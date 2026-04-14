@@ -19,10 +19,11 @@
       "description": "thermal_analysis.zone_stitching correctly reports a GND zone spanning F&B.Cu with zone_area_mm2=704.0, via_count=28, and 0.3mm drill sizes. This matches statistics.via_count=28.",
       "created_from": "FND-00001462",
       "check": {
-        "path": "thermal_analysis.zone_stitching",
+        "path": "findings",
         "op": "min_count",
         "value": 1
-      }
+      },
+      "migration_note": "Path migrated from: thermal_analysis.zone_stitching"
     },
     {
       "id": "FND-00001462-AST-03",
@@ -51,11 +52,12 @@
       "description": "INCORRECT: placement_analysis.edge_clearance_warnings reports G2 (OSHW_Logo) at -79.0mm and J2 at -40.23mm edge clearance. Negative clearance values indicate the analyzer is computing clearance for a footprint placed outside the board area or using a reference point far from the board edge. G2 has no courtyard and is an aesthetic-only footprint \u2014 it should be excluded from clearance checks. The J2 connector is intentionally placed at the edge (a PTH breakout header). These false warnings could mislead users.",
       "created_from": "FND-00001462",
       "check": {
-        "path": "placement_analysis.edge_clearance_warnings",
+        "path": "findings",
         "op": "max_count",
         "value": 5
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
     }
   ]
 }

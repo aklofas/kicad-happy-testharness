@@ -49,12 +49,13 @@
       "incorrect": [
         {
           "description": "TPS2116 (U13) classified as LDO but it is actually a power multiplexer/switch (selects between two input supplies), not a voltage regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U13$"
+            "pattern": "^U13$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -65,12 +66,13 @@
         },
         {
           "description": "TPS62A02 (U5) detected as switching regulator but missing estimated_vout - the feedback network for FB_DCDC was not linked to the regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -81,12 +83,13 @@
         },
         {
           "description": "Crystal oscillator RC filters (R87 1M with C113/C114 27pF, fc=5.9kHz) misidentified as generic low-pass filters - these are actually crystal load capacitor bias resistors for the 40MHz crystal",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R87$"
+            "pattern": "^R87$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -99,12 +102,13 @@
         },
         {
           "description": "RC filter R13 10M with C1/C2 22pF classified as 723Hz low-pass but this is the crystal feedback resistor for the main oscillator",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R13$"
+            "pattern": "^R13$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -146,12 +150,13 @@
         },
         {
           "description": "W25Q128 SPI flash (U3, 16MB) not identified as memory interface",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -162,12 +167,13 @@
         },
         {
           "description": "No crystal circuits detected despite ESP32-P4 having external crystal oscillator with 22pF load caps (C1/C2) and 10M feedback resistor (R13)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^C1$"
+            "pattern": "^C1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -208,12 +214,13 @@
         },
         {
           "description": "RCLAMP0524P ESD protection arrays (U9, U10, U11) not linked to the USB ports they protect",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U10$"
+            "pattern": "^U10$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [

@@ -1,36 +1,37 @@
 {
   "file_pattern": "AMP_PCBv3.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~21 (tolerance 10%)",
+      "description": "Finding count ~25 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 18,
-        "max": 24
+        "min": 22,
+        "max": 28
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~9",
+      "description": "high count ~6",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 5,
+        "max": 7
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~4",
+      "description": "medium count ~6",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~29 (+-10)",
+      "description": "EMC risk score ~57.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 19,
-        "max": 39
+        "min": 47.0,
+        "max": 67.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "8 decoupling finding(s)",
+      "description": "7 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 8
+        "value": 7
       }
     },
     {
@@ -155,11 +156,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~2 net(s) with EMC scores",
+      "description": "~3 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 1
+        "value": 2
       }
     }
   ]

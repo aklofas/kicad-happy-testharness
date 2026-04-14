@@ -9,10 +9,12 @@
       "description": "Decoupling analysis correct: +3V3 (4x caps, 5.0uF), VBUS (1x 4.7uF), +3.3VA (1x 100nF)",
       "created_from": "FND-00000070",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000070-AST-04",

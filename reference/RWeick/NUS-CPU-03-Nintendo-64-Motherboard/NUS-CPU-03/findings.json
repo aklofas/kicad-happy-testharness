@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "U13 LM78M05 correctly detected as LDO +12V to +5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 5
+            "value": 5,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -24,12 +25,13 @@
         },
         {
           "description": "Crystal X1/X2 with load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -41,11 +43,12 @@
         },
         {
           "description": "Q1 2SC2412K LED driver for D3 correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "equals",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -90,7 +93,7 @@
         },
         {
           "description": "Reset pin observation for U10 shows entire +3.3V rail instead of tracing through U3 PST9128 supervisor",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U10",
@@ -103,12 +106,13 @@
       "missed": [
         {
           "description": "RDRAM memory interface (U11/U14 to U9 RCP) not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U11$"
+            "pattern": "^U11$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -141,7 +145,7 @@
       "correct": [
         {
           "description": "U13 (LM78M05) linear regulator correctly detected: input rail +12V, output rail +5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U13"
@@ -149,15 +153,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U13$"
+            "pattern": "^U13$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U12 (Sharp 7VZ5) adjustable regulator correctly detected: input +3.3V, output +VTERM; feedback divider R26/R27 correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "R26",
@@ -167,15 +172,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U12$"
+            "pattern": "^U12$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Both crystal circuits correctly detected: X1 (D143A7) with C39/C40 (43pF) and X2 (D147A7) with C146/C147 (40pF)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "C146",
@@ -188,10 +194,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
@@ -200,20 +207,21 @@
         },
         {
           "description": "Power rail decoupling coverage correctly analysed for +3.3V (96 caps, 437uF), +5V, +12V, +VTERM, and +RAM.VREF rails",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "detector": "decoupling_analysis",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
           "description": "Voltage divider R13/R12 on U7 (MX8330) FSC pin correctly identified as bias network",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R12",
@@ -223,10 +231,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R12$"
+            "pattern": "^R12$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -239,7 +248,7 @@
         },
         {
           "description": "RC filter for audio signals correctly detected: R17/R21 + C29/C30 on RAUDIO/LAUDIO into U2 AMP-NUS",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [
             "C29",
@@ -251,17 +260,18 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R17$"
+            "pattern": "^R17$",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "incorrect": [
         {
           "description": "Q1 (2SC2412K) incorrectly identified as led_driver with D3/R31. Q1 is a CSYNC emitter follower: base from U4/U5 SYNC via R16, emitter to P7.CSYNC through R14 (75 Ohm). D3 is independently powered LED on +3.3V rail.",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "D3",
@@ -276,15 +286,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "Q1 load_type classified as 'inductive' but actual load is resistive: R14 (75 Ohm) to CSYNC output net.",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q1",
@@ -293,15 +304,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "U13 (LM78M05) topology listed as 'LDO' but LM78M05 is a standard fixed-output linear regulator with ~2V dropout, not low-dropout.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U13"
@@ -309,30 +321,32 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U13$"
+            "pattern": "^U13$",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "missed": [
         {
           "description": "6 ESD diode arrays (DA1, DA3, DA5, DA6, DA7, DA8) not detected as protection devices. DA1/DA3 protect controller port inputs, DA5/DA6 protect video signals, DA7/DA8 protect composite output.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "4 ferrite-bead LC power filters missed on controller port 3.3V supply rails: FIL1+C104, FIL3+C106, FIL5+C107, FIL7+C108.",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "detector": "lc_filters",
           "subject_refs": [
             "C104",
@@ -343,15 +357,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^C104$"
+            "pattern": "^C104$",
+            "detector_filter": "detect_lc_filters"
           }
         },
         {
           "description": "RDRAM memory interface (U11, U14 connected to U9 RCP-NUS via Rambus bus, and expansion slot P1) not detected in memory_interfaces.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "P1",
@@ -362,10 +377,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U11$"
+            "pattern": "^U11$",
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],

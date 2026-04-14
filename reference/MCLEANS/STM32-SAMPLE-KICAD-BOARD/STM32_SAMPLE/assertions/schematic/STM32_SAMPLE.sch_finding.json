@@ -9,12 +9,14 @@
       "description": "U1 (LM1117-3.3) is correctly classified as LDO topology with input_rail=+5V and output_rail=+3.3V, estimated_vout=3.3, vref_source=fixed_suffix. The 13 decoupling caps (22\u00b5F total) on +3.3V and 1 cap on +5V are correctly attributed.",
       "created_from": "FND-00001346",
       "check": {
-        "path": "signal_analysis.power_regulators[1].topology",
+        "path": "findings[1].topology",
         "value": "LDO",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_power_regulators"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[1].topology"
     },
     {
       "id": "FND-00001346-AST-02",

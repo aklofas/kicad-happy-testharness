@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "PSUs.kicad_sch is a stub file with no placed components (only a uuid and paper size). The analyzer correctly reports 0 components, 0 nets, and empty signal analysis. No false positives.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -35,9 +35,9 @@
       "correct": [
         {
           "description": "Correctly identifies U4 (TPS61235PRWLR) as a switching boost regulator with L1 and U5 (BQ25616RTWT) as a charger IC. CR1 (SMBJ5.0A-TR) correctly identified as TVS protection on VBUS. Component counts (32 total, 2 IC, 2 inductor) look accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -46,7 +46,7 @@
       "incorrect": [
         {
           "description": "R10 (value '1M', 1 megohm) has DigiKey PN '311-1.00KHRCT-ND' and MPN 'RC0603FR-071KL' which are 1K parts. R12 (150 ohm), R13 (510 ohm), R14/R15 (1k) all share the same DigiKey PN '311-5.10KHRCT-ND' and MPN 'RC0603FR-075K1L' (a 5.1K part). The analyzer faithfully transcribes these values from the schematic \u2014 the data is wrong in the source, but the analyzer does not flag these MPN/value mismatches as warnings.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -67,9 +67,9 @@
       "correct": [
         {
           "description": "13 components correctly identified (2 connectors, 1 IC, 2 resistors, 8 capacitors). FSUSB42MUX classified as 'ic' correctly. All missing MPNs flagged appropriately.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -96,9 +96,9 @@
       "missed": [
         {
           "description": "The cm4-high-speed sheet carries CAM0/CAM1 MIPI CSI lanes (CAM0_C_N/P, CAM0_D0_N/P, CAM1_C_N/P, CAM1_D0-D3 N/P) visible in the PCB net list. The schematic analyzer reports 0 differential pairs and no memory/high-speed interfaces for this sheet. These are driven from Module1 (CM4) with hierarchical labels only, so the local topology lacks enough context, but the missed detection is worth noting.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -121,9 +121,9 @@
       "correct": [
         {
           "description": "Correctly identifies 4 copper layers, 64 footprints all on front (consistent with CM4 design), 252 vias, 184 nets, routing complete. The 'REF**' placeholder footprint is included in component list as expected. Net analysis correctly labels named vs unnamed nets.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -148,9 +148,9 @@
       "correct": [
         {
           "description": "All 11 expected layers found (F/B Cu, F/B Mask, F/B Paste, F/B SilkS, In1/In2 Cu, Edge.Cuts), drill file with 275 holes (252 vias + 19 component + 4 mounting). Board dimensions match PCB file (52.38x84.35mm). Fab layers correctly classified as 'unknown' (not assembly layers).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -175,9 +175,9 @@
       "correct": [
         {
           "description": "Rev2 and rev3 gerbers are identical in structure and counts (same generator, same layer set, same totals). Both parse cleanly with complete=true.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

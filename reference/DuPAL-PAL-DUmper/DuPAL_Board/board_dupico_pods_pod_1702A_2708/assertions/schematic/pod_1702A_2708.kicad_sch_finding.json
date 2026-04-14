@@ -9,7 +9,7 @@
       "description": "The six power rails for this pod board (which generates multiple voltages for legacy 1702A and 2708 EPROM programming) are all correctly detected. The decoupling analysis correctly identifies bypass capacitors on each rail: 100nF on VCC and +12V, 10uF+100nF on -5V and -9V, 47uF+100nF on -12V.",
       "created_from": "FND-00000481",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "U1 (RD-0512D, Custom_Power:RD-0512D) is a 5V-in, \u00b112V-out isolated DC-DC converter with 5 pins: +Vin (VCC), GND, +Vout (+12V), -Vout (-12V), and 0V. It is the primary power source for the \u00b112V rails in this pod schematic. The analyzer classifies it as a generic 'ic' type and does not detect it under power_regulators or as a switching converter. Only the downstream LM7905/LM7909 linear regulators are detected.",
       "created_from": "FND-00000481",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

@@ -21,36 +21,42 @@
       "description": "signal_analysis.power_regulators correctly identifies U3 as LDO topology with input_rail=+5V and output_rail=+3V3. Vout estimated at 3.3V via fixed_suffix method.",
       "created_from": "FND-00001872",
       "check": {
-        "path": "signal_analysis.power_regulators[0].topology",
+        "path": "findings[0].topology",
         "value": "LDO",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_power_regulators"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].topology"
     },
     {
       "id": "FND-00001872-AST-03",
       "description": "signal_analysis.rc_filters correctly identifies R2 (82R) and C2 (10uF) as a low-pass filter with cutoff at 194.09 Hz. This matches the frequency conditioning circuit on the RPM sensor input.",
       "created_from": "FND-00001872",
       "check": {
-        "path": "signal_analysis.rc_filters[0].cutoff_hz",
+        "path": "findings[0].cutoff_hz",
         "value": 194.09,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: signal_analysis.rc_filters[0].cutoff_hz"
     },
     {
       "id": "FND-00001872-AST-04",
       "description": "+5V has C4 (100nF) + C3 (10uF) = 10.1 uF total; +3V3 has C5+C6 (100nF each) + C1 (1uF) = 1.2 uF total. Both rails have bulk and bypass coverage flagged correctly.",
       "created_from": "FND-00001872",
       "check": {
-        "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+        "path": "findings[0].total_capacitance_uF",
         "value": 10.1,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_decoupling"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[0].total_capacitance_uF"
     },
     {
       "id": "FND-00001872-AST-05",
@@ -68,11 +74,13 @@
       "description": "D1 (BZX585-B5V6.115, a 5.6V Zener) is connected anode-to-GND, cathode-to-+5V via R5 (130R) forming an overvoltage clamp. signal_analysis.protection_devices is empty []. This TVS/Zener clamp topology should be detected as a protection device.",
       "created_from": "FND-00001872",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": 0,
-        "op": "count_eq"
+        "op": "count_eq",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001872-AST-07",

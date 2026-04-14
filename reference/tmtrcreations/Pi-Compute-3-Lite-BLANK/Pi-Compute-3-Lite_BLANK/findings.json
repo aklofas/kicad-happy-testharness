@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "4 ICs, 6 resistors, 18 capacitors, 2 connectors, 1 fuse, 2 inductors. Power rails show only GND \u2014 expected for a carrier board where VDD rails come from the CM3 module pins.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -35,9 +35,9 @@
       "correct": [
         {
           "description": "sheets_parsed=2, sheet_files includes both .sch files, same 33 components/22 nets as standalone parse of Page_1.sch \u2014 correct deduplication behavior.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -63,11 +63,11 @@
       "incorrect": [
         {
           "description": "The PCB has 33 SMD components on F.Cu and nets defined (136 nets, 23 unrouted). F.Cu and B.Cu are in the layers list but copper_layers_used=0 and copper_layer_names=[] is wrong. This is a KiCad 5 legacy PCB format parsing issue \u2014 the analyzer fails to count copper layers used when there are no tracks/zones routed yet. The board is clearly a work-in-progress with placed but unrouted components.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The board has an Edge.Cuts layer defined in the layer stack, but board_outline edge_count=0 and bounding_box=null. The analyzer did not extract board outline from the legacy KiCad 5 PCB format. This is a known limitation for unfinished boards or legacy format parsing gaps.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

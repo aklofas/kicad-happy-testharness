@@ -1,7 +1,8 @@
 {
   "file_pattern": "Adafruit-Si7021-PCB-master_Adafruit Si7021 Humidity.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,44 +35,48 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "2 decoupling_analysis detected",
+      "description": "2 detect_decoupling detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "4 design_observations detected",
+      "description": "4 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "1 level_shifters detected",
+      "description": "1 detect_level_shifters detected",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "All level_shifters have ref",
+      "description": "All detect_level_shifters have ref",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^$"
@@ -79,9 +84,10 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "All level_shifters type values are valid",
+      "description": "All detect_level_shifters type values are valid",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "count_matches",
         "field": "type",
         "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
@@ -90,18 +96,20 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 power_regulators detected",
+      "description": "1 detect_power_regulators detected",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "All power_regulators have ref present",
+      "description": "All detect_power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
@@ -109,18 +117,20 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "4 sensor_interfaces detected",
+      "description": "4 detect_sensor_interfaces detected",
       "check": {
-        "path": "signal_analysis.sensor_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_sensor_interfaces",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000013",
-      "description": "All sensor_interfaces have ref",
+      "description": "All detect_sensor_interfaces have ref",
       "check": {
-        "path": "signal_analysis.sensor_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_sensor_interfaces",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^$"
@@ -128,9 +138,10 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "All sensor_interfaces type values are valid",
+      "description": "All detect_sensor_interfaces type values are valid",
       "check": {
-        "path": "signal_analysis.sensor_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_sensor_interfaces",
         "op": "count_matches",
         "field": "type",
         "pattern": "^(motion|environmental|magnetic)$",
@@ -139,27 +150,30 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "2 suggested_certifications detected",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000016",
-      "description": "2 transistor_circuits detected",
+      "description": "2 detect_transistor_circuits detected",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000017",
-      "description": "All transistor_circuits have reference present",
+      "description": "All detect_transistor_circuits have reference present",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"

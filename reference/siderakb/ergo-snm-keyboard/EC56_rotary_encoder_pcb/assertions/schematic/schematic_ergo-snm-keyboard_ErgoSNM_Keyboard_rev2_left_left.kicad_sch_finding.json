@@ -9,11 +9,13 @@
       "description": "The hierarchical rev2 left schematic correctly aggregates all sub-sheets and detects the 6-row x 8-column key matrix using ROW_0..ROW_5 and COL_0..COL_7 net names. The matrix count shows 29 switches (matching actual KEY1..KEY29) and 29 diodes (matching D1..D29). The power regulator (RT9013-33GB LDO converting +5V to +3V3) and the 12MHz crystal circuit are also correctly detected. Total component count of 110 matches the PCB footprint count exactly.",
       "created_from": "FND-00002188",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "op": "equals",
-        "value": 29
+        "value": 29,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     },
     {
       "id": "FND-00002188-AST-02",

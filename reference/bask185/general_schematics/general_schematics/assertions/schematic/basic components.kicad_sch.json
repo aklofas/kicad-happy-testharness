@@ -1,7 +1,8 @@
 {
   "file_pattern": "basic components.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,86 +35,59 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "3 design_observations detected",
+      "description": "7 audit_led_circuits detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "7 led_audit detected",
+      "description": "3 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "All led_audit have ref",
+      "description": "2 detect_motor_drivers detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "All led_audit type values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 7
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "All led_audit drive_method values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 7
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "2 motor_drivers detected",
-      "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "All motor_drivers have driver_reference",
+      "id": "SEED-00000008",
+      "description": "All detect_motor_drivers have driver_reference",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "not_contains_match",
         "field": "driver_reference",
         "pattern": "^$"
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "All motor_drivers driver_type values are valid",
+      "id": "SEED-00000009",
+      "description": "All detect_motor_drivers driver_type values are valid",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "count_matches",
         "field": "driver_type",
         "pattern": "^(stepper|dc_brushed_h_bridge)$",
@@ -121,35 +95,48 @@
       }
     },
     {
-      "id": "SEED-00000013",
-      "description": "2 suggested_certifications detected",
+      "id": "SEED-00000010",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "1 transistor_circuits detected",
+      "id": "SEED-00000011",
+      "description": "1 detect_transistor_circuits detected",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "All transistor_circuits have reference present",
+      "id": "SEED-00000012",
+      "description": "All detect_transistor_circuits have reference present",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000013",
+      "description": "7 validate_led_resistors detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -158,7 +145,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "Has 5 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -167,7 +154,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000016",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -176,7 +163,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000017",
       "description": "Has 7 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -185,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000018",
       "description": "Has 31 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

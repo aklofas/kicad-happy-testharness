@@ -17,12 +17,13 @@
         },
         {
           "description": "Three LDO regulators correctly identified: U2 MCP1703A-1802 (1.8V), U3 MCP1703A-3302 (3.3V), U4 MCP1703A-5002 (5V) with correct input rail VDC and output rails",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -35,12 +36,13 @@
         },
         {
           "description": "Active oscillator X1 (XO32) correctly identified as active_oscillator with output on SYS_CLK net feeding both CPLDs (U1, U5)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -80,11 +82,12 @@
         },
         {
           "description": "Decoupling analysis correctly identified 8 caps on +5V (15.03uF), 16 caps on +3V3 (14.95uF), 11 caps on +1V8 (14.54uF) with proper bypass cap identification",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -104,9 +107,10 @@
           "description": "Dual CPLD (U1, U5 LC4256ZE) power domains correctly identified as having both +1V8 (core) and +3V3 (I/O) rails",
           "analyzer_section": "design_analysis.power_domains",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -122,7 +126,7 @@
       "incorrect": [
         {
           "description": "Design observations incorrectly flag U2, U3, U4 as having missing input caps on VDC rail. In reality, C10, C11, C12 (all 4.7uF) are directly on the VDC net serving as shared input capacitors for all three regulators. The analyzer fails to recognize shared bulk input caps when multiple regulators share an input rail.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "C10",
@@ -155,7 +159,7 @@
       "missed": [
         {
           "description": "JTAG daisy chain not detected: J7 (10-pin JTAG header) -> U1 (CPLD Alpha, TDI/TCK/TMS/TDO) -> U5 (CPLD Beta, TDI/TCK/TMS/TDO) -> J7. TDO1 connects U1.TDO to U5.TDI, TDO2 connects U5.TDO to J7. TCK and TMS are shared. Pull-up/down resistors R4 (TDI), R5 (TCK to GND), R6 (TMS) present.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "bus_topology.detected_bus_signals",
             "op": "min_count",
@@ -164,11 +168,12 @@
         },
         {
           "description": "Fuse F1 not detected as a protection device. F1 is in the power input path: J1 barrel jack -> JP1 -> SW1 -> F1 -> VDC, providing overcurrent protection for the entire board.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "equals",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -182,12 +187,13 @@
         },
         {
           "description": "Memory interface not detected: U6 (GameBoy_SRAM_64K) connected to CPU U8 via MA0-MA12 (address), MD0-MD7 (data), ~{MCS}, ~{MRD}, ~{MWR} (control). This is a classic parallel SRAM interface with active-low chip enable, output enable, and write enable.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -199,12 +205,13 @@
         },
         {
           "description": "Second memory interface not detected: U7 (GameBoy_SRAM_64K) connected to CPU U8 via A0-A14 (address, remapped through cartridge slot J13), D0-D7 (data), ~{CS}, ~{RD}, ~{WR} (control). This is the external cartridge SRAM.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -249,7 +256,7 @@
         },
         {
           "description": "GameBoy LCD interface not identified as a display bus: LD0-LD1 (2-bit pixel data), CP, CPG, CPL (clock signals), FR (frame), HSYNC, VSYNC connecting U8 to CPLD U5 and connector J9. This is the Game Boy's proprietary LCD timing interface.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "bus_topology.detected_bus_signals",
             "op": "min_count",
@@ -258,7 +265,7 @@
         },
         {
           "description": "Pull-up resistor R1 (10K) on ~{RES} to +5V not identified. This is a standard active-low reset pull-up keeping the CPU out of reset during normal operation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "statistics.component_types.resistor",
             "op": "eq",
@@ -267,7 +274,7 @@
         },
         {
           "description": "LED activity indicators on bus control signals not identified: D2-D7 with R7-R12 (2.2K) showing ~{MRD}, ~{MWR}, ~{MCS}, ~{RD}, ~{CS}, ~{WR} activity. D8-D11 with R13-R16 (1K) for CPLD user LEDs. D1 with R2 (560R) as power indicator on VDC.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "statistics.component_types.led",
             "op": "eq",
@@ -308,12 +315,13 @@
         },
         {
           "description": "Three LDO regulators correctly identified: U2 MCP1703A-1802 (1.8V), U3 MCP1703A-3302 (3.3V), U4 MCP1703A-5002 (5V) with correct input rail VDC and output rails",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -326,12 +334,13 @@
         },
         {
           "description": "Active oscillator X1 (XO32) correctly identified as active_oscillator with output on SYS_CLK net feeding both CPLDs U1 and U5",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -362,11 +371,12 @@
         },
         {
           "description": "Decoupling analysis correctly identified 8 caps on +5V (15.03uF), 16 caps on +3V3 (14.95uF), 11 caps on +1V8 (14.54uF) across three rails",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -413,7 +423,7 @@
       "incorrect": [
         {
           "description": "Design observations incorrectly flag U2, U3, U4 as having missing input caps on VDC rail. C10, C11, C12 (all 4.7uF) are directly on the VDC net serving as shared input capacitors for all three regulators. The analyzer fails to recognize shared bulk input caps when multiple regulators share an input rail.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "C10",
@@ -446,7 +456,7 @@
       "missed": [
         {
           "description": "JTAG daisy chain not detected: J7 (10-pin header) -> U1 (CPLD Alpha TDI/TCK/TMS/TDO) -> U5 (CPLD Beta TDI/TCK/TMS/TDO) -> J7. TDO1 connects U1.TDO to U5.TDI, TDO2 connects U5.TDO to J7. Pull resistors R4 (TDI to +1V8), R5 (TCK to GND), R6 (TMS to +1V8) present.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "statistics.component_types.ic",
             "op": "min_count",
@@ -455,11 +465,12 @@
         },
         {
           "description": "Fuse F1 not detected as a protection device. F1 is in the power input path: J1 barrel jack -> JP1 -> SW1 -> F1 -> VDC, providing overcurrent protection for the entire board.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "equals",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -473,12 +484,13 @@
         },
         {
           "description": "VRAM memory interface not detected: U6 (GameBoy_SRAM_64K) connected to CPU U8 via MA0-MA12 (13-bit address), MD0-MD7 (8-bit data), ~{MCS} (chip enable), ~{MRD} (output enable), ~{MWR} (write enable). Classic parallel SRAM interface.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -490,12 +502,13 @@
         },
         {
           "description": "Cartridge SRAM interface not detected: U7 (GameBoy_SRAM_64K) connected to CPU U8 via A0-A14 (address through cartridge slot J13), D0-D7 (data), ~{CS}, ~{RD}, ~{WR} (control). External cartridge SRAM with active-low control.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -540,7 +553,7 @@
         },
         {
           "description": "Game Boy LCD interface not identified as a display bus: LD0-LD1 (2-bit pixel data), CP/CPG/CPL (clock phases), FR (frame), HSYNC, VSYNC connecting CPU U8 to CPLD U5 and connector J9 (8-pin). Proprietary LCD timing interface.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "bus_topology.detected_bus_signals",
             "op": "min_count",
@@ -549,7 +562,7 @@
         },
         {
           "description": "Pull-up resistor R1 (10K) on ~{RES} to +5V not identified as a reset pull-up. Standard active-low reset pull-up keeping the CPU out of reset during normal operation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "statistics.component_types.resistor",
             "op": "min_count",
@@ -558,7 +571,7 @@
         },
         {
           "description": "LED activity indicators on bus control signals not identified: D2-D4 with R7-R9 (2.2K) on ~{MRD}/~{MWR}/~{MCS}, D5-D7 with R10-R12 (2.2K) on ~{RD}/~{CS}/~{WR}, D8-D11 with R13-R16 (1K) for CPLD user LEDs, D1 with R2 (560R) as VDC power indicator.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "statistics.component_types.led",
             "op": "min_count",

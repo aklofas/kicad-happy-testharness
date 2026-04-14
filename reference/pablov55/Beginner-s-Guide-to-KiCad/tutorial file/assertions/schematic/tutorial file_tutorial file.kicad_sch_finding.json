@@ -20,11 +20,13 @@
       "description": "INCORRECT: Q1 (PN2222A) is an NPN switch with R2 (1k) as a collector series resistor (pull-up to the supply) and J3 as the output connector. The collector net (__unnamed_2) has R2 and J3 on it. The analyzer reports load_type as 'connector', ignoring the resistor R2 which is the actual load element on the collector. A more accurate load_type would be 'resistor' since R2 is in series on the collector path. The base_resistors field correctly identifies R1 (10k), but the collector load resistor R2 is not captured.",
       "created_from": "FND-00000386",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].load_type",
+        "path": "findings[0].load_type",
         "op": "equals",
-        "value": "resistor"
+        "value": "resistor",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].load_type"
     },
     {
       "id": "FND-00000386-AST-03",

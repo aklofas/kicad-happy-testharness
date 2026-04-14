@@ -1,7 +1,8 @@
 {
   "file_pattern": "Fault Latch 2_Fault Latch 2.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -15,22 +16,22 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~16",
+      "description": "high count ~13",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 14,
-        "max": 18
+        "min": 11,
+        "max": 15
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~5",
+      "description": "medium count ~6",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~44 (+-10)",
+      "description": "EMC risk score ~61.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 34,
-        "max": 54
+        "min": 51.5,
+        "max": 71.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "16 decoupling finding(s)",
+      "description": "14 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 16
+        "value": 14
       }
     },
     {

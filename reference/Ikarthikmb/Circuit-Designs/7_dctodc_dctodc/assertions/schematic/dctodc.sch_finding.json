@@ -20,11 +20,13 @@
       "description": "The schematic has 6 BD249 NPN BJT instances (all sharing reference 'Q?' due to lack of annotation). The signal_analysis.transistor_circuits array contains only a single entry for 'Q?'. The other five BJT instances are ignored, and their connectivity (base_net, collector_net, emitter_net) is not analyzed. A correct analysis should either report all six instances or make clear that deduplication is occurring.",
       "created_from": "FND-00000430",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 6
+        "value": 6,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

@@ -1,7 +1,8 @@
 {
   "file_pattern": "2xBLDCPicoV3.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,153 +35,163 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 bridge_circuits detected",
+      "description": "2 audit_connector_ground_distribution detected",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "2 connector_ground_audit detected",
+      "description": "21 audit_esd_protection detected",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "2 decoupling_analysis detected",
+      "description": "1 detect_bridge_circuits detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_bridge_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "12 design_observations detected",
+      "description": "2 detect_decoupling detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "21 esd_coverage_audit detected",
+      "description": "12 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "All esd_coverage_audit have connector_ref",
+      "description": "2 detect_power_regulators detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "not_contains_match",
-        "field": "connector_ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "All esd_coverage_audit coverage values are valid",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "coverage",
-        "pattern": "^(full|partial|none)$",
-        "value": 21
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "All esd_coverage_audit risk_level values are valid",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "risk_level",
-        "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 21
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "2 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "All power_regulators have ref present",
+      "id": "SEED-00000011",
+      "description": "All detect_power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "6 rc_filters detected",
+      "id": "SEED-00000012",
+      "description": "6 detect_rc_filters detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000016",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "id": "SEED-00000013",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "not_contains_match",
         "field": "cutoff_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "2 suggested_certifications detected",
+      "id": "SEED-00000014",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "1 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "2 validate_feedback_stability detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_feedback_stability",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000018",
-      "description": "1 voltage_dividers detected",
+      "description": "1 validate_pullups detected",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "validate_pullups",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000019",
-      "description": "All voltage_dividers have non-zero ratio",
+      "description": "8 validate_voltage_levels detected",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "not_contains_match",
-        "field": "ratio",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

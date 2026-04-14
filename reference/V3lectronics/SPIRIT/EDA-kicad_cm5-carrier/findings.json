@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "93 components across a complex power management sheet correctly parsed. Three switching regulators correctly identified: AP3032 (22V boost for backlight), BQ25792 (charger), MP3429GL (5V switcher). Battery (BAT1) classified as 'connector' which is a minor type imprecision but acceptable for a JST-connected cell.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -36,7 +36,7 @@
       "incorrect": [
         {
           "description": "The screen connector DIS1 (Hirose FH72-31S-0.3SHW, a 31-pin FPC connector) is classified as type 'diode'. Its lib_id likely uses a custom SPIRIT library symbol that the classifier incorrectly maps to diode. This is a false type classification from an unrecognized library part.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -58,7 +58,7 @@
       "incorrect": [
         {
           "description": "U9 is a 15-pin FPC connector classified as 'ic' due to its U-prefix reference designator. Custom SPIRIT library footprint with U-reference causes the misclassification. This is a known issue with FPC connectors using IC reference designators in custom libraries.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -79,9 +79,9 @@
       "correct": [
         {
           "description": "Correctly identifies 3 components (J2 SIM socket, U2 EG25GGC modem, U1 GPS module) all as DNP. unique_parts=0 is correct since all are DNP and none have MPNs filled. 229 nets reflects the hierarchical label connectivity from the top-level sheet.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -107,7 +107,7 @@
       "incorrect": [
         {
           "description": "The PCB defines a 6-layer stackup (F.Cu, In1.Cu, In2.Cu, In3.Cu, In4.Cu, B.Cu) and layer definitions include all 6. However, copper_layer_names only lists ['B.Cu', 'F.Cu', 'In1.Cu'] and copper_layers_used=3. The analyzer is likely counting only layers that have routed tracks, missing inner layers that are present as power planes (zones only, no tracks). The board is also heavily unrouted (89 unrouted nets), so inner signal layers may have zero track segments, causing them to be excluded from the count.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -128,9 +128,9 @@
       "correct": [
         {
           "description": "132 components across a CM5 carrier design (speaker, vibration motors, capacitors, ICs, FPCs) correctly counted. 41 DNP parts flagged. Power rails AGND, GND, VCC, PWR_FLAG all identified. The 9 missing MPNs and 1 missing footprint (R6) accurately reflect incomplete source data.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

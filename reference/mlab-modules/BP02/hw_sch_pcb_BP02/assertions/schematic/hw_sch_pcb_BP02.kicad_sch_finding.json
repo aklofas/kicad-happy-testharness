@@ -21,22 +21,26 @@
       "description": "INCORRECT: The schematic is titled 'Universal symmetric RF filter' and is a differential multi-order LC bandpass filter with no antenna or antenna feed point. The rf_matching detector incorrectly identifies every capacitor in the filter (C1\u2013C13) as an 'antenna' component in a matching network topology. None of these capacitors are antennas; they are all series/shunt filter elements in a ladder/lattice bandpass filter connected between SATA7 differential connectors J1 and J2. The 13 rf_matching entries should all be absent.",
       "created_from": "FND-00000393",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "count_matches",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_rf_matching"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     },
     {
       "id": "FND-00000393-AST-03",
       "description": "The lc_filters detector only pairs components that share exactly one net (series connection). In this filter, five L-C pairs are wired in parallel (both terminals of the inductor and capacitor connect to the same two nodes): L11/C7, L5/C5, L17/C9, L12/C8, and L6/C6. Because each such pair shares TWO nets rather than one, the detector misses them entirely. These are legitimate LC resonators (shunt parallel tank circuits) forming the transmission zeros of the elliptic/Chebyshev filter. The current lc_filters list has 28 entries; it should have 33 (5 additional parallel LC pairs).",
       "created_from": "FND-00000393",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 33
+        "value": 33,
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     }
   ]
 }

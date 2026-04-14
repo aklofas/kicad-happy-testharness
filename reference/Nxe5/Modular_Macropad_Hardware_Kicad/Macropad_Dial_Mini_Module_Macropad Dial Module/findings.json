@@ -8,36 +8,39 @@
       "correct": [
         {
           "description": "The analyzer correctly identified Row0-Row4 and Col0-Col4 nets forming a sparse 5x5 matrix. Source confirms 18 SW_MEC_5G switches plus 1 RotaryEncoder_Switch (SW21) with 19 plain-diode column diodes, all matching the output exactly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "Source contains exactly 17 SK6812MINI LEDs (D7, D9-D24). The analyzer correctly found chain_length=17, protocol='single-wire (WS2812)', data_in_net='LED_GPIO', and estimated_current_mA=1020 (17 x 60mA).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "chain_length": 17,
               "led_type": "SK6812MINI"
-            }
+            },
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {
           "description": "U7 (LTC3536EMSE-PBF) correctly identified as a switching regulator with inductor L1, input_rail=BAT+, output_rail=+3V3, estimated_vout=3.315V from R17/R16 feedback divider (1000k/221k).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U7",
               "topology": "switching",
               "output_rail": "+3V3"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -53,23 +56,25 @@
       "incorrect": [
         {
           "description": "The analyzer detects 4 RC filters but filters [0], [1], and [2] all involve the same 4 components (R14, R15, C8, C9) that form a single Type-II compensation network for the LTC3536 switching regulator. Specifically, RC filter [2] (R15+C9, 111kHz) uses the feedback mid-node as both input and ground reference, which is topologically invalid as an independent RC filter. Only filter [3] (R18+C11, 159Hz, ESP32 EN pull-down) is an independent low-pass filter.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "Q1 is an FS8205A dual N-channel MOSFET used in a battery protection circuit driven by the DW01A (U6). Its drain_net and source_net both resolve to 'GND' which is wrong \u2014 the FS8205A is placed in series with the battery path (between B- and GND), not driving an LED load. The 'led' load_type is incorrect; the correct classification would be 'battery_protection' or similar. The drain_is_power=True and source_is_ground=True flags are also inconsistent for this topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "reference": "Q1",
               "value": "FS8205A"
-            }
+            },
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -93,20 +98,22 @@
       "correct": [
         {
           "description": "The Dial Module has 4 RotaryEncoder switches (SW1, SW2, SW8, SW9) with no Row/Col matrix nets. The analyzer correctly reports key_matrices=[] (empty). There are no SW_MEC_5G key switches in this module.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "Source confirms D1, D2, D3 are all LED_Small (non-addressable), not SK6812MINI. The analyzer correctly reports addressable_led_chains=[] for this module.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],
@@ -114,20 +121,22 @@
       "missed": [
         {
           "description": "The Dial Module has a classic 1S LiPo battery management chain: U3=TP4056 (charger from VBUS), U6=DW01A (protection IC), Q1=FS8205A (dual protection MOSFET), and U7=LTC3536 (boost regulator from BAT+ to +3V3). The bms_systems detector returns [] despite all four components being present and interconnected. The TP4056 charger is not recognized as a charging IC, and the overall BMS topology is missed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bms_systems"
           }
         },
         {
           "description": "U1=AS5600L-ASOM is a magnetic rotary position encoder that provides the core functionality for the dial input. It communicates via I2C. The analyzer does not classify it in any signal analysis category \u2014 it appears only in the raw components list. The design's key sensor (the angle encoder that makes this a 'Dial Module') goes entirely undetected in signal analysis.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],
@@ -148,14 +157,15 @@
       "correct": [
         {
           "description": "Source confirms exactly 4 SK6812MINI instances (D5, D6, D7, D8) in the Slider Module. The analyzer correctly reports chain_length=4 with data_in_net='LED_GPIO'.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "chain_length": 4,
               "led_type": "SK6812MINI"
-            }
+            },
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],
@@ -188,14 +198,15 @@
       "correct": [
         {
           "description": "Source confirms exactly 10 SK6812MINI instances (D9-D16, D22, D23) in the Dial Mini Module. The analyzer correctly reports chain_length=10, data_in_net='LED_GPIO', with the correct component list.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "chain_length": 10,
               "led_type": "SK6812MINI"
-            }
+            },
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],
@@ -218,14 +229,15 @@
       "correct": [
         {
           "description": "Source confirms exactly 4 SK6812MINI instances (D5, D6, D7, D8) in the Slider Mini Module. The analyzer correctly reports chain_length=4.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "chain_length": 4,
               "led_type": "SK6812MINI"
-            }
+            },
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],

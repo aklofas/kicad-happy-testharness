@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The analyzer correctly identified the W25Q128JVS flash IC (U3) as a memory interface connected to the RP2040 (U4) with 6 shared signal nets, and detected the 12 MHz crystal circuit with 20 pF load caps on Y1. Component counts (25 total: 14 caps, 6 resistors, 2 ICs, 1 crystal, 2 switches) are correct for a typical RP2040 sub-sheet.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],
@@ -35,11 +36,12 @@
       "correct": [
         {
           "description": "The analyzer found a 5-row by 12-column key matrix (ROW_0..ROW_4, COL_0..COL_11) with 52 switches and 52 diodes, matching the Calcite52 keyboard's 52-key layout. Detection method was net_name-based, which is reliable here.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],
@@ -63,11 +65,12 @@
       "incorrect": [
         {
           "description": "design_observations lists USB_D- with has_esd_protection=false, while USB_D+ on the same net has has_esd_protection=true. Both nets connect to the same SRV05-4 quad-channel ESD protection IC (U2) on pins IO3 and IO2 respectively. The differential_pairs analysis correctly reports has_esd=true for the pair, so only the per-line design_observation is wrong. The ESD device recognition logic likely uses a pin-name heuristic that matches IO2 but not IO3.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/USB_D.*has_esd_protection.*true/"
+            "value": "/USB_D.*has_esd_protection.*true/",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

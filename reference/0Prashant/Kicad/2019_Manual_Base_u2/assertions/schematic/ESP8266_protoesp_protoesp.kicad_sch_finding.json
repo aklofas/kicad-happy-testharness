@@ -9,11 +9,13 @@
       "description": "The signal_analysis.ethernet_interfaces list contains one entry with phy_reference='U6', phy_value='ESP32-WROOM-32', phy_lib_id='esp32_physlayout:ESP32-WROOM-32'. The ESP32-WROOM-32 is a WiFi/Bluetooth SoC module, not an Ethernet PHY. This is a false positive likely caused by the lib_id containing 'physlayout' triggering a PHY detection pattern. The design has no Ethernet magnetics or RJ45 connectors to support the detection.",
       "created_from": "FND-00002473",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_ethernet_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.ethernet_interfaces"
     }
   ]
 }

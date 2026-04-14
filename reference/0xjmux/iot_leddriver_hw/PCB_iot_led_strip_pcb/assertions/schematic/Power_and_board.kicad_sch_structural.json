@@ -2,39 +2,44 @@
   "file_pattern": "Power_and_board.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 design_observations",
+      "description": "Exactly 1 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 1 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 2 power_regulators",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 6 detect_design_observations",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "U2 in power_regulators",
+      "description": "U2 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U2$"
@@ -42,9 +47,10 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "U1 in power_regulators",
+      "description": "U1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U1$"
@@ -52,18 +58,20 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 protection_devices",
+      "description": "Exactly 3 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "D7 in protection_devices",
+      "description": "D7 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D7$"
@@ -71,9 +79,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "D8 in protection_devices",
+      "description": "D8 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D8$"
@@ -81,9 +90,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "F2 in protection_devices",
+      "description": "F2 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F2$"
@@ -91,27 +101,30 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 1 transistor_circuits",
+      "description": "Exactly 1 detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Q1 in transistor_circuits",
+      "description": "Q1 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q1$"

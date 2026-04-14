@@ -9,7 +9,7 @@
       "incorrect": [
         {
           "description": "The KICAD_Boards repo checked out at repos/KICAD_Boards/ contains RF/microwave IPE boards, not AudioAmplifier/BatteryManagmentSystem/ESP32 designs. The paths in the review request do not exist on disk and no corresponding outputs were found under results/outputs/schematic/KICAD_Boards/. All 10 source/output pairs are inaccessible.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -31,7 +31,7 @@
       "incorrect": [
         {
           "description": "No subdirectory matching BatteryManagmentSystem, BreakoutSTM32L432KCU, BuckConverter, DCMotorDriveH-Bridge, ESP32_CAM_USB_Programmer, ESP32_Relay_Controller, ESP32_SmartWatch, ESP32_USB_PowerHUB, or FingerprintDoorLock exists under repos/KICAD_Boards/. The repo appears to be a different KICAD_Boards project than what the review packet expects.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -54,9 +54,9 @@
       "missed": [
         {
           "description": "The KICAD_Boards repo checked out at /home/aklofas/Projects/kicad-happy-testharness/repos/KICAD_Boards/ contains RF/microwave IPE board schematics (KiCad 5 .sch format), not the GPS_Tracker, IR_Remote_Controller, LEDDriver, LiDAR_Scanner, POE_Injector, RS485_LoRa_Gateway, SPI_OLED_Display_Driver, SoilMoistureSensor, StepperMotorDriver, TempSensorNTC, or WeatherStation .kicad_sch files referenced in this review. Neither the source files nor their analyzer output JSON files exist at the specified paths. The review cannot be completed without first obtaining the correct repo checkout.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -81,9 +81,9 @@
       "missed": [
         {
           "description": "Same root cause as GPS_Tracker: the checked-out KICAD_Boards repo does not contain this file. No output JSON exists either.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -108,9 +108,9 @@
       "missed": [
         {
           "description": "Same root cause. All 11 files listed in this review request are absent from the local checkout of KICAD_Boards.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -133,9 +133,9 @@
       "correct": [
         {
           "description": "Source general header says tracks=32 but that counts graphical lines; actual (segment) count is 13, which the analyzer correctly reports. Unrouted detection is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -160,9 +160,9 @@
       "correct": [
         {
           "description": "Board uses no modules (modules=0 in source general header). All segments are on net 0 (unassigned). The analyzer correctly reports 0 footprints, 0 nets, and no board outline. Board size=None is expected for a design with no Edge.Cuts geometry.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -187,9 +187,9 @@
       "correct": [
         {
           "description": "Edge.Cuts gerber contains large alignment cross-hair marks (+/-250mm) far outside the actual board outline (~22x21mm). The analyzer correctly reports aligned=false with width/height variation of 156mm and 91mm. This is a legitimate flag for a gerber set that includes cross-hair calibration geometry in the Edge.Cuts layer.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -215,15 +215,15 @@
       "incorrect": [
         {
           "description": "The analyzer flags missing_required: [B.Mask, F.Mask] and reports complete=false. The RF_Board HMC design is a microwave chip-on-board design where solder mask is intentionally absent (confirmed by the board being a high-frequency RF test fixture). Flagging this as incomplete is a false positive for boards that intentionally omit solder mask. The completeness check uses a fixed required-layers list that doesn't account for bare-die or flex PCB designs.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The alignment check only considers F.Cu, B.Cu, Edge.Cuts and inner copper layers - silkscreen is excluded. B.SilkS content is offset ~147mm from board origin. This is a real misalignment (silkscreen items are completely outside the board area) but the analyzer reports aligned=true with no issues. The layer_extents output does include the SilkS sizes for reference, but no issue is flagged.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -246,9 +246,9 @@
       "correct": [
         {
           "description": "Export folder contains only a single Dwgs.User drawing file. The analyzer correctly identifies layer_count=0, all required layers missing (B.Cu, B.Mask, Edge.Cuts, F.Cu, F.Mask), and complete=false. This is an expected result for an intermediate/partial export.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -273,9 +273,9 @@
       "correct": [
         {
           "description": "Custom library footprints (Battery:Short_CPW_20um, Battery:Open_CPW_20um) for CPW resonator stubs are correctly extracted with pad nets. Zone fill ratio 0.748 and net lengths are plausible for this small 10x8mm substrate design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -302,9 +302,9 @@
       "missed": [
         {
           "description": "The review request lists paths like .../repos/KICAD_Boards/BatteryManagmentSystem/BatteryManagmentSystem.kicad_pcb - none of these files exist. The actual KICAD_Boards repo (megredondo) contains RF/microwave boards (HMC DAC, RF_Board, Resonator_coupler, etc.), not the consumer electronics boards listed. The outputs reviewed are for the actual repo contents, not the phantom files in the request.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

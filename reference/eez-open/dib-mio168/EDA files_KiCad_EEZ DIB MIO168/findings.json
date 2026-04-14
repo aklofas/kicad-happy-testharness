@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Voltage dividers correctly detected: R13/R14 (1.25V reference), DIN level-shift networks (2K7+27K), PE-to-GND divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R13$"
+            "pattern": "^R13$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -25,11 +26,12 @@
         },
         {
           "description": "14 RC filters correctly detected including DAC output post-filters and ADIB connector filters",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -38,11 +40,12 @@
         },
         {
           "description": "LP5907, L78L15, L79L15 regulators correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -51,11 +54,12 @@
         },
         {
           "description": "OPA2196 inverting amplifiers with gain -0.121 correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -64,11 +68,12 @@
         },
         {
           "description": "W9812G6KH-6 SDRAM memory interface correctly detected",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],
@@ -77,12 +82,13 @@
         },
         {
           "description": "Q1-Q5 2N7002PS digital output switches and Q9/Q11 IRLML2246 P-FET power switches correct",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -99,11 +105,12 @@
         },
         {
           "description": "SI8641 digital isolator and WE-750315371 transformer correctly in isolation_barriers",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [],
@@ -114,7 +121,7 @@
       "incorrect": [
         {
           "description": "isolation_barriers isolated_power_rails lists [+3V3_ISO, +15V_ISO, +5V_ISO] but omits -15V_ISO and -5V_ISO \u2014 both exist as isolated negative rails through rectifier/regulator chain",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "detector": "isolation_barriers",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -126,7 +133,7 @@
         },
         {
           "description": "Duplicate reset_pin observation for IC8 STM32F446 NRST emitted 3 times identically",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -134,12 +141,13 @@
         },
         {
           "description": "OPA376 (IC16) buffer has spurious input_resistor R17 (9K09) \u2014 R17 belongs to IC19's feedback path on shared 1V25_REF net",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^R17$"
+            "pattern": "^R17$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [

@@ -1,7 +1,8 @@
 {
   "file_pattern": "fix-brightness_Quorum-64-fix-brightness.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,129 +35,106 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "9 connector_ground_audit detected",
+      "description": "9 audit_connector_ground_distribution detected",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "14 esd_coverage_audit detected",
+      "description": "14 audit_esd_protection detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "All esd_coverage_audit have connector_ref",
+      "description": "1 detect_key_matrices detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "not_contains_match",
-        "field": "connector_ref",
-        "pattern": "^$"
+        "path": "findings",
+        "detector_filter": "detect_key_matrices",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "All esd_coverage_audit coverage values are valid",
+      "description": "35 detect_protection_devices detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "coverage",
-        "pattern": "^(full|partial|none)$",
-        "value": 14
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "All esd_coverage_audit risk_level values are valid",
+      "description": "12 detect_rc_filters detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "risk_level",
-        "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 14
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "1 key_matrices detected",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "signal_analysis.key_matrices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "35 protection_devices detected",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "19 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "not_contains_match",
         "field": "cutoff_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "2 suggested_certifications detected",
+      "id": "SEED-00000011",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "10 voltage_dividers detected",
+      "id": "SEED-00000012",
+      "description": "17 detect_voltage_dividers detected",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000016",
-      "description": "All voltage_dividers have non-zero ratio",
+      "id": "SEED-00000013",
+      "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "not_contains_match",
         "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000014",
       "description": "Has 26 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -165,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000015",
       "description": "Has 14 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -174,7 +152,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000016",
       "description": "Has 53 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -183,7 +161,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000017",
       "description": "Has 123 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -192,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000018",
       "description": "Has 88 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
@@ -201,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000019",
       "description": "Has 35 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",

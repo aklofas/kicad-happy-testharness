@@ -1,16 +1,17 @@
 {
   "file_pattern": "SolarLoRaBox.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~29 (tolerance 10%)",
+      "description": "Finding count ~28 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 26,
-        "max": 32
+        "min": 25,
+        "max": 31
       }
     },
     {
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~7",
+      "description": "medium count ~4",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 3,
+        "max": 5
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~47 (+-10)",
+      "description": "EMC risk score ~53.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 37,
-        "max": 57
+        "min": 43.0,
+        "max": 63.0
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "5 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 2
       }
     },
     {

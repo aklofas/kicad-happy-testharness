@@ -34,7 +34,7 @@
       "incorrect": [
         {
           "description": "AVDD rail flagged as missing decoupling for RP2040 (U5) but AVDD typically has dedicated filtering via inductor - may be present but on a different net name",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U5"
@@ -44,7 +44,7 @@
         },
         {
           "description": "RC filter on OSC_OUT (1K + 30pF, fc=5.3MHz) is actually part of the crystal circuit load capacitor network, not a separate filter",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -54,27 +54,27 @@
       "missed": [
         {
           "description": "No encoder/rotary switch detection - board has 4 switches including encoder with A/B/switch signals",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "OLED/display interface not characterized despite being the primary function of this board",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "RP2040 boot mode configuration (USB boot vs flash boot) not analyzed",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

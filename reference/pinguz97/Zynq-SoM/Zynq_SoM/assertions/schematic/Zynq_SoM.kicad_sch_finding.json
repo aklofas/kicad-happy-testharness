@@ -9,63 +9,75 @@
       "description": "MPM3834/MPM3822 switching regulators correctly identified",
       "created_from": "FND-00000290",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000290-AST-02",
       "description": "TPS7A20 LDO correctly identified",
       "created_from": "FND-00000290",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000290-AST-03",
       "description": "DDR3L SDRAM interface correctly detected",
       "created_from": "FND-00000290",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
+      },
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     },
     {
       "id": "FND-00000290-AST-04",
       "description": "STM32G431 system controller crystal correctly detected",
       "created_from": "FND-00000290",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00000290-AST-05",
       "description": "INCORRECT: TPSM82864 (U8) feedback divider misidentified \u2014 R78/R79 (100k/100k) are STM32 ADC voltage monitoring dividers on +1V0 rail, not regulator FB divider. TPSM82864 FB pin ties directly to +1V0, voltage set via VSET pin R25.",
       "created_from": "FND-00000290",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U8$"
+        "pattern": "^U8$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000290-AST-06",
       "description": "RTL8211F Ethernet PHY interface not detected \u2014 custom lib_id MyLibrary:RTL8211F-CG not matched by Ethernet detector",
       "created_from": "FND-00000290",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_ethernet_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.ethernet_interfaces"
     }
   ]
 }

@@ -1,16 +1,17 @@
 {
   "file_pattern": "phantom_3_pro_gimbal_top_board.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~31 (tolerance 10%)",
+      "description": "Finding count ~38 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 34,
+        "max": 42
       }
     },
     {
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~12",
+      "description": "high count ~11",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 9,
+        "max": 13
       }
     },
     {
@@ -55,23 +56,23 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~10 (+-10)",
+      "description": "EMC risk score ~34.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 20
+        "min": 24.0,
+        "max": 44.0
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "13 decoupling finding(s)",
+      "description": "12 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 13
+        "value": 12
       }
     },
     {

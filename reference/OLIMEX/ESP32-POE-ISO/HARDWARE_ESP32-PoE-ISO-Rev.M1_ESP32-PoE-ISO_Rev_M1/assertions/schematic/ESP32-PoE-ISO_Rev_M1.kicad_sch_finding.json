@@ -9,7 +9,7 @@
       "description": "phy_reference=U4 (LAN8710A-EZC), connectors=[LAN_CON1 RJP-003TC1]. The magnetics list is empty, which is correct since this RJ45 has integrated magnetics (LPJ4112CNL). Accurate.",
       "created_from": "FND-00000539",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "All three dividers correctly identified with accurate resistor values, ratios, and mid-point connections. The U7 feedback divider shows is_feedback=true and connects to U7 FB pin correctly.",
       "created_from": "FND-00000539",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The file_version 20230121 corresponds to KiCad 7. The analyzer outputs 'unknown' rather than '7'. This is a minor cosmetic gap \u2014 the file is parsed correctly, but the version string could be more informative. Not a functional accuracy issue.",
       "created_from": "FND-00000539",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "This board is called 'PoE-ISO' specifically because it uses a galvanic isolation module (DCDC1, F0505S-2WR2) between the PoE input (Earth ground domain) and the board GND domain. The isolation_barriers list is empty. The board has two distinct ground references: 'Earth' (PoE/Ethernet side) and 'GND' (MCU side) with the DCDC1 bridging them. The detector should identify DCDC1 as an isolation barrier.",
       "created_from": "FND-00000539",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

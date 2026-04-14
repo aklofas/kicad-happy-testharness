@@ -17,40 +17,44 @@
         },
         {
           "description": "MIC5365-3.3YD5 is correctly detected as LDO with input_rail=VBUS and output_rail=+3.3V, estimated_vout=3.3, vref_source=fixed_suffix. This is accurate \u2014 the MIC5365-3.3 is a fixed 3.3V LDO powered from USB VBUS.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "value": "LDO",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         },
         {
           "description": "X2 (32kHz LSE) crystal correctly identifies load caps C19 and C16 (both 10pF), computes effective_load_pF=8.0 using the series formula (10p*10p)/(10p+10p)+3pF stray. This is correct and in typical range for a 32.768kHz watch crystal.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[1].effective_load_pF",
+            "path": "findings",
             "value": 8.0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_crystal_circuits[1].effective_load_pF"
           }
         },
         {
           "description": "D2 (USBLC6-2SC6) is correctly detected as esd_ic type protecting USB_D+, USB_D-, USBC_D+, USBC_D- nets. The USBLC6-2SC6 is a dual-data-line USB ESD suppressor in SOT-23-6, and its identification as esd_ic with 4 protected nets is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices[0].type",
+            "path": "findings",
             "value": "esd_ic",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_protection_devices[0].type"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The analyzer reports an LC filter with L2(10uH)+C14(4u7) sharing net 'SMPSFB'. In reality SMPSFB is the STM32WB55's internal SMPS feedback pin net, not a shared LC filter net. The inductor L2 and capacitor C14 form the buck converter output stage \u2014 the inductor connects SMPSLX to the output and C14 is the output bulk cap. Calling this an LC filter (resonant at 23.2kHz) is a misclassification; they share different nodes of the switching stage.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_lc_filters"
           }
         }
       ],

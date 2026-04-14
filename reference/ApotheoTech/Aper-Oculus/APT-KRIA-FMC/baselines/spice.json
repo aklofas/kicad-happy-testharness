@@ -2,41 +2,41 @@
   "APT-KRIA-FMC.kicad_sch.json": {
     "by_type": {
       "crystal_circuit": 1,
-      "decoupling": 2,
+      "decoupling": 7,
       "feedback_network": 8,
       "inrush": 10,
       "lc_filter": 1,
       "protection_device": 5,
-      "rc_filter": 9,
+      "rc_filter": 10,
       "regulator_feedback": 9,
       "snubber_circuit": 1,
-      "transistor_circuit": 3,
+      "transistor_circuit": 2,
       "voltage_divider": 23
     },
     "fail": 0,
-    "pass": 68,
-    "pass_rate": 94.4,
+    "pass": 72,
+    "pass_rate": 93.5,
     "skip": 0,
-    "total_sims": 72,
-    "warn": 4
+    "total_sims": 77,
+    "warn": 5
   },
   "APT-KRIA-FMC.sch.json": {
     "by_type": {
       "crystal_circuit": 1,
-      "decoupling": 2,
-      "lc_filter": 1,
+      "decoupling": 7,
+      "lc_filter": 2,
       "protection_device": 5,
-      "rc_filter": 11,
+      "rc_filter": 12,
       "regulator_feedback": 1,
       "transistor_circuit": 3,
       "voltage_divider": 24
     },
     "fail": 0,
-    "pass": 43,
-    "pass_rate": 89.6,
-    "skip": 1,
-    "total_sims": 48,
-    "warn": 4
+    "pass": 50,
+    "pass_rate": 90.9,
+    "skip": 0,
+    "total_sims": 55,
+    "warn": 5
   },
   "Arduino_Connector.sch.json": {
     "by_type": {},
@@ -142,16 +142,17 @@
   },
   "FMC_PWR.sch.json": {
     "by_type": {
-      "decoupling": 1,
-      "rc_filter": 6,
+      "decoupling": 2,
+      "lc_filter": 2,
+      "rc_filter": 16,
       "voltage_divider": 2
     },
     "fail": 0,
-    "pass": 9,
-    "pass_rate": 100.0,
-    "skip": 0,
-    "total_sims": 9,
-    "warn": 0
+    "pass": 17,
+    "pass_rate": 77.3,
+    "skip": 3,
+    "total_sims": 22,
+    "warn": 2
   },
   "Kria_Reset.kicad_sch.json": {
     "by_type": {},
@@ -163,12 +164,14 @@
     "warn": 0
   },
   "Kria_Reset.sch.json": {
-    "by_type": {},
+    "by_type": {
+      "rc_filter": 6
+    },
     "fail": 0,
-    "pass": 0,
-    "pass_rate": 0,
+    "pass": 6,
+    "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 0,
+    "total_sims": 6,
     "warn": 0
   },
   "MIPI_Conn.kicad_sch.json": {
@@ -217,26 +220,24 @@
     "warn": 0
   },
   "PL_Power.kicad_sch.json": {
-    "by_type": {
-      "rc_filter": 1
-    },
+    "by_type": {},
     "fail": 0,
-    "pass": 1,
-    "pass_rate": 100.0,
+    "pass": 0,
+    "pass_rate": 0,
     "skip": 0,
-    "total_sims": 1,
+    "total_sims": 0,
     "warn": 0
   },
   "PL_Power.sch.json": {
     "by_type": {
-      "decoupling": 1,
+      "decoupling": 2,
       "voltage_divider": 7
     },
     "fail": 0,
-    "pass": 8,
+    "pass": 9,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 8,
+    "total_sims": 9,
     "warn": 0
   },
   "PS_Clocks.kicad_sch.json": {
@@ -249,12 +250,14 @@
     "warn": 0
   },
   "PS_Clocks.sch.json": {
-    "by_type": {},
+    "by_type": {
+      "rc_filter": 16
+    },
     "fail": 0,
-    "pass": 0,
-    "pass_rate": 0,
+    "pass": 16,
+    "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 0,
+    "total_sims": 16,
     "warn": 0
   },
   "PS_Power.kicad_sch.json": {
@@ -282,34 +285,33 @@
   },
   "Power_Kria.kicad_sch.json": {
     "by_type": {
-      "decoupling": 2,
+      "decoupling": 6,
       "inrush": 2,
       "lc_filter": 1,
       "protection_device": 1,
-      "rc_filter": 2,
-      "transistor_circuit": 1
+      "rc_filter": 1
     },
     "fail": 0,
-    "pass": 8,
-    "pass_rate": 88.9,
+    "pass": 10,
+    "pass_rate": 90.9,
     "skip": 0,
-    "total_sims": 9,
+    "total_sims": 11,
     "warn": 1
   },
   "Power_Kria.sch.json": {
     "by_type": {
-      "decoupling": 2,
+      "decoupling": 6,
       "lc_filter": 1,
-      "rc_filter": 5,
+      "rc_filter": 3,
       "regulator_feedback": 1,
       "transistor_circuit": 1,
       "voltage_divider": 2
     },
     "fail": 0,
-    "pass": 9,
-    "pass_rate": 75.0,
-    "skip": 2,
-    "total_sims": 12,
+    "pass": 12,
+    "pass_rate": 85.7,
+    "skip": 1,
+    "total_sims": 14,
     "warn": 1
   },
   "SATA.kicad_sch.json": {
@@ -331,23 +333,27 @@
     "warn": 0
   },
   "SLVS-EC_FRAMOS.kicad_sch.json": {
-    "by_type": {},
+    "by_type": {
+      "decoupling": 1,
+      "rc_filter": 1
+    },
     "fail": 0,
-    "pass": 0,
-    "pass_rate": 0,
+    "pass": 2,
+    "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 0,
+    "total_sims": 2,
     "warn": 0
   },
   "SLVS-EC_FRAMOS.sch.json": {
     "by_type": {
+      "decoupling": 1,
       "rc_filter": 3
     },
     "fail": 0,
-    "pass": 3,
+    "pass": 4,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 3,
+    "total_sims": 4,
     "warn": 0
   },
   "SOM240_1.kicad_sch.json": {
@@ -400,26 +406,28 @@
   "UART_JTAG.sch.json": {
     "by_type": {
       "crystal_circuit": 1,
+      "rc_filter": 1,
       "voltage_divider": 7
     },
     "fail": 0,
-    "pass": 7,
-    "pass_rate": 87.5,
+    "pass": 8,
+    "pass_rate": 88.9,
     "skip": 0,
-    "total_sims": 8,
+    "total_sims": 9,
     "warn": 1
   },
   "USB-3_0.kicad_sch.json": {
     "by_type": {
       "decoupling": 1,
-      "protection_device": 4
+      "protection_device": 4,
+      "rc_filter": 1
     },
     "fail": 0,
     "pass": 5,
-    "pass_rate": 100.0,
+    "pass_rate": 83.3,
     "skip": 0,
-    "total_sims": 5,
-    "warn": 0
+    "total_sims": 6,
+    "warn": 1
   },
   "USB-3_0.sch.json": {
     "by_type": {

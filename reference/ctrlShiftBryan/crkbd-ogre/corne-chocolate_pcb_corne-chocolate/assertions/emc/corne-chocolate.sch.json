@@ -1,16 +1,17 @@
 {
   "file_pattern": "corne-chocolate.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~14 (tolerance 10%)",
+      "description": "Finding count ~8 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 7,
+        "max": 9
       }
     },
     {
@@ -35,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~11",
+      "description": "low count ~3",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 2,
+        "max": 4
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~83 (+-10)",
+      "description": "EMC risk score ~88.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 73,
-        "max": 93
+        "min": 78.5,
+        "max": 98.5
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "11 io_filtering finding(s)",
+      "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 11
+        "value": 3
       }
     },
     {
@@ -106,11 +107,11 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "~38 probe point(s) in test plan",
+      "description": "~30 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 34
+        "value": 27
       }
     },
     {

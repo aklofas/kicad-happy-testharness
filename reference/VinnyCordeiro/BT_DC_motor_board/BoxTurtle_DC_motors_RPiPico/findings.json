@@ -47,22 +47,24 @@
         },
         {
           "description": "J5 is a 3-pin connector (value 'AMS1117 module') that interfaces an AMS1117 3.3V LDO regulator module: pin 1 connects to +5V (input), pin 2 connects to +3.3V (output), pin 3 connects to GND. This is a 5V\u21923.3V regulator path and should appear in signal_analysis.power_regulators, but the list is empty.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "D1 (BAT85 Schottky diode) has its cathode on the +5V rail and its anode connected to pin 3 (common) of SW13 (SPDT switch K3-1204D). This is a steering/ORing diode that routes the SW13 selected output to the +5V rail. D2 is correctly detected as a protection device (reverse_polarity), but D1 is entirely absent from signal_analysis.protection_devices. Both diodes play analogous roles in the power steering topology and D1 should also appear there.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "D1"
-            }
+            },
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

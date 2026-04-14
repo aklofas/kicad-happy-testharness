@@ -19,31 +19,34 @@
       "incorrect": [
         {
           "description": "Three RC-network detections (R7+C8, R8+C8, R11+C8) at 48.23kHz share the same capacitor C8 (33pF) connected to the same node. R7, R8, and R11 are all 100k input resistors for op-amp U2 unit 1's summing junction, and C8 is a small compensation/stray capacitance cap across the summing node \u2014 not three independent RC filter stages. Reporting them as 3 separate RC filters overstates the filter count and mischaracterizes their function.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_value",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "The schematic has U1 (TL074, quad op-amp) used in 4 inverting/summing amplifier configurations, and U2 (TL072, dual op-amp) in 2 amplifier stages \u2014 totaling at least 6 op-amp circuit instances. These include input mixers (U1 units 1 and 2), resonance feedback (U1 unit 3 with R19 33K feedback resistor), output stage (U1 unit 4), and CV conditioning stages (U2 units 1 and 2). The analyzer reports opamp_circuits=0 for this analog synthesizer VCF schematic that is built predominantly around op-amp circuits.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_value",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "Multiple resistors connect op-amp outputs to their inverting inputs forming classic inverting amplifier feedback loops. For example: R19 (33K) in U1 unit 3 feedback path (resonance stage), R38 (51K) in U2 unit 2, R15/R16 (51K) forming the output summing stage feedback on U1 unit 2, R22 (51K) on U1 unit 4. These are standard op-amp feedback networks that should be detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "validate_feedback_stability"
           }
         },
         {
@@ -57,11 +60,12 @@
         },
         {
           "description": "The schematic has C9/C10 (100n) and C11/C12 (10uF) and C13/C14 (100nF) on the power entry section for \u00b115V rails \u2014 a typical eurorack bulk+bypass decoupling arrangement. The decoupling_analysis only reports 1 capacitor per rail (C9 for +15V, C10 for -15V) with 0.1uF each. C11/C12 (10uF bulk electrolytic), and C13/C14 (100nF ceramic) are not counted, so the bulk and high-frequency coverage assessment is incorrect: has_bulk=false and has_high_freq=false are wrong.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis.0.cap_count",
+            "path": "findings",
             "op": "min_value",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_decoupling_analysis.0.cap_count"
           }
         }
       ],

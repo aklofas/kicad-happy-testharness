@@ -1,16 +1,17 @@
 {
   "file_pattern": "T12_SolderingStationScreen.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~5 (tolerance 10%)",
+      "description": "Finding count ~6 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -25,33 +26,33 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "low count ~4",
+      "description": "low count ~3",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 2,
+        "max": 4
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~88 (+-10)",
+      "description": "EMC risk score ~90.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 78,
-        "max": 98
+        "min": 80.5,
+        "max": 100
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "4 io_filtering finding(s)",
+      "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -85,11 +86,11 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "~3 probe point(s) in test plan",
+      "description": "~2 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 2
+        "value": 1
       }
     },
     {

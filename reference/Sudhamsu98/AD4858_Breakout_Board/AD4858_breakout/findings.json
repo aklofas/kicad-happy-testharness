@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The LT1761-SD has an internal reference of 1.22V. For U7 (target +2V5 rail): R1=1.05K/R2=1K gives Vout=1.22*(1+1050/1000)=2.50V, but analyzer estimates 1.23V using 0.6V heuristic and flags a 50.8% vout_net_mismatch. For U6 (target +1V8 rail): R3=475/R4=1K gives Vout=1.22*(1+475/1000)=1.80V, but analyzer estimates 0.885V and again flags a mismatch. Both regulators are actually set correctly for their target rails; the mismatch observations are false positives caused by the wrong Vref assumption. The LT1761-SD datasheet specifies Vref=1.22V.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[0].estimated_vout",
+            "path": "findings",
             "op": "eq",
-            "value": 2.501
+            "value": 2.501,
+            "detector_filter": "detect_design_observations[0].estimated_vout"
           }
         }
       ],

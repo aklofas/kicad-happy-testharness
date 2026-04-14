@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "Key matrix correctly detected as 5 rows x 15 columns with 68 estimated keys, matching the 68 diodes in the schematic",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "Row nets ROW0-ROW4 and column nets COL0-COL14 correctly identified by net name pattern",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -67,7 +69,7 @@
         },
         {
           "description": "key_matrices shows switches_on_matrix=0 despite 91 switch symbols being present. The MX switches are the matrix switches but are not recognized because they are classified as relays instead of switches",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "detector": "key_matrices",
           "subject_refs": [],
           "expected_relation": "not_in_detector",

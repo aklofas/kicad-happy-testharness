@@ -9,7 +9,7 @@
       "description": "USB-C plug used as device without 5.1k CC pull-downs and without VBUS ESD protection or decoupling \u2014 all 4 failures are genuine design gaps. Series resistors on D+/D- correctly pass.",
       "created_from": "FND-00001147",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Q1-Q5 all identified as mosfet type, each switching an LED_*(-) drain net with source to GND_PWR. load_type='connector' is plausible since the LED strips are connected via J connectors.",
       "created_from": "FND-00001147",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The I2C bus between U3 (ESP32-C3-WROOM-02) and the TLC59116IRHBR LED driver via Driver_SDA/Driver_SCL is only detected in the control sub-schematic. The main schematic shows bus_analysis.i2c=[] even though the I2C nets and devices are present in its component list.",
       "created_from": "FND-00001147",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

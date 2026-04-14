@@ -2,93 +2,104 @@
   "file_pattern": "PCB.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 adc_circuits",
+      "description": "Exactly 2 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.adc_circuits",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 1 buzzer_speaker_circuits",
-      "check": {
-        "path": "signal_analysis.buzzer_speaker_circuits",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 8 design_observations",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 8
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 2 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 3 led_audit",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 3
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 1 led_driver_ics",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 detect_adc_circuits",
       "check": {
-        "path": "signal_analysis.led_driver_ics",
+        "path": "findings",
+        "detector_filter": "detect_adc_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 detect_buzzer_speakers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_buzzer_speakers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 8 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 1 detect_led_driver_ics",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_driver_ics",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 1 motor_drivers",
+      "description": "Exactly 1 detect_motor_drivers",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 transistor_circuits",
+      "description": "Exactly 2 detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Q2 in transistor_circuits",
+      "description": "Q2 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q2$"
@@ -96,12 +107,53 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Q3 in transistor_circuits",
+      "description": "Q3 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Exactly 1 detect_wireless_modules",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_wireless_modules",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Exactly 2 validate_i2c_bus",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_i2c_bus",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "Exactly 5 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 2 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 2
       }
     }
   ]

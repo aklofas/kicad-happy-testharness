@@ -53,11 +53,12 @@
         },
         {
           "description": "The AD8676xR is a dual op-amp. The analyzer detects 3 op-amp circuit entries (one for the power unit and two for the signal units), correctly identifying comparator_or_open_loop configuration for both signal units based on the absence of feedback resistors.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "value": 3,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
@@ -135,11 +136,12 @@
         },
         {
           "description": "D2 is a Neopixel_THT (WS2812-type) LED. The analyzer correctly detects an addressable LED chain of length 1 with protocol 'single-wire (WS2812)' and estimates 60mA current.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],

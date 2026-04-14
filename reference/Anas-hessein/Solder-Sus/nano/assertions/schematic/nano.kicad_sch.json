@@ -1,7 +1,8 @@
 {
   "file_pattern": "nano.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,65 +35,58 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 led_audit detected",
+      "description": "1 audit_led_circuits detected",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All led_audit have ref",
+      "description": "1 detect_pwm_led_dimming detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
+        "path": "findings",
+        "detector_filter": "detect_pwm_led_dimming",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "All led_audit type values are valid",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "2 suggested_certifications detected",
+      "description": "3 detect_transistor_circuits detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "3 transistor_circuits detected",
+      "description": "All detect_transistor_circuits have reference present",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "All transistor_circuits have reference present",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"

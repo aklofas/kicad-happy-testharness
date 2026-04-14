@@ -19,11 +19,13 @@
       "description": "On the +5V rail, C7 and C8 have value 'NA(22uF/6.3V/0603)' \u2014 the 'NA' prefix followed by the actual spec in parentheses. The capacitance parser cannot extract '22uF' from this non-standard format, so these caps are excluded from the decoupling_analysis. Only C13 (value '100nF', directly parseable) is found, giving a total of 0.1uF with has_bulk=false. The design_observations then incorrectly warns that there is no bulk capacitance on +5V. The same issue affects Rev A1. The parser should attempt to extract capacitance values from parenthetical content in 'NA(...)' formatted values.",
       "created_from": "FND-00002142",
       "check": {
-        "path": "signal_analysis.decoupling_analysis[0].has_bulk",
+        "path": "findings[0].has_bulk",
         "op": "equals",
-        "value": false
+        "value": false,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[0].has_bulk"
     }
   ]
 }

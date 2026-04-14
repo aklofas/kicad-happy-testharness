@@ -2,39 +2,44 @@
   "file_pattern": "Horse_5Bridge.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 connector_ground_audit",
+      "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 7 esd_coverage_audit",
+      "description": "Exactly 7 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 7
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 5 protection_devices",
+      "description": "Exactly 5 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 5
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "F1 in protection_devices",
+      "description": "F1 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F1$"
@@ -42,9 +47,10 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "F2 in protection_devices",
+      "description": "F2 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F2$"
@@ -52,9 +58,10 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "F3 in protection_devices",
+      "description": "F3 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F3$"
@@ -62,9 +69,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "F4 in protection_devices",
+      "description": "F4 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F4$"
@@ -72,9 +80,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "F5 in protection_devices",
+      "description": "F5 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F5$"
@@ -82,9 +91,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }

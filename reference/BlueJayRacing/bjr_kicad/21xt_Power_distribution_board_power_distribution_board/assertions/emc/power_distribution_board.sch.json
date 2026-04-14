@@ -1,7 +1,8 @@
 {
   "file_pattern": "power_distribution_board.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~3",
+      "description": "medium count ~2",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 1,
+        "max": 3
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~80 (+-10)",
+      "description": "EMC risk score ~84.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 70,
-        "max": 90
+        "min": 74.5,
+        "max": 94.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {

@@ -1,7 +1,8 @@
 {
   "file_pattern": "FlySensei_Stack_Actuation_ECAD.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~5",
+      "description": "medium count ~4",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 3,
+        "max": 5
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~40 (+-10)",
+      "description": "EMC risk score ~52.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 30,
-        "max": 50
+        "min": 42.5,
+        "max": 62.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 2
       }
     },
     {

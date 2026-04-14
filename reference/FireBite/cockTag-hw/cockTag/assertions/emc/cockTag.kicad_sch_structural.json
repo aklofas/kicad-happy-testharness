@@ -2,6 +2,7 @@
   "file_pattern": "cockTag.kicad_sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -91,12 +92,12 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Rule DC-002 present",
+      "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-002$"
+        "pattern": "^DC\\-001$"
       }
     },
     {
@@ -151,6 +152,26 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "C13 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC13\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "C8 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",

@@ -9,7 +9,7 @@
       "description": "The power_regulators section correctly identifies IC1 as an LDO converting +5V to +3.3V, with correct topology='LDO', input_rail='+5V', output_rail='+3V3', estimated_vout=3.3.",
       "created_from": "FND-00000555",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "crystal_circuits correctly identifies Y1 (ECS-.327-9-34QCS-TR) with load caps C3 and C4 both 12pF, effective_load_pF=9.0, which is the standard series calculation ((12*12)/(12+12) + ~3pF stray).",
       "created_from": "FND-00000555",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "16 total components: 7 caps, 3 resistors, 2 ICs (BT840F + LP5912), 1 crystal, 1 LED_RGBC, 2 connectors. All match the schematic source.",
       "created_from": "FND-00000555",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "IC1 pin 4 (EN) is on __unnamed_58 with point_count=1 and IC1 pin 3 (PG) is on __unnamed_57 with point_count=1 \u2014 both single-point unconnected nets. The LP5912 EN pin floating means enable state is indeterminate; PG floating means the power-good signal is unused. The design_observations section flags some single-pin nets but IC1's floating EN/PG are not specifically called out as a design concern.",
       "created_from": "FND-00000555",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -50,7 +50,7 @@
       "description": "The schematic has both '+3.3V' and '+3V3' power symbols that refer to the same physical 3.3V rail from IC1, but the analyzer treats them as separate rails. The +3V3 net has IC1 output and C1/C2 (input decoupling), while +3.3V has J2 connector, C7, and BT840F VDD bypass. The +3.3V net does not connect to U1 VDD at all in the net list (U1 VDD is __unnamed_3), suggesting the BT840F VDD connection is also affected by the pin-mapping error.",
       "created_from": "FND-00000555",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

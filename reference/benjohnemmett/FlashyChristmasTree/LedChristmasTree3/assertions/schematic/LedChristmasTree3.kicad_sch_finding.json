@@ -9,7 +9,7 @@
       "description": "16 components (2R, 9LED, 1BAT, 2C, 2IC) correctly identified. BOM grouped correctly. All refs present.",
       "created_from": "FND-00000552",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "PWR, GND, CLK, led_1..led_8 nets all correctly mapped. 4017 Q0-Q7 outputs to LEDs D2-D9 correctly traced. CLK net between NE555 pin 3 and 4017 pin 14 correct.",
       "created_from": "FND-00000552",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "U1 pins 9 (Q8), 11 (Q9), and 12 (Cout) are connected only to single-pin unnamed nets (__unnamed_3, __unnamed_4, __unnamed_5) with no other connections. These should appear in connectivity_issues.unconnected_pins or single_pin_nets but both arrays are empty.",
       "created_from": "FND-00000552",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -40,7 +40,7 @@
       "description": "The NE555P is wired as a classic astable oscillator (pins 2+6 shorted to RC timing network, pin 7 DIS to resistor junction, output on pin 3 drives CLK). No oscillator or clock_generator entry appears in signal_analysis. The 555 timer astable configuration is a common, detectable pattern.",
       "created_from": "FND-00000552",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -51,7 +51,7 @@
       "description": "D2-D9 anodes connect directly to 4017 Q-outputs (no series resistors), with cathodes to GND. There is only one resistor (R12, 2k7) in the PWR domain, not on LED paths. The analyzer does not flag the missing LED current-limiting resistors, which is a real design concern.",
       "created_from": "FND-00000552",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

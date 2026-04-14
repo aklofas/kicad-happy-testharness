@@ -20,11 +20,12 @@
       "missed": [
         {
           "description": "The schematic is explicitly titled '4 Channel Active RF Splitter, V2' and contains a BGA2815 RF amplifier (NXP broadband gain stage), three TCP-2-25X+ RF splitter ICs (Mini-Circuits), and five 50-ohm UMC coaxial connectors. The signal_analysis.rf_chains and rf_matching arrays are both empty. The BGA2815 and TCP-2-25X splitters should trigger rf_chain or rf_matching detection given their known RF component values and 50-ohm coaxial connectors. This is a clear false negative for a purpose-built RF distribution board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           }
         }
       ],
@@ -57,11 +58,12 @@
       "missed": [
         {
           "description": "The clock_source_4chan design uses a 5PB1104PGxx clock buffer IC (IDT, nominal 50-ohm input/output) to distribute a TCXO signal to four outputs via 50-ohm UMC coaxial connectors. The schematic notes explicitly state '5PB1104 is nominal 50 Ohm input/output impedance'. The rf_chains and rf_matching arrays are empty. A clock buffer with 50-ohm coaxial outputs is effectively an RF distribution chain and should be detected as such, or at minimum as a clock distribution network.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           }
         }
       ],

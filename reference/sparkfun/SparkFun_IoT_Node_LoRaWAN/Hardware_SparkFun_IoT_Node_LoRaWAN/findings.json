@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "RT9080-3.3 (U7) correctly identified as fixed 3.3V LDO regulator via value suffix parsing",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -24,12 +25,13 @@
         },
         {
           "description": "Y1 12MHz crystal with C5=15pF and C2=15pF load caps correctly detected, effective load 10.5pF",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -42,12 +44,13 @@
         },
         {
           "description": "D1 and D3 DT1042-04SO correctly identified as USB ESD protection on USB_D+/USB_D- and XBLR_USB_D+/XBLR_USB_D- lines",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -59,12 +62,13 @@
         },
         {
           "description": "Q1 DMG2305UX correctly identified as P-channel MOSFET power switch controlled by gate on __unnamed_34",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -75,11 +79,12 @@
         },
         {
           "description": "WS2812B_CBI (D4) addressable LED chain correctly detected on LED_IN net",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           },
           "detector": "addressable_led_chains",
           "subject_refs": [
@@ -99,11 +104,12 @@
         },
         {
           "description": "9 decoupling rails analyzed including 3.3V, 1.1V, 3.3V_XBLR, VBATT, VDDA",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -121,11 +127,12 @@
         },
         {
           "description": "Design observations correctly flag missing I2C pull-ups on SDA/SCL and missing input cap on U7",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -139,12 +146,13 @@
       "missed": [
         {
           "description": "MCP73831 (U8) single-cell LiPo battery charger from VUSB not detected as battery management component",
-          "analyzer_section": "signal_analysis.bms_systems",
+          "analyzer_section": "detect_bms_systems",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^U8$"
+            "pattern": "^U8$",
+            "detector_filter": "detect_bms_systems"
           },
           "detector": "bms_systems",
           "subject_refs": [
@@ -155,12 +163,13 @@
         },
         {
           "description": "MAX17048 (U9) I2C fuel gauge for battery monitoring not detected",
-          "analyzer_section": "signal_analysis.bms_systems",
+          "analyzer_section": "detect_bms_systems",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^U9$"
+            "pattern": "^U9$",
+            "detector_filter": "detect_bms_systems"
           },
           "detector": "bms_systems",
           "subject_refs": [
@@ -171,11 +180,12 @@
         },
         {
           "description": "I2C bus on SDA/SCL connecting U1 (RP2350A) and U9 (MAX17048) with pull-up jumper JP7 not detected as bus interface",
-          "analyzer_section": "signal_analysis.bus_interfaces",
+          "analyzer_section": "detect_bus_interfaces",
           "check": {
-            "path": "signal_analysis.bus_interfaces",
+            "path": "findings",
             "op": "equals",
-            "value": 7
+            "value": 7,
+            "detector_filter": "detect_bus_interfaces"
           },
           "detector": "bus_interfaces",
           "subject_refs": [
@@ -188,12 +198,13 @@
         },
         {
           "description": "QSPI flash interface (U2 W25Q128JVPIM) and QSPI PSRAM interface (U3 APS6404L-3SQR-ZR) not detected as memory buses",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -205,11 +216,12 @@
         },
         {
           "description": "Dual USB-C interfaces with CH340C (U5) USB-UART bridge for both RP2350 and XBLR module not detected as USB buses",
-          "analyzer_section": "signal_analysis.bus_interfaces",
+          "analyzer_section": "detect_bus_interfaces",
           "check": {
-            "path": "signal_analysis.bus_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_interfaces"
           },
           "detector": "bus_interfaces",
           "subject_refs": [
@@ -220,11 +232,12 @@
         },
         {
           "description": "XBee LR LoRaWAN module (U4) not detected as RF/radio component despite being a LoRaWAN transceiver",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [

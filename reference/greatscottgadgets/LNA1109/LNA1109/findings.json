@@ -28,12 +28,13 @@
       "incorrect": [
         {
           "description": "U3 (LNA, BGB741L7ESD) falsely classified as power_regulator with topology=unknown. This is the core low-noise amplifier, not a voltage regulator. The fb_net assignment to an RF signal net is incorrect.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -44,7 +45,7 @@
         },
         {
           "description": "4 false positive crystal circuits detected. The LNA1109 has no crystals or oscillators - all active components are RF switches and an amplifier. The crystal detector is likely matching on capacitor-inductor networks near ICs.",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -60,7 +61,7 @@
         },
         {
           "description": "RF chain shows 0 connections between the amplifier and filter, meaning the signal path U1->U3->U4->U2 is not traced",
-          "analyzer_section": "signal_analysis.rf_chains.connections",
+          "analyzer_section": "detect_rf_chains.connections",
           "detector": "rf_chains",
           "subject_refs": [
             "U1",
@@ -75,11 +76,12 @@
       "missed": [
         {
           "description": "Complete RF signal path not traced: SMA_IN -> TVS -> RF_switch_U1 -> matching -> LNA_U3 -> SAW_U4 -> RF_switch_U2 -> SMA_OUT. Only fragments detected.",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],
@@ -88,20 +90,21 @@
         },
         {
           "description": "The bypass/enable path controlled by R1 (3k) and R2 (470) for the LNA bias is not identified as an LNA bias network",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Operating frequency of 1090 MHz (ADS-B) not inferred from the SAW filter FAR-F5QA part number or from the matching network component values",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],

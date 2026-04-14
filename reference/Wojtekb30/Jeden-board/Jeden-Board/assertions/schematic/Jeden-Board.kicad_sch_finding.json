@@ -9,7 +9,7 @@
       "description": "ATmega328-P and FT232RL classified as 'ic', Y2 (XO57CRECNA16M) classified as 'crystal', J7 (USB4235) detected as USB connector, D2 (PTVS5V0Z1USKP) correctly identified as TVS protection on VCC. Missing MPN correctly flagged for parts where the MPN field is blank (value field used as part reference only).",
       "created_from": "FND-00000654",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Y2 is a 4-pin TCXO/oscillator module (GND/VDD/OUTPUT/TRI-STATE), not a 2-pin bare crystal. Oscillator modules do not need load caps, so the crystal_circuits detector correctly produces no result. PWR_FLAG warnings for VCC/GND are legitimate ERC findings.",
       "created_from": "FND-00000654",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "U2.TXD connects to U1.PD0 and U2.RXD to U1.PD1 via unnamed wired nets. The bus_analysis UART detector requires net labels (TX/RX name patterns) to trigger; unnamed nets with matching pin names on the connected IC are not detected. bus_analysis.uart is empty.",
       "created_from": "FND-00000654",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

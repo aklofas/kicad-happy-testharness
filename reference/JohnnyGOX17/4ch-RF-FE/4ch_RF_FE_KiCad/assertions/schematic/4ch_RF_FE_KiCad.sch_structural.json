@@ -2,48 +2,54 @@
   "file_pattern": "4ch_RF_FE_KiCad.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 11 decoupling_analysis",
+      "description": "Exactly 6 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "equals",
-        "value": 11
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 18 design_observations",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 18
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 6 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 6
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 2 lc_filters",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 11 detect_decoupling",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 11
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 18 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 18
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 2 detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "L9 in lc_filters",
+      "description": "L9 in detect_lc_filters",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L9$"
@@ -51,9 +57,10 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "L10 in lc_filters",
+      "description": "L10 in detect_lc_filters",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L10$"
@@ -61,27 +68,30 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 1 level_shifters",
+      "description": "Exactly 1 detect_level_shifters",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U6 in power_regulators",
+      "description": "U6 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U6$"
@@ -89,18 +99,20 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 2 protection_devices",
+      "description": "Exactly 2 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "F1 in protection_devices",
+      "description": "F1 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F1$"
@@ -108,9 +120,10 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "F14 in protection_devices",
+      "description": "F14 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F14$"
@@ -118,18 +131,20 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 2 rc_filters",
+      "description": "Exactly 2 detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R2 in rc_filters",
+      "description": "R2 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R2$"
@@ -137,9 +152,10 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R3 in rc_filters",
+      "description": "R3 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R3$"
@@ -147,39 +163,63 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 1 rf_chains",
+      "description": "Exactly 1 detect_rf_chains",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
+        "detector_filter": "detect_rf_chains",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 1 voltage_dividers",
+      "description": "Exactly 1 detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000019",
-      "description": "R7 in voltage_dividers",
+      "description": "R7 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "Exactly 6 validate_i2c_bus",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_i2c_bus",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "Exactly 9 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 9
       }
     }
   ]

@@ -9,7 +9,7 @@
       "description": "All 38 components are correctly identified including 3 RS485 ICs (U301/U302/U303), 3 RJ45 connectors, 3 TVS diodes (SM712), 3 2-pin connectors, 18\u00d710K resistors, 3\u00d7120R termination resistors, 4\u00d70.1uF capacitors, and 1 solder jumper. U301 and U303 (MAX485E) are correctly detected as RS485 transceivers with proper A/B differential pair nets and control signals. The ERC warnings for RX-485 multi-driver and no-driver nets on RS485_VCC, RE-485, TX-485, and DE-485 are accurate \u2014 these signals are driven from the ESP32 sub-sheet via global labels. BOM correctly groups 18 resistors as 10K and 3 as 120R.",
       "created_from": "FND-00000518",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The design has three RS485 transceivers: U301 and U303 (MAX485E) plus U302 (MAX3486). The analyzer's RS485 detector found U301 and U303 but missed U302. U302 has identical pin function to MAX485E (pins 1=RO, 2=~RE, 3=DE, 4=DI, 6=A, 7=B, 8=VCC) and is connected to the same RS485 bus via nets A1/B1 for its differential pair. The likely cause is that the detector pattern-matches on the value or lib_id and covers 'MAX485' but not 'MAX3486'. Both share the Interface_UART library. This should be a third rs485 entry with transceiver='U302', a_net='A1', b_net='B1'.",
       "created_from": "FND-00000518",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

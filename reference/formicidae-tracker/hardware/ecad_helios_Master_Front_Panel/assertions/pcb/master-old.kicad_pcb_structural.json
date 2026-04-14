@@ -2,6 +2,7 @@
   "file_pattern": "master-old.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -244,18 +245,20 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "Exactly 8 thermal_analysis.thermal_pads",
+      "description": "Exactly 8 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 8
       }
     },
     {
       "id": "STRUCT-00000026",
-      "description": "U14 in thermal_analysis.thermal_pads",
+      "description": "U14 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U14$"
@@ -263,19 +266,21 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "U9 in thermal_analysis.thermal_pads",
+      "description": "U19 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
-        "pattern": "^U9$"
+        "pattern": "^U19$"
       }
     },
     {
       "id": "STRUCT-00000028",
-      "description": "U4 in thermal_analysis.thermal_pads",
+      "description": "U4 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U4$"
@@ -283,58 +288,10 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "U19 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U19$"
-      }
-    },
-    {
-      "id": "STRUCT-00000030",
-      "description": "Exactly 8 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 8
-      }
-    },
-    {
-      "id": "STRUCT-00000031",
-      "description": "U14 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U14$"
-      }
-    },
-    {
-      "id": "STRUCT-00000032",
-      "description": "U19 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U19$"
-      }
-    },
-    {
-      "id": "STRUCT-00000033",
-      "description": "U4 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000034",
       "description": "U9 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U9$"

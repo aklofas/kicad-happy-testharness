@@ -12,20 +12,21 @@
         },
         {
           "description": "Key matrix correctly detected as 5x15 with 60 switches and 60 diodes",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "detector": "key_matrices",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "Q1 BSS138 transistor correctly identified with gate/source/drain nets",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q1"
@@ -33,15 +34,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "SWD debug interface correctly detected on J3",
-          "analyzer_section": "signal_analysis.debug_interfaces",
+          "analyzer_section": "detect_debug_interfaces",
           "detector": "debug_interfaces",
           "subject_refs": [
             "J3"
@@ -65,7 +67,7 @@
         },
         {
           "description": "Addressable LED chain detection fragmented: 56 WS2812C-2020 LEDs form single daisy chain but analyzer reports 55+ separate entries with LED27 repeated. Chain-tracing fails across sub-sheet.",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "detector": "addressable_led_chains",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -83,7 +85,7 @@
       "missed": [
         {
           "description": "Q1 BSS138 with R1/R2 pull-ups is a bidirectional MOSFET level shifter (3V3 to 5V for WS2812 data) but level_shifters is empty",
-          "analyzer_section": "signal_analysis.level_shifters",
+          "analyzer_section": "detect_level_shifters",
           "detector": "level_shifters",
           "subject_refs": [
             "Q1",
@@ -95,7 +97,7 @@
         },
         {
           "description": "VBUS->F1->DS1->VCC power path (fuse + Schottky for USB protection) not in power_path",
-          "analyzer_section": "signal_analysis.power_path",
+          "analyzer_section": "detect_power_path",
           "detector": "power_path",
           "subject_refs": [
             "DS1",

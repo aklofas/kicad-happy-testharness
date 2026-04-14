@@ -9,7 +9,7 @@
       "incorrect": [
         {
           "description": "UART detector misclassifies USB 3.1 SuperSpeed signals as UART",
-          "analyzer_section": "signal_analysis.bus_interfaces",
+          "analyzer_section": "detect_bus_interfaces",
           "detector": "bus_interfaces",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -19,11 +19,12 @@
       "missed": [
         {
           "description": "18 test pads not detected as test points - gen_testpad library symbol not recognized",
-          "analyzer_section": "signal_analysis.test_points",
+          "analyzer_section": "detect_test_points",
           "check": {
-            "path": "signal_analysis.test_points",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_test_points"
           },
           "detector": "test_points",
           "subject_refs": [],

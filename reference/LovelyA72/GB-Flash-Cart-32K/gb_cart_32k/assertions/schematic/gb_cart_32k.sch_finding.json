@@ -9,7 +9,7 @@
       "description": "5 components (U1, C1, R1, R2, P1), 4 types, all correctly identified with proper values and footprints.",
       "created_from": "FND-00000556",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Both power rails extracted; decoupling analysis correctly finds C1 100n on VCC.",
       "created_from": "FND-00000556",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "Source has 3 explicit NoConn markers (lines 16-18) plus one on RAM_CE (line 256), totaling 4. Output reports total_no_connects: 4.",
       "created_from": "FND-00000556",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "All 29 nets correctly enumerated: GND, VCC, WE, ROM_OE, RAM_CE, D0-D7 (8), A0-A15 (16). Net count matches source.",
       "created_from": "FND-00000556",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "U1 is a SST39SF010 parallel flash with A0-A15 address bus and D0-D7 data bus connected via global labels. The memory_interfaces detector returned empty despite a clear parallel memory topology.",
       "created_from": "FND-00000556",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -60,7 +60,7 @@
       "description": "R1 pulls WE to VCC (10K) and R2 pulls ROM_OE to VCC (10K). These are classic active-low signal pull-ups but protection_devices and passive_warnings are both empty. The subcircuits entry for U1 also shows empty neighbor_components, missing the associated passives.",
       "created_from": "FND-00000556",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

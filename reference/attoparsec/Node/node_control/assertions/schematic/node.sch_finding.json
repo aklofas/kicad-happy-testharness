@@ -9,7 +9,7 @@
       "description": "66 total components, 58 nets, crystal Y1 with correct 22pF load caps (effective 14pF), ATmega328P and L7805 both identified as ICs. BOM grouping is accurate. Schottky diodes (Bat85) and their clamp circuit topology correctly parsed.",
       "created_from": "FND-00000990",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The design has nets MISO_DPIN_12, SCK_DPIN_13, and MOSI_PWM_DPIN_11 \u2014 clear SPI signal names on an ATmega328P. bus_analysis.spi is empty. The UART is detected (TX_DPIN_1, RX_DPIN_0) so naming-based detection works for UART but missed SPI. The SPI nets only connect to resistors (not to a clearly identified SPI slave IC), which may explain the miss, but the SPI signals should at least be flagged.",
       "created_from": "FND-00000990",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

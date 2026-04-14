@@ -9,11 +9,13 @@
       "description": "boost.sch implements a discrete boost converter using an IRF740 power MOSFET (Q1, lib_id: Transistor_FET:IRF740), a 470uH inductor (L1), a HER106 rectifier diode (D9), a 4.7uF/350V output capacitor (C9), a gate resistor R2 (22 ohm), and a voltage divider (R1=300k / R4=4.7k) for feedback. The analyzer detects the voltage divider correctly but reports transistor_circuits: []. The IRF740 is a well-known TO-220 power MOSFET and this is a straightforward switched-mode boost converter topology that should be detectable as a transistor switching circuit.",
       "created_from": "FND-00000331",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

@@ -9,14 +9,16 @@
       "description": "INCORRECT: U1 (LM7805_TO220) is reported with topology='LDO'. The LM7805 is a fixed-output linear regulator with approximately 2 V dropout \u2014 it is not a low-dropout device. The correct topology classification is 'linear' or 'linear_fixed'. This same issue applies to the NCP1117-3.3 in Touch_Keyboard which is labeled LDO (it genuinely is an LDO), so the classifier does not distinguish between fixed linear regulators and true LDOs.",
       "created_from": "FND-00001618",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "ref": "U1",
           "topology": "LDO"
-        }
+        },
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001618-AST-02",
@@ -37,25 +39,29 @@
       "description": "INCORRECT: The design_observations entry for U1 states missing_caps with both input rail '__unnamed_2' and output rail '5V'. In reality: C1 (0.1 \u00b5F) and C2 (1000 \u00b5F) are connected to the input rail (__unnamed_2, which is U1's VI pin), and C3 (470 \u00b5F) is connected to the output rail (5V, U1's VO pin). The caps are present but the analyzer fails to find them, likely because the input rail is unnamed ('__unnamed_2') and the detection logic may require a named power rail to match caps to a regulator's input.",
       "created_from": "FND-00001618",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "regulator_caps",
           "component": "U1"
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001618-AST-04",
       "description": "D1, D2, D3, D4 form a classic full-bridge rectifier: D1(A=unnamed_1, K=unnamed_2) and D2(A=unnamed_6, K=unnamed_2) conduct on alternate half-cycles into the rectified DC-positive node (unnamed_2); D3(A=GND, K=unnamed_1) and D4(A=GND, K=unnamed_6) provide the return paths. The analyzer outputs bridge_circuits=[] despite all four diodes being correctly parsed. This is the core circuit topology of the transformerless power supply.",
       "created_from": "FND-00001618",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     }
   ]
 }

@@ -9,7 +9,7 @@
       "incorrect": [
         {
           "description": "SMA connectors treated as antennas by rf_matching detector -- SMA in RF test equipment are signal I/O ports, not antennas",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "detector": "rf_matching",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -19,11 +19,12 @@
       "missed": [
         {
           "description": "RF chain with 7+ components (ADRF5042, ADRF5730, MAAM-011109 x2, ATS2012, LTC5596, FPC07181) returns empty rf_chains -- keywords miss ADRF/ADMV/MAAM families",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],
@@ -32,11 +33,12 @@
         },
         {
           "description": "No attenuator category in RF chain detection -- ATS2012, ADRF5730, HMC424 are common RF attenuators with no detection category",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],
@@ -54,11 +56,12 @@
         },
         {
           "description": "PLL loop filter not detected -- R/C networks on LMX2592/LMX2820 CPout pins form classic passive loop filters detected only as individual rc_filters",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],

@@ -17,71 +17,77 @@
         },
         {
           "description": "U12 (STLQ015-3.3, VBATT\u2192M_BACKUP), U7 (AP7361C-3.3V, VRAW\u21923.3V_P), and U11 (AP2112K-3.3, VRAW\u21923.3V) are all correctly identified as LDO regulators with accurate input/output rail assignments and 3.3V output voltage inferred from the part suffix.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Y1 (24MHz) is correctly detected with two 18pF load capacitors (C14, C15). The effective load capacitance of 12pF is correctly calculated using the series formula (18pF/2 = 9pF per cap in series, effective = 9pF + 3pF stray \u2248 12pF), and the in_typical_range flag is correctly true.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "Three voltage dividers are correctly identified: R19/R20 (100k/100k, VUSB\u2192VBUS_DET) for USB hub VBUS detection, R7/R8 (1k/4.7k, 3.3V\u2192ESP35/DeviceSense) for device sense, and R35/R39 (1k/10k, drain\u2192GND) in the FastOff control circuit. All ratios and mid-point connections are correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "D1 (PESD0402) is correctly identified as protecting the MOSAIC_RF_IN net (GNSS RF antenna input) and D2 (DF5A5.6LFU, 4-line ESD array) protecting SD_CLK, SD_CMD, and SD_DATA. Both protection devices have correct clamp nets and protected net lists.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "Q3 (BSS138) is correctly classified as a level_shifter topology: the gate is driven by the 1.8V rail (mosaic-X5 logic), the drain connects to MPPS_3V3 (3.3V-side), and the source connects to MPPS (1.8V-side). Gate resistor R12 (2.2k) is correctly associated.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "reference": "Q3",
               "topology": "level_shifter"
-            }
+            },
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "The design observation correctly identifies that the ESP21/SDA and ESP22/SCL I2C buses (shared between ESP32 U1, mux U13, and fuel gauge U4) have no dedicated pullup resistors in the schematic. The Qwiic connectors J3 are expected to source pullups externally. The R3 (2.2k) on SDA is a UART/control circuit resistor, not an I2C pullup.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "i2c_bus",
               "has_pullup": false
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The main schematic analysis includes C3 from both sheet 0 (main, 1.0uF on the ESP~{RST} net) and sheet 2 (GNSS subsheet, 0.1uF). The RC filter detector picks up the GNSS subsheet's C3 (0.1uF) for two filter instances involving R1 and R11 on the ESP~{RST} net, when the actual C3 on that net is 1.0uF from the main sheet. This causes incorrect cutoff frequency reporting (159.15 Hz should be 15.92 Hz for 1.0uF). The BOM correctly uses the sheet-0 value (1.0uF), but signal analysis does not.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "resistor": {
@@ -90,27 +96,30 @@
               "capacitor": {
                 "value": "0.1uF"
               }
-            }
+            },
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "The design uses U10 (MCP73833) as a LiPo battery charger (VUSB\u2192VBATT) and U4 (MAX17048) as a fuel gauge (monitoring VBATT). Together with the LiPo battery connector J2 and the STLQ015 backup regulator, this constitutes a battery management system. The bms_systems detector returns an empty list. MCP73833 is also not detected as a power regulator (it is a charger, not a linear regulator, so this may be by design), but the combined charger+gauge system should be flagged.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bms_systems"
           }
         },
         {
           "description": "The schematic has explicit SD_CMD, SD_CLK, and SD_DATA nets connected between the mosaic-X5 GNSS receiver (U2), SD card connector (J4), and ESD protection (D2). The memory_interfaces detector returns an empty list. An SPI/SD card interface should be detected from these named nets and the associated pull-up resistors R37 and R38.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],
@@ -131,11 +140,12 @@
       "correct": [
         {
           "description": "Y1 (24MHz) for the USB251xB USB hub crystal oscillator is correctly detected with 18pF load caps (C14, C15). The USB schematic correctly identifies U3 (CH340C) and U9 (USB251xB) as ICs, and the voltage divider R19/R20 for VBUS detection is correctly found.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],
@@ -158,15 +168,16 @@
       "correct": [
         {
           "description": "D1 (PESD0402) on the MOSAIC_RF_IN net is correctly classified as an ESD protection diode with GND as the clamp net. The mosaic-X5 GNSS receiver (U2) and the RF antenna connector (J1) appear in context.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "D1",
               "type": "diode",
               "protected_net": "MOSAIC_RF_IN"
-            }
+            },
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
@@ -189,11 +200,12 @@
       "correct": [
         {
           "description": "F1 (6V/0.5A/1A on VBATT line) and F3 (6V/2.0A/4.0A on VUSB line) are correctly detected as fuse-type protection devices. The DT1042-04SO 4-line ESD protector D1 is correctly identified as an esd_ic protecting USB_DM, USB_DP, and the additional VBUS/battery lines.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -209,15 +221,16 @@
       "incorrect": [
         {
           "description": "The usb_data design observation for USB_DP reports has_esd_protection=false, but this is wrong. The DT1042-04SO (D1) pin 6 is connected directly to USB_DP as confirmed by net analysis. The protection_devices entry correctly lists USB_DP in D1's protected_nets. There is an inconsistency between the protection_devices detection (correct) and the usb_data observation (incorrect).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "category": "usb_data",
               "net": "USB_DP",
               "has_esd_protection": false
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -239,30 +252,32 @@
       "correct": [
         {
           "description": "R2 (10k) + C7 (1.0uF) forming a 15.92 Hz low-pass filter on the OLED RESET line is correctly detected. The reset_pin design observation for U1 (OLED) correctly identifies the pullup and filter capacitor. The RC filter cutoff of 15.92 Hz is accurate for 10k/1.0uF.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "resistor": {
                 "ref": "R2"
               },
               "cutoff_hz": 15.92
-            }
+            },
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The i2c_bus design observation for the SDA net lists U1 twice in the devices array because the OLED (SSD1306 compatible) has two pins (pin 17 = D1/MOSI and pin 18 = D2) connected to the SDA net in I2C mode. While technically accurate at the pin level, reporting a single component twice in the device list is misleading for I2C bus analysis.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "i2c_bus",
               "net": "SDA"
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

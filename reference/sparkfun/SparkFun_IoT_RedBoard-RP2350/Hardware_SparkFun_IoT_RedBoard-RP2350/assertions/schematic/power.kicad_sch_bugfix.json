@@ -9,11 +9,13 @@
       "issue": "KH-108",
       "fix_type": "false_positive_fix",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "value",
-        "pattern": "LM66200"
-      }
+        "pattern": "LM66200",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "BUGFIX-KH-107-01",
@@ -21,10 +23,12 @@
       "issue": "KH-107",
       "fix_type": "false_positive_fix",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 5
-      }
+        "value": 5,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

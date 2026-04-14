@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The analyzer correctly identifies C4(4.7uF) and C5(100nF) on +1V8, and C2(4.7uF) and C3(1uF) on +3.3V. C1(1uF) is correctly omitted from decoupling because its pin1 connects to an eMMC NC pad row (at y=130.81 in schematic coordinates) rather than to a power rail. The 2-rail decoupling coverage (bulk+bypass for each) is accurately reported.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -28,7 +29,7 @@
         },
         {
           "description": "The 61082-041400LF (Amphenol FCI, LCSC C236050) is a 40-pin SMD connector used as the eMMC socket interface between the carrier and the host board. The analyzer classifies it as type='ic' because it comes from a custom library (MyJLCLib2024) and has no connector-recognizable keywords. The symbol's pin type is 'unspecified' throughout, so type heuristics fall back to 'ic'. The statistics.component_types show ic:1 but should show ic:1, connector:2 if both U? components were correctly classified.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The SDINBDG4-8G eMMC is powered by both +3.3V (VCC pins E6, F5, J10, K9) and +1V8 (VCCQ pins C6, M4, N4, P3, P5). The power_budget only reports the eMMC on the +3.3V rail (estimated_mA=10) and omits +1V8 entirely. The design_analysis.power_domains correctly identifies both +1V8 and +3.3V as IC power rails for U?, but this information does not propagate to power_budget. Same issue is present in UnifiedBoard output.",
@@ -189,9 +190,9 @@
       "missed": [
         {
           "description": "The task listed two gerber output files (Fabrication.json and Fabrication_v2.json) but neither exists under results/outputs/gerber/Spider-eMMC/. The gerbers.txt manifest is empty, confirming no gerber files were found in the Spider-eMMC repository. The repo contains only .kicad_pcb and .kicad_sch source files with no exported gerber/drill files. No gerber analysis was performed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

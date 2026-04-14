@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "BQ76952 BMS system correctly detected with 16 cells, 17 cell voltage pins, 17 balance resistors, charge/discharge FETs (Q2-Q5 IPT012N08N5, Q12 ZXMP10A17GTA), and NTC sensors (RT1, RT2)",
-          "analyzer_section": "signal_analysis.bms_systems",
+          "analyzer_section": "detect_bms_systems",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^Q12$"
+            "pattern": "^Q12$",
+            "detector_filter": "detect_bms_systems"
           },
           "detector": "bms_systems",
           "subject_refs": [
@@ -28,12 +29,13 @@
         },
         {
           "description": "Current sense shunt R45 (300uOhm) correctly detected between BAT- and PACK- with BQ76952 as sense IC",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R45$"
+            "pattern": "^R45$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -44,12 +46,13 @@
         },
         {
           "description": "Feedback voltage divider R28 (82k) / R31 (35.7k) correctly identified as feedback for U3 LMR38010 FB pin with is_feedback=true",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R28$"
+            "pattern": "^R28$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -62,12 +65,13 @@
         },
         {
           "description": "16 cell input RC filters correctly detected (R2-R17 with C1-C16 pairs, 20 ohm + 220nF parallel caps, ~18 kHz cutoff) for BQ76952 cell voltage measurement inputs",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R10$"
+            "pattern": "^R10$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -109,12 +113,13 @@
         },
         {
           "description": "Shunt sense RC filters R19/C28 and R20/C28 (100 ohm + 100nF, ~15.9 kHz) correctly detected for SRP/SRN current sense inputs",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R19$"
+            "pattern": "^R19$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -127,12 +132,13 @@
         },
         {
           "description": "12 MOSFET transistor circuits correctly analyzed including Q2-Q5 (IPT012N08N5 charge/discharge), Q12 (ZXMP10A17GTA P-channel), Q1 (DMN10H220LE) with gate resistors identified",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -148,12 +154,13 @@
         },
         {
           "description": "ESD protection diodes D3/D4 (ESD5B5.0ST1G) on USB data lines and D8 (PESD2CANFD) on CAN bus correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D3$"
+            "pattern": "^D3$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -166,11 +173,12 @@
         },
         {
           "description": "I2C bus with pull-ups R32/R33 on I2C_SDA/I2C_SCL correctly detected connecting U4 (BQ76952) and U5",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -195,12 +203,13 @@
       "incorrect": [
         {
           "description": "U3 LMR38010 estimated_vout=1.978V is wrong. The analyzer assumed Vref=0.6V (heuristic) but LMR38010 actual Vref is 1.0V per datasheet. Correct Vout = 1.0 / 0.303 = 3.30V, matching the +3V3 output rail",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "estimated_vout",
-            "value": 1.978
+            "value": 1.978,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -213,7 +222,7 @@
         },
         {
           "description": "Design observation vout_net_mismatch reports 40.1% difference between estimated 1.978V and +3V3 rail, but this mismatch is caused by the wrong Vref assumption, not a real circuit error",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",

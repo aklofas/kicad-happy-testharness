@@ -17,11 +17,12 @@
         },
         {
           "description": "Key matrix correctly detected as 7 rows x 18 columns with 103 switches and 103 diodes",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -30,11 +31,12 @@
         },
         {
           "description": "Key matrix column count of 18 correctly identified (col0-col17)",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -43,11 +45,12 @@
         },
         {
           "description": "103 estimated keys in matrix correctly counted",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -56,11 +59,12 @@
         },
         {
           "description": "Addressable LED chain of 103 SK6812MINI-E LEDs correctly detected as single-wire WS2812 protocol",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           },
           "detector": "addressable_led_chains",
           "subject_refs": [],
@@ -69,11 +73,12 @@
         },
         {
           "description": "XC6206 LDO correctly identified as power regulator with +5V input and +3V3 output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -82,11 +87,12 @@
         },
         {
           "description": "PRTR5V0U2X correctly identified as ESD protection IC protecting D+ and D- nets",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [],
@@ -95,11 +101,12 @@
         },
         {
           "description": "500mA polyfuse correctly identified as protection device on VBUS-to-+5V path",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [],
@@ -108,11 +115,12 @@
         },
         {
           "description": "Two RC low-pass filters on BOOT0 correctly detected (R7/120ohm charge path at 6.63kHz, R8/68k discharge path at 11.7Hz)",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "equals",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -125,12 +133,13 @@
         },
         {
           "description": "PNP transistor Q3 (MMUN2133LT1G BRT) correctly detected with base driven by STM32 via BOOT0_CHRG net",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q3$"
+            "pattern": "^Q3$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -177,11 +186,12 @@
         },
         {
           "description": "106 decoupling caps on +5V rail correct (103 per-LED caps + 3 power regulation caps)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -236,7 +246,7 @@
         },
         {
           "description": "D- net reported as has_esd_protection=false in design_observations, but PRTR5V0U2X (U2) protects both D+ and D- (correctly noted in protection_devices.protected_nets)",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U2"
@@ -248,11 +258,12 @@
       "missed": [
         {
           "description": "STM32 NRST reset circuit not detected as a design observation (NRST has RESET1 push button, R9/68k, C130/100nF, plus D41 diode), despite U4's LCD_RST being detected",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations[*].net=NRST",
+            "path": "findings",
             "op": "exists",
-            "value": true
+            "value": true,
+            "detector_filter": "detect_design_observations[*].net=NRST"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -315,33 +326,35 @@
       "correct": [
         {
           "description": "Key matrix correctly detected: 103 switches (CH1-CH103), 103 diodes, 7 rows x 18 columns",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "detector": "key_matrices",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "Addressable LED chain correctly identified: 103 SK6812MINI-E LEDs in WS2812 protocol, estimated current 6180mA",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "detector": "addressable_led_chains",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {
           "description": "LDO regulator U3 (XC6206PxxxMR) correctly detected as +5V to +3V3 LDO in power_regulators",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U3"
@@ -349,15 +362,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "ESD protection U2 (PRTR5V0U2X) correctly identified protecting both D+ and D-",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "U2"
@@ -365,10 +379,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -388,11 +403,12 @@
         },
         {
           "description": "design_observations reports D- as has_esd_protection=False, but U2 (PRTR5V0U2X) pin I/O1 connects directly to D-. Contradicts protection_devices which correctly lists protected_nets=[D+,D-].",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations[?net==\"D-\"].has_esd_protection",
+            "path": "findings",
             "op": "equals",
-            "value": true
+            "value": true,
+            "detector_filter": "detect_design_observations[?net==\"D-\"].has_esd_protection"
           },
           "detector": "design_observations",
           "subject_refs": [

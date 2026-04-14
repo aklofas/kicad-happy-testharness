@@ -29,20 +29,24 @@
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001996-AST-04",
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001996-AST-05",
@@ -93,11 +97,13 @@
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001996-AST-10",
@@ -137,18 +143,20 @@
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.voltage_dividers[0].is_feedback",
+        "path": "findings[0].is_feedback",
         "op": "equals",
-        "value": true
+        "value": true,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers[0].is_feedback"
     },
     {
       "id": "FND-00001996-AST-14",
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].led_driver",
+        "path": "findings[0].led_driver",
         "op": "equals",
         "value": {
           "led_ref": "D2",
@@ -156,9 +164,11 @@
           "current_resistor": "R10",
           "current_resistor_value": "2.2k",
           "power_rail": null
-        }
+        },
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].led_driver"
     },
     {
       "id": "FND-00001996-AST-15",
@@ -197,77 +207,91 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001996-AST-19",
       "description": "INCORRECT: ",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001996-AST-20",
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00001996-AST-21",
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.power_regulators[0].topology",
+        "path": "findings[0].topology",
         "op": "equals",
-        "value": "buck"
+        "value": "buck",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].topology"
     },
     {
       "id": "FND-00001996-AST-22",
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_current_sense"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.current_sense"
     },
     {
       "id": "FND-00001996-AST-23",
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001996-AST-24",
       "description": "",
       "created_from": "FND-00001996",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

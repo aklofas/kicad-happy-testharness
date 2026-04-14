@@ -1,30 +1,41 @@
 {
   "file_pattern": "ICEDLeft.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~10 (tolerance 10%)",
+      "description": "Finding count ~12 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 10,
+        "max": 14
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~3",
+      "description": "critical count ~1",
       "check": {
-        "path": "summary.high",
+        "path": "summary.critical",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000003",
+      "description": "high count ~2",
+      "check": {
+        "path": "summary.high",
+        "op": "range",
+        "min": 1,
+        "max": 3
+      }
+    },
+    {
+      "id": "SEED-00000004",
       "description": "medium count ~3",
       "check": {
         "path": "summary.medium",
@@ -34,7 +45,7 @@
       }
     },
     {
-      "id": "SEED-00000004",
+      "id": "SEED-00000005",
       "description": "low count ~4",
       "check": {
         "path": "summary.low",
@@ -44,46 +55,35 @@
       }
     },
     {
-      "id": "SEED-00000005",
-      "description": "EMC risk score ~64 (+-10)",
+      "id": "SEED-00000006",
+      "description": "EMC risk score ~69.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 54,
-        "max": 74
+        "min": 59.5,
+        "max": 79.5
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "1 clock_routing finding(s)",
+      "id": "SEED-00000007",
+      "description": "2 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
-      "description": "2 decoupling finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^decoupling$",
         "value": 2
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "1 ground_plane finding(s)",
+      "description": "2 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 1
+        "value": 2
       }
     },
     {

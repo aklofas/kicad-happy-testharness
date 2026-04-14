@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "5 opamp circuits correctly identified: IC5 units 1-4 (MCP6004) as comparators for HI_CLAMP/LO_CLAMP window detection, IC7 (OPA376) as unity-gain buffer",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -21,12 +22,13 @@
         },
         {
           "description": "IC7 (OPA376) correctly identified as buffer configuration with gain=1.0 (inverting tied to output)",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "field_equals",
             "field": "gain",
-            "value": 1.0
+            "value": 1.0,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -37,11 +39,12 @@
         },
         {
           "description": "IC5 unit 4 correctly identified as comparator with LO_CLAMP on non-inverting and IN4P on inverting",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -50,11 +53,12 @@
         },
         {
           "description": "IC5 unit 3 correctly identified as comparator with HI_CLAMP on non-inverting and IN4P on inverting",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -63,12 +67,13 @@
         },
         {
           "description": "Voltage divider R25/R24 (330R/10K) from -2V5_ISO to GND generating LO_CLAMP reference, ratio=0.968",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "field_equals",
             "field": "ratio",
-            "value": 0.968
+            "value": 0.968,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -82,12 +87,13 @@
         },
         {
           "description": "Voltage divider R22/R23 (330R/10K) from +2V5_ISO to GND generating HI_CLAMP reference, ratio=0.968",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "field_equals",
             "field": "ratio",
-            "value": 0.968
+            "value": 0.968,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -101,12 +107,13 @@
         },
         {
           "description": "Voltage divider R20/R13 (100K/100K) correctly detected with ratio=0.5 feeding IN3N",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "field_equals",
             "field": "ratio",
-            "value": 0.5
+            "value": 0.5,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -120,12 +127,13 @@
         },
         {
           "description": "Q1 and Q2 (2N7002) NMOS transistors correctly identified as switches driven by IC6 (DG212) analog switch",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -155,12 +163,13 @@
         },
         {
           "description": "RC networks R5/C1 and R6/C1 (10R/8n2, fc=1.94MHz) correctly detected as input EMI filters",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R5$"
+            "pattern": "^R5$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -173,11 +182,12 @@
         },
         {
           "description": "Decoupling on +2V5_ISO (1.2uF across 3 caps) and +3V3_ISO (1.2uF across 3 caps) correctly tallied",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -188,7 +198,7 @@
       "incorrect": [
         {
           "description": "Design observation for IC6 (DG212) decoupling is repeated 4 times (once per unit) claiming +15V_ISO rail missing caps; should be deduplicated to one observation per component",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -198,11 +208,12 @@
       "missed": [
         {
           "description": "No isolation_barriers detected despite OK2 optocouplers and isolated power domains (_ISO suffix rails). The optocouplers provide galvanic isolation between measurement and digital domains.",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [],
@@ -211,11 +222,12 @@
         },
         {
           "description": "No power_regulators detected. While power may come from backplane, the isolated DC-DC converters (if present on other sheets) or the power rail structure suggests power regulation should be noted.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],

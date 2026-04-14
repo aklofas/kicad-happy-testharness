@@ -1,7 +1,8 @@
 {
   "file_pattern": "esp32_solar_revV.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -24,26 +25,28 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "2 battery_chargers detected",
+      "description": "2 detect_battery_chargers detected",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "All battery_chargers charger_type values are valid",
+      "description": "All detect_battery_chargers charger_type values are valid",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
         "op": "count_matches",
         "field": "charger_type",
         "pattern": "^(single_cell_linear|single_cell_switching|standalone_protection)$",
@@ -52,27 +55,30 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "3 design_observations detected",
+      "description": "3 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "2 motor_drivers detected",
+      "description": "2 detect_motor_drivers detected",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "All motor_drivers have driver_reference",
+      "description": "All detect_motor_drivers have driver_reference",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "not_contains_match",
         "field": "driver_reference",
         "pattern": "^$"
@@ -80,9 +86,10 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "All motor_drivers driver_type values are valid",
+      "description": "All detect_motor_drivers driver_type values are valid",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "count_matches",
         "field": "driver_type",
         "pattern": "^(stepper|dc_brushed_h_bridge)$",
@@ -91,18 +98,20 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "3 power_regulators detected",
+      "description": "3 detect_power_regulators detected",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "All power_regulators have ref present",
+      "description": "All detect_power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
@@ -110,24 +119,36 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "1 rf_chains detected",
+      "description": "1 detect_rf_chains detected",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
+        "detector_filter": "detect_rf_chains",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000013",
-      "description": "4 suggested_certifications detected",
+      "description": "4 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000014",
+      "description": "2 detect_wireless_modules detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_wireless_modules",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -136,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "Has 11 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

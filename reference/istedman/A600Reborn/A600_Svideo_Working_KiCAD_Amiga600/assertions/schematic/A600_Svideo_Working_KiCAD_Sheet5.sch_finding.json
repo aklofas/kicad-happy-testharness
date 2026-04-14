@@ -9,11 +9,13 @@
       "description": "INCORRECT: X1 (28.37516MHz) has lib_id 'MyLibrary:28.37516MHz', footprint 'MyLibrary:Oscillator', and pins including a 'VCC' power_in pin \u2014 it is a 4-pin oscillator module, not a 2-pin crystal. The analyzer detects it in crystal_circuits and assigns C199 (0.33uF) as a load cap. Crystal load caps are 10\u201333pF; 0.33uF is three orders of magnitude too large and is actually the +5V decoupling capacitor on the oscillator's VCC rail. Oscillator modules are self-contained and need no external load caps.",
       "created_from": "FND-00000348",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "eq",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     }
   ]
 }

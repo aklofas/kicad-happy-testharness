@@ -9,10 +9,12 @@
       "description": "The Kobold keyboard uses 16 WS2812-compatible addressable LEDs (D1-D16) driven from net RGB_PWM_5V. The analyzer correctly identifies the daisy-chain topology, reports chain_length=16, first_led=D1, last_led=D13, protocol='single-wire (WS2812)', and estimated_current_mA=960 (60mA per LED * 16). This demonstrates the analyzer's addressable LED chain detection works for standard WS2812 part names.",
       "created_from": "FND-00002482",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     }
   ]
 }

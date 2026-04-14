@@ -9,7 +9,7 @@
       "description": "signal_analysis.power_regulators correctly identifies U2 as an LDO with input_rail='+5V', output_rail='3.3V', and estimated_vout=3.3V (inferred from the '-3.3' suffix). The separate 3.3V_A rail for the UM980 GNSS IC is correctly understood as a filtered derivative of 3.3V via the L2 ferrite bead \u2014 the decoupling_analysis correctly groups C15/C16/C17 under 3.3V_A.",
       "created_from": "FND-00001577",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "U2",
@@ -17,8 +17,10 @@
           "input_rail": "+5V",
           "output_rail": "3.3V",
           "estimated_vout": 3.3
-        }
-      }
+        },
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001577-AST-02",
@@ -96,26 +98,30 @@
       "description": "INCORRECT: signal_analysis.design_observations contains entries for 'usb_data' category with net='D+' and net='D-', both reporting has_esd_protection=false and listing devices=[U8,U1,J1,J1]. U1 (DT1042-04SO) is explicitly an ESD protection IC for USB differential lines. usb_compliance.connectors[0].checks.usb_esd_ic='pass' correctly identifies U1. The two outputs are internally inconsistent; the design_observations value is wrong.",
       "created_from": "FND-00001577",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "usb_data",
           "net": "D+",
           "has_esd_protection": false
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001577-AST-08",
       "description": "The schematic includes a complete RF antenna input path: J5 (SMA edge connector) -> Net-(D6-A2) -> C7 (100pF DC-blocking capacitor) -> ANT_IN -> U5 (UM980 GNSS IC). L1 (68nH inductor) connects the ANT_BIAS rail to the same RF node for active antenna bias injection. D6 (PESD0402 TVS) provides ESD protection on the RF node. C4+C6 form additional filtering on ANT_BIAS. The signal_analysis.rf_chains and rf_matching arrays are both empty \u2014 this is a significant missed detection for a GNSS receiver design.",
       "created_from": "FND-00001577",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     },
     {
       "id": "FND-00001854-AST-01",
@@ -132,11 +138,13 @@
       "description": "U2 is correctly identified as an LDO regulator with input_rail '+5V', output_rail '3.3V', estimated_vout 3.3V from the fixed suffix. Topology is correctly inferred as LDO.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.power_regulators[0].ref",
+        "path": "findings[0].ref",
         "value": "U2",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].ref"
     },
     {
       "id": "FND-00001854-AST-03",
@@ -154,22 +162,26 @@
       "description": "All three quadruple ESD protection arrays are correctly detected in protection_devices with their protected nets: D9 protects RXD2/RXD3/TXD2/TXD3, D10 protects EVENT/PPS/PVT_STAT/RTK_STAT, D11 protects ERR_STAT/V_ANT_EXT/RESET.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": 5,
-        "op": "count_gte"
+        "op": "count_gte",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001854-AST-05",
       "description": "3.3V_A has 3 caps (44.1uF total: 2x22uF bulk + 0.1uF bypass), 3.3V has 5 caps (3.3uF: 2.2uF + 1uF + 0.1uF + 2x100pF), +5V has 1 cap (0.1uF). The has_bulk/has_bypass/has_high_freq flags are accurate.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "value": 3,
-        "op": "count_eq"
+        "op": "count_eq",
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001854-AST-06",
@@ -187,11 +199,13 @@
       "description": "R7 (1k) and C3 (1uF) form an RC low-pass filter at 159.15 Hz on the V_BCKP net, which is the backup battery trickle supply for the UM980. The filter is correctly identified with correct cutoff frequency.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.rc_filters[0].cutoff_hz",
+        "path": "findings[0].cutoff_hz",
         "value": 159.15,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters[0].cutoff_hz"
     },
     {
       "id": "FND-00001854-AST-08",
@@ -209,11 +223,12 @@
       "description": "INCORRECT: design_observations contains two entries with category 'usb_data' and has_esd_protection: false for both D+ and D-. However, U1 (DT1042-04SO) is a dedicated 4-channel USB ESD protection IC whose I/O3 and I/O4 pins connect directly to D- and D+. The differential_pairs analysis correctly shows has_esd: True with esd_protection: ['U8', 'U1']. The two analyses are inconsistent \u2014 the usb_data observation is incorrect.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.design_observations[?(@.category=='usb_data')].has_esd_protection",
+        "path": "findings.category=='usb_data')].has_esd_protection",
         "value": true,
         "op": "equals"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[?(@.category=='usb_data')].has_esd_protection"
     },
     {
       "id": "FND-00001854-AST-10",
@@ -242,35 +257,40 @@
       "description": "The L1 (68nH) + D6 (TVS) + C4/C6/C7 (100pF/100pF bypass) arrangement on VCC_RF \u2192 ANT_BIAS \u2192 antenna is a classic bias-T for active antenna powering, which is an RF-specific circuit pattern. This is detected as generic LC filters (resonant 1.93 MHz and 61 MHz) but not as an rf_chains or rf_matching entry. The rf_chains and rf_matching arrays are both empty.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "value": 0,
-        "op": "count_gt"
+        "op": "count_gt",
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     },
     {
       "id": "FND-00001854-AST-13",
       "description": "3.3V_A is the analog power domain for the UM980 GNSS core, filtered from 3.3V through L2 (30Ohm ferrite bead, MPZ1608 series). The ferrite bead forms a low-pass power filter separating the analog rail. No power_regulator or LC filter entry captures this relationship. L2 is parsed with parsed_value=30.0 (numeric ohms treated as henries by the value parser), which could cause confusion in LC filter calculations.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "value": "L2",
-        "op": "any_contains"
+        "op": "any_contains",
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00001854-AST-14",
       "description": "The design_observations note that VCC_RF has no decoupling caps on U5, but VCC_RF powers the antenna bias via L1+C4+C6. The decoupling_analysis lists these caps under ANT_BIAS not VCC_RF. The observation 'rails_without_caps: [VCC_RF]' is technically correct from the U5 perspective but misleading \u2014 the design uses an off-IC bias-T topology.",
       "created_from": "FND-00001854",
       "check": {
-        "path": "signal_analysis.design_observations[?(@.component=='U5')].rails_without_caps",
+        "path": "findings.component=='U5')].rails_without_caps",
         "value": [
           "VCC_RF"
         ],
         "op": "equals"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[?(@.component=='U5')].rails_without_caps"
     }
   ]
 }

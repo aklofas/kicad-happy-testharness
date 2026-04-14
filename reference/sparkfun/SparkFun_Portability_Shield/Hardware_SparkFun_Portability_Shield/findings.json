@@ -17,22 +17,23 @@
         },
         {
           "description": "The power_regulators section correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V and output_rail 3.3V_P. The design_observations also include the regulator_voltage category for U1. The decoupling_analysis for 3.3V_P shows 7 capacitors totaling 22.3 uF, correctly pulling in C7, C2, C13, C1, C8, C10, C16.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U1",
               "topology": "LDO",
               "output_rail": "3.3V_P"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "The rc_filters section correctly identifies R1 (10k) and C6 (1.0uF) as a low-pass filter on the OLED reset line (input_net 3.3V_P, output_net OLED_~{RESET}, ground_net GND), with cutoff_hz 15.92 Hz and time_constant_s 0.01. The design_observations also correctly identifies the reset_pin observation for U5 with has_pullup: true and has_filter_cap: true.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "type": "low-pass",
@@ -40,7 +41,8 @@
                 "ref": "R1"
               },
               "output_net": "OLED_~{RESET}"
-            }
+            },
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
@@ -105,15 +107,16 @@
         },
         {
           "description": "The power_regulators in the power sub-sheet correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V, output_rail 3.3V_P, estimated_vout 3.3. Decoupling analysis correctly groups VBATT (4.8 uF), 5V (4.8 uF), and 3.3V_P (10.1 uF) rail capacitors. The design_observations include all three decoupling_coverage entries with correct bulk/bypass classification.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U1",
               "topology": "LDO",
               "output_rail": "3.3V_P"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -121,11 +124,12 @@
       "missed": [
         {
           "description": "The power.kicad_sch schematic contains U3 (MCP73831, single-cell LiPo charge controller) and U2 (MAX17048, LiPo fuel gauge IC). The bms_systems section is empty and protection_devices is empty. The MCP73831 is a classic single-cell Li-Ion/Li-Po charger that should be identified as a battery management component. The LM66200 (U7, dual ideal diode for power switchover between VBATT and 5V) is also not detected as a protection/power path device.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_bms_systems"
           }
         }
       ],

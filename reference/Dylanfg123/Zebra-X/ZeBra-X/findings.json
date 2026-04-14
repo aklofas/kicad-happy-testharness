@@ -8,7 +8,7 @@
       "correct": [
         {
           "description": "All 4 SY8003ADFC switching regulators (U101-U104) correctly identified with correct input (+5V) and output rails (+1V0, +1V8, +1V35, +3V3)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U101",
@@ -19,28 +19,30 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U101$"
+            "pattern": "^U101$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Feedback networks correctly identified for all 4 switchers with accurate Vref=0.6V (lookup), resistor values, and computed output voltages",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           }
         },
         {
           "description": "JTAG debug interface at J300 correctly detected with all 4 signals and status=pass",
-          "analyzer_section": "signal_analysis.debug_interfaces",
+          "analyzer_section": "detect_debug_interfaces",
           "detector": "debug_interfaces",
           "subject_refs": [
             "J300"
@@ -49,14 +51,15 @@
           "confidence": 0.6,
           "expected_value": 300,
           "check": {
-            "path": "signal_analysis.debug_interfaces",
+            "path": "findings",
             "op": "equals",
-            "value": 300
+            "value": 300,
+            "detector_filter": "detect_debug_interfaces"
           }
         },
         {
           "description": "Voltage divider R400/R401 (12K/12K) generating MIO_VREF_0V9 correctly detected",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R400",
@@ -66,14 +69,15 @@
           "confidence": 0.6,
           "expected_value": 9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "equals",
-            "value": 9
+            "value": 9,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "RC filter R903/C905 (12K/4u7) correctly detected as 2.82 Hz low-pass on USB_HS_VBUS_FILT",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [
             "C905",
@@ -82,10 +86,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R903$"
+            "pattern": "^R903$",
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -102,33 +107,35 @@
         },
         {
           "description": "All 6 LEDs correctly audited with 510 ohm series resistors",
-          "analyzer_section": "signal_analysis.led_audit",
+          "analyzer_section": "audit_led_circuits",
           "detector": "led_audit",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.led_audit",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "audit_led_circuits"
           }
         },
         {
           "description": "4 NMOS transistor circuits correctly identified as LED drivers with gate resistors",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "D100 (PMEG1030EJ) correctly identified as reverse polarity protection",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "D100"
@@ -136,15 +143,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D100$"
+            "pattern": "^D100$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "LS1205EVD33 (U100) correctly identified as LDO from VCC to +5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U100"
@@ -152,23 +160,25 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U100$"
+            "pattern": "^U100$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Decoupling analysis correctly covers all 16 power rails",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "detector": "decoupling_analysis",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
@@ -181,7 +191,7 @@
         },
         {
           "description": "FT2232HL (U300) correctly identified as producing +1V8_FTDI from internal LDO",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U300"
@@ -189,10 +199,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U300$"
+            "pattern": "^U300$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -201,28 +212,30 @@
         },
         {
           "description": "Isolation barrier correctly identifies separate GNDPWR domain and +5V_USB_B",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "detector": "isolation_barriers",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           }
         },
         {
           "description": "RC filters on PS_NRST and PS_NPOR correctly detected as reset filters",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -233,7 +246,7 @@
       "incorrect": [
         {
           "description": "TPS2051CDBV (U901) classified as LDO but is a USB power distribution switch with overcurrent protection, no voltage regulation",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U901"
@@ -241,10 +254,11 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U901$"
+            "pattern": "^U901$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -253,7 +267,7 @@
         },
         {
           "description": "Power tree shows all regulators at sequence_order=0 with enable_type=always_on despite actual PG cascade chain: +5V->U101(+1V0)->PG->U102(+1V8)->PG->U103(+1V35)->PG->U104(+3V3)",
-          "analyzer_section": "signal_analysis.power_sequencing_validation.power_tree",
+          "analyzer_section": "detect_power_sequencing_validation.power_tree",
           "detector": "power_sequencing_validation",
           "subject_refs": [
             "U101",
@@ -270,7 +284,7 @@
         },
         {
           "description": "Regulator input/output capacitor lists over-attribute caps from shared power bus to specific regulators",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -278,7 +292,7 @@
         },
         {
           "description": "ESD coverage audit lists oscillators X400/X800/X900 as connectors needing ESD protection -- they are internal components",
-          "analyzer_section": "signal_analysis.esd_coverage_audit",
+          "analyzer_section": "audit_esd_protection",
           "detector": "esd_coverage_audit",
           "subject_refs": [
             "X400",
@@ -294,7 +308,7 @@
         },
         {
           "description": "R127/C125 detected as RC filter but is actually the output filter of BD3539FVM DDR VTT termination regulator",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [
             "C125",
@@ -303,43 +317,46 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R127$"
+            "pattern": "^R127$",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "RTL8211F-CG Gigabit Ethernet PHY: 39 ETH nets, RGMII data lines with series resistors, MDC/MDIO management bus, dedicated power domains",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "detector": "ethernet_interfaces",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           }
         },
         {
           "description": "DDR3L memory interface: 2x MT41K256M16TW, 32-bit data bus, 15-bit address, 3-bit bank, 4 DQS pairs, differential clock, all command signals",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "BD3539FVM (U105) DDR VTT termination regulator generating +0V675 from +1V35 not detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U105"
@@ -348,14 +365,15 @@
           "confidence": 0.6,
           "expected_value": 35,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 35
+            "value": 35,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "3 of 4 oscillators missed: X400 (33.333 MHz Zynq PS_CLK), X800 (25 MHz Ethernet), X900 (13 MHz USB)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "X400",
@@ -365,23 +383,25 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X400$"
+            "pattern": "^X400$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "Clock distribution not detected: 4 distinct clock domains (PS_CLK, ETH_CLK, USB_CLK, FTDI_CLK)",
-          "analyzer_section": "signal_analysis.clock_distribution",
+          "analyzer_section": "detect_clock_distribution",
           "detector": "clock_distribution",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.clock_distribution",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_clock_distribution"
           }
         },
         {
@@ -394,7 +414,7 @@
         },
         {
           "description": "Zynq boot mode configuration circuit with resistor dividers on QSPI lines and DIP switch override not detected",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "93LC65B EEPROM for FT2232HL configuration not detected as SPI bus",
@@ -402,20 +422,21 @@
         },
         {
           "description": "74LVC1G07 open-drain buffers for level translation/reset distribution not detected",
-          "analyzer_section": "signal_analysis.level_shifters",
+          "analyzer_section": "detect_level_shifters",
           "detector": "level_shifters",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.level_shifters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_level_shifters"
           }
         },
         {
           "description": "RGMII series termination resistors on all data/control lines not characterized for signal integrity",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "suggestions": [

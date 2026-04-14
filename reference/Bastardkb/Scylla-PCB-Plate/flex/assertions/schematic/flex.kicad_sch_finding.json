@@ -9,23 +9,27 @@
       "description": "The 12 diodes (D_Schottky_x2_KCom_AAK) are dual-diode packages \u2014 each has two anodes (connecting to two separate switch rows) and a common cathode (to a column). 12 packages \u00d7 2 switches per package = 24 switches total, matching switches_on_matrix=24. The 5 row nets (row1-row5) and 6 column nets (col1-col6) are correctly named. estimated_keys=24 matches actual switch count. detection_method='net_name' is appropriate and accurate.",
       "created_from": "FND-00001401",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "value": 24,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_key_matrices"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check path/value mismatch: expected 24, got None"
+      "aspirational_reason": "agent-generated check path/value mismatch: expected 24, got None",
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     },
     {
       "id": "FND-00001401-AST-02",
       "description": "INCORRECT: The 48 SK6812MINI LEDs use a 2D branching topology: each intermediate net carries 2 DOUT outputs (from two LEDs) and 2 DIN inputs (to two LEDs), rather than a simple daisy chain. The analyzer follows different traversal paths and reports 3 chains: chain0 (24 LEDs), chain1 (24 LEDs sharing only D2 with chain0), and chain2 (1 LED, D27, as a stub). Together they cover all 48 unique LEDs, but the chain count and structure are misleading. Reporting 2-3 separate chains with chain_length=24 each overstates estimated_current_mA (reports 1440mA+1440mA = 2880mA instead of the actual 2880mA for 48 LEDs combined), so the numeric total accidentally comes out right but the structure is wrong.",
       "created_from": "FND-00001401",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "value": null,
-        "op": "exists"
+        "op": "exists",
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001401-AST-03",

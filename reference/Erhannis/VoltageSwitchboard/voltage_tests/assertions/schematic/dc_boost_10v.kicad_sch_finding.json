@@ -30,11 +30,13 @@
       "description": "POW1_10B1 (LM27313XMF) is a switching boost regulator from lib Regulator_Switching, but it is classified as type 'switch' rather than 'ic'. Because the power_regulator detector only runs on 'ic'-typed components, it is entirely absent from signal_analysis.power_regulators. The resistor divider on the FB pin (R1 100k from VOUT to FB, R2 14k from FB to GND) is also not detected as a voltage_divider or feedback_network. Both dc_boost_10v and dc_boost_8_5v have this same miss.",
       "created_from": "FND-00001666",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

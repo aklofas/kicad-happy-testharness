@@ -1,7 +1,8 @@
 {
   "file_pattern": "unibody-split.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,53 +35,58 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "2 decoupling_analysis detected",
+      "description": "2 detect_decoupling detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "4 design_observations detected",
+      "description": "4 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "1 key_matrices detected",
+      "description": "1 detect_key_matrices detected",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
+        "detector_filter": "detect_key_matrices",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "1 power_regulators detected",
+      "description": "1 detect_power_regulators detected",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "All power_regulators have ref present",
+      "description": "All detect_power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
@@ -88,15 +94,26 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 suggested_certifications detected",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "2 validate_pullups detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 48 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -105,7 +122,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 6 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -114,7 +131,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "Has 43 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

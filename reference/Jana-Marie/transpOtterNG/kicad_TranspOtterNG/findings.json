@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "AMS1117 (U1) correctly identified as LDO regulator with +5V input and VCC output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -24,12 +25,13 @@
         },
         {
           "description": "R27/R28 voltage divider (10k/10k, ratio 0.5) for LCD contrast on VO net correctly detected",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R27$"
+            "pattern": "^R27$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -59,12 +61,13 @@
         },
         {
           "description": "RC low-pass filters on UART/I2C inputs (R4-R7 with C5-C8, ~15.9 kHz cutoff) correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R4$"
+            "pattern": "^R4$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -82,12 +85,13 @@
         },
         {
           "description": "Q2 PMOS high-side switch correctly detected with gate resistors R17/R15 (100k)",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q2$"
+            "pattern": "^Q2$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -100,12 +104,13 @@
         },
         {
           "description": "Q1 NMOS gate driver with R15/R16 gate resistors correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -136,11 +141,12 @@
         },
         {
           "description": "Decoupling analysis identifies +5V rail with C2, C12, C10 (20.2 uF total)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].cap_count",
+            "path": "findings",
             "op": "eq",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_decoupling_analysis[0].cap_count"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [
@@ -177,12 +183,13 @@
         },
         {
           "description": "Q1 NMOS falsely associated with LED D3/R1 as an led_driver. D3+R1 is a simple VCC-to-GND power indicator (VCC -> D3 -> R1 -> GND at schematic positions 6550,1000-1750), not driven by Q1 (at position 8500,1750). They are in separate schematic sections with no electrical connection.",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -201,11 +208,12 @@
       "missed": [
         {
           "description": "RFM69HCW (U3) not detected as an RF transceiver in rf_chains despite being a 433/868/915 MHz radio module with SPI interface and antenna output",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [
@@ -216,11 +224,12 @@
         },
         {
           "description": "Antenna matching circuit (C14 series cap + AE1 antenna on ANT net) not detected in rf_matching",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           },
           "detector": "rf_matching",
           "subject_refs": [
@@ -231,12 +240,13 @@
         },
         {
           "description": "URB4805YMD-6WR3 (U2) is a 48V-to-5V isolated DC-DC converter not detected in power_regulators. It converts +15V input (from XT30 via PMOS switch) to +5V rail. Pins are named VIN/VOUT/GND.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -247,12 +257,13 @@
         },
         {
           "description": "D1 (12V Zener diode, D_SOD-323) not detected as a voltage protection/clamping device on the PMOS gate of the power input switch",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -263,11 +274,12 @@
         },
         {
           "description": "WS2812 addressable LED output not detected. ESP GPIO2 drives WS2812 label to connector J3 for external LED strip.",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           },
           "detector": "addressable_led_chains",
           "subject_refs": [

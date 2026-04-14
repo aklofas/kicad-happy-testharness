@@ -9,7 +9,7 @@
       "incorrect": [
         {
           "description": "Same as EEPROM: all MEMDATA_0-7 nets only show J1, missing U1 I/O pin connections. This is a consistent bug across all MM1 boards with the legacy KiCad 5 schematic format.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -30,9 +30,9 @@
       "correct": [
         {
           "description": "FLASH: 16 vias at 0.2mm correctly classified; 32 component holes at 0.8mm (PLCC socket pins) and 2 holes at 1.0mm (pin header) correctly classified as component_holes. Total 50 holes matches PTH drill file count.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

@@ -9,11 +9,13 @@
       "description": "INCORRECT: The LNA915 is a 915 MHz low-noise amplifier board with a BGB741L7ESD LNA (U3) driving a FAR-F5QA SAW filter (U4). The RF chain correctly identifies both components (1 amplifier + 1 filter, total_rf_components=2) but shows connections=[] \u2014 no connection between U3 and U4 is traced. This is a KiCad 5 legacy schematic; all nets in the output have empty component lists (the net-to-component mapping is not populated for legacy format), which prevents the connection tracing algorithm from finding shared nets between the LNA output and the SAW filter input.",
       "created_from": "FND-00002161",
       "check": {
-        "path": "signal_analysis.rf_chains[0].connections",
+        "path": "findings[0].connections",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains[0].connections"
     }
   ]
 }

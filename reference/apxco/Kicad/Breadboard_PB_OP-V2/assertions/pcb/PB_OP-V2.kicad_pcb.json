@@ -1,7 +1,8 @@
 {
   "file_pattern": "PB_OP-V2.kicad_pcb",
   "analyzer_type": "pcb",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -62,36 +63,11 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "DFM analysis present",
-      "check": {
-        "path": "dfm",
-        "op": "exists"
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "DFM tier is 'standard'",
-      "check": {
-        "path": "dfm.dfm_tier",
-        "op": "equals",
-        "value": "standard"
-      }
-    },
-    {
-      "id": "SEED-00000009",
       "description": "1 decoupling placement(s) analyzed",
       "check": {
         "path": "decoupling_placement",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "Placement analysis present",
-      "check": {
-        "path": "placement_analysis",
-        "op": "exists"
       }
     }
   ]

@@ -9,12 +9,14 @@
       "description": "INCORRECT: L1/L2 are 600-ohm ferrite beads in 0402. LC filter shows resonant_hz=2.97 and henries=600.0. Physically impossible \u2014 ferrite beads are rated in ohms at frequency, not henries.",
       "created_from": "FND-00000043",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "inductor.ref",
-        "pattern": "^L1$"
+        "pattern": "^L1$",
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     }
   ]
 }

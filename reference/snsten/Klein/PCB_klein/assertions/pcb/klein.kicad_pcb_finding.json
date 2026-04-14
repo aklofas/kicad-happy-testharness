@@ -9,7 +9,7 @@
       "description": "DFM tier 'standard' with one violation: board size exceeds the JLCPCB 100x100mm pricing tier. The Klein is a full split-keyboard half at ~148x105mm, so this is an accurate finding.",
       "created_from": "FND-00000761",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -21,7 +21,7 @@
       "description": "routing_complete=true, unrouted_count=0, copper_layers_used=2 (F.Cu, B.Cu) with standard 1.6mm FR4 stackup. 127 vias, 2004 track segments, 60 nets \u2014 all consistent with a fully routed keyboard PCB.",
       "created_from": "FND-00000761",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -33,7 +33,7 @@
       "description": "The PCB has zone_count=1 but the ground_domains analysis reports has_zone=false for GND. Power net routing shows GND uses only 0.25mm tracks with no pour. The zone may be a keepout or is unfilled \u2014 the analyzer should flag absence of GND pour on a keyboard PCB as a potential DFM/EMI note.",
       "created_from": "FND-00000761",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

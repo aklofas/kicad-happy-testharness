@@ -2,39 +2,44 @@
   "file_pattern": "torqueadc.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 9 design_observations",
+      "description": "Exactly 6 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 9
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 6 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 6
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 9 opamp_circuits",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 9 detect_design_observations",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 9 detect_opamp_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "equals",
         "value": 9
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "U34 in opamp_circuits",
+      "description": "U34 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U34$"
@@ -42,9 +47,10 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "U36 in opamp_circuits",
+      "description": "U36 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U36$"
@@ -52,9 +58,10 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U33 in opamp_circuits",
+      "description": "U33 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U33$"
@@ -62,9 +69,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U37 in opamp_circuits",
+      "description": "U37 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U37$"
@@ -72,9 +80,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U39 in opamp_circuits",
+      "description": "U39 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U39$"
@@ -82,9 +91,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U35 in opamp_circuits",
+      "description": "U35 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U35$"
@@ -92,9 +102,10 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "U38 in opamp_circuits",
+      "description": "U38 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U38$"
@@ -102,9 +113,10 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "U41 in opamp_circuits",
+      "description": "U41 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U41$"
@@ -112,9 +124,10 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "U40 in opamp_circuits",
+      "description": "U40 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U40$"
@@ -122,18 +135,20 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 12 protection_devices",
+      "description": "Exactly 12 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 12
       }
     },
     {
       "id": "STRUCT-00000014",
-      "description": "D89 in protection_devices",
+      "description": "D89 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D89$"
@@ -141,9 +156,10 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "D78 in protection_devices",
+      "description": "D78 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D78$"
@@ -151,9 +167,10 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "D99 in protection_devices",
+      "description": "D99 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D99$"
@@ -161,9 +178,10 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "D97 in protection_devices",
+      "description": "D97 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D97$"
@@ -171,9 +189,10 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "D158 in protection_devices",
+      "description": "D158 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D158$"
@@ -181,9 +200,10 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "D90 in protection_devices",
+      "description": "D90 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D90$"
@@ -191,9 +211,10 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "D82 in protection_devices",
+      "description": "D82 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D82$"
@@ -201,9 +222,10 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "D105 in protection_devices",
+      "description": "D105 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D105$"
@@ -211,9 +233,10 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "D88 in protection_devices",
+      "description": "D88 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D88$"
@@ -221,9 +244,10 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "D84 in protection_devices",
+      "description": "D84 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D84$"
@@ -231,9 +255,10 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "D83 in protection_devices",
+      "description": "D83 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D83$"
@@ -241,9 +266,10 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "D98 in protection_devices",
+      "description": "D98 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D98$"
@@ -251,27 +277,30 @@
     },
     {
       "id": "STRUCT-00000026",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000027",
-      "description": "Exactly 3 voltage_dividers",
+      "description": "Exactly 3 detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000028",
-      "description": "R236 in voltage_dividers",
+      "description": "R236 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R236$"
@@ -279,9 +308,10 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "R238 in voltage_dividers",
+      "description": "R238 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R238$"
@@ -289,9 +319,10 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "R237 in voltage_dividers",
+      "description": "R237 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R237$"

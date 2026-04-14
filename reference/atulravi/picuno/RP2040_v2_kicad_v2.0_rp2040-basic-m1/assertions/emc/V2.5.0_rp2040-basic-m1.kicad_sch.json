@@ -1,67 +1,68 @@
 {
   "file_pattern": "V2.5.0_rp2040-basic-m1.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~21 (tolerance 10%)",
+      "description": "Finding count ~17 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 18,
-        "max": 24
+        "min": 15,
+        "max": 19
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~3",
+      "description": "high count ~2",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 1,
+        "max": 3
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~3",
+      "description": "medium count ~2",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 1,
+        "max": 3
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~15",
+      "description": "low count ~11",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 9,
+        "max": 13
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~61 (+-10)",
+      "description": "EMC risk score ~75.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 51,
-        "max": 71
+        "min": 65.0,
+        "max": 85.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "3 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "15 io_filtering finding(s)",
+      "description": "11 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 15
+        "value": 11
       }
     },
     {
@@ -117,11 +118,11 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~11 probe point(s) in test plan",
+      "description": "~8 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 9
+        "value": 7
       }
     },
     {

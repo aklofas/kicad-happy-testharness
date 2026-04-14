@@ -9,10 +9,12 @@
       "description": "luckybamboo has four XTAL4PIN crystal references (X1-X4), each with two 18pF load capacitors. All four are correctly detected in crystal_circuits with their two load cap pairs, and the effective load capacitance is computed correctly as 12pF (9pF series + 3pF stray). This demonstrates correct multi-crystal handling for a board with symmetric repeated circuit blocks.",
       "created_from": "FND-00002151",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
-      }
+        "value": 4,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00002151-AST-02",
@@ -41,11 +43,13 @@
       "description": "luckybamboo contains four ADF7242 IEEE 802.15.4 2.4 GHz radio transceivers with external XTAL oscillators (X1-X4), HHM2293A1 bandpass filters, BGA7H1H6 RF amplifiers, and a SKY13322 SP3T RF switch. Despite this board being a dense RF subsystem, signal_analysis.rf_chains is empty. The analyzer does classify HHM2293A1/BGA7H1N6/ADF7242 as active_oscillator false positives in crystal_circuits, but produces no rf_chain detection. The board clearly warrants at least one rf_chain entry grouping the transceiver, filter, amplifier, and switch per channel.",
       "created_from": "FND-00002151",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     }
   ]
 }

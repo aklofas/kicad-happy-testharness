@@ -9,29 +9,32 @@
       "incorrect": [
         {
           "description": "U2 is an NCP1117ST33T3G 3.3V LDO regulator \u2014 one of the most common linear regulators \u2014 but it does not appear in signal_analysis.power_regulators. The component uses a local rescue library ('esp32bb-rescue:NCP1117ST33T3G') and pin names VI/VO/GND rather than the standard IN/OUT naming, which prevents the regulator detector from recognizing it. power_regulators is empty despite a clear LDO being present.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "The RC filter (R3=10K, C1=1nF) is reported with input_net='EN' and output_net='+3.3V', but the actual topology is the reverse: +3.3V feeds through R3, the mid-node (EN rail) is the filtered output, and C1 connects from EN to GND. The analyzer used the resistor's pin1 net as 'input_net', but R3 pin1 connects to EN (the output node) while R3 pin2 connects to +3.3V (the source). The direction assignment is wrong.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters[0].input_net",
+            "path": "findings",
             "op": "equals",
-            "value": "+3.3V"
+            "value": "+3.3V",
+            "detector_filter": "detect_rc_filters[0].input_net"
           }
         },
         {
           "description": "The same reset timing circuit topology (R to EN, C to GND, power rail as source) is labeled 'low-pass' in esp32-s3-testboard but 'RC-network' in esp32bb. Both use 10K resistor and microfarad-range capacitor on the EN pin of an ESP32 module. The inconsistency suggests the type classification depends on secondary factors (net classification, power rail detection) rather than topology, and may produce non-deterministic results.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters[0].type",
+            "path": "findings",
             "op": "equals",
-            "value": "low-pass"
+            "value": "low-pass",
+            "detector_filter": "detect_rc_filters[0].type"
           }
         }
       ],
@@ -65,7 +68,7 @@
       "missed": [
         {
           "description": "The PCB file contains two footprints with reference 'P3' (the USB OTG connector), visible in both the footprint reference list and the silkscreen values_visible_on_silk list which shows 'P3' twice. The PCB connector P3 is likely a through-hole USB connector with a mechanical mounting footprint duplicated. The analyzer does not flag this duplicate reference anywhere \u2014 not in DFM, placement, connectivity, or any other section. A duplicate reference check should be part of PCB validation.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "suggestions": [],

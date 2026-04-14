@@ -9,10 +9,12 @@
       "description": "Q1 and Q2 are Q_NPN_BCE transistors (SOT-23) forming the classic ESP32 auto-reset circuit. Q2 drives the BOOT net (pulled low to enter bootloader) and Q1 drives the EN net (pulled low to reset). Both have base resistors (R4 and R3) and their emitters to GND. The design_analysis.bus_analysis.uart correctly identifies FP_TX and FP_RX as the UART connection between the Flipper Zero host and the ESP32. transistor_circuits correctly identifies load_type=ic for both transistors.",
       "created_from": "FND-00002176",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

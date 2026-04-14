@@ -9,10 +9,12 @@
       "description": "The hw_voltmod schematic uses two TL074 quad op-amps (U3, U4) to buffer and invert 8 cell voltage measurements. All 8 functional units are correctly identified as inverting configuration with gain=-1.0 (Rf=Rin from equal-value 56k or 100k resistor pairs). The two power supply units (unit 5 on each IC) are correctly reported as config=unknown since they have no analog signal connections. Total opamp_circuits=10 matches 8 functional + 2 power units.",
       "created_from": "FND-00002289",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 8
-      }
+        "value": 8,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00002289-AST-02",

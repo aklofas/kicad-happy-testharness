@@ -9,11 +9,13 @@
       "description": "nixie_ctl.sch contains 8 TLP627 phototransistor optocouplers (U1-U8) from the Isolator library (lib_id: Isolator:TLP627). These are galvanic isolation devices used to isolate the low-voltage control signals (ACTL_1 through ACTL_8) from the high-voltage anode drive signals. The analyzer reports isolation_barriers: [] despite 8 TLP627 isolators being present. The TLP627 is a well-known optocoupler from Toshiba.",
       "created_from": "FND-00000330",
       "check": {
-        "path": "signal_analysis.isolation_barriers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_isolation_barriers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.isolation_barriers"
     }
   ]
 }

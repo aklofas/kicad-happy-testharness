@@ -17,24 +17,26 @@
         },
         {
           "description": "The design_observations correctly identifies a reset_pin for U1 (~RESET) with has_pullup=true, correctly attributing R5 (10k, connected from 3.3V to ~RESET) as the pull-up resistor. The reset pin is also exposed on connector J5 for external control.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "reset_pin",
               "component": "U1",
               "has_pullup": true
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         },
         {
           "description": "The decoupling_analysis correctly identifies two-capacitor decoupling on both rails: 3.3V rail has C1 (2.2uF) and C2 (0.1uF) totaling 2.3uF; VDDA analog rail has C3 (2.2uF) and C4 (0.1uF) also totaling 2.3uF. This is an appropriate bulk+bypass combination for an ADC with separated digital/analog power.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
@@ -51,15 +53,16 @@
       "missed": [
         {
           "description": "The I2C bus analysis reports has_pullup=false for both SDA and SCL. However, R3 (2.2k) is connected between SDA and JP3 pin 1(A), and R2 (2.2k) is connected between SCL and JP3 pin 3(C). JP3 is a SolderJumper_3_Bridged123 (all pins bridged by default) with its center pin 2(B) on the 3.3V rail, making the pull-ups active in the default configuration. The analyzer fails to trace pull-up paths through solder jumpers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "category": "i2c_bus",
               "net": "SCL",
               "has_pullup": true
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

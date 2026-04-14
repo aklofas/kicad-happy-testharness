@@ -20,11 +20,13 @@
       "description": "D1 is a BZV55C-5.6V zener diode with its cathode (K, pin 1) on the +3V3 rail and anode (A, pin 2) on GND \u2014 a classic power-rail overvoltage clamp. signal_analysis.protection_devices is empty. The diode is correctly typed as 'diode' in components and bom but no protection circuit is inferred.",
       "created_from": "FND-00000342",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_value",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00000342-AST-03",

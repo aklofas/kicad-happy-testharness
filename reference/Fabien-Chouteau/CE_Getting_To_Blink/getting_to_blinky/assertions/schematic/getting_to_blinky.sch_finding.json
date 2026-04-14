@@ -56,11 +56,13 @@
       "description": "INCORRECT: The analyzer detected R2 (470K) and C1 (1u) as a low-pass filter with fc=0.34 Hz. In reality this is the timing RC network of a 555 astable oscillator \u2014 the resistor and capacitor set the oscillation period (~0.47s time constant), not a signal filtering function. Classifying it as a low-pass filter is a functional misclassification; the correct category would be an oscillator timing network.",
       "created_from": "FND-00000420",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000420-AST-06",
@@ -78,11 +80,13 @@
       "description": "R3 (1K) and D1 (LED) form an LED current-limiting driver circuit on the output of U1 (555 timer, pin 3). This is a standard LED driver topology where a series resistor limits current to the LED. The signal_analysis section has no detection of this LED driver circuit, and D1 does not appear in any signal analysis entry.",
       "created_from": "FND-00000420",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

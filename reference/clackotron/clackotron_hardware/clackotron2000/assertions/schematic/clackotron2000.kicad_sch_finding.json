@@ -19,32 +19,37 @@
       "description": "The analyzer correctly identifies D1 as a single-LED WS2812B chain (protocol: 'single-wire (WS2812)', estimated_current_mA: 60) with data input on LED_Data_5V, and correctly classifies the BSN20 transistors as 'level_shifter' topology for the 3.3V-to-5V level translation network.",
       "created_from": "FND-00002307",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00002307-AST-03",
       "description": "INCORRECT: The analyzer reports estimated_vout=1.0 for U4 (R-78B5.0-1.0) with vref_source='fixed_suffix'. The part number encodes both output voltage (5.0V) and current rating (1.0A) separated by dashes. The parser extracted the last numeric token '1.0' (the current rating) instead of the voltage token '5.0'. This triggers a false vout_net_mismatch observation (80% mismatch against the +5V rail) when the regulator is in fact correctly matched to +5V.",
       "created_from": "FND-00002307",
       "check": {
-        "path": "signal_analysis.power_regulators[?ref=='U4'].estimated_vout",
+        "path": "findings.estimated_vout",
         "op": "equals",
         "value": 5.0
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[?ref=='U4'].estimated_vout"
     },
     {
       "id": "FND-00002307-AST-04",
       "description": "INCORRECT: Each of the four BSN20 transistors (Q1\u2013Q4) is reported with a led_driver field pointing to D1 (WS2812B) with various gate resistors (R15, R16, R17, R18 at 10k each). Only Q4 actually drives the LED data line (LED_Data/LED_Data_5V). Q1, Q2, and Q3 are level-shifters for DataRX, DataEN, and DataTX respectively \u2014 not LED drivers. The association appears to be a false match caused by proximity or shared net heuristics.",
       "created_from": "FND-00002307",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
+        "value": 4,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002307-AST-05",

@@ -17,11 +17,12 @@
         },
         {
           "description": "IC17 DP83848 Ethernet PHY detected",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],
@@ -30,11 +31,12 @@
         },
         {
           "description": "IC5 LD1117 correctly detected as LDO",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 1117
+            "value": 1117,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -54,7 +56,7 @@
         },
         {
           "description": "IC4 listed 4x in power_regulators (once per unit)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -64,11 +66,12 @@
       "missed": [
         {
           "description": "Crystal Y1 load caps C8/C9 not detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "equals",
-            "value": 9
+            "value": 9,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -120,11 +123,12 @@
         },
         {
           "description": "IC17 Ethernet PHY detected even without pin data",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],
@@ -149,9 +153,9 @@
       "missed": [
         {
           "description": "All signal analysis empty due to missing pin connectivity",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Voltage divider R6/R7 (4.7k/4.7k) correctly detected feeding U4 (STM32F103C8Tx) BOOT0 pin with 0.5 ratio from +3V3 to GND, used to select boot mode",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R6$"
+            "pattern": "^R6$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -26,12 +27,13 @@
         },
         {
           "description": "RC low-pass filter R3/C5 (4.7k/0.1uF) at 338.63 Hz correctly detected on the NRST line for reset filtering",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R3$"
+            "pattern": "^R3$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -43,12 +45,13 @@
         },
         {
           "description": "Crystal Y1 (Crystal_GND24) with load caps C4 and C3 (10pF each) correctly detected, effective load 8pF calculated",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -61,11 +64,12 @@
         },
         {
           "description": "Key matrix correctly detected: 4 rows x 5 columns, 18 switches, 18 anti-ghosting diodes (CD4148W), matching the physical keyboard layout",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -74,12 +78,13 @@
         },
         {
           "description": "AZ1117-3.3 (U1) correctly identified as LDO regulator with topology=LDO, output_rail=+3V3, estimated_vout=3.3, vref_source=fixed_suffix",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "estimated_vout",
-            "value": 3.3
+            "value": 3.3,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -92,12 +97,13 @@
         },
         {
           "description": "ESD protection: D1 (CPDUR5V0HE-HF) on VBUS correctly detected, U2 (TPD4E05U06DQA) correctly detected as esd_ic protecting USB D+/D- and other lines",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -109,12 +115,13 @@
         },
         {
           "description": "Q1 (2N7002) correctly detected as N-channel MOSFET LED driver with gate resistor R8 (5.1k) as pulldown, gate driven by U4 (STM32F103C8Tx), LED D8 driven through R13 (1k)",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [

@@ -17,11 +17,12 @@
         },
         {
           "description": "The FPGA-driven DVI output on J5 (footprint LD-HDMI:HDMI_TE_1827059-3-FIXED) is detected as type 'pio_dvi' with 8 series resistors. The design has two sets of differential signals: DDMI_* (FPGA I/O side) and DDMIC_* (connector side, after resistors), which are the before/after nodes of the 8 series impedance resistors \u2014 not two separate outputs. Only one hdmi_dvi_interfaces entry is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.hdmi_dvi_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_hdmi_dvi_interfaces"
           }
         }
       ],

@@ -14,12 +14,13 @@
         {
           "type": "value_parsing",
           "description": "L1/L2 are 600-ohm ferrite beads in 0402. LC filter shows resonant_hz=2.97 and henries=600.0. Physically impossible \u2014 ferrite beads are rated in ohms at frequency, not henries.",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "inductor.ref",
-            "pattern": "^L1$"
+            "pattern": "^L1$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [
@@ -52,13 +53,14 @@
         {
           "type": "rc_filter",
           "description": "R3=10k + C39=1u on U2 EN pin detected as RC filter. This is a soft-start delay circuit for an LDO enable pin, not a signal filter.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "related_issue": "KH-019",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R3$"
+            "pattern": "^R3$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [

@@ -9,7 +9,7 @@
       "description": "control sub-schematic detects I2C bus between ESP32-C3 and TLC59116 with has_pull_up=False on both SDA and SCL. This is a genuine design gap \u2014 I2C requires pull-up resistors.",
       "created_from": "FND-00001148",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Driver_RESET, Driver_SDA, Driver_SCL connect ESP32 (3.3V) to TLC59116 (5V) with needs_level_shifter=True. This is a real design concern.",
       "created_from": "FND-00001148",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "design_observations flags U2 (TLC59116IRHBR) with rails_without_caps=['+5V'] \u2014 no bypass capacitor on the 5V supply pin is a real oversight.",
       "created_from": "FND-00001148",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }

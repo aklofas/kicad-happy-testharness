@@ -8,27 +8,27 @@
       "correct": [
         {
           "description": "signal_analysis.power_regulators correctly identifies U1 (+BATT\u22484.14V from +5V) and U2 (+3V3\u22483.18V from +BATT), both with correct inductors and feedback resistors. The small error in estimated 3.18V vs 3.3V reflects the heuristic Vref assumption.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "design_analysis.bus_analysis.i2c correctly identifies 4 I2C lines, detects 4.7k pull-ups to +3V3 on named nets, and correctly flags missing pull-ups on the unnamed nets used by U7 and U5 (GPS module).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "pwr_flag_warnings correctly flags +BATT and +3V3 as having power_in pins with no power_out or PWR_FLAG. These are internally generated rails from regulators, but the schematic lacks explicit PWR_FLAG symbols, so ERC would flag them.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -37,7 +37,7 @@
       "incorrect": [
         {
           "description": "DISPLAY1 uses lib_id=Graphic:SYM_Arrow45_Large (an arrow graphic symbol used as a placeholder) with footprint=Navi_2_0:EPD_MODUL 5.65. The analyzer classifies it as 'diode' due to the arrow symbol's shape, but it should be classified as 'display' or 'connector'. It appears in the BOM with type='diode', which is wrong.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -58,18 +58,18 @@
       "correct": [
         {
           "description": "Only 3 footprints on front (DISPLAY1, SW2, SM3) and 107 on back. This accurately reflects the actual design \u2014 the EPD display connector, slide switches, and mounting hole are front-side; all electronics are on the back.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "copper_layers_used=4 with F.Cu, In1.Cu, In2.Cu, B.Cu is correct. DFM correctly flags board_size 111.7\u00d7136.95mm exceeding 100\u00d7100mm standard tier. Zone stitching on all 4 power/ground nets correctly analyzed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -94,9 +94,9 @@
       "correct": [
         {
           "description": "completeness.complete=true, all 9 expected layers (including In1.Cu and In2.Cu) found. Layer count=4 correct. Board dimensions 111.75\u00d7137.0mm match PCB output (111.7\u00d7136.95mm within rounding).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -105,7 +105,7 @@
       "incorrect": [
         {
           "description": "The gerber set has no F.Paste or B.Paste files. completeness.missing=[] because the .gbrjob file doesn't list paste layers as expected. However, the board has 96 SMD components requiring solder paste, so the absence of paste layers should be flagged as a DFM concern. The analyzer relies solely on the job file manifest and misses this.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

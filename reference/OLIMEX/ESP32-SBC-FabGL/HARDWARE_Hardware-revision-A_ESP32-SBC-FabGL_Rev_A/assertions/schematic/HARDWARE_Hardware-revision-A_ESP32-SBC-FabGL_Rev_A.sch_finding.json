@@ -30,10 +30,12 @@
       "description": "USBLC6-2P6 ESD protection detected",
       "created_from": "FND-00000182",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

@@ -9,10 +9,12 @@
       "description": "The analyzer correctly identified the keyboard matrix via net-name detection, finding Row_0..Row_5 and Col_0..Col_17 nets, with 105 switches and 105 diodes on the matrix. The RP2040-based design also has its crystal, decoupling, and W25Q128 flash memory interface correctly identified in signal_analysis.",
       "created_from": "FND-00002228",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00002228-AST-02",

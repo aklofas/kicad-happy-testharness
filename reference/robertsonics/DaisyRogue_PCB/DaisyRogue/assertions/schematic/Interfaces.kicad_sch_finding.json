@@ -9,7 +9,7 @@
       "description": "The analyzer correctly identifies all 10 components: U1 (USBLC6-2SC6 USB ESD protection SOT-23-6), U2 (H11L1STA optocoupler 6-pin), U7 (STMPS2151STR USB power switch SOT-23-5), D1 (D_Schottky SOD-323), J1 (Conn_02x13_Odd_Even), P1 (connector), R1 (2.2K), R2 (unknown), R22 (10K), R23 (unknown). Power rails +3V3, +5V, GND correctly identified.",
       "created_from": "FND-00000467",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The differential_pairs section correctly identifies DP and DM as a USB differential pair, lists shared_ics=[U1], has_esd=true, and esd_protection=[U1]. The USBLC6-2SC6 is correctly recognized as providing ESD protection for the USB lines.",
       "created_from": "FND-00000467",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "TX and RX are detected in the UART bus_analysis with pin_count=1 each (TX connects to J1 pin 18, RX to J1 pin 20 in this sheet). In the Daisy sheet, TX connects to A1 USART1_TX and RX to A1 with pin_count=2. The per-sheet analysis is accurate for both.",
       "created_from": "FND-00000467",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "U2 (H11L1STA) is a 6-pin high-speed logic output optocoupler used in MIDI receive circuits. The MIDI_IN hierarchical label connects through R1 (2.2K current-limiting resistor) to the optocoupler LED input. The output connects back to the Daisy sheet via the MIDI_IN signal. The analyzer correctly identifies U2 as an IC with +3V3 power domain, but does not identify it as a MIDI input isolator or flag the characteristic optocoupler MIDI receive topology. No MIDI-related signal category is present.",
       "created_from": "FND-00000467",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

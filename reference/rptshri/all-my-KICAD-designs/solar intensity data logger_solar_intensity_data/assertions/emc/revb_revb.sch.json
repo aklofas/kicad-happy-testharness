@@ -1,7 +1,8 @@
 {
   "file_pattern": "revb_revb.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -15,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~8",
+      "description": "high count ~7",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 7,
-        "max": 9
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -35,23 +36,23 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~60 (+-10)",
+      "description": "EMC risk score ~84.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 50,
-        "max": 70
+        "min": 74.0,
+        "max": 94.0
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {

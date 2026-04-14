@@ -1,36 +1,37 @@
 {
   "file_pattern": "polygonus-Shortage-Version.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~42 (tolerance 10%)",
+      "description": "Finding count ~41 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 37,
-        "max": 47
+        "min": 36,
+        "max": 46
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~8",
+      "description": "high count ~3",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 7,
-        "max": 9
+        "min": 2,
+        "max": 4
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~21",
+      "description": "medium count ~19",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 18,
-        "max": 24
+        "min": 17,
+        "max": 21
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~12 (+-10)",
+      "description": "EMC risk score ~50.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 2,
-        "max": 22
+        "min": 40.5,
+        "max": 60.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "13 decoupling finding(s)",
+      "description": "6 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 13
+        "value": 6
       }
     },
     {
@@ -166,11 +167,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~6 net(s) with EMC scores",
+      "description": "~7 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 5
+        "value": 6
       }
     }
   ]

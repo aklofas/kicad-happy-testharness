@@ -9,11 +9,13 @@
       "description": "For the rev0 (RP2040-based) design, the analyzer correctly identifies W25Q128JVS (128Mbit SPI flash) connected to RP2040 with 6 shared signal nets \u2014 matching the full SPI flash pinout: SCK, MOSI/MISO (QSPI data lines), CS, WP (write protect), and HOLD/RESET. The 12MHz crystal oscillator is also correctly identified with 27pF load capacitors (effective CL = 16.5pF). For rev2 (STM32F401 design), the I2C EEPROM M24C64 is correctly detected sharing 2 nets (SCL, SDA) with the MCU.",
       "created_from": "FND-00002065",
       "check": {
-        "path": "signal_analysis.memory_interfaces[0].connected_processors[0].shared_signal_nets",
+        "path": "findings[0].connected_processors[0].shared_signal_nets",
         "op": "equals",
-        "value": 6
+        "value": 6,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces[0].connected_processors[0].shared_signal_nets"
     }
   ]
 }

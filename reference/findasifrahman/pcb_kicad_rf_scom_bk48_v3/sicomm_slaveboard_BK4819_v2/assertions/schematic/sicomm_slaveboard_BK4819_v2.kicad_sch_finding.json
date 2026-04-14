@@ -9,10 +9,12 @@
       "description": "2 RF matching networks correctly identified: LNA_IN1 (antenna to CMX994E1) and ANT1 (antenna to RF switch), topologies and components verified",
       "created_from": "FND-00000222",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rf_matching"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     },
     {
       "id": "FND-00000222-AST-02",
@@ -39,12 +41,14 @@
       "description": "INCORRECT: 23 LC filters overcounted \u2014 analyzer pairs every inductor-capacitor sharing a net. In RF designs these are impedance matching components, not discrete LC filters. L7 alone generates 4 pairs.",
       "created_from": "FND-00000222",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "inductor.ref",
-        "pattern": "^L7$"
+        "pattern": "^L7$",
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     }
   ]
 }

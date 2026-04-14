@@ -9,7 +9,7 @@
       "description": "All 28 components across 7 types correctly parsed from legacy KiCad 5 .sch. Crystal Y1 load cap analysis (C5/C6 22 pF, effective 14 pF) is correct. Differential pair D+/D- detection correct. VBUS_FILTERED decoupling (100 uF + 100 nF) correctly identified.",
       "created_from": "FND-00000604",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The XOUT global label at schematic Y=3150 mils (80.01 mm) connects to U1 pin 40 (~RESET, input type) and Y1 pin 2 + C6 (passive). The coordinate match is exact. Since no bidirectional or output pin drives this net, the no_driver ERC warning is structurally correct. The naming ('XOUT' for the RESET net) appears to be a schematic design issue in the source.",
       "created_from": "FND-00000604",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "Y1 has value 'Crystal' (generic) and MPN 'ABS06-32.768KHz-1-T', which encodes the 32.768 kHz frequency. The analyzer sets frequency=null because it only parses the value field for numeric frequency. The MPN field contains the frequency unambiguously. The load caps (22 pF) are correct for a 32.768 kHz watch crystal.",
       "created_from": "FND-00000604",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

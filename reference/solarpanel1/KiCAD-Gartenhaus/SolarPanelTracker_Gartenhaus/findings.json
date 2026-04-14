@@ -8,27 +8,27 @@
       "correct": [
         {
           "description": "The bus_topology detected CS, MISO, MOSI, SCK prefixes indicating SPI. I2C signals SCL0/SDA0 are present in nets and design_analysis classifies SCL0 as 'clock' and SDA0 as 'data'. BOM and component data are faithfully extracted.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The USB-C connector HRO-TYPE-C-31-M-12 has no 5.1k CC pulldown resistors, no VBUS decoupling cap, and no explicit ESD IC. All four checks failing is accurate \u2014 the design appears to use USB-C only for mechanical/power connection without proper USB-C sink configuration.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "D6 (P6SMB6.8CA TVS diode) is correctly identified as a protection device with protected_net='+5V' and clamp_net='GND'. The decoupling analysis correctly notes only one 0.1\u00b5F cap on +3V3 and flags U1/U2 as lacking decoupling on +5V and +BATT.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -37,23 +37,23 @@
       "incorrect": [
         {
           "description": "Components A1, A2, A3, A4, A5, A6, A7, A8 all have lib_id from Connector: library and keywords='connector', but are classified as type='ic'. This inflates the ic count from 3 to 11 in statistics. They appear to be connector symbols with mirrored orientation (mirror_y=true) which may trip the classifier. The connector count (19) and ic count (11) are both wrong as a result.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The schematic has 3 PWR_FLAG symbols but they are listed as being on net 'PWR_FLAG' rather than being connected to +5V, GND, etc. The pwr_flag_warnings fire for +5V and GND claiming no PWR_FLAG present. However, whether this is truly a false positive depends on how the PWR_FLAG is wired \u2014 the analyzer appears to miss the actual net connectivity of the PWR_FLAG symbols. +3V3 is not warned (likely correct), but +5V and GND warnings need verification against actual net connectivity.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "design_observations contains a reset_pin observation for U1 (PJRC TFT display) with pin 'RESET' connected to +3V3, flagging has_pullup=false. However this is a display reset pin intentionally tied high. The observation is low-severity but may generate misleading warnings for connector-type display modules where RESET-high means active.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "U3 is an SP3485EN (RS-485 transceiver) \u2014 identifiable from both its value and LCSC/datasheet. The signal_analysis.protection_devices correctly found D6 as TVS, but no RS-485 bus detection occurred. The design has /A, /B nets (RS-485 differential pair) and /DE (direction enable), /RO (receiver output), /DI (driver input) which are classic RS-485 signals. This is a missed detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -76,18 +76,18 @@
       "correct": [
         {
           "description": "Board 90.17x55.245mm matches gerber Edge.Cuts. 59 vias (all 0.4mm), 2 zones (+3V3 on F.Cu, GND on B.Cu), 557 track segments, 67 nets, routing_complete=true. These all cross-validate with gerber output.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The DFM reports one violation: track spacing ~0.1242mm is below standard 0.127mm limit, requiring advanced process. This is correctly flagged as approximate (endpoint-to-endpoint). The classification is plausible for a dense board with 0.2mm min trace width.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -96,7 +96,7 @@
       "incorrect": [
         {
           "description": "The statistics show 34 footprints total: 16 smd + 10 through_hole + 7 exclude_from_pos (H1-H4, JP1, JP2, X1) + 1 exclude_from_bom (U2). The smd_count and tht_count fields only sum to 26, not reporting the 7 exclude_from_pos or the exclude_from_bom footprint. Users relying on smd_count + tht_count will get an incomplete count.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -117,27 +117,27 @@
       "correct": [
         {
           "description": "All 9 layers present and matched per .gbrjob. Drill classification uses X2 attributes: 59 via holes at 0.4mm (ViaDrill), PTH component holes correctly enumerated. NPTH 0.65mm (2) and 1.2mm (8) classified as component_holes due to X2 NonPlated attribute. Board dimensions 90.22x55.3mm from gbrjob match Edge.Cuts within tolerance.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The MountingHole_3.2mm_M3_ISO7380_Pad footprint generates PTH holes with pads, so KiCad outputs them as Plated,PTH,ComponentDrill in X2 attributes. The analyzer correctly uses X2 attributes to place them in component_holes rather than mounting_holes. mounting_holes=0 is accurate per X2 data.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The zip SolarPanelTracker_Rev1.1.zip member date is 2021-09-28 while loose files were last modified more recently (2026-03-14 checkout date). The vs_loose_files='loose_files_newer' flag is correct, indicating the zip may be an older snapshot.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

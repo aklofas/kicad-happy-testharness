@@ -1,7 +1,8 @@
 {
   "file_pattern": "rc-cfcardh.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -15,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~3",
+      "description": "high count ~1",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 0,
+        "max": 2
       }
     },
     {
@@ -35,23 +36,23 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~71 (+-10)",
+      "description": "EMC risk score ~93.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 61,
-        "max": 81
+        "min": 83.5,
+        "max": 100
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "3 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 1
       }
     },
     {

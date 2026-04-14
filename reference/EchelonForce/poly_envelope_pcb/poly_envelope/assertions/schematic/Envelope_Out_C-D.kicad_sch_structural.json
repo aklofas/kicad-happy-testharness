@@ -2,57 +2,64 @@
   "file_pattern": "Envelope_Out_C-D.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling_analysis",
+      "description": "Exactly 2 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 3 design_observations",
+      "description": "Exactly 2 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 2 esd_coverage_audit",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 led_audit",
+      "description": "Exactly 3 detect_design_observations",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 3 opamp_circuits",
+      "description": "Exactly 3 detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U7 in opamp_circuits",
+      "description": "U7 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U7$"
@@ -60,37 +67,51 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_pwm_led_dimming",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_pwm_led_dimming",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 transistor_circuits",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Q4 in transistor_circuits",
+      "description": "Exactly 2 detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Q4 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q4$"
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "Q3 in transistor_circuits",
+      "id": "STRUCT-00000011",
+      "description": "Q3 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q3$"

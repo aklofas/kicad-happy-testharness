@@ -39,11 +39,12 @@
       "missed": [
         {
           "description": "Key matrix not detected despite 76 switches with diodes connected to GPIO nets (A0-A3 rows, D0-D13+MISO+MOSI+SCK columns) - net names use Arduino-style GPIO names instead of ROW/COL",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [
@@ -71,11 +72,12 @@
         },
         {
           "description": "USB data lines D+/D- not flagged for ESD protection analysis",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [],

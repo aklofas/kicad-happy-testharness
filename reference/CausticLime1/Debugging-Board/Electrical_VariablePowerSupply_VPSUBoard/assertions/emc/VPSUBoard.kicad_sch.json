@@ -1,16 +1,17 @@
 {
   "file_pattern": "VPSUBoard.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~4 (tolerance 10%)",
+      "description": "Finding count ~17 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 15,
+        "max": 19
       }
     },
     {
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "EMC risk score ~88 (+-10)",
+      "description": "EMC risk score ~94.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 78,
-        "max": 98
+        "min": 84.0,
+        "max": 100
       }
     },
     {
@@ -89,6 +90,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "~2 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 1
       }
     }
   ]

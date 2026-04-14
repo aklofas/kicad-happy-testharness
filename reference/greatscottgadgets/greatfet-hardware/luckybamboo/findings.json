@@ -22,12 +22,13 @@
       "incorrect": [
         {
           "description": "17 false positive crystal circuits from balun modules (U8-U17, ADF7242_balun), diplexers (U6-U7, U12 HHM2293A1), LNA (U13 BGA7H1N6), and RF switch (U5 SKY13322). These are all RF components, not oscillators.",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U10$"
+            "pattern": "^U10$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -60,11 +61,12 @@
       "missed": [
         {
           "description": "No RF chain detection despite this being a pure RF design with four ADF7242 transceivers, baluns, diplexers, an LNA, and an SP4T antenna switch",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],
@@ -73,11 +75,12 @@
         },
         {
           "description": "No RF matching networks detected despite extensive RF frontend with baluns and matching components",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           },
           "detector": "rf_matching",
           "subject_refs": [],
@@ -86,11 +89,12 @@
         },
         {
           "description": "ADF7242 transceivers not identified as RF transceivers in any signal analysis section. These are 802.15.4 radios critical to understanding the design.",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],
@@ -99,11 +103,12 @@
         },
         {
           "description": "SKY13322 SP4T switch not identified in RF chain despite being the antenna routing switch",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],

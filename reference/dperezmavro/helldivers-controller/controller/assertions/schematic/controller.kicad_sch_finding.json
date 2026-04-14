@@ -19,11 +19,13 @@
       "description": "SW2/SW3/SW4/SW5 each have pin A=GND and pin C=+5V with the wiper (pin B) going directly to ATmega32U4 GPIO pins. This makes each switch deliver either 0V or 5V to the GPIO. The analyzer does not detect this SPDT-as-voltage-selector topology. The signal_analysis.voltage_dividers list is empty even though this is effectively a 2-state voltage source. This is also correct because the ATmega32U4 on the Pro Micro is a 5V device so no damage risk, but the pattern is worth flagging as a non-standard switch wiring.",
       "created_from": "FND-00002124",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     }
   ]
 }

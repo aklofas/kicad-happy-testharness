@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "7 phototransistors (Q1-Q7, TEPT5600) correctly classified as BJT type with base_net=null (photo-sensitive, no base drive), collector_is_power=false, emitter_is_ground=true",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -30,12 +31,13 @@
         },
         {
           "description": "Q8 (2N3904) correctly detected as LED driver BJT with emitter to GND, base resistor R8 (1K), and load_type=led",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q8$"
+            "pattern": "^Q8$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -47,12 +49,13 @@
         },
         {
           "description": "Seven RC-network filters (R1/C1, R2/C2, R3/C3, R4/C4, R5/C5, R6/C6, R7/C7, all 330ohm/2.2nF) correctly detected at 219.22 kHz cutoff, forming sensor output conditioning on each channel",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R1$"
+            "pattern": "^R1$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -76,11 +79,12 @@
         },
         {
           "description": "VCC rail decoupling with C8 (1.0uF) correctly identified",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [

@@ -2,14 +2,15 @@
   "file_pattern": "VNA_Project.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 16 decoupling_placement",
+      "description": "Exactly 17 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 16
+        "value": 17
       }
     },
     {
@@ -74,6 +75,16 @@
     },
     {
       "id": "STRUCT-00000008",
+      "description": "U303 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U303$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "U202 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -83,7 +94,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "U204 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -93,7 +104,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "U304 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -103,7 +114,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "U501 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -113,7 +124,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "U404 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -123,7 +134,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "U403 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -133,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "U405 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -143,7 +154,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "U207 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -153,7 +164,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "U502 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -163,7 +174,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "U203 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -173,58 +184,32 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 thermal_analysis.thermal_pads",
+      "id": "STRUCT-00000019",
+      "description": "Exactly 2 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "U206 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U206$"
       }
     },
     {
       "id": "STRUCT-00000020",
-      "description": "U501 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U501$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
-      "description": "Exactly 2 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "U206 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U206$"
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000021",
       "description": "U501 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U501$"

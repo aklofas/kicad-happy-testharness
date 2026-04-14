@@ -17,12 +17,13 @@
         },
         {
           "description": "D2 (DT1042-04SO) correctly identified as esd_ic protecting USB D+/D- lines. F1 (6V/0.5A/1A) correctly identified as a resettable fuse in series with VBUS. Both accurately captured in protection_devices.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D2$"
+            "pattern": "^D2$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -34,11 +35,12 @@
         },
         {
           "description": "Three VUSB decoupling capacitors correctly identified: C2 (2.2uF), C3 (0.1uF), C4 (10uF), totalling 12.3uF. has_bulk=true and has_bypass=true accurate. C1 (10nF on V3 internal rail of CH340C) correctly excluded from VUSB.",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [
@@ -52,12 +54,13 @@
         },
         {
           "description": "Q1 (MMBT2222A) NPN BJT correctly detected with emitter to GND and base resistor R4 (180 ohm). LED driver sub-detection accurately identifies D1 (Green LED) driven via R3 (1k) through Q1 collector: VUSB -> JP2 -> D1(A) -> D1(K) -> R3 -> Q1(C).",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -92,12 +95,13 @@
       "missed": [
         {
           "description": "BZ1 buzzer reports has_transistor_driver=False but Q1 (MMBT2222A) collector is on net __unnamed_2 which also connects to BZ1(-). Q1 drives the buzzer at its negative terminal simultaneously with the LED (D1). Circuit: BZ1(+) -> JP1 -> VUSB; BZ1(-) -> __unnamed_2 <- Q1(C). has_transistor_driver should be True.",
-          "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
+          "analyzer_section": "detect_buzzer_speakers",
           "check": {
-            "path": "signal_analysis.buzzer_speaker_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_buzzer_speakers"
           },
           "detector": "buzzer_speaker_circuits",
           "subject_refs": [

@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "30 opamp circuit entries for 6 TL074 chips with accurate gain values and configurations",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -30,11 +31,12 @@
         },
         {
           "description": "4 BJT VCA transistors (BCM847 NPN, MMBT3906 PNP) correctly typed with LED load detection",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -43,11 +45,12 @@
         },
         {
           "description": "31 RC filters with correct topology categorization (low-pass, high-pass, RC-network)",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -56,11 +59,12 @@
         },
         {
           "description": "16 voltage dividers including TL431 reference and potentiometer bias correctly detected",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [],
@@ -69,11 +73,12 @@
         },
         {
           "description": "Decoupling coverage for +12V/-12V (8 caps each, 20.6uF) correctly reported",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -84,12 +89,13 @@
       "incorrect": [
         {
           "description": "U1 unit3 (+8VREF non-inverting amp, gain=3.2) misclassified as 'transimpedance_or_buffer' \u2014 has R205 (220k) feedback and R202 (100k) to GND, a standard non-inverting topology",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "field_equals",
             "field": "gain",
-            "value": 3.2
+            "value": 3.2,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -104,7 +110,7 @@
         },
         {
           "description": "design_observations: U1 TL074 decoupling warning emitted 5 times (once per symbol unit) instead of once per IC",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U1"
@@ -134,9 +140,9 @@
       "correct": [
         {
           "description": "Zero opamp circuits, RC filters, voltage dividers correctly reported for switch-only board",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -152,11 +158,12 @@
         },
         {
           "description": "14 decoupling warnings accurately reflect no bypass caps on board",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [],

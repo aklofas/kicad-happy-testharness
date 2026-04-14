@@ -10,11 +10,12 @@
       "missed": [
         {
           "description": "Dual +/-3V3 supply: -3V3 rail decoupling not analyzed",
-          "analyzer_section": "signal_analysis.decoupling",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling",
           "subject_refs": [],

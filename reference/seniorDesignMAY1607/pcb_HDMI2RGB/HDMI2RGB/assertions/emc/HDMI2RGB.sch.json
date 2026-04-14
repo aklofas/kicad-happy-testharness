@@ -1,36 +1,37 @@
 {
   "file_pattern": "HDMI2RGB.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~22 (tolerance 10%)",
+      "description": "Finding count ~25 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 19,
-        "max": 25
+        "min": 22,
+        "max": 28
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~5",
+      "description": "high count ~2",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 1,
+        "max": 3
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~11",
+      "description": "medium count ~9",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 8,
+        "max": 10
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~34 (+-10)",
+      "description": "EMC risk score ~68.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 24,
-        "max": 44
+        "min": 58.5,
+        "max": 78.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -99,13 +100,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "8 switching_emc finding(s)",
+      "description": "4 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 8
+        "value": 4
       }
     },
     {

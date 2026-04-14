@@ -2,6 +2,7 @@
   "file_pattern": "powerstep01-breakout.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -38,12 +39,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Rule DC-002 present",
+      "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-002$"
+        "pattern": "^DC\\-001$"
       }
     },
     {
@@ -78,16 +79,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
@@ -97,7 +88,37 @@
       }
     },
     {
+      "id": "STRUCT-00000009",
+      "description": "U1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
+      }
+    },
+    {
       "id": "STRUCT-00000010",
+      "description": "C6 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C13 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC13\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "J4 in EMC findings",
       "check": {
         "path": "findings",
@@ -107,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "J3 in EMC findings",
       "check": {
         "path": "findings",
@@ -117,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",

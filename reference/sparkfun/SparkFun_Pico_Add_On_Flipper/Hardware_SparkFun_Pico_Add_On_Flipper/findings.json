@@ -41,11 +41,12 @@
         },
         {
           "description": "R1 (2.2k) has pin 2 on 3.3V and pin 1 on IO5/SCL, and R2 (2.2k) has pin 2 on 3.3V and pin 1 on IO4/SDA. These are textbook I2C pullup resistors connected directly from 3.3V to the bus lines. Because the bus names use compound net names (IO4{slash}SDA), the I2C detector fails to recognize these resistors as pullups, leaving design_observations empty and both decoupling_analysis and rc_filters empty.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

@@ -18,11 +18,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_rf_chains"
           }
         },
         {
@@ -63,11 +64,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           }
         },
         {
@@ -108,11 +110,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
@@ -144,29 +147,32 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].frequency",
+            "path": "findings",
             "op": "equals",
-            "value": 32768.0
+            "value": 32768.0,
+            "detector_filter": "detect_crystal_circuits[0].frequency"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "max_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].ref",
+            "path": "findings",
             "op": "equals",
-            "value": "U6"
+            "value": "U6",
+            "detector_filter": "detect_power_regulators[0].ref"
           }
         },
         {
@@ -180,11 +186,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -225,11 +232,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

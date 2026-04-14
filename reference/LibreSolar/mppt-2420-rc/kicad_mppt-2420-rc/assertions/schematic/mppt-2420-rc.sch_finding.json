@@ -9,11 +9,13 @@
       "description": "U3 (TLV9001) forms a classic differential amplifier current-sense topology with R10/R11 and R8/R9. Both opamp_circuits and current_sense are empty. The lib_id uses a generic name rather than a recognized opamp library entry.",
       "created_from": "FND-00002430",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

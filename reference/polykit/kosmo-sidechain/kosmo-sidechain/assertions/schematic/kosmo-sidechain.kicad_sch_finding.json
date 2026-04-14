@@ -9,21 +9,25 @@
       "description": "The analyzer correctly processes all 5 schematic symbols for U1 (4 op-amp units + 1 power unit) and deduplicates them to a single BOM line with quantity 1. Op-amp configurations for units 1 and 4 are correctly identified as inverting amplifiers with accurate gain calculations (-10.0 and -2.128 respectively).",
       "created_from": "FND-00002374",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
-      }
+        "value": 4,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00002374-AST-03",
       "description": "U2 is a VTL5C Vactrol \u2014 an optocoupler combining an LED with a light-dependent resistor used for voltage-controlled gain in the sidechain compressor. Its lib_id is 'Isolator:VTL5C', clearly in the Isolator library, yet signal_analysis.isolation_barriers is empty. The analyzer should recognize Isolator-library components as isolation barriers.",
       "created_from": "FND-00002374",
       "check": {
-        "path": "signal_analysis.isolation_barriers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_isolation_barriers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.isolation_barriers"
     }
   ]
 }

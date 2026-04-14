@@ -9,20 +9,24 @@
       "description": "ANT2 RF matching L_match with L2/C9 detected; L2 value '0' and C9 'N.P.' correctly suggest unpopulated matching network",
       "created_from": "FND-00000195",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rf_matching"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     },
     {
       "id": "FND-00000195-AST-09",
       "description": "Decoupling on VCC rail correctly includes C6 (100n), C5 (1u), C4 (100n) totaling 1.2uF across 3 caps",
       "created_from": "FND-00000195",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000195-AST-10",
@@ -39,12 +43,14 @@
       "description": "INCORRECT: U9 (AP7365-30) output_rail is 'GND' which is incorrect; output pin should connect to VCC rail, not ground",
       "created_from": "FND-00000195",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U9$"
+        "pattern": "^U9$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

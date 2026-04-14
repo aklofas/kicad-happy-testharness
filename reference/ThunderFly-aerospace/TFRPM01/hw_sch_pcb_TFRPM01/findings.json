@@ -80,29 +80,32 @@
         },
         {
           "description": "signal_analysis.power_regulators correctly identifies U3 as LDO topology with input_rail=+5V and output_rail=+3V3. Vout estimated at 3.3V via fixed_suffix method.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "value": "LDO",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         },
         {
           "description": "signal_analysis.rc_filters correctly identifies R2 (82R) and C2 (10uF) as a low-pass filter with cutoff at 194.09 Hz. This matches the frequency conditioning circuit on the RPM sensor input.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters[0].cutoff_hz",
+            "path": "findings",
             "value": 194.09,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_rc_filters[0].cutoff_hz"
           }
         },
         {
           "description": "+5V has C4 (100nF) + C3 (10uF) = 10.1 uF total; +3V3 has C5+C6 (100nF each) + C1 (1uF) = 1.2 uF total. Both rails have bulk and bypass coverage flagged correctly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+            "path": "findings",
             "value": 10.1,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling_analysis[0].total_capacitance_uF"
           }
         }
       ],
@@ -120,11 +123,12 @@
       "missed": [
         {
           "description": "D1 (BZX585-B5V6.115, a 5.6V Zener) is connected anode-to-GND, cathode-to-+5V via R5 (130R) forming an overvoltage clamp. signal_analysis.protection_devices is empty []. This TVS/Zener clamp topology should be detected as a protection device.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 0,
-            "op": "count_eq"
+            "op": "count_eq",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -320,11 +324,12 @@
         },
         {
           "description": "decoupling_analysis for +3.3V lists C1 (100nF). This matches TS4231 application note requirements for 100nF on DVDD pin.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].cap_count",
+            "path": "findings",
             "value": 1,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling_analysis[0].cap_count"
           }
         },
         {
@@ -350,11 +355,12 @@
         },
         {
           "description": "R1 (15k) is connected to the RBIAS pin of the TS4231, which sets the internal current reference. It is listed in the BOM but is not annotated in any signal analysis section (not a voltage divider, not a pull-up, not a current sense). The RBIAS function is design-critical and should ideally be flagged as a bias/reference resistor.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "value": 0,
-            "op": "count_eq"
+            "op": "count_eq",
+            "detector_filter": "detect_current_sense"
           }
         }
       ],

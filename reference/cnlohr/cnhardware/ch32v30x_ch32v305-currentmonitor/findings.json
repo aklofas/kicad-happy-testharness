@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "All 13 MOSFETs correctly mapped as transistor circuits",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -23,7 +24,7 @@
       "incorrect": [
         {
           "description": "SCL/SDA nets from AK5534 clock-select pins falsely detected as I2C -- these are actually clock-select pins named SCL/SDA by the designer, not I2C",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -33,12 +34,13 @@
       "missed": [
         {
           "description": "R1 (0.1 ohm), R2 (1 ohm) current sense resistors not detected on a board named 'currentmonitor'",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R1$"
+            "pattern": "^R1$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [

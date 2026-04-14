@@ -8,18 +8,19 @@
       "correct": [
         {
           "description": "Unit 1 (inverting, Rf=R12 10k, Ri=R10 1k): gain=\u221210, 20 dB. Unit 2 (inverting, Rf=R2 30k, Ri=R1 100k): gain=\u22120.3, \u221210.5 dB. Unit 3 (inverting, Rf=R6 30k, Ri=R5 100k): gain=\u22120.3, \u221210.5 dB. Unit 4 (buffer, inv=out, non-inv=GND): gain=1.0. All verified by manual calculation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits[?unit==`1`].gain",
+            "path": "findings",
             "op": "equals",
-            "value": -10.0
+            "value": -10.0,
+            "detector_filter": "detect_opamp_circuits[?unit==`1`].gain"
           }
         },
         {
           "description": "total_components=50 is correct (50 unique reference designators). component_types: resistor=15 (R1\u2013R12, R14, R15, RV1), led=2 (D1, D4), ic=4 (U1\u2013U4), capacitor=19 (C1\u2013C19), connector=5 (J1, J3, J4, J6, PS1 \u2014 though PS1 is misclassified), ferrite_bead=2 (FB1, FB2), diode=2 (D2, D3), speaker=1 (LS1). Sum = 50. The components list has 55 entries due to U3 appearing 5 times (4 op-amp units + power unit) and RV1 twice (dual-gang pot), both correctly deduplicated in statistics.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -39,11 +40,12 @@
         },
         {
           "description": "The board-level analysis merges nets across all sub-sheets. Three of the four detected RC filters have net assignments that do not represent real signal paths: (1) R14+C9 shows output_net='+5V' and ground_net='__unnamed_27' with input_net='/\u2026/IN_L' \u2014 a 1.59 Hz RC-network with a power rail as output is physically incorrect; (2) R15+C16 shows C16 as '2 caps parallel' (C16 + C9) but C9 is in a different sub-sheet; (3) R7+C9 shows ground_net='/\u2026/IN_L' (an audio signal net used as ground). Only the R15+C16 low-pass entry in the headphone-amp sub-sheet (fc=15.92 Hz, input=SWITCHED_L, ground=GND) is correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -87,11 +89,12 @@
       "missed": [
         {
           "description": "PS1 (V78E05-500-SMT) has a power_out pin type in its KiCad symbol and is a switching regulator converting +12 V \u2192 +5 V. The signal_analysis.power_regulators list is empty in both the power sub-sheet and the top-level board analysis. The power budget therefore cannot account for PS1 as a supply source for the +5 V rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -199,9 +202,9 @@
         },
         {
           "description": "U1 (MAX97220C): closest cap 3.4 mm, 12 nearby. U2 (74LVC1G04): closest 4.2 mm, 9 nearby. U3 (TL074): closest 4.3 mm (C10/C11 decoupling), 9 nearby. U4 (MAX9717x): closest 3.3 mm, 6 nearby. All ICs have correctly identified nearby decoupling capacitors.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -226,9 +229,9 @@
       "correct": [
         {
           "description": "Board dimensions 16.5 \u00d7 19.5 mm verified against Edge.Cuts coordinates in source. net_count=5 correctly excludes the unnamed net 0. footprint_count=2 (FFC connector + 3.5 mm jack, both THT), 10 track segments, 1 GND zone, routing_complete=true. All verified against source.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -253,9 +256,9 @@
       "correct": [
         {
           "description": "buzzer_speaker_circuits entry correctly identifies LS1 (Speaker), its signal net SPEAKER+, and U4 (MAX9717x) as the driver IC. The MAX9717x is a BTL mono speaker amplifier, consistent with the identification.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -307,20 +310,22 @@
       "correct": [
         {
           "description": "U3 unit 1 (leds): inverting, gain=-10.0 (R12=10k / R10=1k), correct. U3 units 2 and 3 (inputs): inverting, gain=-0.3 (R2=30k / R1=100k and R6=30k / R5=100k), with 22pF feedback capacitors C18/C19 captured as feedback_capacitor, correct. U3 unit 4: buffer (output=inverting_input, GND on +), correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits[0].gain",
+            "path": "findings",
             "value": -10.0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_opamp_circuits[0].gain"
           }
         },
         {
           "description": "-12V rail decoupling shows has_bulk=false, cap_count=1 (only C11=100n). +12V has bulk (C2=22u) and bypass (C10=100n). +5V has good coverage. This is accurate and represents a real design asymmetry.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?rail=='-12V'].has_bulk",
+            "path": "findings",
             "value": false,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling_analysis[?rail=='-12V'].has_bulk"
           }
         },
         {
@@ -345,58 +350,64 @@
         },
         {
           "description": "The signal_analysis.rc_filters output includes an entry pairing R14 (100k) with C9 (1u), reporting type='RC-network' with cutoff=1.59 Hz and output_net='+5V'. In the actual circuit, R14 is a pull-up/bias resistor from SWITCHED_L to +5V; C9 is a decoupling/signal capacitor in the speaker amp sheet. They are not topologically connected as an RC filter pair. This is a cross-sheet net name collision artifact. The real RC filter on the headphone side is R15+C16 (correctly reported in the headphone-amp sub-sheet output as low-pass at 15.92 Hz).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 1,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "The V78E05-500-SMT is a CUI 500mA non-isolated DC-DC step-down converter producing +5V from the +12V Eurorack rail. It is classified as type='connector' because the symbol lib_id is a custom winterbloom library entry. It should be 'ic' or 'regulator'. Consequently, the power_regulators section of signal_analysis is empty \u2014 the +12V\u2192+5V conversion is not detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": [],
-            "op": "neq"
+            "op": "neq",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "LS1 (speaker) is driven by MAX9717x (U4), a class-D BTL audio power amplifier. The output reports has_transistor_driver=false and direct_gpio_drive=true, but U4 is an IC amplifier, not a GPIO. The SPEAKER+ and SPEAKER- nets both connect from U4 to LS1, indicating a differential/BTL topology that is not captured. direct_gpio_drive=true is incorrect.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.buzzer_speaker_circuits[0].direct_gpio_drive",
+            "path": "findings",
             "value": false,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_buzzer_speaker_circuits[0].direct_gpio_drive"
           }
         },
         {
           "description": "TL074 is a quad op-amp: units 1\u20134 are op-amp sections, unit 5 is the VCC/VEE power pin unit. The output lists unit 5 under opamp_circuits with configuration='unknown'. This unit should not appear as an op-amp circuit entry; it is the power supply connectivity unit for the IC. This produces noise in the opamp_circuits list.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "value": 4,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
       "missed": [
         {
           "description": "The leds sub-sheet uses a back-to-back anti-parallel LED arrangement: D1 (cathode) and D4 (anode) share net __unnamed_1 (U3A output), while D1 (anode) and D4 (cathode) share net __unnamed_2 (to GND via R8). This is a bidirectional LED peak indicator driven by the opamp output. The analyzer does not detect or label this as an anti-parallel / peak indicator LED circuit; it appears only in the raw ic_pin_analysis without functional characterization.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.led_circuits",
+            "path": "findings",
             "value": null,
-            "op": "exists"
+            "op": "exists",
+            "detector_filter": "detect_led_circuits"
           }
         },
         {
           "description": "U2 (74LVC1G04 NOT gate) in headphone-amp inverts the ~HEADPHONE_PRESENT signal (from J6 normalling contact) through an R15+C16 debounce RC filter, producing SHDN to mute the speaker amplifier U4 when headphones are inserted. This is the core analog headphone detect / speaker mute circuit. The analyzer does not connect these pieces into a signal path description. The signal U2 output (~{HEADPHONE_PRESENT}) appears as a single_pin_net design_observation rather than being characterized as an enable/disable control path.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[?category=='single_pin_nets'].nets[0].net",
+            "path": "findings",
             "value": "~{HEADPHONE_PRESENT}",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_design_observations[?category=='single_pin_nets'].nets[0].net"
           }
         }
       ],

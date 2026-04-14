@@ -51,11 +51,12 @@
       "missed": [
         {
           "description": "The schematic contains a textbook keyboard matrix: 4 switches (K1-K4) each paired with a series diode (D1-D4) organized on nets row0, row1 (diode anodes) and col0, col1 (switch columns), all driven by ATmega32U4 GPIO pins PD6/T1=row0, PD7/T0=row1, PB4=col0, PB5=col1. The signal_analysis.key_matrices array is empty. This is a clear false negative.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],

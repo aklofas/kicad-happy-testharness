@@ -17,11 +17,12 @@
         },
         {
           "description": "The analyzer correctly classified U1 (USBLC6-4) as an ESD IC protecting D+, D-, and two unnamed nets (IO2, IO3 pins). The esd_ic type and protected_nets are accurate per the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -44,11 +45,12 @@
         },
         {
           "description": "The analyzer found: VBUS: C2 (4.7\u00b5F bulk), VDD: C3 (4.7\u00b5F bulk) + C4 (100nF bypass), VIO: C5 (100nF bypass). C1 decouples the VPP pin (internal). The 3-rail coverage matches the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": 3,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -68,13 +70,14 @@
       "missed": [
         {
           "description": "R1 and R2 are 5.1k\u03a9 resistors connected between J1's CC1/CC2 pins and GND. These are the standard USB-C CC pull-down resistors for a USB device (5.1k\u03a9 to GND = UFP/sink). The analyzer does not flag them as USB-C CC termination resistors. This is a missed detection that would be valuable for USB-C design review.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": {
               "category": "usb_cc"
             },
-            "op": "contains_match"
+            "op": "contains_match",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -207,11 +210,12 @@
       "missed": [
         {
           "description": "The schematic has a VCC power rail (via global labels) with capacitors C14 (4.7\u00b5F), C15 (0.1\u00b5F), C8 (0.01\u00b5F), C9 (0.01\u00b5F), C12 (0.1\u00b5F) as bypass/bulk capacitors. The signal_analysis.decoupling_analysis array is empty. This is likely because VCC is a global label rather than a proper KiCad power symbol, so the analyzer does not associate the capacitors with the rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -299,11 +303,12 @@
       "incorrect": [
         {
           "description": "design_observations shows usb_data for D- with has_esd_protection=False, yet D- net analysis shows U1 pin 1 (IO1) is directly on the D- net. The protection_devices section correctly lists U1 as protecting ['D+', 'D-', '__unnamed_4', '__unnamed_5']. The ESD detection for D+ (has_esd_protection=True) correctly finds U1, but the same logic fails for D-. This is an asymmetric bug in the ESD detection path for the design_observations section \u2014 both D+ and D- are symmetrically connected to the USBLC6-4.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[?net=='D-'].has_esd_protection",
+            "path": "findings",
             "value": true,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_design_observations[?net=='D-'].has_esd_protection"
           }
         }
       ],

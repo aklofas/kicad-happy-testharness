@@ -9,7 +9,7 @@
       "incorrect": [
         {
           "description": "R1 and R2 are completely unconnected (no wires) \u2014 all 4 nets are single-pin. connectivity_issues.single_pin_nets is empty [] when it should list all 4 __unnamed_0..3 nets. This is a real connectivity problem the analyzer silently misses.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -32,9 +32,9 @@
       "missed": [
         {
           "description": "Design has a TL072 op-amp (IC1), bypass caps C1-C4, and resistors forming an audio mixer. The opamp_circuits entry is correct, but rc_filters is empty []. C3 (100nF) on the power supply and the input RC networks should produce at least one RC filter hit.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -57,9 +57,9 @@
       "correct": [
         {
           "description": "X1 crystal detected in crystal_circuits, AP2112K-1.8 detected in power_regulators, all 125 components with correct type classification including fuse (F1) and net_tie. dnp_parts=8 matches design intent.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -85,7 +85,7 @@
       "incorrect": [
         {
           "description": "The label '/0a43c989.../ENABLE' is flagged as unconnected_hierarchical, but it appears in the labels list as a hierarchical_label with coordinates \u2014 it is present on the sheet. The sibling sheet's '/79d06a01.../ENABLE' net is populated in the nets dict with 4 points, suggesting the ENABLE hierarchy is connected. This may be a cross-sheet resolution issue.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -106,9 +106,9 @@
       "correct": [
         {
           "description": "All 12 component types identified (IC, capacitor, connector, resistor, inductor, switch, diode, jumper, ferrite_bead, transistor, LED, crystal), 7 power rails extracted, 101 nets found.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -133,9 +133,9 @@
       "correct": [
         {
           "description": "Correct footprint counts (94 total, 37 front/57 back, 86 SMD/1 THT), 87 vias, 47 nets, board dimensions 16.5x40mm, routing_complete=true, stackup extracted correctly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -160,9 +160,9 @@
       "correct": [
         {
           "description": "All statistics zero, board_outline edge_count=0, bounding_box=null, copper_presence warning correctly issued, silkscreen warnings appropriate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -188,7 +188,7 @@
       "incorrect": [
         {
           "description": "The PCB has 2 footprints placed on F.Cu (front_side=2) but copper_layers_used=0 with empty copper_layer_names. This is technically correct (no tracks routed) but misleading \u2014 the board clearly uses F.Cu for pads. A board with placed SMD components should report at least 1 copper layer used.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

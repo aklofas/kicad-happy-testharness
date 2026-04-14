@@ -1,16 +1,17 @@
 {
   "file_pattern": "mariposa.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~25 (tolerance 10%)",
+      "description": "Finding count ~29 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 22,
-        "max": 28
+        "min": 26,
+        "max": 32
       }
     },
     {
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~14",
+      "description": "medium count ~13",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 11,
+        "max": 15
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~19 (+-10)",
+      "description": "EMC risk score ~29.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 9,
-        "max": 29
+        "min": 19.0,
+        "max": 39.0
       }
     },
     {
@@ -110,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "3 switching_emc finding(s)",
+      "description": "2 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -166,11 +167,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~7 net(s) with EMC scores",
+      "description": "~8 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 6
+        "value": 7
       }
     }
   ]

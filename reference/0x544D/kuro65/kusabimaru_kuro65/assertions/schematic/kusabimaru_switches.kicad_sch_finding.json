@@ -9,20 +9,24 @@
       "description": "Key matrix correctly detected: 5 rows x 16 columns, 69 switch-diode pairs, matrix structure valid",
       "created_from": "FND-00000223",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00000223-AST-02",
       "description": "69 bypass capacitors (100nF each) correctly detected as decoupling, totaling 6.9uF",
       "created_from": "FND-00000223",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

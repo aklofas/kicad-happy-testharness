@@ -2,20 +2,10 @@
   "file_pattern": "keyboard.kicad_sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 decoupling finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^decoupling$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "6 diff_pair finding(s)",
       "check": {
         "path": "findings",
@@ -26,13 +16,24 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "1 emi_filter finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^emi_filter$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "1 inductor_leakage finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^inductor_leakage$",
         "value": 1
       }
     },
@@ -71,16 +72,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Rule DC-001 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^DC\\-001$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "Rule DP-002 present",
       "check": {
         "path": "findings",
@@ -90,7 +81,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "Rule DP-003 present",
       "check": {
         "path": "findings",
@@ -100,7 +91,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "Rule EF-001 present",
       "check": {
         "path": "findings",
@@ -110,7 +101,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -120,13 +111,23 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Rule ML-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^ML\\-001$"
       }
     },
     {
@@ -221,22 +222,22 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "C4 in EMC findings",
+      "description": "L1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC4\\b"
+        "pattern": "\\bL1\\b"
       }
     },
     {
       "id": "STRUCT-00000023",
-      "description": "C5 in EMC findings",
+      "description": "Y2 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC5\\b"
+        "pattern": "\\bY2\\b"
       }
     },
     {

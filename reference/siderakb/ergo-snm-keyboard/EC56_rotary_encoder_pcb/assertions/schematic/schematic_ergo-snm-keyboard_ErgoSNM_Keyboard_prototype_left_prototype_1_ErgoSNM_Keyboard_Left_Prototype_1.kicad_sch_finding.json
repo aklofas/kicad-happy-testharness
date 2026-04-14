@@ -20,11 +20,12 @@
       "description": "The prototype left schematic has explicit SPI nets: MISO_Bluefruit, MOSI_Bluefruit, SCK_Bluefruit, CS_Bluefruit connecting M2 (Pro_Micro) to M3 (Adafruit_Bluefruit_LE_SPI_Friend). Despite these clearly named SPI signals, signal_analysis.spi_interfaces is empty. The root cause is that M1 (nRF51822_Core_board), M2 (Pro_Micro), and M3 (Adafruit_Bluefruit_LE_SPI_Friend) all use custom library identifiers from 'ErgoSNM_Keybaord_Library' and receive component_type='?' (unknown). The SPI detector likely requires at least one recognized 'ic' type component on the bus. M-prefixed module components with non-standard lib_ids are excluded from IC-based detection.",
       "created_from": "FND-00002186",
       "check": {
-        "path": "signal_analysis.spi_interfaces",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.spi_interfaces"
     }
   ]
 }

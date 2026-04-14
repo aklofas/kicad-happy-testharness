@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "8 total components (4 TP, 2 PCIe connectors, 1 cap, 1 resistor DNP) correctly parsed. Power rails +12V, +3.3V, +3.3VA, GND identified. Empty signal_analysis is correct for a passive PCIe lane passthrough with no active circuitry.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,11 +19,11 @@
       "incorrect": [
         {
           "description": "The 4 test points (TP1-TP4) use PinHeader_1.00mm footprints (THT), and the 2 PCIe connectors are PCB-edge type. PCB output confirms 4 THT and 2 SMD. The schematic assembly_complexity analyzer is not recognizing PinHeader footprints as THT, inflating SMD count and zeroing THT count.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "+12V and +3.3VA are supplied by the PCIe x16 edge connector (J2), which is a passive connector pin, not a power source in the schematic sense. These warnings are expected for pass-through PCIe designs and are not real ERC issues.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -44,9 +44,9 @@
       "correct": [
         {
           "description": "4 copper layers (F.Cu, In1.Cu, In2.Cu, B.Cu) correctly detected. 933 track segments, 126 vias, 1 zone. Footprint types correctly classified: TP1-TP4 as through_hole, R1/C1 as smd, J1/J2 as exclude_from_pos_files (PCIe edge). Board 28.55 x 85.6mm.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

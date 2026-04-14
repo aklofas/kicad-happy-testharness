@@ -20,11 +20,13 @@
       "description": "INCORRECT: The key_matrix detection found a 4-row \u00d7 6-column matrix via net name heuristics (row1\u2013row4, col1\u2013col6) with estimated_keys=12 (from diode count) and switches_on_matrix=0. The 12 physical key switches are present (KEYSW footprints idle-hands:MX_CUTOUT) but since they are typed as 'relay' rather than 'switch', the switch counting step skips them. This is a downstream consequence of the KEYSW\u2192relay misclassification above. If correctly typed as 'switch', switches_on_matrix would equal 12.",
       "created_from": "FND-00002069",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "op": "equals",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     }
   ]
 }

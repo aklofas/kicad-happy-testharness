@@ -9,12 +9,13 @@
         {
           "type": "power_regulator",
           "description": "U1 AP2204R-3.3 correctly identified as LDO with VBUS input and +3V3 output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -26,12 +27,13 @@
         {
           "type": "protection_devices",
           "description": "F1 fuse and U2 USBLC6-4 ESD protection correctly identified",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^F1$"
+            "pattern": "^F1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -44,11 +46,12 @@
         {
           "type": "decoupling",
           "description": "Decoupling analysis correct: +3V3 (4x caps, 5.0uF), VBUS (1x 4.7uF), +3.3VA (1x 100nF)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -77,12 +80,13 @@
         {
           "type": "rc_filters",
           "description": "6 RC anti-aliasing filters on ADC inputs (R11-R16 series + C8-C13 shunt to GND). rc_filters array is empty.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R11$"
+            "pattern": "^R11$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -105,12 +109,13 @@
         {
           "type": "lc_filters",
           "description": "Ferrite bead FB1 between +3V3 and +3.3VA with C7 100nF forms analog supply filter. Not detected.",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^FB1$"
+            "pattern": "^FB1$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [

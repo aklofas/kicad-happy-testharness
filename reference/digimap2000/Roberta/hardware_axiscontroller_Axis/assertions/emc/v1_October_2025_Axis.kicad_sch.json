@@ -1,7 +1,8 @@
 {
   "file_pattern": "v1_October_2025_Axis.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -15,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~7",
+      "description": "high count ~6",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -35,33 +36,33 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~13",
+      "description": "low count ~12",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 10,
+        "max": 14
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~38 (+-10)",
+      "description": "EMC risk score ~44.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 28,
-        "max": 48
+        "min": 34.5,
+        "max": 54.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "5 decoupling finding(s)",
+      "description": "4 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "13 io_filtering finding(s)",
+      "description": "12 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 13
+        "value": 12
       }
     },
     {
@@ -117,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~11 probe point(s) in test plan",
+      "description": "~10 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",

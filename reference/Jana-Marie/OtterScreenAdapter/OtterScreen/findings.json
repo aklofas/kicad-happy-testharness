@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "33 components, AMS1117-3.3 LDO (+5V\u2192+3V3), two TPS61160A boost LED drivers with inductors, DisplayPort bridge chip (U1=5022505191), USB-C connector (J2) all correctly extracted and classified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -20,18 +20,18 @@
       "missed": [
         {
           "description": "U2=NE555 in SO-8 is used as a PWM oscillator for the backlight LEDs (PWM net connects to LEDC pins of the display bridge). The signal_analysis has no 'oscillator_circuits' or 'timer_circuits' detection for it. The NE555 is classified only as a generic IC with no circuit function identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "U1 is a DisplayPort LVDS bridge IC with L0/L1/L2/L3 differential pairs (standard DisplayPort lanes) plus AUX channel. hdmi_dvi_interfaces returns empty even though differential pairs L0-L3 are correctly identified. This is a DisplayPort-specific interface that the detector does not handle.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -54,9 +54,9 @@
       "correct": [
         {
           "description": "24k/4.7k voltage divider for RXREF (USB-C reference voltage) correctly detected with mid-point to STM32 ADC pin. USBLC6-4 identified as esd_ic protecting CC1/CC2/USB_P/USB_N. USB differential pair identified with ESD. STM32F072 correctly classified as IC on +3V3.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -65,15 +65,15 @@
       "incorrect": [
         {
           "description": "bus_analysis reports three 'uart' entries for nets CC_RX, RXREF, CC_TX. These are USB-C CC-line signals for USB-PD communication (BMC-encoded on CC pins), not standard UART. RXREF is a reference voltage (ADC input for CC voltage measurement with a 24k/4.7k voltage divider). False positive detection driven by net name matching.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "Q2 transistor analysis shows source_net='STM_HPD' and gate_net='STM_HPD', but in the schematic STM_HPD goes through R11 (1M gate resistor) to the gate, while the source connects to GND. The legacy .sch pin coordinate resolution is conflating the gate label net with the source pin.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "U1 (SY7200AABC) correctly shows input_rail='+5V', but U2 (same part) reports input_rail=null. Both converters are in the same power topology. The custom library symbol (otter:SY7200AABC) likely prevents input rail resolution for U2.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -94,9 +94,9 @@
       "correct": [
         {
           "description": "USBLC6-4 ESD protection correctly identified, AMS1117-3.3 detected as LDO, decoupling coverage observation for +5V (missing bypass/high-freq caps) is valid observation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -121,9 +121,9 @@
       "correct": [
         {
           "description": "Board dimensions 44.8x31.4mm, 330 track segments, 111 vias, routing complete. GND zone stitching with 78 vias detected. DFM min track 0.154mm, min drill 0.3mm, 0 violations. Courtyard overlaps (U2/C1, R6/C4, L2/C6) detected - these are real overlaps in the design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -148,9 +148,9 @@
       "correct": [
         {
           "description": "65 footprints, 4 copper layers, routing complete. DFM: track spacing 0.119mm (below 0.127mm standard limit) and annular ring 0.1mm (below 0.125mm standard) both correctly flagged as advanced-tier violations. 13 courtyard overlaps detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -175,9 +175,9 @@
       "correct": [
         {
           "description": "All 9 layers found (F/B Cu, Mask, Paste, SilkS, Edge.Cuts), PTH+NPTH drills present. Board 44.8x31.4mm, 111 vias at 0.3mm drill. Layer alignment verified. No missing required layers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -202,9 +202,9 @@
       "correct": [
         {
           "description": "11 layers found including In1.Cu and In2.Cu. Board 40.0x20.8mm, 175 vias at 0.4mm drill. Complete and aligned.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

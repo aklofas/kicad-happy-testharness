@@ -2,6 +2,7 @@
   "file_pattern": "Magnetbandanschluss.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -16,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -69,16 +70,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Rule DC-002 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^DC\\-002$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -88,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "Rule VS-001 present",
       "check": {
         "path": "findings",
@@ -98,13 +89,23 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "U17 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU17\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C17 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC17\\b"
       }
     },
     {
@@ -119,16 +120,6 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "U16 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU16\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
       "description": "TP4 in EMC findings",
       "check": {
         "path": "findings",
@@ -138,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000013",
       "description": "TP3 in EMC findings",
       "check": {
         "path": "findings",
@@ -148,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000014",
       "description": "TP2 in EMC findings",
       "check": {
         "path": "findings",
@@ -158,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "TP1 in EMC findings",
       "check": {
         "path": "findings",
@@ -168,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "X12 in EMC findings",
       "check": {
         "path": "findings",
@@ -178,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "X4 in EMC findings",
       "check": {
         "path": "findings",
@@ -188,7 +179,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "X3 in EMC findings",
       "check": {
         "path": "findings",
@@ -198,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "X2 in EMC findings",
       "check": {
         "path": "findings",
@@ -208,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "X1 in EMC findings",
       "check": {
         "path": "findings",

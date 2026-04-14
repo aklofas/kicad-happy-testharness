@@ -18,29 +18,32 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits[0].drain_is_power",
+            "path": "findings",
             "op": "equals",
-            "value": false
+            "value": false,
+            "detector_filter": "detect_transistor_circuits[0].drain_is_power"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_key_matrices"
           }
         },
         {

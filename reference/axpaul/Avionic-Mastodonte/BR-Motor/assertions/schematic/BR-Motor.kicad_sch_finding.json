@@ -9,46 +9,53 @@
       "description": "The component description explicitly states 'P-Channel 40 V 50A (Tc)' and the part number encodes P-channel in its name ('50P04'). The lib_id uses a custom library (SQD50P04-13L_T4GE3:SQD50P04-13L_T4GE3) rather than the standard Transistor_FET: namespace, which appears to prevent the analyzer from detecting P-channel status. The analyzer should also check the component description field for 'P-Channel' or 'P-channel' keywords when the lib_id is not in a recognized namespace. This misclassification also causes an incorrect topology reading: the circuit shows drain_net=+BATT and source_net=VCC which is consistent with a P-channel high-side switch, not an N-channel device.",
       "created_from": "FND-00000380",
       "check": {
-        "path": "signal_analysis.transistor_circuits[?reference=='Q1'].is_pchannel",
+        "path": "findings.is_pchannel",
         "op": "eq",
         "value": false
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: eq"
+      "aspirational_reason": "unsupported op: eq",
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[?reference=='Q1'].is_pchannel"
     },
     {
       "id": "FND-00000380-AST-02",
       "description": "The LM340AT uses the KiCad lib_id 'Regulator_Linear:L7805' which is the 78xx series fixed positive voltage regulator. The 78xx/LM340 family is NOT an LDO \u2014 it requires approximately 2V of dropout voltage at full load. True LDOs typically achieve <300-500mV dropout. The analyzer classifies all Regulator_Linear parts as 'LDO' topology, which is misleading for classic fixed-dropout regulators. The output_rail is correctly identified as +5V.",
       "created_from": "FND-00000380",
       "check": {
-        "path": "signal_analysis.power_regulators[0].topology",
+        "path": "findings[0].topology",
         "op": "eq",
-        "value": "LDO"
+        "value": "LDO",
+        "detector_filter": "detect_power_regulators"
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: eq"
+      "aspirational_reason": "unsupported op: eq",
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].topology"
     },
     {
       "id": "FND-00000380-AST-03",
       "description": "INCORRECT: Each optocoupler/Schmitt-trigger input has both a pull-up resistor (e.g. R24 from +3.3V) and a series resistor (e.g. R30 from signal) both connecting to the same RC node (e.g. IN_N2 with C17 to GND). The analyzer detects both the pull-up R and the series R as separate RC filters with the same capacitor, resulting in 12 detections instead of 6. The 6 spurious entries all have a power rail (+3.3V) as their input_net, while the 6 genuine signal-path filters have unnamed nets as their input. The genuine filters are: R28-C18, R30-C17, R34-C16, R36-C15, R38-C14, R40-C13.",
       "created_from": "FND-00000380",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "eq",
-        "value": 12
+        "value": 12,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000380-AST-04",
       "description": "The design contains three DRV8872DDA integrated H-bridge brushed DC motor drivers (lib_id: Driver_Motor:DRV8872DDA), yet signal_analysis.bridge_circuits is empty (0 entries). The drivers are correctly identified as 'motor driver' in ic_pin_analysis.function, so the functional identification is present. However, bridge_circuits remains empty because that detector targets discrete transistor H-bridge topologies rather than integrated motor driver ICs. A user relying on bridge_circuits to find all motor drive stages would miss all three DRV8872 instances. Ideally, integrated motor driver ICs from the Driver_Motor: library family should also appear in bridge_circuits.",
       "created_from": "FND-00000380",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "eq",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     }
   ]
 }

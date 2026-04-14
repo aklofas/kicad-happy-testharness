@@ -1,16 +1,17 @@
 {
   "file_pattern": "phantom_3_pro_esc_center_board.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~7 (tolerance 10%)",
+      "description": "Finding count ~21 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~71 (+-10)",
+      "description": "EMC risk score ~78.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 61,
-        "max": 81
+        "min": 68.0,
+        "max": 88.0
       }
     },
     {
@@ -138,6 +139,15 @@
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "~3 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
         "op": "min_count",
         "value": 2
       }

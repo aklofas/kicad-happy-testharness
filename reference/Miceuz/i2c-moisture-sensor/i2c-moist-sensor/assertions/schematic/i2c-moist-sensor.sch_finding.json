@@ -30,11 +30,13 @@
       "description": "The crystal X1 (16MHz) has two load capacitors C1 (33p) and C2 (33pp). Only C1 is listed in the crystal_circuits load_caps array. C2 has value '33pp' which is a typo for '33pF' (double p). The capacitance parser cannot interpret '33pp' as a valid value, so C2's farads is null and it is excluded from the crystal circuit entry. A balanced crystal circuit requires two equal load caps; the output only shows one. The analyzer should ideally still list C2 as a crystal load cap even without a parseable capacitance value, or note that a second crystal cap was detected but its value was unparseable.",
       "created_from": "FND-00002137",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].load_caps",
+        "path": "findings[0].load_caps",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].load_caps"
     }
   ]
 }

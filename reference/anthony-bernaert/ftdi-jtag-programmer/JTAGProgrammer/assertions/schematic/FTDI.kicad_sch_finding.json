@@ -9,11 +9,13 @@
       "description": "The FTDI sub-sheet contains a FT2232HL (U1) with ADBUS0=JTAG_TCK, ADBUS1=JTAG_TDI, ADBUS2=JTAG_TDO, ADBUS3=JTAG_TMS, ADBUS7=JTAG_SRST on channel A, and BDBUS0=UART_TXD, BDBUS1=UART_RXD, BDBUS2=UART_RTS, BDBUS3=UART_CTS on channel B. None of these are detected as JTAG or UART interfaces. The named nets (JTAG_TCK, UART_TXD, etc.) are flagged only as 'single_pin_nets' in design_observations, but no JTAG bus detector or UART bus detector fires. The four 74LVC3G17 buffer/level-shifter ICs (U4-U7) between the FTDI and target connector are also not identified as level shifters.",
       "created_from": "FND-00002073",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/jtag/i"
+        "value": "/jtag/i",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

@@ -2,21 +2,24 @@
   "file_pattern": "Battery Balancer.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 bms_systems",
+      "description": "Exactly 1 detect_bms_systems",
       "check": {
-        "path": "signal_analysis.bms_systems",
+        "path": "findings",
+        "detector_filter": "detect_bms_systems",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "U1 in bms_systems",
+      "description": "U1 in detect_bms_systems",
       "check": {
-        "path": "signal_analysis.bms_systems",
+        "path": "findings",
+        "detector_filter": "detect_bms_systems",
         "op": "contains_match",
         "field": "bms_reference",
         "pattern": "^U1$"
@@ -24,39 +27,53 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 design_observations",
+      "description": "Exactly 3 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 suggested_certifications",
+      "description": "Exactly 4 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 transistor_circuits",
+      "description": "Exactly 1 detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Q6 in transistor_circuits",
+      "description": "Q6 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 4 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 4
       }
     }
   ]

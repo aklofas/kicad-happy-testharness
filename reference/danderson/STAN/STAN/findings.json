@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "U8 TLV76133DCY correctly detected as LDO regulator with input_rail=USB_VBUS and output_rail=+3.3V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U8$"
+            "pattern": "^U8$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -24,12 +25,13 @@
         },
         {
           "description": "U9 USBLC6-2P6 ESD protection correctly detected on USB_DP, USB_DM, and USB_VBUS nets",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U9$"
+            "pattern": "^U9$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -40,12 +42,13 @@
         },
         {
           "description": "Crystal Y1 (X50328MSB2GI) correctly detected with 2x 20pF load caps (C6, C9) giving effective CL=13pF, flagged as in_typical_range=true",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -58,12 +61,13 @@
         },
         {
           "description": "Low-pass RC filter R5 (47k) / C16 (0.1uF) at 33.86 Hz correctly detected on +3.3V rail",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R5$"
+            "pattern": "^R5$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -75,11 +79,12 @@
         },
         {
           "description": "13 decoupling caps on +3.3V rail (15.8uF total including C1 4.7uF bulk and C20 10uF) correctly analyzed with has_bulk=true, has_bypass=true",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [
@@ -91,12 +96,13 @@
         },
         {
           "description": "U1 STM32F401VCTx correctly detected as ic_with_internal_regulator topology in power_regulators",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -107,11 +113,12 @@
         },
         {
           "description": "USB data lines USB_DP and USB_DM correctly flagged with has_esd_protection=true via U9",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -122,11 +129,12 @@
         },
         {
           "description": "Missing input cap warning for U8 TLV76133DCY on USB_VBUS rail correctly flagged in regulator_caps observation",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -143,7 +151,7 @@
         },
         {
           "description": "Decoupling observation flags U7 AP22816KC and U1 STM32F401VCTx as missing caps on PWR_ON and PWR_OK rails, but these are logic signals not power rails requiring decoupling",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U1",
@@ -156,12 +164,13 @@
       "missed": [
         {
           "description": "U4 IS61C5128AS-25TLI (512Kx8 SRAM) and U6 S29GL064S70TFI040 (64Mbit NOR flash) not detected in memory_interfaces. They connect to U1 STM32F401VCTx through bus buffers (U10/U8/U11/U9 74ALVC16245DG, U15/U16 74AHC16373DG) rather than directly, which prevents detection.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [

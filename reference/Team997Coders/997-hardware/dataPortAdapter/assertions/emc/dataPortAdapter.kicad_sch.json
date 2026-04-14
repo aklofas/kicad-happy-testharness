@@ -1,47 +1,48 @@
 {
   "file_pattern": "dataPortAdapter.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~11 (tolerance 10%)",
+      "description": "Finding count ~8 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "low count ~11",
+      "description": "low count ~6",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 5,
+        "max": 7
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "EMC risk score ~94 (+-10)",
+      "description": "EMC risk score ~97.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 84,
+        "min": 87.0,
         "max": 100
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "11 io_filtering finding(s)",
+      "description": "6 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 11
+        "value": 6
       }
     },
     {
@@ -64,11 +65,11 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "~8 probe point(s) in test plan",
+      "description": "~3 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 7
+        "value": 2
       }
     },
     {

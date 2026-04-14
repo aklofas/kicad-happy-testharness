@@ -2,12 +2,14 @@
   "file_pattern": "EncoderMIDI.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
       "description": "Exactly 1 tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "equals",
         "value": 1
       }
@@ -16,7 +18,8 @@
       "id": "STRUCT-00000002",
       "description": "R3 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R3$"

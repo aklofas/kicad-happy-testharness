@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The analyzer reports an RC filter with R1 (560\u03a9) on Vout1\u2192D3A and C2 (47\u00b5F) on Vout1\u2192V-. R1 is an LED current-limiting resistor for D5 (D3A net is the LED anode). C2 is the LM7805 output bypass cap. R and C share one node (Vout1) but C2 bypasses Vout1 to ground while R1 routes current to the LED \u2014 they do not form a series RC low-pass filter. The reported cutoff_hz of 6.05 Hz is physically meaningless for this topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -27,14 +28,15 @@
         },
         {
           "description": "The design_observations section reports {\"category\": \"decoupling\", \"component\": \"U1\", \"rails_without_caps\": [\"Vin\"]}. However, C1 (470\u00b5F) is directly connected on the Vin net (pin 1 of U1 is Vin, and C1 pin 1 is also on Vin). The ic_pin_analysis for U1 pin 1 itself correctly shows has_decoupling_cap: true with C1 listed. The design_observation is contradictory and incorrect.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "category": "decoupling",
               "component": "U1"
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         },
         {
@@ -50,11 +52,12 @@
       "missed": [
         {
           "description": "D1, D2, D3, D4 are four 1N4007 diodes arranged as a full-wave bridge rectifier fed from J3 (barrel jack). The schematic text annotation 'N2 - Bridge rectifier' confirms this. The signal_analysis.bridge_circuits array is empty \u2014 the analyzer failed to recognize the topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           }
         }
       ],

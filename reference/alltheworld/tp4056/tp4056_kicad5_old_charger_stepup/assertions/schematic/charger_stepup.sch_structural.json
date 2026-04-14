@@ -2,48 +2,54 @@
   "file_pattern": "charger_stepup.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 battery_chargers",
+      "description": "Exactly 5 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 3
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 6 esd_coverage_audit",
+      "description": "Exactly 2 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 2 led_audit",
-      "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 4 rc_filters",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 detect_battery_chargers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
         "op": "equals",
-        "value": 4
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 3 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "R3 in rc_filters",
+      "description": "R3 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R3$"
@@ -51,9 +57,10 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "R4 in rc_filters",
+      "description": "R4 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R4$"
@@ -61,9 +68,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "R5 in rc_filters",
+      "description": "R5 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R5$"
@@ -71,11 +79,32 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 4 suggested_certifications",
+      "description": "Exactly 4 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Exactly 1 validate_led_resistors",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Exactly 2 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 2
       }
     }
   ]

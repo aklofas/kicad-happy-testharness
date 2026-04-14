@@ -17,31 +17,34 @@
         },
         {
           "description": "U4 (ICE40UP5K-SG48I) function=FPGA (Xilinx). U2 (MIC5504-1.2YM5) detected as LDO with input_rail=+3V3, output_rail=+1V2, estimated_vout=1.2V (correct, from fixed suffix). U3 (AT25SF081-SSH) detected as SPI flash in memory_interfaces with processor=U4 and 4 shared SPI nets.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "R4 (100R) series with C5 (10uF) and C6 (100nF) in parallel to GND. Total capacitance 10.1uF, cutoff 157.6 Hz. Input net +1V2, output to unnamed decoupling node. Topology matches source schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The TPS22919DCK is a 5V/3A single-channel load switch (MOSFET pass element with no voltage regulation). IN=+3V3, OUT=VCCIO_1 \u2014 output is simply switched +3V3. Analyzer classifies it topology=LDO. This cascades into a false positive in cross_domain_signals: the analyzer treats VCCIO_1 as a distinct regulated voltage domain rather than recognizing it equals +3V3.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -57,11 +60,12 @@
       "missed": [
         {
           "description": "Net names SPI_SCK, SPI_SI, SPI_SO, SPI_SS unambiguously identify an SPI bus. U4 pins 14-17 and U3 pins 1,2,5,6 all connect to these nets. memory_interfaces correctly identifies 4 shared signal nets between U3 and U4, but bus_analysis.spi remains empty. The SPI bus should appear there.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],

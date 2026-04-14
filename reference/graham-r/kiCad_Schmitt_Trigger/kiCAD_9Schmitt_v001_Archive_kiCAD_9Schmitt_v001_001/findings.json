@@ -8,9 +8,10 @@
       "summary": "RC input-conditioning filters correctly detected with accurate cutoff frequency",
       "details": "All 9 channels of the 9-channel Schmitt trigger design have R2(18K2)+C(100nF) RC low-pass filters correctly identified with fc=87.45 Hz (verified: 1/(2*pi*18200*100e-9) = 87.45 Hz). The analyzer correctly identified R2 as the filter resistor and excluded the upstream series resistor R1(82K) that is isolated by diode D1.",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 9
+        "value": 9,
+        "detector_filter": "detect_rc_filters"
       }
     },
     {

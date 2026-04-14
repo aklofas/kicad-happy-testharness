@@ -9,7 +9,7 @@
       "description": "The schematic parses all 4 sheets correctly: OTC.sch, ESP8285.sch, USB-UART.sch, HVPS_SMD.sch. Component counts, BOM grouping, and power rails (+3V3, +5V, GND, HT, VBus, VCC, etc.) all look accurate.",
       "created_from": "FND-00000965",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Y1 (26MHz) crystal with C2 and C3 (12pF each) load capacitors is correctly detected. Effective load capacitance computed as 9pF which is reasonable.",
       "created_from": "FND-00000965",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "D1 (D_Schottky_Small) identified as reverse_polarity protection on VBus. U5 (ESD SOT143) identified as ESD protection on USB D+/D- lines. Both are accurate.",
       "created_from": "FND-00000965",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "Rsen1 is a 40m\u03a9 shunt resistor in an R_2010 package, used in the LM3478-based high-voltage boost supply. The current_sense detector returned an empty list. This is a real current sensing element that should be detected.",
       "created_from": "FND-00000965",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

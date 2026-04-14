@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The kicad_sch analyzer detected the key matrix with rows=[row0..row4] and columns=[col0..col5], estimated_keys=31, switches_on_matrix=31, diodes_on_matrix=30. The SofleChocWireless is a 30-key (plus encoder) per-half design, so 31 keys (including encoder) is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].columns",
+            "path": "findings",
             "value": 6,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_key_matrices[0].columns"
           }
         },
         {
@@ -48,11 +49,12 @@
       "missed": [
         {
           "description": "The SofleChocWireless has SK6812 Mini-E addressable RGB LEDs integrated into each hotswap socket (footprint names include 'SK6812MiniE'). There is a net named 'LED' and a 'LED' signal in the schematic. The signal_analysis.addressable_led_chains array is empty, meaning the WS2812/SK6812 chain detection did not fire. The design has 30 per-key LEDs chained via the LED net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],
@@ -73,22 +75,24 @@
       "correct": [
         {
           "description": "The legacy .sch version of the design includes R1 and R2 as I2C pull-up resistors on SDA and SCL respectively. The analyzer correctly reports has_pullup=true, pullup_resistor='R2'/'R1', pullup_rail='VCC' for both I2C lines. This version predates the wireless redesign that removed the pull-ups.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[1].has_pullup",
+            "path": "findings",
             "value": true,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_design_observations[1].has_pullup"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The legacy KiCad 5 schematic reports a 5x5 matrix (col_nets=[col0..col4]) with estimated_keys=54. However, the .sch file also contains col5 net labels (found at lines 9681-9690 in the .sch JSON), which means the matrix is actually 5x6. The kicad_sch version correctly reports 5x6. The legacy parser appears to miss col5 in the matrix reconstruction. The 54-key estimate is also implausible for one half of a split keyboard (should be ~31).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].columns",
+            "path": "findings",
             "value": 6,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_key_matrices[0].columns"
           }
         },
         {

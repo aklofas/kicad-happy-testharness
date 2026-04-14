@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The MC4558CPT is a dual bipolar op-amp (STMicroelectronics). It appears in signal_analysis.crystal_circuits with type='active_oscillator'. Op-amps are not oscillators by nature, and this schematic uses the MC4558CPT as a signal buffer/driver, not as an oscillator. The same false positive also appears in foxglove_foxglove.sch.json for the same IC. The crystal_circuits detector is incorrectly triggering on general-purpose op-amp library symbols.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],
@@ -36,11 +37,12 @@
       "incorrect": [
         {
           "description": "jasmine_jasmine.sch.json lists two false positives in crystal_circuits: U1 (MCP73831T, a single-cell LiPo battery charger controller) and U4 (PCA9674, an 8-bit I2C I/O expander). Neither IC has any oscillator functionality. The crystal_circuits detector appears to match on any IC that has an output pin connected to certain net patterns, regardless of whether it is actually an oscillator. These are clear misclassifications.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],
@@ -62,11 +64,12 @@
       "correct": [
         {
           "description": "luckybamboo has four XTAL4PIN crystal references (X1-X4), each with two 18pF load capacitors. All four are correctly detected in crystal_circuits with their two load cap pairs, and the effective load capacitance is computed correctly as 12pF (9pF series + 3pF stray). This demonstrates correct multi-crystal handling for a board with symmetric repeated circuit blocks.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],
@@ -93,11 +96,12 @@
         },
         {
           "description": "luckybamboo contains four ADF7242 IEEE 802.15.4 2.4 GHz radio transceivers with external XTAL oscillators (X1-X4), HHM2293A1 bandpass filters, BGA7H1H6 RF amplifiers, and a SKY13322 SP3T RF switch. Despite this board being a dense RF subsystem, signal_analysis.rf_chains is empty. The analyzer does classify HHM2293A1/BGA7H1N6/ADF7242 as active_oscillator false positives in crystal_circuits, but produces no rf_chain detection. The board clearly warrants at least one rf_chain entry grouping the transceiver, filter, amplifier, and switch per channel.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           }
         }
       ],
@@ -209,11 +213,12 @@
         },
         {
           "description": "gladiolus has 10 inductors (L1-L10) forming anti-aliasing and reconstruction filters for the ADC/DAC signal paths, along with 3 capacitors (C9, C10, C14-C16). The rf_matching detector produces 6 separate matching network entries, treating each inductor as an 'antenna' component with all adjacent L/C components as its matching network. These are not antenna matching networks \u2014 they are multi-section LC bandpass/lowpass filters for the 50MSPS ADC input and 175MSPS DAC output. The inductor values (1-2.2uH) and resonant frequencies (9-33 MHz) are consistent with signal filtering, not antenna matching.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rf_matching"
           }
         }
       ],

@@ -19,29 +19,31 @@
       "incorrect": [
         {
           "description": "C3 ('10 \u03bcF') is parsed as farads=1e-11 (should be 1e-5 F). C1, C2, C4 ('0.1 \u03bcF') are parsed as farads=0.1 (should be 1e-7 F). The Unicode \u00b5 prefix is not handled, treating '0.1 \u03bcF' as 0.1 F (100,000 \u00b5F) and '10 \u03bcF' as something around 10 pF. This cascades to decoupling analysis (total_capacitance_uF reports 200000.0 \u00b5F instead of ~10.2 \u00b5F) and RC filter time constants (RC = 100s instead of ~100\u00b5s for R=1k\u03a9, C=0.1\u00b5F).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "rail": "+5V",
               "total_capacitance_uF": {
                 "less_than": 100
               }
-            }
+            },
+            "detector_filter": "detect_decoupling"
           }
         },
         {
           "description": "Two RC filter instances are detected (R2+C4 and R1+C4), both reporting cutoff_hz=0.0 and enormous time constants (100s and 1000s respectively). The correct cutoff for R2(1k\u03a9)+C4(0.1\u00b5F) is ~1592 Hz and for R1(10k\u03a9)+C4(0.1\u00b5F) is ~159 Hz. The root cause is the \u00b5F\u2192F conversion bug. Additionally, R1 (10k\u03a9 pull-up) and C4 do not actually form a standalone RC filter \u2014 C4 is the SW1 debounce capacitor connected between the switch output and GND, not between R1 and GND, making one of the two detections a false positive.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "cutoff_hz": {
                 "greater_than": 100
               }
-            }
+            },
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -139,20 +141,22 @@
       "incorrect": [
         {
           "description": "R2 (1 k\u03a9) + C4 (0.1 \u00b5F) form a switch debounce RC. The analyzer stores C4 as farads=0.1 (treating the \u00b5F numeric value as Farads), producing time_constant=100 s and cutoff_hz=0.0016 Hz rounded to 0.00. Correct values: time_constant=100 \u00b5s, cutoff=1591.5 Hz. The unicode '\u00b5' with space prefix (e.g. '0.1 \u00b5F') is not correctly scaled to Farads. The same bug makes R1+C4 a spurious second filter entry with input_net=+3.3V (pull-up resistor misidentified as filter input). The actual circuit is a pull-up (R1) + series resistor (R2) + debounce cap (C4) for SW1.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters[0].cutoff_hz",
+            "path": "findings",
             "value": 0.0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_rc_filters[0].cutoff_hz"
           }
         },
         {
           "description": "In the decoupling_analysis section: C3 (10 \u00b5F) has farads=1e-11 and self_resonant_hz=1.59e9 Hz \u2014 both are wildly wrong. C1 and C2 (0.1 \u00b5F each) have farads=0.1 \u2014 treating \u00b5F value as Farads. total_capacitance_uF=200000 (should be ~10.2 \u00b5F) is internally consistent with the bug: 0.1 F \u00d7 1e6 = 100000 \u00b5F each for C1 and C2. Correct: C3=10 \u00b5F=1e-5 F, C1=C2=0.1 \u00b5F=1e-7 F. This is a separate code path from pdn_impedance (which has different unit handling).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+            "path": "findings",
             "value": 200000.0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling_analysis[0].total_capacitance_uF"
           }
         },
         {

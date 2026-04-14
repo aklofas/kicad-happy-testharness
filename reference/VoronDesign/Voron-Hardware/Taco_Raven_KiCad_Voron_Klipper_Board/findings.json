@@ -37,7 +37,7 @@
       "incorrect": [
         {
           "description": "Single-pin nets reported on TMC2130 GNDP1 pins (SPI_CS_X/Y/E0/E1/Z2/Z3) - these are likely valid chip-select nets connected via hierarchical sheets, flagged as single-pin because sub-sheet connections are not followed",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -45,7 +45,7 @@
         },
         {
           "description": "Regulator caps flagged as missing for A4403 and AP2112 input/output - likely present but on unnamed nets the analyzer cannot trace back to the regulator",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "A4403"
@@ -55,7 +55,7 @@
         },
         {
           "description": "MOSFET transistor circuits not detected despite board having high-current heater and fan outputs (expected for a Voron printer controller)",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -63,7 +63,7 @@
         },
         {
           "description": "USB D+ flagged as missing ESD protection, but USB may not be a primary interface on this board",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -73,11 +73,12 @@
       "missed": [
         {
           "description": "No crystal circuit detected - ATSAMD51 typically uses an external crystal/oscillator, likely present but not identified",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -86,20 +87,21 @@
         },
         {
           "description": "TMC2130 SPI bus topology not characterized - 8 stepper drivers sharing SPI with individual chip selects is a key design pattern",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "No current sense detection despite TMC2130 drivers having sense resistors for motor current setting",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [],

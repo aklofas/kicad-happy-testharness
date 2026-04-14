@@ -17,11 +17,12 @@
         },
         {
           "description": "The key_matrices detection (rows: 5, columns: 15, switches_on_matrix: 77, diodes_on_matrix: 65, estimated_keys: 77) is accurate. The 12-switch diode shortfall is by design: the 12 Kb-prefixed switches (Kb014, Kb200, Kb213, Kb300, Kb312, Kb400, Kb401, Kb402, Kb406, Kb411, Kb412, Kb413) are alternate layout position keys sharing the same matrix nodes as primary K-prefixed switches. This is standard keyboard PCB practice for supporting multiple layout options. The 5x15=75 logical matrix positions are correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].rows",
+            "path": "findings",
             "op": "eq",
-            "value": 5
+            "value": 5,
+            "detector_filter": "detect_key_matrices[0].rows"
           }
         }
       ],

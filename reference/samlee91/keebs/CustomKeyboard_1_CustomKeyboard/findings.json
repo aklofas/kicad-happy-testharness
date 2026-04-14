@@ -18,11 +18,12 @@
         },
         {
           "description": "The key_matrices detector correctly identifies the 7\u00d718 matrix from row/col net names and finds 90 diodes on the matrix. However, switches_on_matrix=0 because the 90 K_* components have type='relay' rather than 'switch', so the key matrix scanner does not count them as switches. The matrix relies on net-name detection for its existence but cannot correlate switches to it. The estimated_keys=90 is correct but switch_count reporting is wrong.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],

@@ -9,22 +9,24 @@
       "description": "All rev2 and rev3 keyboard PCBs (left, right, receiver, thumb cluster at 115.57x106.68mm) correctly trigger the board_size DFM violation noting the JLCPCB pricing tier boundary. The keyboard plate PCBs (116.25x111.5mm) are also correctly flagged. The routing is reported as complete (routing_complete=true, unrouted_count=0) for all boards. The 2-layer stackup (F.Cu/B.Cu) is correctly identified, and GND+3V3 zone stitching with via density analysis is correctly reported.",
       "created_from": "FND-00002192",
       "check": {
-        "path": "dfm.violations[0].parameter",
+        "path": "findings[0].parameter",
         "op": "equals",
         "value": "board_size"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: dfm.violations[0].parameter"
     },
     {
       "id": "FND-00002192-AST-02",
       "description": "The analyzer correctly identifies a courtyard overlap between KEY1 (key switch) and LD2 (status LED) on F.Cu with 1.776mm2 overlap, and between J3 and D12 on B.Cu with 0.343mm2 overlap. The KEY1/LD2 overlap is noteworthy in a keyboard design\u2014it suggests the LED is intentionally placed within the key switch footprint area, which is a common technique for per-key RGB but requires careful 3D verification. The 22 tombstoning risk flags for 0402 capacitors with GND pour on one pad are also correctly identified.",
       "created_from": "FND-00002192",
       "check": {
-        "path": "placement_analysis.courtyard_overlaps",
+        "path": "findings",
         "op": "min_count",
         "value": 2
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: placement_analysis.courtyard_overlaps"
     }
   ]
 }

@@ -2,16 +2,17 @@
   "file_pattern": "sch_power_supply.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "5 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 5
+        "value": 3
       }
     },
     {
@@ -26,16 +27,6 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "U901 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU901\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
       "description": "U1005 in EMC findings",
       "check": {
         "path": "findings",

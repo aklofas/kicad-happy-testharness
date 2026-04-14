@@ -9,7 +9,7 @@
       "description": "8 components (3 ic, 3 connector, 1 transistor, 1 resistor), power rails +3.3V/+5V/GND, and all footprints correctly extracted. BOM accurately lists all 8 unique parts with correct footprints and datasheets.",
       "created_from": "FND-00000590",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Q1 base=LCD_CTL, collector=GND, emitter=LCD_GND is an unusual but real topology (LCD backlight ground switch). The analyzer correctly identifies: type=bjt, load_type=connector (LCD connector on emitter side), base_resistors=[R1 1k]. The collector_is_power=true and emitter_is_ground=true flags are consistent with the actual net assignments.",
       "created_from": "FND-00000590",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The schematic has no capacitors at all; the WeMos module is powered directly from the IRM-03-5 without local decoupling. The design_observations entry for U2 correctly lists both rails as rails_without_caps.",
       "created_from": "FND-00000590",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "U1 is a MeanWell IRM-03-5, a 3W AC/DC module (5V output). U3 is a MeanWell SLC03-series isolated DC/DC converter. Neither appears in signal_analysis.power_regulators. The detector likely only recognizes regulators by lib_id keywords (LDO, VREG, etc.) and misses custom-library AC/DC and DC/DC modules. These are the primary power supply components of the design.",
       "created_from": "FND-00000590",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

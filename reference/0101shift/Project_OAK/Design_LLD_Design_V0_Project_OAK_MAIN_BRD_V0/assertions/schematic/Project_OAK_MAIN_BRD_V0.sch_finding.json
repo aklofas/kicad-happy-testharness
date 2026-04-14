@@ -30,11 +30,13 @@
       "description": "INCORRECT: The voltage divider R14/R15 feeding +3V0_VOL_MON has mid_point_connections that includes U2 (RX8130CE) pin 7 (GND, type=power_in). This is because the RX8130CE's GND pin happens to be connected to the +3V0_VOL_MON net (likely a schematic routing error in the source). The analyzer correctly reports the net connection, but listing a GND-type power pin as a mid-point load is misleading. A proper mid-point load should be a signal or input type pin.",
       "created_from": "FND-00001721",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     }
   ]
 }

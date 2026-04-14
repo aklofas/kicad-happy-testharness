@@ -35,29 +35,32 @@
         },
         {
           "description": "All 37 LEDs (D1\u2013D37) and all 7 BC547 NPN transistors (Q1\u2013Q7) are identified. Transistor circuit analysis correctly shows 6 transistors with LED loads (Q2\u2013Q7) and Q1 with a resistive load. emitter_is_ground=False is correct because emitter nets connect through 120E/1K resistors to +3V0, not GND directly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 7
+            "value": 7,
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "The analyzer correctly identifies 4 RC low-pass filters: R4/C3 (DWN_BTN), R3/C2 (UP_BTN), R2/C1 (LGT_ON_BTN), and R17/C13 (MCU_RSTn), all with 10k resistors and 0.1uF capacitors giving ~159 Hz cutoff. These are correct debounce/reset filter identifications.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "The 50% voltage divider (R14=10k top, R15=10k bottom) feeding the +3V0_VOL_MON net is correctly identified. This is used for battery voltage monitoring on an analog ADC pin of the ATmega328PB.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -119,11 +122,12 @@
         },
         {
           "description": "The voltage divider R14/R15 feeding +3V0_VOL_MON has mid_point_connections that includes U2 (RX8130CE) pin 7 (GND, type=power_in). This is because the RX8130CE's GND pin happens to be connected to the +3V0_VOL_MON net (likely a schematic routing error in the source). The analyzer correctly reports the net connection, but listing a GND-type power pin as a mid-point load is misleading. A proper mid-point load should be a signal or input type pin.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],

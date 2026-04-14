@@ -9,7 +9,7 @@
       "description": "AP1231-1.8V has VOUT (pin 5) connected to GND and VIN (pin 1) connected to VDD_1.8V \u2014 a backwards connection. The analyzer faithfully reports output_rail=GND which matches the netlist, accurately exposing a schematic/library symbol error.",
       "created_from": "FND-00001008",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Q1 12MHz crystal with C8/C11 (27pF each) correctly identified as a crystal circuit. Effective load capacitance 16.5pF is a reasonable series calculation. Detected consistently across all revisions.",
       "created_from": "FND-00001008",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "I2C0_SCL(EINT) and I2C0_SDA(EINT) correctly detected with 1.5k pull-ups to +1.8V via R19/R20 connecting U4 (PCA9306) and U6 (BC66). Bus analysis is accurate.",
       "created_from": "FND-00001008",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "USB_D+ and USB_D- correctly identified as USB differential pair on USB-UART1. The design_observations correctly note has_esd_protection=false for the USB data lines, which is accurate (no TVS/ESD diode present).",
       "created_from": "FND-00001008",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "C2 (22uF/6.3V X5R) on the +5V rail has <50% voltage derating margin. The warning is valid \u2014 best practice requires 2x derating for electrolytic/ceramic caps. Consistent across all revisions.",
       "created_from": "FND-00001008",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -59,7 +59,7 @@
       "description": "D1 (1N5819 Schottky) on +5V_EXT\u2192+5V is correctly identified as reverse polarity protection. D2-D5 are also Schottky diodes in other circuit contexts (flyback protection, etc.) and are not flagged as primary protection devices \u2014 this appears contextually correct.",
       "created_from": "FND-00001008",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -69,7 +69,7 @@
       "description": "rf_chains=[] and rf_matching=[] for a design with a Quectel BC66 NB-IoT module (U6) connected to an ANT1 U.FL connector through L3 (0R jumper) and optional capacitors C13/C14 (NA). Even a minimal pass-through antenna path should trigger rf_chains detection. Reproduced across all three main revisions.",
       "created_from": "FND-00001008",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

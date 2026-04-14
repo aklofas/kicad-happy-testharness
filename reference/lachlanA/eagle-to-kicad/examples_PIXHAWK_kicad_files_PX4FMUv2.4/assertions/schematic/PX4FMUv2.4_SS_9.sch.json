@@ -1,7 +1,8 @@
 {
   "file_pattern": "PX4FMUv2.4_SS_9.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,86 +35,59 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 design_observations detected",
+      "description": "19 audit_esd_protection detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "19 esd_coverage_audit detected",
+      "description": "1 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "All esd_coverage_audit have connector_ref",
+      "description": "2 detect_level_shifters detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "not_contains_match",
-        "field": "connector_ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "All esd_coverage_audit coverage values are valid",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "coverage",
-        "pattern": "^(full|partial|none)$",
-        "value": 19
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "All esd_coverage_audit risk_level values are valid",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "risk_level",
-        "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 19
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "2 level_shifters detected",
-      "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "All level_shifters have ref",
+      "id": "SEED-00000008",
+      "description": "All detect_level_shifters have ref",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^$"
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "All level_shifters type values are valid",
+      "id": "SEED-00000009",
+      "description": "All detect_level_shifters type values are valid",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "count_matches",
         "field": "type",
         "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
@@ -121,44 +95,48 @@
       }
     },
     {
+      "id": "SEED-00000010",
+      "description": "3 detect_protection_devices detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "2 detect_suggested_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "1 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
       "id": "SEED-00000013",
-      "description": "3 protection_devices detected",
+      "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "2 suggested_certifications detected",
-      "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000015",
-      "description": "1 voltage_dividers detected",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "All voltage_dividers have non-zero ratio",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "not_contains_match",
         "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000014",
       "description": "Has 20 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

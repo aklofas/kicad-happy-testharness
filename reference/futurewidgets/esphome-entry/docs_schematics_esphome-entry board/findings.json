@@ -37,11 +37,12 @@
       "missed": [
         {
           "description": "U2 is a PC817 optocoupler connecting the remote button input (J2) to the ESP32-C3 GPIO21 via the TRIGGER_REMOTE net. The input side has the LED (anode via R1 to J2 pin 1, cathode to GND) and the output side connects to the microcontroller GPIO. This is a textbook galvanic isolation circuit. The isolation_barriers section is empty, and the signal_analysis.isolation_barriers list contains no entries. The PC817 is classified as a generic 'ic' type rather than being recognized as an optocoupler.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           }
         }
       ],

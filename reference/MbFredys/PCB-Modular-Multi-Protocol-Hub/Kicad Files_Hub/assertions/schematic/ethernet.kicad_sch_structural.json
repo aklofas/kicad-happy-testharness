@@ -2,67 +2,75 @@
   "file_pattern": "ethernet.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 crystal_circuits",
+      "description": "Exactly 1 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Y3 in crystal_circuits",
+      "description": "Exactly 1 detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Y3 in detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Y3$"
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 decoupling_analysis",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 detect_decoupling",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 2 design_observations",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 1 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 ethernet_interfaces",
+      "description": "Exactly 1 detect_ethernet_interfaces",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_ethernet_interfaces",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U12 in ethernet_interfaces",
+      "description": "U12 in detect_ethernet_interfaces",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_ethernet_interfaces",
         "op": "contains_match",
         "field": "phy_reference",
         "pattern": "^U12$"
@@ -70,18 +78,20 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 protection_devices",
+      "description": "Exactly 1 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U11 in protection_devices",
+      "description": "U11 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U11$"
@@ -89,18 +99,20 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 8 rc_filters",
+      "description": "Exactly 8 detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 8
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R52 in rc_filters",
+      "description": "R52 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R52$"
@@ -108,9 +120,10 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R51 in rc_filters",
+      "description": "R51 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R51$"
@@ -118,9 +131,10 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R54 in rc_filters",
+      "description": "R54 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R54$"
@@ -128,9 +142,10 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R53 in rc_filters",
+      "description": "R53 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R53$"
@@ -138,11 +153,22 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "Exactly 1 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

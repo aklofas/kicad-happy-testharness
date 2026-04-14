@@ -9,15 +9,15 @@
       "incorrect": [
         {
           "description": "X1 has lib_id 'Regulator_Switching:TPS63060' and is a buck-boost switching regulator. The analyzer typed it as 'connector', propagating to the BOM component_types count. As a result, power_regulators is empty in this sheet even though a feedback network and inductor are present. The assembly complexity also incorrectly scores X1 as a connector.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "signal_analysis.power_regulators is empty. The feedback divider (R25/R26 to X1 FB pin) and inductor L2 are present on this sheet, and the feedback_networks list correctly captures the divider. However the regulator itself is not classified, likely because the component type is 'connector'. If X1 were typed as 'ic', the regulator detector would likely trigger.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -40,9 +40,9 @@
       "correct": [
         {
           "description": "design_observations correctly identifies I2C_SCL and I2C_SDA with pull-up resistors R3 and R1 to +3V3 rail, and bus_analysis.i2c lists U1.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -51,15 +51,15 @@
       "incorrect": [
         {
           "description": "R4 value is '10K NTC' \u2014 an NTC thermistor for temperature sensing. The analyzer pairs it with C2 to form a low-pass RC filter (cutoff 15.92 Hz), but this is not a designed filter; R4 is a thermistor feeding the BQ34Z100's temperature measurement input. The RC filter detection is a false positive here.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "U1 is a BQ34Z100 battery fuel gauge IC with a dedicated 10m\u03a9 precision shunt R8 across Battery+ and Battery- for coulomb counting. Both bms_systems and current_sense are empty. The R8 value '0R01 75PPM' is unusual notation (0.01\u03a9) and the analyzer evidently doesn't parse this or match BQ34Z100 as a BMS/fuel-gauge part.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -82,9 +82,9 @@
       "correct": [
         {
           "description": "power_regulators correctly identifies U3 (SPV1040) as a switching regulator with L1 as its inductor. Protection TVS D10 (SMBJ5.0A) is also correctly classified. LC filter on PV+ input (L1/C8) is detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -93,7 +93,7 @@
       "incorrect": [
         {
           "description": "design_observations reports missing output caps for U3 (SPV1040) on net '__unnamed_2', but C13 (10uF/6V3), C14 (47uF/6V3), and C15 (47uF) are present on this sheet and decoupled to GND. The analyzer likely fails to associate unnamed nets with the regulator output when caps are nearby but not on the same explicit named net.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -115,11 +115,11 @@
       "incorrect": [
         {
           "description": "label_shape_warnings reports 'undriven input label' for Battery+, Battery-, NTC1, NTC2. These are hierarchical labels (shape=input) that are driven by the parent sheet's hierarchy \u2014 the input shape is normal convention for bidirectional or output-from-child labels. No actual ERC issue exists since they connect to BT1's passive pins.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "design_analysis.differential_pairs reports Battery+ and Battery- as a differential pair connected via BT1. These are simply the positive and negative supply terminals of a LTO battery pack \u2014 not a differential signal pair. The naming pattern (+/-) triggers a false differential pair classification.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -140,9 +140,9 @@
       "correct": [
         {
           "description": "Total component count, unique parts, DNP count (1), power rails (+3V3/GND), and component type breakdown all appear consistent with the sub-sheets combined.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -167,18 +167,18 @@
       "correct": [
         {
           "description": "Layer configuration (F.Cu/B.Cu), board dimensions (~80.8x70.6mm), footprint count, via count, track segment count, and routing_complete=false with 1 unrouted net all appear accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "thermal_analysis.zone_stitching correctly identifies GND pour on both F.Cu and B.Cu with 13,215mm\u00b2 area and 350 stitching vias. TPS63060 thermal pad (X1 pad 11) with 6 nearby thermal vias is also detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -187,7 +187,7 @@
       "incorrect": [
         {
           "description": "The PCB JSON statistics report front_side=14, back_side=65, but the gerber component_analysis reports front_side=23, back_side=56. One of these counts is wrong. The gerber count (79 total on both) matches but the front/back split differs significantly, suggesting a layer attribution discrepancy between analyzers.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -208,18 +208,18 @@
       "correct": [
         {
           "description": "All expected 2-layer gerber files present (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts) plus PTH and NPTH drill files. Board dimensions (80.87x70.71mm) match PCB. Alignment passes. 392 via holes + 67 component holes + 8 NPTH mounting holes correctly classified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Drill classification correctly uses X2 attributes to separate vias (392 \u00d7 0.5mm), component holes (67 across 5 tool sizes), and NPTH mounting holes (8 \u00d7 2.7mm). Min trace 0.2mm is reasonable for this design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

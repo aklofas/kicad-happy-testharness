@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "6 opamp circuits correctly identified: U3 units 1-2 (MCP6002) for CO gas sensing, U6 units 1-2 (MCP6002) for NO gas sensing, U9 units 1-2 (AD8676) for output buffering",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -26,12 +27,13 @@
         },
         {
           "description": "U3 unit 2 correctly identified as transimpedance/buffer for CO output with R8 feedback (10R)",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -43,12 +45,13 @@
         },
         {
           "description": "U6 unit 1 correctly identified as comparator (no feedback) generating Counter_NO digital output",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -59,12 +62,13 @@
         },
         {
           "description": "U9 units 1-2 (AD8676) correctly identified as transimpedance/buffer with R16/R19 (2.2k) feedback for U_Out_CO and U_Out_NO outputs",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U9$"
+            "pattern": "^U9$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -77,12 +81,13 @@
         },
         {
           "description": "Voltage divider R14/R9 (2.2k/1k, ratio=0.31) correctly detected generating reference for U3 non-inverting input",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "field_equals",
             "field": "ratio",
-            "value": 0.31
+            "value": 0.31,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -97,12 +102,13 @@
         },
         {
           "description": "Voltage divider R27/R28 (1k/1k, ratio=0.5) correctly detected generating mid-rail reference for U6 comparator",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "field_equals",
             "field": "ratio",
-            "value": 0.5
+            "value": 0.5,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -117,12 +123,13 @@
         },
         {
           "description": "RC low-pass filters R17/C8 and R15/C4 (1k/470nF, fc=338.6Hz) correctly detected for PWM-to-analog conversion on gas sensor heater drives",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R15$"
+            "pattern": "^R15$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -136,12 +143,13 @@
         },
         {
           "description": "U4 (OKI-78SR-5) correctly identified as switching DC-DC converter from +24V to +5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U4$"
+            "pattern": "^U4$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -152,12 +160,13 @@
         },
         {
           "description": "U5 (AP2127N-3.3) correctly identified as LDO from +5V to +3.3V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -186,12 +195,13 @@
         },
         {
           "description": "Power cascade +24V -> +5V -> +3.3V correctly reflected in regulator chain U4->U5",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U4$"
+            "pattern": "^U4$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -205,12 +215,13 @@
       "incorrect": [
         {
           "description": "Current sense detection claims R12 (R220=0.22 ohm) is a shunt resistor with U7 (LT1785xS8) as sense IC on RS485-A/RS485-B nets. However, U7 is an RS485 transceiver, not a current sense amplifier. R12 is likely a termination or bias resistor, not a current shunt.",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "shunt.ref",
-            "pattern": "^R12$"
+            "pattern": "^R12$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -223,12 +234,13 @@
         },
         {
           "description": "U4 (OKI-78SR-5_1.5-W36-C) estimated_vout=1.5V is wrong; it outputs 5V. The '1.5' in the part name refers to the 1.5A current rating, not the output voltage. The output rail is correctly labeled +5V.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "estimated_vout",
-            "value": 1.5
+            "value": 1.5,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [

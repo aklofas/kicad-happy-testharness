@@ -18,23 +18,25 @@
         },
         {
           "description": "signal_analysis.decoupling_analysis for +3.3V shows 4 caps all valued 100pF, but the schematic has 2x 10uF capacitors on +3.3V (in addition to 100pF decoupling caps). Because all capacitors share the duplicate reference 'C?', BOM deduplication collapses them to a single entry retaining only one value. When the decoupling analysis looks up cap values, all C? instances resolve to the same value, causing 10uF caps to be misidentified as 100pF. The analysis then incorrectly reports has_bulk=false and has_bypass=false for the +3.3V rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "contains_match",
             "field": "rail",
-            "pattern": "^\\+3\\.3V$"
+            "pattern": "^\\+3\\.3V$",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
       "missed": [
         {
           "description": "The schematic contains an AMS1117-3.3 (SOT-223) linear LDO regulator converting +5V USB to +3.3V. signal_analysis.power_regulators is empty. The regulator is correctly placed in a subcircuit (center_ic U? AMS1117-3.3) but the detector fails to classify it. This likely fails because the component reference is 'U?' (unannotated) rather than a numbered ref like 'U2', confusing the regulator recognition heuristic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

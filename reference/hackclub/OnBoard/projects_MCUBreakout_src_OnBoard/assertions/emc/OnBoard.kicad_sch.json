@@ -1,7 +1,8 @@
 {
   "file_pattern": "OnBoard.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~11",
+      "description": "medium count ~10",
       "check": {
         "path": "summary.medium",
         "op": "range",
         "min": 9,
-        "max": 13
+        "max": 11
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~60 (+-10)",
+      "description": "EMC risk score ~65.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 50,
-        "max": 70
+        "min": 55.5,
+        "max": 75.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {

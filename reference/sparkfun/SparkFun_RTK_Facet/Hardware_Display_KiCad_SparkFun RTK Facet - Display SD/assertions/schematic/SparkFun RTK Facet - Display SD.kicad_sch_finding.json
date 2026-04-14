@@ -19,10 +19,12 @@
       "description": "The RC low-pass filter formed by R2 (10k) and C7 (1.0uF) connected to the RESET net of U1 (SSD1306 OLED) is correctly detected. Cutoff frequency of 15.92 Hz (1/(2\u03c0\u00d710k\u03a9\u00d71\u03bcF)) is correct. Input net is 3.3V, output net is RESET, ground net is GND.",
       "created_from": "FND-00001523",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001523-AST-03",
@@ -39,10 +41,12 @@
       "description": "The decoupling_analysis correctly identifies C4 (1.0uF), C6 (1.0uF), and C16 (0.1uF) as decoupling capacitors for the 3.3V rail, totaling 2.1uF. has_bulk=true, has_bypass=true, has_high_freq=false is accurate. C1 (2.2uF) is correctly omitted as it connects to U1's VCC pin separately.",
       "created_from": "FND-00001523",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001523-AST-05",

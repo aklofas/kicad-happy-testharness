@@ -1,7 +1,8 @@
 {
   "file_pattern": "wchlinke-swd-adapter-checker.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,101 +35,95 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 decoupling_analysis detected",
+      "description": "20 audit_led_circuits detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 design_observations detected",
+      "description": "1 detect_decoupling detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "20 led_audit detected",
+      "description": "1 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "All led_audit have ref",
+      "description": "10 detect_pwm_led_dimming detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
+        "path": "findings",
+        "detector_filter": "detect_pwm_led_dimming",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "All led_audit type values are valid",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 20
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "All led_audit drive_method values are valid",
+      "description": "10 detect_transistor_circuits detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 20
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "2 suggested_certifications detected",
+      "description": "All detect_transistor_circuits have reference present",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "10 transistor_circuits detected",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All transistor_circuits have reference present",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
+      "description": "2 validate_pullups detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -137,7 +132,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "Has 20 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -146,7 +141,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "Has 20 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -155,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "Has 10 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

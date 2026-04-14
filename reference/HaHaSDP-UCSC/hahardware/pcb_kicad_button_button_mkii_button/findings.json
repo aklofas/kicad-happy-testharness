@@ -89,12 +89,13 @@
         },
         {
           "description": "LC filter correctly detected: L1 (10uH) with parallel C10+C11, resonant at ~159kHz for SMPS filter",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L1$"
+            "pattern": "^L1$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [
@@ -107,11 +108,12 @@
         },
         {
           "description": "Decoupling analysis on +3.3V rail correctly identifies 5 capacitors (C7, C6, C9, C24, C22) totaling ~1.02uF",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].cap_count",
+            "path": "findings",
             "op": "eq",
-            "value": 5
+            "value": 5,
+            "detector_filter": "detect_decoupling_analysis[0].cap_count"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [
@@ -153,11 +155,12 @@
         },
         {
           "description": "Both crystal circuits detected with correct frequency values (32MHz and 32.768kHz)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -172,12 +175,13 @@
         },
         {
           "description": "Y2 (32MHz crystal) only has 1 load cap detected (C15 33pF) but should have 2: C14 (27pF) on one side and C15 (33pF) on the other side, connected to FXTAL0 and FXTAL1 pins of U1",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Y2$"
+            "pattern": "^Y2$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -191,12 +195,13 @@
         },
         {
           "description": "Y1 (32.768kHz crystal) only has 1 load cap detected (C12 27pF) but should have 2: C12 (27pF) and C13 (22pF), connected to pins via the crystal oscillator circuit",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -213,12 +218,13 @@
         },
         {
           "description": "RC filter with R14/C18 has ground_net listed as +3.3V instead of GND. R14 connects BUTTON signal to C18, and C18's other terminal goes to +3.3V (as a pull-up decoupling). The ground reference for this filter is actually the +3.3V rail, which is technically valid for a high-side filter but the naming is confusing.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R14$"
+            "pattern": "^R14$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -232,12 +238,13 @@
       "missed": [
         {
           "description": "TLV1117LV-3V (U2) is a 3.3V LDO voltage regulator converting battery voltage to 3.3V, but power_regulators is empty. This is the primary power supply for the entire design.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -248,11 +255,12 @@
         },
         {
           "description": "RF matching network not detected: BAL1 (STBNR1_balun) with matching components C16, C17 (TBD), L2 connects STBlueNRG-1 RF pins to antenna pad via a balun+filter topology. This is a BLE 2.4GHz RF front-end.",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           },
           "detector": "rf_matching",
           "subject_refs": [
@@ -265,12 +273,13 @@
         },
         {
           "description": "Schottky diode protection circuit (D3, D4) providing reverse-current protection for battery charging is not detected as a protection device. These prevent reverse current flow from the supply into the coin cell battery.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D3$"
+            "pattern": "^D3$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -282,12 +291,13 @@
         },
         {
           "description": "Multi-stage SMPS input filter not characterized: the VBATT path uses R7-R8-R9-R10 (1k each) as series isolation resistors with parallel decoupling caps (C1/C2/C3, C4/C5/C6, C7/C8/C9, C22/C23/C24) forming a 4-stage pi-filter for the BlueNRG-1 SMPS supply.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R10$"
+            "pattern": "^R10$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [

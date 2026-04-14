@@ -8,22 +8,24 @@
       "correct": [
         {
           "description": "The analyzer correctly identifies two SY8009AAAC switching regulators (U2/U3) for the +3.3V and +1V2 rails respectively, detects the SPI configuration bus with prefix matching 'ICE40-', detects UART signals on PIO2_9/TxD and PIO2_8/RxD nets routed through U4 (the FPGA), identifies W25Q16 as a memory interface, and counts 5 power rails (+1V2, +3.3V, +5V, GND, PWR_FLAG). The 4-layer board stackup (F.Cu, In1(GND).Cu, In2(PWR).Cu, B.Cu) is also correctly parsed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The memory_interfaces detector reports connected_processors with shared_signal_nets=1 for the W25Q16 SPI flash connected to the iCE40HX1K FPGA. Inspection of net assignments shows that U1's DI, DO, CLK, CS, WP, and HOLD pins are all on unnamed/floating nets (e.g., __unnamed_16 through __unnamed_21), and only the CLK/SCK net ('iCE40-SCK') is actually shared with the FPGA. The SPI bus is effectively broken in the schematic \u2014 no MOSI/MISO/CS connections are made between U1 and U4. The analyzer's bus_analysis correctly identifies the SPI bus using only the iCE40-SD* prefix nets (which only have one end connected to U4/PGM1), but misses that U1 is not wired into this bus. This same issue appears in Rev A.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces[0].connected_processors[0].shared_signal_nets",
+            "path": "findings",
             "op": "equals",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces[0].connected_processors[0].shared_signal_nets"
           }
         }
       ],

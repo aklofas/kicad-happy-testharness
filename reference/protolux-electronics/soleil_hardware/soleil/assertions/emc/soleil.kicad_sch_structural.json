@@ -2,16 +2,17 @@
   "file_pattern": "soleil.kicad_sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 pdn finding(s)",
+      "description": "2 pdn finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^pdn$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -104,6 +105,36 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C15 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC15\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C14 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC14\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C24 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC24\\b"
       }
     }
   ]

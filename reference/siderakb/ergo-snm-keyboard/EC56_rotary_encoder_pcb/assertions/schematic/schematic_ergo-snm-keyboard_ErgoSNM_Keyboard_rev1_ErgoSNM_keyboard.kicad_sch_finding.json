@@ -9,11 +9,13 @@
       "description": "The rev1 flat schematic (no hierarchy, no MCU on-sheet, uses Pro Micro connectors J5/J6) correctly detects the 5x7 key matrix with ROW_0..ROW_4 and COL_0..COL_6, counting exactly 35 switch and 35 diode components all on the matrix. The 4 PWR_FLAG warnings (VCC, GND, VBUS, +BATT have no PWR_FLAG or power_out driver) are accurate\u2014rev1 uses Pro Micro connectors without explicit power flags. The 17 label_shape_warnings for ROW/COL global labels shaped as 'input' with no driver are correctly flagged since the MCU is external.",
       "created_from": "FND-00002185",
       "check": {
-        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "path": "findings[0].estimated_keys",
         "op": "equals",
-        "value": 35
+        "value": 35,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].estimated_keys"
     },
     {
       "id": "FND-00002185-AST-02",

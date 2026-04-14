@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "LTC2248 ADC and RF lowpass filter chain with 6 LC pairs at correct frequencies",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "16.368MHz TCXO correctly classified as active_oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -34,11 +36,12 @@
         },
         {
           "description": "4 power regulators correct: LMR10530Y buck 1.0V, LP5907 LDOs 1.8V and 3.3V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -58,12 +61,13 @@
       "incorrect": [
         {
           "description": "LMR10530Y (U701) fb_net='SW1' instead of 'FB' \u2014 KiCad 5 legacy pin-position-matching swaps SW (pin 7/8) and FB (pin 5) due to close y-coordinates",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U701$"
+            "pattern": "^U701$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -75,12 +79,13 @@
         },
         {
           "description": "LTC6401-20 (U405) +IN/-IN and +OUT/-OUT pins systematically swapped \u2014 same KiCad 5 pin-position bug, paired pins swap",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U405$"
+            "pattern": "^U405$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -113,11 +118,12 @@
       "correct": [
         {
           "description": "All 8 transistors detected with gate/base connections captured",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "equals",
-            "value": 8
+            "value": 8,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -127,11 +133,12 @@
         },
         {
           "description": "TPS7A4501 and LM2941 LDOs correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -140,12 +147,13 @@
         },
         {
           "description": "L202+C218 LC filter at 25.3Hz for power ripple correctly identified",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L202$"
+            "pattern": "^L202$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [
@@ -157,12 +165,13 @@
         },
         {
           "description": "Q201 MMBT4401 capacitance multiplier with base RC filter correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q201$"
+            "pattern": "^Q201$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -173,11 +182,12 @@
         },
         {
           "description": "5 RC snubber networks at bridge rectifier correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -188,12 +198,13 @@
       "incorrect": [
         {
           "description": "J310 N-JFETs and J271 P-JFET (Q501/Q502/Q507) typed as 'mosfet' \u2014 lib_id clearly indicates N_JFET/P_JFET",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q501$"
+            "pattern": "^Q501$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -208,12 +219,13 @@
         },
         {
           "description": "Q502 J271 P_JFET has is_pchannel=false \u2014 'p_jfet' not in P-channel detection patterns",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q502$"
+            "pattern": "^Q502$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -225,12 +237,13 @@
         },
         {
           "description": "Q503-Q506 (NPN_2E/PNP_2E 2-emitter BJTs) have emitter_net=null \u2014 pin detector looks for 'E'/'EMITTER' but these use 'E1'/'E2'",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q503$"
+            "pattern": "^Q503$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -246,11 +259,12 @@
       "missed": [
         {
           "description": "Bridge rectifier D201 (BR 0.5A 400V) not detected in bridge_circuits \u2014 detector focuses on H-bridge FETs, not diode bridges",
-          "analyzer_section": "signal_analysis.bridge_circuits",
+          "analyzer_section": "detect_bridge_circuits",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           },
           "detector": "bridge_circuits",
           "subject_refs": [

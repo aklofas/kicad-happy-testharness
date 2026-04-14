@@ -35,12 +35,13 @@
         },
         {
           "description": "W25Q128JVS SPI flash (U3) correctly detected as memory interface connected to FPGA with 6 shared signal nets",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -51,12 +52,13 @@
         },
         {
           "description": "TPD4E02B04DQAR ESD protection ICs (U6, U7) correctly detected protecting B2B differential pairs",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -77,12 +79,13 @@
         },
         {
           "description": "BSS138 MOSFET LED drivers (Q1, Q2, Q3) correctly detected with gate pulldown resistors and LED load identification",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -95,12 +98,13 @@
         },
         {
           "description": "Voltage divider R15/R16 (15K/3K from +12V) correctly detected feeding U9 EN pin via 1V_EN net",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R15$"
+            "pattern": "^R15$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -113,12 +117,13 @@
         },
         {
           "description": "VREF voltage divider R18/R19 (2K/2K from +1V8) correctly detected generating 0.9V reference for DDR2 SDRAM U2",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R18$"
+            "pattern": "^R18$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -167,11 +172,12 @@
         },
         {
           "description": "Decoupling analysis correctly identifies 5 power rails with cap counts: +1V0 (17 caps, 486.9uF), +3V3 (9 caps), +1V8 (23 caps), +12V (5 caps), VDDA (2 caps)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -182,12 +188,13 @@
       "incorrect": [
         {
           "description": "MPM54304GMN-0000 (U8) identified as producing only MGTAVTT with topology 'ic_with_internal_regulator'. It is actually a quad PMIC producing 4 rails: +1V8 (VOUT1), +3V3 (VOUT2), MGTAVCC (VOUT3), MGTAVTT (VOUT4). The analyzer should detect all 4 output rails.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U8$"
+            "pattern": "^U8$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -202,12 +209,13 @@
         },
         {
           "description": "RC filter detection found R12+C2 as an 'RC-network' with ground_net='VSENSE_P'. This is actually a compensation/snubber capacitor in the MPM3683 differential remote sense feedback network (FB/VSENSE_P/VSENSE_N), not a signal-path RC filter. The ground_net should be recognized as part of the differential sense pair, not a ground reference.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R12$"
+            "pattern": "^R12$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -229,12 +237,13 @@
       "missed": [
         {
           "description": "DDR2 SDRAM interface: MT47H64M8SH (U2) is a 60-pin DDR2 memory IC with 28+ signal connections to FPGA U1 (DDR_A0-13, DDR_BA0-1, DDR_DQ0-7, DDR_DM, DDR_DQS_P/N, DDR_CK_P/N, DDR_CAS, DDR_RAS, DDR_WE, DDR_CKE, DDR_ODT). This is the most signal-rich interface on the board and was not detected in memory_interfaces.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -255,7 +264,7 @@
         },
         {
           "description": "PCIe x8 interface not detected as a high-speed bus protocol. The design has a PCI Express x8 edge connector (J1) with 8 TX and 8 RX differential lanes, REFCLK+/-, PERST#, WAKE#, SMCLK/SMDAT, and JTAG signals. While differential pairs are detected, no PCIe bus-level detection exists.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "design_analysis.differential_pairs[?type=='PCIe']",
             "op": "min_count",
@@ -264,12 +273,13 @@
         },
         {
           "description": "Two 125MHz LVDS oscillators (U4, U5) providing GTX reference clock and DDR reference clock not detected as clock sources. U4 outputs GTX_125_C_P/N feeding FPGA MGT refclk, U5 outputs DDR_125_P/N feeding FPGA bank for DDR2 clocking.",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U4$"
+            "pattern": "^U4$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -281,11 +291,12 @@
         },
         {
           "description": "MGTAVCC power rail (1.0V for FPGA MGT analog) missing from decoupling_analysis despite having C12 (22uF) and C21 (4.7uF) on the rail with 10 pin connections.",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?rail=='MGTAVCC']",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling_analysis[?rail=='MGTAVCC']"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [
@@ -297,11 +308,12 @@
         },
         {
           "description": "MGTAVTT power rail (1.2V for FPGA MGT termination) missing from decoupling_analysis despite having C15 (22uF) and C25 (4.7uF) on the rail with 14 pin connections.",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?rail=='MGTAVTT']",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling_analysis[?rail=='MGTAVTT']"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [

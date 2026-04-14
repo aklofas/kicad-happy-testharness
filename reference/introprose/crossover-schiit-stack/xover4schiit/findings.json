@@ -54,20 +54,22 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/\"net\": \"D-\", \"has_esd_protection\": false/"
+            "value": "/\"net\": \"D-\", \"has_esd_protection\": false/",
+            "detector_filter": "detect_design_observations"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -108,29 +110,32 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {

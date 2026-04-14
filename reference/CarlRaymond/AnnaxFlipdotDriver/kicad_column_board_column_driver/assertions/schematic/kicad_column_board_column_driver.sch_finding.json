@@ -9,7 +9,7 @@
       "description": "Multi-unit BAV70W and BAV70W pairs counted correctly by de-duplicating unit-2 entries. BOM grouping by value+footprint is accurate.",
       "created_from": "FND-00000544",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "All 4 power rails found. Decoupling correctly identifies 8 bypass caps on +5V (0.8uF total). Correctly notes no bulk capacitance.",
       "created_from": "FND-00000544",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The column driver uses 8 TPIC6B595 power shift registers chained via RC_DATA, RC_SHIFT_CLK, COL_REG_CLK, and ~RC_CLEAR signals. These form a classic daisy-chain shift register bus (similar to SPI). The bus_analysis.spi and signal_analysis sections are both empty \u2014 the analyzer failed to identify this shift register topology. TPIC6B595 is a common power shift register and the net names are unambiguous.",
       "created_from": "FND-00000544",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -40,7 +40,7 @@
       "description": "4x TBD62783 (Toshiba 7-ch sink driver, rated 50V) are present but subcircuit descriptions are empty strings. The +24V rail supplies the flip-dot coils. No high-voltage driver or open-drain driver topology is noted anywhere in the output.",
       "created_from": "FND-00000544",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

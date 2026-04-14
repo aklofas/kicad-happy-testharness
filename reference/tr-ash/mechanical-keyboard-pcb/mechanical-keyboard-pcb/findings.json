@@ -21,9 +21,10 @@
       "summary": "68 keyboard switches (keyboard:MX-RGB) classified as type 'ic' instead of 'switch'",
       "details": "The schematic contains 68 mechanical keyboard switch symbols from the 'keyboard:MX-RGB' library. All 68 are classified as type 'ic' in the components array, causing the statistics to report 72 ICs (68 keyboard switches + 3 IS31FL3731 LED drivers + 1 AT90USB1286 MCU). The single explicit SW_Push switch (SW?) is correctly classified as 'switch'. The key_matrices detector finds 0 key matrices, missing the 68-key matrix. The misclassification is caused by the 'keyboard:MX-RGB' lib_id not being recognized as a switch type \u2014 the classifier likely falls back to 'ic' for unrecognized library symbols with the 'U' reference prefix.",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
       }
     }
   ]

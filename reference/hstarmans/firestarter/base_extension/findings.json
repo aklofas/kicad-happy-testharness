@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "U1 LM7805 correctly identified as LDO regulator with +12V input and +5V output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -24,12 +25,13 @@
         },
         {
           "description": "U2 MCP1700T-3302E/TT correctly identified as LDO regulator with +5V input and +3.3V output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -40,12 +42,13 @@
         },
         {
           "description": "3 RC low-pass filters correctly detected on X_PO, Y_PO, Z_PO position feedback nets (R3/C27, R4/C28, R5/C29) with 159 Hz cutoff",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R3$"
+            "pattern": "^R3$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -79,12 +82,13 @@
         },
         {
           "description": "F1 fuse correctly detected as protection device on the +12V/VBUS path",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^F1$"
+            "pattern": "^F1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -122,11 +126,12 @@
         },
         {
           "description": "4 decoupling rails correctly identified (+5V, +12V, VDD, +3.3V) with reasonable capacitance totals",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -153,11 +158,12 @@
         },
         {
           "description": "2 power regulators correctly detected forming the 12V to 5V to 3.3V power chain",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -204,12 +210,13 @@
         },
         {
           "description": "6 current sense resistors (R8, R9, R10, R11, R12, R13) at 0.5 ohm in 1206 package not detected in current_sense. These are connected to the TMC2209 BRA/BRB sense pins for motor current measurement.",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R10$"
+            "pattern": "^R10$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -225,11 +232,12 @@
         },
         {
           "description": "3 decoupling capacitors (C12, C16, C19, all 0.1uF) missing from +12V rail decoupling analysis. These are on the +12V rail per power_net_summary but absent from decoupling_analysis, which shows 10 caps instead of 13.",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?rail='+12V'].cap_count",
+            "path": "findings",
             "op": "gte",
-            "value": 13
+            "value": 13,
+            "detector_filter": "detect_decoupling_analysis[?rail='+12V'].cap_count"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [

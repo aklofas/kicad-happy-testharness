@@ -39,30 +39,36 @@
       "description": "All 37 LEDs (D1\u2013D37) and all 7 BC547 NPN transistors (Q1\u2013Q7) are identified. Transistor circuit analysis correctly shows 6 transistors with LED loads (Q2\u2013Q7) and Q1 with a resistive load. emitter_is_ground=False is correct because emitter nets connect through 120E/1K resistors to +3V0, not GND directly.",
       "created_from": "FND-00001720",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 7
-      }
+        "value": 7,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001720-AST-05",
       "description": "The analyzer correctly identifies 4 RC low-pass filters: R4/C3 (DWN_BTN), R3/C2 (UP_BTN), R2/C1 (LGT_ON_BTN), and R17/C13 (MCU_RSTn), all with 10k resistors and 0.1uF capacitors giving ~159 Hz cutoff. These are correct debounce/reset filter identifications.",
       "created_from": "FND-00001720",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
-      }
+        "value": 4,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001720-AST-06",
       "description": "The 50% voltage divider (R14=10k top, R15=10k bottom) feeding the +3V0_VOL_MON net is correctly identified. This is used for battery voltage monitoring on an analog ADC pin of the ATmega328PB.",
       "created_from": "FND-00001720",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00001720-AST-07",

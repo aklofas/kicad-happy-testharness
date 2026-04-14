@@ -9,11 +9,13 @@
       "description": "The fc980c is a capacitive keyboard controller for the Topre FC980C. The key matrix uses an external matrix-scanning IC connected to the keyboard via a 20-pin 'KEYBOARD' JST connector (J3). Row and column selection is communicated via 3-bit ROW_BIT[0:2] and 4-bit COL_BIT[0:3] encoded addresses, plus KEY_STATE and KEY_ENABLE control signals. The analyzer's key_matrices detector finds nothing because it looks for conventional direct ROW/COL nets with diodes. This is a false negative \u2014 the design definitely contains keyboard matrix logic, just at a higher abstraction level. A note in design_observations or a pattern matching 'bit-encoded keyboard matrix' signals would be valuable.",
       "created_from": "FND-00002064",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     }
   ]
 }

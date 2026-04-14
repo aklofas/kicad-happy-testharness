@@ -2,57 +2,64 @@
   "file_pattern": "arena_10_of_10_v1r1.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 11 connector_ground_audit",
+      "description": "Exactly 11 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 11
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 5 decoupling_analysis",
+      "description": "Exactly 27 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "equals",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 9 design_observations",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 9
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 27 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 27
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 1 ethernet_interfaces",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 5 detect_decoupling",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 9 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 detect_ethernet_interfaces",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_ethernet_interfaces",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U1 in ethernet_interfaces",
+      "description": "U1 in detect_ethernet_interfaces",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_ethernet_interfaces",
         "op": "contains_match",
         "field": "phy_reference",
         "pattern": "^U1$"
@@ -60,18 +67,20 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 9 opamp_circuits",
+      "description": "Exactly 9 detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "equals",
         "value": 9
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U83 in opamp_circuits",
+      "description": "U83 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U83$"
@@ -79,9 +88,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U87 in opamp_circuits",
+      "description": "U87 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U87$"
@@ -89,9 +99,10 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "U86 in opamp_circuits",
+      "description": "U86 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U86$"
@@ -99,18 +110,20 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 4 protection_devices",
+      "description": "Exactly 4 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000012",
-      "description": "D4 in protection_devices",
+      "description": "D4 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D4$"
@@ -118,9 +131,10 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "D3 in protection_devices",
+      "description": "D3 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D3$"
@@ -128,9 +142,10 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "D1 in protection_devices",
+      "description": "D1 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D1$"
@@ -138,9 +153,10 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "D2 in protection_devices",
+      "description": "D2 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D2$"
@@ -148,11 +164,54 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "Exactly 2 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R181 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R181$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R180 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R180$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "Exactly 6 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 6
       }
     }
   ]

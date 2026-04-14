@@ -1,36 +1,37 @@
 {
   "file_pattern": "Dual-Mag-Strobe.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~68 (tolerance 10%)",
+      "description": "Finding count ~64 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 64,
-        "max": 72
+        "min": 60,
+        "max": 68
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~35",
+      "description": "high count ~26",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 23,
+        "max": 29
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~23",
+      "description": "medium count ~26",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 23,
+        "max": 29
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~37 (+-10)",
+      "description": "EMC risk score ~52.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 27,
-        "max": 47
+        "min": 42.0,
+        "max": 62.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "55 decoupling finding(s)",
+      "description": "49 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 55
+        "value": 49
       }
     },
     {

@@ -22,11 +22,13 @@
       "description": "INCORRECT: The lib_id 'kb5-rescue:SW_Push_45deg-sw_push_45deg-ESP32-S2-WROOM-rescue' contains the substring 'WROOM' (or similar ESP32 module name) in a rescue library name, causing the rf_chains detector to classify all 78-85 keyboard switches as RF transceivers. Affects all four keyboard schematics: ti92revive.kicad_sch (78 transceivers), keyboard.kicad_sch (74), ti92-reviceStable.sch (85), kb5.sch (63). These are all SW_Push_45deg push-button components connected in a keyboard matrix, not wireless transceivers. The rf_chains list should be empty for all of these files.",
       "created_from": "FND-00001604",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     },
     {
       "id": "FND-00001604-AST-03",
@@ -76,11 +78,13 @@
       "description": "All four keyboard schematics contain a TCA8418 8x10 keyboard controller IC (IC1) wired to row0-row7 and col0-col9 nets with 74-85 keyboard switches forming a full key matrix. The key_matrices detector returns empty ([]) for all files. The TCA8418 with its named row/col nets and associated switches is a textbook key matrix and should be detected. The design uses I2C (SDA/SCL) for host communication.",
       "created_from": "FND-00001604",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     }
   ]
 }

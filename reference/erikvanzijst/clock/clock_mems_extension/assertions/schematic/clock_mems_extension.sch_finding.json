@@ -9,11 +9,13 @@
       "description": "U1 is a Silicon Labs SIT1630AI MEMS oscillator in SOT-23-5. The active oscillator detection in detect_crystal_circuits() scans for keywords including 'sit2' and 'sit8' (for SIT2xxx/SIT8xxx series) but not 'sit1' for the SIT1xxx series. Value 'SIT1630AI' and lib_id 'clock_extension:SIT1630AI' produce no keyword matches, so U1 is not added to crystal_circuits. The component is classified as type 'ic' (correct \u2014 U-prefix), and none of the oscillator keyword patterns match SIT1xxx. The crystal_circuits list is empty for this design when it should contain U1 as an active_oscillator.",
       "created_from": "FND-00002014",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     }
   ]
 }

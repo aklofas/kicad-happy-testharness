@@ -19,32 +19,36 @@
       "description": "The RT9080-3.3 (U2) is correctly identified as an LDO, with input_rail=5V, output_rail=3.3V, and estimated_vout=3.3V derived from the fixed suffix on the part number. This matches the schematic where 5V feeds U2 and produces the 3.3V rail.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "U2",
           "topology": "LDO",
           "input_rail": "5V",
           "output_rail": "3.3V"
-        }
-      }
+        },
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001445-AST-03",
       "description": "Two RC low-pass filters are correctly identified: R6(10\u03a9)+C4||C3(100pF) at 159kHz cutoff on the VCC_RF supply path, and R7(1k\u03a9)+C9(1\u00b5F) at 159Hz cutoff for the V_BCKP battery backup supply. Both are real filter circuits matching the schematic topology.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001445-AST-04",
       "description": "The L1(68nH)+C6(100pF) LC filter at 61.03 MHz is correctly identified. L1 and C6 share the __unnamed_0 net along with J5 (SMA antenna connector) and D3 (ESD protection). This is a genuine RF matching/filtering network in the antenna path for the GNSS receiver.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "inductor": {
@@ -53,44 +57,52 @@
           "capacitor": {
             "ref": "C6"
           }
-        }
-      }
+        },
+        "detector_filter": "detect_lc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00001445-AST-05",
       "description": "D3 (PESD0402 bidirectional TVS) on the antenna line, D6 and D7 (PESD0603-240 bidirectional TVS) on data lines, and F1 (PTC resettable fuse 750mA) are all correctly identified as protection devices with their protected and clamp nets.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
-      }
+        "value": 4,
+        "detector_filter": "detect_protection_devices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001445-AST-06",
       "description": "The design_observations correctly reports i2c_bus for SCL and SDA nets with has_pullup=false. The schematic confirms no pull-up resistors connect to the SCL or SDA nets. U3 (LG290P), J4, J7 (Qwiic), J6, J9 connect to these nets. SparkFun's Qwiic ecosystem relies on external devices or separate pullup boards; this board provides none. The observation is accurate.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "category": "i2c_bus",
           "has_pullup": false
-        }
-      }
+        },
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001445-AST-07",
       "description": "The 3.3V rail decoupling analysis correctly lists C5(100nF), C8(33pF), C2(10\u00b5F), C13(1\u00b5F) for a total of 11.1\u00b5F. The coverage is correctly marked as has_bulk=true (C2 10\u00b5F), has_bypass=true (C5 100nF), and has_high_freq=true (C8 33pF), reflecting good broadband decoupling practice.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rail": "3.3V",
           "cap_count": 4
-        }
-      }
+        },
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001445-AST-08",
@@ -119,39 +131,45 @@
       "description": "INCORRECT: The analyzer reports an LC filter pairing L1(68nH) with C4||C3(~100pF) at 1.93 MHz. However, L1 and C4/C3 are on the same net (__unnamed_10) for different purposes: L1 is in series in the RF antenna signal path (J5 SMA \u2192 L1 \u2192 C6+RF_IN) while C4 and C3 are power supply bypass capacitors on the VCC_RF output side. They share a node topologically but do not form a tuned LC resonator. The genuine LC filter is L1+C6 at 61 MHz (the RF choke with the antenna filter cap).",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00001445-AST-11",
       "description": "INCORRECT: The 5V decoupling analysis marks has_bulk=true with caps C7(1\u00b5F) and C1(100nF). Conventionally, 'bulk' decoupling refers to large electrolytics (10\u00b5F+) providing bulk charge reservoir. A 1\u00b5F ceramic cap is typically bypass/decoupling, not bulk. The has_bulk classification likely uses a threshold \u22651\u00b5F, which is more lenient than the standard definition. This may mislead users into thinking there is adequate bulk decoupling on the 5V rail.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rail": "5V",
           "cap_count": 2,
           "total_capacitance_uF": 1.1
-        }
+        },
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001445-AST-12",
       "description": "D5 (PMEG4005EJ Schottky diode, SOD-323) connects 3.3V (anode) to __unnamed_40 (cathode), which feeds R7 and ultimately the V_BCKP rail powering the GNSS RTC battery backup. It provides reverse blocking to prevent the backup battery (BT1) from backfeeding the 3.3V rail. The protection_devices list detects D6, D7, D3 (TVS diodes) and F1 (fuse) but misses D5.",
       "created_from": "FND-00001445",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "D5"
-        }
+        },
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

@@ -2,21 +2,24 @@
   "file_pattern": "coloradj.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 4 detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R37 in rc_filters",
+      "description": "R37 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R37$"
@@ -24,9 +27,10 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "R36 in rc_filters",
+      "description": "R36 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R36$"
@@ -34,9 +38,10 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R35 in rc_filters",
+      "description": "R35 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R35$"
@@ -44,9 +49,10 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }

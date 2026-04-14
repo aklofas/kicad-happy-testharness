@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "PICO1_D+/PICO1_D- and PICO2_D+/PICO2_D- are correctly identified as differential pairs with ESD protection attributed to the Pi Pico (U1, U2) internal protection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The board is a purely passive passthrough adapter. Zero bus protocols detected is correct. 17 components + 56 no-connects reflect the heavily unconnected nature of the design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,11 +28,11 @@
       "incorrect": [
         {
           "description": "differential_pairs includes SPK+ and SPK- as a 'differential' pair with 'has_esd: false', connecting JAMMA audio connector J8 and JAMMA edge connector J9. These are mono speaker connections on separate connectors, not a differential signal pair. The name matching on +/- suffix is over-broad.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "cross_domain_signals flags USB_SHIELD (shared between J1/U1 in USB_PICO1_VCC domain and J2/U2 in USB_PICO2_VCC domain) as needing a level shifter. USB_SHIELD is chassis ground/shield, not a logic signal \u2014 no level shifter is needed or appropriate.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -53,18 +53,18 @@
       "correct": [
         {
           "description": "The board at 125.73x77.036mm correctly triggers the board_size DFM violation requiring a higher pricing tier. This is valid for a JAMMA edge connector board which must be a certain size.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Net count (111) matches the schematic (111 total_nets). 22 front/1 back placement, 1 SMD/17 THT is plausible for a connector-heavy JAMMA board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

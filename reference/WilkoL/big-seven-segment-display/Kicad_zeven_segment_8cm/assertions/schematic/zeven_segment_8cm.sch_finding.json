@@ -19,32 +19,38 @@
       "description": "The APE8865N-33-HF-3 SOT-23 LDO is correctly detected as a linear regulator with topology='LDO', input_rail='6V5', output_rail='+3.3V', estimated_vout=3.3V via fixed_suffix detection. The design observation also correctly flags missing input decoupling.",
       "created_from": "FND-00001991",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001991-AST-03",
       "description": "INCORRECT: The 6V5 net is the input voltage supply to the APE8865N-33-HF-3 LDO regulator. Because 6V5 is unnamed in KiCad's standard power library and uses a numeric voltage name, the analyzer classifies it as 'signal' rather than 'power'. This causes C1 (100nF on the 6V5 rail) to be omitted from decoupling_analysis. Only C2 (on +3.3V) appears. The regulator observation correctly flags 'missing_caps: {input: 6V5}' which partially compensates, but the decoupling_analysis is incomplete.",
       "created_from": "FND-00001991",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001991-AST-04",
       "description": "INCORRECT: The STP16CP05 LED shift register has R1 (1k) in series with its SDI input, and R2\u2013R5 (100k each) as pull resistors on SPI signal lines at J1/J2. The analyzer detects three 'voltage dividers': R1/R5, R3/R5, and R2/R4. These are SPI termination/level-conditioning resistors, not DC bias dividers. The mid-points all connect to signal pins (SDI, J1/J2 connector) rather than high-impedance sensing nodes, confirming the false positive. The R2/R4 pair (50% ratio) connecting J1 pins is particularly weak as a divider candidate.",
       "created_from": "FND-00001991",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     }
   ]
 }

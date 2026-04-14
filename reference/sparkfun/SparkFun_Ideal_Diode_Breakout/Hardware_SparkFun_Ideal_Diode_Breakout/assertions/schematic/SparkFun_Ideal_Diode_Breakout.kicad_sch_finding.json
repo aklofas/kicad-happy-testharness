@@ -29,24 +29,28 @@
       "description": "signal_analysis.transistor_circuits correctly identifies all 8 transistors: 4x DMG2305UX P-MOSFET (Q2, Q4, Q6, Q8) with gate_pulldown resistors R2, R4, R6, R8 respectively, and 4x BCM857BS dual-PNP BJT (Q1, Q3, Q5, Q7) with base resistors R1, R3, R5, R7. The is_pchannel=true for the MOSFETs is correct for DMG2305UX (P-channel). The BJT base_net and collector_net both resolving to unnamed nets is expected since the base-collector feedback loop creates unnamed internal nets.",
       "created_from": "FND-00001465",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 8
-      }
+        "value": 8,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001465-AST-04",
       "description": "INCORRECT: The analyzer classifies Q1, Q3, Q5, Q7 (BCM857BS dual PNP) with emitter_net pointing to VIN1/VIN2/VIN3/VIN4 respectively. The BCM857BS is a dual PNP transistor acting as a comparator/controller driving the P-MOSFET gate. In the ideal diode circuit, the BJT collector drives the MOSFET gate; the emitter connects to VIN. The analyzer's emitter assignment to VIN is consistent with the schematic nets, but the collector_net and base_net are both resolving to the same unnamed internal net (__unnamed_X), which suggests the dual transistor's internal feedback connection (base of transistor A connected to collector of transistor B for the cross-coupled control) is not properly decomposed. This causes the 'collector_is_power=false' and 'load_type=resistive' which are somewhat misleading for this gate-drive application.",
       "created_from": "FND-00001465",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "reference": "Q1",
           "type": "bjt"
-        }
+        },
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001465-AST-05",
@@ -64,11 +68,13 @@
       "description": "The design implements 4 identical ideal diode circuits, each consisting of a P-MOSFET (DMG2305UX, Q2/Q4/Q6/Q8) controlled by a dual PNP transistor pair (BCM857BS, Q1/Q3/Q5/Q7) with a 100k gate drive resistor. This is a classic ideal diode / ORing controller circuit using discrete components. signal_analysis.protection_devices is empty, missing 4 instances of this protection topology. The transistor_circuits array correctly identifies the 8 transistors but classifies them as generic mosfet/bjt switches rather than as components of an ideal diode protection circuit.",
       "created_from": "FND-00001465",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

@@ -9,33 +9,39 @@
       "description": "design_observations reports I2C0_SDA has_pullup=true (pullup_resistor=R2, pullup_rail=+3.3V) and I2C0_SCL has_pullup=true (pullup_resistor=R1), but bus_analysis.i2c reports has_pull_up=false and pull_ups=[] for both I2C0_SDA and I2C0_SCL. The two sections contradict each other. Both R1 and R2 are DNP (do_not_place=true, value='NC'), so the pull-ups are not assembled; bus_analysis is correct that there are no effective pull-ups in circuit.",
       "created_from": "FND-00000337",
       "check": {
-        "path": "signal_analysis.design_observations[0].has_pullup",
+        "path": "findings[0].has_pullup",
         "op": "equals",
-        "value": true
+        "value": true,
+        "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "aspirational_reason": "describes known analyzer limitation not yet fixed"
+      "aspirational_reason": "describes known analyzer limitation not yet fixed",
+      "migration_note": "Path migrated from: signal_analysis.design_observations[0].has_pullup"
     },
     {
       "id": "FND-00000337-AST-02",
       "description": "Despite the repo being named 'ADF4351_with_raspberry_pi_pico_kicad', this schematic is the Raspberry Pi Pico controller board only. The ADF4351 RF synthesizer is an off-board module connected via the 'to PLL connector' (J6, J2). There are no RF components (inductors, capacitors, matching networks, the ADF4351 IC) in the schematic. The analyzer output correctly shows rf_chains=[] and rf_matching=[]. This is accurate but the design context should be noted: the absence of RF detections is correct for this partial design.",
       "created_from": "FND-00000337",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "equals",
-        "value": []
-      }
+        "value": [],
+        "detector_filter": "detect_rf_chains"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     },
     {
       "id": "FND-00000337-AST-03",
       "description": "R1 and R2 are both marked DNP=true with value='NC' in the schematic. The design_observations section reports the I2C lines have pull-ups via R1 and R2 (has_pullup=true, pullup_rail=+3.3V). This is misleading: the assembled board has no I2C pull-ups because these resistors are DNP. The analyzer should qualify pull-up detections by whether the resistors are DNP.",
       "created_from": "FND-00000337",
       "check": {
-        "path": "signal_analysis.design_observations[0].has_pullup",
+        "path": "findings[0].has_pullup",
         "op": "eq",
-        "value": false
+        "value": false,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[0].has_pullup"
     },
     {
       "id": "FND-00000337-AST-04",

@@ -9,10 +9,12 @@
       "description": "STSPIN32F0A correctly identified as switching regulator with bootstrap and +3.3V output",
       "created_from": "FND-00000269",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000269-AST-02",
@@ -29,44 +31,52 @@
       "description": "3x SiZ250DT MOSFETs detected with gate resistors and 20mohm source sense resistors",
       "created_from": "FND-00000269",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000269-AST-05",
       "description": "INCORRECT: 7 duplicate power_regulator entries for U1 STSPIN32F0A \u2014 one per schematic unit instead of one per IC",
       "created_from": "FND-00000269",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U1$"
+        "pattern": "^U1$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000269-AST-06",
       "description": "bridge_circuits empty \u2014 3x SiZ250DT dual N-ch MOSFETs (Q1/Q2/Q3) form three-phase half-bridge with pin names G1/D1/S1D2/G2/S2 not matched by bridge detector",
       "created_from": "FND-00000269",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     },
     {
       "id": "FND-00000269-AST-08",
       "description": "opamp_circuits empty \u2014 STSPIN32F0A internal opamps (OP1-OP3) wired for current sensing not detected",
       "created_from": "FND-00000269",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

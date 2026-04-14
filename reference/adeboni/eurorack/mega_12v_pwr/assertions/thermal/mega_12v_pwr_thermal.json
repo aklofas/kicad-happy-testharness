@@ -1,0 +1,38 @@
+{
+  "file_pattern": "mega_12v_pwr_thermal",
+  "analyzer_type": "thermal",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Finding count ~1 (tolerance 10%)",
+      "check": {
+        "path": "summary.total_findings",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Components analyzed ~1 (tolerance 10%)",
+      "check": {
+        "path": "summary.components_analyzed",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Thermal score ~100 (+-10)",
+      "check": {
+        "path": "summary.thermal_score",
+        "op": "range",
+        "min": 90,
+        "max": 100
+      }
+    }
+  ]
+}

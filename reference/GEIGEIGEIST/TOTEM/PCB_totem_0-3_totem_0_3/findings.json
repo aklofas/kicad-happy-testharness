@@ -35,15 +35,16 @@
       "correct": [
         {
           "description": "signal_analysis.key_matrices reports one matrix with rows=8 (ROW0-3_L and ROW0-3_R), columns=10 (COL0-4_L and COL0-4_R), estimated_keys=38, switches_on_matrix=38, diodes_on_matrix=38, detection_method=topology. This accurately models the TOTEM 38-key split wireless keyboard: each half has a 4-row x 5-col submatrix, and the schematic combines L and R sides. The estimated_keys=38 is confirmed by the 38 SWL/SWR key switch instances in the source.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "estimated_keys": 38,
               "switches_on_matrix": 38,
               "diodes_on_matrix": 38
-            }
+            },
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],

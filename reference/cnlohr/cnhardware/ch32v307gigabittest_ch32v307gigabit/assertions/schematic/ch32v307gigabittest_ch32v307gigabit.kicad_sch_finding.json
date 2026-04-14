@@ -9,11 +9,13 @@
       "description": "Ethernet interface not detected -- RTL8211E PHY + G2406S magnetics + 8P8C RJ45 with GMII bus nets all present",
       "created_from": "FND-00000160",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_ethernet_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.ethernet_interfaces"
     }
   ]
 }

@@ -44,11 +44,12 @@
         },
         {
           "description": "4 voltage dividers (330/470 ohm, ratio 0.5875 giving ~2.94V) correctly detected feeding TCA0372 inverting inputs for active termination reference",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [],
@@ -93,11 +94,12 @@
         },
         {
           "description": "3 decoupling groups correctly analyzed: +12V (10.1uF), -12V (10.1uF), +5V (11.2uF with 13 caps)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -157,7 +159,7 @@
         },
         {
           "description": "TCA0372 opamp circuits classified as 'comparator_or_open_loop' but they are actually configured as voltage followers/buffers with positive feedback (output tied to non-inverting input) providing a regulated termination voltage. The TCA0372 is a high-current dual power opamp specifically designed for active bus termination. While the positive feedback connection could be interpreted as comparator-like, the intent is a unity-gain buffer driving the termination reference rail through a decoupling capacitor.",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -175,7 +177,7 @@
       "missed": [
         {
           "description": "VME bus protocol not detected. This is a VME64 backplane with all standard VME bus signals (A[0..31], D[0..31], AM[0..5], IRQ1-7, BR0-3, BG0-3, IACK, DTACK, AS, DS0, DS1, BERR, SYSRESET, SYSCLK, BBSY, BCLR, etc.). The bus topology section detects address/data bus widths but does not identify this as a VME bus system.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "bus_topology.detected_bus_signals[?prefix='A'].range",
             "op": "contains",
@@ -184,11 +186,12 @@
         },
         {
           "description": "Active bus termination circuit not identified as a distinct pattern. The TCA0372 opamps (U1, U2) with voltage dividers (330/470 ohm) providing ~2.94V reference, feeding through PASSIVE/ACTIVE jumpers (JP1-JP8) to 4610X resistor divider networks (RN1-RN24), is a classic VME active termination circuit. This is a well-known bus termination topology that should be recognized.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers[?r_top.ref='R19'].mid_point_connections[0].component",
+            "path": "findings",
             "op": "eq",
-            "value": "U1"
+            "value": "U1",
+            "detector_filter": "detect_voltage_dividers[?r_top.ref='R19'].mid_point_connections[0].component"
           }
         },
         {
@@ -237,7 +240,7 @@
         },
         {
           "description": "All 4 comparator voltage-divider references correctly detected: R19/R20, R3/R4, R21/R22, R7/R8 producing 2.94V",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R19",
@@ -252,23 +255,25 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R19$"
+            "pattern": "^R19$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "All 4 TCA0372 units correctly classified as comparator_or_open_loop with hysteresis feedback",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {

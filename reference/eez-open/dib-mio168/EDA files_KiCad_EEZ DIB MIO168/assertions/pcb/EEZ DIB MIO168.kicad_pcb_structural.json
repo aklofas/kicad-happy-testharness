@@ -2,14 +2,15 @@
   "file_pattern": "EEZ DIB MIO168.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 19 decoupling_placement",
+      "description": "Exactly 22 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 19
+        "value": 22
       }
     },
     {
@@ -94,6 +95,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "IC18 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC18$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "IC6 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -103,7 +114,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "IC19 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -113,7 +124,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "IC12 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -123,7 +134,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "IC15 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -133,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "IC21 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -143,7 +154,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "IC7 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -153,7 +164,17 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
+      "description": "IC8 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "IC2 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -163,7 +184,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "IC16 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -173,7 +194,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "IC22 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -183,7 +204,17 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
+      "description": "IC14 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC14$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
       "description": "IC11 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -193,7 +224,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000023",
       "description": "IC9 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -203,39 +234,11 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
-      "description": "Exactly 2 thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
-      "description": "IC13 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC13$"
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
-      "description": "IC12 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC12$"
-      }
-    },
-    {
       "id": "STRUCT-00000024",
       "description": "Exactly 2 thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 2
       }
@@ -244,7 +247,8 @@
       "id": "STRUCT-00000025",
       "description": "IC12 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^IC12$"
@@ -254,7 +258,8 @@
       "id": "STRUCT-00000026",
       "description": "IC13 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^IC13$"

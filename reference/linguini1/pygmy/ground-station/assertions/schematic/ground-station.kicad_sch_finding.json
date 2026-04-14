@@ -9,32 +9,38 @@
       "description": "1 regulator correctly detected",
       "created_from": "FND-00000241",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000241-AST-02",
       "description": "2 RC filters correctly detected",
       "created_from": "FND-00000241",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000241-AST-03",
       "description": "INCORRECT: Protection device U4 (USBLC6-2SC6) counted as 4 entries due to per-net counting instead of per-device",
       "created_from": "FND-00000241",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U4$"
+        "pattern": "^U4$",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

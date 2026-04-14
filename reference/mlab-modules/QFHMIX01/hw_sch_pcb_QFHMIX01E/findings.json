@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "LC filter networks correctly identified with inductor-capacitor topology",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "Power regulators correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -36,12 +38,13 @@
       "incorrect": [
         {
           "description": "3 RC networks (R14/C11 68R/10nF, R11/C13, R15/C12) misclassified as 'high-pass' with output_net='GND' \u2014 actual cap terminals connect to CLK_MIX2_P/CLK_MIX1_P/CLK_MIX1_N, not GND",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R11$"
+            "pattern": "^R11$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [

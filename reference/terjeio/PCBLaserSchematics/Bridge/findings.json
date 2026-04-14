@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "2 connectors (P1 CONN_02X08, P2 CONN_01X12) with 9 nets (GND, 12V, 3V3, SDA, SCL, LASER, ZSTEP, ZDIR, ZHOME) correctly extracted. Net membership matches label assignments.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,7 +19,7 @@
       "incorrect": [
         {
           "description": "In Bridge.sch, '12V' and '3V3' are power rail net labels but net_classification assigns them 'signal'. These are clearly power distribution nets (multiple pins, PWR flag symbol on GND). The classifier only promotes nets to 'power' when backed by power symbols; label-only power rails are misclassified.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -40,27 +40,27 @@
       "correct": [
         {
           "description": "Component counts, types, power rails (+12V, +3V3, +5V, GND), and BOM extraction are all accurate. Power rail net classification (power/ground) is correct for Controller.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "MSP430G2553 P1.4/P1.5 connect to SDA/SCL nets. The bus analysis correctly identifies U2 as the device and correctly notes no pull-up resistors on either line.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "R6 and C5 form a filter from the multi-resistor junction (__unnamed_59) to GND. Cutoff frequency calculation is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -69,15 +69,15 @@
       "incorrect": [
         {
           "description": "The UART bus entry lists U1 (FT232RL) on the TxD net via pin CBUS4, which is a configurable I/O pin, not the standard TXD line. The analyzer is matching net-name 'TxD' heuristically without verifying the pin function. MSP430 P3.6 is also not a dedicated UART TX in this schematic's multi-function pin context. The detection should require the pin name to include 'TX' or the component to be a known UART device on a known TX pin.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The +3V3 rail is sourced from the FT232RL's built-in 3.3V output (USBDP pin tied to +3V3 in the netlist), which serves MSP430, A4988s, and connectors. The power_regulators array is empty; an integrated regulator detection is missing.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -100,9 +100,9 @@
       "correct": [
         {
           "description": "Transistor types, gate/base/drain/collector/emitter net assignments are accurate. Q2 load_type=resistive is correct. Gate resistor R4 on Q1 is detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -111,23 +111,23 @@
       "incorrect": [
         {
           "description": "Four I2C bus entries are reported but only one is real. The GND net is flagged as SCL because MCP4725 pin 5 (SCL) is mis-wired to GND in the schematic \u2014 the analyzer correctly follows netlist connectivity but should not classify GND as an I2C bus line. Net __unnamed_1 is flagged as SDA because MCP4725 pin 4 (SDA) connects there via a resistor, not to the named SDA net. This is a schematic wiring anomaly but the I2C bus classification itself is misleading.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The observation reports U1 pins VOUT (net 'SDA') and VSS (net 'SCL') as single-pin nets. This is because the 'SDA' and 'SCL' named nets connect only to VOUT and VSS respectively (due to the schematic's wiring anomaly), not to the actual I2C pins of MCP4725. The root cause is the schematic's net naming \u2014 but the observation is factually misleading.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "RV1 (value '5K', lib_id 'POT', footprint 'Potentiometer_Bourns_3296Y') is classified as type 'resistor' in both the BOM and component list. The lib_id 'POT' and the RV reference designator prefix clearly indicate a potentiometer and should map to a distinct type.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "Q2 (BC547) emitter is on net __unnamed_25, which contains only C7 pin 1 and Q2 emitter. C7 appears to be a bypass cap \u2014 if the other side of C7 is GND, then the emitter is effectively AC-grounded. However the analyzer cannot determine this without checking the other pin of C7. Worth noting as a potential improvement area.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -150,9 +150,9 @@
       "correct": [
         {
           "description": "copper_layers_used=1, copper_layer_names=['B.Cu'], track layer_distribution confirms all routing on B.Cu. Footprints on both F.Cu (P1) and B.Cu (P2) are correctly identified. Routing complete with 0 unrouted nets.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -177,9 +177,9 @@
       "correct": [
         {
           "description": "Statistics (60\u00d757.5mm board, 13 SMD, 21 THT, 0 vias, routing complete) are plausible. DFM tier 'standard' with min trace 0.25mm is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -204,9 +204,9 @@
       "correct": [
         {
           "description": "Single-layer routing with 18 SMD and 9 THT footprints. Statistics are internally consistent.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -233,9 +233,9 @@
       "missed": [
         {
           "description": "The repo contains only .sch and .kicad_pcb files with no exported gerber/drill files. No gerber output directory exists. This is expected for a design-only repo without manufacturing outputs.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

@@ -9,10 +9,12 @@
       "description": "STSPIN32G4 identified as switching regulator with bootstrap",
       "created_from": "FND-00000271",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000271-AST-02",
@@ -39,44 +41,52 @@
       "description": "16MHz crystal with 6.8pF load caps correctly detected",
       "created_from": "FND-00000271",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00000271-AST-05",
       "description": "INCORRECT: 5 duplicate power_regulator entries for U1 \u2014 one per schematic unit",
       "created_from": "FND-00000271",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U1$"
+        "pattern": "^U1$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000271-AST-06",
       "description": "bridge_circuits empty \u2014 3x CSD88584Q5DC dual MOSFETs (Q1/Q2/Q3) with GH/SH/GL/VSW/VIN/PGND pins not detected",
       "created_from": "FND-00000271",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     },
     {
       "id": "FND-00000271-AST-08",
       "description": "opamp_circuits empty \u2014 STSPIN32G4 internal opamps not detected",
       "created_from": "FND-00000271",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

@@ -9,7 +9,7 @@
       "description": "Crystal Y1 detected with C1 and C2 as load caps (22pF each), series combination giving 11pF + ~3pF stray = 14pF effective load. Feedback resistor R1 (1M) across XTAL1/XTAL2 correctly identified. Standard AVR crystal oscillator circuit.",
       "created_from": "FND-00000574",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Power regulator PS1 with fuse F1 correctly detected. The TMLM04253 is an AC/DC converter (line-powered), and the design observation correctly flags missing output decoupling caps and missing +3.3V decoupling.",
       "created_from": "FND-00000574",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "SPI bus identified with MOSI/MISO/SCK all connected between U1 (ATmega328), J3 (expansion header), and J8 (ISP programming header). Chip select count correctly reported as 1.",
       "created_from": "FND-00000574",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "J4 pin 2 (named 'GND' in the lib symbol) is connected to the +5V net, and pin 3 (named 'VCC') is connected to GND. The analyzer faithfully represents these connections but does not flag this as an ERC/connectivity issue. This is a real design error in the source schematic that could be caught by cross-referencing pin names against connected net names.",
       "created_from": "FND-00000574",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

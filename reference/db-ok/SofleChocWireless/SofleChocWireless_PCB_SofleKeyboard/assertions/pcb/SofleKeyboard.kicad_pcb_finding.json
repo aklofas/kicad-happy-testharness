@@ -29,11 +29,13 @@
       "description": "INCORRECT: The thermal_pad_vias section lists all SW1-SW31 hotswap socket pads (e.g., SW1 pad 6 'col5', SW10 pad 5) and flags them as having 'adequacy=none' (no thermal vias). These are electrical hotswap retention/signal pads on Kailh Choc hotswap sockets, not thermal pads requiring via stitching for heat dissipation. The SK6812 Mini-E LED pads may have larger area, but the pads flagged (2.19x3.08mm to 2.21x2.88mm) are standard hotswap electrical pads. True thermal pads (e.g., on power ICs) would require different context \u2014 a keyboard hotswap socket carries no significant heat load.",
       "created_from": "FND-00001368",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
         "value": true,
-        "op": "exists"
+        "op": "exists",
+        "detector_filter": "analyze_thermal_pad_vias"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: thermal_pad_vias"
     }
   ]
 }

@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The analyzer correctly identified U1 as a 5V fixed LDO taking +12V as input and producing +5V for the microcontroller interface circuitry. The voltage divider (R6=47K, R7=22K) from KLINE to RX is also correctly detected, with ratio 0.319 that level-shifts the 12V K-line bus down to approximately 3.8V for the MCU RX input.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -28,13 +29,13 @@
       "incorrect": [
         {
           "description": "The V2 project is split across three sub-sheets (connectors, interface, iso9141-interface). The main sheet and the connectors sheet both have PWR_FLAGs, but analyzing each sheet in isolation causes the analyzer to emit pwr_flag_warnings for +12V and GND in the main interface sub-sheet (hw_V2_interface.kicad_sch). Those rails are properly flagged in the connectors sub-sheet. This is a known limitation of per-sheet analysis but is a false positive in terms of reporting ERC-relevant warnings.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "This design is explicitly an ISO9141 K-line automotive bus interface. The schematic uses NPN transistors (Q1, Q2) to drive the KLINE net and a voltage divider (R6/R7) to receive from it. The analyzer detects the UART-named signals TX/RX on the microcontroller side, but does not recognize the K-line topology (single-wire bidirectional, 12V logic, pull-up to +12V through resistor, open-collector NPN drivers). No bus_analysis entry or design_observation for ISO9141/K-line is emitted.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "suggestions": [],

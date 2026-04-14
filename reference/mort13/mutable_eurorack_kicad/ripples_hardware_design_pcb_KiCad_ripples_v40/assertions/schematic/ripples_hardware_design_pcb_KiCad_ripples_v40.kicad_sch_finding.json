@@ -9,22 +9,26 @@
       "description": "Zero voltage dividers detected due to empty component values from Eagle import",
       "created_from": "FND-00000163",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000163-AST-02",
       "description": "Zero RC filters detected due to empty component values",
       "created_from": "FND-00000163",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

@@ -9,22 +9,26 @@
       "description": "INCORRECT: R80+C143 misidentified as RC filter (1.93Hz cutoff) \u2014 R80 is the upper leg of MT3608 feedback divider (Ra in Vout=0.6*(1+Ra/Rb)). C143 is FB pin sense capacitor, not a signal filter.",
       "created_from": "FND-00000227",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R80$"
-      }
+        "pattern": "^R80$",
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000227-AST-04",
       "description": "INCORRECT: RC filter duplicates: R82/C176 and R90/C140 each reported twice (forward and reverse direction). Bidirectional traversal artifact inflates 4 real filters to 8 reported.",
       "created_from": "FND-00000227",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R82$"
-      }
+        "pattern": "^R82$",
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

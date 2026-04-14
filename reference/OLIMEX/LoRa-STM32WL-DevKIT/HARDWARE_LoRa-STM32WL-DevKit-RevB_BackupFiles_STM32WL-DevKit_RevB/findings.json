@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "RC filter for R19/C13 (100K/22uF, 0.07Hz time constant) is correctly identified. I2C bus on I2C1_SDA correctly shows 3 devices (U4, U5, U3) with R11 pullup. D1 (1N5819) correctly classified as reverse_polarity protection. Component counts (13 caps, 19 resistors, 5 ICs, 3 LEDs) match the BOM. Multi-sheet parsing (2 sheets) is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "design_observations reports I2C1_SCL has_pullup=false, pullup_resistor=null. However, R10 (10K) is connected to I2C1_SCL. The issue is that in this KiCad 5 legacy schematic, U4 pin1 is named 'GND' and U5 pin2 is named 'VDD' on the I2C1_SCL net \u2014 the pin names in the .sch file don't match the schematic intent. The pullup detector is likely confused by the non-SCL pin names on the net from the ICs, causing it to miss R10 as a pullup. I2C1_SDA correctly detects R11 as pullup.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "U1 is a 3.3V LDO (ME6210A33PG, SOT89 package), connected from /CMSIS-DAP/5V_USB input to +3.3V output, but power_regulators is empty []. The part is classified as 'ic' type with a transistor footprint library. The datasheet link also points to AP1117 which is a well-known LDO, suggesting the analyzer failed to match this part name to a regulator pattern.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -51,7 +51,7 @@
       "incorrect": [
         {
           "description": "In drill_tools, '0.5994mm' has type='NPTH' and count=87 (2 NPTH + 85 PTH merged). The PTH file has 85 holes at 0.5994mm (connector through-holes) while the NPTH file has only 2 at that diameter. The consolidation logic picks NPTH as the type when the same diameter appears in both files, even though PTH is the dominant type (85 vs 2). The component_holes list also shows two separate entries for 0.5994mm, one labeled NPTH (count=2) and one unlabeled PTH (count=85).",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -72,9 +72,9 @@
       "correct": [
         {
           "description": "Board dimensions (58.42x55.88mm) match gerber output. 66 nets, routing_complete=true, 0 unrouted. GND zone stitching via density (0.9/cm2) and 5V_USB zone (11.8/cm2) look correct. DFM tier='standard' with 0 violations is plausible for this 2-layer board. The edge_clearance_warning for C13 at -8.87mm is valid \u2014 C13 is at y=77.489 which is above the board top edge (y=86.36).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

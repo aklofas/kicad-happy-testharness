@@ -8,9 +8,10 @@
       "summary": "Analyzer correctly detected VDD/SWCLK net swap schematic error in STM32G071 design",
       "details": "The analyzer correctly reports that U2 pin 26 (VDD, power_in) is connected to the 'swclk' net rather than +3.3V, and that U2 pin 8 (SWCLK(PA14)) is on the +3.3V net instead. This appears to be a genuine wiring error in the source schematic \u2014 the VDD supply pin and the SWCLK debug signal are swapped. The analyzer surfaces this both as a single_pin_net observation (only VDD is on swclk) and as an ERC warning about missing driver on swdio. The ERC warning is slightly mislabeled (it flags swdio when the root issue is on swclk), but the underlying detection is correct.",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": null
+        "value": null,
+        "detector_filter": "detect_design_observations"
       }
     },
     {

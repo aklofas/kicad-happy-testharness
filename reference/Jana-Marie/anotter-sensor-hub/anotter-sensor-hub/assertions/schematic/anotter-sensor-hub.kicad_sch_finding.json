@@ -29,10 +29,12 @@
       "description": "The power_regulators section correctly identifies U2 as AMS1117-3.3, topology=LDO, input_rail=+5V, output_rail=VCC, estimated_vout=3.3. The VCC output naming is correct as confirmed by the schematic nets.",
       "created_from": "FND-00001937",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001937-AST-04",

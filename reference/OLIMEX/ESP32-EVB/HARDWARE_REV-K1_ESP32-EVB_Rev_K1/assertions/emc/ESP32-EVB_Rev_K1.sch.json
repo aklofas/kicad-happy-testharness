@@ -1,36 +1,37 @@
 {
   "file_pattern": "ESP32-EVB_Rev_K1.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~24 (tolerance 10%)",
+      "description": "Finding count ~22 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 19,
+        "max": 25
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~2",
+      "description": "high count ~1",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 1,
-        "max": 3
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~7",
+      "description": "medium count ~4",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 3,
+        "max": 5
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~64 (+-10)",
+      "description": "EMC risk score ~81.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 54,
-        "max": 74
+        "min": 71.5,
+        "max": 91.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "6 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 6
+        "value": 2
       }
     },
     {

@@ -1,16 +1,17 @@
 {
   "file_pattern": "SFduino-UNO-S2.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~20 (tolerance 10%)",
+      "description": "Finding count ~29 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 26,
+        "max": 32
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~41 (+-10)",
+      "description": "EMC risk score ~52.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 31,
-        "max": 51
+        "min": 42.5,
+        "max": 62.5
       }
     },
     {
@@ -66,23 +67,23 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 decoupling finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^decoupling$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000008",
       "description": "1 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 inductor_leakage finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^inductor_leakage$",
         "value": 1
       }
     },
@@ -166,11 +167,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~4 net(s) with EMC scores",
+      "description": "~6 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

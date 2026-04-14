@@ -19,11 +19,13 @@
       "description": "Same issue as RingLight: Q1 and Q2 are uPA2753 transistor arrays with non-standard pin names (G/D/S variants), correctly typed as 'transistor' in component_types, but the transistor_circuits detector reports 0 entries. The analyzer cannot classify this custom-library transistor's switching topology.",
       "created_from": "FND-00001691",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "value": 0,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

@@ -1,16 +1,17 @@
 {
   "file_pattern": "orb9k_3.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~3 (tolerance 10%)",
+      "description": "Finding count ~5 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 4,
+        "max": 6
       }
     },
     {
@@ -25,9 +26,9 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~1",
+      "description": "high count ~1",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.high",
         "op": "range",
         "min": 0,
         "max": 2
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~81 (+-10)",
+      "description": "EMC risk score ~80.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 71,
-        "max": 91
+        "min": 70.5,
+        "max": 90.5
       }
     },
     {

@@ -19,12 +19,14 @@
       "description": "U4 TDFN-8 thermal pad (9, 3.82mm\u00b2, GND net) has 5 standalone vias (effective 8.9 with GND pour fill), density 2.33/mm\u00b2, adequacy='adequate'. The tenting warning (5 untented vias may cause solder wicking) is also correctly flagged. The recommended minimum of 5 vias is met.",
       "created_from": "FND-00001891",
       "check": {
-        "path": "thermal_pad_vias[0].adequacy",
+        "path": "findings[0].adequacy",
         "value": "adequate",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "analyze_thermal_pad_vias"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: thermal_pad_vias[0].adequacy"
     },
     {
       "id": "FND-00001891-AST-03",

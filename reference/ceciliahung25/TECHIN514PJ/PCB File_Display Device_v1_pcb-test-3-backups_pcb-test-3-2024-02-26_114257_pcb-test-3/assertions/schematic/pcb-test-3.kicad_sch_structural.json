@@ -2,77 +2,95 @@
   "file_pattern": "pcb-test-3.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 audio_circuits",
+      "description": "Exactly 1 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.audio_circuits",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 buzzer_speaker_circuits",
+      "description": "Exactly 1 detect_audio_circuits",
       "check": {
-        "path": "signal_analysis.buzzer_speaker_circuits",
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "LS1 in buzzer_speaker_circuits",
+      "description": "Exactly 1 detect_buzzer_speakers",
       "check": {
-        "path": "signal_analysis.buzzer_speaker_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^LS1$"
+        "path": "findings",
+        "detector_filter": "detect_buzzer_speakers",
+        "op": "equals",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 design_observations",
+      "description": "Exactly 1 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 led_audit",
+      "description": "Exactly 1 detect_rc_filters",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 rc_filters",
+      "description": "R4 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R4 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R4$"
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 2 suggested_certifications",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 detect_wireless_modules",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_wireless_modules",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Exactly 2 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
         "op": "equals",
         "value": 2
       }

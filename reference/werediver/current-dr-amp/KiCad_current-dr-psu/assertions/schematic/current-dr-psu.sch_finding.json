@@ -20,22 +20,26 @@
       "description": "The PSU schematic contains D1-D4 (all STPS2L40U Schottky diodes, Device:D_Schottky lib_id) connected in a full-wave bridge rectifier configuration after transformer TR1, feeding 10000uF filter capacitors C1 and C2. The bridge_circuits detector returned an empty list. This is a significant miss for a mains-powered linear PSU \u2014 the bridge rectifier is the primary power conversion element.",
       "created_from": "FND-00002323",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     },
     {
       "id": "FND-00002323-AST-03",
       "description": "U6 and U8 are TS432 (TL431 clone, lib_id=Reference_Voltage:TL431DBZ), used as shunt voltage references in the linear regulator feedback loops. The power_regulators list is empty. The TL431 is one of the most common discrete voltage regulation components; its presence alongside pass transistors (Q3-Q6) and error amplifiers (U5/U7 TL072) constitutes a complete discrete linear regulator that was entirely missed by the power regulator detector.",
       "created_from": "FND-00002323",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

@@ -16,9 +16,10 @@
       "summary": "Multi-rail power regulation chain (24V\u219212V\u21925V) correctly detected with proper topology",
       "details": "The analyzer correctly identifies U1 (7812, L7812 LDO) converting +24V to +12V, and U2 (HT7550-1, matched to MCP1700x lib) converting +12V to +5V. Both appear in power_regulators with correct topology='LDO', input_rail, and output_rail fields. The SMF33A TVS on U4 (D3) is also correctly classified as a reverse_polarity protection device on the +24V rail.",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "equals",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_power_regulators"
       }
     },
     {

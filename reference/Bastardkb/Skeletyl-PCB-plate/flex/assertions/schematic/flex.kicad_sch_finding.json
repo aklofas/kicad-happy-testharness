@@ -9,12 +9,14 @@
       "description": "The key matrix detector identifies 4 row nets and 5 column nets, and correctly reports estimated_keys=15 (not the na\u00efve 4\u00d75=20), matching the actual 15 switches and 15 diodes on the matrix. This matches the Skeletyl 3\u00d75 layout (15-key per half) via net-name detection. The detection_method='net_name' is appropriate here since nets are labeled row2\u2013row5, col2\u2013col6.",
       "created_from": "FND-00001407",
       "check": {
-        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "path": "findings[0].estimated_keys",
         "value": 15,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_key_matrices"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check path/value mismatch: expected 15, got None"
+      "aspirational_reason": "agent-generated check path/value mismatch: expected 15, got None",
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].estimated_keys"
     },
     {
       "id": "FND-00001407-AST-02",
@@ -31,11 +33,13 @@
       "description": "INCORRECT: The analyzer finds three addressable LED chains: two of length 15 and one of length 1 (D6 alone). The two 15-element chains both start at D5 and share only D5 in their component lists \u2014 they represent two parallel sub-chains branching from the same data input. D6 (also from the same input net) is reported as a degenerate single-element chain. Total unique LEDs across all chains = 30 which matches statistics.component_types.led=30, but the chain count and topology are misleading. This keyboard PCB has two parallel chains of 15 LEDs each (left/right halves), not 2 complete+1 degenerate.",
       "created_from": "FND-00001407",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "value": 2,
-        "op": "max_count"
+        "op": "max_count",
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     }
   ]
 }

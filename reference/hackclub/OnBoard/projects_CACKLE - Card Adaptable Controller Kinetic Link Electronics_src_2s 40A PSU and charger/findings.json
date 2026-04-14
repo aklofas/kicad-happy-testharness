@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "16 false positive rf_matching detections \u2014 resistors (R18 5mOhm sense, R21/R12 10ohm, R24/R23 10k) and capacitors misidentified as antennas; these are power supply filter components on a PSU board",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "detector": "rf_matching",
           "subject_refs": [
             "R12",
@@ -42,12 +42,13 @@
         },
         {
           "description": "R27(120ohm)/R26(120ohm) RS-485 termination/bias resistors falsely detected as voltage divider between RS485+ and RS485-",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R26$"
+            "pattern": "^R26$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -69,12 +70,13 @@
       "missed": [
         {
           "description": "No current sense detection despite R18 (5mOhm, 10W) being a high-power current sense resistor",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R18$"
+            "pattern": "^R18$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -85,20 +87,21 @@
         },
         {
           "description": "No charger circuit detection despite board name being \"2s 40A PSU and charger\"",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Missing regulator input/output cap warnings despite design_observations noting them",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],

@@ -21,11 +21,13 @@
       "description": "PS1 (CUI VXO7803-500-M) is a 3.3V/500mA isolated DC-DC converter module. It is classified as type='connector' because it uses a custom lib_id 'SIB_Footprint:VXO7803-500-M' with no keyword matching. signal_analysis.power_regulators is empty. The component has +VIN input, GND, +VO output, and ON/OFF control pins \u2014 a clear switching power supply topology. The output LC filter (L1 10-47uH with C36/C37 22uF output caps) is also not detected under lc_filters. The component should be classified as ic/power_converter rather than connector, and power_regulators should include an entry for PS1.",
       "created_from": "FND-00000335",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_value",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

@@ -9,10 +9,12 @@
       "issue": "KH-054",
       "fix_type": "detection_fix",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     },
     {
       "id": "BUGFIX-KH-054-02",
@@ -20,10 +22,12 @@
       "issue": "KH-054",
       "fix_type": "detection_fix",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
-      }
+        "value": 0,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

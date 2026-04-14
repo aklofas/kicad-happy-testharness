@@ -9,30 +9,34 @@
       "description": "INCORRECT: U3 (LNA, BGB741L7ESD) falsely classified as power_regulator with topology=unknown. This is the core low-noise amplifier, not a voltage regulator. The fb_net assignment to an RF signal net is incorrect.",
       "created_from": "FND-00000137",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U3$"
+        "pattern": "^U3$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000137-AST-02",
       "description": "Complete RF signal path not traced: SMA_IN -> TVS -> RF_switch_U1 -> matching -> LNA_U3 -> SAW_U4 -> RF_switch_U2 -> SMA_OUT. Only fragments detected.",
       "created_from": "FND-00000137",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     },
     {
       "id": "FND-00000137-AST-03",
       "description": "The bypass/enable path controlled by R1 (3k) and R2 (470) for the LNA bias is not identified as an LNA bias network",
       "created_from": "FND-00000137",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -43,11 +47,13 @@
       "description": "Operating frequency of 1090 MHz (ADS-B) not inferred from the SAW filter FAR-F5QA part number or from the matching network component values",
       "created_from": "FND-00000137",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     }
   ]
 }

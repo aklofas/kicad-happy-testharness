@@ -2,126 +2,97 @@
   "file_pattern": "power.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 decoupling_analysis",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 5 design_observations",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 5
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 feedback_networks",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "R18 in feedback_networks",
-      "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R18$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "R17 in feedback_networks",
-      "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R17$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "R19 in feedback_networks",
-      "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R19$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 1 power_regulators",
-      "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "U3 in power_regulators",
+      "id": "STRUCT-00000004",
+      "description": "U3 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U3$"
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 2 suggested_certifications",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 3 voltage_dividers",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 6 detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 6
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "R18 in voltage_dividers",
+      "id": "STRUCT-00000007",
+      "description": "R18 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R18$"
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "R17 in voltage_dividers",
+      "id": "STRUCT-00000008",
+      "description": "R17 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R17$"
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "R19 in voltage_dividers",
+      "id": "STRUCT-00000009",
+      "description": "R19 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R19$"

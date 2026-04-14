@@ -9,11 +9,11 @@
       "incorrect": [
         {
           "description": "The MCP1754ST-3302E part has '3302' in its name (3.3V fixed LDO). The analyzer parses the suffix and arrives at estimated_vout=2.3V, triggering a false vout_net_mismatch (30% diff vs +3.3V net). The part name encoding '3302' means 3.3V but the parser misreads it. Same false alarm appears in design_observations as regulator_voltage and regulator_caps warnings.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "All four JUMPER_3-PIN instances (A1, A2, B1, B2) have the same lib_id but A1 and A2 are typed 'ic' while B1 and B2 are typed 'jumper'. The type assignment appears inconsistent \u2014 the classification depends on component reference prefix, but 'A' prefix is being mapped to 'ic' instead of 'jumper'. This is minor but affects component_types counts (reports 4 'ic' when 2 should be 'jumper').",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -36,9 +36,9 @@
       "missed": [
         {
           "description": "U1 (MIC5353-3.3YMT-TR) is a 3.3V LDO but power_regulators list is empty. The same miss occurs in LPLink_Nano (also uses MIC5353-3.3YMT-TR as U3). The lib_id is the full part number from a local library, which the analyzer apparently does not match against any regulator pattern. Both designs have this miss.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -62,7 +62,7 @@
       "incorrect": [
         {
           "description": "GPS_Diamond uses KiCad 4 with non-standard copper layer names ('Top', 'Bottom', 'Ground', 'Power') instead of standard 'F.Cu'/'B.Cu'. The analyzer counts copper layers and classifies front/back using the standard names, so it reports 0 copper layers and 0 footprints on either side, even though 38 SMD footprints are present and 340 track segments are routed. track_segments and via_count are still parsed correctly.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -83,9 +83,9 @@
       "correct": [
         {
           "description": "The PCB analyzer correctly detected the incomplete routing state. footprint_count=16 matches schematic component count, board dimensions 15x14mm are plausible for the design size.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -110,9 +110,9 @@
       "correct": [
         {
           "description": "The I2C bus detection found IMU_SCL/SDA connecting U4 and U5, and flagged missing pull-ups. UART detection found GPS_RX connected to U3 (SAM-M8Q GPS). These findings are accurate for a sensor board with IMU + GPS.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -137,9 +137,9 @@
       "correct": [
         {
           "description": "component_types shows only connector (3) and mounting_hole (4), total_components=7. The 4 mounting holes (H1-H4) are properly identified as mounting_hole type not counted in missing_mpn. Reasonable characterization of a passive adapter board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -164,9 +164,9 @@
       "correct": [
         {
           "description": "power_regulators correctly identifies U4 (MPM3620A) as a switching topology with fb_net. The associated voltage_divider (R7 100k / R8) for feedback is also correctly detected. This is accurate for a switcher with external feedback resistors.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

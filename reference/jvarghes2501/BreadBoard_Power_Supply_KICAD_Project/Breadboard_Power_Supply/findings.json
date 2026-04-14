@@ -8,45 +8,49 @@
       "correct": [
         {
           "description": "The analyzer correctly detects R2 (330 ohm) and R3 (560 ohm) as the LM317 feedback divider, with R2 connecting the output rail (3.3V net) to the ADJ pin and R3 connecting ADJ to GND. The estimated Vout of 1.987V (Vref=1.25V, formula Vout = 1.25*(1+330/560)) is mathematically correct, and the vout_net_mismatch observation correctly flags the 39.8% discrepancy between the calculated voltage and the net name '3.3V'.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[1].estimated_vout",
+            "path": "findings",
             "op": "range",
             "value": [
               1.9,
               2.1
-            ]
+            ],
+            "detector_filter": "detect_power_regulators[1].estimated_vout"
           }
         },
         {
           "description": "signal_analysis.power_regulators correctly lists U1 (LM7805_TO220, input 12V, output 5V) and U2 (LM317_TO-220, input 12V, output 3.3V net, with feedback divider). Both are labelled topology 'LDO'. The component counts (17 total: 7 connectors, 3 capacitors, 2 ICs, 3 resistors, 1 switch, 1 LED) are correct per the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The analyzer reports an RC low-pass filter (48.23 Hz) formed by R1 (330 ohm) and C1 (10 uF). In the actual circuit, R1 is a current-limiting resistor in series with LED D1 (path: 12V -> R1 -> D1 anode -> D1 cathode -> GND). C1 is an input bypass capacitor on the 12V rail for U1 (LM7805). These two components share the 12V node but serve entirely different purposes. The R-C topology is coincidental, not a deliberate filter. There is no RC filter in this design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "signal_analysis.design_observations contains two 'regulator_caps' entries claiming that input and output caps are missing for U1 and U2. However, ic_pin_analysis.decoupling_caps_by_rail for U1 lists C1 (10 uF) on the 12V input and C2 (0.1 uF) on the 5V output. For U2 it lists C1 (10 uF) on the 12V input and C3 (1 uF) on the 3.3V output. All four decoupling caps are present. The design_observations field is internally inconsistent with the ic_pin_analysis field.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "category": "regulator_caps"
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         },
         {
@@ -62,9 +66,9 @@
       "missed": [
         {
           "description": "The schematic contains a classic power-on LED indicator: 12V -> S1 (power switch) -> 12V bus -> R1 (330 ohm current limiter) -> D1 (LED anode) -> D1 (LED cathode) -> GND. The components and net connections are all correctly captured in nets and ic_pin_analysis, but the analyzer produces no signal_analysis entry for this LED indicator subcircuit. There is no entry in any signal_analysis list (e.g., a dedicated LED indicator or LED driver detector) that identifies this topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

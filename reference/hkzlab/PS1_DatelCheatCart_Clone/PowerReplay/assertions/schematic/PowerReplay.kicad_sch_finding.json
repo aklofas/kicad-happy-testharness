@@ -9,7 +9,7 @@
       "description": "14 total components, 78 nets, power rails +7.5V/GND/VCC all correctly identified. No-connects (24) and decoupling caps identified correctly on the right rails.",
       "created_from": "FND-00001061",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "25 multi-driver nets detected: U2 and U7 are two GAL16V8s with shared tri-state outputs (IO1-IO8) on the same nets. This is valid detection \u2014 the shared outputs are by design (SW1 selects between configurations), but the analyzer correctly identifies the electrical ambiguity.",
       "created_from": "FND-00001061",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "T1 is an L78L05 5V linear regulator with a +7.5V input rail and VCC output rail plus decoupling caps (C3 on +7.5V, C1/C2 on VCC). The power_regulators list is empty. This is partly caused by the wrong 'transformer' type classification, but also indicates the detector doesn't recognise this regulator circuit.",
       "created_from": "FND-00001061",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

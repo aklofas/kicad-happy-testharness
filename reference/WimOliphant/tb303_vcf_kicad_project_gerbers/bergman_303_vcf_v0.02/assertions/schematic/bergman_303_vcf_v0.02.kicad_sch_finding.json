@@ -29,22 +29,25 @@
       "description": "INCORRECT: L7805 voltage regulator classified as IC instead of power regulator",
       "created_from": "FND-00000170",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^L7805$"
-      }
+        "pattern": "^L7805$",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000170-AST-04",
       "description": "Analog filter topology not detected despite being the core function of the board (TB-303 VCF)",
       "created_from": "FND-00000170",
       "check": {
-        "path": "signal_analysis.filters",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.filters"
     },
     {
       "id": "FND-00000176-AST-01",

@@ -16,12 +16,13 @@
       "incorrect": [
         {
           "description": "Same false positive as LNA1109: U3 (LNA) classified as power_regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -32,7 +33,7 @@
         },
         {
           "description": "Same false positive crystal circuits as LNA1109",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -46,11 +47,12 @@
       "missed": [
         {
           "description": "Same as LNA1109: complete RF signal path not traced, LNA bias network not identified, operating frequency not inferred",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],

@@ -19,31 +19,34 @@
       "incorrect": [
         {
           "description": "IC3 (LM348 quad op-amp) appears 5 times in signal_analysis.opamp_circuits: units 1, 2, 3, 4, and 5. Unit 5 has configuration 'unknown' with no input/output nets \u2014 this corresponds to the power supply unit of the quad op-amp (the V+ / V- pin unit), which should not be classified as an opamp circuit. The power supply unit of a multi-unit op-amp being included as a separate 'unknown' opamp circuit entry is incorrect. The 4 actual amplifier units are correctly identified as comparator_or_open_loop configuration.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "max_count",
-            "value": 5
+            "value": 5,
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
       "missed": [
         {
           "description": "The dragon64 computer has 5 crystal/oscillator components: XL1 (1.8432MHz), XL2 (4.433619MHz colorburst), XL3 (14.218MHz CPU clock), XL4 (CXO_DIP8 oscillator, DNP), and XL5 (1.8432MHz). The signal_analysis.crystal_circuits array is empty. The crystals use lib_ids Device:Crystal_GND3, Device:Crystal_GND3_Small, and Oscillator:CXO_DIP8, and are typed as 'other' in the component list rather than 'crystal'. The detector apparently requires components to be typed as 'crystal' or uses value-based matching that doesn't catch these. Three distinct clock domains are present: system clock (14.218MHz), PAL colorburst (4.433619MHz), and UART baud rate (1.8432MHz).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "The dragon64 is a full 6809-based home computer with a 16-bit address bus (nets A0-A15 are all present) and 10 RAM ICs in the design (IC15, IC16, IC20-IC22, IC25-IC27, IC32-IC33 from the RAM sheet). The signal_analysis.memory_interfaces array is empty. Additionally the data bus nets are partially missing \u2014 only D3, D5, D6 are found in the top-level schematic's net list, while D0-D7 are named differently (possibly prefixed or differently labeled in sub-sheets). This suggests the memory interface detector is not matching on this vintage-computer bus topology where the CPU data bus uses a different naming convention.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],

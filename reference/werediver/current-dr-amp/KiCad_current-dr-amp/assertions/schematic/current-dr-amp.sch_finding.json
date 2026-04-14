@@ -20,11 +20,13 @@
       "description": "INCORRECT: The three op-amp ICs (U1 OPA1641, U2/U3 OPA1611) are all reported with configuration='unknown' in opamp_circuits. This is a classic audio current-drive amplifier circuit \u2014 the op-amps are surrounded by resistors forming feedback networks. The voltage_dividers detector did find R7/R10 and R8/R10 dividers adjacent to these op-amps, but no feedback_networks were detected and the op-amp configuration analyzer didn't resolve inverting or non-inverting configurations. This limits the useful signal-path description of the design.",
       "created_from": "FND-00002322",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

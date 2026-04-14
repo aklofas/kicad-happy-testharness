@@ -1,0 +1,48 @@
+{
+  "file_pattern": "blus-mini-mk2_thermal",
+  "analyzer_type": "thermal",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Finding count ~3 (tolerance 10%)",
+      "check": {
+        "path": "summary.total_findings",
+        "op": "range",
+        "min": 2,
+        "max": 4
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "medium count ~1",
+      "check": {
+        "path": "summary.medium",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Components analyzed ~3 (tolerance 10%)",
+      "check": {
+        "path": "summary.components_analyzed",
+        "op": "range",
+        "min": 2,
+        "max": 4
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Thermal score ~97 (+-10)",
+      "check": {
+        "path": "summary.thermal_score",
+        "op": "range",
+        "min": 87,
+        "max": 100
+      }
+    }
+  ]
+}

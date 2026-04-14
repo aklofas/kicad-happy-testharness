@@ -31,11 +31,13 @@
       "description": "The display board interfaces a 2x20 HD44780-compatible LCD (U1) with a 4-bit parallel bus: RS, RW, E, D4, D5, D6, D7 signals are wired from J1 (the inter-board connector) to the LCD. The signal_analysis.memory_interfaces array is empty and bus_analysis shows no detected buses. The parallel HD44780 interface could be recognized as a character LCD protocol with the classic RS/RW/E control plus D4-D7 data lines.",
       "created_from": "FND-00000398",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

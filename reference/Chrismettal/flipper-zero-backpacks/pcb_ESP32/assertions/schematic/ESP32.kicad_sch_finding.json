@@ -20,11 +20,13 @@
       "description": "The power_regulators section correctly identifies U2 as an AMS1117-3.3 LDO with input rail +5V and output rail LDO_+3.3V at 3.3V, using the fixed_suffix vref method. The RC filter on R9/C4 (10k/10uF, 1.59Hz cutoff) driving the ESP32-S2 EN pin is also correctly detected as a power-on reset delay circuit.",
       "created_from": "FND-00002091",
       "check": {
-        "path": "signal_analysis.power_regulators[0].ref",
+        "path": "findings[0].ref",
         "op": "equals",
-        "value": "U2"
+        "value": "U2",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].ref"
     },
     {
       "id": "FND-00002091-AST-03",
@@ -42,11 +44,13 @@
       "description": "The statistics section correctly counts 12 transistors, but signal_analysis.transistor_circuits contains only 8 entries covering Q1\u2013Q4 and Q9\u2013Q12 (all AO3401A/AO3400A MOSFETs). Q5, Q6, Q7, and Q8 are MMDT2907A-7-F (footprint MMDT3906), dual PNP BJT packages used for power switching (+5V\u2192Ext_+5V, +3.3V\u2192Ext_+3.3V paths). The transistor circuit analyzer handles MOSFETs but silently skips BJTs, leaving 4 BJT-based power switching circuits uncharacterized.",
       "created_from": "FND-00002091",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 12
+        "value": 12,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002091-AST-05",

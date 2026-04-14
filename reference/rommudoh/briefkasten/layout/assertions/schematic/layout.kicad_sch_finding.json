@@ -9,33 +9,39 @@
       "description": "INCORRECT: The analyzer detects two RC filters. The second one (R4=1k\u03a9, C2=1000\u00b5F) sets ground_net to '+3V3', which is wrong. C2's positive pin connects to +3V3 and negative pin connects to IO0. This means the analyzer is treating +3V3 as the 'ground' side of the RC because C2 bridges +3V3 and IO0. The combination is actually a bulk decoupling capacitor for the +3V3 rail, not an RC filter at all. The 0.16 Hz cutoff frequency is also implausibly low for a signal filter.",
       "created_from": "FND-00002292",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00002292-AST-02",
       "description": "INCORRECT: design_observations reports U1 (ESP-01S) as having 'rails_without_caps: [\"+3V3\"]'. However, both C1 (10\u00b5F) and C2 (1000\u00b5F) are connected to the +3V3 rail in the schematic. The ic_pin_analysis for U1 confirms decoupling caps exist (has_decoupling_cap: true with C2 listed on the VCC and CH_PD pins). The design_observations decoupling checker appears to be producing a contradictory result.",
       "created_from": "FND-00002292",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00002292-AST-03",
       "description": "The transistor_circuits entry for Q1 shows base_resistors=[] and load_type='other'. Q1's base net (__unnamed_1) connects directly to SW2 (reed switch). While R4 (1k\u03a9) is not directly in the base net, the design uses Q1 as a switch triggered by the reed contact: the load on collector is R1 (1M\u03a9 pull-up to RST). The load_type='other' is acceptable, but the design topology of this reed switch \u2192 NPN \u2192 ESP reset circuit is not described in design_observations, which could note the switchable reset topology.",
       "created_from": "FND-00002292",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "XC6206P332MR LDO (U1) input +5V, output +3.3V correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -24,12 +25,13 @@
         },
         {
           "description": "Crystal Y1 16MHz with 12pF load caps, effective 9pF correct",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -49,12 +51,13 @@
         },
         {
           "description": "RC filter R2+C1 (10k/1u, 15.92Hz) on NRST correct",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R2$"
+            "pattern": "^R2$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -66,12 +69,13 @@
         },
         {
           "description": "Polyfuse F1 (2A) correctly identified on VCC rail",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^F1$"
+            "pattern": "^F1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -114,12 +118,13 @@
         },
         {
           "description": "Spurious RC filter R9(22ohm)+C1(1u) at 7.23kHz \u2014 R9 is SWD debug header series protection, C1 is shared NRST cap",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R9$"
+            "pattern": "^R9$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -133,11 +138,12 @@
       "missed": [
         {
           "description": "Key matrix not detected \u2014 KRow0-7/KCol0-20 GPIO matrix exists but switch components are on keyboard daughterboard, not in parsed sheets",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],

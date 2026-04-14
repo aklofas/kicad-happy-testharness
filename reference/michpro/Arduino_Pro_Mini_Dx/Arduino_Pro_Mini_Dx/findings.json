@@ -8,22 +8,24 @@
       "correct": [
         {
           "description": "Y1 (32.768kHz) has two capacitors on each crystal pin: C1=6p8 and C2=1p5 on pin1 (parallel = 8.3pF), C3=6p8 and C4=1p5 on pin2 (parallel = 8.3pF). Correct CL_eff = (8.3pF * 8.3pF)/(8.3pF + 8.3pF) + ~3pF stray = ~7.15pF. The analyzer instead computes (1p5 * 6p8)/(1p5 + 6p8) + 3pF = 4.23pF, applying the series formula to only one pair of capacitors and ignoring that caps on the same crystal pin are in parallel. The note string 'CL_eff = (1p5 * 6p8) / (1p5 + 6p8) + ~3pF stray' confirms the formula is wrong.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].effective_load_pF",
+            "path": "findings",
             "op": "eq",
-            "value": 4.23
+            "value": 4.23,
+            "detector_filter": "detect_crystal_circuits[0].effective_load_pF"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The analyzer reports an RC low-pass filter with R1=330\u03a9 and C5=100n (cutoff 4.82kHz, input_net=__unnamed_5, output_net=__unnamed_3). In this circuit, __unnamed_5 is SW1 pin2 (pulled to GND when pressed) and __unnamed_3 is the RESET debounce node. R1 is a current-limiting series resistor in the reset button path, not the source resistor of a signal filter. The actual debounce filter is R2(4k7)+C5 (pull-up + bypass), which is also reported separately. The R1+C5 detection conflates the switch series resistor with the filter capacitor.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters[0].resistor.ref",
+            "path": "findings",
             "op": "eq",
-            "value": "R1"
+            "value": "R1",
+            "detector_filter": "detect_rc_filters[0].resistor.ref"
           }
         },
         {

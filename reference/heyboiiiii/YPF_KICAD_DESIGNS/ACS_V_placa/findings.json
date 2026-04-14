@@ -17,20 +17,22 @@
         },
         {
           "description": "The analyzer correctly identifies R2 (10k) and R1 (10k) forming a voltage divider from the ACS712 OUT pin (unnamed_0) to GND with midpoint at the 'ACS' net, ratio 0.5. The output-conditioning voltage divider is properly characterized.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "The design_observations correctly flags U7 (ACS712 current sensor module) as having VCC connected but no decoupling capacitor on that rail, which is a real design gap in this schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -57,11 +59,12 @@
       "missed": [
         {
           "description": "R7 (10K, VBAT+ to VBAT_U) and R8 (10k, VBAT_U to GND) form a clear 50% battery voltage divider for measuring the car battery level. This divider is not detected in signal_analysis.voltage_dividers. The R2/R1 divider IS detected, so the failure is specific to this topology \u2014 likely because VBAT+ is a global_label acting as the top net with no other connections on that net in this sheet.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
@@ -212,20 +215,22 @@
         },
         {
           "description": "U6 (L7805) is correctly identified in power_regulators with input_rail='VIN' and output_rail='VCC'. The decoupling analysis correctly associates C1 (1uF) with VIN and C2 (0.33uF) with VCC, matching the standard L7805 application circuit.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Q1 (2N3904) is correctly identified as collector-to-VCC load type 'connector' with base resistor R4 and emitter resistor R3. Q2 (2N3904) is correctly identified with base resistor R5 and emitter driving J4 (buzzer). Both circuits have proper base_resistors identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
@@ -259,9 +264,9 @@
       "incorrect": [
         {
           "description": "The L7805 (Regulator_Linear:L7805) is classified with topology='LDO' in power_regulators. The L7805 is a traditional series-pass linear regulator requiring a minimum ~2V dropout, not a Low-Dropout (LDO) device. LDO regulators have dropout voltages below ~0.5V. This is a generic misclassification affecting all linear regulators in the analyzer.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": [
               {
                 "path": "topology",
@@ -269,7 +274,8 @@
                 "op": "equals"
               }
             ],
-            "op": "contains_match"
+            "op": "contains_match",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {

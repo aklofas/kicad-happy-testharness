@@ -9,10 +9,12 @@
       "description": "The key_matrices detector correctly found a 6-row x 1-column matrix with 6 switches and 6 diodes using net_name detection (row1..row6, col0). The addressable_led_chains detector correctly identified 6 SK6812MINI LEDs (D7-D12) as a WS2812-protocol chain with Din/Dout signal flow and correctly estimated 360mA current draw.",
       "created_from": "FND-00002325",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00002325-AST-02",

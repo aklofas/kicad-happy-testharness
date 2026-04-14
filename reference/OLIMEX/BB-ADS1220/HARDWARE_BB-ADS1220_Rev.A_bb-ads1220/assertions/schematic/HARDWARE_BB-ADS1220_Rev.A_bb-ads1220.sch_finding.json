@@ -73,11 +73,13 @@
       "description": "C1, C2, and C3 are all 100nF bypass/decoupling capacitors placed on U1's power rails (AVDD, AVSS/GND, and the DVDD/output side). The signal_analysis.decoupling_analysis array is empty, missing all three. C2 is explicitly on the AVSS supply node, C3 is on the DVDD output pin of U1, and C1 is on the CLK/reference side.",
       "created_from": "FND-00000382",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000382-AST-07",

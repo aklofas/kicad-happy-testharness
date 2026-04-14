@@ -9,11 +9,13 @@
       "description": "INCORRECT: In tubes.sch, the 8 WS2812B LEDs (D1-D8) are connected in a single daisy chain: NEOPIXEL -> R13 (100 ohm series resistor) -> D1 DIN, then D1 DOUT -> D2 DIN -> D3 DIN -> ... -> D8 DIN via direct wire connections. The wires explicitly connect each LED's DOUT to the next LED's DIN (e.g., wire at y=5900 from x=2100 to x=2650 connects D1 DOUT to D2 DIN, then 3250-3800 for D2->D3, etc.). The analyzer reports 8 separate chains of length 1 each instead of 1 chain of length 8. This is because the WS2812B components use a custom library symbol (8IN14Lib:WS2812B) whose pin data is not resolved in the net list \u2014 the chain topology cannot be traced and each LED is treated as an isolated chain. The correct result is addressable_led_chains with 1 entry, chain_length=8, first_led=D1, last_led=D8.",
       "created_from": "FND-00000328",
       "check": {
-        "path": "signal_analysis.addressable_led_chains[0].chain_length",
+        "path": "findings[0].chain_length",
         "op": "eq",
-        "value": 8
+        "value": 8,
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains[0].chain_length"
     }
   ]
 }

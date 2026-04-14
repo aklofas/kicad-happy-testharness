@@ -9,21 +9,25 @@
       "description": "POW1_VI1 (TC7662Bx0A) is correctly detected in power_regulators with topology='switching' and output_rail='V-'. The flying capacitor connections (CAP+/CAP- to C1_VI1) and input/output caps (C3 on V+, C2 on V-) are correctly mapped in ic_pin_analysis. 4 components total is correct.",
       "created_from": "FND-00001673",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001673-AST-02",
       "description": "INCORRECT: The design_observation with category 'regulator_caps' reports {\"missing_caps\": {\"output\": \"V-\"}} for POW1_VI1. However, C2_VI1 (10uF) is connected to V- as confirmed by ic_pin_analysis (pin 5 VOUT on V- has decoupling_caps=[C2_VI1]). The decoupling_analysis correctly shows C3_VI1 on V+ but misses V- because the net name 'V-' is not recognized as a power rail by the decoupling detector. The cap is present and correctly wired; the observation is incorrect.",
       "created_from": "FND-00001673",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "value": 0,
-        "op": "max_count"
+        "op": "max_count",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

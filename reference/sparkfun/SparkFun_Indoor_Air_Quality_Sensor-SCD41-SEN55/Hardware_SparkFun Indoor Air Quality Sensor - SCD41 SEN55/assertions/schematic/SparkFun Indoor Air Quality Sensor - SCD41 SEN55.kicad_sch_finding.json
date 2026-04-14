@@ -19,14 +19,16 @@
       "description": "The design_observations entry for category 'switching_regulator' correctly identifies U1=AP3012 with inductor=L1 and input_rail=3.3V. The detection of the boost topology is correct even though the output rail is misidentified.",
       "created_from": "FND-00001441",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "category": "switching_regulator",
           "component": "U1",
           "inductor": "L1"
-        }
-      }
+        },
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001441-AST-03",
@@ -45,10 +47,12 @@
       "description": "The decoupling_analysis correctly identifies C1 (0.1uF) and C4 (4.7uF) on the 3.3V rail, and C5 (0.1uF) plus C2 (22uF) on the 5V rail. Rail coverage observations (has_bulk, has_bypass) are accurate.",
       "created_from": "FND-00001441",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001441-AST-05",
@@ -65,14 +69,16 @@
       "description": "INCORRECT: The signal_analysis.power_regulators entry for U1/AP3012 reports input_rail='3.3V' and output_rail='3.3V'. This is wrong: the AP3012 is a step-up (boost) converter. Its IN pin (pin 5) is on the 3.3V rail, while the 5V output net (via diode D1/PMEG4005EJ anode and capacitor C2) feeds the SEN55 connector. The feedback network (R2=100k, R3=33k) sets the output voltage, which the decoupling analysis confirms is associated with the 5V rail. The analyzer incorrectly resolved the output rail by tracing the FB pin resistors to the 5V net but still reports 3.3V as output.",
       "created_from": "FND-00001441",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "U1",
           "topology": "switching"
-        }
+        },
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001441-AST-07",
@@ -112,36 +118,42 @@
       "description": "The schematic has R3 (2.2k) connected between 3.3V and SDA, and R4 (2.2k) connected between 3.3V and SCL. These are classic I2C pull-up resistors. The design_observations i2c_bus entries for both SDA and SCL report has_pullup=false and pullup_resistor=null. The bus_analysis.i2c entries similarly show empty pull_ups arrays and has_pull_up=false. Looking at the net data, on the SDA net R3 pin 1 connects directly to the SDA line, and on the SCL net R4 pin 2 connects directly to SCL \u2014 the analyzer failed to recognize these as pull-ups. (Note: in the schematic the pull-up resistors for the I2C bus connecting to the Qwiic connectors are R3=2.2k/SDA and R4=2.2k/SCL; there is also JP2 which can disconnect them.)",
       "created_from": "FND-00001441",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "i2c_bus",
           "has_pullup": false
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001441-AST-11",
       "description": "R2 (100k) connects from the 5V output rail to the AP3012 FB pin, and R3 (33k) connects from the FB pin to GND (via JP2 and a net to GND). This classic resistive voltage divider sets the boost converter output voltage. The signal_analysis.voltage_dividers list is empty. The feedback_networks list is also empty. The ic_pin_analysis shows both resistors on pin 3 (FB) of U1 but the voltage divider pattern was not recognized.",
       "created_from": "FND-00001441",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00001441-AST-12",
       "description": "The signal_analysis.protection_devices list is empty. D1 (PMEG4005EJ, 40V/500mA Schottky diode) serves as the catch/freewheeling diode in the AP3012 boost converter circuit \u2014 a standard component in switching regulator topologies. It is connected between the SW node (U1 pin 1) and the 5V output rail. The analyzer did not detect this protection/rectification diode.",
       "created_from": "FND-00001441",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

@@ -1,7 +1,8 @@
 {
   "file_pattern": "Agro_Doctor__saved_Agro_doctor.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,84 +35,69 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 decoupling_analysis detected",
+      "description": "3 audit_led_circuits detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "3 design_observations detected",
+      "description": "1 detect_decoupling detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "3 led_audit detected",
+      "description": "3 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "All led_audit have ref",
+      "description": "6 detect_motor_drivers detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "All led_audit type values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "6 motor_drivers detected",
-      "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "All motor_drivers have driver_reference",
+      "id": "SEED-00000009",
+      "description": "All detect_motor_drivers have driver_reference",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "not_contains_match",
         "field": "driver_reference",
         "pattern": "^$"
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "All motor_drivers driver_type values are valid",
+      "id": "SEED-00000010",
+      "description": "All detect_motor_drivers driver_type values are valid",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "count_matches",
         "field": "driver_type",
         "pattern": "^(stepper|dc_brushed_h_bridge)$",
@@ -119,35 +105,48 @@
       }
     },
     {
-      "id": "SEED-00000013",
-      "description": "2 power_regulators detected",
+      "id": "SEED-00000011",
+      "description": "2 detect_power_regulators detected",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "All power_regulators have ref present",
+      "id": "SEED-00000012",
+      "description": "All detect_power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "2 suggested_certifications detected",
+      "id": "SEED-00000013",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
+      "description": "3 validate_led_resistors detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "Has 13 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -156,7 +155,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "Has 10 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -165,7 +164,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

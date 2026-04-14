@@ -1,36 +1,37 @@
 {
   "file_pattern": "replicookie.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~77 (tolerance 10%)",
+      "description": "Finding count ~76 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 73,
-        "max": 81
+        "min": 72,
+        "max": 80
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~12",
+      "description": "high count ~11",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 9,
+        "max": 13
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~11",
+      "description": "medium count ~9",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 8,
+        "max": 10
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~30 (+-10)",
+      "description": "EMC risk score ~49.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 20,
-        "max": 40
+        "min": 39.5,
+        "max": 59.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "6 decoupling finding(s)",
+      "description": "3 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 6
+        "value": 3
       }
     },
     {

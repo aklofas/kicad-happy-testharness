@@ -19,11 +19,13 @@
       "description": "The design has U2=ACT8945AQJ305-T (a multi-rail PMIC with 3 DC-DC converters and 4 LDOs) and U3=MIC5247-2.0 (an LDO). Both appear in subcircuits, but power_regulators is empty in signal_analysis. The same miss occurs in the V1 file. The ACT8945A uses a custom lib_id (ACT8945AQJ305-T:ACT8945AQJ305-T) and the MIC5247 uses symbols:MIC5247-2.0 \u2014 neither matches whatever pattern the power regulator detector uses for LDO/DCDC recognition. The design also has 3 inductors (L1-L3, NR3015T2R2M) forming the switching converter output filters for the PMIC, which would confirm its DC-DC topology.",
       "created_from": "FND-00002096",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002096-AST-03",

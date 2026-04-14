@@ -9,55 +9,65 @@
       "description": "INCORRECT: Key matrix switch count likely overcounted due to Key_Switch_LED dual-unit symbols (switch + LED counted separately)",
       "created_from": "FND-00000326",
       "check": {
-        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "path": "findings[0].estimated_keys",
         "op": "max_value",
-        "value": 100
+        "value": 100,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].estimated_keys"
     },
     {
       "id": "FND-00000326-AST-02",
       "description": "ESD1 (PRTR5V0U2X, lib: Power_Protection:PRTR5V0U2X) on USB data lines not detected as protection_device",
       "created_from": "FND-00000326",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_value",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00000327-AST-01",
       "description": "INCORRECT: The schematic uses a 2-unit Key_Switch_LED symbol (unit 1 = switch contacts, unit 2 = LED). The key matrix is 5 rows x 14 columns = 70 physical key positions, confirmed by 70 unique diode refs (D000-D413). However, the topology-based detection counts each unit of each multi-unit symbol as a separate switch, giving 162 (= 70 K-symbols \u00d7 2 units + 11 Kb-symbols \u00d7 2 units). The correct answer for estimated_keys is 70. The matrix dimensions (rows:5, columns:14) are correct.",
       "created_from": "FND-00000327",
       "check": {
-        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "path": "findings[0].estimated_keys",
         "op": "eq",
-        "value": 70
+        "value": 70,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].estimated_keys"
     },
     {
       "id": "FND-00000327-AST-02",
       "description": "ESD1 is a PRTR5V0U2X USB ESD protection IC (Nexperia, Power_Protection:PRTR5V0U2X library) directly connected to D+ and D- nets. It is absent from signal_analysis.protection_devices because the component is classified as type='other' (not 'ic' or 'diode'), causing it to fall through both the diode-based and IC-based code paths in detect_protection_devices. As a result, the design_observations for net 'D+' and 'D-' both report has_esd_protection: false even though ESD1 is clearly present on both nets.",
       "created_from": "FND-00000327",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "contains",
-        "value": "ESD1"
+        "value": "ESD1",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00000327-AST-03",
       "description": "R5 (1k resistor) sits between RP2040 U1 XOUT pin (net __unnamed_14) and Y1 crystal pin 3 / C14 load cap (net __unnamed_12). This is the standard RP2040 crystal feedback series resistor recommended in the RP2040 hardware design guide for oscillation stability. The crystal_circuits detection reports C14 as a direct load capacitor on that crystal pin, but C14 is actually in series with R5 \u2014 the analyzer does not report R5 as a series_resistor in the crystal circuit entry for Y1.",
       "created_from": "FND-00000327",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0]",
+        "path": "findings[0]",
         "op": "contains",
-        "value": "series_resistor"
+        "value": "series_resistor",
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0]"
     }
   ]
 }

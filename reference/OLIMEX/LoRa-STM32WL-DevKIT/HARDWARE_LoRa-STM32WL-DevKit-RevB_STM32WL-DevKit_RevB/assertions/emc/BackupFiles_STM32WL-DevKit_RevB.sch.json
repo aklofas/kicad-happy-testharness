@@ -1,16 +1,17 @@
 {
   "file_pattern": "BackupFiles_STM32WL-DevKit_RevB.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~11 (tolerance 10%)",
+      "description": "Finding count ~12 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 10,
+        "max": 14
       }
     },
     {
@@ -35,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~6",
+      "description": "low count ~5",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 4,
+        "max": 6
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~77 (+-10)",
+      "description": "EMC risk score ~82.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 67,
-        "max": 87
+        "min": 72.5,
+        "max": 92.5
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "7 io_filtering finding(s)",
+      "description": "6 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 7
+        "value": 6
       }
     },
     {
@@ -106,11 +107,11 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "~6 probe point(s) in test plan",
+      "description": "~5 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 5
+        "value": 4
       }
     },
     {

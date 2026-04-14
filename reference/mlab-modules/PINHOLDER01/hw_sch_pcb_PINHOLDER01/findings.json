@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "Correctly identifies J1 on B.Cu (back side SMD connector), two mounting holes grounded to GND zone on B.Cu, two test points. Zone fill ratio and copper presence analysis are accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -36,11 +36,11 @@
       "incorrect": [
         {
           "description": "alignment.aligned=false citing 'Width varies by 9.1mm, Height varies by 6.6mm'. This is expected: solder mask and silkscreen only cover component areas, not the full board extent. Comparing their extents to Edge.Cuts/copper introduces false misalignment warnings. Only copper layers and Edge.Cuts should be compared for alignment.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "drill_classification shows mounting_holes.count=0 and component_holes.count=2 for the 3.0mm PTH drills. These are M3 mounting holes (footprint MountingHole_3mm), not component drills. The X2 attribute says 'ComponentDrill' because KiCad exports grounded mounting holes as PTH ComponentDrill, but the gerber analyzer should use diameter heuristics (>=2.5mm PTH with no net signal) to reclassify them as mounting holes.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -61,9 +61,9 @@
       "correct": [
         {
           "description": "Test points TP1/TP2 covering 2 nets correctly identified. GND PWR_FLAG warning correctly raised. Missing MPN audit correct (all 3 sourced components lack MPN).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -72,7 +72,7 @@
       "incorrect": [
         {
           "description": "Mounting holes (M3, M4) have no MPN by design \u2014 they are mechanical, not electrical components. Including them in missing_mpn and sourcing audit inflates the mpn_coverage gap. The sourcing audit should exclude mounting holes from the MPN coverage metric.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

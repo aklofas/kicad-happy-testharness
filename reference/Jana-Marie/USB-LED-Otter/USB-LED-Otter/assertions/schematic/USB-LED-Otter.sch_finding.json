@@ -31,9 +31,18 @@
       "check": {
         "path": "statistics.power_rails",
         "value": [
-          {"name": "+3.3V", "voltage": 3.3},
-          {"name": "+5V", "voltage": 5.0},
-          {"name": "GND", "voltage": null}
+          {
+            "name": "+3.3V",
+            "voltage": 3.3
+          },
+          {
+            "name": "+5V",
+            "voltage": 5.0
+          },
+          {
+            "name": "GND",
+            "voltage": null
+          }
         ],
         "op": "equals"
       }
@@ -43,13 +52,15 @@
       "description": "U1 is an MCP1700-3302E LDO regulator. Its lib_id is 'Regulator_Linear:MCP1700-3302E_SOT23'. The schematic shows it powered from +5V and outputting +3.3V, but the analyzer reports input_rail: null, output_rail: null, topology: 'unknown'. The MCP1700 pin connections (IN\u2192+5V, GND\u2192GND, OUT\u2192+3.3V) are traceable from the net data but the regulator pin mapping was not resolved.",
       "created_from": "FND-00001647",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": {
           "input_rail": "+5V"
         },
-        "op": "contains_match"
+        "op": "contains_match",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

@@ -9,11 +9,13 @@
       "description": "INCORRECT: The analyzer estimated Vout = 2.496V using a heuristic Vref of 0.6V with the 316k/100k feedback divider (ratio 0.240385). However, the schematic notes embedded in the design text explicitly state Vref = 1.212V, giving an actual target of 5.04V. The formula 1.212V * (1 + 316k/100k) = 5.04V matches the design intent. The 0.6V Vref heuristic is wrong for TPS61089 by 2x, causing a >100% error in the estimated output voltage. This is significant because the board's output rail (+5V) is used to power downstream circuits.",
       "created_from": "FND-00002132",
       "check": {
-        "path": "signal_analysis.power_regulators[0].estimated_vout",
+        "path": "findings[0].estimated_vout",
         "op": "greater_than",
-        "value": 4.5
+        "value": 4.5,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].estimated_vout"
     }
   ]
 }

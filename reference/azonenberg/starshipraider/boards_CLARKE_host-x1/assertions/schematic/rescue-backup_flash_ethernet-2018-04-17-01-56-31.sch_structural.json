@@ -2,89 +2,109 @@
   "file_pattern": "rescue-backup_flash_ethernet-2018-04-17-01-56-31.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 crystal_circuits",
+      "description": "Exactly 4 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000002",
-      "description": "U9 in crystal_circuits",
+      "id": "STRUCT-00000003",
+      "description": "U9 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U9$"
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "U10 in crystal_circuits",
+      "id": "STRUCT-00000004",
+      "description": "U10 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U10$"
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 3 decoupling_analysis",
-      "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
       "id": "STRUCT-00000005",
-      "description": "Exactly 3 design_observations",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 ethernet_interfaces",
+      "description": "Exactly 3 detect_design_observations",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 1 detect_ethernet_interfaces",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_ethernet_interfaces",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "U8 in ethernet_interfaces",
+      "id": "STRUCT-00000008",
+      "description": "U8 in detect_ethernet_interfaces",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_ethernet_interfaces",
         "op": "contains_match",
         "field": "phy_reference",
         "pattern": "^U8$"
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 4 led_audit",
+      "id": "STRUCT-00000009",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
-        "value": 4
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 2 suggested_certifications",
+      "id": "STRUCT-00000010",
+      "description": "Exactly 4 validate_led_resistors",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     }
   ]

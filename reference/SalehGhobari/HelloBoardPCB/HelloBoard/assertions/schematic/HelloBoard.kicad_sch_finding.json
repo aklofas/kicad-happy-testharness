@@ -9,7 +9,7 @@
       "description": "All 36 components correctly identified across 8 categories (6 IC, 6 R, 14 C, 4 connectors, 2 LED, 2 switch, 1 crystal, 1 ferrite). Power rails +3.3V, +3.3VA, VBUS, GND all detected. AMS1117-3.3 LDO correctly identified with VBUS input and +3.3V output.",
       "created_from": "FND-00000601",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "I2C_SCL and I2C_SDA nets show U1 (STM32) and U4 (ADXL343) as participants with R2 and R4 (2K2) pullups to +3.3V. Crystal Y1 at 16 MHz with C10/C11 10 pF load caps detected, effective load 8 pF calculated correctly. ERC warnings for NRST and BOOT0 (no active driver, driven only by passive components) are valid.",
       "created_from": "FND-00000601",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "RV1 (Bourns 3214W, 10k) is stored in the 'resistor' type bucket. The description field correctly reads 'Potentiometer', so there is no information loss. The BOM correctly separates it from fixed resistors because its footprint differs.",
       "created_from": "FND-00000601",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }

@@ -29,20 +29,24 @@
       "description": "RT9080-3.3 is correctly identified as an LDO topology with input_rail=VBUS and output_rail=3.3V, matching the schematic. The fixed output voltage suffix extraction (3.3) is correct.",
       "created_from": "FND-00001449",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001449-AST-04",
       "description": "C4 (1.0uF) and C5 (10uF) decoupling 3.3V, C2 (10uF) and C3 (1.0uF) decoupling VBUS, all correctly detected. Total 11uF per rail is accurate.",
       "created_from": "FND-00001449",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001449-AST-05",
@@ -117,15 +121,17 @@
       "description": "The analyzer reports has_pullup=false for both SCL and SDA nets. However, R12 (2.2k) connects SCL to JP4 pin A, and R11 (2.2k) connects SDA to JP4 pin C. JP4 is a 3-pole solder jumper whose center pad (pin 2/B) connects to 3.3V. When JP4 is bridged (its default closed state), R11 and R12 serve as I2C pull-ups to 3.3V. The pull-up detection fails because the path goes through JP4 rather than a direct resistor-to-rail connection.",
       "created_from": "FND-00001449",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "i2c_bus",
           "net": "SCL",
           "has_pullup": true
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001449-AST-12",
@@ -143,11 +149,13 @@
       "description": "CFG1 net: R6 (100k) pulls to GND and JP2/R5 (1k) can pull to 3.3V \u2014 forming a selectable pull-down configuration. CFG2 net: R7 (100k) to GND and JP3/R8 (1k) to 3.3V via jumper. These resistor pairs forming interface configuration dividers are not detected in signal_analysis.voltage_dividers (which is empty).",
       "created_from": "FND-00001449",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "not_exists",
-        "value": null
+        "value": null,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     }
   ]
 }

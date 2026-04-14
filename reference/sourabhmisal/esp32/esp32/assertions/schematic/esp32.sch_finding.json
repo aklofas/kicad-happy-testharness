@@ -9,10 +9,12 @@
       "description": "The two S8050 NPN transistors (Q1, Q2) forming the standard ESP32 auto-reset circuit (DTR/RTS from CP2102N driving EN and IO0) are correctly identified as transistor_circuits with their base resistors (R21, R22 at 12K). The CP2102N USB-UART bridge (U3) and NCP1117-3.3 LDO regulator (U2) are also correctly identified in the subcircuits and signal_analysis.power_regulators sections.",
       "created_from": "FND-00002042",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002042-AST-02",

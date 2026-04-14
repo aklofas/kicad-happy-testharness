@@ -31,11 +31,13 @@
       "description": "The design implements a clear sensor-to-ADC readout chain: 64 SS49E Hall sensors are grouped 8-per-mux, feeding 8 SN74HC4851N 8:1 analog multiplexers, whose COM outputs (COM0\u2013COM7) connect to the Arduino Nano analog inputs (A0\u2013A7 implied through J1 connector). The address bus (A, B, C) and inhibit (INH) from the Arduino select which sensor is read. Signal analysis produces no entries for this analog mux topology \u2014 no detector fires for the analog switching network. The design_observations section also has no entry describing this architecture.",
       "created_from": "FND-00000438",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

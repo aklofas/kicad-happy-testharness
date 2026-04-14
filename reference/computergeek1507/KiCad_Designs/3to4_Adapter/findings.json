@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "U4 (OKI-78SR-5, value 'OKI-78SR-5') is classified as topology='LDO' and estimated_vout=7.8V. The OKI-78SR-5 is a Murata/Recom step-down switching regulator (SIL package), not an LDO. The '-5' suffix should parse to 5.0V output, but the fixed_suffix path returns 7.8V. Both the topology and the Vout estimate are wrong.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -56,22 +57,24 @@
       "incorrect": [
         {
           "description": "U1 (VR10S05) is classified as topology='LDO' because it uses the Regulator_Linear:L7805 lib_id. The VR10S05 is a Murata SIL-package isolated DC/DC switching converter, not a linear regulator. The classifier relies solely on lib_id family and does not check the component value string for known switching regulator part numbers. This is the same root cause as the OKI-78SR-5 misclassification.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "missed": [
         {
           "description": "U4 and U5 are LTV-214G phototransistor optocouplers used to isolate limit switch inputs from the Pico's GPIO. signal_analysis.isolation_barriers is empty. The isolation_barriers detector does not recognize optocouplers by lib_id pattern (LTV-214:LTV-214G) or value string. The subcircuits section does identify these as neighbor components of the Pico, but no structural isolation analysis is performed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           }
         }
       ],
@@ -131,11 +134,12 @@
       "missed": [
         {
           "description": "U2 (AMS1117-5.0, Regulator_Linear:AMS1117-5.0) drives the +5V rail (pin VO connected to +5V) but does not appear in signal_analysis.power_regulators. The schematic has duplicate reference assignments: U2 is used for both the AMS1117-5.0 and the rp2040-zero module, and U4 is used for both the 74AHCT1G125 and the INA219BxD. The duplicate ref likely causes the regulator detector to either skip or discard the AMS1117 entry when resolving net-to-component mappings.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

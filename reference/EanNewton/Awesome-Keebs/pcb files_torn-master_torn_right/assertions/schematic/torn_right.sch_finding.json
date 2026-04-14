@@ -49,11 +49,13 @@
       "description": "INCORRECT: The schematic has 19 SW_Push switches and 3 Rotary_Encoder_Switch devices (SW28, SW41, SW44), giving 22 total matrix switches. The analyzer reports switches_on_matrix=24 and estimated_keys=24. The overcount by 2 occurs because rotary encoders SW41 and SW44 each have both their B and C encoder pins connected to different COL nets (SW41 appears on both COL6 and COL7; SW44 appears twice on COL9). Each such encoder is counted twice in the matrix switch tally instead of once.",
       "created_from": "FND-00000389",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "op": "equals",
-        "value": 22
+        "value": 22,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     }
   ]
 }

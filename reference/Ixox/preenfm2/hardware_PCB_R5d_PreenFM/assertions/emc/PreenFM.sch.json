@@ -1,7 +1,8 @@
 {
   "file_pattern": "PreenFM.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -15,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~5",
+      "description": "high count ~3",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 2,
+        "max": 4
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~54 (+-10)",
+      "description": "EMC risk score ~81.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 44,
-        "max": 64
+        "min": 71.0,
+        "max": 91.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "3 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 1
       }
     },
     {

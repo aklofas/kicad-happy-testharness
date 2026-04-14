@@ -9,22 +9,26 @@
       "description": "U2 (CN3058E) is a LiFePO4 battery charger IC. The analyzer found it in power_regulators with topology='unknown', which is appropriate since it does not follow a standard linear or switching regulator pin topology. The associated FB and ISET nets were also correctly captured.",
       "created_from": "FND-00002047",
       "check": {
-        "path": "signal_analysis.power_regulators[0].ref",
+        "path": "findings[0].ref",
         "op": "equals",
-        "value": "U2"
+        "value": "U2",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].ref"
     },
     {
       "id": "FND-00002047-AST-02",
       "description": "INCORRECT: U3 is a TPS709 LDO with a power_out pin (VOUT) and is clearly a power regulator, but it does not appear in signal_analysis.power_regulators. Only U2 (CN3058E battery charger) was detected. The TPS709 has a non-standard lib_id ('tps709:TPS709') and pin names VI/VO/GND rather than standard IN/OUT names, which likely caused the regulator detector to miss it. The 3V3 output rail is also misclassified as 'signal' rather than 'power' because there is no power symbol for it in this KiCad 5 schematic.",
       "created_from": "FND-00002047",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002047-AST-03",

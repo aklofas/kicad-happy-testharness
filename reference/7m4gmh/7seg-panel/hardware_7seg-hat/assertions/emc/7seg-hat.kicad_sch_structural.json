@@ -2,6 +2,7 @@
   "file_pattern": "7seg-hat.kicad_sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -27,6 +28,17 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "1 thermal_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^thermal_emc$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
@@ -36,7 +48,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -46,7 +58,17 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
+      "description": "Rule TH-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^TH\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "U101 in EMC findings",
       "check": {
         "path": "findings",
@@ -56,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "C101 in EMC findings",
       "check": {
         "path": "findings",
@@ -66,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "C104 in EMC findings",
       "check": {
         "path": "findings",
@@ -76,7 +98,17 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
+      "description": "C103 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "J104 in EMC findings",
       "check": {
         "path": "findings",
@@ -86,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
       "description": "J102 in EMC findings",
       "check": {
         "path": "findings",
@@ -96,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000013",
       "description": "J101 in EMC findings",
       "check": {
         "path": "findings",
@@ -106,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000014",
       "description": "J103 in EMC findings",
       "check": {
         "path": "findings",

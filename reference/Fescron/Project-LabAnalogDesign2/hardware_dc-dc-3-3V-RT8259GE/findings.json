@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "25 components correctly enumerated (U1, C1-C5, R1-R3, L1, J1-J2, JP1-JP2, TP1-TP5, H1-H4, D1, G1). Component types (ic, capacitor, resistor, inductor, connector, test_point, jumper, mounting_hole, diode) all correctly classified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "The RC filter detector found R1 (62k\u03a9, FB net) with C2/C5 (22\u00b5F) on __unnamed_5 (the output Vout node) and flagged a 0.06 Hz low-pass filter. But R1 is the feedback divider top resistor for the RT8259GE, and C2/C5 are output bypass capacitors. The 'input_net=FB, output_net=__unnamed_5' structure is the regulator output path, not an RC filter. This is the same category of feedback-divider false positive seen in other switching regulator designs.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "In the net map, the 'FB' named net includes U1 pin 1 (name='BOOT') alongside R1/R2 feedback resistors. Meanwhile __unnamed_1 has U1 pin 3 (name='FB') with C3. The RT8259GE pin 1 is BOOT (soft-start), not FB. The KiCad 5 legacy parser appears to be mapping the net label 'FB' from the schematic wire label to U1 pin 1 incorrectly \u2014 this is a net-connectivity parsing issue in the legacy .sch parser affecting pin-to-net assignment.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The RT8259GE is a step-down (buck) switching regulator. The analyzer detected it as topology='unknown' with input_rail='__unnamed_3' (an unnamed net), despite R1/R2 forming a complete feedback voltage divider. The unnamed input rail is because the VIN net lacks a named power rail symbol. This is consistent with known KH issues around unnamed nets preventing regulator classification.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -48,9 +48,9 @@
       "correct": [
         {
           "description": "2-layer board, 40x38mm, 27 footprints, 8 nets, fully routed (0 unrouted). DFM: 0 violations, minimum track 0.381mm, minimum drill 0.7mm. GND zone stitching with 1 via correctly detected. 2 courtyard overlaps reported \u2014 these are for the OSHW logo (G1) and KiCad logo (REF**) board-only decorative footprints overlapping with real components, which is acceptable.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

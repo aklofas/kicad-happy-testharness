@@ -20,11 +20,12 @@
       "missed": [
         {
           "description": "The design is explicitly a 'Charlieplexed LED sequencer' (per README and repo name). An ATtiny13A drives 20 LEDs via 5 GPIO pins through 5 resistors using charlieplexing (5 pins \u00d7 (5-1) = 20 LEDs). The analyzer produces empty signal_analysis.key_matrices and no charlieplex observation anywhere in the output. The topology is recognizable: a single MCU with N outputs driving N\u00d7(N-1) LEDs. This is a missed detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

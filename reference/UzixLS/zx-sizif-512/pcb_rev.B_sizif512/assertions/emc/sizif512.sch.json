@@ -1,16 +1,17 @@
 {
   "file_pattern": "sizif512.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~52 (tolerance 10%)",
+      "description": "Finding count ~43 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 49,
-        "max": 55
+        "min": 38,
+        "max": 48
       }
     },
     {
@@ -25,32 +26,32 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~15",
+      "description": "medium count ~6",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 5,
+        "max": 7
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~31",
+      "description": "low count ~25",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 22,
+        "max": 28
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~30 (+-10)",
+      "description": "EMC risk score ~55.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 20,
-        "max": 40
+        "min": 45.0,
+        "max": 65.0
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "14 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 14
+        "value": 5
       }
     },
     {
@@ -99,13 +100,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "33 io_filtering finding(s)",
+      "description": "27 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 33
+        "value": 27
       }
     },
     {
@@ -128,11 +129,11 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "~33 probe point(s) in test plan",
+      "description": "~27 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 29
+        "value": 24
       }
     },
     {

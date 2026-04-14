@@ -17,31 +17,34 @@
         },
         {
           "description": "The 16MHz crystal is detected and its frequency correctly parsed at 16000000.0 Hz. The crystal is a standard HC-49S type for the ATmega2560.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "The design_observations correctly identifies SCL and SDA nets on IC? (ATmega2560) and correctly reports has_pullup=false. The schematic has no I2C pull-up resistors, which is a real design gap for a minimal ATmega2560 core schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The source schematic has two 22pF capacitors (C?) connected as crystal load caps for the Y? crystal. However load_caps=[] is reported. Because the schematic is unannotated (all refs are '?'), the analyzer cannot reliably trace net connectivity from the crystal pins to the load capacitors, since all C? instances share a collapsed reference. This is an inherent limitation with unannotated schematics, but the result is a missed detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],

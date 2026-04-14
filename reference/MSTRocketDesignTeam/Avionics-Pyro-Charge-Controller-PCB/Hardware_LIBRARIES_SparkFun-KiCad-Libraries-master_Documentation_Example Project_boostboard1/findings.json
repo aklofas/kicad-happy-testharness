@@ -26,12 +26,13 @@
         },
         {
           "description": "Crystal Y1 correctly identified as 32MHz with two 30pF load caps (C6, C7) and effective load 18pF",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -44,11 +45,12 @@
         },
         {
           "description": "Crystal load cap calculation correct: CL_eff = (30pF * 30pF)/(30pF + 30pF) + 3pF stray = 18pF",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -57,7 +59,7 @@
         },
         {
           "description": "I2C1 bus correctly detected with R22 (4.7k) pullup on SCL and R23 (4.7k) pullup on SDA to +3.3V",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
             "path": "$.signal_analysis.design_observations[?(@.category=='i2c_bus' && @.net=='I2C1_SCL')].pullup_resistor",
             "op": "eq",
@@ -73,7 +75,7 @@
         },
         {
           "description": "I2C2 bus correctly detected with R24 (4.7k) pullup on SCL and R25 (4.7k) pullup on SDA to +3.3V",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
             "path": "$.signal_analysis.design_observations[?(@.category=='i2c_bus' && @.net=='I2C2_SCL')].pullup_resistor",
             "op": "eq",
@@ -89,7 +91,7 @@
         },
         {
           "description": "Reset circuit correctly detected: R33 (4.7k) pullup, C8 (100nF) filter cap, SW1 push button",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
             "path": "$.signal_analysis.design_observations[?(@.category=='reset_pin')].component",
             "op": "eq",
@@ -106,12 +108,13 @@
         },
         {
           "description": "RC filter on NRST correctly identified: R33 4.7k + C8 100nF = 338.63 Hz low-pass",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R33$"
+            "pattern": "^R33$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -123,11 +126,12 @@
         },
         {
           "description": "Decoupling analysis correctly finds 12 caps on +3.3V rail (9x 100nF + 3x 1uF = 3.9uF total)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -237,7 +241,7 @@
       "missed": [
         {
           "description": "5 LED indicator circuits (D1-D5 with 820 ohm series resistors R17-R21) not detected as LED indicator patterns. Each LED is driven from an MCU GPIO pin through a current-limiting resistor to GND. At 3.3V with ~2V LED drop, current is approximately (3.3-2)/820 = 1.6mA per LED.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "$.statistics.component_types.led",
             "op": "min_count",
@@ -246,11 +250,12 @@
         },
         {
           "description": "PVD_IN label (Power Voltage Dropout monitoring) not recognized in design observations. This is a specific STM32 feature for brownout detection, connected to a dedicated pin via decoupling capacitor C17.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -261,11 +266,12 @@
         },
         {
           "description": "Debug jumper JP1 (3-pin jumper connecting +3.3V, common, and GND) not analyzed as a debug/configuration feature. This jumper selects BOOT0 mode or similar debug configuration for the STM32, with R32 (4.7k) in the circuit.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [

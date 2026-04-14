@@ -2,6 +2,7 @@
   "file_pattern": "GamryAddition.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -59,6 +60,16 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Rule DC-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DC\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
@@ -68,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -78,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
@@ -88,23 +99,13 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Rule VS-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^VS\\-001$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "IC1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bIC1\\b"
       }
     },
     {
@@ -319,6 +320,26 @@
     },
     {
       "id": "STRUCT-00000032",
+      "description": "IC1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bIC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
+      "description": "C1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000034",
       "description": "P1 in EMC findings",
       "check": {
         "path": "findings",
@@ -328,7 +349,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000035",
       "description": "P2 in EMC findings",
       "check": {
         "path": "findings",

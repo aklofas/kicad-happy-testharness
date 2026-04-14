@@ -9,20 +9,24 @@
       "description": "NE5532 inverting amp stages correctly identified",
       "created_from": "FND-00000260",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00000260-AST-02",
       "description": "DAC output anti-aliasing RC filters correctly detected",
       "created_from": "FND-00000260",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

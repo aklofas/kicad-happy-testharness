@@ -48,11 +48,12 @@
       "missed": [
         {
           "description": "ZX Spectrum keyboard matrix using touch pads (K0-K10) with 74HC4051 multiplexers not identified as a key matrix",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [
@@ -73,11 +74,12 @@
         },
         {
           "description": "SD card interface (SD-01A connector Card1) not detected as a memory card interface",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],
@@ -95,9 +97,9 @@
         },
         {
           "description": "Battery management subsystem (TP4057 charger + TPS2117 power mux + battery connector) not identified as a complete power path",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

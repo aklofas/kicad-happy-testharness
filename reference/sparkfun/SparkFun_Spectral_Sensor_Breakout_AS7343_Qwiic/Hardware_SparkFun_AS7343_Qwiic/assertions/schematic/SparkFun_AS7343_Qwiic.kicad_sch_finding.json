@@ -19,15 +19,17 @@
       "description": "The analyzer correctly identifies U1 as an LDO regulator with input_rail=3.3V and output_rail=1.8V. The estimated_vout=1.8 derived from the part value suffix is correct. Decoupling caps C5/C2 on the input and C6/C4/C1 on the output are correctly identified.",
       "created_from": "FND-00001493",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "U1",
           "topology": "LDO",
           "input_rail": "3.3V",
           "output_rail": "1.8V"
-        }
-      }
+        },
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001493-AST-03",
@@ -44,10 +46,12 @@
       "description": "R1 is a series 22-ohm resistor between the 1.8V LDO output and U2's VDD pin, with C3 (1.0uF) decoupling U2's VDD. The analyzer correctly computes the RC low-pass filter with fc = 7.23 kHz. The input_net=1.8V and output_net=__unnamed_1 (U2-VDD net) are correctly traced.",
       "created_from": "FND-00001493",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001493-AST-05",
@@ -86,10 +90,12 @@
       "description": "The 1.8V rail has C6 (4.7uF), C4 (4.7uF), C1 (0.1uF) for 9.5uF total; the 3.3V rail has C5 (4.7uF) and C2 (0.1uF) for 4.8uF total. Both have bulk and bypass caps correctly flagged. The absence of a high-frequency cap (e.g. 10nF or 100pF) is correctly noted as has_high_freq=false.",
       "created_from": "FND-00001493",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001493-AST-09",
@@ -116,11 +122,13 @@
       "description": "INCORRECT: Q1 and Q2 are BSS138 N-MOSFETs used as bidirectional I2C level shifters. Their gates are tied directly to the 1.8V rail. R8 (for Q1) and R7 (for Q2) are 2.2k pull-up resistors on the SDA_1V8/SCL_1V8 nets (source side), not gate resistors. The analyzer incorrectly classifies them as gate_resistors because they share the 1.8V net with the gate, but they are electrically on the source/level-translated side. Similarly, U1 (LDO) is falsely listed as gate_driver_ic for Q1/Q2 \u2014 it merely provides the 1.8V rail that powers the gate bias.",
       "created_from": "FND-00001493",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001493-AST-12",

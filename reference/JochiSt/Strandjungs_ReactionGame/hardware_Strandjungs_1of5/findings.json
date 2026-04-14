@@ -31,13 +31,14 @@
         },
         {
           "description": "The design has 5 identical switch channels, each with a BUZ11 MOSFET driving a solenoid load and a BC847 NPN transistor driving a status LED. In the transistor_circuits output, all 5 BUZ11 instances (Q2, Q4, Q6, Q8, Q10) report flyback_diode='D7' and led_driver pointing to D8+R12. This is because the hierarchical schematic was flattened and all channels share net aliases; D7 and D8 belong to one specific channel but the analyzer cannot distinguish per-channel assignments. Each channel has its own dedicated flyback diode and LED, not a shared one.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "count_matches",
             "value": {
               "flyback_diode": "D7"
-            }
+            },
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -107,20 +108,22 @@
         },
         {
           "description": "All 5 BUZ11 N-channel MOSFETs (Q2,Q4,Q6,Q8,Q10) detected as type=mosfet with has_flyback_diode=True (correct, SM4001 diodes D1,D3,D5,D7,D9 provide flyback protection). All 5 BC847 NPN BJTs (Q1,Q3,Q5,Q7,Q9) detected as type=bjt with correct emitter_net=GND and appropriate base_resistors (10k\u03a9 each). Load type=resistive for BJTs is correct (collector connects through resistive load). Total 10 transistors detected correctly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 10,
-            "op": "len_eq"
+            "op": "len_eq",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "C1 (1uF) parsed as farads=1e-6, C2 (100n) as farads=1e-7, C4 (10uF) as farads=1e-5, C3 (100n) as farads=1e-7 \u2014 all correct. total_capacitance_uF values are accurate (1.1 \u00b5F for +12V rail, 10.1 \u00b5F for +5V rail). This contrasts with Stock-Ticker-Hardware where Unicode \u00b5 values are incorrectly parsed. SI suffix notation (uF, n, p) is handled correctly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+            "path": "findings",
             "value": 1.1,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling_analysis[0].total_capacitance_uF"
           }
         },
         {
@@ -136,11 +139,12 @@
       "incorrect": [
         {
           "description": "The L7805 (78xx series) is a fixed positive linear voltage regulator with ~2\u20132.5 V dropout voltage. It is NOT an LDO (Low Dropout Regulator). True LDOs (LM1117, AMS1117, MIC5219) have dropout < 1.3 V. The analyzer assigns topology='LDO' to all linear regulators matched from the Regulator_Linear KiCad library, but 78xx-series parts should be labeled 'linear' or 'fixed_linear'. The input_rail=+12V, output_rail=+5V detection is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "value": "LDO",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         }
       ],

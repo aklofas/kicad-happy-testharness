@@ -10,11 +10,12 @@
       "missed": [
         {
           "description": "The RS485iso.kicad_sch contains U11 (ISO3082DW, lib_id Interface_UART:ISO3082DW), which is an isolated RS485 transceiver. The bus_analysis reports can=[], i2c=[], spi=[], uart=[] \u2014 no RS485 interface is detected. The design_observations only flags 4 single-pin nets (POCI, REN, DEN, PICO \u2014 which are the RS485 DE/RE control and data pins) but does not synthesize them into an RS485 bus detection. The analyzer should recognize the ISO3082DW lib_id or the A/B differential pair as RS485.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -35,11 +36,12 @@
       "correct": [
         {
           "description": "The hw_voltmod schematic uses two TL074 quad op-amps (U3, U4) to buffer and invert 8 cell voltage measurements. All 8 functional units are correctly identified as inverting configuration with gain=-1.0 (Rf=Rin from equal-value 56k or 100k resistor pairs). The two power supply units (unit 5 on each IC) are correctly reported as config=unknown since they have no analog signal connections. Total opamp_circuits=10 matches 8 functional + 2 power units.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 8
+            "value": 8,
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {

@@ -29,14 +29,16 @@
       "description": "C2 (1 \u00b5F) has pin 1 connected to __unnamed_0 (the AVDD power-in pin of U1) and pin 2 to GND. The net is classified 'power_internal' rather than a named rail, so the decoupling_analysis only reports C1 (100 nF) on +3.3V with cap_count=1, total=0.1 \u00b5F. C2's role as AVDD decoupling for the TS4231's analog supply is not captured. The design_observations correctly notes that +3.3V has no bulk capacitor, but doesn't account for AVDD decoupling.",
       "created_from": "FND-00001628",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rail": "+3.3V",
           "cap_count": 1
-        }
+        },
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

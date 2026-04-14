@@ -9,22 +9,24 @@
       "description": "STM32H743IITx MCU correctly identified with internal regulator topology",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.power_regulators[?(@.ref=='U6')].topology",
+        "path": "findings.ref=='U6')].topology",
         "op": "equals",
         "value": "ic_with_internal_regulator"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[?(@.ref=='U6')].topology"
     },
     {
       "id": "FND-00000306-AST-02",
       "description": "3 I2C buses (I2C1-I2C3) correctly detected with pull-up resistors (1.5k to MCU_3V3)",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.design_observations[?(@.category=='i2c_bus')]",
+        "path": "findings.category=='i2c_bus')]",
         "op": "min_count",
         "value": 6
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[?(@.category=='i2c_bus')]"
     },
     {
       "id": "FND-00000306-AST-03",
@@ -64,11 +66,12 @@
       "description": "USBLC6-2 ESD protection on USB data lines correctly detected",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.protection_devices[?(@.ref=='VD1')]",
+        "path": "findings.ref=='VD1')]",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices[?(@.ref=='VD1')]"
     },
     {
       "id": "FND-00000306-AST-07",
@@ -87,21 +90,24 @@
       "description": "RC filter on NRST pin (R7=10k, C8=100nF, fc=159 Hz) correctly detected",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000306-AST-09",
       "description": "Reset pin analysis identifies pullup, filter cap, switch, debug connector",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.design_observations[?(@.category=='reset_pin')]",
+        "path": "findings.category=='reset_pin')]",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[?(@.category=='reset_pin')]"
     },
     {
       "id": "FND-00000306-AST-10",
@@ -120,11 +126,12 @@
       "description": "FM25V05-G FRAM correctly detected in memory_interfaces with SPI to STM32",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.memory_interfaces[?(@.memory_reference=='U9')]",
+        "path": "findings.memory_reference=='U9')]",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces[?(@.memory_reference=='U9')]"
     },
     {
       "id": "FND-00000306-AST-12",
@@ -163,32 +170,38 @@
       "description": "9 decoupling rail analyses covering all major power rails",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 9
-      }
+        "value": 9,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000306-AST-16",
       "description": "6 voltage dividers for LTC4417 UV/OV thresholds: R21(453k)/R22(56k), R23(105k)/R22, R34(453k)/R35(56k), R36(105k)/R35, R37(453k)/R38(56k), R39(105k)/R38",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000306-AST-17",
       "description": "LTC4417CUF power path priority controller not classified as power management IC -- selects from 3 input sources to VDD_5V_IN",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000306-AST-18",
@@ -206,33 +219,39 @@
       "description": "4x TXS0108ERGYR level shifter/buffer ICs not detected as level translation despite lib_id 'Level-Shifting:TXS0108ERGYR'",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.isolation_barriers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_isolation_barriers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.isolation_barriers"
     },
     {
       "id": "FND-00000306-AST-20",
       "description": "EMIF06-MSD02N16 (U11) SD card EMI filter + ESD protection not flagged in protection_devices",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00000306-AST-21",
       "description": "Power path switch topology (LTC4417 + 3x SIS903DN P-FETs) not recognized as prioritized power selection circuit",
       "created_from": "FND-00000306",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

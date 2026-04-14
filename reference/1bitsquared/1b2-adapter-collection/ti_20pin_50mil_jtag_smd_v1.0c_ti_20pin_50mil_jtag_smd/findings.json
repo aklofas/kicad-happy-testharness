@@ -34,9 +34,10 @@
       "summary": "No design_observation for JTAG/SWD debug interface adapter detected",
       "details": "The schematic is a TI 20-pin 50mil JTAG to ARM Cortex 10-pin SWD/JTAG adapter. All canonical JTAG signals are present and labeled (TMS, TCK, TDI, TDO, TRST, RTCK, VREF) on both connectors. The signal_analysis.design_observations list is empty \u2014 no note is generated that this is a debug interface adapter. A design_observation calling out the JTAG/SWD signal mapping would add significant context.",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_value",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_design_observations"
       },
       "status": "new",
       "id": "FND-00002542"

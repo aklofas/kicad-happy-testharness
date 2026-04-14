@@ -34,12 +34,13 @@
       "missed": [
         {
           "description": "Bias voltage divider R24 (10K from +9V) / R25 (10K to GND) creating +4.5V mid-rail bias not detected as voltage_divider. C15 (47uF) and C12 (0.1uF) bypass this node.",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R24$"
+            "pattern": "^R24$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [

@@ -64,22 +64,26 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002023",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/\"net\": \"D-\", \"has_esd_protection\": false/"
+        "value": "/\"net\": \"D-\", \"has_esd_protection\": false/",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00002023-AST-07",
       "description": "INCORRECT: ",
       "created_from": "FND-00002023",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002023-AST-08",
@@ -97,11 +101,12 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002023",
       "check": {
-        "path": "placement_analysis.courtyard_overlaps",
+        "path": "findings",
         "op": "min_count",
         "value": 6
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: placement_analysis.courtyard_overlaps"
     },
     {
       "id": "FND-00002023-AST-10",
@@ -130,33 +135,39 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002023",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002023-AST-13",
       "description": "INCORRECT: ",
       "created_from": "FND-00002023",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002023-AST-14",
       "description": "INCORRECT: ",
       "created_from": "FND-00002023",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00002023-AST-15",

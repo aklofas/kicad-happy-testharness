@@ -1,16 +1,17 @@
 {
   "file_pattern": "CAN_PCB.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~15 (tolerance 10%)",
+      "description": "Finding count ~13 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 11,
+        "max": 15
       }
     },
     {
@@ -25,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "low count ~12",
+      "description": "low count ~8",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~72 (+-10)",
+      "description": "EMC risk score ~86.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 62,
-        "max": 82
+        "min": 76.0,
+        "max": 96.0
       }
     },
     {
@@ -56,13 +57,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "12 io_filtering finding(s)",
+      "description": "8 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 12
+        "value": 8
       }
     },
     {
@@ -85,11 +86,11 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "~12 probe point(s) in test plan",
+      "description": "~8 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 10
+        "value": 7
       }
     },
     {

@@ -90,11 +90,12 @@
         },
         {
           "description": "The signal_analysis.key_matrices section reports a 2x2 keyboard matrix (estimated_keys=4, switches_on_matrix=4, diodes_on_matrix=4). This is a guitar effects pedal (Big Muff clone) with no keyboard matrix. The false positive is likely triggered by the four 2-pin transistor-mod connectors (J_Q1MOD1\u2013J_Q4MOD1), which are bypass jumper pads for transistor socket modification, combined with nearby diodes. The topology-based detection misidentified these as a matrix. BasicClone and RussianClone (which lack these connectors) do not have this false positive.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],

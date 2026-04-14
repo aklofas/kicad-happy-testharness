@@ -9,7 +9,7 @@
       "description": "Both I2C bus entries correctly list all sensor ICs and correctly identify pull-up resistors tied to VCC. Voltage divider for VBUS sensing (R10/R11\u2192U2 VBUS pin) and battery voltage divider (R4/R21\u2192U1 IO35) are also correctly identified.",
       "created_from": "FND-00000704",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Q1 is a standard CP2102\u2192ESP32 auto-reset circuit (dual NPN in SOT-363). Q2/Q3/Q4 (all MOSFETs) appear in transistor_circuits but Q1 does not, suggesting BJT detection in transistor_circuits is incomplete or the dual-unit symbol (units 1 & 2 both reference Q1) causes the BJT to be skipped by the circuit detector.",
       "created_from": "FND-00000704",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

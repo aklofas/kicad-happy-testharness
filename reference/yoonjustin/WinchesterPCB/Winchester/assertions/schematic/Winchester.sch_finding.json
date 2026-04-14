@@ -29,10 +29,12 @@
       "description": "The 12 MHz crystal (ECS120, ref Y1) is correctly found in signal_analysis.crystal_circuits. The frequency is null because the value 'ECS120' is a part number rather than a numeric frequency string, which is expected for legacy KiCad 5 parts.",
       "created_from": "FND-00001969",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00001969-AST-04",

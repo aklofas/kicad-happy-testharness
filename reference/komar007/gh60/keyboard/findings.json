@@ -9,31 +9,34 @@
       "incorrect": [
         {
           "description": "The matrix.sch sub-sheet contains 65 1N4148 diodes (one per key) wired in a standard key-matrix anti-ghosting configuration alongside 84 switches and 65 diodes all on row/col nets. The keyboard.sch.json key_matrices entry reports diodes_on_matrix=0 even though these diodes are part of the same hierarchical design and share the col/row nets. The detection_method is 'net_name', suggesting the detector only examines the sheet where the matrix nets were found rather than tracing cross-sheet diode connections.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].diodes_on_matrix",
+            "path": "findings",
             "op": "greater_than",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_key_matrices[0].diodes_on_matrix"
           }
         },
         {
           "description": "The bus_analysis.i2c section reports a bus on net 'col5' (line='SCL') with device IC1. The net name 'col5' is a keyboard matrix column net \u2014 it is not an I2C bus. The ATmega32U4 shares I2C and GPIO on the same physical pins, and here PD0/SCL is used as a keyboard column scan output, not as I2C. This is a false-positive I2C detection based on pin-name matching without considering the functional context of the net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bus_analysis.i2c",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_bus_analysis.i2c"
           }
         }
       ],
       "missed": [
         {
           "description": "The top-level keyboard.sch contains local labels SCK, MOSI, MISO connecting IC1 (ATmega32U4) to an ISP programming header (6-pin connector). The bus_analysis.spi list is empty. The ATmega32U4 exposes these SPI pins for in-circuit programming. The analyzer detected two SPI-named labels on the sheet but did not synthesize them into a spi bus entry, likely because the chip's pin names do not match the SPI heuristic pattern when accessed through the legacy .sch parser.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bus_analysis.spi",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_analysis.spi"
           }
         }
       ],

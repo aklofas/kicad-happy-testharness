@@ -19,21 +19,23 @@
       "description": "The power_regulators section correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V and output_rail 3.3V_P. The design_observations also include the regulator_voltage category for U1. The decoupling_analysis for 3.3V_P shows 7 capacitors totaling 22.3 uF, correctly pulling in C7, C2, C13, C1, C8, C10, C16.",
       "created_from": "FND-00001472",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "U1",
           "topology": "LDO",
           "output_rail": "3.3V_P"
-        }
-      }
+        },
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001472-AST-03",
       "description": "The rc_filters section correctly identifies R1 (10k) and C6 (1.0uF) as a low-pass filter on the OLED reset line (input_net 3.3V_P, output_net OLED_~{RESET}, ground_net GND), with cutoff_hz 15.92 Hz and time_constant_s 0.01. The design_observations also correctly identifies the reset_pin observation for U5 with has_pullup: true and has_filter_cap: true.",
       "created_from": "FND-00001472",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "type": "low-pass",
@@ -41,8 +43,10 @@
             "ref": "R1"
           },
           "output_net": "OLED_~{RESET}"
-        }
-      }
+        },
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001472-AST-04",

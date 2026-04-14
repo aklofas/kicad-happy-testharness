@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "ic_pin_analysis correctly shows D+ (pin 2) has 68R series resistor (R2) and 1kR pull-up (R4), D- (pin 3) has 68R series resistor (R3). Zener diodes D2 and D3 (3V6) correctly identified as clamping on D+/D- lines to GND. This is the classic V-USB low-speed signaling circuit.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,7 +19,7 @@
       "incorrect": [
         {
           "description": "U2 uses lib_id 'USB_CONNECTOR:USB' and footprint 'Connector_USB:USB', but because its reference designator starts with 'U', the analyzer classified it as type='ic'. It should be classified as a connector. This misclassification means the USB connector is not in the connector count (2 connectors listed: J1+J2, but U2 is also a connector).",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -40,18 +40,18 @@
       "correct": [
         {
           "description": "smd_count=10, tht_count=2 (J1+J2 connectors). front_side=11, back_side=1 (J1 is on B.Cu). 9 vias all 0.6mm/0.3mm. Routing complete with 11 nets matching schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "decoupling_placement shows C1 as nearest cap to U1 (ATtiny85), sharing +5V and GND nets. Also correctly associates C1 with U2 (USB connector) since they share power nets. Distance 9.8mm for a small 40x12mm board is reasonable.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -76,9 +76,9 @@
       "correct": [
         {
           "description": "pad_summary shows smd_apertures=28, tht_holes=8, smd_ratio=0.78. The 8 PTH 1.0mm holes are correctly identified as component holes (J1+J2 pin headers, 4 pins each). The 9 PTH 0.3mm holes are correctly classified as vias. U2 (USB connector) has no drill since it's an SMD footprint.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -87,7 +87,7 @@
       "incorrect": [
         {
           "description": "F.Cu extent is 26x11mm vs Edge.Cuts 40x12.2mm. The board is 40mm wide but components only occupy ~26mm, leaving blank area on the left (where the USB connector pokes out). This is expected for a USB dongle-style board, not a misalignment.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

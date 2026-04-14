@@ -8,20 +8,22 @@
       "correct": [
         {
           "description": "The bfo9000 is a 54-key keyboard (6 rows A-F, 9 columns 1-9). The key_matrices detector correctly identifies rows RowA-RowF, columns Col1-Col9, 54 switches (SW_Push), and 54 diodes using topology detection. The estimated_keys=54 matches exactly the actual component count.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "Two I2C bus observations are reported: SDA net pulled up to VCC via R2, and SCL net pulled up to VCC via R1. The sole I2C device is U1 (ProMicro). This matches the source schematic where R1 and R2 are 4.7k pull-ups for I2C to the OLED display.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_design_observations"
           }
         },
         {

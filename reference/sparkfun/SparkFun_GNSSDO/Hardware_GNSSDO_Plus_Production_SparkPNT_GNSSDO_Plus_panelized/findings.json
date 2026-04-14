@@ -17,58 +17,64 @@
         },
         {
           "description": "The ethernet_interfaces section correctly identifies U4 (KSZ8041NL/I Ethernet PHY) with connector J5 (MagJack_PoE_RJ45). The PHY lib_id and value are correctly captured. This is also correctly detected in the Ethernet sub-schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_ethernet_interfaces"
           }
         },
         {
           "description": "U13 (SiT5358AI-FS033IT-10.000000) is correctly identified as an active_oscillator in crystal_circuits with output_net captured. The 10 MHz TCXO/oscillator module is properly classified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "The isolation_barriers correctly identifies two ground domains (GND and GND-ISO) from the PoE isolation circuit. The isolated_power_rails lists GND-ISO. The isolation_components list being empty is acceptable since the galvanic isolation is embedded within the MagJack (transformer inside connector body).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_isolation_barriers"
           }
         },
         {
           "description": "U11 (AP7361C-3.3V) detected as LDO outputting 3.3V from 5V input, and U5 (AP7361C-3.3V) detected as LDO outputting 3.3V_P from 5V input. Both correctly identified via fixed-suffix vref_source. The third regulator U7 (Ag9905M) has unknown topology as expected for a PoE PD controller.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 3,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "11 protection devices correctly identified: DT1042-04SO multi-channel ESD ICs protecting USB and Ethernet differential pairs, DF5A5.6LFU arrays on SD card and I2C lines, PESD0402 TVS diodes on RF and external signal lines, a varistor (V.1) on the DC input, and F1 fuse. Classification as esd_ic, diode, varistor, and fuse types is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 11,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The signal_analysis.key_matrices detects 1 key matrix (2 rows, 3 columns, 4 switches) with row_nets=['SD_CMD', '__unnamed_43']. SD_CMD is an SD card SPI signal, not a matrix row. SW1\u2013SW3 are SPST push buttons (panel controls from USB sub-sheet) and SW4 is a DPDT slide switch (from Level_Shifting sub-sheet). These are independent control switches, not a scanning keyboard matrix. The coincidence of SD card net names and switch passive nets triggers a false topological match.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
@@ -99,11 +105,12 @@
       "correct": [
         {
           "description": "8 transistor circuits correctly identified as PMOS MOSFETs (DMG2305UX). Q2/Q4 driven by U26 (LTC4418), Q6/Q8 driven by U27 (LTC4418) are correctly attributed. Q3/Q5/Q7/Q9 have unnamed gate nets (internal LTC4418 analog control) \u2014 no gate_driver_ic is listed for these but this is expected since they are driven by unnamed intermediate nodes. The transistor count of 9 (including Q1 from PowerPath) is consistent with the design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 8,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
@@ -119,31 +126,34 @@
       "incorrect": [
         {
           "description": "In the top-level flat hierarchical analysis, U5 output_rail is detected as '3.3V' instead of the correct '3.3V_P'. The Power sub-schematic (analyzed in isolation) correctly identifies U5 output as '3.3V_P'. The GNSSDO original (same topology) also correctly identifies U5 output as '3.3V_P'. The error is introduced by the hierarchical flattening process in the Plus design, likely due to net scope resolution differences between the two AP7361C instances.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 4,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U7 (DP5305) is a USB Power Delivery protocol controller IC, not a power regulator. It negotiates USB-PD voltage profiles rather than regulating voltage directly. Classifying it as a power_regulator with topology=unknown is imprecise. However, since the topology is clearly 'unknown' rather than LDO/buck/boost, the practical impact is limited to the regulator list being inflated by 1 non-regulator entry.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 4,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "missed": [
         {
           "description": "crystal_circuits is empty (0 items) in the GNSSDO Plus top-level schematic and in the Oscillator sub-schematic. U13 (STP3593LF) is an oven-controlled crystal oscillator (OCXO) module \u2014 a high-precision active oscillator. The analyzer fails to recognize STP3593LF as an oscillator, likely because the part name does not match known oscillator patterns (e.g., no 'OSC', 'TCXO', 'SiT', 'XTAL' in the name). It should be detected similarly to the SiT5358 in the GNSSDO original.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],

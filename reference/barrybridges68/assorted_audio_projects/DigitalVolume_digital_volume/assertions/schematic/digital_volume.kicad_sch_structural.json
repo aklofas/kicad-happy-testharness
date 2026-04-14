@@ -2,57 +2,64 @@
   "file_pattern": "digital_volume.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 decoupling_analysis",
+      "description": "Exactly 8 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 7 design_observations",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 7
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 8 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 8
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 2 led_audit",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 11 opamp_circuits",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 7 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 11 detect_opamp_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "equals",
         "value": 11
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U9 in opamp_circuits",
+      "description": "U9 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U9$"
@@ -60,9 +67,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U10 in opamp_circuits",
+      "description": "U10 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U10$"
@@ -70,9 +78,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U4 in opamp_circuits",
+      "description": "U4 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U4$"
@@ -80,9 +89,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U5 in opamp_circuits",
+      "description": "U5 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U5$"
@@ -90,9 +100,10 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "U12 in opamp_circuits",
+      "description": "U12 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U12$"
@@ -100,9 +111,10 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "U11 in opamp_circuits",
+      "description": "U11 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U11$"
@@ -110,18 +122,20 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 3 power_regulators",
+      "description": "Exactly 3 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "U1 in power_regulators",
+      "description": "U1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U1$"
@@ -129,9 +143,10 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U3 in power_regulators",
+      "description": "U3 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U3$"
@@ -139,9 +154,10 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "U2 in power_regulators",
+      "description": "U2 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U2$"
@@ -149,18 +165,20 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 9 rc_filters",
+      "description": "Exactly 9 detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 9
       }
     },
     {
       "id": "STRUCT-00000017",
-      "description": "R32 in rc_filters",
+      "description": "R32 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R32$"
@@ -168,9 +186,10 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "R33 in rc_filters",
+      "description": "R33 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R33$"
@@ -178,9 +197,10 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "R21 in rc_filters",
+      "description": "R21 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R21$"
@@ -188,9 +208,10 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "R31 in rc_filters",
+      "description": "R31 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R31$"
@@ -198,9 +219,10 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "R34 in rc_filters",
+      "description": "R34 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R34$"
@@ -208,9 +230,10 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "R19 in rc_filters",
+      "description": "R19 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R19$"
@@ -218,9 +241,10 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "R20 in rc_filters",
+      "description": "R20 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R20$"
@@ -228,9 +252,10 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "R17 in rc_filters",
+      "description": "R17 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R17$"
@@ -238,9 +263,10 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "R12 in rc_filters",
+      "description": "R12 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R12$"
@@ -248,27 +274,30 @@
     },
     {
       "id": "STRUCT-00000026",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000027",
-      "description": "Exactly 4 voltage_dividers",
+      "description": "Exactly 4 detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000028",
-      "description": "R25 in voltage_dividers",
+      "description": "R25 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R25$"
@@ -276,9 +305,10 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "R26 in voltage_dividers",
+      "description": "R26 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R26$"
@@ -286,9 +316,10 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "R1 in voltage_dividers",
+      "description": "R1 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R1$"
@@ -296,12 +327,23 @@
     },
     {
       "id": "STRUCT-00000031",
-      "description": "R3 in voltage_dividers",
+      "description": "R3 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000032",
+      "description": "Exactly 1 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

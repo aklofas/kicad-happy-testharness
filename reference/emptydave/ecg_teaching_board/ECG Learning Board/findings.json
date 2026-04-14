@@ -17,29 +17,32 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 8
+            "value": 8,
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 8
+            "value": 8,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -118,11 +121,12 @@
       "incorrect": [
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_ethernet_interfaces"
           }
         },
         {

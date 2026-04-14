@@ -25,7 +25,7 @@
       "incorrect": [
         {
           "description": "Key matrix reports only 1 column (COL5) but there should be ~16 columns for a 65-key 4-row matrix - likely only detected one column net while others use different naming",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "detector": "key_matrices",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -43,11 +43,12 @@
       "missed": [
         {
           "description": "Crystal frequency 16MHz detected in value but frequency field is None - should parse numeric frequency from value string",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -56,9 +57,9 @@
         },
         {
           "description": "USB series resistors R2/R3 on D+/D- not analyzed for value correctness (22 ohm typical for USB)",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

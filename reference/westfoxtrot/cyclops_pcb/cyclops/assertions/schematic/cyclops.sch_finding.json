@@ -20,11 +20,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "path": "findings[0].estimated_keys",
         "op": "equals",
-        "value": 67
+        "value": 67,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].estimated_keys"
     },
     {
       "id": "FND-00002033-AST-03",
@@ -42,22 +44,26 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].effective_load_pF",
+        "path": "findings[0].effective_load_pF",
         "op": "equals",
-        "value": 14.0
+        "value": 14.0,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].effective_load_pF"
     },
     {
       "id": "FND-00002033-AST-05",
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+        "path": "findings[0].total_capacitance_uF",
         "op": "equals",
-        "value": 5.1
+        "value": 5.1,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[0].total_capacitance_uF"
     },
     {
       "id": "FND-00002033-AST-06",
@@ -141,22 +147,26 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00002033-AST-14",
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.addressable_led_chains[0].chain_length",
+        "path": "findings[0].chain_length",
         "op": "equals",
-        "value": 6
+        "value": 6,
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains[0].chain_length"
     },
     {
       "id": "FND-00002033-AST-15",
@@ -229,33 +239,39 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     },
     {
       "id": "FND-00002033-AST-22",
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.power_regulators[0].output_rail",
+        "path": "findings[0].output_rail",
         "op": "equals",
-        "value": "__unnamed_43"
+        "value": "__unnamed_43",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].output_rail"
     },
     {
       "id": "FND-00002033-AST-23",
       "description": "INCORRECT: ",
       "created_from": "FND-00002033",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00002033-AST-24",

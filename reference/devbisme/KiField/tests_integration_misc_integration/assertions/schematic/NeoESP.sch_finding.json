@@ -19,10 +19,12 @@
       "description": "D2 is a Neopixel_THT (WS2812-type) LED. The analyzer correctly detects an addressable LED chain of length 1 with protocol 'single-wire (WS2812)' and estimates 60mA current.",
       "created_from": "FND-00001652",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001652-AST-03",

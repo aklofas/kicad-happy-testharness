@@ -19,12 +19,13 @@
       "incorrect": [
         {
           "description": "RC filter R32(150ohm)+C14(120pF) falsely groups C11(1nF) as parallel \u2014 C11 shares only the input node, not the output node. Reported fc=947kHz vs correct 8.84MHz",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R32$"
+            "pattern": "^R32$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -37,12 +38,13 @@
         },
         {
           "description": "NE5532 differential-to-single-ended output stages (U4-U7) classified as 'compensator' instead of difference amplifier",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U4$"
+            "pattern": "^U4$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -58,11 +60,12 @@
       "missed": [
         {
           "description": "I2S/TDM serial audio interface not detected \u2014 all 4 AK4458VN data bus signals present (MCLK, BICK, LRCK, SDTI1-4) but no I2S detector exists",
-          "analyzer_section": "signal_analysis.bus_interfaces",
+          "analyzer_section": "detect_bus_interfaces",
           "check": {
-            "path": "signal_analysis.bus_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_interfaces"
           },
           "detector": "bus_interfaces",
           "subject_refs": [],
@@ -91,11 +94,12 @@
       "correct": [
         {
           "description": "LDO regulator correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -104,11 +108,12 @@
         },
         {
           "description": "TL072 buffer/comparator classifications correct",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -119,12 +124,13 @@
       "incorrect": [
         {
           "description": "U1 TMUX4051PWR analog multiplexer falsely classified as isolation barrier \u2014 it straddles GND/GNDA domains but provides no galvanic isolation; it is a CMOS analog mux",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [
@@ -154,11 +160,12 @@
       "correct": [
         {
           "description": "NE5532 inverting amp stages correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -167,11 +174,12 @@
         },
         {
           "description": "DAC output anti-aliasing RC filters correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],

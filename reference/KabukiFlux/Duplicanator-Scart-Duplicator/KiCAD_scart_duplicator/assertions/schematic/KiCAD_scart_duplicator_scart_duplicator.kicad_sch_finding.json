@@ -39,24 +39,28 @@
       "description": "INCORRECT: R5-R8 5.36M DC bias networks detected as filters",
       "created_from": "FND-00000185",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R5$"
+        "pattern": "^R5$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000185-AST-05",
       "description": "INCORRECT: R1-R4 75-ohm video termination detected as high-pass filters",
       "created_from": "FND-00000185",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R1$"
+        "pattern": "^R1$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

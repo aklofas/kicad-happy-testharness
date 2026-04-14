@@ -29,37 +29,43 @@
       "description": "The analyzer correctly identifies two RC filters: R5 (100\u03a9) + C2 (47\u00b5F) giving ~33.86 Hz cutoff (output supply filtering), and R2 (200k\u03a9) + C2 (47\u00b5F) giving ~0.017 Hz cutoff (very slow timing RC). Both are real RC filter pairs. The frequency calculations are accurate.",
       "created_from": "FND-00001489",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001489-AST-04",
       "description": "The analyzer correctly identifies F1 (Polyfuse/resettable fuse) as a protection device in protection_devices. This is the only protection device on the schematic. The value and footprint are consistent with a standard SMD resettable fuse protecting the output.",
       "created_from": "FND-00001489",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "count_matches",
         "field": "reference",
         "pattern": "F1",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected exactly 1 matches, got 0"
+      "aspirational_reason": "agent-generated check failed: expected exactly 1 matches, got 0",
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001489-AST-05",
       "description": "INCORRECT: Q3 is a SIL2308 dual MOSFET with two schematic units: unit 1 is an N-channel MOSFET (gate=EN via R9, drain=R10/gate drive) and unit 2 is a P-channel MOSFET (gate=CTRL, source=VIN, drain=VOUT). The transistor_circuits list only captures unit 2 (P-channel). Unit 1 (N-channel) performs the gate-drive enable function and is a separate circuit element that should be independently analyzed. The N-channel unit is part of the power switch control path.",
       "created_from": "FND-00001489",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "count_matches",
         "field": "reference",
         "pattern": "Q3",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001489-AST-07",

@@ -9,11 +9,13 @@
       "description": "INCORRECT: The analyzer detected D2 (value 'M4', footprint SMA_Standard) as an antenna with L2 (BLM21PG300SN1D ferrite bead) as a matching network component. D2 is a reverse-polarity protection diode on the VAA analog supply; its value 'M4' is a package/footprint designation (SMA diode), not an RF component identifier. L2 is a ferrite bead used for EMI filtering between the +5V supply input and the VAA analog rail. Neither component has anything to do with RF or antenna matching. The detection was likely triggered by the diode value string 'M4' matching some pattern heuristic.",
       "created_from": "FND-00000396",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_rf_matching"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     },
     {
       "id": "FND-00000396-AST-02",

@@ -20,11 +20,12 @@
       "description": "INCORRECT: U1 (ESP32-S2-WROVER) reports edge_clearance_mm=-10.23 and J19 (USB-C) reports -2.54, implying they are outside the board. However, both components are positioned within the board's coordinate extent (board x: 99.5\u2013165.9mm, y: 83.6\u2013131.7mm; U1 at x=120.0, y=117.7). The board has a complex U-shaped outline with 20 edges and arcs (cutouts for the Flipper Zero connector tabs at the top), and the edge clearance calculation appears to use the bounding box or a simplified outline rather than the actual board contour, producing false negatives for components near the cutout areas.",
       "created_from": "FND-00002094",
       "check": {
-        "path": "placement_analysis.edge_clearance_warnings",
+        "path": "findings",
         "op": "max_count",
         "value": 4
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
     }
   ]
 }

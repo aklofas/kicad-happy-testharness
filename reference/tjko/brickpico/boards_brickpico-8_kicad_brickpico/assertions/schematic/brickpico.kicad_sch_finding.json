@@ -9,19 +9,21 @@
       "description": "INCORRECT: LC filter detected between L1 (3.3uH) and capacitors is actually the buck converter output filter, not a signal filter. Should be associated with the power regulator.",
       "created_from": "FND-00000133",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "inductor.ref",
-        "pattern": "^L1$"
+        "pattern": "^L1$",
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00000133-AST-02",
       "description": "LED driver topology not identified. The core function (RP2040 PWM driving 2N7002K MOSFETs to switch LED strings with current-limiting resistors and polyfuse protection) is a common pattern not captured as a higher-level circuit.",
       "created_from": "FND-00000133",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

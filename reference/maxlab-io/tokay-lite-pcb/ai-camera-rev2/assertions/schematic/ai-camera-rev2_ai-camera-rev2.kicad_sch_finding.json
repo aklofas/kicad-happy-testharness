@@ -9,10 +9,12 @@
       "description": "Power regulators correctly detected (SY8089 buck, RT9166 LDO, XC6206 LDO)",
       "created_from": "FND-00000278",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000278-AST-03",
@@ -29,36 +31,42 @@
       "description": "INCORRECT: Q8 AO3401A false led_driver for D7/R25 \u2014 D7 is on net __unnamed_32 (USR_LED), Q8 drain is on __unnamed_4; no connectivity. R25 (215k) is Q10 gate pull-down, not LED current resistor",
       "created_from": "FND-00000278",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q8$"
+        "pattern": "^Q8$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000278-AST-05",
       "description": "INCORRECT: Q5/Q7/Q9 has_snubber=true false positive \u2014 R18 (215k) is an open-drain pull-up, not a snubber",
       "created_from": "FND-00000278",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q5$"
+        "pattern": "^Q5$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000278-AST-06",
       "description": "INCORRECT: U11 MT9284-28J LED driver misclassified as switching regulator with output_rail=VBUS and estimated_vout=2.8V \u2014 drives 10 IR LEDs, not a voltage output",
       "created_from": "FND-00000278",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U11$"
+        "pattern": "^U11$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

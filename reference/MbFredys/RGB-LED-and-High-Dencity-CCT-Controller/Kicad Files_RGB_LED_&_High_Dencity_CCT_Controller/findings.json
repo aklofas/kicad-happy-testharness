@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "USB-C plug used as device without 5.1k CC pull-downs and without VBUS ESD protection or decoupling \u2014 all 4 failures are genuine design gaps. Series resistors on D+/D- correctly pass.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Q1-Q5 all identified as mosfet type, each switching an LED_*(-) drain net with source to GND_PWR. load_type='connector' is plausible since the LED strips are connected via J connectors.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,19 +28,19 @@
       "incorrect": [
         {
           "description": "U1 LM2678T-ADJ is a 5A Simple Switcher step-down (buck) converter from Texas Instruments. The analyzer outputs topology='unknown' with fb_net='+5V'. The lib_id is a custom library ('Librer\u00eda_Global_OK:LM2678T-ADJ') not matching standard KiCad names, which likely causes the topology detection to fail. Should be 'buck' or 'switching'.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The board explicitly uses split ground planes (GND_LOGIC for digital circuitry, GND_PWR for power/LED) joined by NT2 (NetTie_4). The analyzer reports multiple_domains=False and classifies both as domain='signal'. This is a missed detection \u2014 multiple_domains should be True when separate ground nets are present even if connected via a net tie.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The I2C bus between U3 (ESP32-C3-WROOM-02) and the TLC59116IRHBR LED driver via Driver_SDA/Driver_SCL is only detected in the control sub-schematic. The main schematic shows bus_analysis.i2c=[] even though the I2C nets and devices are present in its component list.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -63,27 +63,27 @@
       "correct": [
         {
           "description": "control sub-schematic detects I2C bus between ESP32-C3 and TLC59116 with has_pull_up=False on both SDA and SCL. This is a genuine design gap \u2014 I2C requires pull-up resistors.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Driver_RESET, Driver_SDA, Driver_SCL connect ESP32 (3.3V) to TLC59116 (5V) with needs_level_shifter=True. This is a real design concern.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "design_observations flags U2 (TLC59116IRHBR) with rails_without_caps=['+5V'] \u2014 no bypass capacitor on the 5V supply pin is a real oversight.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -92,7 +92,7 @@
       "incorrect": [
         {
           "description": "The control sub-schematic uses a local 'GND' power symbol but this is a hierarchical sub-sheet that inherits net names from the parent through hierarchical labels. The GND pwr_flag warning in the sub-sheet context may be a false alarm \u2014 the actual parent defines GND_LOGIC and GND_PWR with their own power sources. This is a known challenge for flat-analyzed sub-sheets.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -113,18 +113,18 @@
       "correct": [
         {
           "description": "Two zones detected: GND_LOGIC on F.Cu (4663 mm\u00b2 filled, fill_ratio=0.754) and GND_PWR on B.Cu (3982 mm\u00b2 filled, fill_ratio=0.644). This correctly captures the split ground plane design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "thermal_pads reports U3 pad '19' (2.9x2.9mm, 8.41mm\u00b2) with nearby_thermal_vias=12. This is correct for an ESP32-C3 module's GND pad.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -133,7 +133,7 @@
       "incorrect": [
         {
           "description": "9 nets have pads but no routing tracks, yet the board is marked routing_complete. These are likely GND_LOGIC and GND_PWR nets whose pads are connected via copper zone fills (not tracks). The routed_nets count should include zone-connected nets or the reporting logic should be clarified.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

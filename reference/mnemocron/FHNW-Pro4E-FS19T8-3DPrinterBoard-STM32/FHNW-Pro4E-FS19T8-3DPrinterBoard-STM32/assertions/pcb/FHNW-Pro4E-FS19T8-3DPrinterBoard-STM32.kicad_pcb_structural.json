@@ -2,18 +2,39 @@
   "file_pattern": "FHNW-Pro4E-FS19T8-3DPrinterBoard-STM32.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 10 decoupling_placement",
+      "description": "Exactly 12 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 10
+        "value": 12
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U201 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U201$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U301 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U301$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "U602 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -23,7 +44,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "U601 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -33,7 +54,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "U603 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -43,7 +64,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "U604 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -53,7 +74,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "U102 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -63,7 +84,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "U202 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -73,7 +94,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "U502 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -83,7 +104,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "U203 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -93,7 +114,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "U101 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -103,7 +124,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "U1 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -113,39 +134,21 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 3 thermal_analysis.thermal_pads",
+      "id": "STRUCT-00000014",
+      "description": "Exactly 3 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 3
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "T402 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^T402$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "T403 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^T403$"
-      }
-    },
-    {
       "id": "STRUCT-00000015",
-      "description": "T101 in thermal_analysis.thermal_pads",
+      "description": "T101 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^T101$"
@@ -153,38 +156,21 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 3 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "T101 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^T101$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
       "description": "T402 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^T402$"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
       "description": "T403 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^T403$"

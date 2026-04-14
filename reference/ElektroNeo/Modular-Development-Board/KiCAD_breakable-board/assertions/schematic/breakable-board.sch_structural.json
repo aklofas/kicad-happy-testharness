@@ -2,86 +2,96 @@
   "file_pattern": "breakable-board.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 connector_ground_audit",
+      "description": "Exactly 6 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 6
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 current_sense",
+      "description": "Exactly 12 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "equals",
+        "value": 12
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "R5 in current_sense",
+      "id": "STRUCT-00000004",
+      "description": "R5 in detect_current_sense",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
         "op": "contains_match",
         "field": "shunt.ref",
         "pattern": "^R5$"
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "R2 in current_sense",
+      "id": "STRUCT-00000005",
+      "description": "R2 in detect_current_sense",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
         "op": "contains_match",
         "field": "shunt.ref",
         "pattern": "^R2$"
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 3 decoupling_analysis",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 3
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 6 design_observations",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 6 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 6
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 12 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 12
-      }
-    },
-    {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 power_regulators",
+      "description": "Exactly 2 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U7 in power_regulators",
+      "description": "U7 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U7$"
@@ -89,9 +99,10 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "U6 in power_regulators",
+      "description": "U6 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U6$"
@@ -99,9 +110,10 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }

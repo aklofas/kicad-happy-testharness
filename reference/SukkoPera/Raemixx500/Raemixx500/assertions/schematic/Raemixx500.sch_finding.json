@@ -9,7 +9,7 @@
       "description": "The main Raemixx500.sch.json correctly parses 14 sheets, identifies all 14 sheet files, and aggregates 372 unique components with correct power rails (+12V, -12V, VCC, GND, GNDA, VDDA, VAC, VDC). The hierarchical output is authoritative and accurate.",
       "created_from": "FND-00001209",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Both crystal circuits are found in the main output with correct load cap associations. Y9 frequency parsed as 32768 Hz. X1 frequency is null (oscillator module, not raw crystal \u2014 acceptable).",
       "created_from": "FND-00001209",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The RAM sheet has 8x XX4256 DRAM chips with RAS/CAS control signals (~RAS0, ~RAS1, ~CASL, ~CASU). The memory_interfaces array is empty in all outputs, including the hierarchical analysis. The analyzer does not identify DRAM interfaces on this design.",
       "created_from": "FND-00001209",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

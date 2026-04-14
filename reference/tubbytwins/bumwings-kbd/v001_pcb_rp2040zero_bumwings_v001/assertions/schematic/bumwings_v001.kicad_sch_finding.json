@@ -9,10 +9,12 @@
       "description": "The analyzer accurately identified the split keyboard matrix topology via net analysis: 8 row nets (row_up, row_dn, row_home, row_mod plus 4 unnamed) and 14 column nets (col_Lt, col_Lr, col_Li1/Li2, col_Lm, col_Lp1/Lp2, col_Rt, col_Rr, col_Ri1/Ri2, col_Rm, col_Rp1/Rp2), with 54 switches and 54 diodes on the matrix. The detection_method 'topology' is appropriate.",
       "created_from": "FND-00002345",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     }
   ]
 }

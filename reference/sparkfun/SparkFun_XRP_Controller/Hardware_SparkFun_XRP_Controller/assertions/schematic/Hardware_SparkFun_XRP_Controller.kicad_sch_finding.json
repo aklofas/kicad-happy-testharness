@@ -29,11 +29,12 @@
       "description": "QSPI flash memory interface to W25Q128 not detected as memory bus",
       "created_from": "FND-00000168",
       "check": {
-        "path": "signal_analysis.bus_interfaces",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bus_interfaces"
     },
     {
       "id": "FND-00000174-AST-01",
@@ -71,21 +72,25 @@
       "description": "D4 WS2812B addressable LED chain detected",
       "created_from": "FND-00000174",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00000174-AST-06",
       "description": "QSPI memory interface between RP2350B and W25Q128/APS6404L not detected",
       "created_from": "FND-00000174",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     },
     {
       "id": "FND-00000174-AST-07",

@@ -30,11 +30,13 @@
       "description": "voltage_tests aggregates all sub-sheets and finds 6 power_regulators, but should find 8: LM337L_SO8 x2 (negative LDOs), APE8865N-18-HF-3 x1 (positive LDO), AP2112K-3.3 x1 (USB LDO), TC7662Bx0A x2 (inverters), LM27313XMF x2 (boost converters). POW1_10B1 and POW1_85B1 are missing because they are typed 'switch' not 'ic'. This is the same issue as in the individual dc_boost schematics.",
       "created_from": "FND-00001675",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": 8,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

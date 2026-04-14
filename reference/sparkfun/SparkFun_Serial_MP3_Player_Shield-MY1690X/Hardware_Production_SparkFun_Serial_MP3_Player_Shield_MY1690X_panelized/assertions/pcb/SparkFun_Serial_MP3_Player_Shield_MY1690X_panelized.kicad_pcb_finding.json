@@ -19,11 +19,12 @@
       "description": "The 40 unrouted nets in the panelized board all have names matching 'unconnected-(B1-...' pattern, corresponding to Arduino Uno shield pins intentionally left unconnected in the schematic (marked as no_connect). The analyzer reports routing_complete=false which is technically accurate per the ratsnest data, but there is no annotation that these 40 'unrouted' nets are deliberate no-connects rather than missing routes. A note distinguishing intentional no-connects from real routing omissions would improve analysis utility.",
       "created_from": "FND-00001487",
       "check": {
-        "path": "connectivity.unrouted_count",
+        "path": "findings_count",
         "op": "equals",
         "value": 40
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: connectivity.unrouted_count"
     }
   ]
 }

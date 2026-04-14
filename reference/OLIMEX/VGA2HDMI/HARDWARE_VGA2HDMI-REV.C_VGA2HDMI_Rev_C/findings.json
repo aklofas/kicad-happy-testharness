@@ -17,47 +17,52 @@
         },
         {
           "description": "The schematic contains HDMI_OUT1 (HDMI-SWM-19 connector) which is correctly detected as an HDMI interface.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.hdmi_dvi_interfaces",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_hdmi_dvi_interfaces"
           }
         },
         {
           "description": "Q1 uses the OLIMEX_Devices:Crystal library and has value 'Q24.576MHz/20pF/20ppm/2P/5x3.2mm'. The analyzer correctly identifies it as a crystal with load capacitors C18 and C19 (33 pF each), calculating 19.5 pF effective load within typical range.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "Three identical RC high-pass networks (R=75\u03a9, C=47nF, fc=45.15 kHz) on RED_IN, GREEN_IN, BLUE_IN are correctly detected. These are DC-blocking/termination networks for VGA analog signals.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 3,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "VR1 LD1117AG-33 is correctly identified as a fixed 3.3V LDO with +5V_USB input and +3.3V output, voltage inferred from the '-33' suffix.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "VR2 LD1117AG-AD is an adjustable LDO. With R29=220\u03a9 (output to ADJ) and R26=100\u03a9 (ADJ to GND), Vout = 1.25\u00d7(1+220/100) = 4.0V, but the net is named +1.8V. The analyzer correctly flags a 122% mismatch. This appears to be a real design error or a net naming mistake in the VGA2HDMI schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -84,11 +89,12 @@
       "missed": [
         {
           "description": "The schematic has 5 ESD protection arrays (TVS1-TVS5, OLIMEX_Diodes:GG0402052R542P). They are classified as 'diode' in component_types but are absent from signal_analysis.protection_devices. Only FUSE1 is detected. The TVS reference prefix and GG0402 library name should trigger TVS/ESD protection detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 5,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

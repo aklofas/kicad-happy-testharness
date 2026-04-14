@@ -28,11 +28,12 @@
         },
         {
           "description": "The signal_analysis.addressable_led_chains reports 3 chains: two with chain_length=18 (both starting at D28 on net __unnamed_35) and one chain_length=1 starting at D3. Total LEDs across chains = 18+18+1 = 37 but the schematic has exactly 36 LEDs. The 1-LED chain for D3 appears to be the start of one of the two 18-LED chains detected via a different traversal path, not a separate chain. Two physical chains of 18 LEDs each (one per side of the reversible PCB) is the correct topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "max_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],
@@ -90,11 +91,12 @@
       "correct": [
         {
           "description": "key_matrices detects 4 row nets (row2, row3, row4, row5) and 6 column nets (col1\u2013col6), estimated_keys=18 matching switches_on_matrix=18 and diodes_on_matrix=18. The 4\u00d76 = 24 positions with 18 populated keys is accurately characterized. The detection_method=net_name is appropriate for this design which uses explicit row/col net labels.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].estimated_keys",
+            "path": "findings",
             "value": 18,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_key_matrices[0].estimated_keys"
           }
         },
         {
@@ -119,11 +121,12 @@
       "incorrect": [
         {
           "description": "The 36 SK6812MINI LEDs form two chains of 18 each. The analyzer finds three chains: chain1 (18 LEDs, first=D28), chain2 (18 LEDs, first=D28), and chain3 (length 1, D3). Chains 1 and 2 share the same data_in_net (__unnamed_35) and start node D28, indicating a duplicate traversal from a branch point rather than two genuinely separate chains. D3 is isolated as a single-LED chain, suggesting a topology traversal error. Together the three chains cover all 36 unique LEDs (chain1 \u222a chain2 \u222a chain3 = 36 unique), so coverage is complete but the chain decomposition is wrong.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "value": 3,
-            "op": "len_eq"
+            "op": "len_eq",
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],

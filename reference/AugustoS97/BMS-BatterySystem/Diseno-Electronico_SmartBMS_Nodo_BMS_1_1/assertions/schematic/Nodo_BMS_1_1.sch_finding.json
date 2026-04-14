@@ -21,22 +21,26 @@
       "description": "Sheet 1 contains Y1 and Y2 crystals (both with rescue-library prefix 'Nodo_BMS_1_1-rescue:...'). Their pin lists are empty in the output, so no connected load capacitors can be found and crystal_circuits=[] even though both crystals exist and have load caps nearby in the schematic.",
       "created_from": "FND-00000406",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00000406-AST-03",
       "description": "The analyzer correctly identifies U5 as an LTC6804-2 BMS IC. However, cell_voltage_pins=0, cell_count=0, cell_nets=[], and balance_resistors=0 are all reported as zero. The sheet hierarchy connects 13 cell voltage inputs (C0-C12) and 12 cell balancing outputs (B0-B11) to sheet 2 through named net labels, and sheet 2 has 12 balancing switch transistors (Q2-Q13) with 10R ballast resistors. Because the rescue-library components in both sheets have empty pin lists, the BMS detector cannot traverse the cell voltage or balancing connectivity and reports a structurally empty BMS entry.",
       "created_from": "FND-00000406",
       "check": {
-        "path": "signal_analysis.bms_systems[0].cell_count",
+        "path": "findings[0].cell_count",
         "op": "greater_than",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_bms_systems"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bms_systems[0].cell_count"
     }
   ]
 }

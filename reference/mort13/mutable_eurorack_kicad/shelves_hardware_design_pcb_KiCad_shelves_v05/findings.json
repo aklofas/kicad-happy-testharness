@@ -16,7 +16,7 @@
         },
         {
           "description": "Q1 (NPN-SOT23) correctly detected as BJT with LED collector load and base resistors R116/R114",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q1",
@@ -26,23 +26,25 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "37 opamp circuit entries generated covering all 13 multi-unit opamps with correct reference, value, unit, output_net",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
@@ -61,7 +63,7 @@
       "incorrect": [
         {
           "description": "All 28 active opamp units classified as 'comparator_or_open_loop' despite 24 having clear resistive/RC feedback between output and inverting input. E.g. IC6u1: R40 bridges HP_2 (output) to inverting input; IC4 units 1-4 all have R+C feedback pairs.",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "R40"
@@ -69,10 +71,11 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^R40$"
+            "pattern": "^R40$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
@@ -85,7 +88,7 @@
         },
         {
           "description": "design_observations reports all 12 ICs missing VCC decoupling. False positive: 14 capacitors are present on VCC net.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -95,21 +98,22 @@
       "missed": [
         {
           "description": "0 rc_filters detected despite extensive RC networks in state-variable filter topology (IC4, IC9, IC10 all have R+C feedback integrators).",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "count_equals",
           "confidence": 0.6,
           "expected_value": 0,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "equals",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "0 protection_devices detected. D3-D6 (SOD323-W, anode GND, cathode on opamp outputs) are output clamping diodes. D1 is reverse-polarity protection on VEE.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "D1",
@@ -122,14 +126,15 @@
           "confidence": 0.6,
           "expected_value": 0,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "equals",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "0 power_regulators detected. IC1/IC2 (LM4041DBZ) are shunt voltage references producing AREF_+10 and AREF_-10 rails, biased via R1/R2 from VCC/VEE.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "R1",
@@ -139,9 +144,10 @@
           "confidence": 0.6,
           "expected_value": 0,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

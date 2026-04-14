@@ -49,11 +49,13 @@
       "description": "INCORRECT: thermal_pad_vias contains 15+ false positives from paste-only stencil aperture pads that have no copper pad, only solder paste openings for stencil alignment. These are not thermal pads.",
       "created_from": "FND-00000295",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
         "op": "max_count",
-        "value": 5
+        "value": 5,
+        "detector_filter": "analyze_thermal_pad_vias"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: thermal_pad_vias"
     }
   ]
 }

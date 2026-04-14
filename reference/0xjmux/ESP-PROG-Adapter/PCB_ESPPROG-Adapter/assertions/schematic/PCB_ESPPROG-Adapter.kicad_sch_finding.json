@@ -9,7 +9,7 @@
       "description": "JP1 (ESPPROG_TX_RX_JUMP), JP2 (CH_PD EN), JP5 (TX\u2192RX), JP6 (RX\u2192TX), JP7 (JTAG ~{RST}), J1 (Conn ESP-Prog JTAG), J2 (Conn ESP-Prog UART), J3 (DebugHeader_Cortex-M_JTAG_10p_TagConnect), J5 (SOICBite connector UART Loopback), J7 (SOICBite IDC UART), J8 (SOICBite connector numbering order, DNP), J9 (SOICBite IDC JTAG) \u2014 all 12 components are present with correct reference, value, lib_id, footprint, and in_bom fields. J8 correctly has dnp=true.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "ESP_TMS connects J1 pin 2, J3 pin 2 (TMS), J9 pin 3. ESP_TCK connects J1 pin 4, J3 pin 4 (TCK), J9 pin 5. ESP_TDO connects J1 pin 6, J3 pin 6 (TDO), J9 pin 6. ESP_TDI connects J1 pin 8, J3 pin 8 (TDI), J9 pin 8. JTAG_VDD connects J1 pin 1, J3 pin 1 (VTREF), J9 pin 1. All correct.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "JP1 (jmux-kicadlib:ESP-Prog-Adapter-Reversible-UART) is a 2-unit component. Both unit 1 and unit 2 appear as separate component entries in the components list with distinct uuids and y-positions. The nets ESP_RXD0 and ESP_TXD0 correctly reference both units' pins (e.g., JP1 pin 1 and JP1 pin 2 from unit 1, plus JP1 pins 5 and 6 from unit 2 for the TX0 outputs).",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "The ESP_EN net is shared across all three connector interfaces (UART header J2, SOICbite UART J7, SOICbite JTAG J9) plus the solder jumper JP7. This represents the ESP chip-enable signal routing. Net connectivity is fully and correctly traced.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "J1 (Conn ESP-Prog JTAG) interface=jtag, J3 (DebugHeader_Cortex-M_JTAG_10p_TagConnect) interface=jtag, J9 (SOICBite IDC JTAG) interface=jtag. J2 (Conn ESP-Prog UART) interface=uart, J5 (SOICBite connector UART Loopback) interface=uart, J7 (SOICBite IDC UART) interface=uart. All six correctly categorized.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -59,7 +59,7 @@
       "description": "The schematic uses 'Earth' and 'VDD_U' power symbols (#PWR01\u2013#PWR08 are Earth; VDD_U appears on J7/J2 VDD rails). JTAG_VDD is not a power symbol \u2014 it is a net label connecting VTREF pins \u2014 so its omission from power_rails is correct.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -69,7 +69,7 @@
       "description": "The source schematic contains exactly 18 (no_connect ...) entries (lines 2543\u20132611). The analyzer reports total_no_connects=18, which is correct.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -79,7 +79,7 @@
       "description": "J1, J2, J3, J7, J9 (connectors) and JP1 (ESPPROG_TX_RX_JUMP) are the 6 in_bom=true parts. JP2, JP5, JP6, JP7 (solder jumpers with in_bom=false), J5 (in_bom=false), and J8 (in_bom=false, DNP) are all correctly excluded from the bom array. unique_parts=6 is correct.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -89,7 +89,7 @@
       "description": "The bus_analysis.uart section correctly lists four UART nets (ESP_RXD0, ESPPROG_RX, ESP_TXD0, ESPPROG_TX). However, bus_analysis contains no 'jtag' section despite the presence of named nets ESP_TMS, ESP_TCK, ESP_TDI, ESP_TDO that form a complete JTAG bus. The analyzer detects JTAG connectors in test_coverage but does not synthesize a JTAG bus entry in bus_analysis. The same issue exists for UsageExamples.kicad_sch where TMS, TCK, TDI, TDO nets form a JTAG bus that goes undetected in bus_analysis.",
       "created_from": "FND-00000492",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

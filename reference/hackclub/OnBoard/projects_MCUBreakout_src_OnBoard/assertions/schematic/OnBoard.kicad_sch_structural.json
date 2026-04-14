@@ -2,103 +2,115 @@
   "file_pattern": "OnBoard.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 connector_ground_audit",
+      "description": "Exactly 3 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 crystal_circuits",
+      "description": "Exactly 6 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 1
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Y1 in crystal_circuits",
+      "description": "Exactly 6 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y1$"
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "equals",
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 debug_interfaces",
+      "description": "Exactly 1 detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.debug_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 decoupling_analysis",
+      "description": "Y1 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 1 detect_debug_interfaces",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 2 detect_decoupling",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 7 design_observations",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 7 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 7
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 6 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 6 led_audit",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "equals",
-        "value": 6
-      }
-    },
-    {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 level_shifters",
+      "description": "Exactly 2 detect_level_shifters",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "U4 in power_regulators",
+      "description": "U4 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U4$"
@@ -106,18 +118,20 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 19 protection_devices",
+      "description": "Exactly 19 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 19
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "D17 in protection_devices",
+      "description": "D17 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D17$"
@@ -125,9 +139,10 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "D15 in protection_devices",
+      "description": "D15 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D15$"
@@ -135,9 +150,10 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "D5 in protection_devices",
+      "description": "D5 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D5$"
@@ -145,9 +161,10 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "D1 in protection_devices",
+      "description": "D1 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D1$"
@@ -155,9 +172,10 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "D14 in protection_devices",
+      "description": "D14 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D14$"
@@ -165,9 +183,10 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "D10 in protection_devices",
+      "description": "D10 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D10$"
@@ -175,9 +194,10 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "D13 in protection_devices",
+      "description": "D13 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D13$"
@@ -185,9 +205,10 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "D20 in protection_devices",
+      "description": "D20 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D20$"
@@ -195,9 +216,10 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "D8 in protection_devices",
+      "description": "D8 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D8$"
@@ -205,9 +227,10 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "D21 in protection_devices",
+      "description": "D21 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D21$"
@@ -215,9 +238,10 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "D18 in protection_devices",
+      "description": "D18 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D18$"
@@ -225,9 +249,10 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "D16 in protection_devices",
+      "description": "D16 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D16$"
@@ -235,9 +260,10 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "D22 in protection_devices",
+      "description": "D22 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D22$"
@@ -245,9 +271,10 @@
     },
     {
       "id": "STRUCT-00000026",
-      "description": "D7 in protection_devices",
+      "description": "D7 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D7$"
@@ -255,9 +282,10 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "D6 in protection_devices",
+      "description": "D6 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D6$"
@@ -265,9 +293,10 @@
     },
     {
       "id": "STRUCT-00000028",
-      "description": "D12 in protection_devices",
+      "description": "D12 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D12$"
@@ -275,9 +304,10 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "D9 in protection_devices",
+      "description": "D9 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D9$"
@@ -285,9 +315,10 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "D23 in protection_devices",
+      "description": "D23 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D23$"
@@ -295,9 +326,10 @@
     },
     {
       "id": "STRUCT-00000031",
-      "description": "U3 in protection_devices",
+      "description": "U3 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U3$"
@@ -305,27 +337,30 @@
     },
     {
       "id": "STRUCT-00000032",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000033",
-      "description": "Exactly 3 transistor_circuits",
+      "description": "Exactly 3 detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000034",
-      "description": "Q4 in transistor_circuits",
+      "description": "Q4 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q4$"
@@ -333,9 +368,10 @@
     },
     {
       "id": "STRUCT-00000035",
-      "description": "Q1 in transistor_circuits",
+      "description": "Q1 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q1$"
@@ -343,12 +379,23 @@
     },
     {
       "id": "STRUCT-00000036",
-      "description": "Q3 in transistor_circuits",
+      "description": "Q3 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000037",
+      "description": "Exactly 1 validate_power_sequencing",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_power_sequencing",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

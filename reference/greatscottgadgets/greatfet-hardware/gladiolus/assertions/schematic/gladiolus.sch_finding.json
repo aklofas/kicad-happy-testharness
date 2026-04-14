@@ -20,11 +20,13 @@
       "description": "INCORRECT: gladiolus has 10 inductors (L1-L10) forming anti-aliasing and reconstruction filters for the ADC/DAC signal paths, along with 3 capacitors (C9, C10, C14-C16). The rf_matching detector produces 6 separate matching network entries, treating each inductor as an 'antenna' component with all adjacent L/C components as its matching network. These are not antenna matching networks \u2014 they are multi-section LC bandpass/lowpass filters for the 50MSPS ADC input and 175MSPS DAC output. The inductor values (1-2.2uH) and resonant frequencies (9-33 MHz) are consistent with signal filtering, not antenna matching.",
       "created_from": "FND-00002155",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_rf_matching"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     }
   ]
 }

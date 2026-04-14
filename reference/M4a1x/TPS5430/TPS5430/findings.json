@@ -8,42 +8,45 @@
       "correct": [
         {
           "description": "signal_analysis.power_regulators reports U1 as topology=switching, inductor=L1, has_bootstrap=true, input_rail=VCC, output_rail=VDD. This accurately reflects the schematic: L1 (47 \u00b5H) is the output inductor, the BOOT cap network is present, and the design converts VCC to VDD.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U1",
               "topology": "switching",
               "inductor": "L1",
               "has_bootstrap": true
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "transistor_circuits reports Q1 as mosfet, is_pchannel=true, source_net=VCC, load_type=high_side_switch, with gate_pulldown R1 (100 k\u03a9). This matches the schematic: Q1 is a P-channel MOSFET enabling/disabling power to the regulator.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "reference": "Q1",
               "is_pchannel": true,
               "load_type": "high_side_switch"
-            }
+            },
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "decoupling_analysis for rail VCC reports capacitors C3, C1, C2, C4 all 10 \u00b5F/50 V, totalling 40 \u00b5F with cap_count=4. This matches the schematic: four 10 \u00b5F 1206 bulk caps on the VCC input rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "rail": "VCC",
               "total_capacitance_uF": 40.0,
               "cap_count": 4
-            }
+            },
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -61,23 +64,25 @@
       "missed": [
         {
           "description": "C9 and C10 both have value '100u{slash}6.3V' \u2014 KiCad encodes the slash character as '{slash}' in the S-expression file. The value parser does not substitute {slash} back to '/', so parsed_value is null for both capacitors. As a result they are absent from the decoupling_analysis for the VDD rail, which reports only C7 (10 \u00b5F, total 10 \u00b5F) instead of C7+C9+C10 (210 \u00b5F). C5 (100n{slash}50V) and C8 (4n7{slash}50V) are similarly affected but are signal capacitors, not decoupling caps on a named rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "rail": "VDD",
               "total_capacitance_uF": 210.0
-            }
+            },
+            "detector_filter": "detect_decoupling"
           }
         },
         {
           "description": "F1 is a Littelfuse 1206L300SLTHYR resettable polyfuse placed in series between J1 (barrel-jack input) and the Q1 P-MOSFET drain, providing overcurrent protection on the input rail. D2 is a ZMM5V6 Zener diode with its cathode on VCC and anode on the gate of Q1, clamping the gate drive voltage. Neither is reported in signal_analysis.protection_devices, which returns an empty list.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
@@ -174,29 +179,32 @@
       "correct": [
         {
           "description": "signal_analysis.power_regulators identifies U1 as a switching regulator. The inductor L1 (47uH) and Schottky diode D1 (SS34) are the correct components for this TPS5430 synchronous buck design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "value": "switching",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         },
         {
           "description": "signal_analysis.voltage_dividers identifies R5 (5k6) and R6 (270R) on the Feedback net, consistent with the TPS5430 output voltage programming network.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers[0].resistors[0].ref",
+            "path": "findings",
             "value": "R5",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_voltage_dividers[0].resistors[0].ref"
           }
         },
         {
           "description": "signal_analysis.transistor_circuits identifies both Q1 (AO3401A, P-channel MOSFET) and Q2 (MMBT3904, NPN BJT). Q1 functions as a high-side load switch and Q2 as the gate drive/control transistor.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 2,
-            "op": "count_gte"
+            "op": "count_gte",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
@@ -213,29 +221,32 @@
       "missed": [
         {
           "description": "signal_analysis.decoupling_analysis for VDD rail only includes C7 (10uF). The schematic also has C9 and C10 (100uF tantalum electrolytic) on the VDD output rail, which are the primary bulk storage capacitors. The total decoupling on VDD is 210uF, not 10uF. This is likely because the capacitor value parser does not recognise the 100u or 100uF tantalum values, or the net connectivity for C9/C10 pins is not resolved to VDD.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?(@.rail=='VDD')].total_capacitance_uF",
+            "path": "findings",
             "value": 100.0,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling_analysis[?(@.rail=='VDD')].total_capacitance_uF"
           }
         },
         {
           "description": "signal_analysis.protection_devices is empty. F1 is a polyfuse (resettable fuse) on the VCC input rail providing overcurrent protection. Polyfuses should be classified as protection devices alongside TVS diodes and Zener clamps.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 0,
-            "op": "count_eq"
+            "op": "count_eq",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "signal_analysis.snubbers is empty. The TPS5430 schematic includes an RC snubber (a resistor and capacitor) on the SW switching node to suppress ringing. This should be classified in signal_analysis.snubbers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.snubbers",
+            "path": "findings",
             "value": 0,
-            "op": "count_eq"
+            "op": "count_eq",
+            "detector_filter": "detect_snubbers"
           }
         }
       ],

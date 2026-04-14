@@ -29,10 +29,12 @@
       "description": "Decoupling on +12V (C1 47u + C10 100n) and +3.3V (C4 100n + C2 22u + C3 1u) correctly detected with has_bulk/has_bypass flags",
       "created_from": "FND-00000196",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

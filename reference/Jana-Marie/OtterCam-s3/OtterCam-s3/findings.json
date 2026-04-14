@@ -17,12 +17,13 @@
         },
         {
           "description": "U3 SY8089 buck converter correctly identified as regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -48,7 +49,7 @@
         },
         {
           "description": "AP6236 WiFi/BT module classified as voltage regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -56,7 +57,7 @@
         },
         {
           "description": "AXP209 PMIC estimated_vout 4.8V is incorrect",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -86,11 +87,12 @@
       "correct": [
         {
           "description": "SY8089 buck converter correctly identified with proper output voltage",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -117,11 +119,12 @@
         },
         {
           "description": "RC reset filter correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -132,7 +135,7 @@
       "incorrect": [
         {
           "description": "AXP209 PMIC estimated_vout 4.8V is wrong for a multi-rail PMIC",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -170,11 +173,12 @@
         },
         {
           "description": "U3 SY8089 correctly detected as switching regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 8089
+            "value": 8089,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -210,7 +214,7 @@
         },
         {
           "description": "AP6236 WiFi module classified as power regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -218,7 +222,7 @@
         },
         {
           "description": "AXP209 estimated_vout 4.8V incorrect (programmable PMIC)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -228,11 +232,12 @@
       "missed": [
         {
           "description": "Ethernet PHY interface not detected",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],
@@ -241,11 +246,12 @@
         },
         {
           "description": "DDR memory interface not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],
@@ -274,11 +280,12 @@
       "correct": [
         {
           "description": "U3 SY8089 correctly detected with feedback divider R29/R30",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 8089
+            "value": 8089,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -292,12 +299,13 @@
         },
         {
           "description": "D4 P6SMB6.8CA TVS correctly detected on +5V",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D4$"
+            "pattern": "^D4$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -319,7 +327,7 @@
       "incorrect": [
         {
           "description": "AXP209 estimated_vout 4.8V wrong (programmable PMIC)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",

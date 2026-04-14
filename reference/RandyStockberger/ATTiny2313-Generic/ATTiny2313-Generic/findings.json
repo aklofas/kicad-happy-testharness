@@ -38,11 +38,12 @@
       "missed": [
         {
           "description": "The ISP header CON1 (AVR-ISP-6) has explicit MISO (pin 1), SCK (pin 3), and MOSI (pin 4) signals. These connect via the RESET pull-up wiring network and unnamed nets to the ATtiny2313 pins PB5/MOSI, PB6/MISO, and PB7/SCK (pins 17, 18, 19). The signal_analysis.spi array is empty [] despite clearly having an SPI ISP programming interface. The ISP-6 header is a standard AVR SPI programming connector.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.spi",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_spi"
           }
         }
       ],

@@ -26,20 +26,22 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/AP7335/"
+            "value": "/AP7335/",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
@@ -71,11 +73,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/ROW_/"
+            "value": "/ROW_/",
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
@@ -116,11 +119,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/estimated_keys/"
+            "value": "/estimated_keys/",
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
@@ -181,11 +185,12 @@
       "incorrect": [
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/regulator_voltage/"
+            "value": "/regulator_voltage/",
+            "detector_filter": "detect_design_observations"
           }
         },
         {
@@ -199,11 +204,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/switches_on_matrix/"
+            "value": "/switches_on_matrix/",
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
@@ -217,31 +223,34 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].diodes_on_matrix",
+            "path": "findings",
             "op": "equals",
-            "value": 42
+            "value": 42,
+            "detector_filter": "detect_key_matrices[0].diodes_on_matrix"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/single_pin_nets/"
+            "value": "/single_pin_nets/",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
       "missed": [
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],

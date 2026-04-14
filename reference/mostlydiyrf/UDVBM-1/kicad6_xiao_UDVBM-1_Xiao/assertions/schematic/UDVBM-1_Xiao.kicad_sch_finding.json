@@ -19,12 +19,14 @@
       "description": "The power supply CLC filter consisting of L1=1.0mH and C5/C11=220uF each is correctly analyzed. Resonant frequency f = 1/(2\u03c0\u221a(LC)) = 1/(2\u03c0\u221a(0.001\u00d70.000220)) = 339.32 Hz is mathematically correct. Impedance at resonance = \u221a(L/C) = \u221a(0.001/0.000220) = 2.13 ohms is also correct. Two LC filter instances are reported (L1+C11 and L1+C5) sharing the inductor, which correctly models the pi-filter topology.",
       "created_from": "FND-00001611",
       "check": {
-        "path": "signal_analysis.lc_filters.resonant_hz",
+        "path": "findings.resonant_hz",
         "op": "equals",
-        "value": 339.32
+        "value": 339.32,
+        "detector_filter": "detect_lc_filters"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected 339.32, got None"
+      "aspirational_reason": "agent-generated check failed: expected 339.32, got None",
+      "migration_note": "Path migrated from: signal_analysis.lc_filters.resonant_hz"
     },
     {
       "id": "FND-00001611-AST-03",

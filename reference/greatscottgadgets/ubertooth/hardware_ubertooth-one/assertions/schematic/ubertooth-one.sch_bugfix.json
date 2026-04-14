@@ -9,7 +9,7 @@
       "issue": "KH-015",
       "fix_type": "detection_fix",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
@@ -19,10 +19,12 @@
       "issue": "KH-015",
       "fix_type": "detection_fix",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "BUGFIX-KH-045-01",

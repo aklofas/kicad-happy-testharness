@@ -2,16 +2,17 @@
   "file_pattern": "Runner 4017.kicad_sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -38,12 +39,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Rule DC-002 present",
+      "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-002$"
+        "pattern": "^DC\\-001$"
       }
     },
     {
@@ -78,12 +79,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U201 in EMC findings",
+      "description": "J101 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU201\\b"
+        "pattern": "\\bJ101\\b"
       }
     },
     {
@@ -98,16 +99,26 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "J101 in EMC findings",
+      "description": "C101 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bJ101\\b"
+        "pattern": "\\bC101\\b"
       }
     },
     {
       "id": "STRUCT-00000011",
+      "description": "C202 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC202\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "J102 in EMC findings",
       "check": {
         "path": "findings",

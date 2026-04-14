@@ -1,7 +1,8 @@
 {
   "file_pattern": "G4_obsolete_G4_ShieldCurrent_G4_ShieldCurrent.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -45,22 +46,22 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~7",
+      "description": "low count ~5",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 4,
+        "max": 6
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~53 (+-10)",
+      "description": "EMC risk score ~69.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 43,
-        "max": 63
+        "min": 59.0,
+        "max": 79.0
       }
     },
     {
@@ -87,13 +88,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "7 io_filtering finding(s)",
+      "description": "5 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 7
+        "value": 5
       }
     },
     {
@@ -127,11 +128,11 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "~5 probe point(s) in test plan",
+      "description": "~3 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 4
+        "value": 2
       }
     },
     {

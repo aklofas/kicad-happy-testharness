@@ -9,11 +9,13 @@
       "description": "INCORRECT: Capacitors C1 and C2 have value '104', which is standard EIA capacitor code for 100 nF (10 \u00d7 10^4 pF). The analyzer parses this as 1.04e-10 F (104 pF), yielding a calculated self-resonant frequency of ~494 MHz \u2014 more than 30x too high. This causes the decoupling analysis for V_CONTROL rail to show total_capacitance_uF=0.0 (essentially zero) and 'has_bypass: false', which is incorrect. The actual capacitance is 0.2 uF (200 nF) across the two caps.",
       "created_from": "FND-00002257",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

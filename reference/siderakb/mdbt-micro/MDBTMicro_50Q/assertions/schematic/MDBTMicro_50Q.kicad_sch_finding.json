@@ -20,11 +20,13 @@
       "description": "signal_analysis.rf_matching contains two spurious entries. The first associates R4 (1k resistor) as an antenna with LD2 ('Blue' LED, mistyped as inductor) as a matching component targeting U2 (MDBT50Q-x1MV2). The second associates R5 (1k) with LD3 ('Green' LED). In reality these resistors are LED current-limiting resistors and the LD components are status LEDs, not RF matching components. The false positives are a direct consequence of LD1-3 being misclassified as inductors.",
       "created_from": "FND-00002452",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "equals",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_rf_matching"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     }
   ]
 }

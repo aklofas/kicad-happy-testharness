@@ -1,36 +1,37 @@
 {
   "file_pattern": "proc101d.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~73 (tolerance 10%)",
+      "description": "Finding count ~79 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 69,
-        "max": 77
+        "min": 75,
+        "max": 83
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~17",
+      "description": "high count ~15",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 15,
-        "max": 19
+        "min": 13,
+        "max": 17
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~49",
+      "description": "medium count ~47",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 44,
-        "max": 54
+        "min": 42,
+        "max": 52
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~31.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 10
+        "min": 21.5,
+        "max": 41.5
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "3 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -121,13 +122,13 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "19 switching_emc finding(s)",
+      "description": "17 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 19
+        "value": 17
       }
     },
     {

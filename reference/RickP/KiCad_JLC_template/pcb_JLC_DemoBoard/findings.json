@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "3 components, 3 nets (GND, VCC, unnamed signal), correct power rail identification, component types (battery, resistor, led) all correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -20,9 +20,9 @@
       "missed": [
         {
           "description": "In the net output, BT1 pin '1' (named '+') is on the GND net and pin '2' (named '-') is on VCC. This is reversed polarity relative to standard conventions. No ERC warning generated. May be a symbol convention artifact in KiCad 5, but warrants a design observation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -45,9 +45,9 @@
       "correct": [
         {
           "description": "Footprint count, component types, zone fill ratios, via stitching, board dimensions, and net routing all look accurate. 6 stitching vias on GND correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -56,7 +56,7 @@
       "incorrect": [
         {
           "description": "Board outline is a circle. Edge clearance computation uses bounding box (14.3\u00d714.4mm rectangle) rather than actual circular outline geometry. Components well within the circle appear to violate clearance to the bounding box corners. This is a known limitation when the board is circular.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

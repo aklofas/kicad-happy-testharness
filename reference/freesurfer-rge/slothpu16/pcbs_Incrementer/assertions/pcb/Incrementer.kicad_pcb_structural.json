@@ -2,18 +2,39 @@
   "file_pattern": "Incrementer.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling_placement",
+      "description": "Exactly 4 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U301 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U301$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U201 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U201$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "U203 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -23,7 +44,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "U303 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

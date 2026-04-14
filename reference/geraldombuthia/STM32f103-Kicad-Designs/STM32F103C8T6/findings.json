@@ -8,27 +8,27 @@
       "correct": [
         {
           "description": "Correct: AMS1117-3.3 as LDO from VBUS\u2192+3.3V, I2C2 SDA/SCL with 1K5 pull-ups, USART1 TX/RX identified on U2, USB differential pair with J4+U2, series resistors R5 on USB, crystal Y1 at 16MHz with load caps C5/C9. Power domain grouping (+3.3V/+3.3VA for U2, VBUS for U1) is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "J4 is USB_B_Micro with footprint='' \u2014 correctly reported in missing_footprint list. All other components have valid footprints.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "These nets connect passives and MCU input pins without a PWR/output driver symbol \u2014 correctly flagged as no_driver ERC warnings. These are expected in a raw KiCad schematic without explicit power symbols on those lines.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -37,7 +37,7 @@
       "incorrect": [
         {
           "description": "esd_protection lists 'U2' (STM32F103C8T6) as ESD protection for USB differential pair. The MCU has internal USB ESD but the analyzer is conflating pin connectivity with dedicated ESD protection. No dedicated ESD protection device (e.g. PRTR5V0U2X) exists in the BOM. The STM32 happens to share the USB net but is not an ESD protector.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -58,9 +58,9 @@
       "correct": [
         {
           "description": "smd_count=25, tht_count=3 (header pins), 4 copper zones identified correctly (VBUS, GND on F.Cu; two GND on B.Cu \u2014 one zone plus fill plane). Via count 24 with 7 fanout vias from U2 LQFP-48 correctly detected. Routing complete confirmed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -69,7 +69,7 @@
       "incorrect": [
         {
           "description": "The B.Cu layer entry shows type='power' (line 37 of PCB JSON). In KiCad, copper layers are always signal type in the layer definition \u2014 the 'power' designation is not a standard KiCad layer type for B.Cu. This appears to be an analyzer misclassification; KiCad's layer types are 'signal', 'power', 'mixed', 'jumper' but B.Cu in this file is used as a GND plane via a zone, not declared as power type in the file.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -90,9 +90,9 @@
       "correct": [
         {
           "description": "All required layers (F.Cu, B.Cu, F/B Mask, F/B Paste, F/B SilkS, Edge.Cuts) present and correctly classified. Drill file correctly parsed with 44 total holes: 24 vias (0.3mm), 12 PTH component (1.0mm), 2 NPTH (0.8mm), 2 NPTH (0.9mm), 4 NPTH mounting (2.2mm). T2 (0.55mm, 0 holes) and T3 (0.85mm, 0 holes) correctly noted as defined but unused.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -101,7 +101,7 @@
       "incorrect": [
         {
           "description": "The alignment checker reports 'Height varies by 2.6mm across copper/edge layers' because B.Paste has 0x0 extents (no paste on back, correct for an all-SMD-front design), B.Mask extents are smaller than Edge.Cuts (mask doesn't extend to full board edge \u2014 normal), and silk is smaller still. The Cu layers (35.98\u00d729.98) vs Edge.Cuts (37\u00d731) difference is ~1mm per side which is normal keepout/clearance behavior. This is a false positive \u2014 the gerbers are correctly aligned.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

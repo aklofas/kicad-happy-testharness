@@ -33,13 +33,15 @@
       "description": "INCORRECT: The design has 5 identical switch channels, each with a BUZ11 MOSFET driving a solenoid load and a BC847 NPN transistor driving a status LED. In the transistor_circuits output, all 5 BUZ11 instances (Q2, Q4, Q6, Q8, Q10) report flyback_diode='D7' and led_driver pointing to D8+R12. This is because the hierarchical schematic was flattened and all channels share net aliases; D7 and D8 belong to one specific channel but the analyzer cannot distinguish per-channel assignments. Each channel has its own dedicated flyback diode and LED, not a shared one.",
       "created_from": "FND-00001593",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "count_matches",
         "value": {
           "flyback_diode": "D7"
-        }
+        },
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

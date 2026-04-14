@@ -31,12 +31,14 @@
       "description": "decoupling_analysis shows rail '3.3V' with C1 and C3 both at 0.1uF, total 0.2uF. This matches the BOM exactly. The observation correctly notes has_bulk=false (no bulk cap like 10uF), has_bypass=true, has_high_freq=false \u2014 appropriate for a pure I2C sensor board powered externally via Qwiic.",
       "created_from": "FND-00001381",
       "check": {
-        "path": "signal_analysis.decoupling_analysis[0].cap_count",
+        "path": "findings[0].cap_count",
         "value": 2,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_decoupling"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check path/value mismatch: expected 2, got None"
+      "aspirational_reason": "agent-generated check path/value mismatch: expected 2, got None",
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[0].cap_count"
     },
     {
       "id": "FND-00001381-AST-04",

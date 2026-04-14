@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The schematic has a standard Arduino DTR auto-reset circuit: C7 (100n) couples DTR to RST, and R1 (10k) pulls RST high to VCC. The RC filter detector reports this as an RC filter with input_net='RST', output_net='VCC', ground_net='DTR'. DTR is a UART control signal, not a ground net. The actual topology is a series capacitor between DTR and RST (for edge-triggered reset from DTR toggling), not a shunt RC filter. The ground_net field is wrong and the filter classification is incorrect \u2014 this is a coupling/reset network, not a low-pass filter.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "eq",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -38,11 +39,12 @@
       "missed": [
         {
           "description": "Y1 uses lib_id 'archive:Device_Crystal_GND2_Small' and footprint 'footprints:muRata-resonator_SMD_CSTCExxM00G55-R0'. The CSTCE series are 3-pin ceramic resonators with integrated load capacitors, not discrete quartz crystals. The analyzer correctly notes no load_caps in the crystal_circuits entry, but classifies Y1 as type='crystal' throughout. A more accurate classification would be 'resonator'. The footprint filter warning already flags the mismatch. This is cosmetic but could mislead design review about whether load caps are missing.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].load_caps",
+            "path": "findings",
             "op": "eq",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_crystal_circuits[0].load_caps"
           }
         }
       ],

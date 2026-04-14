@@ -9,7 +9,7 @@
       "description": "68 total components (13 caps, 16 resistors, 3 ICs, 2 jumpers, 6 fiducials, 1 connector, 27 test points), all BOM groups and values correct. Power rails (+3.3V, GND, VDD, PWR_FLAG) identified correctly.",
       "created_from": "FND-00000564",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "SDIO bus detected with bus_id=EMMC, bus_width=8, with CMD/CLK/D0-D7 signals mapped, pullups on CMD and D0 identified. Both the NAND flash (U1) and eMMC (U2) are correctly associated.",
       "created_from": "FND-00000564",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "Net classification correctly identifies eMMC-CLK and SPI_CLK as 'clock', NAND-CE0/SPI_CS as 'chip_select', SPI-MOSI/MISO as 'data', +3.3V as 'power', GND as 'ground'. Good heuristic performance on named nets.",
       "created_from": "FND-00000564",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "U3 is a W25Q128 SPI NOR flash with nets explicitly named SPI-MOSI(IO0), SPI-MISO(IO1), SPI-CLK(CLK), SPI-CS(CMD), SPI-WPn(IO2), SPI-HOLD(IO3). bus_analysis.spi is empty. The analyzer should detect this SPI bus.",
       "created_from": "FND-00000564",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -50,7 +50,7 @@
       "description": "U1 is an MT29F64G08 NAND flash with dedicated NAND bus signals (NAND-D0 through NAND-D7, NAND-CE0, NAND-WE, NAND-RE, NAND-ALE, NAND-CLE, NAND-RB0). signal_analysis.memory_interfaces is empty \u2014 the NAND interface is not recognized as a memory interface.",
       "created_from": "FND-00000564",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

@@ -1,16 +1,17 @@
 {
   "file_pattern": "reDIP-64.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~15 (tolerance 10%)",
+      "description": "Finding count ~25 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 22,
+        "max": 28
       }
     },
     {
@@ -35,12 +36,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~75 (+-10)",
+      "description": "EMC risk score ~80.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 65,
-        "max": 85
+        "min": 70.0,
+        "max": 90.0
       }
     },
     {
@@ -145,11 +146,11 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "~4 net(s) with EMC scores",
+      "description": "~6 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

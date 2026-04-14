@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "2 feedback networks correctly identified: U6/U4 SY80004DQD DCDC converters with R33/R34 and R16/R26 dividers (ratio 0.180, Vout\u22483.3V)",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "field_equals",
             "field": "vout",
-            "value": 3.3
+            "value": 3.3,
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [
@@ -31,12 +32,13 @@
         },
         {
           "description": "U3 WR0331-18FF4R LDO (3.3V\u21921.8V) correctly detected with fixed output from part suffix",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -47,12 +49,13 @@
         },
         {
           "description": "4 ESD protection diodes (D5-D8, DF2S6.8FS) correctly identified protecting SPI bus pins",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D5$"
+            "pattern": "^D5$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -66,12 +69,13 @@
         },
         {
           "description": "X1 24MHz crystal with C14/C15 (12pF) load caps correctly detected, effective load 9pF",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -84,12 +88,13 @@
         },
         {
           "description": "2 RC filters on reset circuit (R7/C3 1.59kHz, R7/C16 72.34Hz) correctly identified",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R7$"
+            "pattern": "^R7$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -104,12 +109,13 @@
       "incorrect": [
         {
           "description": "Q4 gate_driver_ics contains unrelated ICs (U1 processor, U3 LDO, U5 memory) \u2014 should only list ICs with output pins connected to gate net",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q4$"
+            "pattern": "^Q4$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [

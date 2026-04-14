@@ -2,6 +2,7 @@
   "file_pattern": "Hardware_V1.4_Hardware.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -88,6 +89,16 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "U6 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "U5 in EMC findings",
       "check": {
         "path": "findings",
@@ -97,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "C4 in EMC findings",
       "check": {
         "path": "findings",
@@ -107,23 +118,13 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "C5 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC5\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "U6 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU6\\b"
       }
     },
     {

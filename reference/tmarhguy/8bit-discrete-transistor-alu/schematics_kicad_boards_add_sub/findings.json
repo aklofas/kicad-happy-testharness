@@ -35,11 +35,12 @@
         },
         {
           "description": "Decoupling analysis correctly found 6x 100nF caps on VCC rail",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -66,11 +67,12 @@
         },
         {
           "description": "140 transistor circuits correctly identified with MOSFET type, gate/drain/source nets, and power connection analysis",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -108,7 +110,7 @@
       "incorrect": [
         {
           "description": "Bridge circuit detection classified 19 complementary NMOS pairs as a '19_phase' motor bridge. These are actually CMOS transmission gates implementing discrete multiplexer/pass-transistor logic in the adder carry chain, not H-bridges or motor drivers. The 38 transistors (Q36xx-Q57xx) form paired NMOS pass gates, not power-stage half-bridges.",
-          "analyzer_section": "signal_analysis.bridge_circuits",
+          "analyzer_section": "detect_bridge_circuits",
           "detector": "bridge_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -116,7 +118,7 @@
         },
         {
           "description": "Bridge circuit lists 74HC86 XOR gates as 'driver_ics' for the bridge. XOR gates serve as conditional inverters for the subtraction mode (A XOR M), not as gate drivers for a motor bridge.",
-          "analyzer_section": "signal_analysis.bridge_circuits[0].driver_ics",
+          "analyzer_section": "detect_bridge_circuits[0].driver_ics",
           "detector": "bridge_circuits[0]",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -124,7 +126,7 @@
         },
         {
           "description": "All FETs in the bridge classification show as NMOS only, but the actual transmission gates use complementary NMOS/PMOS pairs. The PMOS counterparts (Q3601, Q3604, Q3701, Q3704, etc.) are in transistor_circuits but their paired NMOS are in bridge_circuits, splitting what are actually complementary pairs across two different detection categories.",
-          "analyzer_section": "signal_analysis.bridge_circuits[0].fet_values",
+          "analyzer_section": "detect_bridge_circuits[0].fet_values",
           "detector": "bridge_circuits[0]",
           "subject_refs": [
             "Q3601",
@@ -139,12 +141,13 @@
       "missed": [
         {
           "description": "No detection of discrete CMOS logic gates. The design's core innovation is implementing AND, OR, NAND, NOT, and XOR functions from complementary MOSFET pairs. The 140 transistors in transistor_circuits form recognizable CMOS gate topologies (e.g., Q5005+Q5006 form an AND gate, Q903-Q906 form an OR gate, Q5105+Q5106 form an inverter) that should be classified as digital logic gates rather than generic transistor circuits.",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q5005$"
+            "pattern": "^Q5005$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -162,20 +165,21 @@
         },
         {
           "description": "No detection of the adder/subtractor functional block. The hierarchical sheet structure (adder8 containing 4x adder2, each containing full-adder logic) implements an 8-bit ripple-carry adder with XOR-based conditional inversion for subtraction mode. This is a recognizable arithmetic circuit topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "No detection of CMOS transmission gates / pass-transistor logic. The 38 transistors classified as bridge circuits are actually CMOS pass gates used in the multiplexer selection logic, a fundamental analog switch topology distinct from both bridges and simple switching transistors.",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -209,41 +213,44 @@
         },
         {
           "description": "Bus topology correctly identifies 8-bit A[0..7], B[0..7], SUM[0..7] and CTRL buses",
-          "analyzer_section": "signal_analysis.bus_topology",
+          "analyzer_section": "detect_bus_topology",
           "detector": "bus_topology",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.bus_topology",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_topology"
           }
         },
         {
           "description": "6x 100nF bypass capacitors on VCC correctly aggregated",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "detector": "decoupling_analysis",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
           "description": "140 transistors correctly analyzed as MOSFETs with accurate gate/drain/source net assignments",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
@@ -254,7 +261,7 @@
       "incorrect": [
         {
           "description": "19 NMOS pass-transistors falsely labeled as 'high_side' of H-bridge half-bridges. All 38 components in bridge_circuits are NMOS \u2014 a real H-bridge high-side must be PMOS. The actual topology is CMOS logic gate stacks, not motor bridges. 74HC86 XOR ICs incorrectly flagged as 'driver_ics'.",
-          "analyzer_section": "signal_analysis.bridge_circuits",
+          "analyzer_section": "detect_bridge_circuits",
           "detector": "bridge_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -272,15 +279,16 @@
       "missed": [
         {
           "description": "No detection of CMOS complementary logic pattern: 50 PMOS+NMOS gate pairs share the same gate net forming CMOS inverter/buffer/pass-gate cells \u2014 the defining architecture of this design.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

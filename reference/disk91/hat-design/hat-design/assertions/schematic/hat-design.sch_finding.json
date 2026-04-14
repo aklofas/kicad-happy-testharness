@@ -19,7 +19,7 @@
       "description": "The Raspberry Pi HAT specification defines ID_SD as SDA (data) and ID_SC as SCL (clock). However, the schematic routes ID_SD to IC1 pin 6 (SCL) and ID_SC to IC1 pin 5 (SDA). The analyzer correctly reports the IC pin names seen on each net (ID_SD -> SCL, ID_SC -> SDA), but does not emit any warning about this mismatch between the HAT connector signal names and the EEPROM pin assignments. An ERC warning about the potential design issue (net named ID_SD connected to an SCL pin) would be useful.",
       "created_from": "FND-00002119",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

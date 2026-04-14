@@ -2,21 +2,24 @@
   "file_pattern": "VCF_core.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 opamp_circuits",
+      "description": "Exactly 5 detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "equals",
         "value": 5
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "U3 in opamp_circuits",
+      "description": "U3 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U3$"
@@ -24,9 +27,10 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "U1 in opamp_circuits",
+      "description": "U1 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U1$"
@@ -34,9 +38,10 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "U2 in opamp_circuits",
+      "description": "U2 in detect_opamp_circuits",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U2$"
@@ -44,27 +49,30 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 voltage_dividers",
+      "description": "Exactly 11 detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 11
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "R216 in voltage_dividers",
+      "description": "R216 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R216$"
@@ -72,22 +80,112 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "R213 in voltage_dividers",
+      "description": "R214 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R214$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R219 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R219$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R210 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R210$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R206 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R206$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R213 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R213$"
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "R217 in voltage_dividers",
+      "id": "STRUCT-00000013",
+      "description": "R211 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R211$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R217 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R217$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R221 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R221$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R203 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R203$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R205 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R205$"
       }
     }
   ]

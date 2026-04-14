@@ -2,6 +2,7 @@
   "file_pattern": "i2c_bridge_primary.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -57,6 +58,16 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "U2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
@@ -66,7 +77,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "C3 in EMC findings",
       "check": {
         "path": "findings",
@@ -76,13 +87,13 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "U2 in EMC findings",
+      "id": "STRUCT-00000009",
+      "description": "C2 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU2\\b"
+        "pattern": "\\bC2\\b"
       }
     }
   ]

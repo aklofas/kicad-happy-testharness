@@ -9,11 +9,13 @@
       "description": "INCORRECT: The nets JSON shows C1 pin 2 is on Vin (C1 is a polarized cap, pin 2 is the positive terminal) and C2 pin 2 is on Vout1. Both U1's input and output rails therefore have filter capacitors. Two design_observations fire incorrectly: one 'decoupling' observation listing Vin in rails_without_caps and one 'regulator_caps' observation claiming both input and output capacitors are missing for U1/LM7805.",
       "created_from": "FND-00000428",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000428-AST-02",
@@ -31,11 +33,13 @@
       "description": "D1, D2, D3, D4 (all 1N4007) form a full-wave bridge rectifier: D1A/D3A join at Vin (positive DC rail), D2K/D4K join at V- (negative rail), D1K/D2A and D3K/D4A join the AC input terminals. The signal_analysis.bridge_circuits array is empty. This is a clear bridge rectifier topology that the analyzer should detect.",
       "created_from": "FND-00000428",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     }
   ]
 }

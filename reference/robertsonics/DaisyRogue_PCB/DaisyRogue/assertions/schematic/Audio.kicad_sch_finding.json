@@ -9,7 +9,7 @@
       "description": "The analyzer correctly identifies all 40 components: 25 capacitors (3300pF \u00d78, 22uF \u00d78, 1.0uF \u00d74, 2.2uF \u00d72, 10uF \u00d72, 10nF \u00d71), 10 resistors (all 2.2K), 2 ferrite beads (600R), 1 connector (J2 Conn_02x13_Odd_Even), 2 ICs (U3 PCM1681TPWPQ1, U4 LP2985-5.0). Values, footprints, and lib_ids all match the source. The 5 power rails (+3V3, +5VA, GND, GNDA, VIN) are correctly identified.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "All 29 pins of U3 (including the EPAD pin 29) are correctly mapped to their nets. Key verified mappings: pin 9 VDD \u2192 +3V3, pin 10 DGND \u2192 GND, pin 17 VCC1 \u2192 +5VA, pin 18 AGND1 \u2192 GNDA, pin 23 VCC2 \u2192 +5VA, pin 24 AGND2 \u2192 GNDA, pin 25 VCOM \u2192 VCOM, pins 15\u201322 VOUT1\u2013VOUT8 \u2192 OUT1\u2013OUT8 nets with the correct coupling capacitors (22uF each). Pins 2, 11\u201314 tied to GND (correct \u2014 mode select strapping). Pins 5\u20138 (SCK/DATA1/BCK/LRCK) correctly mapped to TDM_MCLK/TDM_DO/TDM_BCLK/TDM_FS.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The analyzer correctly detects SCL (U3 pin 3 MC/SCL/DEMP) and SDA (U3 pin 4 MD/SDA/MUTE) as I2C lines, each with a 2.2K pull-up resistor to +3V3 (R4 on SCL, R3 on SDA). Pull-up direction ('pull-up', to_rail '+3V3') is correct.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "U4 LP2985-5.0 is correctly classified as an LDO regulator. Its output (pin 5 VOUT) correctly maps to the +5VA net. The bypass cap C24 (10nF) on pin 4 (BP) is correctly associated. The inrush analysis correctly attributes C25 (2.2uF), C21 (1.0uF), C20 (1.0uF), C22 (10uF) as output caps totaling 14.2uF.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "The analyzer correctly identifies two separate ground domains: GND (digital, connected to U3 DGND pin 10 and FB2 pin 2) and GNDA (analog, connected to U3 AGND1 pin 18, AGND2 pin 24, and all the analog bypass caps C11\u2013C18, C19\u2013C25). FB2 (600R ferrite bead) correctly bridges GND to GNDA, and FB1 bridges VIN to the U4 input node. This analog/digital ground separation is correctly captured.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -59,7 +59,7 @@
       "description": "Each of the 8 DAC outputs has a 22uF coupling capacitor correctly traced: VOUT8 (pin 15) \u2192 C3, VOUT7 (pin 16) \u2192 C7, VOUT6 (pin 19) \u2192 C4, VOUT5 (pin 20) \u2192 C8, VOUT4 (pin 21) \u2192 C5, VOUT3 (pin 22) \u2192 C9, VOUT2 (pin 26) \u2192 C6, VOUT1 (pin 27) \u2192 C10. Each has a downstream RC filter (Rxx + Cxx 3300pF) and connector output correctly traced through the 8-resistor and 8-capacitor RC filter stage.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -69,7 +69,7 @@
       "description": "The VCOM net correctly connects U3 pin 25 (VCOM power_in), C19 pin 1 (2.2uF bypass), and J2 pin 25. The ERC warning about VCOM having no output driver is appropriate since VCOM is an output of the PCM1681 that the schematic expects to come in from the connector J2 (it is driven by the chip itself but the symbol shows power_in).",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -79,7 +79,7 @@
       "description": "U3 (PCM1681TPWPQ1) is an 8-channel DAC with a TDM/I2S serial audio interface. Its four TDM signals (TDM_MCLK \u2192 SCK pin 5, TDM_DO \u2192 DATA1 pin 6, TDM_BCLK \u2192 BCK pin 7, TDM_FS \u2192 LRCK pin 8) are present in the nets and flagged as single-pin nets (correctly noting they're sub-sheet hierarchical connections), but no I2S/TDM bus group is detected in bus_analysis. The analyzer detects I2C correctly but does not detect this audio serial bus.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -90,7 +90,7 @@
       "description": "Each of the 8 DAC output channels has an RC low-pass filter formed by one 2.2K resistor and one 3300pF capacitor (e.g. R7+C15 for OUT7/J2 pin 18, R9+C12 for OUT1/J2 pin 12, etc.). These 8 RC filter pairs are clearly present in the netlist but are not identified as low-pass filters in any signal_paths or filter detector output. The analyzer does not have a 'signal_paths' or 'filter_detectors' section in its output at all for this file.",
       "created_from": "FND-00000465",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

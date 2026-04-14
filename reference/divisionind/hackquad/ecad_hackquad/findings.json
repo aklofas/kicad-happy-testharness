@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The analyzer correctly identifies U7 (RT6150AGQW) as a switching regulator converting VBUS to +3.3V with feedback divider R12/R13 (487k/86.6k), and U9 (XC6221B132MR-G) as an LDO converting VBUS to CAM_1.2V for camera power. The estimated Vout of 3.974V for RT6150AGQW is close to the calculated value (Vref=0.6V assumed). In contrast, the KiCad 5 legacy .sch parser detects the same regulators but with wrong rails (input=REG_EN, output=None), showing clear improvement in the .kicad_sch parser.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -38,11 +39,12 @@
         },
         {
           "description": "Q3-Q6 (each AO3400A N-ch MOSFET) are four independent low-side switches driving motors M0-M3 (all 'Motor_DC' type) with individual flyback diodes D3, D4, D6, D7 and 1k gate resistors driven by ESP32 PWM outputs. This is a classic 4-motor brushed DC drive for a quadcopter. The analyzer correctly detects Q3-Q6 as transistor_circuits with flyback diodes and gate resistors, but motor_drivers remains empty and load_type is 'other' rather than 'motor'. The circuit would benefit from explicit motor-drive topology recognition.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.motor_drivers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_motor_drivers"
           }
         }
       ],

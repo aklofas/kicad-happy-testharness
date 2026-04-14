@@ -66,11 +66,12 @@
       "missed": [
         {
           "description": "C2 has pin 1 on VCC and pin 2 on GND; the PCB footprint confirms value '100nF'. Because the schematic analyzer reads the empty instance Value field and falls back to the symbol name 'C_Small', parsed_value is None. The decoupling detector requires a valid capacitance, so C2 is excluded and decoupling_analysis returns an empty list. The design_observations also incorrectly states U1's VCC rail has no decoupling caps at all.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -193,11 +194,12 @@
         },
         {
           "description": "signal_analysis.design_observations contains {category: 'decoupling', component: 'U1', rails_without_caps: ['VCC'], rails_with_caps: []}. The nets section clearly shows C2 pin 1 is on VCC and C2 pin 2 is on GND, meaning C2 (100nF) is a decoupling capacitor bridging VCC to GND. The VCC rail is properly decoupled. The decoupling_analysis section is also empty when it should contain C2. The observation is a false positive.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_design_observations"
           }
         },
         {

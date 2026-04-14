@@ -17,11 +17,12 @@
         },
         {
           "description": "The isolation_barriers entry correctly identifies U1 (ADuM3190ARQZ) as an isolation component separating the GNDD (digital/secondary) and GNDPWR (primary power) ground domains.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_isolation_barriers"
           }
         }
       ],
@@ -29,11 +30,12 @@
       "missed": [
         {
           "description": "The design implements an isolated flyback converter using TR1 (L01ZxxxS05 transformer), U1 (ADuM3190ARQZ isolated error amplifier), D3 (CDBHM260L-HF rectifier), and L1. The power_regulators array is empty. The isolated converter topology should be detected as a power regulator producing the isolated VCC output.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

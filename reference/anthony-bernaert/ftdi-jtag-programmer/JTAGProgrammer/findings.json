@@ -10,11 +10,12 @@
       "missed": [
         {
           "description": "The FTDI sub-sheet contains a FT2232HL (U1) with ADBUS0=JTAG_TCK, ADBUS1=JTAG_TDI, ADBUS2=JTAG_TDO, ADBUS3=JTAG_TMS, ADBUS7=JTAG_SRST on channel A, and BDBUS0=UART_TXD, BDBUS1=UART_RXD, BDBUS2=UART_RTS, BDBUS3=UART_CTS on channel B. None of these are detected as JTAG or UART interfaces. The named nets (JTAG_TCK, UART_TXD, etc.) are flagged only as 'single_pin_nets' in design_observations, but no JTAG bus detector or UART bus detector fires. The four 74LVC3G17 buffer/level-shifter ICs (U4-U7) between the FTDI and target connector are also not identified as level shifters.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/jtag/i"
+            "value": "/jtag/i",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -36,11 +37,12 @@
       "incorrect": [
         {
           "description": "The design_observations for USB_D+ and USB_D- both report has_esd_protection: false. However, D1 and D2 are PGB1010603MR (Littelfuse TVS diode array), a standard USB ESD protection device. D1 and D2 are explicitly listed in the 'devices' array for those nets, so the analyzer sees them but still sets the flag to false. The ESD protection check does not recognize PGB1010603MR as an ESD/TVS device because it uses a custom lib_id (PGB1010603MR:PGB1010603MR) rather than a standard library name like Diode: or TVS:.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[?net=='USB_D+'].has_esd_protection",
+            "path": "findings",
             "op": "equals",
-            "value": true
+            "value": true,
+            "detector_filter": "detect_design_observations[?net=='USB_D+'].has_esd_protection"
           }
         },
         {
@@ -56,11 +58,12 @@
       "missed": [
         {
           "description": "U3 (93LC56B, Memory_EEPROM:93LCxxBxxOT) is the FT2232HL configuration EEPROM connected via Microwire/SPI. The memory_interfaces and spi_buses detectors both return empty lists. The 93LC56B is a well-known EEPROM part (standard KiCad library symbol) and its presence alongside the FT2232HL is a standard design pattern. The net names for CS/SK/DI/DO are unnamed in the sub-sheet, which may prevent detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],

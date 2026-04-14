@@ -19,22 +19,26 @@
       "description": "The signal_analysis.transistor_circuits section correctly identifies Q1 (BC107, collector_net to relay K3 coil, emitter to GND) and Q2 (BC107, collector_net to relay K2 coil, emitter to GND) with base resistors R3 and R4 respectively. The emitter_is_ground flag is correctly true for both.",
       "created_from": "FND-00001347",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "value": 2,
-        "op": "equals"
-      }
+        "op": "equals",
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001347-AST-03",
       "description": "The ic_pin_analysis for A2 correctly identifies R1, R2, and R6 (all 10K) as pull-down resistors on Arduino pins A0, A1, and A2 respectively, each going to GND. The switches SW1, SW2, SW3 connect from 3V3 (Arduino pin 4) through the switch to these pins, making these pull-downs correct for switch-to-power circuits (the other side is at 3V3, so they would actually be pull-downs when switches are open).",
       "created_from": "FND-00001347",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].base_resistors[0].reference",
+        "path": "findings[0].base_resistors[0].reference",
         "value": "R4",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_transistor_circuits"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check path/value mismatch: expected R4, got None"
+      "aspirational_reason": "agent-generated check path/value mismatch: expected R4, got None",
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].base_resistors[0].reference"
     },
     {
       "id": "FND-00001347-AST-04",
@@ -52,11 +56,13 @@
       "description": "D1 and D4 are 1N4148 diodes placed across relay coils (D4 cathode on K2 pin 16 / anode on collector Q2; D1 cathode on K3 pin 1 / anode on collector Q1). These are classic flyback/freewheeling protection diodes. The signal_analysis.protection_devices list is empty, so these are missed. The relay coil topology is clear from the net data.",
       "created_from": "FND-00001347",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": [],
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

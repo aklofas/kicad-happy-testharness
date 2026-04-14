@@ -19,42 +19,50 @@
       "description": "Two RC filters and one LC filter are detected. R7(1k)+C9(1\u00b5F) \u2192 159 Hz low-pass on V_BCKP backup supply line is correct. R6(13.3\u03a9)+C1||C2(~100pF) \u2192 119 kHz is correct for the VCC_RF supply entry filter. The LC filter with L1(33nH)+C1||C2(~100pF) resonating at 2.77 MHz is mathematically correct. The LDO regulator RT9080-3.3 from VDD\u21923.3V is correctly identified. The RC filter math and component pairing are accurate.",
       "created_from": "FND-00001421",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "value": 2,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001421-AST-03",
       "description": "The RT9080-3.3 LDO is correctly identified with input_rail=VDD and output_rail=3.3V. The protection devices correctly identify D4 (PESD0402 TVS on ANT_IN) and F1 (6V/0.5A fuse on VBUS). The decoupling coverage observations for 3.3V and VDD rails are correct \u2014 3.3V has bulk+bypass+high-freq, VDD has bulk+bypass but no high-freq capacitor.",
       "created_from": "FND-00001421",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001421-AST-04",
       "description": "The DAN-F10N GNSS module supports I2C communication. The design_observations list contains no i2c_bus entries and i2c_buses is absent. The GNSS module (U6) likely has I2C pins that are not connected or left as no-connect in this design, which explains the absence. However, no observation is generated noting this omission. The test_coverage section lists only a UART debug connector \u2014 confirming I2C is not wired up \u2014 but no explicit note is generated about unused I2C capability.",
       "created_from": "FND-00001421",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "value": null,
-        "op": "exists"
+        "op": "exists",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001421-AST-05",
       "description": "rf_chains and rf_matching both return empty lists despite the design having a clear RF path: RF antenna \u2192 U1 (DT1042-04SO ESD protection IC) \u2192 ANT_IN \u2192 U6 (DAN-F10N GNSS module). The LC filter on VCC_RF supply (L1+C1||C2) is a high-frequency EMI filter for the GNSS RF supply, not a signal-path RF component. The antenna signal path itself (U1 \u2192 U6 via ANT_IN net) is not modeled as an RF chain.",
       "created_from": "FND-00001421",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "value": null,
-        "op": "exists"
+        "op": "exists",
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     }
   ]
 }

@@ -9,21 +9,25 @@
       "description": "The analyzer correctly identified a 4-row \u00d7 10-column key matrix (40 estimated keys) using topology detection, matching the 40 SW_SPST switches and 40 1N4148 diodes in the BOM. Row nets (r1\u2013r4) and column nets (c1\u2013c10) are correctly identified.",
       "created_from": "FND-00002232",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00002232-AST-02",
       "description": "INCORRECT: The design connects a ST7735_1.8inch display to the Raspberry Pi Pico via signals SCK, SDA (MOSI), CS, DC, and RESET \u2014 a standard 4-wire SPI interface. The analyzer detected an I2C bus on the 'sda' net (because the net name contains 'sda') and reported it in bus_analysis.i2c, with no SPI detection. The 'sda' net is actually SPI MOSI misnamed by the designer. The analyzer should look for corroborating SCK/CS/DC signals before concluding I2C.",
       "created_from": "FND-00002232",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00002232-AST-03",

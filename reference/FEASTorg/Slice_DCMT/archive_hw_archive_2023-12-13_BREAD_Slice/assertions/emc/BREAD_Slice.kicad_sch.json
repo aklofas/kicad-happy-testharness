@@ -1,26 +1,27 @@
 {
   "file_pattern": "BREAD_Slice.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~9 (tolerance 10%)",
+      "description": "Finding count ~12 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 10,
+        "max": 14
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~6",
+      "description": "high count ~7",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -35,16 +36,27 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~76 (+-10)",
+      "description": "EMC risk score ~80.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 66,
-        "max": 86
+        "min": 70.0,
+        "max": 90.0
       }
     },
     {
       "id": "SEED-00000005",
+      "description": "1 decoupling finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "9 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -55,7 +67,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -64,7 +76,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -73,7 +85,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "~10 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -82,7 +94,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -91,7 +103,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",

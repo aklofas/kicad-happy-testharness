@@ -17,11 +17,12 @@
         },
         {
           "description": "TL074/TL072 opamp compensator configurations correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -30,11 +31,12 @@
         },
         {
           "description": "Power regulators correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -45,12 +47,13 @@
       "incorrect": [
         {
           "description": "Q2-Q5 MMBFJ111 JFETs classified as 'mosfet' \u2014 signal_detectors.py hardcodes type='mosfet' for all FETs with no JFET distinction",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q2$"
+            "pattern": "^Q2$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -64,12 +67,13 @@
         },
         {
           "description": "14 of 15 RC filters are opamp feedback R+C pairs (output-to-inverting-input), not standalone filters \u2014 only R35+C32 is genuine",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R35$"
+            "pattern": "^R35$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -81,12 +85,13 @@
         },
         {
           "description": "R27/R28 and R19/R20 voltage dividers are actually opamp feedback networks (R27 is feedback from U2 output to inverting input)",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R19$"
+            "pattern": "^R19$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -103,12 +108,13 @@
       "missed": [
         {
           "description": "U11 LTV-357T optocoupler not detected as isolation component \u2014 only one ground net (GNDD) and 'Isolator' in lib_id doesn't match keyword 'isolated'",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U11$"
+            "pattern": "^U11$",
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [
@@ -140,11 +146,12 @@
       "correct": [
         {
           "description": "TL074/TL072 opamp configurations correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -155,12 +162,13 @@
       "incorrect": [
         {
           "description": "14 of 15 RC filters are opamp feedback pairs, only R33+C27 (VREF filter) is genuine",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R33$"
+            "pattern": "^R33$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -172,12 +180,13 @@
         },
         {
           "description": "U9 unit 2 TL072 classified as 'comparator_or_open_loop' \u2014 feedback through RN7 (resistor_network type) missed because 2-hop detection only looks for 'resistor' type, not 'resistor_network'",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U9$"
+            "pattern": "^U9$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [

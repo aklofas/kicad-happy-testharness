@@ -28,12 +28,13 @@
       "incorrect": [
         {
           "description": "L7805 voltage regulator classified as IC instead of power regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^L7805$"
+            "pattern": "^L7805$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -50,11 +51,12 @@
       "missed": [
         {
           "description": "Analog filter topology not detected despite being the core function of the board (TB-303 VCF)",
-          "analyzer_section": "signal_analysis.filters",
+          "analyzer_section": "detect_filters",
           "check": {
-            "path": "signal_analysis.filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_filters"
           },
           "detector": "filters",
           "subject_refs": [],

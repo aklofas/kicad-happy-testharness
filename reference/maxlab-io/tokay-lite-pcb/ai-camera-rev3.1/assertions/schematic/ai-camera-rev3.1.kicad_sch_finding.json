@@ -9,22 +9,26 @@
       "description": "Power regulators correctly detected",
       "created_from": "FND-00000279",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000279-AST-02",
       "description": "INCORRECT: U8/U7 input_rail=__unnamed_0 instead of named rail \u2014 +3.3VA label removed between rev2 and rev3.1",
       "created_from": "FND-00000279",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U8$"
+        "pattern": "^U8$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

@@ -12,7 +12,7 @@
         },
         {
           "description": "Y1 (32.768kHz) crystal with load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "Y1"
@@ -20,15 +20,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "R11/R12 battery voltage divider correctly found with ratio 0.258",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R11",
@@ -37,28 +38,30 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R11$"
+            "pattern": "^R11$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "LT3652HV feedback dividers correctly identified as feedback networks",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "detector": "feedback_networks",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "validate_feedback_stability"
           }
         },
         {
           "description": "SWD debug interfaces on P2/P3 correctly detected",
-          "analyzer_section": "signal_analysis.debug_interfaces",
+          "analyzer_section": "detect_debug_interfaces",
           "detector": "debug_interfaces",
           "subject_refs": [
             "P2",
@@ -68,40 +71,43 @@
           "confidence": 0.6,
           "expected_value": 3,
           "check": {
-            "path": "signal_analysis.debug_interfaces",
+            "path": "findings",
             "op": "equals",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_debug_interfaces"
           }
         },
         {
           "description": "USB ESD protection (ESD321, TVS0500) correctly identified",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "4 LoRa transceivers correctly found in rf_chains",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "detector": "rf_chains",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           }
         },
         {
           "description": "Level shifters U2/U3 (SN74LVCH245A) correctly identified",
-          "analyzer_section": "signal_analysis.level_shifters",
+          "analyzer_section": "detect_level_shifters",
           "detector": "level_shifters",
           "subject_refs": [
             "U2",
@@ -114,7 +120,7 @@
       "incorrect": [
         {
           "description": "U20/U17 (TPS630701, buck-boost) classified as LDO \u2014 have external inductors L5/L6 not detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "L5",
@@ -126,14 +132,15 @@
           "confidence": 0.6,
           "expected_value": 6,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 6
+            "value": 6,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U11/U13 (LT3652HV) estimated_vout=1.523V wrong \u2014 LT3652 is battery charger with Vref=3.3V not 0.6V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U11",
@@ -144,15 +151,16 @@
           "field": "estimated_vout",
           "expected_value": 1.523,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "estimated_vout",
-            "value": 1.523
+            "value": 1.523,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U20 compensation_capacitors contains 30+ unrelated caps (MCU decoupling, crystal loads)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U20"
@@ -160,17 +168,18 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U20$"
+            "pattern": "^U20$",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "missed": [
         {
           "description": "battery_chargers empty but U11/U13 (LT3652HV) and U15 (BQ25883) are charger ICs",
-          "analyzer_section": "signal_analysis.battery_chargers",
+          "analyzer_section": "detect_battery_chargers",
           "detector": "battery_chargers",
           "subject_refs": [
             "U11",
@@ -182,7 +191,7 @@
         },
         {
           "description": "5 INA230 current monitors (U9/U10/U16/U19/U23) not detected",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "detector": "current_sense",
           "subject_refs": [
             "U10",
@@ -194,15 +203,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^U10$"
+            "pattern": "^U10$",
+            "detector_filter": "detect_current_sense"
           }
         },
         {
           "description": "U6 (MAX708) voltage supervisor IC missed \u2014 only RC reset detected",
-          "analyzer_section": "signal_analysis.reset_supervisors",
+          "analyzer_section": "detect_reset_supervisors",
           "detector": "reset_supervisors",
           "subject_refs": [
             "U6"
@@ -212,20 +222,21 @@
         },
         {
           "description": "LED12-15 (SK68xx NeoPixel) addressable LEDs missed",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "detector": "addressable_led_chains",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {
           "description": "U22 (TPS54226) feedback divider not found, estimated_vout=None",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U22"
@@ -233,23 +244,25 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U22$"
+            "pattern": "^U22$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "4 MCP9700A temperature sensors missed",
-          "analyzer_section": "signal_analysis.sensor_interfaces",
+          "analyzer_section": "detect_sensor_interfaces",
           "detector": "sensor_interfaces",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.sensor_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_sensor_interfaces"
           }
         }
       ],

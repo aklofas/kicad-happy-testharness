@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "MPM3834/MPM3822 switching regulators correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "TPS7A20 LDO correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -34,11 +36,12 @@
         },
         {
           "description": "DDR3L SDRAM interface correctly detected",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],
@@ -47,11 +50,12 @@
         },
         {
           "description": "STM32G431 system controller crystal correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -62,12 +66,13 @@
       "incorrect": [
         {
           "description": "TPSM82864 (U8) feedback divider misidentified \u2014 R78/R79 (100k/100k) are STM32 ADC voltage monitoring dividers on +1V0 rail, not regulator FB divider. TPSM82864 FB pin ties directly to +1V0, voltage set via VSET pin R25.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U8$"
+            "pattern": "^U8$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -81,7 +86,7 @@
         },
         {
           "description": "Duplicate reset_pin observations for U7 (IS21ES08G eMMC) \u2014 emitted 3 times identically",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U7"
@@ -91,7 +96,7 @@
         },
         {
           "description": "has_high_freq=false on +1V35 with 11x 47nF/0201 caps (SRF ~23MHz) \u2014 47nF in 0201 is standard FPGA HF bypass",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "detector": "decoupling_analysis",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -105,11 +110,12 @@
       "missed": [
         {
           "description": "RTL8211F Ethernet PHY interface not detected \u2014 custom lib_id MyLibrary:RTL8211F-CG not matched by Ethernet detector",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],
@@ -139,20 +145,21 @@
       "correct": [
         {
           "description": "All five power regulators correctly detected with accurate feedback divider analysis",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "DDR3L memory interface correctly identified: U1 MT41K256M16TW with 25 shared signal nets to U2 XC7Z020",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "U1",
@@ -161,23 +168,25 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "W25Q128JVS SPI flash correctly detected with 5 shared nets to Zynq",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
@@ -222,7 +231,7 @@
       "missed": [
         {
           "description": "RTL8211F (U3) not detected as Ethernet PHY \u2014 uses custom MyLibrary: lib_id.",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "detector": "ethernet_interfaces",
           "subject_refs": [
             "U3"
@@ -230,15 +239,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_ethernet_interfaces"
           }
         },
         {
           "description": "IS21ES08G eMMC (U7) not detected in memory_interfaces \u2014 uses custom MyLibrary: lib_id.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "U7"
@@ -246,10 +256,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {

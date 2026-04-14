@@ -17,12 +17,13 @@
         },
         {
           "description": "Crystal/resonator circuits Y1 and Y2 (16MHz AWSCR ceramic resonators) detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -34,11 +35,12 @@
         },
         {
           "description": "Ceramic resonators correctly noted as having no external load caps (built-in)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -47,11 +49,12 @@
         },
         {
           "description": "Power regulators detected including LDOs",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -75,12 +78,13 @@
         },
         {
           "description": "MCP1661 (U7) boost converter output_rail listed as +3V8 (which is the input rail VIN). Actual output is +12V via SW->L2->D23 boost topology",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -95,12 +99,13 @@
       "missed": [
         {
           "description": "Boost converter topology (U7 MCP1661: +3V8->SW->L2->D23->+12V) not fully traced through inductor-diode chain",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -132,7 +137,7 @@
       "correct": [
         {
           "description": "U6 (AP2112K-3.3) correctly identified as LDO: input=+3V8, output=+3V3",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U6"
@@ -140,15 +145,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Voltage divider R21/R22 from +12V correctly identified as boost converter feedback to U7 V_FB",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R21",
@@ -158,10 +164,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R21$"
+            "pattern": "^R21$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -174,7 +181,7 @@
         },
         {
           "description": "U13 (ADA4807-2ACP) dual opamp units correctly analyzed as inverting gain=-1",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "U13"
@@ -182,15 +189,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U13$"
+            "pattern": "^U13$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "Q6-Q9 (MMBT3904) correctly detected as LED drivers",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q6",
@@ -201,10 +209,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q6$"
+            "pattern": "^Q6$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
@@ -221,7 +230,7 @@
         },
         {
           "description": "Y1/Y2 (16MHz ceramic resonators) correctly show empty load_caps",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "Y1",
@@ -230,10 +239,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
@@ -248,7 +258,7 @@
         },
         {
           "description": "U7 (MCP1661 boost converter) output_rail reported as '+3V8' \u2014 this is the input. Output is +12V via L2 -> D23 Schottky.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "D23",
@@ -258,15 +268,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U7 design_observation also reports output_rail='+3V8' and input_rail=None, both wrong.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U7"
@@ -282,7 +293,7 @@
       "missed": [
         {
           "description": "Battery management system not detected: BQ2970 (U3, undervoltage protection) + MCP73831 (U5, LiPo charger) + Q3/Q4 (CSD16301Q2 charge/discharge FETs). bms_systems is empty.",
-          "analyzer_section": "signal_analysis.bms_systems",
+          "analyzer_section": "detect_bms_systems",
           "detector": "bms_systems",
           "subject_refs": [
             "Q3",
@@ -293,15 +304,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_bms_systems"
           }
         },
         {
           "description": "Q4 gate net (__unnamed_86) appears disconnected from U3 Cout (__unnamed_74) \u2014 possible schematic wiring gap or netlist extraction issue.",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q4",
@@ -310,10 +322,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q4$"
+            "pattern": "^Q4$",
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],

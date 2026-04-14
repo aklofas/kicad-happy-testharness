@@ -2,16 +2,17 @@
   "file_pattern": "LoLin_Pro_Controller.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -27,12 +28,12 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Rule DC-002 present",
+      "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-002$"
+        "pattern": "^DC\\-001$"
       }
     },
     {
@@ -47,22 +48,22 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "U3 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
       "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC2\\b"
       }
     },
     {

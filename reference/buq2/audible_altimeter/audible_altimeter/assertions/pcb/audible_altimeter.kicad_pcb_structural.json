@@ -2,14 +2,15 @@
   "file_pattern": "audible_altimeter.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 8 decoupling_placement",
+      "description": "Exactly 9 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 8
+        "value": 9
       }
     },
     {
@@ -54,16 +55,6 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U7 in decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "U14 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -73,7 +64,27 @@
       }
     },
     {
+      "id": "STRUCT-00000007",
+      "description": "U4 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U4$"
+      }
+    },
+    {
       "id": "STRUCT-00000008",
+      "description": "U10 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U10$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "U11 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -83,7 +94,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "U13 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -93,38 +104,21 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 2 thermal_analysis.thermal_pads",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 2 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "CON1 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^CON1$"
       }
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 2 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
       "description": "CON1 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^CON1$"

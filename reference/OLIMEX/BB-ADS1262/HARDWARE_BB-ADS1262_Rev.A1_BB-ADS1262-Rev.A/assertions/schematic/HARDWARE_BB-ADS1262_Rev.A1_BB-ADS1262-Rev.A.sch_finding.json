@@ -9,36 +9,42 @@
       "description": "The schematic contains two resistor divider feedback networks: R17 (9.1K_1%) + R18 (1.05K_1%) set the output voltage of the MT3608 boost converter (U2), and R27 (5.6K_1%) + R28 (1.05K_1%) set the output voltage of the AP2127K-ADJ LDO (U3). Both 'voltage_dividers' and 'feedback_networks' arrays are empty in the output. These are textbook voltage-setting feedback dividers on adjustable regulators and should be detected.",
       "created_from": "FND-00000383",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000383-AST-02",
       "description": "The Rev.A output correctly generates a 'regulator_caps' design observation for both U2 (MT3608 switching) and U3 (AP2127K-ADJ LDO). The Rev.A1 output only generates the observation for U3 but omits U2. In both schematic versions the boost converter U2 has its input/output capacitors on unnamed internal nets, so U2's regulator_caps observation should also be flagged in Rev.A1. The difference appears to be a net-numbering side-effect where Rev.A1 resolves the MT3608 input differently.",
       "created_from": "FND-00000383",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "category": "regulator_caps",
           "component": "U2"
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000383-AST-03",
       "description": "The boost converter (U2/MT3608) has C18 (22uF/6.3V) on the input and C19 (22uF/10V) on the output. The LDO (U3/AP2127K-ADJ) has C21 (1uF) on its output. Because these capacitors sit on unnamed internal nets rather than named power rails (+5VA, +3.3VD), they are entirely absent from the decoupling_analysis. The analysis reports only 2 caps on +5VA (C3 100nF + C22 1uF) and 1 cap on +3.3VD (C2 100nF), missing the bulk storage caps for the boost/LDO stages. This leads to a misleading picture of decoupling coverage.",
       "created_from": "FND-00000383",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "count_matches",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

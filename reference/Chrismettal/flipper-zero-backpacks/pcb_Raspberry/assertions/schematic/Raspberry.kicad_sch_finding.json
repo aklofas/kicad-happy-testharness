@@ -9,10 +9,12 @@
       "description": "The crystal circuit analyzer detects Y1 (32.768kHz) connected to the PCF8523T RTC (U1) and reports load_caps=[] (empty). This is correct\u2014the PCF8523 has integrated crystal load capacitors internally, so no external load caps are needed or present in the schematic. The crystal connects directly to OSCI/OSCO pins of the PCF8523.",
       "created_from": "FND-00002092",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].load_caps",
+        "path": "findings[0].load_caps",
         "op": "max_count",
-        "value": 0
-      }
+        "value": 0,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].load_caps"
     }
   ]
 }

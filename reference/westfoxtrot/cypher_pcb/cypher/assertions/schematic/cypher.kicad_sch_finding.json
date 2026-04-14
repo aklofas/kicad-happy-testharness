@@ -9,20 +9,24 @@
       "description": "1 LDO correctly detected",
       "created_from": "FND-00000235",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000235-AST-02",
       "description": "5 protection devices correctly detected",
       "created_from": "FND-00000235",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

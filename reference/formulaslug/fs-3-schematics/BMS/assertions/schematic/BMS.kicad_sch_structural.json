@@ -2,86 +2,95 @@
   "file_pattern": "BMS.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 bms_systems",
+      "description": "Exactly 9 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.bms_systems",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 audit_led_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 detect_bms_systems",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_bms_systems",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000002",
-      "description": "U3 in bms_systems",
+      "id": "STRUCT-00000004",
+      "description": "U3 in detect_bms_systems",
       "check": {
-        "path": "signal_analysis.bms_systems",
+        "path": "findings",
+        "detector_filter": "detect_bms_systems",
         "op": "contains_match",
         "field": "bms_reference",
         "pattern": "^U3$"
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 3 design_observations",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 3 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 3
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 9 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 9
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 2 led_audit",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 1 detect_integrated_ldos",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_integrated_ldos",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U3 in power_regulators",
+      "description": "Exactly 6 detect_led_drivers",
       "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U3$"
+        "path": "findings",
+        "detector_filter": "detect_led_drivers",
+        "op": "equals",
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 9 rc_filters",
+      "description": "Exactly 9 detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 9
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "R2 in rc_filters",
+      "description": "R2 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R2$"
@@ -89,9 +98,10 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R32 in rc_filters",
+      "description": "R32 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R32$"
@@ -99,9 +109,10 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R3 in rc_filters",
+      "description": "R3 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R3$"
@@ -109,9 +120,10 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R5 in rc_filters",
+      "description": "R5 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R5$"
@@ -119,9 +131,10 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R18 in rc_filters",
+      "description": "R18 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R18$"
@@ -129,9 +142,10 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R22 in rc_filters",
+      "description": "R22 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R22$"
@@ -139,9 +153,10 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R26 in rc_filters",
+      "description": "R26 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R26$"
@@ -149,9 +164,10 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "R36 in rc_filters",
+      "description": "R36 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R36$"
@@ -159,9 +175,10 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "R45 in rc_filters",
+      "description": "R45 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R45$"
@@ -169,90 +186,43 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 4 suggested_certifications",
+      "description": "Exactly 4 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000019",
-      "description": "Exactly 7 transistor_circuits",
+      "description": "Exactly 1 detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "equals",
-        "value": 7
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000020",
-      "description": "Q3 in transistor_circuits",
+      "description": "Q1 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q3$"
+        "pattern": "^Q1$"
       }
     },
     {
       "id": "STRUCT-00000021",
-      "description": "Q4 in transistor_circuits",
+      "description": "Exactly 1 validate_led_resistors",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
-      "description": "Q5 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
-      "description": "Q6 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q6$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
-      "description": "Q7 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
-      "description": "Q8 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000026",
-      "description": "Q1 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q1$"
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

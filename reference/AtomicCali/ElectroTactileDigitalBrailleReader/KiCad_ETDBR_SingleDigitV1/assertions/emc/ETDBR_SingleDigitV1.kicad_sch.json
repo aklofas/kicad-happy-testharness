@@ -1,16 +1,17 @@
 {
   "file_pattern": "ETDBR_SingleDigitV1.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~13 (tolerance 10%)",
+      "description": "Finding count ~7 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -25,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "low count ~11",
+      "description": "low count ~3",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 2,
+        "max": 4
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~80 (+-10)",
+      "description": "EMC risk score ~86.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 70,
-        "max": 90
+        "min": 76.5,
+        "max": 96.5
       }
     },
     {
@@ -56,13 +57,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "11 io_filtering finding(s)",
+      "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 11
+        "value": 3
       }
     },
     {
@@ -96,11 +97,11 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "~10 probe point(s) in test plan",
+      "description": "~2 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 9
+        "value": 1
       }
     },
     {

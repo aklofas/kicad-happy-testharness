@@ -17,11 +17,12 @@
         },
         {
           "description": "LM2596 switching regulator correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -30,11 +31,12 @@
         },
         {
           "description": "RC filters for audio path correctly identified",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -45,12 +47,13 @@
       "incorrect": [
         {
           "description": "10 transistors (Q5-Q12 2SA1175 PNP + Q13/Q14 ZVN2106A MOSFET) falsely identified as driving LED D1 \u2014 D1 is standalone (anode +5V, cathode through R3 470ohm to GND), no shared nets with any transistor",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q10$"
+            "pattern": "^Q10$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -72,12 +75,13 @@
         },
         {
           "description": "Q13/Q14 gate_driver_ics inflated to 19 ICs \u2014 gates statically biased at +3.3V, analyzer traverses entire +3.3V power net listing all connected ICs as gate drivers",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q13$"
+            "pattern": "^Q13$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -91,12 +95,13 @@
       "missed": [
         {
           "description": "LM311N comparator (U18) and LM386N audio amplifier (U19) not detected in opamp_circuits \u2014 both are central ZX Spectrum functional circuits",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U18$"
+            "pattern": "^U18$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [

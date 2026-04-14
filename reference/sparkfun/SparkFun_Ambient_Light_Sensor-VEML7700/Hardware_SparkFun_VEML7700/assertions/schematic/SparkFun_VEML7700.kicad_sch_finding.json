@@ -31,11 +31,13 @@
       "description": "INCORRECT: R2 (2.2k) is on the SCL net (pin 1) with its other end (pin 2) connected through JP2 to the 3.3V rail. R6 (2.2k) mirrors this on SDA. These are the on-board I2C pull-ups (switchable via JP2). The analyzer reports has_pullup: false and pullup_resistor: null for both SCL and SDA in design_observations. The pull-up resistors feed through a 3-pin solder jumper (JP2) which has a middle tap connected to 3.3V \u2014 the analyzer fails to trace through the jumper to find the power rail connection, so the pull-up topology goes undetected.",
       "created_from": "FND-00001412",
       "check": {
-        "path": "signal_analysis.design_observations[0].has_pullup",
+        "path": "findings[0].has_pullup",
         "value": true,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[0].has_pullup"
     }
   ]
 }

@@ -2,14 +2,15 @@
   "file_pattern": "underglow2.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 15 decoupling_placement",
+      "description": "Exactly 16 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 15
+        "value": 16
       }
     },
     {
@@ -44,6 +45,16 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "U503 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U503$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "U601 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -53,7 +64,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "U303 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -63,7 +74,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "U301 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -73,7 +84,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U306 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -83,7 +94,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "U401 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -93,7 +104,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "U302 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -103,7 +114,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "U308 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -113,7 +124,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "U802 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -123,7 +134,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "U304 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -133,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "U202 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -143,7 +154,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "U307 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -153,7 +164,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "U201 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -163,687 +174,724 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 thermal_analysis.thermal_pads",
+      "id": "STRUCT-00000018",
+      "description": "Exactly 2 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
-      "description": "U801 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U801$"
       }
     },
     {
       "id": "STRUCT-00000019",
-      "description": "U601 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U601$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
-      "description": "Exactly 2 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "U801 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U801$"
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000020",
       "description": "U601 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U601$"
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000021",
       "description": "Exactly 62 tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "equals",
         "value": 62
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000022",
       "description": "C401 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C401$"
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000023",
       "description": "C402 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C402$"
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000024",
       "description": "C502 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C502$"
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000025",
       "description": "C503 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C503$"
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000026",
       "description": "C504 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C504$"
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000027",
       "description": "C505 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C505$"
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000028",
       "description": "C506 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C506$"
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000029",
       "description": "C507 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C507$"
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000030",
       "description": "C508 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C508$"
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000031",
       "description": "C509 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C509$"
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000032",
       "description": "C510 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C510$"
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000033",
       "description": "C511 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C511$"
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000034",
       "description": "C512 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C512$"
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000035",
       "description": "C513 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C513$"
       }
     },
     {
-      "id": "STRUCT-00000038",
+      "id": "STRUCT-00000036",
       "description": "C514 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C514$"
       }
     },
     {
-      "id": "STRUCT-00000039",
+      "id": "STRUCT-00000037",
       "description": "C515 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C515$"
       }
     },
     {
-      "id": "STRUCT-00000040",
+      "id": "STRUCT-00000038",
       "description": "C516 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C516$"
       }
     },
     {
-      "id": "STRUCT-00000041",
+      "id": "STRUCT-00000039",
       "description": "C517 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C517$"
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000040",
       "description": "C518 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C518$"
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000041",
       "description": "C519 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C519$"
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000042",
       "description": "C520 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C520$"
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000043",
       "description": "C521 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C521$"
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000044",
       "description": "C604 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C604$"
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000045",
       "description": "C606 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C606$"
       }
     },
     {
-      "id": "STRUCT-00000048",
+      "id": "STRUCT-00000046",
       "description": "C607 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C607$"
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000047",
       "description": "C608 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C608$"
       }
     },
     {
-      "id": "STRUCT-00000050",
+      "id": "STRUCT-00000048",
       "description": "C609 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C609$"
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000049",
       "description": "C610 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C610$"
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000050",
       "description": "C611 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C611$"
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000051",
       "description": "C612 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C612$"
       }
     },
     {
-      "id": "STRUCT-00000054",
+      "id": "STRUCT-00000052",
       "description": "C613 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C613$"
       }
     },
     {
-      "id": "STRUCT-00000055",
+      "id": "STRUCT-00000053",
       "description": "C614 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C614$"
       }
     },
     {
-      "id": "STRUCT-00000056",
+      "id": "STRUCT-00000054",
       "description": "C615 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C615$"
       }
     },
     {
-      "id": "STRUCT-00000057",
+      "id": "STRUCT-00000055",
       "description": "C616 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C616$"
       }
     },
     {
-      "id": "STRUCT-00000058",
+      "id": "STRUCT-00000056",
       "description": "C617 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C617$"
       }
     },
     {
-      "id": "STRUCT-00000059",
+      "id": "STRUCT-00000057",
       "description": "C618 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C618$"
       }
     },
     {
-      "id": "STRUCT-00000060",
+      "id": "STRUCT-00000058",
       "description": "C801 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C801$"
       }
     },
     {
-      "id": "STRUCT-00000061",
+      "id": "STRUCT-00000059",
       "description": "C802 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C802$"
       }
     },
     {
-      "id": "STRUCT-00000062",
+      "id": "STRUCT-00000060",
       "description": "C805 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C805$"
       }
     },
     {
-      "id": "STRUCT-00000063",
+      "id": "STRUCT-00000061",
       "description": "C807 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C807$"
       }
     },
     {
-      "id": "STRUCT-00000064",
+      "id": "STRUCT-00000062",
       "description": "C808 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C808$"
       }
     },
     {
-      "id": "STRUCT-00000065",
+      "id": "STRUCT-00000063",
       "description": "C809 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C809$"
       }
     },
     {
-      "id": "STRUCT-00000066",
+      "id": "STRUCT-00000064",
       "description": "C810 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C810$"
       }
     },
     {
-      "id": "STRUCT-00000067",
+      "id": "STRUCT-00000065",
       "description": "C811 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C811$"
       }
     },
     {
-      "id": "STRUCT-00000068",
+      "id": "STRUCT-00000066",
       "description": "C812 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C812$"
       }
     },
     {
-      "id": "STRUCT-00000069",
+      "id": "STRUCT-00000067",
       "description": "C813 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C813$"
       }
     },
     {
-      "id": "STRUCT-00000070",
+      "id": "STRUCT-00000068",
       "description": "C814 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C814$"
       }
     },
     {
-      "id": "STRUCT-00000071",
+      "id": "STRUCT-00000069",
       "description": "C826 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C826$"
       }
     },
     {
-      "id": "STRUCT-00000072",
+      "id": "STRUCT-00000070",
       "description": "C827 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C827$"
       }
     },
     {
-      "id": "STRUCT-00000073",
+      "id": "STRUCT-00000071",
       "description": "C828 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C828$"
       }
     },
     {
-      "id": "STRUCT-00000074",
+      "id": "STRUCT-00000072",
       "description": "C829 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^C829$"
       }
     },
     {
-      "id": "STRUCT-00000075",
+      "id": "STRUCT-00000073",
       "description": "L601 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^L601$"
       }
     },
     {
-      "id": "STRUCT-00000076",
+      "id": "STRUCT-00000074",
       "description": "L805 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^L805$"
       }
     },
     {
-      "id": "STRUCT-00000077",
+      "id": "STRUCT-00000075",
       "description": "R402 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R402$"
       }
     },
     {
-      "id": "STRUCT-00000078",
+      "id": "STRUCT-00000076",
       "description": "R501 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R501$"
       }
     },
     {
-      "id": "STRUCT-00000079",
+      "id": "STRUCT-00000077",
       "description": "R503 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R503$"
       }
     },
     {
-      "id": "STRUCT-00000080",
+      "id": "STRUCT-00000078",
       "description": "R504 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R504$"
       }
     },
     {
-      "id": "STRUCT-00000081",
+      "id": "STRUCT-00000079",
       "description": "R505 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R505$"
       }
     },
     {
-      "id": "STRUCT-00000082",
+      "id": "STRUCT-00000080",
       "description": "R605 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R605$"
       }
     },
     {
-      "id": "STRUCT-00000083",
+      "id": "STRUCT-00000081",
       "description": "R608 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R608$"
       }
     },
     {
-      "id": "STRUCT-00000084",
+      "id": "STRUCT-00000082",
       "description": "R801 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R801$"
       }
     },
     {
-      "id": "STRUCT-00000085",
+      "id": "STRUCT-00000083",
       "description": "R802 in tombstoning_risk",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R802$"

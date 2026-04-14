@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Three crystal circuits correctly detected: Q1 (8.0MHz/20pF) with C13/C14 (33pF) giving 19.5pF effective load, Q2 (32.768KHz/12.5pF) with C15/C16 (33pF), and Q3 (40.000MHz/12pF) with C20/C21 (22pF) giving 14pF effective load",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^C13$"
+            "pattern": "^C13$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -32,12 +33,13 @@
         },
         {
           "description": "D2 (SMBJ6.0A) correctly detected as TVS protection diode on +5V rail clamping to GND",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D2$"
+            "pattern": "^D2$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -48,12 +50,13 @@
         },
         {
           "description": "D1 (1N5822/SS34) correctly detected as reverse polarity protection between +5V_EXT and +5V",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -64,11 +67,12 @@
         },
         {
           "description": "I2C bus correctly detected on SCL (RB8/SCL1) and SDA (RB9/SDA1) nets with pullups R42/R43 to +3.3V, devices U6 (ATECC508A), U1 (PIC32MX), U5 (ESP32)",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -83,12 +87,13 @@
         },
         {
           "description": "Memory interface U8 (LY68S3200SLT PSRAM) correctly detected with 3 shared signals to U5 (ESP32)",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -100,12 +105,13 @@
         },
         {
           "description": "Memory interface U7 (MX25U3235F flash) correctly detected connected to U5 (ESP32)",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -117,11 +123,12 @@
         },
         {
           "description": "Decoupling analysis: +5V rail with 3x 47uF (141uF total), +3.3V with 12 caps (49.8uF), +1.8V with 3 caps (1.2uF) all correctly tallied",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -130,12 +137,13 @@
         },
         {
           "description": "LC filter L5 (2.4nH)/C30 (4.7pF) resonating at 1.50 GHz correctly detected - this is the ESP32 2.4GHz antenna matching network",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L5$"
+            "pattern": "^L5$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [
@@ -147,12 +155,13 @@
         },
         {
           "description": "RC filter R1/C1 at 159 Hz and R2/C1+C17 at 723 Hz correctly detected on MCLR reset circuit",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R1$"
+            "pattern": "^R1$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -166,12 +175,13 @@
         },
         {
           "description": "Voltage divider R23/R22 (4.99k/10k) at ratio 0.667 feeding USB-OTG fault detection pin correctly detected",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R22$"
+            "pattern": "^R22$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -203,12 +213,13 @@
       "incorrect": [
         {
           "description": "U3 (SY8089AAAC) switching regulator detected with input_rail=GND which is wrong. The SY8089 input comes from +5V rail. The analyzer may be confusing the GND pin with the VIN pin",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -219,12 +230,13 @@
         },
         {
           "description": "U3 (SY8089) regulator is missing output_rail and inductor detection. The SY8089 LX pin connects to the inductor and the output should be +3.3V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -235,12 +247,13 @@
         },
         {
           "description": "Voltage divider R18/R19 (4.99k/1.1k) mid_point connected to U3 pin 3 (LX). This is actually the feedback divider for the SY8089 buck converter (FB pin, not LX), suggesting pin mapping is incorrect for this part",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R18$"
+            "pattern": "^R18$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -253,11 +266,12 @@
         },
         {
           "description": "Voltage divider R10/R11 (1.1k/10k) at ratio 0.90 with mid_point connection to THERM1 is detected as a voltage divider. While technically a divider, this is a thermistor circuit for battery temperature sensing, not a signal divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "equals",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -270,7 +284,7 @@
         },
         {
           "description": "Regulator caps observation says missing input cap on GND for U3 - this is a consequence of the incorrect input_rail=GND detection",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U3"
@@ -282,12 +296,13 @@
       "missed": [
         {
           "description": "MCP73833 (U2) LiPo battery charger IC not detected in bms_systems. It manages battery charging with STAT1/STAT2 outputs and PG (power good) indicator",
-          "analyzer_section": "signal_analysis.bms_systems",
+          "analyzer_section": "detect_bms_systems",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_bms_systems"
           },
           "detector": "bms_systems",
           "subject_refs": [
@@ -298,12 +313,13 @@
         },
         {
           "description": "SY6280AAC (U4) USB power switch not detected. It controls +5V_USB-OTG power with overcurrent/fault protection - this is a notable power management component",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U4$"
+            "pattern": "^U4$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -314,11 +330,12 @@
         },
         {
           "description": "ESP32 antenna matching network (L5/C30 LC detected) should also include the nearby components L4, C29, C28 which form the complete RF matching network to ANT1",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "equals",
-            "value": 30
+            "value": 30,
+            "detector_filter": "detect_rf_matching"
           },
           "detector": "rf_matching",
           "subject_refs": [
@@ -349,7 +366,7 @@
       "correct": [
         {
           "description": "Three crystal circuits correctly identified: Q1 (8MHz/PIC32, CL_eff=19.5pF vs 20pF spec), Q2 (32.768kHz/PIC32, CL_eff=19.5pF vs 12.5pF spec), Q3 (40MHz/ESP32, CL_eff=14pF vs 12pF spec) with correct load cap refs",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "Q1",
@@ -359,15 +376,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "R18 (4.99k) / R19 (1.1k) correctly identified as voltage divider with ratio 0.1806 and nets +3.3V top / GND bottom",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R18",
@@ -376,15 +394,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R18$"
+            "pattern": "^R18$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "D2 (SMBJ6.0A) correctly identified as TVS protection on +5V rail clamping to GND",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "D2"
@@ -392,15 +411,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D2$"
+            "pattern": "^D2$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "D1 (SS34) correctly identified as reverse_polarity protection between +5V_EXT and +5V",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "D1"
@@ -408,15 +428,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "I2C bus on SCL/SDA nets correctly detected with U6, U1, U5 as devices, R42/R43 (2.2k) pullups to +3.3V",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "R42",
@@ -430,33 +451,35 @@
         },
         {
           "description": "Decoupling analysis correctly identifies 4 rails: +5V (141uF/3 caps), +3.3V (49.8uF/12 caps), +5V_USB-OTG (0.1uF/1 cap), +1.8V (1.2uF/3 caps)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "detector": "decoupling_analysis",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
           "description": "LED audit correctly identifies PWRLED1, COMPLETE1, CHARGING1, PWR_GOOD1 with correct series resistors (all 2.2k) and supply net +5V",
-          "analyzer_section": "signal_analysis.led_audit",
+          "analyzer_section": "audit_led_circuits",
           "detector": "led_audit",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.led_audit",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "audit_led_circuits"
           }
         },
         {
           "description": "Memory interfaces U8 (PSRAM) and U7 (flash) correctly detected with ESP32 U5 as connected processor",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "U5",
@@ -466,15 +489,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "LC filter L5 (2.4nH) / C30 (4.7pF) correctly identified at 1.50 GHz resonance - this is the ESP32 antenna matching network",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "detector": "lc_filters",
           "subject_refs": [
             "C30",
@@ -483,15 +507,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L5$"
+            "pattern": "^L5$",
+            "detector_filter": "detect_lc_filters"
           }
         },
         {
           "description": "R10 (1.1k) / R11 (10k) voltage divider correctly identified - this is the MCP73833 THERM thermistor voltage divider with THERM1 test pad at midpoint",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R10",
@@ -500,10 +525,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R10$"
+            "pattern": "^R10$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -516,7 +542,7 @@
         },
         {
           "description": "RC filter R21 (10k) / C32 (100nF) at 159.15 Hz correctly identified as ESP32_EN reset RC delay circuit",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [
             "C32",
@@ -525,30 +551,32 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R21$"
+            "pattern": "^R21$",
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "ESD coverage audit correctly flags USB-OTG1 as high_risk with no ESD protection on D+/D-/ID lines",
-          "analyzer_section": "signal_analysis.esd_coverage_audit",
+          "analyzer_section": "audit_esd_protection",
           "detector": "esd_coverage_audit",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.esd_coverage_audit",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "audit_esd_protection"
           }
         }
       ],
       "incorrect": [
         {
           "description": "U3 (SY8089) power_regulator input_rail is null - should be the battery/5V input rail. The schematic shows U3 pin 4 (IN) connected to the battery charger output path via FET2 and D3",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "D3",
@@ -557,15 +585,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U3 (SY8089) output_rail shows __unnamed_4 instead of +3.3V. The inductor L2 output connects to the +3.3V power symbol",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "L2",
@@ -574,15 +603,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Voltage divider R18/R19 midpoint shows connection to U3 pin 3 (LX) which is the switching node output, not the feedback pin. The midpoint should connect to U3 pin 5 (FB)",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R18",
@@ -592,15 +622,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R18$"
+            "pattern": "^R18$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "U4 (SY6280AAC) power_path entry has input_rail='RB14/USB-OTG_EN(VBUSON)' and output_rail='GND'. The SY6280 IN connects to +5V, OUT goes to +5V_USB-OTG, EN is controlled by RB14. The analyzer confused the enable pin with the input rail",
-          "analyzer_section": "signal_analysis.power_path",
+          "analyzer_section": "detect_power_path",
           "detector": "power_path",
           "subject_refs": [
             "U4"
@@ -630,7 +661,7 @@
         },
         {
           "description": "R23/R22 voltage divider: this is really a pull-up/pull-down resistor network on a USB-OTG FAULT status signal, not a classical voltage divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R22",
@@ -639,17 +670,18 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R22$"
+            "pattern": "^R22$",
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
       "missed": [
         {
           "description": "U2 (MCP73833) LiPo battery charger IC not detected in battery_chargers. It manages battery charging with STAT1/STAT2 outputs and PG indicator, PROG pin R6=2.2k sets charge current to ~455mA",
-          "analyzer_section": "signal_analysis.battery_chargers",
+          "analyzer_section": "detect_battery_chargers",
           "detector": "battery_chargers",
           "subject_refs": [
             "R6",
@@ -660,7 +692,7 @@
         },
         {
           "description": "Power path management circuit with FET1 and FET2 (WPM2015 P-MOSFETs) not detected. FET1 provides power OR-ing between +5V_EXT and +5V_USB-OTG. FET2 manages battery/charger output to buck converter U3",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "U3"
@@ -668,15 +700,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "SD/MMC card interface not detected as a bus protocol. MICRO_SD1 connector connects via series resistors to ESP32 HS2_xxx SDIO pins with pullups R27-R30",
-          "analyzer_section": "signal_analysis.bus_protocols",
+          "analyzer_section": "detect_bus_protocols",
           "detector": "bus_protocols",
           "subject_refs": [
             "R27",
@@ -689,7 +722,7 @@
         },
         {
           "description": "USB-OTG interface not detected. USB-OTG1 micro-USB connector with D+/D- through ferrite L3 to PIC32 USB pins, ID pin to RB5, VBUS through load switch U4",
-          "analyzer_section": "signal_analysis.usb_interfaces",
+          "analyzer_section": "detect_usb_interfaces",
           "detector": "usb_interfaces",
           "subject_refs": [
             "L3",
@@ -700,7 +733,7 @@
         },
         {
           "description": "ESP32 auto-programming circuit with D4 (BAT54C) and transistor logic using DTR/RTS to control ESP32_EN and GPIO0 for boot mode selection",
-          "analyzer_section": "signal_analysis.debug_interfaces",
+          "analyzer_section": "detect_debug_interfaces",
           "detector": "debug_interfaces",
           "subject_refs": [
             "D4"
@@ -710,7 +743,7 @@
         },
         {
           "description": "1.8V power domain for flash and PSRAM: R30 (2.2k) pulls GPIO12 to +3.3V which configures ESP32 internal LDO to output 1.8V on VDD_SDIO",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "R30"
@@ -720,7 +753,7 @@
         },
         {
           "description": "UART bridge between PIC32 (U1) and ESP32 (U5) not detected. RC7/U1TXD and RC6/U1RXD connect to ESP32 GPIO3/U0RXD and GPIO1/U0TXD through R33, R34 (220R)",
-          "analyzer_section": "signal_analysis.bus_protocols",
+          "analyzer_section": "detect_bus_protocols",
           "detector": "bus_protocols",
           "subject_refs": [
             "R33",
@@ -733,16 +766,17 @@
         },
         {
           "description": "SPI bus between PIC32 and ESP32 not detected. Shared VSPI signals: GPIO18/VSPICLK, GPIO19/VSPIQ, GPIO23/VSPID, GPIO5/VSPICS0",
-          "analyzer_section": "signal_analysis.bus_protocols",
+          "analyzer_section": "detect_bus_protocols",
           "detector": "bus_protocols",
           "subject_refs": [],
           "expected_relation": "count_equals",
           "confidence": 0.6,
           "expected_value": 32,
           "check": {
-            "path": "signal_analysis.bus_protocols",
+            "path": "findings",
             "op": "equals",
-            "value": 32
+            "value": 32,
+            "detector_filter": "detect_bus_protocols"
           }
         }
       ],

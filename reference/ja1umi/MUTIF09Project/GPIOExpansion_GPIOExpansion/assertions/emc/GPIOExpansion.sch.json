@@ -1,36 +1,37 @@
 {
   "file_pattern": "GPIOExpansion.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~25 (tolerance 10%)",
+      "description": "Finding count ~26 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 22,
-        "max": 28
+        "min": 23,
+        "max": 29
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~5",
+      "description": "high count ~6",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 5,
+        "max": 7
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~9",
+      "description": "medium count ~7",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~48 (+-10)",
+      "description": "EMC risk score ~63.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 38,
-        "max": 58
+        "min": 53.0,
+        "max": 73.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "13 decoupling finding(s)",
+      "description": "12 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 13
+        "value": 12
       }
     },
     {

@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "5 regulators correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -23,7 +24,7 @@
       "incorrect": [
         {
           "description": "2 RF matching networks falsely detected - L1 ferrite bead EMI filter and C12 decoupling capacitor misidentified as RF matching",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "detector": "rf_matching",
           "subject_refs": [
             "C12",
@@ -34,7 +35,7 @@
         },
         {
           "description": "RC filter count includes feedback networks that are not signal filters",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "not_in_detector",

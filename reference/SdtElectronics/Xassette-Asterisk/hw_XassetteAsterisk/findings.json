@@ -26,20 +26,22 @@
         },
         {
           "description": "Analyzer finds 5 power regulators: U3, U4, U5 (SY8089AAAC switching), U6 (SY7201ABC boost), U7 (XC6206PxxxMR LDO). This is consistent with the multi-rail power supply design visible in the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 5,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Y1 and Y2 are both found with correct load capacitor pairs (18pF each, effective load 12pF). Y2 at 24MHz is the USB PHY crystal. Both crystal circuits correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {

@@ -9,11 +9,13 @@
       "description": "INCORRECT: Fourier right has 39 actual key switches and 4 named row nets (rowA\u2013rowD). The topology detector reports 5 rows and 18 columns but places 'rowA' in both row_nets and col_nets \u2014 a net cannot be both a row and column driver. switches_on_matrix=56 and diodes_on_matrix=56 significantly exceed the 39 actual switches (44% overcount). This is the same topology detection failure as the left half.",
       "created_from": "FND-00002181",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "op": "less_than",
-        "value": 45
+        "value": 45,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     }
   ]
 }

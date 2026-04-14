@@ -53,22 +53,25 @@
       "description": "placement_analysis.edge_clearance_warnings shows USB1 on B.Cu with edge_clearance_mm=-0.35. This is expected and intentional: the USB Type-A plug extends beyond the PCB edge by design so it can plug into a host port. The detection is accurate.",
       "created_from": "FND-00001900",
       "check": {
-        "path": "placement_analysis.edge_clearance_warnings[0].component",
+        "path": "findings[0].component",
         "value": "USB1",
         "op": "equals"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings[0].component"
     },
     {
       "id": "FND-00001900-AST-06",
       "description": "tombstoning_risk lists multiple 0402 capacitors (C10, C11, etc.) as medium risk where one pad connects to a GND pour and the other to a signal net. This is a standard SMT assembly concern for small-body passives adjacent to ground pours.",
       "created_from": "FND-00001900",
       "check": {
-        "path": "tombstoning_risk[0].risk_level",
+        "path": "findings[0].risk_level",
         "value": "medium",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "analyze_tombstoning_risk"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: tombstoning_risk[0].risk_level"
     },
     {
       "id": "FND-00001900-AST-07",

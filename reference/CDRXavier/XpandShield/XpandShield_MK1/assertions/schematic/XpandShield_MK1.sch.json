@@ -1,7 +1,8 @@
 {
   "file_pattern": "XpandShield_MK1.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,36 +35,49 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 battery_chargers detected",
+      "description": "2 audit_led_circuits detected",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All battery_chargers have charger_reference",
+      "description": "1 detect_battery_chargers detected",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All detect_battery_chargers have charger_reference",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
         "op": "not_contains_match",
         "field": "charger_reference",
         "pattern": "^$"
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "All battery_chargers charger_type values are valid",
+      "id": "SEED-00000008",
+      "description": "All detect_battery_chargers charger_type values are valid",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
         "op": "count_matches",
         "field": "charger_type",
         "pattern": "^(single_cell_linear|single_cell_switching|standalone_protection)$",
@@ -71,51 +85,21 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "2 led_audit detected",
+      "id": "SEED-00000009",
+      "description": "4 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "All led_audit have ref",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
       "id": "SEED-00000010",
-      "description": "All led_audit type values are valid",
+      "description": "4 validate_led_resistors detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "All led_audit drive_method values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "4 suggested_certifications detected",
-      "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
         "op": "min_count",
         "value": 1
       }

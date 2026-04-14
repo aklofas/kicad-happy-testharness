@@ -9,11 +9,13 @@
       "description": "INCORRECT: U3 LM2574 is detected as a power_regulator but assigned topology 'LDO'. The LM2574 is a 500mA Step-Down (Buck) Switching Voltage Regulator with an external inductor on the output \u2014 not a linear/LDO regulator. This is a fundamentally different circuit topology. LM317K (U6) is also in this schematic and IS correctly an LDO, which may explain how the LDO logic fired for both.",
       "created_from": "FND-00002163",
       "check": {
-        "path": "signal_analysis.power_regulators[0].topology",
+        "path": "findings[0].topology",
         "op": "equals",
-        "value": "LDO"
+        "value": "LDO",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].topology"
     },
     {
       "id": "FND-00002163-AST-02",

@@ -8,27 +8,27 @@
       "correct": [
         {
           "description": "signal_analysis.key_matrices reports rows=5, cols=14, estimated_keys=70, detection_method=net_name. Matches the 70 S-refs and 70 D-refs in the schematic exactly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "statistics.component_types matches the schematic: all 141 total components parsed correctly, with proper typing of D-refs as diode, S-refs as switch, U1 as ic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The schematic has no power symbols (only ESP32 module and passive keyboard matrix), so empty power_rails and empty pwr_flag_warnings is correct behavior.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -53,9 +53,9 @@
       "correct": [
         {
           "description": "The .kicad_pcb source file contains only layer definitions and a single empty net \u2014 no footprints, no tracks, no vias. The analyzer correctly reports all zeros and routing_complete=true (nothing to route).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

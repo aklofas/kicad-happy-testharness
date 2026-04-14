@@ -17,29 +17,32 @@
         },
         {
           "description": "The key matrix detector correctly finds 5 rows (ROW0-ROW4) and 14 columns (COL0-COL13), estimated_keys=67, switches_on_matrix=67, diodes_on_matrix=67. This matches the JIS 60% layout with 67 keys.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "U4 (W25Q16JVUXIQ) flash connected to U3 (RP2040) via 6 shared signal nets is correctly detected as a memory interface. The total_pins=8 matches the W25Q16's package.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "U1 is correctly identified as a fixed 3.3V LDO (topology=LDO, input=+5V, output=+3V3, estimated_vout=3.3, vref_source=fixed_suffix). The vref is inferred from the part number suffix '332' meaning 3.32V.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

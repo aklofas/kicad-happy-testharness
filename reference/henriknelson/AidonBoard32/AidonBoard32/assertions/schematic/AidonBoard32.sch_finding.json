@@ -9,22 +9,26 @@
       "description": "INCORRECT: Q4 (MMBT3904) has collector tied to GND and emitter on UART_RX \u2014 it is a signal inverter/level-shifter for the HAN_OUT\u2192UART_RX path, not a LED driver. The analyzer associates it with LED D4 via the led_driver field, but D4/R8 are connected from +3.3V to a net that is not in Q4's collector path. The load_type should not be 'led' and led_driver should be null for Q4.",
       "created_from": "FND-00000364",
       "check": {
-        "path": "signal_analysis.transistor_circuits[3].load_type",
+        "path": "findings[3].load_type",
         "op": "eq",
-        "value": "led"
+        "value": "led",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[3].load_type"
     },
     {
       "id": "FND-00000364-AST-02",
       "description": "INCORRECT: The analyzer lists U2 (CP2102N) in Q1's gate_driver_ics because U2's SUSPEND output pin connects to the VBUS net, which is also Q1's gate net. However, SUSPEND is an output pin that happens to land on VBUS; U2 is not intentionally driving Q1's gate for switching. Q1's gate is at VBUS potential via the VBUS rail, with R1 (100K) to GND for bias \u2014 no IC is driving the gate as a switch.",
       "created_from": "FND-00000364",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].gate_driver_ics",
+        "path": "findings[0].gate_driver_ics",
         "op": "eq",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].gate_driver_ics"
     }
   ]
 }

@@ -18,11 +18,12 @@
         },
         {
           "description": "The detector reports a 2-row \u00d7 17-column key matrix with row_nets=['BL', '__unnamed_28'] and diodes_on_matrix=17. In reality this is a gamepad using two 74HC165 parallel-in shift registers to read 17 buttons; there is no matrix. BL is the display backlight control signal; __unnamed_28 is the 5 V supply rail via BAT43 protection diodes D1 and D4. Only 3 physical diodes exist in the design (D1, D2, D4), none of which form a matrix. The estimated_keys=17 and diodes_on_matrix=17 are both wrong.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
@@ -106,11 +107,12 @@
       "correct": [
         {
           "description": "key_matrices correctly detects the button matrix structure. buzzer_speaker_circuits correctly identifies LS1 and LS2 (Speaker). transistor_circuits correctly identifies Q1 as a PMOS power switch (TSM480P06CH) with gate resistor R4. has_transistor_driver=false for speakers is correct because Q1 is a battery switch on the drain net, not a speaker driver. decoupling_analysis correctly identifies multiple 100nF caps on +3V3. Component counts (18 switches, 16 caps, 24 resistors, 5 ICs) are accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "value": 1,
-            "op": "length_equals"
+            "op": "length_equals",
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],

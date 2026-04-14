@@ -17,11 +17,12 @@
         },
         {
           "description": "Two decoupling entries: +3.3V with C2 (10uF) + C3 (100nF) = 10.1uF total (bulk + bypass), and +5V with C1 (1uF). These match the schematic. C4 (4u7) connects to +3.3V line going to CP2112 VIO pin and is also correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

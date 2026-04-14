@@ -1,71 +1,62 @@
 {
   "file_pattern": "pitchfork_205_lqfp64.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~9 (tolerance 10%)",
+      "description": "Finding count ~12 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 10,
+        "max": 14
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~4",
+      "description": "high count ~2",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 1,
+        "max": 3
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~4",
+      "description": "medium count ~5",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 4,
+        "max": 6
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~1",
+      "description": "EMC risk score ~80.0 (+-10)",
       "check": {
-        "path": "summary.low",
+        "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 2
+        "min": 70.0,
+        "max": 90.0
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~55 (+-10)",
-      "check": {
-        "path": "summary.emc_risk_score",
-        "op": "range",
-        "min": 45,
-        "max": 65
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "4 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 2
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "1 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -76,14 +67,25 @@
       }
     },
     {
+      "id": "SEED-00000007",
+      "description": "1 inductor_leakage finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^inductor_leakage$",
+        "value": 1
+      }
+    },
+    {
       "id": "SEED-00000008",
-      "description": "3 io_filtering finding(s)",
+      "description": "2 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -117,11 +119,11 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~10 probe point(s) in test plan",
+      "description": "~9 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 9
+        "value": 8
       }
     },
     {

@@ -2,39 +2,44 @@
   "file_pattern": "salida.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 isolation_barriers",
+      "description": "Exactly 8 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.isolation_barriers",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 8 led_audit",
-      "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 8
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 motor_drivers",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 detect_isolation_barriers",
       "check": {
-        "path": "signal_analysis.motor_drivers",
+        "path": "findings",
+        "detector_filter": "detect_isolation_barriers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 detect_motor_drivers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_motor_drivers",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }

@@ -9,7 +9,7 @@
       "description": "All component references, values, footprints, and pin counts match the schematic source. U1/U2 (eliteC) each have 29 pins correctly mapped. BOM groupings are correct (e.g., R1/R3/R5/R6 = 5.1k, R2/R4 = 4.7k). The 10 no_connect markers are correctly captured in statistics.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "All global label nets are correctly resolved: scl_r connects R1-pin2 + U2-pin6(SDA) + J13-pin3; sda_r connects U2-pin5(SCL) + J13-pin4 + R3-pin2; sda_l connects U1-pin5(SCL) + J14-pin4 + R4-pin2; scl_l connects U1-pin6(SDA) + J14-pin3 + R2-pin2. Keyboard matrix signals (col/row), SPI (MOSI/MISO/SS), serial, RGB, battery switch, and split_hand nets are all correctly extracted with matching pin assignments.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "SPI bus 'L' correctly groups mosi_l and miso_l on U1, with ss_l as chip-select (chip_select_count:1). SPI bus 'R' correctly groups mosi_r and miso_r on U2, with ss_r as chip-select. These map to the trackball connectors J7 (left) and J8 (right) which use SPI for the PMW3360/similar sensor interface, consistent with the 'trackball' value labels.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "Both U1 and U2 are powered from +5V (via their RAW pin used as power-out for battery, VCC for logic). The bat_l and bat_r nets correctly appear in the power_net_summary with JP1/SW3/U1 and JP2/SW4/U2 respectively. The SPDT power switches (SW3/SW4) and jumpers (JP1/JP2) for battery bypass are correctly netted.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "SW1 pin 1 (A) connects to 'Rst' net with U1 pin 22 (RST). SW2 pin 1 (A) connects to 'Rst2' net with U2 pin 22 (RST). Both RST nets correctly generate ERC warnings for 'no_driver' since they only have passive and input pin types \u2014 this is expected for reset lines driven low by a switch.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -59,7 +59,7 @@
       "description": "R1 (5.1k) pull-up on scl_r to +5V, R3 (5.1k) pull-up on sda_r to +5V, R2 (4.7k) pull-up on scl_l to +5V, R4 (4.7k) pull-up on sda_l to +5V \u2014 all four correctly identified with has_pull_up:true and pull-up resistor details. The mixed 5.1k/4.7k values across the two halves are accurately reported.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -69,7 +69,7 @@
       "description": "All four MountingHole_Pad instances (H1, H2, H3, H4) correctly appear in the GND net with pin_type:input (matching the symbol definition). They are correctly not listed in missing_mpn since they're mechanical components. The mounting holes are correctly grouped in the BOM as a single 4-quantity entry with value 'M4' and footprint 'Library:MountingHole_4mm_Pad_thin'.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -79,7 +79,7 @@
       "description": "R5 (5.1k) pin 1 connects to split_hand_r (U2-pin28 F1), R5 pin 2 connects to GND. R6 (5.1k) pin 1 connects to +5V, R6 pin 2 connects to split_hand_l (U1-pin28 F1). This creates a voltage divider/pull configuration for the handedness detection described in the schematic text annotation. The analyzer correctly reports these connections.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -89,7 +89,7 @@
       "description": "U1 pin 1 (TX) drives the 'rgb_r' net to J4-RGB connector, and U1 pin 2 (RX) connects to 'serial_l' going to the J1 TRRS serial jack. U2 pin 1 (TX) drives 'rgb_l' and U2 pin 2 (RX) connects to 'serial_r' going to J2. The pin names 'TX' and 'RX' are unambiguous UART signals on the Elite-C (ATmega32U4). The analyzer should detect these as UART even though the net names ('serial_l', 'rgb_r') do not contain 'TX'/'RX'/'UART'. The UART detection appears to rely on net name heuristics rather than the IC pin name for the connected pins.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -100,7 +100,7 @@
       "description": "The schematic has 10 no_connect markers and 10 unnamed nets (__unnamed_0 through __unnamed_9). The unnamed nets include: __unnamed_0 (U1-B7), __unnamed_1 (U1-D5), __unnamed_2 (U1-C7), __unnamed_3 (U2-B7), __unnamed_4 (U2-D5), __unnamed_5 (U2-C7) \u2014 these are truly unconnected IO pins on the MCUs with no_connect markers. __unnamed_6 (J1-S), __unnamed_7 (SW3-A), __unnamed_8 (SW4-A), __unnamed_9 (J2-S) \u2014 these have no_connect markers applied. The single_pin_nets array is empty because the analyzer correctly excludes no_connect-marked pins from connectivity issues. However, the 6 unconnected MCU I/O pins (B7, D5, C7 on both U1 and U2) plus 4 other single-pin nets all happen to have no_connect markers, so no false alarms. This is correct behavior.",
       "created_from": "FND-00000509",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

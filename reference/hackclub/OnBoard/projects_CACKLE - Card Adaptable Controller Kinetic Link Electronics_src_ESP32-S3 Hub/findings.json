@@ -36,12 +36,13 @@
         },
         {
           "description": "RC filter R7=10k/C13=1uF with fc=15.9Hz detected but this is likely a power-on reset or enable delay circuit, not a signal filter",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R7$"
+            "pattern": "^R7$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -55,9 +56,9 @@
       "missed": [
         {
           "description": "THVD1420DRLR is a half-duplex RS-485/RS-422 transceiver with ESD protection - not identified as bus protocol or analyzed",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -73,29 +74,30 @@
         },
         {
           "description": "SPI bus topology with 8 chip selects driving multiple sensor boards via FPC connectors not identified as a bus protocol",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "I2C bus (SDA/SCL) not identified as a bus protocol despite detected bus signals",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "No power regulator detected - board may be powered externally via connectors but power path not analyzed",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],

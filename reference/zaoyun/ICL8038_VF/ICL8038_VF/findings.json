@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "The R4 (12K) / R5 (15K) resistor divider from VCC to GND, with midpoint connected to IC1 pin 1 (duty cycle adjustment), is correctly identified as a voltage divider with ratio 0.556.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,28 +19,28 @@
       "incorrect": [
         {
           "description": "R1 (15K) connects VCC to IC1 pin 1 (SINE_ADJ1/timing) with C1 (100nF) to GND. The analyzer detects this as a 106 Hz low-pass filter with input_net=VCC. This is a timing/bias network for the ICL8038, not a signal filter. The VCC-as-input-net pattern is again a false positive indicator for RC filter detection.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "IC1 (ICL8038) uses a custom symbol where all pins are type 'passive', so the analyzer cannot identify VCC/GND rails for the IC. The power_domains.ic_power_rails dict is empty and domain_groups is empty. This is a correct behavioral result given the symbol data, but it means no power domain analysis is performed for the only IC in the design.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "IC1 is an ICL8038 precision waveform generator with SINE_OUT, TRIANGLE_OUT, SQUARE_OUT outputs and a TIMING_CAP pin. The analyzer produces no oscillator, waveform generator, or function generator detection for this IC. The signal_analysis has no relevant category; crystal_circuits and feedback_networks are both empty.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Q1 is an S8050 NPN transistor connected on nets __unnamed_3 (collector via R15), __unnamed_14 (base via R14/R13 divider), and __unnamed_16 (emitter via R17). The transistor_circuits list is empty. This is likely because all ICL8038 pins are typed 'passive', causing net classification to fail for base/collector/emitter identification.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

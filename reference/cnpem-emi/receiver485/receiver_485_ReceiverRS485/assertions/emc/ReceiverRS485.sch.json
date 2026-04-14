@@ -1,16 +1,17 @@
 {
   "file_pattern": "ReceiverRS485.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~64 (tolerance 10%)",
+      "description": "Finding count ~44 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 60,
-        "max": 68
+        "min": 39,
+        "max": 49
       }
     },
     {
@@ -45,22 +46,22 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~31",
+      "description": "low count ~9",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 8,
+        "max": 10
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~14 (+-10)",
+      "description": "EMC risk score ~42.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 4,
-        "max": 24
+        "min": 32.5,
+        "max": 52.5
       }
     },
     {
@@ -87,13 +88,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "43 io_filtering finding(s)",
+      "description": "21 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 43
+        "value": 21
       }
     },
     {
@@ -116,11 +117,11 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~33 probe point(s) in test plan",
+      "description": "~11 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 29
+        "value": 9
       }
     },
     {

@@ -9,20 +9,24 @@
       "description": "2 LC filters correctly detected",
       "created_from": "FND-00000240",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00000240-AST-02",
       "description": "2 MOSFET circuits correctly detected",
       "created_from": "FND-00000240",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "67 RC filters correctly detected including 60 Zorro bus 1k+1nF snubbers",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -21,12 +22,13 @@
         },
         {
           "description": "Q202 PNP audio transistor, Q300/Q301/Q9100 NPN switches correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q202$"
+            "pattern": "^Q202$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -40,11 +42,12 @@
         },
         {
           "description": "MC7905 -5V regulator correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -53,12 +56,13 @@
         },
         {
           "description": "Y800 32.768kHz RTC crystal correctly identified",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y800$"
+            "pattern": "^Y800$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -69,12 +73,13 @@
         },
         {
           "description": "X1/X2 28.63636MHz active oscillators correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -88,12 +93,13 @@
       "incorrect": [
         {
           "description": "Q200/Q201 MMBFJ211 (lib Transistor_FET:BF545C) N-channel JFETs classified as type='mosfet' \u2014 signal_detectors.py hardcodes mosfet for all G/D/S transistors",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q200$"
+            "pattern": "^Q200$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -105,12 +111,13 @@
         },
         {
           "description": "VC800 (CTRIM 22-47pF trimmer cap, lib 2000ATX-rescue:CTRIM-Device) misclassified as 'varistor' \u2014 VC prefix has no entry in type_map, falls to single-char V->varistor. Missing from Y800 crystal load_caps (shows only C810, should be C810+VC800)",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^C810$"
+            "pattern": "^C810$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -150,7 +157,7 @@
         },
         {
           "description": "Regulator U9000 (MC7905) correctly identified as LDO converting -12V to -5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U9000"
@@ -158,15 +165,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U9000$"
+            "pattern": "^U9000$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "All 7 transistors correctly classified: Q200/Q201 as JFET (MMBFJ211) audio mute switches, Q300/Q301/Q302/Q9100 as BJTs",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q200",
@@ -179,15 +187,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q200$"
+            "pattern": "^Q200$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "Crystal oscillators correctly detected: Y800 (32.768kHz passive), X1 (28.63636MHz master clock), X2 oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "X1",
@@ -197,15 +206,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "ATX power-on delay RC networks correctly detected: R9101/C9104 (62ms delay) and R9103/C9103 for +5VSB sense",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [
             "C9103",
@@ -216,23 +226,25 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R9101$"
+            "pattern": "^R9101$",
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "67 RC filters detected including 47 Zorro bus termination networks (1k + 1000pF, fc=159kHz) and 8 audio filters",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -245,7 +257,7 @@
         },
         {
           "description": "Three fuses correctly identified: F1 (4A, +5VMOUSE), F3 (+12V), F4 (+5V)",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "F1",
@@ -255,10 +267,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^F1$"
+            "pattern": "^F1$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -273,7 +286,7 @@
         },
         {
           "description": "design_observations flags U204 (LF347) as missing decoupling on '+AV' rail, but ic_pin_analysis shows C220 (0.22uF), C222 (47uF), and C900 (0.1uF) on +AV. False positive contradicting its own ic_pin_analysis.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "C220",
@@ -288,7 +301,7 @@
       "missed": [
         {
           "description": "LF347 quad op-amp (U204) not detected in opamp_circuits despite having 4 units with +in/-in/out pins and dual supply +AV/-AV. LM339 comparator (U805) also not detected.",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "U204",
@@ -297,15 +310,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U204$"
+            "pattern": "^U204$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "F2 (4A fuse) missed in protection_devices because both adjacent nets are unnamed. F2 sits between EMI332 feedthrough cap and D400 on +12V Zorro supply.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "D400",
@@ -314,15 +328,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D400$"
+            "pattern": "^D400$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "Y800 (32.768kHz crystal) has only one load cap reported (C810). VC800 (22-47pF trimmer on pin 2) not counted as load cap despite serving the same function.",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "C810",
@@ -331,10 +346,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y800$"
+            "pattern": "^Y800$",
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],

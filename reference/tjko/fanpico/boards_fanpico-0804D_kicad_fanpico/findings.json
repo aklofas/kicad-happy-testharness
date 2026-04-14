@@ -35,7 +35,7 @@
         },
         {
           "description": "Voltage divider count is only 2, but the SPX1117-ADJ feedback network (which sets output voltage) should be detected as a voltage divider with a purpose annotation",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -45,9 +45,9 @@
       "missed": [
         {
           "description": "PWM fan control topology not identified. The core function of this board (RP2040 generating PWM signals routed through SN74AHCT126 buffers to fan headers) is not captured in any signal analysis section.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

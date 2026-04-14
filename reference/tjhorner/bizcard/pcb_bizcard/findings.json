@@ -8,44 +8,48 @@
       "correct": [
         {
           "description": "The analyzer correctly identifies: AMS1117-3.3 LDO (VBUS\u2192+3V3), 12MHz crystal with 30pF load caps (effective load 18pF), 4-LED WS2812B addressable chain on GPIO24, W25Q128JVS flash connected to RP2040 via QSPI (6 shared nets, memory_interfaces entry), CUI CPT-9019S buzzer on GPIO3, and comprehensive decoupling on +1V1 (1.2\u00b5F), +3V3 (11.8\u00b5F), and VBUS (10.4\u00b5F) rails.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "The 4-LED WS2812B chain (D1\u2013D4) is correctly identified with chain_length=4, first_led=D1, last_led=D4, data_in_net=GPIO24, protocol='single-wire (WS2812)', led_type=WS2812B, and estimated_current_mA=240mA. The fifth LED (D5) is a plain LED status indicator correctly classified separately.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "chain_length": 4,
               "led_type": "WS2812B"
-            }
+            },
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {
           "description": "The memory_interfaces section correctly identifies W25Q128JVS (U2) connected to RP2040 (U3) with 6 shared signal nets (QSPI_SCLK, QSPI_SS, QSPI_SD0\u2013SD3). This is properly captured even though the QSPI bus does not appear as a standard SPI bus in bus_analysis, which is appropriate since QSPI uses a dedicated naming scheme.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "The design_observations correctly identify USB_D+ and USB_D- nets with R4 and R5 (27 ohm series resistors, standard for RP2040 USB) and correctly notes has_esd_protection=false. The RP2040 has internal USB transceivers so this is expected for this design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "usb_data",
               "has_esd_protection": false
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

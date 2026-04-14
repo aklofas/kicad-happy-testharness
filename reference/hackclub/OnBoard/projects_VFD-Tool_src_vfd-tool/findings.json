@@ -34,12 +34,13 @@
       "incorrect": [
         {
           "description": "TPS562200 U7 estimated Vout=2.58V but U8 (identical part) has no estimated Vout",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "vout",
-            "value": 2.58
+            "value": 2.58,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -53,12 +54,13 @@
         },
         {
           "description": "TPS54331DR U10 has no estimated Vout despite likely having feedback divider",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U10$"
+            "pattern": "^U10$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -75,20 +77,21 @@
       "missed": [
         {
           "description": "VFD (vacuum fluorescent display) driver circuitry not detected \u2014 this is the main function of the board",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "No current sense detection despite likely having sense resistors for VFD filament drive",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [],

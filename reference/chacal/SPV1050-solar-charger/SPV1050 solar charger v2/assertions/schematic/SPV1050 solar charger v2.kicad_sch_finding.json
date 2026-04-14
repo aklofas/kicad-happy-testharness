@@ -9,7 +9,7 @@
       "description": "15 components (1 IC, 3 connectors, 6 resistors, 1 inductor, 4 capacitors), 15 nets, 4 no-connects all match the schematic. Power labels V_PV and BAT correctly extracted.",
       "created_from": "FND-00001333",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Two voltage dividers found: R2/R3 for MPP_SET (pin 2) and R5/R6 for EOC (pin 9). These set the MPPT operating point and end-of-charge threshold respectively. Detection is accurate.",
       "created_from": "FND-00001333",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "GND has power_in pins but no PWR_FLAG symbol. This is a real ERC issue in the design. BAT and V_PV no_driver warnings are also correct \u2014 they are fed from connectors which lack PWR_FLAG.",
       "created_from": "FND-00001333",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "The SPV1050 is a solar energy harvesting IC with integrated boost converter (inductor L1 connected between IN_LV and L_HV pins), MPPT tracking, and battery charging. The analyzer outputs empty power_regulators and design_observations. It should detect the switching regulator topology from the L1 connection to pin 16 (IN_LV) and pin 19 (L_HV), similar to how it detects TPS61041.",
       "created_from": "FND-00001333",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

@@ -1,7 +1,8 @@
 {
   "file_pattern": "VideoBoard_VideoBoard.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~37",
+      "description": "high count ~36",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 33,
-        "max": 41
+        "min": 32,
+        "max": 40
       }
     },
     {
@@ -55,23 +56,23 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~45 (+-10)",
+      "description": "EMC risk score ~65.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 35,
-        "max": 55
+        "min": 55.0,
+        "max": 75.0
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "36 decoupling finding(s)",
+      "description": "35 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 36
+        "value": 35
       }
     },
     {

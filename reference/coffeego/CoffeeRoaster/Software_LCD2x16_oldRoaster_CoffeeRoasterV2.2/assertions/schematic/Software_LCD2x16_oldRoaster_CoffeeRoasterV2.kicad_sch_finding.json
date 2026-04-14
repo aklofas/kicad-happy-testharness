@@ -19,12 +19,14 @@
       "description": "INCORRECT: 2 RC filters (R2+C2, R1+C1) detected as false positives - R1/R2 connect to a resistor junction at __unnamed_35, while C1/C2 are switch debounce capacitors. These components are not wired as RC filter networks.",
       "created_from": "FND-00000217",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R2$"
+        "pattern": "^R2$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

@@ -2,57 +2,64 @@
   "file_pattern": "glitcher.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 connector_ground_audit",
+      "description": "Exactly 4 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 14 design_observations",
+      "description": "Exactly 21 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 14
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 21 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 21
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 7 led_audit",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 7 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 7
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 6 power_regulators",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 14 detect_design_observations",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 14
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 6 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 6
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U6_VADJ_OUT1 in power_regulators",
+      "description": "U6_VADJ_OUT1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U6_VADJ_OUT1$"
@@ -60,9 +67,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U4_1V8_OUT1 in power_regulators",
+      "description": "U4_1V8_OUT1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U4_1V8_OUT1$"
@@ -70,9 +78,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U5_1V2_OUT1 in power_regulators",
+      "description": "U5_1V2_OUT1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U5_1V2_OUT1$"
@@ -80,9 +89,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U8_2V5_OUT1 in power_regulators",
+      "description": "U8_2V5_OUT1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U8_2V5_OUT1$"
@@ -90,9 +100,10 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "U7_3V3_OUT1 in power_regulators",
+      "description": "U7_3V3_OUT1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U7_3V3_OUT1$"
@@ -100,9 +111,10 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "U9_3V3ALWAYS1 in power_regulators",
+      "description": "U9_3V3ALWAYS1 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U9_3V3ALWAYS1$"
@@ -110,9 +122,30 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Exactly 1 validate_led_resistors",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "Exactly 2 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
         "op": "equals",
         "value": 2
       }

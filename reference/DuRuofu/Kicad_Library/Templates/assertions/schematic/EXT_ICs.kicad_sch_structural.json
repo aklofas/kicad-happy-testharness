@@ -2,48 +2,54 @@
   "file_pattern": "EXT_ICs.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 audio_circuits",
+      "description": "Exactly 1 detect_audio_circuits",
       "check": {
-        "path": "signal_analysis.audio_circuits",
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 battery_chargers",
+      "description": "Exactly 1 detect_battery_chargers",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 5 design_observations",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 5
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 5 power_regulators",
+      "description": "Exactly 5 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 5
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "U25 in power_regulators",
+      "description": "U25 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U25$"
@@ -51,9 +57,10 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U18 in power_regulators",
+      "description": "U18 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U18$"
@@ -61,9 +68,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U23 in power_regulators",
+      "description": "U23 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U23$"
@@ -71,9 +79,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U22 in power_regulators",
+      "description": "U22 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U22$"
@@ -81,9 +90,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U17 in power_regulators",
+      "description": "U17 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U17$"
@@ -91,20 +101,42 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 3 sensor_interfaces",
+      "description": "Exactly 3 detect_sensor_interfaces",
       "check": {
-        "path": "signal_analysis.sensor_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_sensor_interfaces",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 4 suggested_certifications",
+      "description": "Exactly 4 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Exactly 1 detect_wireless_modules",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_wireless_modules",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Exactly 23 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 23
       }
     }
   ]

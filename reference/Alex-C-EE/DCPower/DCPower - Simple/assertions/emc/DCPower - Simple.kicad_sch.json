@@ -1,16 +1,17 @@
 {
   "file_pattern": "DCPower - Simple.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~10 (tolerance 10%)",
+      "description": "Finding count ~16 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 14,
+        "max": 18
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~44 (+-10)",
+      "description": "EMC risk score ~51.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 34,
-        "max": 54
+        "min": 41.0,
+        "max": 61.0
       }
     },
     {
@@ -144,11 +145,11 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "~2 net(s) with EMC scores",
+      "description": "~3 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 1
+        "value": 2
       }
     }
   ]

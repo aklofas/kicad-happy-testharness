@@ -17,11 +17,12 @@
         },
         {
           "description": "D1, D2, D3 (ws2812b) are detected as 3 separate chains of length 1. This is consistent with the board layout: three corner status LEDs individually controlled rather than daisy-chained. Each has its own DIN signal, so the chain-length-1 detection is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {
@@ -55,22 +56,24 @@
         },
         {
           "description": "U6 (ADP150-2.8) is a fixed 2.8V LDO from Analog Devices. The analyzer reports topology='unknown', input_rail=null, output_rail=null, estimated_vout=null. From the PCB layout, U6 is connected to +5V input (pin 1) and +2V8 output (pin 5). The value 'ADP150-2.8' encodes the output voltage in its part number (2.8V). The schematic also has +2V8 as an explicit power rail. The LDO topology should be recognized at minimum from the -2.8 suffix.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "missed": [
         {
           "description": "The decoupling_analysis correctly finds 10 entries for rails like VAA, VDD, VDDIO_35 etc. However, the +2V8 rail (output of ADP150-2.8) is not represented in decoupling_analysis even though it has bypass capacitors (C10 per the PCB pad_nets). This is likely caused by the LDO output_rail=null failure \u2014 without knowing the rail name, decoupling caps on that net cannot be associated.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 10
+            "value": 10,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

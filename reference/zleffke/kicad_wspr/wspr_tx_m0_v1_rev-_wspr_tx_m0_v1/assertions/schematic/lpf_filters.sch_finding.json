@@ -9,11 +9,13 @@
       "description": "lpf_filters.sch is a dedicated low-pass filter bank sub-sheet with 6 inductors (L1-L6) and 8 capacitors (C9-C16). The component count is correctly reported (total_components=14), but signal_analysis.lc_filters remains empty. This is a two-band LC ladder filter network for WSPR transmitter harmonic suppression. The detector does not recognize the LC ladder topology formed by series inductors with shunt capacitors to GND.",
       "created_from": "FND-00002500",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     }
   ]
 }

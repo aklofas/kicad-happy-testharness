@@ -19,11 +19,13 @@
       "description": "8 RC filter stages (36K + 500pF, fc\u224888Hz) on op-amp outputs not detected. Each LM324 output feeds through CD4066 analog switch to R-C low-pass filter.",
       "created_from": "FND-00000224",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

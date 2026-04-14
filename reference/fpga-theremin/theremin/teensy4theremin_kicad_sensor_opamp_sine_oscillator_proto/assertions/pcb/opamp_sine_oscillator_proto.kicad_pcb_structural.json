@@ -2,18 +2,29 @@
   "file_pattern": "opamp_sine_oscillator_proto.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling_placement",
+      "description": "Exactly 3 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U1 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "U3 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -23,7 +34,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "U2 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

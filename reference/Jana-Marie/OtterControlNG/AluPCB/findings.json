@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "bus_analysis.can correctly identifies CANTX/CANRX with STM32G431 (U1) and CAN transceiver (U2). power_regulators finds XL7015 boost, ACT4088 switcher, and AP2204R-3.3 LDO. Crystal Y1 (8MHz) with load caps detected. SK6812 addressable LED chain found. ESD protection (USBLC6-4) detected. UART and RS485 found in bus_analysis.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -37,9 +37,9 @@
       "missed": [
         {
           "description": "The PAC5523 is an integrated 3-phase BLDC motor controller with built-in gate drivers. DRH0-5 (high-side drive) and DRL0-2 (low-side drive) gate signals are present, as well as IUH/IUL/IVH/IVL/IWH/IWL current sense nets and VP bus net. The analyzer returned empty bridge_circuits and motor_drivers despite clear BLDC topology. This is a missed detection for integrated motor controller ICs that drive external gate drive signals but do not have discrete MOSFETs in the same schematic sheet.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -62,9 +62,9 @@
       "correct": [
         {
           "description": "IC.sch is a KiCad 5 hierarchical sheet symbol file with no real components (it only defines the sheet interface pins, not the actual schematic content). The analyzer correctly returns 0 components and empty analysis for it. Same pattern holds for PAC5523/IC.sch.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -89,9 +89,9 @@
       "correct": [
         {
           "description": "Connectivity correctly shows 0 unrouted nets. Thermal pad via analysis for STM32G431 QFN (9 vias vs recommended 14-22) is a valid real-world finding. DFM tier standard with no violations. CAN/HALL/motor nets correctly appear in net_classes. Tombstoning risk on C20 (0402 with thermal asymmetry) is plausible.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -100,7 +100,7 @@
       "incorrect": [
         {
           "description": "Both STM32G431 and PAC5523 boards (identical physical size, KiCad 5.x file_version 20171130) each report exactly 50 courtyard overlaps. The KiCad 5 PCB format stores courtyard polygons in module-local coordinates; if the analyzer is not transforming courtyard vertices by component rotation/position, it will incorrectly compute overlap. J2 overlapping U2 by 16.2mm\u00b2 and U1 overlapping Y1 by 15.0mm\u00b2 on a production PCB would have been caught by KiCad's own DRC \u2014 these are almost certainly parsing artifacts.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -122,7 +122,7 @@
       "incorrect": [
         {
           "description": "AluPCB is a deliberately single-sided aluminum (IMS) PCB: 1 copper layer (F.Cu only), 0 back-side components, no B.Cu gerber. The analyzer reports complete=false with missing_required=['B.Cu','B.Mask']. This is a false positive \u2014 single-sided IMS boards legitimately have no back copper. The completeness checker should not require B.Cu when the PCB has only 1 copper layer.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -143,9 +143,9 @@
       "correct": [
         {
           "description": "11 gerber files + 2 drill files detected, all 4 copper layers plus mask/paste/silkscreen/edge present, aligned, complete=true. Generator correctly identified as KiCad Pcbnew 5.1.2.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -170,9 +170,9 @@
       "correct": [
         {
           "description": "Both PAC5523/gerber and PAC5523/out report complete=true with all 4 copper layers. Generator KiCad 5.1.2 correctly detected. This validates the analyzer handles multiple gerber output directories in the same repo correctly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

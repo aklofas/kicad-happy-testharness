@@ -16,9 +16,10 @@
       "summary": "3-phase BLDC inverter bridge not detected -- bridge_circuits and transistor_circuits both empty",
       "details": "The design has 6 IRF150P220XKMA1 power MOSFETs (Q1-Q6) arranged as three half-bridge pairs driven by three IR2112 gate drivers. Neither the bridge topology nor the individual MOSFET switch circuits are detected.",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
       }
     },
     {
@@ -29,9 +30,10 @@
       "summary": "9 UF4004 flyback diodes not detected as protection devices",
       "details": "The motor controller has 9 UF4004 fast-recovery diodes (D1-D9) as flyback/freewheeling diodes for the MOSFET switches and bootstrap circuits. protection_devices=[] despite all 9 diodes being present.",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 6
+        "value": 6,
+        "detector_filter": "detect_protection_devices"
       }
     },
     {

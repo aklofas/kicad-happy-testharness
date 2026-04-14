@@ -35,11 +35,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].ref",
+            "path": "findings",
             "op": "equals",
-            "value": "U2"
+            "value": "U2",
+            "detector_filter": "detect_power_regulators[0].ref"
           }
         },
         {
@@ -53,11 +54,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "op": "equals",
-            "value": "switching"
+            "value": "switching",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         },
         {
@@ -89,11 +91,12 @@
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].capacitors",
+            "path": "findings",
             "op": "min_count",
-            "value": 9
+            "value": 9,
+            "detector_filter": "detect_decoupling_analysis[0].capacitors"
           }
         },
         {
@@ -183,20 +186,22 @@
       "missed": [
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters"
           }
         },
         {
           "description": "",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "validate_feedback_stability"
           }
         }
       ],

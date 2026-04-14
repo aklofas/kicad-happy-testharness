@@ -1,7 +1,8 @@
 {
   "file_pattern": "CDE-3_CDE-3.kicad_pcb",
   "analyzer_type": "pcb",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -91,44 +92,11 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "DFM analysis present",
-      "check": {
-        "path": "dfm",
-        "op": "exists"
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "DFM tier is 'standard'",
-      "check": {
-        "path": "dfm.dfm_tier",
-        "op": "equals",
-        "value": "standard"
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "53 power net(s) analyzed",
       "check": {
         "path": "power_net_routing",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "Thermal analysis present",
-      "check": {
-        "path": "thermal_analysis",
-        "op": "exists"
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "Placement analysis present",
-      "check": {
-        "path": "placement_analysis",
-        "op": "exists"
       }
     }
   ]

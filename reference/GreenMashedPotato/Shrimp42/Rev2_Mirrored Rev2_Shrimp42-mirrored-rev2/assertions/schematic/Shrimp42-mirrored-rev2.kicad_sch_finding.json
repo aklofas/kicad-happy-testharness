@@ -19,11 +19,13 @@
       "description": "signal_analysis.key_matrices is empty for the Rev2 Mirrored half-board schematic which has nets CL0-CL5 and RL0-RL3 with 21 KEYSW switches and 21 diodes \u2014 a standard 3-or-4-row \u00d7 6-column keyboard half matrix. The TRRS connector (U2) and ProMicro (U1) confirm it is a split half PCB. The matrix detector fails to trigger even with canonical row/column net names.",
       "created_from": "FND-00001356",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     }
   ]
 }

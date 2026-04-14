@@ -9,7 +9,7 @@
       "description": "26 components correctly identified (9R, 10SW, 2IC, 1connector, 1resistor_network, 3C). All 30 nets present with correct pin assignments. SN74HC157N and SN74HC163N correctly typed as ICs.",
       "created_from": "FND-00000973",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Single GND domain detected, correctly not flagging multiple domains. Power rail 5V identified as the only supply rail.",
       "created_from": "FND-00000973",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "U2 (SN74HC163N) pins QD (pad 11), QA (pad 14), and RCO (pad 15) are unconnected outputs that end up on single-pin unnamed nets. The connectivity_issues section shows empty unconnected_pins, but these outputs are floating. These should be flagged as potentially unintended unconnected outputs.",
       "created_from": "FND-00000973",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -40,7 +40,7 @@
       "description": "This is a classic digital controller: RN1 (8x47k resistor network) pulls up 8 button lines to 5V, and individual buttons (SW5-8 + SW1-4 via mux) pull them to GND. No pull-up or button topology was detected in signal_analysis. The design_observations list is empty.",
       "created_from": "FND-00000973",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

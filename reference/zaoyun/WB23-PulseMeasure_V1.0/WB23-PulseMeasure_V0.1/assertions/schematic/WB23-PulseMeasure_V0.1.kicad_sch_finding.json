@@ -29,30 +29,36 @@
       "description": "Two LDO regulators detected: V1=AMS1117-5.0 (input +12V, output +5V) and V2=HT7533 (input +5V, output +3.3V). Both are correct based on the KiCad library IDs and value strings.",
       "created_from": "FND-00001794",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": 2,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001794-AST-04",
       "description": "Y1 is an 8MHz crystal with C1=20pF and C4=20pF as load capacitors, yielding an effective load of 13pF. The analyzer correctly identifies the crystal circuit, frequency, and load caps.",
       "created_from": "FND-00001794",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00001794-AST-05",
       "description": "The analyzer correctly identifies decoupling caps on +3.3V (6 caps, 10.5uF total), VCC (2 caps, 20uF), +5V (2 caps, 10.1uF), and +12V (2 caps, 10.1uF). All rails have bulk and bypass coverage.",
       "created_from": "FND-00001794",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "value": 4,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001794-AST-06",
@@ -103,11 +109,13 @@
       "description": "INCORRECT: The analyzer detects 10 opamp circuit entries for U3 and U4 (TLC274 quad op-amp). Units 1-4 of each IC are real opamp sections (8 correct detections). Unit 5 is the power supply pin unit of TLC274 \u2014 it has no signal function and should not appear as an opamp circuit. The two 'unknown' configuration entries for U3 unit 5 and U4 unit 5 are false positives.",
       "created_from": "FND-00001794",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "value": 8,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00001794-AST-11",

@@ -29,21 +29,25 @@
       "description": "decoupling_analysis correctly identifies V3.3 with C1 (100n, 15.9 MHz SRF). U1 (TMP236 temperature sensor) runs on V3.3 and has one bypass capacitor \u2014 this is accurately reflected.",
       "created_from": "FND-00001749",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001749-AST-04",
       "description": "INCORRECT: The analyzer reports configuration='comparator_or_open_loop' for U3 (LT1001/OP07). In reality U3 is a non-inverting amplifier: the output (Vout / U3.pin6) feeds back through NT4 (net tie) to RN1.pin3, then the RN1 midpoint (pin2) connects to U3.pin2 (inverting input), forming a classic non-inverting gain stage. The feedback path is invisible to the analyzer because NT4 is a net tie that creates a separate net (__unnamed_6) between Vout and RN1.pin3, breaking the net-level feedback chain. This is a Kelvin-sense (4-wire) design pattern that defeats the opamp feedback detector.",
       "created_from": "FND-00001749",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "value": "non_inverting_amplifier",
-        "op": "contains_match"
+        "op": "contains_match",
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00001749-AST-05",
@@ -61,22 +65,26 @@
       "description": "INCORRECT: signal_analysis.design_observations contains a 'decoupling' warning for U3 (LT1001) with rails_without_caps=['Vout']. This is incorrect: Vout is U3 pin6 (output), not a power supply. The actual supply rails V-heater+ and V_heater- (hierarchical port nets) do have decoupling caps (C4 for V+, C5 for V-). The warning arises from the erroneous power domain mapping discussed above.",
       "created_from": "FND-00001749",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "value": 0,
-        "op": "max_count"
+        "op": "max_count",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001749-AST-07",
       "description": "feedback_networks is empty. RN1 (17k/20k VoltageDivider symbol) forms a feedback divider from U3's output (Vout) to U3's inverting input (__unnamed_7), traversing NT4 (net tie). The net tie boundaries prevent the feedback network detector from tracing the path. This is a missed detection: the design has a clear resistor-divider feedback network that sets the gain of the LT1001.",
       "created_from": "FND-00001749",
       "check": {
-        "path": "signal_analysis.feedback_networks",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.feedback_networks"
     }
   ]
 }

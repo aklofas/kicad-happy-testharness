@@ -60,11 +60,13 @@
       "description": "INCORRECT: 15 of 19 thermal_pad_vias are false positives from paste-only stencil aperture pads with no copper. Same issue as ESP32-P4-PC.",
       "created_from": "FND-00000296",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
         "op": "max_count",
-        "value": 5
+        "value": 5,
+        "detector_filter": "analyze_thermal_pad_vias"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: thermal_pad_vias"
     }
   ]
 }

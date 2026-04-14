@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "U1 (XC6206P332MR) is correctly classified as an LDO, with input rail VCC and output rail +3.3V. The output voltage is not estimated from the lib_id suffix in this case, which is correct since the part name encodes 3.3V but the analyzer does not always parse custom part number suffixes.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -26,11 +27,12 @@
         },
         {
           "description": "D1 (SP0502BAHT) is correctly classified as an esd_ic type protection device guarding the TX2 net. The D2 (1N5819WS) Schottky diode is correctly typed as 'diode' in the BOM.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {

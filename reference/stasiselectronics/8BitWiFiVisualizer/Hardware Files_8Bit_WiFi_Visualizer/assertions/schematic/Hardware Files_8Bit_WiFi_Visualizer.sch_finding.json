@@ -9,11 +9,13 @@
       "description": "The RC filter detection (R2 10k + C5 1uF, low-pass at 15.92 Hz from +3.3V to ESP_EN, with GND) is accurate \u2014 this is the ESP8266 enable pin RC power-on reset network. The decoupling analysis is also correct: +3.3V rail has C3 (10uF bulk), C4 (1uF bypass), C2 (1uF output cap of regulator) totaling 12uF; +5V rail has C1 (1uF input cap of regulator). C5 is correctly excluded from decoupling (it is part of the RC filter). These detections are accurate.",
       "created_from": "FND-00000325",
       "check": {
-        "path": "signal_analysis.rc_filters[0].output_net",
+        "path": "findings[0].output_net",
         "op": "equals",
-        "value": "ESP_EN"
+        "value": "ESP_EN",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters[0].output_net"
     },
     {
       "id": "FND-00000325-AST-02",
@@ -53,11 +55,13 @@
       "description": "U1 is an AMS1117-3.3 LDO linear regulator converting +5V (from USB via J1) to +3.3V. The analyzer detects the component (lib_id=Regulator_Linear:AMS1117-3.3) but reports topology='unknown', input_rail=null, output_rail=null, and estimated_vout=null. This is caused by U1 having zero pins extracted (same root issue as U2), so the analyzer cannot resolve which rail connects to the input vs output pins. The correct result should be: topology='LDO', input_rail='+5V', output_rail='+3.3V', estimated_vout=3.3V.",
       "created_from": "FND-00000325",
       "check": {
-        "path": "signal_analysis.power_regulators[0].input_rail",
+        "path": "findings[0].input_rail",
         "op": "eq",
-        "value": "+5V"
+        "value": "+5V",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].input_rail"
     }
   ]
 }

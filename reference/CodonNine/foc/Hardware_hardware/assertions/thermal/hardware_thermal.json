@@ -1,0 +1,48 @@
+{
+  "file_pattern": "hardware_thermal",
+  "analyzer_type": "thermal",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Finding count ~7 (tolerance 10%)",
+      "check": {
+        "path": "summary.total_findings",
+        "op": "range",
+        "min": 6,
+        "max": 8
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "medium count ~3",
+      "check": {
+        "path": "summary.medium",
+        "op": "range",
+        "min": 2,
+        "max": 4
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Components analyzed ~6 (tolerance 10%)",
+      "check": {
+        "path": "summary.components_analyzed",
+        "op": "range",
+        "min": 5,
+        "max": 7
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Thermal score ~91 (+-10)",
+      "check": {
+        "path": "summary.thermal_score",
+        "op": "range",
+        "min": 81,
+        "max": 100
+      }
+    }
+  ]
+}

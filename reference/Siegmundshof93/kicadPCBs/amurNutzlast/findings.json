@@ -19,11 +19,12 @@
       "incorrect": [
         {
           "description": "U2 (LT3030 dual LDO) has two feedback paths. The analyzer selects the voltage divider formed by R10 (0.1\u03a9, top_net='+1V2') and R11 (100\u03a9, bottom_net='GND') and calculates estimated_vout = 0.6 * (100/100.1) = 0.601V. However R10/R11 are current sense resistors placed in the output current path, not the ADJ feedback divider. The actual feedback divider for OUT1 is R12 (357k\u03a9, top) and R13 (210k\u03a9, bottom) connecting to the ADJ1 pin. Using the correct formula Vout = Vref*(1 + R_top/R_bot) = 0.6*(1 + 357k/210k) = 1.62V. The analyzer incorrectly identifies any voltage divider whose midpoint connects to a regulator pin, without distinguishing sense resistors from feedback resistors by value.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/\"estimated_vout\":\\s*[0-9]/"
+            "value": "/\"estimated_vout\":\\s*[0-9]/",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

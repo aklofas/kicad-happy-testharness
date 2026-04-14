@@ -101,10 +101,11 @@
       "missed": [
         {
           "description": "The signal_analysis section has no voltage_dividers array. The design has notable resistor networks: R7 (10k) pulls the OFF signal low to GND; R6 (1k) is in series on the OFF net forming a classic pull-down with voltage dividing. Similarly, R2 (200k) from BTN to the timing node and R1 (1k) pull-up to VIN form a potential divider for the Schmitt trigger input threshold detection. These should be candidates for voltage divider detection. The schematic output does not include a signal_analysis section at all, suggesting it may not run the voltage divider detector on this design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
-            "op": "exists"
+            "path": "findings",
+            "op": "min_count",
+            "value": 1
           }
         },
         {

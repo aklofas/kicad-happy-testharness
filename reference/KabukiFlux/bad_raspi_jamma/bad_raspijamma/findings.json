@@ -29,11 +29,12 @@
         },
         {
           "description": "R3/C2/C4 and R4/C1/C3 form RC low-pass filters for PWM_LEFT and PWM_RIGHT audio signals. The analyzer detects 4 RC filter instances (two true low-pass and two RC-network pairs) which correctly reflects the two symmetric filter channels in the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 4,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
@@ -166,11 +167,12 @@
       "missed": [
         {
           "description": "U2 uses lib_id 'MySymbols:HX-2S-JH20', value '~', and connects to BT1 (B-), BT1/BT2 midpoint (BM), BT2 (B+), a fuse (P+), and GND (P-) \u2014 a classic 2-cell lithium battery management/protection circuit topology. The bms_systems list is empty and protection_devices is also empty. The analyzer does not detect BMS ICs from custom/non-standard library names, and the generic value '~' provides no clue. This should be flagged as a BMS or protection device.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_bms_systems"
           }
         }
       ],

@@ -2,39 +2,44 @@
   "file_pattern": "rgb-to-hdmi.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 connector_ground_audit",
+      "description": "Exactly 3 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 6 esd_coverage_audit",
+      "description": "Exactly 6 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 6
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 4 hdmi_dvi_interfaces",
+      "description": "Exactly 4 detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "P3 in hdmi_dvi_interfaces",
+      "description": "P3 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^P3$"
@@ -42,9 +47,10 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "P2 in hdmi_dvi_interfaces",
+      "description": "P2 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^P2$"
@@ -52,9 +58,10 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "P4 in hdmi_dvi_interfaces",
+      "description": "P4 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^P4$"
@@ -62,9 +69,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "P1 in hdmi_dvi_interfaces",
+      "description": "P1 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^P1$"
@@ -72,9 +80,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }

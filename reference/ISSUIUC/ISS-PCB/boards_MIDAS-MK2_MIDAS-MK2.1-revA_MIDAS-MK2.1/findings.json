@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "Voltage dividers correctly identified for pyro sense (100k/30k) and feedback dividers",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "TPS566242 feedback (135k/30k -> 3.3V) and TPS564247 feedback (155k/30k -> 3.7V) correct with accurate Vout",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [],
@@ -34,11 +36,12 @@
         },
         {
           "description": "Switching regulator topology correctly identifies TPS566242 and TPS564247 with inductor references",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -49,12 +52,13 @@
       "incorrect": [
         {
           "description": "Switching regulators TPS566242 (U303) and TPS564247 (U105) report input_rail and fb_net but no output_rail -- LDOs do have output_rail",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U105$"
+            "pattern": "^U105$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [

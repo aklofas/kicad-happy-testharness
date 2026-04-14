@@ -29,11 +29,12 @@
       "missed": [
         {
           "description": "SPI bus between RP2040 and peripheral ICs not detected",
-          "analyzer_section": "signal_analysis.bus_interfaces",
+          "analyzer_section": "detect_bus_interfaces",
           "check": {
-            "path": "signal_analysis.bus_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_interfaces"
           },
           "detector": "bus_interfaces",
           "subject_refs": [],

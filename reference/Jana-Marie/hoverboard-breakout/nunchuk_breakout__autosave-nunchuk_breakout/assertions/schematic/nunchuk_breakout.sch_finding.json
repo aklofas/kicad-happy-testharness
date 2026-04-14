@@ -9,11 +9,13 @@
       "description": "INCORRECT: The analyzer identified two 4.82 MHz RC low-pass filters (R3+C2 on SCL, R2+C1 on SDA, each 3k3+10p). While the RC topology is geometrically valid, these components are I2C pull-up resistors (R top to VCC, line out to SCL/SDA) with small bypass capacitors to GND \u2014 a standard I2C bus filter. Classifying them as low-pass filters without contextual I2C role is misleading. The 'input_net' is VCC for both, which is characteristic of pull-up configurations, not signal filter inputs.",
       "created_from": "FND-00002130",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00002130-AST-02",

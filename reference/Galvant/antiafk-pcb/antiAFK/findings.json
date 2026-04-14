@@ -17,11 +17,12 @@
         },
         {
           "description": "The crystal_circuits section correctly identifies X1 (16MHz) with load capacitors C2 (18pF) and C3 (18pF), computing effective_load_pF=12.0 using the series formula (18*18)/(18+18)+3pF stray. The frequency is correctly parsed as 16000000 Hz.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
@@ -37,11 +38,12 @@
       "incorrect": [
         {
           "description": "D1 and D2 are Zener diodes connected from the raw USB data lines (N-0000022/N-0000023 = the USB connector's D+/D- pads) to GND. This is a classic low-cost USB ESD protection scheme using 3.6V Zeners (standard for 5V USB EAP protection). The USB data observation reports has_esd_protection=false for both USB_DP and USB_DM, and protection_devices is empty []. D1 and D2 should be detected as TVS/Zener protection devices for the USB lines.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

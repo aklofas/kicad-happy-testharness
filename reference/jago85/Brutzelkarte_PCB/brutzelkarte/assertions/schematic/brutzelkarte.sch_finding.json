@@ -22,26 +22,30 @@
       "description": "INCORRECT: The voltage_dividers list contains two entries for ROM_SCK and BOOT_SCK. Each has a 10 k\u03a9 resistor to +3V3 (R21/R24) and a 10 k\u03a9 resistor to GND (R22/R25), with the mid-point being the SPI clock line and a 100 nF filter capacitor (C34/C32) also at the mid-point. These are not voltage dividers being used to set a bias level; they are SPI clock lines with termination/bias resistors and RC low-pass filters \u2014 a common technique to reduce SPI clock edge rates. The ROM_SCK and BOOT_SCK net names make the SPI context clear. The equal 10k/10k ratio and the presence of a filter capacitor are characteristic of this topology rather than a signal-level voltage divider.",
       "created_from": "FND-00000434",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "r_top": {
             "ref": "R21"
           }
-        }
+        },
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000434-AST-03",
       "description": "The memory sub-sheet contains a 32768 Hz crystal Y1 (Device:Crystal_Small) with two 6-9 pF load capacitors C23 and C24, connected to the MCP7940N real-time clock U4. The crystal_circuits detector returns an empty list. Y1 is typed correctly as 'crystal' but its pins array is empty (a KiCad 5 legacy parsing limitation), so the crystal circuit cannot be resolved. The detector should still identify the crystal by net topology: C23 and C24 are each on separate unnamed nets with only one pin each, adjacent to Y1.",
       "created_from": "FND-00000434",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00000434-AST-04",
@@ -72,11 +76,13 @@
       "description": "U3 is an IS62WV12816EBLL 128K\u00d716 asynchronous SRAM with a 17-bit address bus (RAM_A[0..16]) and 16-bit data bus (RAM_DQ[0..15]), plus RAM_CE, RAM_WE, RAM_OE, and byte-enable signals. This is a classic parallel memory bus interface. The signal_analysis.memory_interfaces list is empty. Contributing factors include the pin-to-net mapping errors for U3 in the KiCad 5 parser (multiple U3 data and address pins end up on GND/+3V3/wrong nets due to position-based pin matching failures for the 44-pin TSOP package), preventing the analyzer from recognizing the memory bus topology.",
       "created_from": "FND-00000434",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

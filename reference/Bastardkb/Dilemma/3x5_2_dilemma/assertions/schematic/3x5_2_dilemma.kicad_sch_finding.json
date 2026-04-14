@@ -9,7 +9,7 @@
       "description": "The hand-detection circuit uses R7 (5.1k, pin 1 to +5VL) and R1 (5.1k, pin 2 to GND) to create a 0.5 ratio voltage divider on the 'hand' net, connected to U2 pin F4 (GPIO). The analyzer correctly identifies this in signal_analysis.voltage_dividers with top_net='+5VL', mid_net='hand', bottom_net='GND', ratio=0.5, and mid_point_connections listing U2 pin 20 (F4).",
       "created_from": "FND-00000470",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The analyzer correctly identifies I2C bus activity: scl_l net pulled up via R4 (4.7k to +5VL) and sda_l net pulled up via R3 (4.7k to +5VL), both driven from U2 (eliteC). The pull-up analysis correctly reports ohms=4700.0 and to_rail='+5VL' for both lines.",
       "created_from": "FND-00000470",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The analyzer correctly identifies a full-duplex SPI bus (bus_id='L') driven from U2 with signals on mosi_l, miso_l nets. The chip select count of 1 and bus mode 'full_duplex' are consistent with the trackball connector J7 as the SPI peripheral.",
       "created_from": "FND-00000470",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "The analyzer correctly reports estimated_keys=17, switches_on_matrix=17, diodes_on_matrix=17. The 3x5_2 single-half design has 3 finger columns (5 keys each) + 2 thumb columns (1 key each) = 17 total. The matrix topology detection via diode-switch pairing is accurate. The only error is that the row_nets and col_nets labels are swapped (covered separately).",
       "created_from": "FND-00000470",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }

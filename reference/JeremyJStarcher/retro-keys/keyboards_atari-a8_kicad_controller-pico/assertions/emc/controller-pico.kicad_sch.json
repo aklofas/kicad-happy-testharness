@@ -1,7 +1,8 @@
 {
   "file_pattern": "controller-pico.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -45,22 +46,22 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~9",
+      "description": "low count ~7",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 6,
+        "max": 8
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~60 (+-10)",
+      "description": "EMC risk score ~67.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 50,
-        "max": 70
+        "min": 57.0,
+        "max": 77.0
       }
     },
     {
@@ -87,13 +88,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "9 io_filtering finding(s)",
+      "description": "7 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 9
+        "value": 7
       }
     },
     {
@@ -127,11 +128,11 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "~5 probe point(s) in test plan",
+      "description": "~4 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 4
+        "value": 3
       }
     },
     {

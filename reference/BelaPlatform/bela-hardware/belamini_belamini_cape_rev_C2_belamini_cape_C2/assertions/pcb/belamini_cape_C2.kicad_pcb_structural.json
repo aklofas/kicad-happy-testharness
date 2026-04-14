@@ -2,6 +2,7 @@
   "file_pattern": "belamini_cape_C2.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -74,38 +75,42 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 4 thermal_analysis.thermal_pads",
+      "description": "Exactly 4 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "IC3 in thermal_analysis.thermal_pads",
+      "description": "IC1 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "IC1 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^IC1$"
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "IC4 in thermal_analysis.thermal_pads",
+      "id": "STRUCT-00000010",
+      "description": "IC2 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^IC2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "IC4 in thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^IC4$"
@@ -113,58 +118,10 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "IC2 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 4 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "IC1 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "IC2 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "IC4 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "IC3 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^IC3$"

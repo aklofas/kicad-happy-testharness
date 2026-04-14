@@ -35,11 +35,13 @@
       "description": "The schematic connects ATmega328P (U1) to MCP2515 (U2) via SPI: MOSI, MISO, SCK, and SS_MCP nets are all present and named. The memory_interfaces (or equivalent SPI bus detector) reports no SPI bus detected. The MOSI/MISO nets also partially fail to include U2 pins due to the pin coordinate mismatch described separately.",
       "created_from": "FND-00000403",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

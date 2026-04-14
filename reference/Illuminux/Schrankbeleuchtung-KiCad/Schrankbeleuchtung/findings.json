@@ -17,20 +17,22 @@
         },
         {
           "description": "U1 TPS560430XDBVT is identified as a switching regulator with L1 (10uH inductor), +12V input, +5V output rail, and FB divider R9/R10. The estimated Vout of 2.499V (Vref=0.6V, R9=10k top, R10=3.16k bottom: 0.6*(1+10000/3160)=2.499V) is mathematically correct. The vout_net_mismatch observation correctly flags the 50% discrepancy between calculated Vout (~2.5V) and the +5V net name \u2014 a genuine design anomaly the analyzer correctly surfaces.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].estimated_vout",
+            "path": "findings",
             "value": 2.6,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_power_regulators[0].estimated_vout"
           }
         },
         {
           "description": "R9/R10 voltage divider (10k/3.16k, ratio 0.240) is detected as both a voltage_divider and feedback_network feeding U1's FB pin \u2014 accurate. LC filter (L1 10uH + C3 0.1uF, resonant at 159.15 kHz) is detected for the switching converter output filter \u2014 correct topology for a TPS560430 design. Four N-channel MOSFETs (Q1-Q4 IRLML0030TRPBF) are correctly detected as transistor_circuits with gate resistors R1-R4 (187R each) driving LED channel outputs.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.feedback_networks[0].mid_point_connections[0].component",
+            "path": "findings",
             "value": "U1",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_feedback_networks[0].mid_point_connections[0].component"
           }
         }
       ],

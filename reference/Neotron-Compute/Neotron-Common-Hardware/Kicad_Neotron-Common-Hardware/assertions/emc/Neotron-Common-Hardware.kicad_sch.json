@@ -1,56 +1,57 @@
 {
   "file_pattern": "Neotron-Common-Hardware.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~56 (tolerance 10%)",
+      "description": "Finding count ~54 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 53,
-        "max": 59
+        "min": 51,
+        "max": 57
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~15",
+      "description": "high count ~14",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 12,
+        "max": 16
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~11",
+      "description": "medium count ~6",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 5,
+        "max": 7
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~30",
+      "description": "low count ~28",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 27,
-        "max": 33
+        "min": 25,
+        "max": 31
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~26 (+-10)",
+      "description": "EMC risk score ~54.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 16,
-        "max": 36
+        "min": 44.5,
+        "max": 64.5
       }
     },
     {
@@ -66,24 +67,24 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "18 decoupling finding(s)",
+      "description": "12 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 18
+        "value": 12
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "35 io_filtering finding(s)",
+      "description": "33 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 35
+        "value": 33
       }
     },
     {
@@ -128,11 +129,11 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "~34 probe point(s) in test plan",
+      "description": "~32 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 30
+        "value": 28
       }
     },
     {
@@ -151,6 +152,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "~1 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 1
       }
     }
   ]

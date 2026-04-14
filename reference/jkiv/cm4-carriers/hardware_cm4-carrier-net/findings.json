@@ -19,20 +19,22 @@
       "incorrect": [
         {
           "description": "The design_observations USB_D- entry has has_esd_protection=false, but U6 (TPD2EUSB30) is present on the USB_D- net (pin 2). The bug is in signal_detectors.py line 3499: 'protected_nets = {p[\"protected_net\"] for p in results.get(\"protection_devices\", [])}' uses the singular protected_net field (which is only 'USB_D+'), not the plural protected_nets list (['USB_D+', 'USB_D-', '__unnamed_90']). The fix is to collect all protected_nets entries. Affects any multi-rail ESD protection device.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/\"has_esd_protection\":\\s*false/"
+            "value": "/\"has_esd_protection\":\\s*false/",
+            "detector_filter": "detect_design_observations"
           }
         },
         {
           "description": "The transistor_circuit entry for Q1 (DMP2066LSN) includes a led_driver sub-object referencing D3 ('Activity LED') with power_rail='+3V3'. However D3 is on net PI_LED_nACT (driven directly by the CM4 module, not by Q1). The actual load on Q1's source net (SD_PWR) includes D4 ('SD ON' LED) and J2 (SD card connector). The load_type='led' is triggered by D4 on SD_PWR, but the led_driver association logic looks more broadly and picks up the unrelated D3. The primary load is the SD card (J2 connector), not an LED.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits[0].led_driver.led_ref",
+            "path": "findings",
             "op": "equals",
-            "value": "D3"
+            "value": "D3",
+            "detector_filter": "detect_transistor_circuits[0].led_driver.led_ref"
           }
         },
         {

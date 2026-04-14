@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The OPamp-noninverting schematic has R1 (1k) from the inverting input to GND and R2 (9k) from the inverting input to the output \u2014 a textbook non-inverting configuration with gain = 1 + R2/R1 = 10. The analyzer classifies it as 'transimpedance_or_buffer' instead of 'non_inverting'. The 'transimpedance_or_buffer' label implies either unity gain (voltage follower) or a transimpedance topology, neither of which applies here.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits[0].configuration",
+            "path": "findings",
             "op": "equals",
-            "value": "non_inverting"
+            "value": "non_inverting",
+            "detector_filter": "detect_opamp_circuits[0].configuration"
           }
         }
       ],
@@ -36,22 +37,24 @@
       "incorrect": [
         {
           "description": "The rc_filters detector reports a high-pass filter (R1=10\u03a9, C1=1\u03bcF, fc=15.9 kHz) for the LC parallel resonance circuit. In this topology, C1 is part of the parallel LC tank between 'In' and 'Out', while R1 is a series damping resistor \u2014 not an RC high-pass filter. The out\u2192GND path through R1 is mistaken for an RC filter because the detector only checks pairwise R+C connectivity without considering whether an inductor is also bridging the same nodes.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "The schematic is a parallel RLC tank: L1 and C1 are both connected between the 'In' net and 'Out' net in parallel, with R1 as the series damping resistor. The lc_filter detector only looks for an L and C sharing a single internal node (series topology), so it finds nothing. Instead, the rc_filters detector incorrectly reports a high-pass filter from R1+C1 (cutoff 15.9 kHz), ignoring the inductor entirely. The schematic's own annotation notes f0 = 159 kHz, which is the parallel resonant frequency. The LC-Series-resonance schematic (same component values, series topology) correctly triggers lc_filters with resonant_hz = 159.15 kHz.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters"
           }
         }
       ],
@@ -72,11 +75,12 @@
       "correct": [
         {
           "description": "The OPamp-inverting schematic is correctly detected as 'inverting' configuration. The gain is reported as -10.0 (gain_dB=20.0), matching the actual R2/R1 ratio of 10k/1k = 10. The feedback_resistor (R2=10k) and input_resistor (R1=1k) are correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits[0].gain",
+            "path": "findings",
             "op": "equals",
-            "value": -10.0
+            "value": -10.0,
+            "detector_filter": "detect_opamp_circuits[0].gain"
           }
         }
       ],
@@ -110,11 +114,12 @@
       "incorrect": [
         {
           "description": "The OPamp-adding schematic is a summing/adding amplifier: three resistors (R1, R2, R3) all connect to the inverting input of U2, and R3 also serves as the feedback resistor. The analyzer detects it as a plain 'inverting' configuration using only R1 and R3 (input and feedback), missing that R2 is a second input resistor feeding the same summing node. A summing amplifier is a distinct topology (output is weighted sum of inputs) that warrants its own 'summing_inverting' or 'summing' configuration label and gain formula.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits[0].configuration",
+            "path": "findings",
             "op": "equals",
-            "value": "inverting"
+            "value": "inverting",
+            "detector_filter": "detect_opamp_circuits[0].configuration"
           }
         }
       ],
@@ -138,11 +143,12 @@
       "missed": [
         {
           "description": "In the NPN common-emitter amplifier, R1 (48k) connects from Vdc to node Ub, and R2 (7.2k) connects from Ub to GND \u2014 a classic resistor divider setting the base bias voltage. The voltage_dividers list is empty. The transistor_circuit entry does correctly capture R1 and R2 as base_resistors and notes base_pulldown=R2, but the explicit voltage divider analysis section does not fire because Vdc is not recognized as a power rail (it's a named signal net, not a power symbol). The divider output feeds the base input, which is a recognized bias topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
@@ -164,11 +170,12 @@
       "incorrect": [
         {
           "description": "The OPamp-freerunning schematic has an LM741 with its inverting input (pin 2) tied to GND and a 1M\u03a9 feedback resistor from output to inverting input. With only R1 (1M\u03a9) as feedback from output to inverting input and a VSIN source at non-inverting input, this is an almost-unity-gain non-inverting amplifier (or freerunning simulation). The analyzer reports 'comparator_or_open_loop' because pin 1 (+) is on the non-inverting input going to In, while pin 2 (-) connects to GND via the feedback network. The configuration should more accurately be 'non_inverting' with very high gain (approaching open loop due to 1M\u03a9 feedback).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits[0].configuration",
+            "path": "findings",
             "op": "equals",
-            "value": "comparator_or_open_loop"
+            "value": "comparator_or_open_loop",
+            "detector_filter": "detect_opamp_circuits[0].configuration"
           }
         }
       ],
@@ -192,11 +199,12 @@
       "missed": [
         {
           "description": "The schematic is a classic NPN constant-current source: Zener diode D1 (BZX84C5V6, 5.6V) sets the base voltage via R1 (1k), and R2 (80\u03a9 emitter resistor) sets the constant collector current Ic \u2248 (Vz - Vbe)/R2 \u2248 60mA. The analyzer detects the transistor circuit correctly (with base_resistors=[R1] and emitter_resistor=R2) but reports zero current_sense entries and zero power_regulators. The Zener diode's role in establishing the reference voltage for the base bias is not captured anywhere in the output.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_current_sense"
           }
         }
       ],
@@ -217,11 +225,12 @@
       "correct": [
         {
           "description": "The transistor_circuits entry for Q1 correctly identifies the BJT type, emitter_is_ground=true (switch configuration), load_type='resistive', and the led_driver sub-object with D1 (LED), current_resistor Rk1 (150\u03a9), and base_resistor Rb1 (1k). This is accurate for an NPN transistor switch driving an LED.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits[0].led_driver.led_ref",
+            "path": "findings",
             "op": "equals",
-            "value": "D1"
+            "value": "D1",
+            "detector_filter": "detect_transistor_circuits[0].led_driver.led_ref"
           }
         }
       ],
@@ -246,11 +255,12 @@
       "missed": [
         {
           "description": "The RC-Bandpass schematic connects a high-pass stage (R1=1k, C1=1\u03bcF, fc=159 Hz) in series with a low-pass stage (R2=10\u03a9, C2=1\u03bcF, fc=15.9 kHz). Together they form a bandpass filter with passband 159 Hz\u201315.9 kHz. The analyzer correctly identifies both individual stages as separate rc_filters entries, plus an additional spurious 'RC-network' entry. However, there is no 'bandpass' type entry that synthesizes the two cascaded stages into a single bandpass topology \u2014 the fact that a high-pass and low-pass with compatible cutoffs are chained is not flagged as a bandpass.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/bandpass/"
+            "value": "/bandpass/",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],

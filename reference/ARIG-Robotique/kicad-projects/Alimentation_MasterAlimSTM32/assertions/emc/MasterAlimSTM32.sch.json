@@ -1,16 +1,17 @@
 {
   "file_pattern": "MasterAlimSTM32.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~24 (tolerance 10%)",
+      "description": "Finding count ~22 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 19,
+        "max": 25
       }
     },
     {
@@ -25,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~12",
+      "description": "high count ~10",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 9,
+        "max": 11
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~2",
+      "description": "medium count ~1",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 1,
-        "max": 3
+        "min": 0,
+        "max": 2
       }
     },
     {
@@ -55,23 +56,23 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~20 (+-10)",
+      "description": "EMC risk score ~62.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 10,
-        "max": 30
+        "min": 52.0,
+        "max": 72.0
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "5 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 2
       }
     },
     {

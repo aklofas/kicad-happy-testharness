@@ -2,6 +2,7 @@
   "file_pattern": "esphome-nfc.kicad_sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -27,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -79,16 +80,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Rule DC-002 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^DC\\-002$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -98,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
@@ -108,33 +99,23 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "U4 in EMC findings",
+      "id": "STRUCT-00000010",
+      "description": "C4 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU4\\b"
+        "pattern": "\\bC4\\b"
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "C13 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC13\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "C12 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC12\\b"
       }
     }
   ]

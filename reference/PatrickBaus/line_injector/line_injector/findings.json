@@ -8,9 +8,10 @@
       "summary": "NMOS transistor circuit with gate resistor correctly detected for AOT2618 high-side switch",
       "details": "The transistor_circuits section correctly identifies Q1 (AOT2618, NMOS) with drain on VDD, source driving output connectors, gate_resistors=[R1 10k], and drain_is_power=true. The 49.9\u03a9 source resistors (R2, R3, R4) for current-sharing and the large 1mF bulk capacitors (C1, C3) are present in the BOM. The RC filter detection correctly identifies the gate RC filter (R1=10k, C6+C4=2\u00b5F in parallel, fc=7.96 Hz).",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
       }
     }
   ]

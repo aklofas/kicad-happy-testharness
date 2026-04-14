@@ -67,12 +67,13 @@
       "incorrect": [
         {
           "description": "Audio codec crystal circuit components (R91/R104 with C90/C93/C81/C91) classified as generic RC low-pass filters - these are actually crystal load network components for an audio codec crystal oscillator",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R104$"
+            "pattern": "^R104$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -88,12 +89,13 @@
         },
         {
           "description": "Crystal feedback resistor R13 1k with 27pF caps classified as RC filter at 5.89MHz - this is crystal oscillator biasing, not an RC filter",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R13$"
+            "pattern": "^R13$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -104,12 +106,13 @@
         },
         {
           "description": "AMP volume control network (R77 10k / R42 1k) classified as voltage divider but this is actually part of the digital volume control circuit for the audio amplifier where T2 is used as a variable attenuator",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R42$"
+            "pattern": "^R42$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -124,12 +127,13 @@
       "missed": [
         {
           "description": "No crystal circuits detected - RP2350 uses a 12MHz crystal with 27pF load caps (C21/C22) visible in BOM",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^C21$"
+            "pattern": "^C21$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -177,11 +181,12 @@
         },
         {
           "description": "Line-In audio connector and headset connector not linked to audio signal path",
-          "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
+          "analyzer_section": "detect_buzzer_speakers",
           "check": {
-            "path": "signal_analysis.buzzer_speaker_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_buzzer_speakers"
           },
           "detector": "buzzer_speaker_circuits",
           "subject_refs": [],
@@ -190,11 +195,12 @@
         },
         {
           "description": "SD card interface (MICRO_SD1) not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],

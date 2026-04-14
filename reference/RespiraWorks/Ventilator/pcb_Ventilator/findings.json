@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Voltage divider R163/R165 (442k/39k) correctly detected as Vin-Sense scaling divider with 0.081 ratio, matching the schematic note of 0.15x scaling (the full divider is R163+R164/R165 giving effective ~0.15x)",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R163$"
+            "pattern": "^R163$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -26,12 +27,13 @@
         },
         {
           "description": "Voltage divider R166/R168 (442k/39k) correctly detected as VBat-Sense scaling divider with 0.081 ratio, matching the same scaling topology as Vin-Sense",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R166$"
+            "pattern": "^R166$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -43,11 +45,12 @@
         },
         {
           "description": "RC filter C95/R163-R164-R165 correctly detected as 240 Hz low-pass on Vin-Sense line, with C95=10nF forming the filter",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "equals",
-            "value": 165
+            "value": 165,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -62,12 +65,13 @@
         },
         {
           "description": "Voltage divider R169/R170 (442k/100k) for battery charger input voltage sensing correctly identified",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R169$"
+            "pattern": "^R169$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -79,12 +83,13 @@
         },
         {
           "description": "Feedback divider R171/R172 (52.3k/10k) on RegN net for buck converter correctly found with ratio 0.16",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R171$"
+            "pattern": "^R171$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -96,12 +101,13 @@
         },
         {
           "description": "R175/R176 (316k/100k) Pack-P voltage sensing divider correctly identified with R183/C106 low-pass filter at 5.31 Hz",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R175$"
+            "pattern": "^R175$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -115,12 +121,13 @@
         },
         {
           "description": "R212/R213 (100k/10k) feedback divider from 12Vout correctly detected with ratio 0.091",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R212$"
+            "pattern": "^R212$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -161,12 +168,13 @@
       "incorrect": [
         {
           "description": "R167/R168 (39k/39k) incorrectly reported as a standalone voltage divider with ratio 0.5. R167 is the middle resistor in a 3-resistor divider chain R166-R167-R168 (442k-39k-39k), not a separate divider. The actual topology is a multi-tap attenuator for VBat-Sense.",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R166$"
+            "pattern": "^R166$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -179,12 +187,13 @@
         },
         {
           "description": "R164/R165 (39k/39k) similarly reported as a standalone 0.5 ratio divider. R164 is part of the R163-R164-R165 attenuator chain for Vin-Sense, not a standalone divider.",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R163$"
+            "pattern": "^R163$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -199,12 +208,13 @@
       "missed": [
         {
           "description": "No power regulator detected for the 12V buck converter sub-sheet (power_vsys.sch). The sheet contains U25, a buck controller IC, but no power_regulators entry was generated.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U25$"
+            "pattern": "^U25$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -215,12 +225,13 @@
         },
         {
           "description": "No protection_devices detected for D26 (SMBJ20AQ 20V TVS zener) which provides surge protection on the power input line.",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D26$"
+            "pattern": "^D26$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -245,12 +256,13 @@
       "correct": [
         {
           "description": "Voltage divider R71/R72 (100k/100k) on Alarm-Bat net correctly detected with 0.5 ratio, feeding through R77 to a comparator input",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R71$"
+            "pattern": "^R71$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -263,12 +275,13 @@
         },
         {
           "description": "RC low-pass filter R66/C47 (100k/100nF) at 15.92 Hz on PD-Alarm correctly identified",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R66$"
+            "pattern": "^R66$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -280,12 +293,13 @@
         },
         {
           "description": "RC low-pass filter R67/C49 (442k/1uF) at 0.36 Hz correctly detected as a very slow time constant circuit",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R67$"
+            "pattern": "^R67$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -297,12 +311,13 @@
         },
         {
           "description": "RC filter R70/C52 (249k/10nF) at 63.92 Hz correctly identified",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R70$"
+            "pattern": "^R70$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -314,12 +329,13 @@
         },
         {
           "description": "BJT transistors Q4, Q5, Q9, Q11, Q13 (MMBT3904) correctly identified with base resistors and pulldown analysis",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q11$"
+            "pattern": "^Q11$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -364,12 +380,13 @@
       "missed": [
         {
           "description": "Comparator circuits U6 (TLV7031) and U7 (TLV7031) not detected. These are voltage comparators used as power-down alarm triggers, comparing power rail voltages against reference thresholds. U8 (NE555) timer IC also not detected as a timer/oscillator.",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [
@@ -395,12 +412,13 @@
       "correct": [
         {
           "description": "Crystal Y1 and Y3 (8 MHz) correctly detected with load capacitors and frequency",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -430,12 +448,13 @@
         },
         {
           "description": "Voltage divider R30/R31 (316k/52.3k) on nEnable correctly detected as power supply enable threshold divider from Vin",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R30$"
+            "pattern": "^R30$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -447,12 +466,13 @@
         },
         {
           "description": "Feedback divider R34/R35 (52.3k/10k) on Fb net for 5V buck converter correctly identified",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R34$"
+            "pattern": "^R34$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -464,12 +484,13 @@
         },
         {
           "description": "R253/R254 (4.7k/4.7k) VSense mid-rail divider from +3.3V_Ctrl correctly found",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R253$"
+            "pattern": "^R253$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -481,12 +502,13 @@
         },
         {
           "description": "Voltage divider R21/R20 (1k/1k) for UI-Power-Off signal correctly detected",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R20$"
+            "pattern": "^R20$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -500,12 +522,13 @@
       "incorrect": [
         {
           "description": "R135/R134 (4.02k/4.02k) reported as voltage divider with Out-A2 to Out-B1 to GND, but these are stepper motor driver output resistors connected through a diode (D23), not a voltage divider. The mid-point connections show both anode and cathode of D23, confirming this is a different topology.",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R134$"
+            "pattern": "^R134$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -521,11 +544,12 @@
       "missed": [
         {
           "description": "No power regulators detected in the full hierarchical analysis. The design includes multiple regulators: the 5V buck (power_5V_buck.sch), 3.3V LDO (power_3.3V_LDO.sch), and the 12V system buck (power_vsys.sch). These sub-sheets contain regulator ICs that were not captured.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -534,11 +558,12 @@
         },
         {
           "description": "I2C bus connections (SCL/SDA nets visible throughout battery controller, sensors, and other sub-sheets) not detected as bus protocols.",
-          "analyzer_section": "signal_analysis.bus_protocols",
+          "analyzer_section": "detect_bus_protocols",
           "check": {
-            "path": "signal_analysis.bus_protocols",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_protocols"
           },
           "detector": "bus_protocols",
           "subject_refs": [],

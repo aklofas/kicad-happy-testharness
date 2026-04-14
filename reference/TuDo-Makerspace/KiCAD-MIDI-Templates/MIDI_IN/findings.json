@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "All three schematics correctly report duplicate_references and unannotated for all refs ending in '?'. This is appropriate for design templates where component annotation is intentionally deferred.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "pwr_flag_warnings correctly identifies GND has no PWR_FLAG. label_shape_warnings correctly flags 'MCU VCC' as an undriven input-shaped label. Both are real design issues in this template.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,28 +28,28 @@
       "incorrect": [
         {
           "description": "The analyzer counts unique BOM rows (grouped by ref prefix, all '?') rather than actual placed instances. MIDI_IN has 27 component instances (8x C?, 2x D?, 2x FB?, 3x J?, 2x Q?, 8x R?, 2x U?) but total_components=7 and unique_parts=7. This is misleading for any actual count-based assertion. These schematics are design templates showing multiple circuit variants on a single sheet with all references left unannotated.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "MIDI_IN has 2 Q? instances (NMOS transistors, UUIDs 7606cbd0 and dbdba231) but transistor_circuits only contains 1 entry. This is likely caused by duplicate reference collision: when multiple components share the same '?' reference, the net resolver merges or loses connectivity for the duplicate, causing the second transistor to be skipped.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "MIDI_IN is the canonical MIDI IN circuit which uses a 6N137 high-speed optocoupler (U?, lib_id: Isolator:6N137) as the core isolation barrier between the MIDI cable and the MCU. isolation_barriers=[] in the output. The 6N137 should be detectable by its lib_id prefix 'Isolator:' or its keywords 'optically coupled'.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "MIDI_IN has two D? diodes (value: '1N4148/1N400x') used as protection diodes on the MIDI input. protection_devices=[] in the output. These should be identifiable as protection/clamping diodes given their placement on the input signal path.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -73,11 +73,11 @@
       "incorrect": [
         {
           "description": "Same BOM-dedup undercounting as MIDI_IN. MIDI_OUT has 31 instances (6x U?, 6x J?, 2x Q?, 13x R?, 4x FB?) collapsed to 5 BOM rows. This is a systematic issue: the analyzer uses BOM dedup row count (grouped by value+footprint) as total_components rather than len(components list).",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The single detected Q? transistor circuit in MIDI_OUT shows gate_net='__unnamed_16' and drain_net='__unnamed_16' \u2014 the same unnamed net for both, which is electrically impossible in the actual design. This is caused by net merging when multiple components share the same '?' reference, producing incorrect connectivity data for the transistor. MIDI_OUT has 2 Q? instances but only 1 is in transistor_circuits.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -99,7 +99,7 @@
       "incorrect": [
         {
           "description": "Same BOM-dedup undercounting. 28 instances collapsed to 5 BOM rows due to all refs being unannotated (all end in '?'). Analyzer counts unique BOM-dedup groups as total_components.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -120,9 +120,9 @@
       "correct": [
         {
           "description": "All three .kicad_pcb files are minimal 50-byte stubs containing only '(kicad_pcb (version 20211014) (generator pcbnew))'. The analyzer correctly reports footprint_count=0, track_segments=0, zero layers, and routing_complete=true (vacuously). The copper_presence warning about unfilled zones is appropriate noise for a stub board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

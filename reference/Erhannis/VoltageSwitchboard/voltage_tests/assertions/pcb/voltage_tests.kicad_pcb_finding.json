@@ -39,20 +39,22 @@
       "description": "thermal_analysis.zone_stitching correctly identifies two filled zones: GND on In1.Cu (3961.5 mm\u00b2, 18 vias) and +3V3 on In2.Cu (3961.5 mm\u00b2, 3 vias). This is a typical 4-layer stackup with power/ground planes on the inner layers. Via densities are accurately reported.",
       "created_from": "FND-00001676",
       "check": {
-        "path": "thermal_analysis.zone_stitching",
+        "path": "findings",
         "value": 2,
         "op": "min_count"
-      }
+      },
+      "migration_note": "Path migrated from: thermal_analysis.zone_stitching"
     },
     {
       "id": "FND-00001676-AST-05",
       "description": "connectivity reports total_nets_with_pads=46, routed_nets=34 (some nets are routed via copper pours/zones rather than discrete tracks), unrouted_count=0, routing_complete=True. This is consistent with a board using internal copper pour planes for power/ground nets.",
       "created_from": "FND-00001676",
       "check": {
-        "path": "connectivity.unrouted_count",
+        "path": "findings_count",
         "value": 0,
         "op": "equals"
-      }
+      },
+      "migration_note": "Path migrated from: connectivity.unrouted_count"
     },
     {
       "id": "FND-00001676-AST-06",

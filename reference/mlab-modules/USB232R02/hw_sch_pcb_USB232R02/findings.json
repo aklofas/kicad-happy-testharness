@@ -17,20 +17,22 @@
         },
         {
           "description": "The analyzer correctly identifies R1 (4k7) and R2 (10k) forming a voltage divider from +5V to GND with the midpoint connected to U2 pin 11 (~RESET). The ratio of 0.680 is correct (10k/(4.7k+10k)). This is the standard reset pull-up/divider for the FT231XQ.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "The analyzer correctly identifies U1 (USBLC6-2SC6) as an ESD protection IC with protected_nets D+, D-, DN, DP. The protection_devices list correctly captures both F1 (fuse on VBUS path) and U1 as protection devices.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -53,11 +55,12 @@
         },
         {
           "description": "Three decoupling entries are correctly detected: +5V with C4 (100nF) and C2 (10uF) for 10.1uF total, VCCIO with C5 (100nF), and +3V3 with C3 (100nF). These match the schematic connections to U2 (FT231XQ) power pins.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": 3,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

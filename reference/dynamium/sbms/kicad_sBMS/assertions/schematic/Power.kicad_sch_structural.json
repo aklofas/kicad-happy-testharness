@@ -2,67 +2,75 @@
   "file_pattern": "Power.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 decoupling_analysis",
+      "description": "Exactly 3 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 8 design_observations",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 8
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 3 lc_filters",
-      "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 3
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "L1 in lc_filters",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 3 detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "L1 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L1$"
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 3 led_audit",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 power_regulators",
+      "description": "Exactly 3 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U5 in power_regulators",
+      "description": "U5 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U5$"
@@ -70,9 +78,10 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U13 in power_regulators",
+      "description": "U13 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U13$"
@@ -80,9 +89,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U3 in power_regulators",
+      "description": "U3 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U3$"
@@ -90,18 +100,20 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 4 detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R2 in rc_filters",
+      "description": "R2 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R2$"
@@ -109,9 +121,10 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R3 in rc_filters",
+      "description": "R3 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R3$"
@@ -119,9 +132,10 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R4 in rc_filters",
+      "description": "R4 in detect_rc_filters",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R4$"
@@ -129,27 +143,30 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Exactly 39 transistor_circuits",
+      "description": "Exactly 39 detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "equals",
         "value": 39
       }
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Q17 in transistor_circuits",
+      "description": "Q17 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q17$"
@@ -157,9 +174,10 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Q11 in transistor_circuits",
+      "description": "Q11 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q11$"
@@ -167,9 +185,10 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Q39 in transistor_circuits",
+      "description": "Q39 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q39$"
@@ -177,9 +196,10 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "Q30 in transistor_circuits",
+      "description": "Q30 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q30$"
@@ -187,9 +207,10 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "Q1 in transistor_circuits",
+      "description": "Q1 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q1$"
@@ -197,9 +218,10 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "Q26 in transistor_circuits",
+      "description": "Q26 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q26$"
@@ -207,9 +229,10 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "Q36 in transistor_circuits",
+      "description": "Q36 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q36$"
@@ -217,9 +240,10 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "Q20 in transistor_circuits",
+      "description": "Q20 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q20$"
@@ -227,9 +251,10 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "Q10 in transistor_circuits",
+      "description": "Q10 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q10$"
@@ -237,9 +262,10 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "Q19 in transistor_circuits",
+      "description": "Q19 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q19$"
@@ -247,9 +273,10 @@
     },
     {
       "id": "STRUCT-00000026",
-      "description": "Q22 in transistor_circuits",
+      "description": "Q22 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q22$"
@@ -257,9 +284,10 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "Q5 in transistor_circuits",
+      "description": "Q5 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q5$"
@@ -267,9 +295,10 @@
     },
     {
       "id": "STRUCT-00000028",
-      "description": "Q6 in transistor_circuits",
+      "description": "Q6 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q6$"
@@ -277,9 +306,10 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "Q29 in transistor_circuits",
+      "description": "Q29 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q29$"
@@ -287,9 +317,10 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "Q15 in transistor_circuits",
+      "description": "Q15 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q15$"
@@ -297,9 +328,10 @@
     },
     {
       "id": "STRUCT-00000031",
-      "description": "Q35 in transistor_circuits",
+      "description": "Q35 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q35$"
@@ -307,9 +339,10 @@
     },
     {
       "id": "STRUCT-00000032",
-      "description": "Q28 in transistor_circuits",
+      "description": "Q28 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q28$"
@@ -317,9 +350,10 @@
     },
     {
       "id": "STRUCT-00000033",
-      "description": "Q2 in transistor_circuits",
+      "description": "Q2 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q2$"
@@ -327,9 +361,10 @@
     },
     {
       "id": "STRUCT-00000034",
-      "description": "Q33 in transistor_circuits",
+      "description": "Q33 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q33$"
@@ -337,9 +372,10 @@
     },
     {
       "id": "STRUCT-00000035",
-      "description": "Q32 in transistor_circuits",
+      "description": "Q32 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q32$"
@@ -347,9 +383,10 @@
     },
     {
       "id": "STRUCT-00000036",
-      "description": "Q24 in transistor_circuits",
+      "description": "Q24 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q24$"
@@ -357,9 +394,10 @@
     },
     {
       "id": "STRUCT-00000037",
-      "description": "Q12 in transistor_circuits",
+      "description": "Q12 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q12$"
@@ -367,9 +405,10 @@
     },
     {
       "id": "STRUCT-00000038",
-      "description": "Q16 in transistor_circuits",
+      "description": "Q16 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q16$"
@@ -377,9 +416,10 @@
     },
     {
       "id": "STRUCT-00000039",
-      "description": "Q8 in transistor_circuits",
+      "description": "Q8 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q8$"
@@ -387,9 +427,10 @@
     },
     {
       "id": "STRUCT-00000040",
-      "description": "Q34 in transistor_circuits",
+      "description": "Q34 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q34$"
@@ -397,9 +438,10 @@
     },
     {
       "id": "STRUCT-00000041",
-      "description": "Q38 in transistor_circuits",
+      "description": "Q38 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q38$"
@@ -407,9 +449,10 @@
     },
     {
       "id": "STRUCT-00000042",
-      "description": "Q9 in transistor_circuits",
+      "description": "Q9 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q9$"
@@ -417,9 +460,10 @@
     },
     {
       "id": "STRUCT-00000043",
-      "description": "Q7 in transistor_circuits",
+      "description": "Q7 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q7$"
@@ -427,9 +471,10 @@
     },
     {
       "id": "STRUCT-00000044",
-      "description": "Q18 in transistor_circuits",
+      "description": "Q18 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q18$"
@@ -437,9 +482,10 @@
     },
     {
       "id": "STRUCT-00000045",
-      "description": "Q27 in transistor_circuits",
+      "description": "Q27 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q27$"
@@ -447,9 +493,10 @@
     },
     {
       "id": "STRUCT-00000046",
-      "description": "Q13 in transistor_circuits",
+      "description": "Q13 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q13$"
@@ -457,9 +504,10 @@
     },
     {
       "id": "STRUCT-00000047",
-      "description": "Q14 in transistor_circuits",
+      "description": "Q14 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q14$"
@@ -467,9 +515,10 @@
     },
     {
       "id": "STRUCT-00000048",
-      "description": "Q31 in transistor_circuits",
+      "description": "Q31 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q31$"
@@ -477,9 +526,10 @@
     },
     {
       "id": "STRUCT-00000049",
-      "description": "Q21 in transistor_circuits",
+      "description": "Q21 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q21$"
@@ -487,9 +537,10 @@
     },
     {
       "id": "STRUCT-00000050",
-      "description": "Q25 in transistor_circuits",
+      "description": "Q25 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q25$"
@@ -497,9 +548,10 @@
     },
     {
       "id": "STRUCT-00000051",
-      "description": "Q3 in transistor_circuits",
+      "description": "Q3 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q3$"
@@ -507,9 +559,10 @@
     },
     {
       "id": "STRUCT-00000052",
-      "description": "Q23 in transistor_circuits",
+      "description": "Q23 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q23$"
@@ -517,9 +570,10 @@
     },
     {
       "id": "STRUCT-00000053",
-      "description": "Q4 in transistor_circuits",
+      "description": "Q4 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q4$"
@@ -527,9 +581,10 @@
     },
     {
       "id": "STRUCT-00000054",
-      "description": "Q37 in transistor_circuits",
+      "description": "Q37 in detect_transistor_circuits",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q37$"

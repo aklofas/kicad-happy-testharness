@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "22 components extracted (1 IC, 6 caps, 8 connectors, 3 LEDs, 3 resistors, 1 jumper). Power rails with analog/digital split (+5V/+5VD, GNDA/GNDD) correctly identified. KiCad 5 legacy format parsed without errors.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "The -5V net is a negative supply rail powering the PGA2311 analog section (connected to VEE/AVSS). It is classified as 'signal' in net_classification instead of 'power' or 'negative_supply'. This is the same class of V- classification bug seen in PDH_photodiode.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The PGA2311 is an SPI-controlled stereo volume control. Nets SCLK, SDI, CS, SDO are present and individually classified as clock/data/chip_select/data, but bus_analysis.spi is empty []. The analyzer correctly classifies net types but fails to aggregate them into an SPI bus topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -50,9 +50,9 @@
       "correct": [
         {
           "description": "26 footprints all on front side, mixed SMD/THT (13 each), 2-layer, routing complete. DFM tier classified as advanced due to min track/drill metrics.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

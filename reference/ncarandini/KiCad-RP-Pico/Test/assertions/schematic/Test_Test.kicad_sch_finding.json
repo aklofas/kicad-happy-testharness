@@ -9,7 +9,7 @@
       "description": "U1 (Pico, 43 pins), J1/J2 (Conn_01x20), J3 (Conn_01x03) all correctly extracted. unconnected_pins=0 is correct. GND net with 16 connections is accurate (Pico has 8 GND pins, connectors share the net).",
       "created_from": "FND-00000732",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "J3 has SWDIO on pin 1 and SWCLK on pin 3 (GND pin 2), which is a standard SWD debug connector. test_coverage.observations says 'No debug connectors (SWD/JTAG/UART) identified'. The SWD pins are on unnamed nets ('__unnamed_29', '__unnamed_30') so the name-based SWD detector misses them.",
       "created_from": "FND-00000732",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

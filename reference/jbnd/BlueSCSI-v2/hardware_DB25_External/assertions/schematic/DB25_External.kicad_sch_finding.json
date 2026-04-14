@@ -31,11 +31,13 @@
       "description": "Same as Centronics_50Pin: nets SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS are present but memory_interfaces is empty. The SPI SD card interface connected to the Raspberry Pi Pico (RP1) is not identified.",
       "created_from": "FND-00000412",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

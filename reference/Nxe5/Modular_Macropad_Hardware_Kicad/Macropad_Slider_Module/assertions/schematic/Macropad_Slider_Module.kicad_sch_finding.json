@@ -9,13 +9,15 @@
       "description": "Source confirms exactly 4 SK6812MINI instances (D5, D6, D7, D8) in the Slider Module. The analyzer correctly reports chain_length=4 with data_in_net='LED_GPIO'.",
       "created_from": "FND-00001778",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "chain_length": 4,
           "led_type": "SK6812MINI"
-        }
-      }
+        },
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001778-AST-02",

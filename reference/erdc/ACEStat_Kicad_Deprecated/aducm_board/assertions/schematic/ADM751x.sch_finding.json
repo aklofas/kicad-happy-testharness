@@ -9,11 +9,13 @@
       "description": "U3 (ADM7514, Analog Devices ultra-low noise LDO from the ADM751x family) is present with VIN/VOUT/EN/BYP/REF/REF_SENSE pins and 5 decoupling capacitors. signal_analysis.power_regulators is empty []. The ADM7514 is clearly a linear regulator (pins named VOUT, VIN, EN confirm this). A power_regulator entry with regulator_type='linear', input_rail='+VIN', output_rail='+VOUT' should be generated.",
       "created_from": "FND-00000333",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_value",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

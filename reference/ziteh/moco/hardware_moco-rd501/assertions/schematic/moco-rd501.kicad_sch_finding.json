@@ -9,30 +9,36 @@
       "description": "Three-phase bridge (Q1-Q6 CSD18540Q5B) correctly detected in bridge_circuits",
       "created_from": "FND-00000270",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     },
     {
       "id": "FND-00000270-AST-02",
       "description": "DRV8301 correctly identified as ic_with_internal_regulator providing +5V",
       "created_from": "FND-00000270",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000270-AST-03",
       "description": "XC6220B331MR LDO producing 3.3V correctly identified",
       "created_from": "FND-00000270",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000270-AST-04",
@@ -49,10 +55,12 @@
       "description": "Two crystals (8MHz, 16MHz) with load cap analysis correct",
       "created_from": "FND-00000270",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00000270-AST-06",

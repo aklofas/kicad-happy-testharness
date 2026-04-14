@@ -17,11 +17,12 @@
         },
         {
           "description": "Dual KSZ9031 Ethernet PHYs detected",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],
@@ -30,11 +31,12 @@
         },
         {
           "description": "25MHz crystals with 33pF load caps detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -43,11 +45,12 @@
         },
         {
           "description": "ESDS314DBVR ESD ICs correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [],
@@ -74,7 +77,7 @@
         },
         {
           "description": "False three-phase bridge circuit from PHY address strap FETs",
-          "analyzer_section": "signal_analysis.bridge_circuits",
+          "analyzer_section": "detect_bridge_circuits",
           "detector": "bridge_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -84,12 +87,13 @@
       "missed": [
         {
           "description": "VR1/VR2 AMS1117-1.2 LDOs not detected as power regulators",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^VR1$"
+            "pattern": "^VR1$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [

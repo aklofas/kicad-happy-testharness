@@ -8,27 +8,27 @@
       "correct": [
         {
           "description": "rf_chains contains one chain with U1 (SX1262) as transceiver and U3 (PE4259) as switch. rf_matching correctly identifies the pi-match network (L7, C22, C17, C19) around antenna J12.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "power_regulators lists U2 with topology LDO, input_rail +5V, output_rail +3V3, estimated_vout 3.3 from fixed_suffix. Correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "rc_filters correctly computes the R=100R, C=1nF low-pass filter with cutoff ~1.59 MHz on the DIO2 net going to the SX1262 DIO2 pin. Value calculation is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -37,15 +37,15 @@
       "incorrect": [
         {
           "description": "bus_analysis.spi contains two entries: bus_id '0' and bus_id 'pin_U1', both describing the same MISO/MOSI/SCK nets connected only to U1. The second entry adds no new information; the deduplication between net-based and pin-name-based SPI detection is failing for single-device buses.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "crystal_circuits reports Y1 with load_caps=[] but the schematic has small-value caps (C11 '-' value, C12 '-' value) near the crystal. C11/C12 have value '-' which may cause the cap-association logic to skip them. This is a data quality issue (unspecified cap values) but worth checking whether the crystal oscillator connection is being traced.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -68,18 +68,18 @@
       "correct": [
         {
           "description": "Statistics match the schematic component count (55). Board dimensions 50.3x30.0mm correctly extracted. All 29 nets fully routed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "L4 (47nH, 0402) has pad1 connected to a zone net and pad2 on signal-only \u2014 thermal asymmetry correctly identified as medium tombstoning risk.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

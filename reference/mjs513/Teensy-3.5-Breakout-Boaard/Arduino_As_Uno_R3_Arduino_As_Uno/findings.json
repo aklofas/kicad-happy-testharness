@@ -56,11 +56,12 @@
       "missed": [
         {
           "description": "D3 and D4 are D_Schottky diodes. D3 has its cathode on +5V and anode on an intermediate net; D4 has its cathode on that same net and anode feeding a board output. This is a Schottky diode OR / power-mux topology. The analyzer reports protection_devices=[] and no other classification. While this is not a classic reverse-polarity protector, it is a meaningful discrete power circuit worth noting. The false_negative category applies because the circuit has recognizable structure that goes undetected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
@@ -144,11 +145,12 @@
       "correct": [
         {
           "description": "U1 (NCP1117ST50T3G_MountingTab) is identified as topology='LDO' with input_rail and output_rail populated. The SOT-223 LDO with VI/VO/GND pins is correctly recognized despite all rails being unnamed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -164,11 +166,12 @@
       "incorrect": [
         {
           "description": "The analyzer emits a 'regulator_caps' observation claiming missing_caps for both the input rail (__unnamed_74) and output rail (__unnamed_78). However, C1 and C2 both connect to __unnamed_74 (U1 VI input), and C3 connects to __unnamed_75 (U1 VO pin 2). The analyzer tracks only pin 4 (the tab VO) as the output rail but ignores pin 2 (also VO), so it misses C3 on the output side. Both input and output capacitors are present; the observation is incorrect.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -650,22 +653,24 @@
       "correct": [
         {
           "description": "U1 is an NCP1117ST50T3G in SOT-223 package (the '50' suffix = 5.0V fixed output LDO). The analyzer correctly identifies it as topology=LDO. The input rail (__unnamed_74, pin 3 VI) connects C1 and C2. The output rail is __unnamed_75 (pin 2 VO) connecting C3, SW3 (RST button), and P16. There is also a tab pin (pin 4 VO, __unnamed_78) as a separate net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "value": "LDO",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The design_observations entry for U1 (NCP1117) reports missing_caps on both input and output. However, C1 and C2 are on net __unnamed_74 (pin 3 VI = input), and C3 is on net __unnamed_75 (pin 2 VO = output). Caps are present on both sides. The false positive occurs because the analyzer selected the tab pin (pin 4, also named VO) as the output_rail (__unnamed_78), which contains only the solo U1 tab connection and no caps. The real output rail __unnamed_75 (pin 2) does have C3. The analyzer picks the wrong VO pin as the representative output net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -681,11 +686,12 @@
         },
         {
           "description": "The schematic has three capacitors (C1: CP radial, C2: C ceramic disc, C3: CP radial) all electrically connected to U1 (NCP1117 LDO). C1 and C2 share the input net with U1 pin VI, and C3 shares the output net with U1 pin VO. The decoupling_analysis list is empty even though these are textbook LDO decoupling capacitors. The lack of named power rails (no power symbols) likely prevents the decoupling detector from associating the caps with a known power domain.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -723,11 +729,12 @@
       "missed": [
         {
           "description": "The schematic contains two D_Schottky components forming a power-ORing / reverse-feed protection chain. D3 anode connects to +5V (Arduino rail) and cathode to an intermediate net shared with D4 anode. D4 cathode connects onward. This is a classic dual-diode power isolation topology (protecting against back-feed between two power sources). The protection_devices list is empty. The detector likely misses Schottky diodes when they are not on nets named with voltage patterns or when they don't connect to a dedicated IC power pin.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {

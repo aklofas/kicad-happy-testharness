@@ -2,16 +2,17 @@
   "file_pattern": "active-probe-test.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "3 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -77,26 +78,16 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U104 in EMC findings",
+      "description": "C202 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU104\\b"
+        "pattern": "\\bC202\\b"
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "C104 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC104\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
       "description": "J201 in EMC findings",
       "check": {
         "path": "findings",
@@ -106,13 +97,23 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "U103 in EMC findings",
+      "id": "STRUCT-00000010",
+      "description": "U104 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU103\\b"
+        "pattern": "\\bU104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C104 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC104\\b"
       }
     },
     {

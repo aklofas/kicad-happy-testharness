@@ -8,36 +8,36 @@
       "correct": [
         {
           "description": "The Effector board uses GNDA (analog ground) and GND (digital ground) as separate domains. ground_domains correctly classifies GND as 'signal' and GNDA as 'analog', sets multiple_domains=true, and issues a star-ground verification note. This is exactly right for an audio effects board with op-amps.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Two identical 470k/470k voltage dividers from +3.3V to GNDA are identified, with mid-points connected to op-amp non-inverting inputs (U1 pin 3 and U1 pin 5). Ratio=0.5 is correct. The decoupling caps (C2, C3) at mid-points are also listed in mid_point_connections.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "All four active op-amp circuits (U1 units 1&2, U2 units 1&2) are correctly identified as unity-gain buffers (output fed back to inverting input). The power unit (unit 3 for both ICs) is correctly reported as 'unknown' configuration \u2014 it's the supply pin unit of the NJM4580/LM2904D.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "design_observations correctly identifies both I2C bus lines with has_pullup=true, correct pullup values and rail. The SSD1306 OLED connector J3 is the I2C device connected via the Pico A1 module.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -46,7 +46,7 @@
       "incorrect": [
         {
           "description": "The pwr_flag_warnings reports '+5V has power_in pins but no power_out or PWR_FLAG'. J6 (Barrel_Jack_MountingPin) is the power source for +5V, but since it uses passive pins, the analyzer doesn't recognize it as a power source. This is a connector-powered design and the warning is technically a false positive \u2014 the real ERC would also flag this but the design is correct.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -67,18 +67,18 @@
       "correct": [
         {
           "description": "The PCB thermal_analysis correctly identifies two separate GND zones: GNDA (1961mm2, 61 vias) and GND (3439mm2, 40 vias). This reflects the analog/digital ground split in the design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "0.1mm annular ring is below the standard 0.125mm threshold. The dfm_tier is correctly escalated to 'advanced'. This is a real DFM concern for a hobby-level PCB that may go to a standard-tier fab.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

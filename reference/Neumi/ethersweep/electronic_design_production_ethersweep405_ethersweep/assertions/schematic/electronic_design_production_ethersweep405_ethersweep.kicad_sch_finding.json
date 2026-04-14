@@ -19,10 +19,12 @@
       "description": "I2C bus between STM32 (U3) and AS5600 (U5) with pull-ups R24, R27",
       "created_from": "FND-00000150",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000150-AST-04",
@@ -49,35 +51,40 @@
       "description": "INCORRECT: R4, R5 (33 ohm) falsely detected as current sense shunts -- these are Ethernet differential pair series termination resistors between W5500 TX/RX and HR911105A RJ45",
       "created_from": "FND-00000150",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "shunt.ref",
-        "pattern": "^R4$"
+        "pattern": "^R4$",
+        "detector_filter": "detect_current_sense"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.current_sense"
     },
     {
       "id": "FND-00000150-AST-07",
       "description": "INCORRECT: DD4012SA (U4, Diodes Inc buck converter) classified as power_symbol because lib_id is 'power:DD4012SA' with in_bom=yes -- excluded from components, ic_pin_analysis, and power_regulators entirely",
       "created_from": "FND-00000150",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U4$"
+        "pattern": "^U4$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000150-AST-08",
       "description": "+28V motor power rail missing from power_budget despite 11 power symbol instances feeding TMC2209 via DD4012SA",
       "created_from": "FND-00000150",
       "check": {
-        "path": "signal_analysis.power_budget",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_budget"
     }
   ]
 }

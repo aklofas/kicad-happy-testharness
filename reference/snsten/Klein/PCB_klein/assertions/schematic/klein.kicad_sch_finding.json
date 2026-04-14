@@ -9,7 +9,7 @@
       "description": "design_observations reports two i2c_bus entries for SDA and SCL, each identifying the pull-up resistor (R1, R2) and rail (VCC_3V3). SCL and SDA nets are correctly classified as 'clock' and 'data' in net_classification.",
       "created_from": "FND-00000760",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "key_matrices detector finds 4 rows, 19 estimated keys, 19 diodes on matrix \u2014 consistent with the 19 keyboard switch diodes in the BOM. Matrix detection method 'net_name' works for ROW/COL labelled nets.",
       "created_from": "FND-00000760",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "buzzer_speaker_circuits reports BZ1 is directly driven by GPIO (direct_gpio_drive=true, driver_ic=U2). This is correct \u2014 there is no transistor or driver between the MCU and buzzer.",
       "created_from": "FND-00000760",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }

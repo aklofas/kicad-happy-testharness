@@ -52,12 +52,13 @@
       "incorrect": [
         {
           "description": "Crystal circuit components (R6 100R series with C15/C16 18pF load caps) classified as RC filter at 88.4MHz - this is the RP2040 12MHz crystal oscillator circuit",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R6$"
+            "pattern": "^R6$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -80,12 +81,13 @@
       "missed": [
         {
           "description": "No crystal circuit detected for RP2040 12MHz crystal with 18pF load caps (C15/C16) and 100R series resistor (R6)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^C15$"
+            "pattern": "^C15$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -107,11 +109,12 @@
         },
         {
           "description": "Audio output circuit (SPK_L1, SPK_R1 speaker connectors with AUDIO1 headphone jack) not linked into audio signal chain",
-          "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
+          "analyzer_section": "detect_buzzer_speakers",
           "check": {
-            "path": "signal_analysis.buzzer_speaker_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_buzzer_speakers"
           },
           "detector": "buzzer_speaker_circuits",
           "subject_refs": [],
@@ -138,12 +141,13 @@
         },
         {
           "description": "Power path management (D1/D5/D7/D9 Schottky diode OR-ing between USB/battery/external power) not analyzed as power path topology",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [

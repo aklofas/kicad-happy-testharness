@@ -67,11 +67,12 @@
       "missed": [
         {
           "description": "The mainboard schematic has two op-amp ICs: U4 (OPA388, single-channel precision op-amp in SOT-23-5) and U8 (OPA4197, quad precision op-amp in TSSOP-14). Both are powered from \u00b112V rails (U8 confirmed in ic_power_rails). The signal_analysis.opamp_circuits array is empty. This is a missed detection \u2014 the design has an analog output scaling section with four channels of op-amp buffering for DAC_OUT_A/B/C/D through resistor networks (R2/R3/R5/R7/R8/R9/R16-R19 precision 0.1% resistors), exactly the kind of op-amp circuit the detector should identify.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
@@ -94,11 +95,12 @@
       "missed": [
         {
           "description": "The precision-dac-cv-scaler breakout is built around U1 (OPA4197, quad op-amp) with 14 precision resistors (0.1% tolerance, values like 4.70k, 9.09k, 2.91k, 1k) forming a precision scaling/buffering network for DAC CV outputs. This is a textbook multi-channel inverting amplifier topology. signal_analysis.opamp_circuits is empty. The design also has U2 (TMUX1134, analog mux) and a placeholder U? (OPA197). The op-amp detector is missing active op-amp circuits here due to likely pin naming differences in the custom library symbol (pins show as unnamed outputs rather than standard OUT/IN+/IN- names).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],

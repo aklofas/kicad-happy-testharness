@@ -15,12 +15,13 @@
         {
           "type": "current_sense",
           "description": "3x R4/R5/R6 with Kelvin connections and anti-alias RC filters feeding DRV8323 integrated CSA. current_sense=[]. 2mOhm shunt resistors not detected.",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R4$"
+            "pattern": "^R4$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -82,11 +83,12 @@
         {
           "type": "bus_termination",
           "description": "CAN bus 120-ohm termination resistor present but not linked to CAN bus protocol detection.",
-          "analyzer_section": "signal_analysis.bus_protocols",
+          "analyzer_section": "detect_bus_protocols",
           "check": {
-            "path": "signal_analysis.bus_protocols",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_protocols"
           },
           "detector": "bus_protocols",
           "subject_refs": [],

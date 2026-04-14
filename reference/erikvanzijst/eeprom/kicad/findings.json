@@ -8,9 +8,10 @@
       "summary": "Serial-to-parallel EEPROM programmer not detected as memory interface",
       "details": "The design uses two cascaded 74HC595 shift registers (U1, U2) driven via SPI-like signals (SCLK, RCLK, SER) to address a 32KB AT28C256 parallel EEPROM (U3). The schematic uses nets named SCLK, RCLK, SER, ~CE, ~OE, ~WE, and IO0-IO7. Despite clear memory bus signals and a parallel EEPROM footprint, `signal_analysis.memory_interfaces` is empty. The 74HC595 serial-in/parallel-out shift registers driving parallel address lines represent a recognizable address-expansion pattern.",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       }
     },
     {
@@ -21,9 +22,10 @@
       "summary": "Decoupling cap count reports 2 for VCC but schematic has 3 caps on VCC",
       "details": "The decoupling analysis reports only C1 and C3 on the VCC rail (total 0.2uF, cap_count=2). C2 is also a 100nF capacitor with pin 2 on VCC, but pin 1 lands on an isolated stub net (__unnamed_43) with no other connections. The analyzer correctly excludes it as a decoupling capacitor since the GND side is disconnected, but `design_observations.single_pin_nets` only reports U3's pins as single-pin nets and misses C2's dangling pin, which indicates a schematic connectivity issue.",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": null
+        "value": null,
+        "detector_filter": "detect_design_observations"
       }
     }
   ]

@@ -9,22 +9,26 @@
       "description": "INCORRECT: The AP2112K-3.3 (U3) has its VIN pin (pin 1) placed at schematic coordinate (2550, 1850) by the Y-mirror transform (matrix 1 0 0 -1), which connects it to the +5V rail. However, the analyzer reports VIN on the GND net and GND (pin 2) on the +3.3V net. VOUT (pin 5) is at (3150, 1850) and connects to the +3.3V net via wire to C6/C8, but the analyzer reports it on __unnamed_1. This is caused by incorrect pin coordinate calculation for the 1 0 0 -1 Y-mirror transform used by all components in this KiCad 5 legacy .sch file. The pin Y offsets are being negated in the wrong direction, causing top/bottom pin swaps.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.power_regulators[0].input_rail",
+        "path": "findings[0].input_rail",
         "op": "equals",
-        "value": "+5V"
+        "value": "+5V",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].input_rail"
     },
     {
       "id": "FND-00000410-AST-02",
       "description": "INCORRECT: The power_regulators entry for U3 AP2112K-3.3 reports output_rail as __unnamed_1. The VOUT pin connects via wire to a +3.3V power symbol, so it should be reported on the +3.3V net. Because of the pin-coordinate Y-mirror bug, VOUT is placed on an isolated unnamed net instead of the named +3.3V rail. This causes the regulator_caps design observation to incorrectly flag missing output capacitors for U3 (C6 and C8 are 10uF and 1uF on the real +3.3V output).",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.power_regulators[0].output_rail",
+        "path": "findings[0].output_rail",
         "op": "equals",
-        "value": "+3.3V"
+        "value": "+3.3V",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].output_rail"
     },
     {
       "id": "FND-00000410-AST-03",
@@ -73,11 +77,13 @@
       "description": "INCORRECT: The MMBT3904 NPN transistor (Q1) is at P 10250 1450 with transform 1 0 0 -1. The library defines E (emitter, pin 2) at offset (100, -200) and C (collector, pin 3) at (100, 200). With Y-mirror, E moves to schematic position (10350, 1650) which connects to GND, and C moves to (10350, 1250) which connects to the D2 signal net (gate output driver). The analyzer has them backwards: it reports C on GND and E on D2. This causes the transistor_circuits analysis to classify the circuit incorrectly with collector_is_power=true (collector thought to be on GND, emitter driving signal) when in reality the emitter is grounded and the collector drives the gate output.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].collector_net",
+        "path": "findings[0].collector_net",
         "op": "equals",
-        "value": "D2"
+        "value": "D2",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].collector_net"
     },
     {
       "id": "FND-00000410-AST-07",
@@ -98,21 +104,23 @@
       "description": "INCORRECT: The design_observations section reports that U5 TL072 is missing -12V decoupling capacitors (rails_without_caps: [\"-12V\"]). In reality, C14 (1uF, 0603) is connected to the -12V net. The false observation arises because the pin inversion bug makes the analyzer think U5's V- pin is on +12V \u2014 so it searches for decoupling on +12V (where C13 exists) and finds -12V uncapped. Both C13 and C14 provide proper decoupling for the TL072's dual supply rails.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "decoupling",
           "component": "U5"
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000410-AST-09",
       "description": "INCORRECT: The rc_filters section reports an RC-network with R5 (100k) and C15 (18pF) with cutoff 88.42 kHz. In the schematic, R5 connects between the CV conditioning node (__unnamed_27) and CV_IN. C15 (18pF crystal load cap) connects between __unnamed_27 and the A1 net (MCP6001 output). They share a node at __unnamed_27 but C15 connects to A1, not to GND, so there is no RC filter topology here. C15 is a crystal load capacitor used on the SAMD21 XTAL pins, not a filter capacitor.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "resistor": {
@@ -121,16 +129,18 @@
           "capacitor": {
             "ref": "C15"
           }
-        }
+        },
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000410-AST-10",
       "description": "INCORRECT: The rc_filters section reports a low-pass filter with R6 (200k) and two parallel capacitors C10 (0.1uF) + C15 (18pF). C10 connects between GND and VREF_-10, and R6 connects between the CV conditioning node and VREF_-10 \u2014 this could form an RC filter. However, C15 connects between the CV conditioning node and A1 (not between VREF_-10 and GND), so it is not in parallel with C10. The parallel-cap grouping logic is incorrectly picking up C15 as a parallel capacitor because both C10 and C15 share a node with R6's output side. The correct RC filter cutoff for R6+C10 alone would be 1/(2\u03c0 \u00d7 200k \u00d7 100nF) = 7.96 Hz (coincidentally the same), but C15 should not be included.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "resistor": {
@@ -142,44 +152,52 @@
               "C15"
             ]
           }
-        }
+        },
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000410-AST-11",
       "description": "The decoupling_analysis lists +3.3V, +5V, and +12V rails but omits -12V entirely. C14 (1uF, 0603) is connected between the -12V net and GND, serving as a decoupling capacitor for the TL072 negative supply. Because V+ of U5 is misassigned to -12V (due to the pin inversion bug), the analyzer does not recognize -12V as a supply rail for U5, and C14 is never attributed to any decoupling rail. The -12V decoupling coverage observation is therefore missing.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rail": "-12V"
-        }
+        },
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000410-AST-12",
       "description": "The GD25Q64C is an SPI NOR flash chip connected to the ATSAMD21 via labeled nets FLASH_CS, FLASH_SCK, FLASH_MOSI, FLASH_MISO. Because the U8 pin coordinates are wrong (CLK on FLASH_CS net, ~CS on FLASH_SCK net, etc.), the SPI signal pattern is not recognized and memory_interfaces is empty. The single_pin_nets observation further shows incorrect pin-net associations (U8 ~CS said to be on FLASH_SCK, U8 IO2 on FLASH_MISO) which are direct artifacts of the pin swap. The U1 SAMD21 labels match correctly for FLASH_CS but FLASH_SCK/MOSI/MISO labels on U1 are not resolved to U8 because the U8 side has wrong pins.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     },
     {
       "id": "FND-00000410-AST-13",
       "description": "Both op-amps in the design are in active circuits but opamp_circuits is empty. U5 TL072 unit 1 is configured as an audio output buffer/amplifier (R5 input, R6 feedback, C10 compensation). U5 TL072 unit 2 appears in an audio path. U6 MCP6001 is a comparator/buffer for the CV input signal (connected to R7, C15, R5, and producing the A1 output). The pin-coordinate inversion causes all three inputs/output of each unit to appear on the same unnamed net (e.g., unit 2 shows +/- and output all on __unnamed_46), making valid opamp circuit pattern detection impossible.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

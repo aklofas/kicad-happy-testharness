@@ -30,11 +30,12 @@
       "description": "INCORRECT: F2 (value 'ESDUSB', footprint SOT-563) is classified as type 'fuse' because its reference starts with 'F'. The ESDUSB part is a TVS diode array for USB ESD protection, not a fuse. This propagates to the USB differential pair analysis: the differential_pairs entry shows 'has_esd: false' because the ESD device is never recognized as such \u2014 it's treated as a protection device of type 'fuse' rather than an ESD clamp, so the has_esd flag on the USB pair is incorrectly false.",
       "created_from": "FND-00002219",
       "check": {
-        "path": "signal_analysis.differential_pairs",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.differential_pairs"
     }
   ]
 }

@@ -9,44 +9,52 @@
       "description": "4 voltage dividers as 4.7K/10K SPI level shifters for AT25DF161 flash correctly identified",
       "created_from": "FND-00000281",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000281-AST-03",
       "description": "3 power regulators (AMS1117-5.0, dual L78L33) correctly identified",
       "created_from": "FND-00000281",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000281-AST-05",
       "description": "INCORRECT: RC filter double-counting: C14 appears in two entries (R30+C14 and R29+C14) \u2014 only R30+C14 is a genuine power-on reset filter; R29 shares the same cap node",
       "created_from": "FND-00000281",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R30$"
+        "pattern": "^R30$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000281-AST-06",
       "description": "INCORRECT: Same double-counting for C29 (R48+C29 and R47+C29)",
       "created_from": "FND-00000281",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R48$"
+        "pattern": "^R48$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

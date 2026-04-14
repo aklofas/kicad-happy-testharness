@@ -9,11 +9,13 @@
       "description": "U3 (ADM7154, an Analog Devices ultra-low noise LDO regulator from the ADM715x family) is present with VIN/VOUT/EN pins and 5 decoupling capacitors, but signal_analysis.power_regulators is empty []. The subcircuits section captures U3 as a neighbor-IC cluster but does not classify it as a linear regulator. The lib_id 'SIB_Footprint:ADM7514' and value 'ADM7154' both contain 'ADM7' which should be matchable. Correct output would include a power_regulator entry with regulator_type='linear', input_rail='+VIN', output_rail='+VOUT'.",
       "created_from": "FND-00000332",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_value",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

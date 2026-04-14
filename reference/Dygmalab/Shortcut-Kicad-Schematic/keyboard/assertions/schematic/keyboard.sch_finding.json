@@ -31,34 +31,40 @@
       "description": "INCORRECT: The key_matrices detector reports a 4\u00d714 matrix with estimated_keys=33 and switches_on_matrix=26. The 14-column figure comes from merging label-only nets col8\u2013col14 (which appear only as flat labels in the main sheet with no switch or diode pins) with col1\u2013col7 from the left-board sub-sheet. Columns col8\u2013col13 each have zero component pins; col14 connects only to connector P2. The actual populated left-side matrix is 4\u00d77 with 15 switches + a 4\u00d72 thumb extension = 23 diode-switched positions. The 14-column figure is a false positive caused by treating label-only nets as populated matrix columns.",
       "created_from": "FND-00001351",
       "check": {
-        "path": "signal_analysis.key_matrices[0].columns",
+        "path": "findings[0].columns",
         "value": 9,
-        "op": "max_count"
+        "op": "max_count",
+        "detector_filter": "detect_key_matrices"
       },
       "aspirational": true,
-      "aspirational_reason": "Depends on bracket-notation path resolution ([0]) which is not yet implemented in resolve_path()"
+      "aspirational_reason": "Depends on bracket-notation path resolution ([0]) which is not yet implemented in resolve_path()",
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].columns"
     },
     {
       "id": "FND-00001351-AST-04",
       "description": "X1 is a Murata CSTCE16M0V53 ceramic resonator (datasheet field confirms the part number), paired with U1 (ATmega32U4). The crystal_circuits list is empty. Detection fails because the KiCad 5 legacy parser does not resolve pin-to-net mappings for the ATmega32U4 (U1 pins=[]) or the resonator (X1 pins=[]), so the topological matching for a crystal+MCU circuit cannot trigger. The design observation about a missing oscillator circuit is therefore also absent from design_observations.",
       "created_from": "FND-00001351",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "value": [],
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00001351-AST-05",
       "description": "The design has 16 WS2812B LEDs (led1\u2013led16) split across two halves, intended to form daisy-chained groups. The analyzer produces 8 separate addressable_led_chains each with chain_length=1 and data_in_net=''. Chain stitching fails because KiCad 5 legacy parsing leaves all LED pin arrays empty (pins=[]), so the DIN\u2192DOUT connection topology cannot be traced. Additionally, led1\u2013led8 (right half) are missing from all three .sch files and are therefore not detected at all. The eight LEDs on the left-board sheet are detected individually but never linked.",
       "created_from": "FND-00001351",
       "check": {
-        "path": "signal_analysis.addressable_led_chains[0].chain_length",
+        "path": "findings[0].chain_length",
         "value": 1,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains[0].chain_length"
     }
   ]
 }

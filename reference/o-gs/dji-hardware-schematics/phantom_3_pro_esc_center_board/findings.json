@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "3 switching power regulators correctly identified: LM25116 and 2x TPS54531",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "6 AON6504 MOSFETs correctly identified as motor-driving transistor circuits in the 3-phase bridge",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -34,12 +36,13 @@
         },
         {
           "description": "Q25/Q26 correctly identified as NMOS driven by LM25116 gate driver IC in the buck converter",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q25$"
+            "pattern": "^Q25$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -51,11 +54,12 @@
         },
         {
           "description": "MOTOR_A/B/C drain net labels on high-side FETs correctly identified as motor load type",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -64,12 +68,13 @@
         },
         {
           "description": "Voltage divider R134 (102k) / R133 (21k) from +BATT correctly detected with 17% ratio for LM25116 enable",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R133$"
+            "pattern": "^R133$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -81,11 +86,12 @@
         },
         {
           "description": "2 crystal circuits detected for TMS320F28027F DSP with 36pF load caps",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -94,12 +100,13 @@
         },
         {
           "description": "2 LC filters correctly identified: L14/C172 (159kHz) and L15/C183 (65kHz) for switching regulators",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L14$"
+            "pattern": "^L14$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [
@@ -113,11 +120,12 @@
         },
         {
           "description": "USB data lines (DP/DM) detected with ESD protection observation",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [],
@@ -135,11 +143,12 @@
         },
         {
           "description": "+BATT decoupling analysis correct with 7 caps totaling 442uF including bulk electrolytics",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -189,7 +198,7 @@
         },
         {
           "description": "RF matching false positive: C36 (2.2uF) and C33 (2.2uF) identified as antennas with matching networks (L3, L2), but these are MCU power supply decoupling capacitors on the +3.3V rail near the TMS320F28027F, not RF components",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "detector": "rf_matching",
           "subject_refs": [
             "C33",
@@ -202,12 +211,13 @@
         },
         {
           "description": "Crystal Y1 and Y2 share the same load caps (C37/C38) in the output, but they are two separate crystals each with their own load cap pair. The analyzer appears to have assigned the same caps to both crystals.",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -223,11 +233,12 @@
       "missed": [
         {
           "description": "3-phase H-bridge motor drive topology not identified: Q1/Q2 (phase A), Q3/Q4 (phase B), Q5/Q6 (phase C) with DRV8301 gate driver, 10mOhm sense resistors, and bootstrap capacitors. This is the core ESC function.",
-          "analyzer_section": "signal_analysis.bridge_circuits",
+          "analyzer_section": "detect_bridge_circuits",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           },
           "detector": "bridge_circuits",
           "subject_refs": [
@@ -243,12 +254,13 @@
         },
         {
           "description": "Current sensing not detected: R21 (10mOhm) and R25 (10mOhm) are low-side current sense resistors for motor phases A and B (connected to DRV8301 SP1/SN1 and SP2/SN2 shunt amplifier inputs). R155 (0.01 Ohm) is the LM25116 current sense resistor.",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R155$"
+            "pattern": "^R155$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -261,7 +273,7 @@
         },
         {
           "description": "SPI bus not detected: SPISIMOA, SPISOMIA, SPICLKA, SPISTEA# nets connect TMS320F28027F to DRV8301 for motor driver configuration and status readback",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "nets.SPISIMOA",
             "op": "exists",
@@ -270,11 +282,12 @@
         },
         {
           "description": "Feedback network for LM25116 not detected: R134 (102k)/R133 (21k) voltage divider feeds back to U3 pin 11 (DEMB) for output voltage regulation. The voltage divider is detected but not linked as a feedback network.",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "equals",
-            "value": 25116
+            "value": 25116,
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [
@@ -288,7 +301,7 @@
         },
         {
           "description": "Multiple UART interfaces not detected: ESC_TX/ESC_RX, U3_TX/U3_RX, U4_TX/U4_RX, U7_TX/U7_RX, U8_TX/U8_RX are serial communication buses between the ESC MCUs and the flight controller",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
             "path": "nets.ESC_TX",
             "op": "exists",
@@ -306,12 +319,13 @@
         },
         {
           "description": "DRV8301 internal buck regulator topology not detected: the DRV8301 has pins for an internal buck converter (PH, BSTBK, PVDD2, ENBUCK, SSTR) that generates VCC rail, with external L1 (22uH), D6 (Schottky), and C15 (47uF)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^C15$"
+            "pattern": "^C15$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -324,9 +338,9 @@
         },
         {
           "description": "LED driver circuits not identified: 2 instances of phantom_3_pro_led_drv.sch with Q29/Q30 (PMST3904 BJTs) driving LEDs through R186-R191 current limiting resistors for red/green motor position indicators",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

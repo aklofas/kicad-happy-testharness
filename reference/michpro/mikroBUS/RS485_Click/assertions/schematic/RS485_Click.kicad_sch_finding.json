@@ -9,11 +9,13 @@
       "description": "The protection_devices list includes D2 and D3 (SMF7.5CA on the A and B RS-485 lines) but omits D1 which has the same value and lib_id (SMF7.5CA, archive:Device_D_TVS_ALT). This indicates an incomplete scan of TVS diodes on the differential pair. D1's pins list is empty in the component data, suggesting the analyzer failed to resolve its net connections from the 'archive:' library symbol.",
       "created_from": "FND-00002389",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

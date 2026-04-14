@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "Op-amp circuits for TL072/TL074 correctly identified with inverting/non-inverting configurations",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -32,7 +33,7 @@
       "incorrect": [
         {
           "description": "21 of 45 RC filter entries contain false parallel capacitor groupings \u2014 caps on different PT2399 nodes (pins 13/14 and separate filter stages) incorrectly combined, producing wrong capacitance and cutoff values",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "not_in_detector",

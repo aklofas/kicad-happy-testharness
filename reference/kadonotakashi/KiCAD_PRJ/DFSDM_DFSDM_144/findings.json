@@ -199,20 +199,22 @@
         },
         {
           "description": "The PCM5102 board uses dual opamp ICs (U4 and U5, likely NJM2068 or similar) for I/V conversion and output filtering. The analyzer correctly detects 6 opamp circuits (3 per opamp IC, corresponding to multiple unit instantiations of the dual opamp symbol).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "value": 6,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "The PCM5102 audio DAC board uses multiple RC filter stages in the output path. The analyzer correctly identifies 7 RC filter networks.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 7,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
@@ -280,11 +282,12 @@
         },
         {
           "description": "The PCM5122 board uses voltage divider networks in the output path for level adjustment. The analyzer correctly identifies 4 voltage dividers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "value": 4,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
@@ -410,20 +413,22 @@
         },
         {
           "description": "The RingLight uses R+R voltage divider networks to set bias for the uPA2753 transistor gate (G pin). The analyzer correctly identifies 4 voltage dividers (one per transistor channel), each with R_top=1k and R_bottom=20 ohm.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "value": 4,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "The RingLight design uses RC low-pass filters (R=1k, C=100nF) for smoothing PWM control signals. The analyzer correctly identifies 4 RC filters at approximately 1.59 kHz cutoff.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 4,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
@@ -431,11 +436,12 @@
       "missed": [
         {
           "description": "RingLight has Q1 and Q2, both uPA2753 NPN transistor arrays (SOIC-8), correctly typed as 'transistor' and with pin data available (pins 1/2/3S/5/6/7/8/G/D). However, the analyzer reports transistor_circuits=[] (0 entries). The uPA2753 uses non-standard pin names (3S, G, D) that do not match the BJT/MOSFET/JFET patterns expected by the transistor circuit detector. This is a false negative - the design does have transistor switching circuits.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -495,11 +501,12 @@
       "missed": [
         {
           "description": "Same issue as RingLight: Q1 and Q2 are uPA2753 transistor arrays with non-standard pin names (G/D/S variants), correctly typed as 'transistor' in component_types, but the transistor_circuits detector reports 0 entries. The analyzer cannot classify this custom-library transistor's switching topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -693,20 +700,22 @@
         },
         {
           "description": "The analyzer correctly identifies U1 (NJU7223) as an LDO regulator with input rail +5V and output rail +3V3.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "The analyzer correctly identifies Q1 and Q3 as BJT transistor circuits. Note Q2 (uPA2753 array) is not detected due to non-standard pin names, but Q1 and Q3 (2SC1815, TO-92) are correctly analyzed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -765,20 +774,22 @@
         },
         {
           "description": "The analyzer correctly identifies both Q1 and Q2 as JFET type transistors using Device:Q_NJFET_SGD. Gate resistors are correctly attributed: Q2 gate has R6, R3, R2, R1; Q1 gate has R2. The JFET topology is correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "The mic_amp design uses C1 (0.22uF) and C2 (2.2uF) with various resistors for input coupling and bias bypassing. The analyzer correctly identifies 4 RC filter networks with computed cutoff frequencies: 1.54 Hz (47k+2.2uF bias bypass), 0.72 Hz (1M+0.22uF input coupling), and 72.34 Hz (10k+0.22uF).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 4,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],

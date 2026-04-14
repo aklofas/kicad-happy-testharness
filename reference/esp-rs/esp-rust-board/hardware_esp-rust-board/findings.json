@@ -34,12 +34,13 @@
       "incorrect": [
         {
           "description": "Crystal Y1 value shown as 32.768Hz - should be 32.768kHz (frequency field is null, value string not parsed)",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -54,7 +55,7 @@
         },
         {
           "description": "Switching regulator output_rail is null - should be +3V3 (SY8088 feeds the 3.3V domain)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -68,18 +69,18 @@
       "missed": [
         {
           "description": "WS2812B addressable RGB LED (D9) not identified as a smart LED requiring data signal - classified as generic LED",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "LiPo charging circuit (MCP73831) charge current setting resistor not analyzed",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

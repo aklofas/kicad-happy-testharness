@@ -9,7 +9,7 @@
       "description": "J1 (3.5mm Barrel), D1/D2 (LED), R1/R2 (2K2), R3 (2.2), D3/D4/D5/D6/D7 (1N4007), C1/C2/C3/C4/C5 (470uF 35V), U1/U2 unit 2 (CK5654 heater) are all correctly identified with the right values and references. The unit=2 field on U1/U2 correctly marks these as the heater unit of the multi-unit CK5654 symbol.",
       "created_from": "FND-00000461",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The nets for the Greinacher quadrupler are correctly traced: __unnamed_0 (J1 pin 2, D3 anode, C2 pin 2, C3 pin 1) is the AC input node; __unnamed_2 (C2 pin 1, D4 anode, D5 cathode) and __unnamed_3 (C3 pin 2, D6 anode, D7 cathode) are the intermediate doubler nodes; +V (D4 cathode, C4 pin 2) is the positive output; -V (D7 anode, C5 pin 1) is the negative output. This cross-cap diode connectivity is correctly resolved.",
       "created_from": "FND-00000461",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "D3 (1N4007) is placed in series with the AC input line between J1 (Barrel_Jack pin 2) and the voltage quadrupler / LED circuit. It functions as a half-wave rectifier and reverse-polarity protection for the LED indicators. The protection_devices list in signal_analysis is empty \u2014 D3 is not recognized as a protection or rectifier device.",
       "created_from": "FND-00000461",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

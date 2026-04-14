@@ -1,36 +1,37 @@
 {
   "file_pattern": "BMS-5s.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~20 (tolerance 10%)",
+      "description": "Finding count ~22 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 19,
+        "max": 25
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~6",
+      "description": "high count ~4",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 3,
+        "max": 5
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~6",
+      "description": "medium count ~5",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 4,
+        "max": 6
       }
     },
     {
@@ -45,33 +46,33 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~56 (+-10)",
+      "description": "EMC risk score ~78.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 46,
-        "max": 66
+        "min": 68.0,
+        "max": 88.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "2 decoupling finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^decoupling$",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "1 emi_filter finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^emi_filter$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 esd_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^esd_path$",
         "value": 1
       }
     },
@@ -88,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "15 io_filtering finding(s)",
+      "description": "13 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 15
+        "value": 13
       }
     },
     {
@@ -128,11 +129,11 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "~16 probe point(s) in test plan",
+      "description": "~14 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 14
+        "value": 12
       }
     },
     {

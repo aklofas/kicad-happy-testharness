@@ -20,22 +20,26 @@
       "description": "INCORRECT: The detected RC low-pass filter reports input_net='__unnamed_6' (RV1 wiper/pin 2) and output_net='__unnamed_3' (L1/C4 junction, before the wiper). In the actual circuit, RF power flows from J1 through D1 and L1 into net __unnamed_3 (the detected DC voltage node), then through the RV1 pot to the wiper output. The RC filter topology and cutoff calculation (15.92 kHz) may be structurally questionable since RV1 is a variable resistor and the signal direction is from __unnamed_3 toward __unnamed_6, not the reverse.",
       "created_from": "FND-00002369",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00002369-AST-03",
       "description": "This is a classic RF envelope detector: SMA input J1 \u2192 input coupling capacitor C1 (5pF) \u2192 Schottky diode D1 (SMS7630-005LF, a zero-bias Schottky for RF detection) with C2/C3 bypass caps \u2192 inductor L1 (100nH) RF choke \u2192 C4 output filter \u2192 RV1 trimmer output. The rf_chains and rf_matching arrays are both empty. The analyzer should detect at minimum the Schottky diode in an RF context (no forward bias DC source, connected to RF input connector) and the LC network as RF-frequency filtering (~15 MHz resonance). The design_observations list is also empty.",
       "created_from": "FND-00002369",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     }
   ]
 }

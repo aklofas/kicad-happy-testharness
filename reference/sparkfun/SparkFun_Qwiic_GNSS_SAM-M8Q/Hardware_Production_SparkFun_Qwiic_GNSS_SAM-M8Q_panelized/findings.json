@@ -30,25 +30,27 @@
         },
         {
           "description": "The power_regulators section correctly identifies U6 as an LDO with input_rail=VBUS, output_rail=3.3V, topology=LDO, and estimated_vout=3.3 via fixed_suffix detection. This matches the schematic where U6 is a 600mA LDO converting USB VBUS to 3.3V for U1 (SAM-M8Q) and other 3.3V consumers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U6",
               "topology": "LDO",
               "input_rail": "VBUS",
               "output_rail": "3.3V"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "D7 is a PESD3V3L4UG quad ESD protection array in SOT-353 (SC-70-5), correctly classified as esd_ic protecting the V_BCKP rail. The PESD0402 TVS diode (D3) is also correctly identified protecting VBUS.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -62,11 +64,12 @@
         },
         {
           "description": "The decoupling_analysis correctly lists 2 capacitors on the 3.3V rail (10.1uF total) and 1 capacitor on VBUS (1uF). C9 (1uF backup battery decoupling) is not listed under 3.3V because it is on V_BCKP, which is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
@@ -117,25 +120,27 @@
       "incorrect": [
         {
           "description": "The analyzer detected an RC low-pass filter (R7=1k, C9=1uF, cutoff=159.15 Hz) on the V_BCKP net. However, this is not a signal filter: R7 is a current-limiting/isolation resistor between the 3.3V rail and the backup battery node, and C9 is the decoupling capacitor for U1's V_BCKP pin. The 'input_net' is __unnamed_21 (D5 cathode / R7 junction), which is the 3.3V-to-battery charge path through a Schottky diode D5. Calling this a low-pass RC filter is misleading \u2014 it is a backup power supply circuit, not a filter in a signal path.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "The design_observations and bus_analysis sections both report has_pullup=false for SCL and SDA nets. However, R6 (2.2k) connects between 3.3V (via JP2 jumper pad B, which is the center/3.3V pad) and SCL, and R8 (2.2k) connects between 3.3V (via JP2) and SDA. These are the I2C pull-up resistors controlled by solder jumper JP2. The analyzer fails to trace through the JP2 net-tie structure to identify R6 and R8 as pull-ups on SCL and SDA respectively.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "category": "i2c_bus",
               "has_pullup": false
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         },
         {
@@ -152,14 +157,15 @@
         },
         {
           "description": "In protection_devices, D7 (PESD3V3L4UG) has 'clamp_net': null. This quad ESD array has its anode (pin 2) connected to GND and its cathodes connected to 3.3V (pin 3/K2), V_BCKP (pin 5/K4), and two unconnected pins. The common anode is GND and the 3.3V clamp is the upper rail. The null clamp_net is an incomplete characterization \u2014 the actual clamp configuration is GND (common anode) to individual signal rails.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "D7",
               "clamp_net": "GND"
-            }
+            },
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

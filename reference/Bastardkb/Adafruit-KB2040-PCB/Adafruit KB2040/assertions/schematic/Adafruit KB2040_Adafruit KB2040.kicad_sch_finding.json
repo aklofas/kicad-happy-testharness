@@ -53,22 +53,25 @@
       "description": "INCORRECT: The design_observations entry for U2 (category: 'regulator_caps') reports missing_caps for both input ('RAW') and output ('3.3V') rails. However, the schematic clearly has C8 (10\u00b5F) and multiple 0.1\u00b5F caps (C9, C11, C13, C14, C16, C17) on the 3.3V rail confirmed by inrush_analysis, and C6 (10\u00b5F) on the VBUS/RAW side. The inrush_analysis section lists C8, C13, C14, C15, C16 as output caps for U2. The decoupling cap detection in design_observations uses a different (apparently broken) lookup path than inrush_analysis.",
       "created_from": "FND-00000345",
       "check": {
-        "path": "signal_analysis.design_observations[?category=='regulator_caps']",
+        "path": "findings",
         "op": "eq",
         "value": []
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[?category=='regulator_caps']"
     },
     {
       "id": "FND-00000345-AST-06",
       "description": "Y1 (12 MHz crystal) has two 22pF load caps: C19 connected to crystal pin 3 (XIN side, net __unnamed_3) and C20 connected to crystal pin 1 (XOUT side, net __unnamed_20). Both caps have their other end on __unnamed_19 (shared node between C19 pin 1 and C20 pin 1), which connects to XIN/XOUT via R6 and IC2. The signal_analysis.crystal_circuits entry shows 'load_caps: []' \u2014 the load cap detection logic fails to associate C19 and C20 with Y1 because the crystal pins connect to them through an intermediate net rather than directly, or because the topology check is too strict.",
       "created_from": "FND-00000345",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].load_caps",
+        "path": "findings[0].load_caps",
         "op": "min_length",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].load_caps"
     }
   ]
 }

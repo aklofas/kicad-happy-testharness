@@ -19,10 +19,12 @@
       "description": "The 4 SK6812MINI LEDs (D13, D14, D15, D16) are correctly identified as a single-wire (WS2812) addressable LED chain of length 4, with first_led=D13 and last_led=D16. The estimated current of 240mA (4 x 60mA) is appropriate.",
       "created_from": "FND-00001944",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001944-AST-03",
@@ -40,11 +42,13 @@
       "description": "C3 (value 'NA_C', in_bom=false) is connected to Vcc and Gnd on the flex board, functioning as an optional decoupling capacitor placeholder. The decoupling_analysis section is empty (no rail analyzed) despite Vcc being a power rail with an associated capacitor. This is a minor miss since the capacitor is a placeholder (NA value), but the power rail should still appear in decoupling_analysis.",
       "created_from": "FND-00001944",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

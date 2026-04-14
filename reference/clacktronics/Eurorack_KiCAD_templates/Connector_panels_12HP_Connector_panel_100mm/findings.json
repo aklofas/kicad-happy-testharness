@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "The .sch file contains only a header and no component or wire records. The analyzer correctly reports total_components=0, total_nets=0, total_wires=0, and empty signal_analysis sections.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,7 +19,7 @@
       "incorrect": [
         {
           "description": "The .sch header line reads 'EESchema Schematic File Version 2', but the analyzer outputs file_version: '4'. The file is otherwise empty (no components), so this is a minor metadata error with no functional impact.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -40,27 +40,27 @@
       "correct": [
         {
           "description": "Correct counts (3 components, 2 unique parts), correct lib_ids, footprints, and BOM grouping. Power rails +12V, -12V, GND all identified. Net connectivity matches schematic wiring.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "net_classification correctly assigns 'power' to +12V and -12V, 'ground' to GND, and 'signal' to the two unnamed connector-to-diode intermediate nets.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "None of the components carry MPN/manufacturer fields. The analyzer correctly lists all three in missing_mpn while not including the power symbols (#PWR*), which is the expected behavior.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -70,9 +70,9 @@
       "missed": [
         {
           "description": "D1 protects the +12V rail and D2 protects the -12V rail using series Schottky diodes \u2014 a textbook Eurorack reverse-polarity protection topology. The analyzer's protection_devices list is empty and design_observations is empty. This pattern (diode in series between IDC connector pin and named power rail) should be recognizable as protection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

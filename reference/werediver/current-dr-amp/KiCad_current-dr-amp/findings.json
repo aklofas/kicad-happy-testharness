@@ -18,11 +18,12 @@
         },
         {
           "description": "The three op-amp ICs (U1 OPA1641, U2/U3 OPA1611) are all reported with configuration='unknown' in opamp_circuits. This is a classic audio current-drive amplifier circuit \u2014 the op-amps are surrounded by resistors forming feedback networks. The voltage_dividers detector did find R7/R10 and R8/R10 dividers adjacent to these op-amps, but no feedback_networks were detected and the op-amp configuration analyzer didn't resolve inverting or non-inverting configurations. This limits the useful signal-path description of the design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
@@ -56,20 +57,22 @@
       "missed": [
         {
           "description": "The PSU schematic contains D1-D4 (all STPS2L40U Schottky diodes, Device:D_Schottky lib_id) connected in a full-wave bridge rectifier configuration after transformer TR1, feeding 10000uF filter capacitors C1 and C2. The bridge_circuits detector returned an empty list. This is a significant miss for a mains-powered linear PSU \u2014 the bridge rectifier is the primary power conversion element.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           }
         },
         {
           "description": "U6 and U8 are TS432 (TL431 clone, lib_id=Reference_Voltage:TL431DBZ), used as shunt voltage references in the linear regulator feedback loops. The power_regulators list is empty. The TL431 is one of the most common discrete voltage regulation components; its presence alongside pass transistors (Q3-Q6) and error amplifiers (U5/U7 TL072) constitutes a complete discrete linear regulator that was entirely missed by the power regulator detector.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

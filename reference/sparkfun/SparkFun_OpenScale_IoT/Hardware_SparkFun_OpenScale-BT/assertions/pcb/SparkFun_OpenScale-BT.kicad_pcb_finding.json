@@ -29,13 +29,15 @@
       "description": "The thermal_pad_vias section correctly identifies U6 (ESP32-PICO-V3-02) as having exposed thermal pads (49.1 through 49.9, each 1.45x1.45mm on GND) with via_count: 0 and adequacy: 'none'. This is a real concern for the design \u2014 the ESP32 module's exposed GND pads have no thermal vias connecting to the back copper pour.",
       "created_from": "FND-00001468",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "component": "U6",
           "adequacy": "none"
-        }
-      }
+        },
+        "detector_filter": "analyze_thermal_pad_vias"
+      },
+      "migration_note": "Path migrated from: thermal_pad_vias"
     },
     {
       "id": "FND-00001468-AST-04",

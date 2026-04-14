@@ -47,20 +47,22 @@
         },
         {
           "description": "The 14.31818 MHz crystal (Y1) is the standard NTSC color burst frequency used in Commodore VIC-20 computers. The analyzer correctly identifies it in crystal_circuits with frequency=14318180.0 Hz.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "Q1 (2SC1815) is the audio input buffer with base driven by AUDIO_IN net. Q2 (2SC1815) is the video output driver with collector driving VIDEO_OUT and emitter at +5V (unusual common-collector topology from the original CBM schematic). Both are correctly detected and their pin-net assignments match the physical wire connections in the source schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
@@ -115,16 +117,17 @@
       "missed": [
         {
           "description": "The crystal oscillator circuit uses UB9 (7402 NOR gate used as inverter) as the amplifier, with C48 (CTRIM trimmer capacitor) and C50 (standard capacitor) as the Pierce oscillator load caps. The UB9 subcircuit correctly shows C48 and C50 as neighbors of Y1. However, the crystal_circuits entry for Y1 reports load_caps=[] instead of identifying C48 and C50. The CTRIM symbol for C48 may be preventing detection since it is not a standard 'C' capacitor symbol.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": [
               {
                 "reference": "Y1",
                 "load_caps": []
               }
             ],
-            "op": "contains_match"
+            "op": "contains_match",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {

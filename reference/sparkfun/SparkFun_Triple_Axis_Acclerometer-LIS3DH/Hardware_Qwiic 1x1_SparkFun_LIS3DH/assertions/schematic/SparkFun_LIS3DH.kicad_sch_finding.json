@@ -29,15 +29,17 @@
       "description": "INCORRECT: The Qwiic 1x1 design has R3 (2.2k) on SCL and R2 (2.2k) on SDA as I2C pull-ups, connected through JP2 (closed jumper) to 3.3V. The analyzer reports has_pullup=false and pull_ups=[] for both I2C lines. The resistors are visible in the net topology (R3 pin 1 on SCL net, R2 pin 1 on SDA net) and their other pins connect to unnamed nets that feed through JP2 to 3.3V. The indirect path through the jumper prevents the pull-up from being detected.",
       "created_from": "FND-00001543",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "category": "i2c_bus",
           "net": "SDA",
           "has_pullup": true
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001543-AST-04",

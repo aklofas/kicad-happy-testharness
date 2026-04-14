@@ -17,29 +17,32 @@
         },
         {
           "description": "The key matrix detector correctly identified 6 row nets (ROW0-ROW5) and 19 column nets (COL0-COL18), with 101 switches and 101 anti-ghosting diodes on the matrix. SW102 (SW_SPDT slide switch for USB/BT mode select) is correctly excluded from the matrix count. The 1800 layout leaves some of the 6x19=114 positions unfilled, giving 101 actual keys.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "U2 (MCP1725-3302E_SN) correctly identified with topology=LDO, input_rail=+5V, output_rail=+3V3. This is a fixed 3.3V LDO from Microchip that is correctly classified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U3 (PRTR5V0U2X) correctly identified as an ESD IC protecting D+ and D- nets. USB compliance checks correctly flag CC1/CC2 5.1k pull-downs as passing, and VBUS decoupling as passing. The vbus_esd_protection=fail is correct \u2014 PRTR5V0U2X does not provide VBUS protection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -53,22 +56,24 @@
         },
         {
           "description": "All 8 RC filters are valid: one PWRGD/NRST reset filter (R4+C1, 159Hz cutoff) and seven identical soft-start/enable RC networks (10k + 10uF, 1.59Hz) for the 7 MPQ3326 LED driver ICs. The very low cutoff frequencies are appropriate for slow power sequencing.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 8
+            "value": 8,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The PRTR5V0U2X (U3) protects both D+ and D-, as correctly captured in signal_analysis.protection_devices where protected_nets=[D+, D-]. However, the design_observation for USB net D- shows has_esd_protection=false while D+ correctly shows true. The lookup in usb_data observations fails to check the multi-net protected_nets field and only matches D+ by primary protected_net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {

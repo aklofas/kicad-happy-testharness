@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "The PCB file contains component placement only with no routing. The analyzer correctly reports routing_complete=false, unrouted_net_count=69, copper_layers_used=0, board_width_mm=null, and edge_count=0. This matches the actual PCB file which has no (segment) entries.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -35,18 +35,18 @@
       "correct": [
         {
           "description": "USB-C connector J1 (USB4105-GF-A) has CC1/CC2 5.1k pulldowns (pass), VBUS decoupling (pass), but no VBUS ESD protection (fail). The analyzer correctly identifies this gap with 1 fail, 3 pass, 3 info.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "U3 detected as switching topology with L2 inductor, +VSW input, +3.3V output, feedback via R8/R9 voltage divider (511k/91k). Estimated Vout=3.308V from Vref=0.5V lookup. This is accurate for the TPS631000.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -55,15 +55,15 @@
       "incorrect": [
         {
           "description": "P1/P2 cross +BATT to +3.3V domains. BQ34Z100 has open-drain IO pins that are tolerant of 3.3V pull-ups even when running from higher BATT voltage (typical Li-ion 3.7-4.2V). The level-shifter flag fires because the power domain voltages differ, but the open-drain topology makes this safe without a dedicated level shifter.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The design is explicitly a Li-ion BMS (title: 'Single cell Li-ion battery management with USB-C charger'). U1=BQ34Z100 (fuel gauge), U2=BQ25628E (charger), U5=BQ29700DSER (cell protection). bms_systems=[] in signal_analysis. The BMS detector apparently does not recognize these TI BQ-series parts.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -87,7 +87,7 @@
       "incorrect": [
         {
           "description": "The LION1CELL02 Edge.Cuts gerber file contains 0 apertures and 0 draws \u2014 the board outline is genuinely absent from the gerber set. The gbrjob file has board_width_mm=0.0, board_height_mm=0.0. The board dimensions are therefore not determinable, which is correctly indicated by board_dimensions={}. However, the gerber analyzer reports complete=true (from gbrjob) while the board is clearly incomplete/placeholder, which is misleading.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

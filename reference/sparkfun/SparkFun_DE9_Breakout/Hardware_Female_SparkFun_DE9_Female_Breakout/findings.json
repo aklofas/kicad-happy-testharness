@@ -54,11 +54,12 @@
       "correct": [
         {
           "description": "Both Female and Male schematics have zero findings across all signal_analysis detectors (voltage_dividers, rc_filters, power_regulators, transistor_circuits, etc.). This is exactly correct: the design is a passive DE9-to-header breakout with no active components, no filters, no power conversion. No false positives were triggered. The design_analysis.bus_analysis also correctly reports no I2C/SPI/UART/CAN buses.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators.instances",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators.instances"
           }
         },
         {

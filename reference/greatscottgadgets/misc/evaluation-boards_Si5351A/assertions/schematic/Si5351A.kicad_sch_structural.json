@@ -2,124 +2,138 @@
   "file_pattern": "Si5351A.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 clock_distribution",
+      "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.clock_distribution",
-        "op": "equals",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 1 connector_ground_audit",
-      "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 4 crystal_circuits",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 14 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "equals",
+        "value": 14
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 5 detect_clock_distribution",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_clock_distribution",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 4 detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "equals",
         "value": 4
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Y1 in crystal_circuits",
+      "id": "STRUCT-00000005",
+      "description": "Y1 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Y1$"
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Y2 in crystal_circuits",
+      "id": "STRUCT-00000006",
+      "description": "Y2 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Y2$"
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "U5 in crystal_circuits",
+      "id": "STRUCT-00000007",
+      "description": "U5 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U5$"
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "X1 in crystal_circuits",
+      "id": "STRUCT-00000008",
+      "description": "X1 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^X1$"
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 1 decoupling_analysis",
-      "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
       "id": "STRUCT-00000009",
-      "description": "Exactly 1 design_observations",
+      "description": "Exactly 1 detect_decoupling",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 14 esd_coverage_audit",
+      "description": "Exactly 1 detect_design_observations",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 14
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 3 voltage_dividers",
+      "description": "Exactly 3 detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
         "value": 3
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R8 in voltage_dividers",
+      "description": "R8 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R8$"
@@ -127,9 +141,10 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R2 in voltage_dividers",
+      "description": "R2 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R2$"
@@ -137,9 +152,10 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R9 in voltage_dividers",
+      "description": "R9 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R9$"

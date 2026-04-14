@@ -19,12 +19,13 @@
       "description": "J4 (5-pin header, 0.5mm pitch horizontal) overlaps U2 (STM32F405 LQFP-64) courtyard by 73.334mm\u00b2 \u2014 a large overlap that would indicate the 5-pin connector footprint is placed on top of the MCU. This is a legitimate layout problem correctly flagged by the analyzer.",
       "created_from": "FND-00001345",
       "check": {
-        "path": "placement_analysis.courtyard_overlaps[0].overlap_mm2",
+        "path": "findings[0].overlap_mm2",
         "value": 70.0,
         "op": "min_count"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: placement_analysis.courtyard_overlaps[0].overlap_mm2"
     },
     {
       "id": "FND-00001345-AST-03",

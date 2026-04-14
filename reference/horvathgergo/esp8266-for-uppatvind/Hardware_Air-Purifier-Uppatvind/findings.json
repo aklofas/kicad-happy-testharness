@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The MC34063AD (U1) is a step-down regulator generating +3V3 from vin. The feedback divider is R6=3.3k\u03a9 (top) and R5=2k\u03a9 (bottom). The MC34063's internal voltage reference is 1.25V, so Vout = 1.25 * (1 + 3300/2000) = 3.3125V. The analyzer assumes vref=0.6V (a generic heuristic, likely borrowed from TL431 or similar), yielding estimated_vout=1.59V. Both the estimated_vout field and the regulator_voltage design_observation repeat this incorrect value. The lib_id is Regulator_Switching:MC34063AD, which could be used to look up the correct Vref.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].estimated_vout",
+            "path": "findings",
             "op": "greater_than",
-            "value": 3.0
+            "value": 3.0,
+            "detector_filter": "detect_power_regulators[0].estimated_vout"
           }
         },
         {
@@ -36,11 +37,12 @@
         },
         {
           "description": "The MC34063AD (U1) has L1 (220uH) as a switching inductor, D1 (Schottky 1N5819WS) as a catch diode, and the input rail is 'vin' while the output rail is '+3V3'. This is a classic buck/step-down topology. The analyzer sets topology='unknown', missing an opportunity to identify the regulator type from the circuit structure (inductor + Schottky diode + input rail name).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "op": "equals",
-            "value": "unknown"
+            "value": "unknown",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         }
       ],

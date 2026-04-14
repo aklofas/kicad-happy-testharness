@@ -30,11 +30,13 @@
       "description": "INCORRECT: U3 (SRV05-4, lib_id: Power_Protection:SRV05-4) is a USB ESD suppressor that connects directly to the USBD_P and USBD_N lines. The ESD detection code at signal_detectors.py line 1728 correctly identifies it as a protection device via 'power_protection:' prefix, but then iterates over U3's pins to find protected nets. In the KiCad 5 legacy parser output, U3 has pins=[] (empty), so no protected nets are gathered and the device is not added to protection_devices. Consequently the differential pair entries for USBD_P/USBD_N and USBD_IN_P/USBD_IN_N both show has_esd=False, which is incorrect \u2014 ESD protection is present. Root cause: KiCad 5 legacy pin data not populated for this component.",
       "created_from": "FND-00002067",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00002067-AST-04",

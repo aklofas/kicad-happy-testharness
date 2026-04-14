@@ -21,9 +21,18 @@
       "check": {
         "path": "statistics.power_rails",
         "value": [
-          {"name": "+5V", "voltage": 5.0},
-          {"name": "GND", "voltage": null},
-          {"name": "VCC", "voltage": null}
+          {
+            "name": "+5V",
+            "voltage": 5.0
+          },
+          {
+            "name": "GND",
+            "voltage": null
+          },
+          {
+            "name": "VCC",
+            "voltage": null
+          }
         ],
         "op": "equals"
       }
@@ -33,11 +42,13 @@
       "description": "F1 (Polyfuse, Fuse:Fuse_1206_3216Metric) is correctly identified as a protection device with protected_net='+5V' and clamp_net='VCC'. The fuse protects the USB 5V supply before it reaches the MCU VCC rail.",
       "created_from": "FND-00001902",
       "check": {
-        "path": "signal_analysis.protection_devices[0].ref",
+        "path": "findings[0].ref",
         "value": "F1",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices[0].ref"
     },
     {
       "id": "FND-00001902-AST-04",
@@ -58,44 +69,52 @@
       "description": "Correctly identifies a key matrix using net-name detection with 4 row nets (ROW0-ROW3) and 6 column nets (COL0-COL5). diodes_on_matrix=22 is accurate (D1-D22 all connect via their Anode to a ROW net). The detection method 'net_name' is appropriate for this design.",
       "created_from": "FND-00001902",
       "check": {
-        "path": "signal_analysis.key_matrices[0].rows",
+        "path": "findings[0].rows",
         "value": 4,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].rows"
     },
     {
       "id": "FND-00001902-AST-06",
       "description": "INCORRECT: The analyzer reports switches_on_matrix=25 and estimated_keys=25, but there are exactly 22 MX-NoLED switches in the schematic (MX1-MX22). The overcounting arises because the code counts MX pin occurrences on COL nets (25 total pin instances) rather than unique MX component references. Three MX switches (MX1, MX17, MX20) have both their pin1 and pin2 on the same COL net, adding 3 extra pin counts: COL5 has 5 MX pin instances (MX1 both pins + MX2/3/4 pin1), COL1 has 4 (MX17 both pins + MX18/19 pin1), COL0 has 4 (MX20 both pins + MX21/22 pin1). True matrix size is 4\u00d76 with 22 populated positions (ROW3 only has 4 keys: COL3-COL5 not present in row 3).",
       "created_from": "FND-00001902",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "value": 22,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     },
     {
       "id": "FND-00001902-AST-07",
       "description": "INCORRECT: The analyzer assigns C11 (0.1uF) to net __unnamed_30, the same unnamed net as crystal pin Y1:pin1 and load cap C3 (22pF). In the actual schematic, C11 pin2 connects via wire to the +5V power symbol, making it a +5V decoupling cap, not a crystal load capacitor. The net tracer in the KiCad 5 legacy parser fails to follow the wire from C11 pin2 (at schematic coords ~3000,3050) to the +5V symbol (at 2350,3000). As a result: (a) the effective_load_pF is reported as 25.0pF instead of the correct ~13.7pF (C2 and C3 only in series, ignoring C11); (b) the note incorrectly states 'CL_eff = (22pF * 0.1uF) / (22pF + 0.1uF) + ~3pF stray'.",
       "created_from": "FND-00001902",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].load_caps",
+        "path": "findings[0].load_caps",
         "value": 2,
-        "op": "len_eq"
+        "op": "len_eq",
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].load_caps"
     },
     {
       "id": "FND-00001902-AST-08",
       "description": "INCORRECT: Because C11 pin2 is assigned to __unnamed_30 (the XTAL1 net) instead of +5V, C11 (0.1uF) does not appear in the +5V decoupling_analysis rail. The +5V rail shows only C7 (10uF) and C9 (1uF) for 2 caps / 11.0uF total. The correct count should be 3 caps / 11.1uF. This also causes the design_observation for +5V decoupling to report has_bypass=true based on C7/C9 (both >=1uF, not actually bypass range), when C11 at 0.1uF is the real bypass capacitor. Additionally, U1 UCAP pin (pin 6) is on isolated net __unnamed_23 not connected to C6, though C6 should decouple UCAP.",
       "created_from": "FND-00001902",
       "check": {
-        "path": "signal_analysis.decoupling_analysis[1].cap_count",
+        "path": "findings[1].cap_count",
         "value": 3,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[1].cap_count"
     },
     {
       "id": "FND-00001902-AST-09",

@@ -19,10 +19,12 @@
       "description": "The analyzer correctly classified U1 (USBLC6-4) as an ESD IC protecting D+, D-, and two unnamed nets (IO2, IO3 pins). The esd_ic type and protected_nets are accurate per the schematic.",
       "created_from": "FND-00001642",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_protection_devices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001642-AST-03",
@@ -49,10 +51,12 @@
       "description": "The analyzer found: VBUS: C2 (4.7\u00b5F bulk), VDD: C3 (4.7\u00b5F bulk) + C4 (100nF bypass), VIO: C5 (100nF bypass). C1 decouples the VPP pin (internal). The 3-rail coverage matches the schematic.",
       "created_from": "FND-00001642",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "value": 3,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001642-AST-06",
@@ -72,13 +76,15 @@
       "description": "R1 and R2 are 5.1k\u03a9 resistors connected between J1's CC1/CC2 pins and GND. These are the standard USB-C CC pull-down resistors for a USB device (5.1k\u03a9 to GND = UFP/sink). The analyzer does not flag them as USB-C CC termination resistors. This is a missed detection that would be valuable for USB-C design review.",
       "created_from": "FND-00001642",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "value": {
           "category": "usb_cc"
         },
-        "op": "contains_match"
+        "op": "contains_match",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

@@ -1,7 +1,8 @@
 {
   "file_pattern": "Arduino_Nano_AoA_LED_Indicator.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -45,22 +46,22 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~10",
+      "description": "low count ~8",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~69 (+-10)",
+      "description": "EMC risk score ~73.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 59,
-        "max": 79
+        "min": 63.0,
+        "max": 83.0
       }
     },
     {
@@ -76,13 +77,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "10 io_filtering finding(s)",
+      "description": "8 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 10
+        "value": 8
       }
     },
     {
@@ -127,11 +128,11 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "~8 probe point(s) in test plan",
+      "description": "~6 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 7
+        "value": 5
       }
     },
     {

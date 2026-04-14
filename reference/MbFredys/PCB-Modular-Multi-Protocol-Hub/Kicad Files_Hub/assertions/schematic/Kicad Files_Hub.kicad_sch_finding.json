@@ -9,12 +9,14 @@
       "description": "INCORRECT: RC filter overcounting: C58 (0.1uF) shared by R51-R54 (50ohm Ethernet terminators) generates 4 separate filter detections. These are impedance matching/termination, not discrete RC filters.",
       "created_from": "FND-00000225",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R51$"
+        "pattern": "^R51$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

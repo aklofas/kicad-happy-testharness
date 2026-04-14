@@ -57,11 +57,12 @@
         },
         {
           "description": "C1 (100uF polarized, c_2917 footprint) and C2 (1uF 0603) are both connected to the VL net which is U1's VDD supply pin. These are the primary bulk and bypass decoupling caps for the APDS-9960 sensor. The decoupling_analysis section only reports C3 (1uF) on VCC; the VL rail is completely absent. C3 is on the VCC rail (LED supply side), not VDD.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_value",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

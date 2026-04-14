@@ -9,46 +9,54 @@
       "description": "Decoupling on +3.3V rail correctly tallied at 48.1uF across C27 (1uF), C38 (100nF), C13 (47uF)",
       "created_from": "FND-00000197",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000197-AST-15",
       "description": "INCORRECT: U9 (TPS631000) estimated_vout is 5.914V but the output rail is correctly labeled +5V. The vout estimate is slightly off from the nominal 5V, likely due to heuristic Vref=0.6V vs actual TPS631000 Vref=0.5V",
       "created_from": "FND-00000197",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U9$"
+        "pattern": "^U9$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000197-AST-16",
       "description": "INCORRECT: U10 (TPS631000) estimated_vout is 3.969V on the +3.3V rail; same Vref heuristic issue. With actual Vref=0.5V, output would be 0.5/0.151=3.31V which matches the +3.3V rail exactly",
       "created_from": "FND-00000197",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U10$"
+        "pattern": "^U10$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000197-AST-17",
       "description": "INCORRECT: RC filter R3/C8 (10k/4u7) classified as 'RC-network' with ground_net='+3.3V' which is wrong - this is a reset RC delay circuit, not a ground-referenced filter",
       "created_from": "FND-00000197",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R3$"
+        "pattern": "^R3$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

@@ -30,11 +30,13 @@
       "description": "INCORRECT: The signal_analysis.addressable_led_chains reports 3 chains: two with chain_length=18 (both starting at D28 on net __unnamed_35) and one chain_length=1 starting at D3. Total LEDs across chains = 18+18+1 = 37 but the schematic has exactly 36 LEDs. The 1-LED chain for D3 appears to be the start of one of the two 18-LED chains detected via a different traversal path, not a separate chain. Two physical chains of 18 LEDs each (one per side of the reversible PCB) is the correct topology.",
       "created_from": "FND-00001595",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "max_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     }
   ]
 }

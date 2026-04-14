@@ -9,7 +9,7 @@
       "description": "The analyzer correctly includes components from the hierarchical sub-sheet (switch_matrix.kicad_sch) loaded via the (sheet ...) instance. Sheet 0 (MainBoard) contributes 16 components: U1 (Pico), SW1 (SW_SPDT), SW2 (SW_DIP_x04), SW3 (RotaryEncoder_Switch), R1-R5, C1-C2, J1-J5. Sheet 1 (switch_matrix) contributes 150 components: 66 SW_SPST key switches and 84 series diodes. Total 166 matches the source. The 69-switch count correctly includes SW1+SW2+SW3+66 SPST keys.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "U1 lib_id is 'MCU_RaspberryPi_and_Boards:Pico', value 'Pico', classified as 'ic'. Pin 36 (3V3) connects to +3.3V, pins 39 (VSYS) and 40 (VBUS) connect to +5V. The power domain correctly reports U1 on both +3.3V and +5V rails. The footprint is correctly read as 'MCU_RaspberryPi_and_Boards:RPi_Pico_SMD_TH' (slightly differs from source 'RPi_Pico:RPi_Pico_SMD_TH' \u2014 this is a footprint library name discrepancy between what the source declares and what the bom shows, but not an analyzer error since the lib_id portion is correct).",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "SW1 uses lib_id 'Switch:SW_SPDT' (value 'PiPowerSwitch'), correctly classified as 'switch'. SW2 uses lib_id 'Switch:SW_DIP_x04' (value 'SPI_SW'), correctly classified as 'switch'. SW3 uses lib_id 'Device:RotaryEncoder_Switch' (value 'RotaryEncoder_Switch'), correctly classified as 'switch' with pins A, B, C, S1, S2.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "The bus_analysis correctly identifies a full-duplex SPI bus. SPI_MOSI, SPI_MISO, SPI_SCK are global labels that connect through the Pi Zero connector (J1) interface signals and the Pico (U1). chip_select_count is 2, corresponding to SPI_CS and PI_SPI_CS global labels seen in the schematic. The devices list shows only U1, which is correct for what the main board sheet directly connects.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "The bus_analysis correctly identifies two I2C nets (I2C0_SDA, I2C0_SCL) via global labels. It correctly reports has_pull_up: false and pull_ups: [] for both lines. This is a real design observation: the schematic routes I2C to J5 (JoyStick_Or_I2C1) and J2 (JMD0.96C OLED display) without explicit pull-up resistors in this schematic \u2014 the pullups may be on connected modules. The design_observations section correctly calls this out.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -59,7 +59,7 @@
       "description": "The sleep_current_audit correctly identifies R3 and R4 as pull-up resistors on the +3V3 rail. Net tracing confirms: +3V3 \u2192 R3 pin2 \u2192 net __unnamed_2 (connecting SW3 pin A and R2 pin2); +3V3 \u2192 R4 pin1 \u2192 net __unnamed_0 (connecting SW3 pin B and R5 pin1). R3 and R4 are the actual pull-up resistors to the encoder quadrature signals. R2 and R5 are series resistors between the junction and the Enc1/Enc2 signals at U1 GPIO16/GPIO17. The pull-up current of 660 uA (2 \u00d7 330 uA at 10k on 3.3V) is numerically correct.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -69,7 +69,7 @@
       "description": "Checking a sample of key pins: GPIO0 (pin 1) \u2192 net 'C6' (keyboard column); GPIO1 (pin 2) \u2192 'C5'; GPIO2 (pin 4) \u2192 'C4'; GPIO16 (pin 21) \u2192 'Enc1'; GPIO17 (pin 22) \u2192 'Enc2'; GPIO26_ADC0 (pin 31) \u2192 'ANG2'; GPIO28_ADC2 (pin 34) \u2192 connects to LED net. The keyboard column nets C0..C6 are correctly mapped to U1 GPIO0..GPIO6 (pins 1,2,4,5,6,7,9). The named row-select nets R0..R4 correctly appear on U1 GPIO7..GPIO15 (pins 10-20). Pin 36 (3V3) \u2192 '+3.3V', pins 39/40 (VSYS/VBUS) \u2192 '+5V'. All verified pin counts and net assignments match the source schematic.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -79,7 +79,7 @@
       "description": "The hierarchical_labels section reports global_label_count: 73. The labels list includes the correct global labels: SPI_SCK, SPI_MOSI, SPI_MISO, SPI_CS, PI_SPI_SCK, PI_SPI_MOSI, PI_SPI_MISO, PI_SPI_CS, I2C0_SDA, I2C0_SCL, ANG1, ANG2, LED, C0..C6, R0..R4, Enc1, Enc2, Encoder_SW_1, Encoder_SW_2, Extra1..Extra3, ExtraSource \u2014 all matching labels in the source schematic. The bus_topology correctly identifies bus-like signal groups: C (7 signals), R (5 signals), Enc (2 signals), Encoder_SW_ (2 signals), Extra (3 signals), ANG (2 signals).",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -89,7 +89,7 @@
       "description": "J3 is a 3-pin header (Connector:Conn_01x03_Female, value 'WS2812') with a 330\u03a9 series resistor R1 connecting the LED data line. The global label 'LED' connects to the Pico (U1 GPIO28_ADC2 via 'LED' global label). The signal_analysis.addressable_led_chains section returns an empty list []. The design uses J3 as an external connector for WS2812 LED strips \u2014 a standard WS2812 signal path with a series resistor (R1=330\u03a9) on the data line. The analyzer should detect the J3 WS2812 connector + R1 series resistor pattern as an LED chain interface.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -100,7 +100,7 @@
       "description": "J1 uses footprint 'PiZero:Raspberry_Pi_Zero_Socketed_THT_MountingHoles_Castellated' and value 'Pi_Zero'. It is a 40-pin (2\u00d720) connector providing the Pi Zero GPIO interface carrying the SPI bus (PI_SPI_MOSI, PI_SPI_MISO, PI_SPI_SCK, PI_SPI_CS), I2C (I2C0_SDA, I2C0_SCL), and power (Pi_VCC local net). The analyzer classifies J1 only as a generic 'connector' type. No design_observation or special annotation identifies it as a Raspberry Pi Zero expansion header, even though the footprint name and value strongly indicate it. This is not a critical miss but represents a missed annotation opportunity.",
       "created_from": "FND-00000445",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

@@ -1,7 +1,8 @@
 {
   "file_pattern": "glr-2024e-display-can-shield.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,9 +35,9 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
@@ -44,7 +45,8 @@
       "id": "SEED-00000005",
       "description": "3 design_observations detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "design_observations",
         "op": "min_count",
         "value": 1
       }
@@ -53,7 +55,8 @@
       "id": "SEED-00000006",
       "description": "1 power_regulators detected",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "power_regulators",
         "op": "min_count",
         "value": 1
       }
@@ -62,7 +65,8 @@
       "id": "SEED-00000007",
       "description": "All power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
@@ -72,7 +76,8 @@
       "id": "SEED-00000008",
       "description": "1 protection_devices detected",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "protection_devices",
         "op": "min_count",
         "value": 1
       }

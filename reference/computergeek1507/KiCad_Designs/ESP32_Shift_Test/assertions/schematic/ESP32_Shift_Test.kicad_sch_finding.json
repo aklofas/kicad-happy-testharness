@@ -9,11 +9,13 @@
       "description": "INCORRECT: U4 (OKI-78SR-5, value 'OKI-78SR-5') is classified as topology='LDO' and estimated_vout=7.8V. The OKI-78SR-5 is a Murata/Recom step-down switching regulator (SIL package), not an LDO. The '-5' suffix should parse to 5.0V output, but the fixed_suffix path returns 7.8V. Both the topology and the Vout estimate are wrong.",
       "created_from": "FND-00002274",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002274-AST-02",

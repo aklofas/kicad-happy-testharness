@@ -9,7 +9,7 @@
       "description": "Each OPA4202 unit is configured as an inverting amplifier with Rf=49.9 ohm and Ri=1k ohm. Gain=-Rf/Ri=-0.0499 (reported -0.05) and gain_dB=20*log10(0.0499)=-26.04 dB (reported -26.0). The feedback capacitor (C47 etc.) is also captured. Power units (unit 5) correctly reported as 'unknown' configuration.",
       "created_from": "FND-00000818",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The main board is a hierarchical design with 5 copies of reference_circuit (4 opamps + 1 LM399 each) plus the top-level power/connector sheet. The component counts match the PCB footprint counts (287 footprints), confirming cross-file consistency.",
       "created_from": "FND-00000818",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "Each of the 20 LM399 reference channels has a differential output pair (Vout+/Vout-). The analyzer correctly identifies 20 differential pairs corresponding to the 20 LM399 voltage reference channels (4 reference blocks x 5 channels per block).",
       "created_from": "FND-00000818",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "The schematic has PWR_FLAG symbols placed on their own 'PWR_FLAG' net, not connected to GND. The GND net lacks a power_out driver or PWR_FLAG, so the warning is a genuine ERC issue (KiCad ERC would flag this in practice).",
       "created_from": "FND-00000818",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }

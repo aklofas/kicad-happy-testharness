@@ -2,30 +2,34 @@
   "file_pattern": "sensors_o2_temp.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 5 voltage_dividers",
+      "description": "Exactly 7 detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 5
+        "value": 7
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "R95 in voltage_dividers",
+      "description": "R95 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R95$"
@@ -33,42 +37,57 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R101 in voltage_dividers",
+      "description": "R98 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R98$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R92 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R92$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R101 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R101$"
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "R97 in voltage_dividers",
+      "id": "STRUCT-00000007",
+      "description": "R97 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R97$"
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "R93 in voltage_dividers",
+      "id": "STRUCT-00000008",
+      "description": "R93 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R93$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R92 in voltage_dividers",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R92$"
       }
     }
   ]

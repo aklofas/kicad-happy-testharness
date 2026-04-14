@@ -17,20 +17,22 @@
         },
         {
           "description": "Y1 (Crystal_GND24) is correctly detected with its two 15pF load capacitors (C3 and C4), yielding effective load capacitance of 10.5pF (series combination + ~3pF stray). This is the standard RP2040 crystal oscillator configuration.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "U3 is detected as an LDO with +5V input rail and +3V3 output rail, estimated Vout 3.3V via fixed_suffix recognition. The XC6210B332MR-G is indeed a fixed 3.3V LDO.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -44,20 +46,22 @@
         },
         {
           "description": "U5 (W25Q128JVS) is linked to U1 (RP2040) with 6 shared signal nets (QSPI_D0/D1/D2/D3/SCLK/CS). This is the correct QSPI flash connection for RP2040 designs.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "F1 (Polyfuse) is detected as a fuse on the Vbus path, and U4 (USBLC6-2P6) is detected as an ESD IC protecting D+_daughter and D-_daughter USB lines. Both are correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
@@ -74,11 +78,12 @@
         },
         {
           "description": "The design has D1 (LED, footprint LED_0402_1005Metric, type 'led') connected to an 'LED' net which is driven from GPIO on U1. The output also has a 'RGB' net present in the PCB. The addressable_led_chains section is empty despite the design having an LED output. While D1 appears to be a simple indicator LED (not WS2812-type), the 'RGB' net label and the SK6812-type LEDs in the companion flex PCB suggest this connection drives an LED chain. The schematic should at minimum note the LED/RGB signal paths.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],

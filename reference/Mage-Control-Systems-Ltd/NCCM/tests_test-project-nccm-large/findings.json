@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "3 components (R1, BT1, D1), 3 nets (GND + 2 unnamed), 8 wires all correctly parsed. BOM entries match source symbols. Net connectivity is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "GND net has power_in pin (#PWR01) and passive pins but no PWR_FLAG symbol, so ERC would flag it. The warning is accurate for this schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,15 +28,15 @@
       "incorrect": [
         {
           "description": "The schematic output reports smd_count=1 (D1) and package_breakdown 'other_SMD':1. The source schematic has D1 using footprint 'LED_THT:LED_D1.8mm..._Horizontal', which is explicitly a THT part. The PCB output correctly identifies D1 as through_hole (tht_count=3). The schematic analyzer is apparently classifying D1 based on symbol type rather than footprint library prefix.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The schematic contains 3 KiCad 9 netclass_flag items (BAT+, BAT-, LED) used to assign net classes to nets. The analyzer produces no output field for these \u2014 they are silently ignored. This is a key feature of KiCad 9 and is the entire point of the NCCM test project.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -59,9 +59,9 @@
       "correct": [
         {
           "description": "33 components (32 resistors at 1M + 1 battery), 33 nets, power_rails=[GND, PWR_FLAG, VCC] all match what a stress-test netclass matrix project would contain. BOM grouping of 32 resistors into one line item is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -86,18 +86,18 @@
       "correct": [
         {
           "description": "footprint_count=3, tht_count=3, smd_count=0, 2 copper layers, 1 GND zone spanning both layers, 6 track segments, routing_complete=true, board outline missing (edge_count=0) which matches source. All net assignments correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "min_track_width=0.4mm, dfm_tier=standard with no violations, silkscreen warnings for missing board name/revision are appropriate for a test project with no board name in silkscreen.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -106,7 +106,7 @@
       "incorrect": [
         {
           "description": "The GND zone has outline_area_mm2=6288.2 but filled_area_mm2=11707.86, giving fill_ratio=1.862. Filled area cannot exceed outline area. This indicates a bug in how the filled area is computed \u2014 likely summing both copper layers' fill areas without realizing they overlap in 2D footprint. The zone fills both F.Cu and B.Cu (6024+5683=11707), but the outline polygon is 2D and only 6288 mm2. Filled area should be reported per-layer or capped.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -129,9 +129,9 @@
       "missed": [
         {
           "description": "The gerber manifest is empty and the NCCM repo contains no gerber outputs. The prompt referenced 'nccm_output.json' and 'nccm_output_2.json' which do not exist on disk. No gerber analysis was possible or performed. This is expected for a plugin test-project repo.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

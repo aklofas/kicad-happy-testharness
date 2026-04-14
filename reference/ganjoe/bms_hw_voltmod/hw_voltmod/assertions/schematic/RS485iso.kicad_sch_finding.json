@@ -9,11 +9,13 @@
       "description": "The RS485iso.kicad_sch contains U11 (ISO3082DW, lib_id Interface_UART:ISO3082DW), which is an isolated RS485 transceiver. The bus_analysis reports can=[], i2c=[], spi=[], uart=[] \u2014 no RS485 interface is detected. The design_observations only flags 4 single-pin nets (POCI, REN, DEN, PICO \u2014 which are the RS485 DE/RE control and data pins) but does not synthesize them into an RS485 bus detection. The analyzer should recognize the ISO3082DW lib_id or the A/B differential pair as RS485.",
       "created_from": "FND-00002288",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

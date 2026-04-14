@@ -34,12 +34,13 @@
       "incorrect": [
         {
           "description": "TX4139 regulator feedback divider shows input as +12V but R96/R97 ratio gives 8.97V output - the input should be VMOT not +12V for the voltage divider top_net",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R96$"
+            "pattern": "^R96$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -51,7 +52,7 @@
         },
         {
           "description": "Isolation barrier lists no isolation_components despite SFH617A optocoupler and LTV-208 dual optocouplers being present in the design",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "detector": "isolation_barriers",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -61,9 +62,9 @@
       "missed": [
         {
           "description": "E-stop circuit with optocoupler-based safety interlock (Q7 NMOS on GND_ISO, SFH617A optocoupler crossing isolation barrier) not identified as a safety/interlock circuit",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -79,11 +80,12 @@
         },
         {
           "description": "Level shifters TXS0101DCKR not identified in the signal path between isolated and non-isolated domains",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [],

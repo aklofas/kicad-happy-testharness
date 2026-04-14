@@ -2,14 +2,15 @@
   "file_pattern": "video.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 8 decoupling_placement",
+      "description": "Exactly 12 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 8
+        "value": 12
       }
     },
     {
@@ -84,12 +85,52 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "U21 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U21$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "U22 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U22$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "U23 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "contains_match",
         "field": "ic",
         "pattern": "^U23$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "U24 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U24$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "U4 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U4$"
       }
     }
   ]

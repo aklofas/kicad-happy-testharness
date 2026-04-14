@@ -2,48 +2,54 @@
   "file_pattern": "CM5_HighSpeed.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling_analysis",
+      "description": "Exactly 6 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 3 design_observations",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 6 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 6
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 2 hdmi_dvi_interfaces",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 2 detect_hdmi_dvi_interfaces",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "J22 in hdmi_dvi_interfaces",
+      "description": "J22 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^J22$"
@@ -51,9 +57,10 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "J10 in hdmi_dvi_interfaces",
+      "description": "J10 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^J10$"
@@ -61,27 +68,30 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 1 power_path",
+      "description": "Exactly 1 detect_power_path",
       "check": {
-        "path": "signal_analysis.power_path",
+        "path": "findings",
+        "detector_filter": "detect_power_path",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U6 in power_regulators",
+      "description": "U6 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U6$"
@@ -89,11 +99,22 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Exactly 1 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

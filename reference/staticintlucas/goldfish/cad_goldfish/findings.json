@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The analyzer correctly: identifies the 16 MHz crystal (X1) with two 22 pF load caps (C7, C8) and computes effective load capacitance of 14 pF; detects CC1/CC2 5.1k pulldown resistors (R1, R2) as passing USB-C device compliance; finds decoupling caps on VBUS (C5 0.1uF + C6 4.7uF) and VCC rails; identifies F1 as a fuse protecting the VBUS line from RAW; and correctly counts 26 schematic components matching the BOM.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],

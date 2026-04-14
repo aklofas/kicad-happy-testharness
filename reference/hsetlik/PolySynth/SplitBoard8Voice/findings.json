@@ -8,7 +8,7 @@
       "correct": [
         {
           "description": "U201 TL074 quad opamp correctly decomposed into 4 units with correct gain/config",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "U201"
@@ -16,15 +16,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U201$"
+            "pattern": "^U201$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "TPS56528 switching + L7805/L7905 LDOs correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "L7805",
@@ -33,15 +34,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^L7805$"
+            "pattern": "^L7805$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Y401 16MHz crystal correctly parsed with 6pF load caps",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "Y401"
@@ -49,49 +51,53 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y401$"
+            "pattern": "^Y401$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "Two SK6812 LED chains (50+15) correctly detected",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "detector": "addressable_led_chains",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {
           "description": "22 encoder debounce RC filters correctly detected at 338.63Hz",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "~70 buffer opamps for CV distribution correctly detected",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
@@ -102,7 +108,7 @@
         },
         {
           "description": "U701 TCA9548A I2C mux classified as level_shifter_ic \u2014 it's an 8-channel I2C switch",
-          "analyzer_section": "signal_analysis.level_shifters",
+          "analyzer_section": "detect_level_shifters",
           "detector": "level_shifters",
           "subject_refs": [
             "U701"
@@ -116,7 +122,7 @@
         },
         {
           "description": "Y402 '32.768kHZ' frequency=null \u2014 capital HZ not recognized",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "Y402"
@@ -124,15 +130,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Y402$"
+            "pattern": "^Y402$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "TPS56528 output_rail is '__unnamed_28' instead of +3.3V (Schottky OR-ing diode not traced)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -142,11 +149,11 @@
       "missed": [
         {
           "description": "MIDI interface (3 DIN connectors, 6N138 optocoupler, MIDI_RX/TX) not detected",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "U301 DAC7578 8-channel I2C DAC not identified as DAC",
-          "analyzer_section": "signal_analysis.adc_circuits",
+          "analyzer_section": "detect_adc_circuits",
           "detector": "adc_circuits",
           "subject_refs": [
             "U301"
@@ -156,15 +163,16 @@
         },
         {
           "description": "Audio output circuit (TL074 mixing to stereo jack) not in audio_circuits",
-          "analyzer_section": "signal_analysis.audio_circuits",
+          "analyzer_section": "detect_audio_circuits",
           "detector": "audio_circuits",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.audio_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_audio_circuits"
           }
         }
       ],

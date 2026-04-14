@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "Y1 (32.768kHz crystal) with C6 and C7 (both 6pF) correctly detected. effective_load_pF=6.0 and in_typical_range=true. Crystal frequency parsed correctly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "C8 (100nF) is detected as part of two RC low-pass filters: R5+C8 (1.59kHz) and R6+C8 (159Hz). C8 is a decoupling cap, not a filter cap. R5 and R6 are separate pull-up/debounce resistors on different nets. Analyzer is spuriously pairing C8 with any nearby resistors sharing a GND connection.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "design_observations reports {component: U1, pin: VDDA, net: 'pa0'} as a single-pin net. VDDA is the analog power supply pin of the STM32L041, not a signal labeled 'pa0'. This suggests a pin-to-net mapping error in the legacy schematic parser where pin names from adjacent symbols are conflated.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "In the legacy schematic output, capacitors C2, C3, C4, C5, C6, C7, C8 all have footprint 'Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder'. This is a real schematic error (wrong footprint assigned to capacitors). The analyzer correctly extracts the data but does not flag the semantic mismatch between component type 'capacitor' and a 'Diode_SMD' footprint library. A footprint/type consistency check is missing.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -48,9 +48,9 @@
       "correct": [
         {
           "description": "footprint_count=31, front_side=22, back_side=9, smd_count=19, tht_count=12, net_count=29, routing_complete=true, board dimensions 35.56\u00d733.02mm all consistent with a STM32 breakout board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -75,9 +75,9 @@
       "correct": [
         {
           "description": "All 9 standard layers present plus both drill files. smd_ratio=0.61 correctly derived from paste_layer_flashes (57 SMD pads vs 36 THT holes). Layer extents aligned. Board dimensions 35.56\u00d733.02mm match PCB analysis.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

@@ -9,7 +9,7 @@
       "description": "routing_complete=true with 0 unrouted nets, 2-layer board (F.Cu + B.Cu), board 132.02x47.08mm, 27 footprints, 30 nets all correctly extracted.",
       "created_from": "FND-00000974",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -21,7 +21,7 @@
       "description": "The PCB has footprints with designators I, II, RUN, SEL (used as physical labels for buttons instead of SW_N). The PCB analyzer correctly lists them as footprints and includes them in component_groups. This is unusual design practice but handled correctly.",
       "created_from": "FND-00000974",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -33,7 +33,7 @@
       "description": "Board is 132x47mm, exceeding JLCPCB standard tier 100x100mm limit. The DFM violation is correctly identified with accurate dimensions.",
       "created_from": "FND-00000974",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -45,7 +45,7 @@
       "description": "U2 SN74HC163N has pins A(3), B(4), C(5), D(6) all tied to GND, meaning the counter always loads 0. This is a valid functional choice for a counter that only counts, but is worth noting. The PCB pad_nets show this correctly but no design_observation flags it.",
       "created_from": "FND-00000974",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

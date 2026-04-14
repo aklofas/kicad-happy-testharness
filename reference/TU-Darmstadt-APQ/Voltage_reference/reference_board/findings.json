@@ -26,22 +26,24 @@
         },
         {
           "description": "decoupling_analysis correctly identifies V3.3 with C1 (100n, 15.9 MHz SRF). U1 (TMP236 temperature sensor) runs on V3.3 and has one bypass capacitor \u2014 this is accurately reflected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The analyzer reports configuration='comparator_or_open_loop' for U3 (LT1001/OP07). In reality U3 is a non-inverting amplifier: the output (Vout / U3.pin6) feeds back through NT4 (net tie) to RN1.pin3, then the RN1 midpoint (pin2) connects to U3.pin2 (inverting input), forming a classic non-inverting gain stage. The feedback path is invisible to the analyzer because NT4 is a net tie that creates a separate net (__unnamed_6) between Vout and RN1.pin3, breaking the net-level feedback chain. This is a Kelvin-sense (4-wire) design pattern that defeats the opamp feedback detector.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "value": "non_inverting_amplifier",
-            "op": "contains_match"
+            "op": "contains_match",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
@@ -55,22 +57,24 @@
         },
         {
           "description": "signal_analysis.design_observations contains a 'decoupling' warning for U3 (LT1001) with rails_without_caps=['Vout']. This is incorrect: Vout is U3 pin6 (output), not a power supply. The actual supply rails V-heater+ and V_heater- (hierarchical port nets) do have decoupling caps (C4 for V+, C5 for V-). The warning arises from the erroneous power domain mapping discussed above.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
       "missed": [
         {
           "description": "feedback_networks is empty. RN1 (17k/20k VoltageDivider symbol) forms a feedback divider from U3's output (Vout) to U3's inverting input (__unnamed_7), traversing NT4 (net tie). The net tie boundaries prevent the feedback network detector from tracing the path. This is a missed detection: the design has a clear resistor-divider feedback network that sets the gain of the LT1001.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "validate_feedback_stability"
           }
         }
       ],
@@ -122,22 +126,24 @@
       "incorrect": [
         {
           "description": "The sub-schematic analysis independently misclassifies U3 (LT1001) as 'comparator_or_open_loop'. The feedback path from V_zener- (output) through NT4 to RN1.pin3, then RN1.pin2 to U3 inverting input is again broken by the net tie boundary. The true configuration is non-inverting amplifier with gain set by RN1 (17k/20k). Both the top-level and sub-schematic analyses make the same error.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "value": "non_inverting_amplifier",
-            "op": "contains_match"
+            "op": "contains_match",
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
       "missed": [
         {
           "description": "statistics.power_rails lists only ['GND', 'V+']. V- (connected to U3.pin4, type power_in) is absent. In net_classification V- is labeled 'signal' rather than 'power'. Because V- is a hierarchical port with no explicit power symbol in the sub-sheet, the analyzer does not recognize it as a supply rail. Consequently C5 (100n on V-) is not reported in decoupling_analysis, and the negative supply of the LT1001 appears unmonitored.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

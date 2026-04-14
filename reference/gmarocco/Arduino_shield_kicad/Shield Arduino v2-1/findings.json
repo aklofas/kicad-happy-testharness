@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "C5 has value '865080253012 470uF 10V' in the schematic \u2014 a W\u00fcrth Elektronik capacitor where the designer prepended the MPN (865080253012) into the value field. The analyzer parses '865080253012' as the capacitance in farads (0.865080253012 F = 865,080 \u00b5F) instead of extracting '470uF'. This causes signal_analysis.decoupling_analysis for the +5VA rail to report total_capacitance_uF=865080.353 instead of the correct ~470.1 \u00b5F, and inrush_analysis to use the wrong capacitance. The correct approach is to parse the last numeric token followed by a capacitance unit suffix (uF, nF, pF) from a multi-token value string.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?rail=='+5VA'].total_capacitance_uF",
+            "path": "findings",
             "op": "eq",
-            "value": 470.1
+            "value": 470.1,
+            "detector_filter": "detect_decoupling_analysis[?rail=='+5VA'].total_capacitance_uF"
           }
         },
         {
@@ -46,22 +47,24 @@
         },
         {
           "description": "signal_analysis.protection_devices includes VR1 (PT10MH01-103A2020-S, a trimmer potentiometer) as a 'varistor' clamping the +5VA rail. This is incorrect: a trimmer pot is a user-adjustable resistor, not an overvoltage clamping device. The protection_devices list should only contain TVS diodes, MOVs, varistors, and fuses. VR1 appears here as a downstream consequence of the varistor misclassification.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices[?ref=='VR1']",
+            "path": "findings",
             "op": "eq",
-            "value": null
+            "value": null,
+            "detector_filter": "detect_protection_devices[?ref=='VR1']"
           }
         }
       ],
       "missed": [
         {
           "description": "L1 (B82442T1685K050, 6.8 mH inductor) is placed in series between the +5V and +5VA power rails, with bulk/bypass capacitors C5 (470 \u00b5F) and C6 (10 \u00b5F) on the +5VA output. This is a classic L-C power filter used to create a low-noise analog supply (+5VA) from the digital +5V rail. signal_analysis.lc_filters=[] \u2014 the filter is not detected. The LC filter detector should recognize inductors on power rails with downstream capacitors as power filter topologies.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters"
           }
         }
       ],

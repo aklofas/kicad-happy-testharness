@@ -1,7 +1,8 @@
 {
   "file_pattern": "DISPLAY&LORA.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,26 +35,28 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 display_interfaces detected",
+      "description": "1 detect_display_interfaces detected",
       "check": {
-        "path": "signal_analysis.display_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_display_interfaces",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All display_interfaces have ref",
+      "description": "All detect_display_interfaces have ref",
       "check": {
-        "path": "signal_analysis.display_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_display_interfaces",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^$"
@@ -61,9 +64,10 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "All display_interfaces type values are valid",
+      "description": "All detect_display_interfaces type values are valid",
       "check": {
-        "path": "signal_analysis.display_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_display_interfaces",
         "op": "count_matches",
         "field": "type",
         "pattern": "^(display|touch_controller)$",
@@ -72,33 +76,46 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "1 rf_chains detected",
+      "description": "1 detect_rf_chains detected",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
+        "detector_filter": "detect_rf_chains",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "17 rf_matching detected",
+      "description": "17 detect_rf_matching detected",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
+        "detector_filter": "detect_rf_matching",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "2 suggested_certifications detected",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "1 detect_wireless_modules detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_wireless_modules",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 25 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -107,7 +124,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 6 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",

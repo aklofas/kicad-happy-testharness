@@ -17,20 +17,22 @@
         },
         {
           "description": "The signal_analysis.transistor_circuits section correctly identifies Q1 (BC107, collector_net to relay K3 coil, emitter to GND) and Q2 (BC107, collector_net to relay K2 coil, emitter to GND) with base resistors R3 and R4 respectively. The emitter_is_ground flag is correctly true for both.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 2,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "The ic_pin_analysis for A2 correctly identifies R1, R2, and R6 (all 10K) as pull-down resistors on Arduino pins A0, A1, and A2 respectively, each going to GND. The switches SW1, SW2, SW3 connect from 3V3 (Arduino pin 4) through the switch to these pins, making these pull-downs correct for switch-to-power circuits (the other side is at 3V3, so they would actually be pull-downs when switches are open).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits[0].base_resistors[0].reference",
+            "path": "findings",
             "value": "R4",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_transistor_circuits[0].base_resistors[0].reference"
           }
         }
       ],
@@ -48,11 +50,12 @@
       "missed": [
         {
           "description": "D1 and D4 are 1N4148 diodes placed across relay coils (D4 cathode on K2 pin 16 / anode on collector Q2; D1 cathode on K3 pin 1 / anode on collector Q1). These are classic flyback/freewheeling protection diodes. The signal_analysis.protection_devices list is empty, so these are missed. The relay coil topology is clear from the net data.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
@@ -104,11 +107,12 @@
       "missed": [
         {
           "description": "D4 (1N4007) has its cathode (pin K) on net __unnamed_6 with K1 pin 1 and Daisy ADC_0, and its anode (pin A) on net __unnamed_13 with K1 pin 8. This is a standard flyback diode across the relay coil. The signal_analysis.protection_devices list is empty. This is the same miss as in the Crossfade Pedal \u2014 the analyzer does not correlate diodes placed across relay coil pins as protection devices.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

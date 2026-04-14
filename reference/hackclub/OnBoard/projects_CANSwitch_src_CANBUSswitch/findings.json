@@ -23,11 +23,12 @@
       "missed": [
         {
           "description": "The two resistors are likely 120 ohm CAN bus termination resistors. No observation about CAN termination is generated despite the project being named CANBUSswitch.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [],

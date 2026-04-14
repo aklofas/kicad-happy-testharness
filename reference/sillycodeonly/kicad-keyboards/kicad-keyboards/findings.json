@@ -8,20 +8,22 @@
       "correct": [
         {
           "description": "The analyzer correctly identified the keyboard matrix structure: 4 row nets (Row 0\u20133), 9 column nets (Col 0\u20139), 37 MX switches, and 37 SOD-123 diodes matched on matrix. Detection method 'net_name' is accurate for this design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "Y1 (16MHz crystal) is found with both load capacitors C6 and C7 (22pF each), yielding effective load of 14pF. The circuit is consistent with ATmega32U4 USB FS requirements (16MHz with 22pF load caps is a standard and correct combination).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],
@@ -29,11 +31,12 @@
       "missed": [
         {
           "description": "The schematic uses an ATmega32U4 MCU (U1) which has a built-in USB FS transceiver. The D+ and D- nets are present (connected via 22\u03a9 series resistors R2/R3 to USB connector USB1). However, there is no 'usb_interfaces' key in signal_analysis at all \u2014 USB FS detection is entirely absent from the analyzer. The design clearly implements USB HID.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.usb_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_usb_interfaces"
           }
         }
       ],

@@ -2,6 +2,7 @@
   "file_pattern": "cm4-robot.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -314,37 +315,20 @@
     },
     {
       "id": "STRUCT-00000032",
-      "description": "Exactly 1 thermal_analysis.thermal_pads",
+      "description": "Exactly 1 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000033",
-      "description": "U3 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000034",
-      "description": "Exactly 1 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000035",
       "description": "U3 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U3$"

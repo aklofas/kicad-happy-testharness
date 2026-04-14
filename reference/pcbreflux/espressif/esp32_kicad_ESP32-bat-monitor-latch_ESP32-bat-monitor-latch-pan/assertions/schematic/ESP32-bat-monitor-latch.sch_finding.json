@@ -19,11 +19,13 @@
       "description": "INCORRECT: Q5 (AO3401 P-channel MOSFET) in the latch circuit is reported with drain_net='__unnamed_3' and source_net='__unnamed_3' \u2014 the same unnamed net for both pins. The source schematic places Q5 at position 4850 2050 with orientation (0 -1 -1 0), which is a mirrored orientation compared to Q2 and Q4 (0 1 -1 0). The gate of Q5 connects to R6 and the RC filter, while its source connects to Q2's gate and its drain connects to the output side. The identical drain/source assignment indicates the net-to-pin mapping fails when the symbol is mirrored vertically.",
       "created_from": "FND-00002088",
       "check": {
-        "path": "signal_analysis.transistor_circuits[4].drain_net",
+        "path": "findings[4].drain_net",
         "op": "equals",
-        "value": "__unnamed_3"
+        "value": "__unnamed_3",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[4].drain_net"
     }
   ]
 }

@@ -31,11 +31,13 @@
       "description": "INCORRECT: The AP1117-ADJ has a documented internal reference voltage of 1.25 V. The analyzer falls back to a 0.6 V heuristic (vref_source: 'heuristic') and reports estimated_vout = 1.068 V. With the correct Vref of 1.25 V and the divider R21=120 \u03a9 (top, Vout\u2192ADJ) / R20=154 \u03a9 (bottom, ADJ\u2192GND), the formula gives Vout = 1.25 \u00d7 (1 + 120/154) \u2248 2.22 V. The output rail is named '+2V8', and the design_observation already flags a large vout_net_mismatch (61.9% diff), but the root cause is the wrong Vref assumption rather than a design error. The AMS1117-2.85 in the other three schematics is handled correctly as a fixed-output part.",
       "created_from": "FND-00000411",
       "check": {
-        "path": "signal_analysis.power_regulators[0].assumed_vref",
+        "path": "findings[0].assumed_vref",
         "op": "equals",
-        "value": 0.6
+        "value": 0.6,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].assumed_vref"
     },
     {
       "id": "FND-00000411-AST-04",
@@ -53,11 +55,13 @@
       "description": "The schematic has a MicroSD card (SD2) connected via nets named SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS, SD_D1, SD_D2, forming a clear SPI mode SD card interface. The memory_interfaces list in signal_analysis is empty for all four BlueSCSI-v2 schematics. The net names explicitly contain MOSI/MISO/CLK keywords, which should be sufficient for the analyzer to detect and report a SPI or SD-card memory interface. This is a consistent false negative across all four files.",
       "created_from": "FND-00000411",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

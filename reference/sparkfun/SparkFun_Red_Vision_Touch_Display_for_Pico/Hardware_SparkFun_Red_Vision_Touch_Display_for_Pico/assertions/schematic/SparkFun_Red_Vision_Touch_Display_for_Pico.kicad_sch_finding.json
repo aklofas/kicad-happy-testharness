@@ -29,23 +29,27 @@
       "description": "Q1 (RE1C002UNTCL NMOS) correctly detected as backlight driver switch. Gate driven by DISP_BL signal from U2 (PCA9534PW), source=GND, drain connects to backlight. gate_resistors includes R2 (100k) pull-down.",
       "created_from": "FND-00001520",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "reference": "Q1",
           "type": "mosfet"
-        }
-      }
+        },
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001520-AST-04",
       "description": "3.3V rail decoupling correctly identified: C1 (10uF bulk) + C2 (0.1uF bypass), total 10.1uF, has_bulk=true, has_bypass=true \u2014 accurate.",
       "created_from": "FND-00001520",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001520-AST-05",

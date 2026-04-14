@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "Both LM358 units identified as comparator_or_open_loop with named nets Signal_L/Signal_R and Driver_L/Driver_R. Q1 and Q2 NPN transistors correctly flagged as motor-driving with base pulldowns R3/R11.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Power regulator detection correctly identifies U2 as AMS1117-5.0, topology=LDO, vout=5.0V via fixed suffix parsing.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "decoupling_analysis is [] even though C1 and C2 (both 10uF) are present. They connect via unnamed nets to AMS1117 output and +7.5V input rather than directly to a named power rail, so they are invisible to the decoupling detector. The regulator_caps observation also flags missing caps, creating a contradictory picture.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

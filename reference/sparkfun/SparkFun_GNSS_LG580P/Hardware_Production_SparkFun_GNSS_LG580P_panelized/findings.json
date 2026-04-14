@@ -19,11 +19,12 @@
       "incorrect": [
         {
           "description": "L1 and L2 (both 68nH) each appear in two LC filter entries: once paired with a single 100pF cap (61 MHz resonance) and once with a parallel 100pF+100pF network (1.93 MHz resonance). The actual circuit has each inductor forming a Pi-network supply filter with two caps on the output node. The same inductor being reported in two separate LC filter instances inflates the lc_filters count from 2 to 4 and the lower-frequency 1.93 MHz entries are an artifact of the parallel cap expansion logic treating the combined node as a separate LC pair.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_lc_filters"
           }
         }
       ],

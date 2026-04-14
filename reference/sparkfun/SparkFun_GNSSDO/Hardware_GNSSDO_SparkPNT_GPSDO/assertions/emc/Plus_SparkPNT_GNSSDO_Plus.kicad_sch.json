@@ -1,36 +1,37 @@
 {
   "file_pattern": "Plus_SparkPNT_GNSSDO_Plus.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~87 (tolerance 10%)",
+      "description": "Finding count ~84 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 82,
-        "max": 92
+        "min": 79,
+        "max": 89
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~15",
+      "description": "high count ~10",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 9,
+        "max": 11
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~28",
+      "description": "medium count ~29",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 25,
-        "max": 31
+        "min": 26,
+        "max": 32
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~0.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
         "min": 0,
-        "max": 10
+        "max": 10.5
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "11 decoupling finding(s)",
+      "description": "7 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 11
+        "value": 7
       }
     },
     {

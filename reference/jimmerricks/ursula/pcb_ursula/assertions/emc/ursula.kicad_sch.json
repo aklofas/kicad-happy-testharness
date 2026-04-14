@@ -1,16 +1,17 @@
 {
   "file_pattern": "ursula.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~73 (tolerance 10%)",
+      "description": "Finding count ~71 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 69,
-        "max": 77
+        "min": 67,
+        "max": 75
       }
     },
     {
@@ -35,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~69",
+      "description": "low count ~65",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 65,
-        "max": 73
+        "min": 61,
+        "max": 69
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~56 (+-10)",
+      "description": "EMC risk score ~66.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 46,
-        "max": 66
+        "min": 56.5,
+        "max": 76.5
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "70 io_filtering finding(s)",
+      "description": "66 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 70
+        "value": 66
       }
     },
     {
@@ -117,11 +118,11 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~38 probe point(s) in test plan",
+      "description": "~35 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 34
+        "value": 31
       }
     },
     {

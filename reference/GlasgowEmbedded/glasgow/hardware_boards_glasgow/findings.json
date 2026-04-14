@@ -15,13 +15,14 @@
         {
           "type": "current_sense",
           "description": "67 of 68 current_sense detections are false positives \u2014 R49 paired with unrelated ICs (SN74LVC1T45, CAT24M01X, etc.) that merely share GND net",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "related_issue": "#7",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "shunt.ref",
-            "pattern": "^R49$"
+            "pattern": "^R49$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -64,13 +65,14 @@
         {
           "type": "voltage_divider",
           "description": "R30 (4R7) / R48 (0R15) on ISNS_H \u2192 GND detected as divider but these are current sense shunt resistors",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "related_issue": "#12",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R30$"
+            "pattern": "^R30$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -83,13 +85,14 @@
         {
           "type": "voltage_divider",
           "description": "R56 (0R33) / R48 (0R15) on ISNS_H \u2192 GND same issue \u2014 current sense, not divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "related_issue": "#12",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R48$"
+            "pattern": "^R48$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -102,13 +105,14 @@
         {
           "type": "voltage_divider",
           "description": "R5/R4 (100k/100k) on ~{CY_RESET} \u2192 GND is a pull-up/pull-down pair on a digital reset line, not a voltage sensing divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "related_issue": "#12",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R4$"
+            "pattern": "^R4$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -274,11 +278,12 @@
       "incorrect": [
         {
           "description": "The glasgow io_banks sheet instantiates io_buffer.kicad_sch twice (IO_Buffer_A and IO_Buffer_B). Each instance contains a TPS73101 adjustable LDO: U31 in IO_Buffer_A and U14 in IO_Buffer_B. The physical feedback divider resistor in io_buffer is tagged as R34 (59k) in instance A and R28 (59k) in instance B, and R35 (24k3) in instance A / R29 (24k3) in instance B. The analyzer reports both U31 and U14 using R34/R35 as their feedback divider \u2014 it always picks the IO_Buffer_A instance reference and applies it to both regulators. The estimated_vout of 2.057V is only valid for one of the two instance interpretations; the actual VIO output depends on which R28/R29 values are correct. This is a hierarchical multi-instance ref resolution bug.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -309,11 +314,12 @@
         },
         {
           "description": "The analyzer detects U2 (CAT24M01X, 1Mbit EEPROM) and U3 (BL24C256A, 256kbit EEPROM) as memory interfaces. Both are correctly identified as connected to both U1 (CY7C68013A USB MCU) and U30 (ICE40HX8K FPGA) via 2 shared signal nets (I2C SDA/SCL). This is the Glasgow debug tool's I2C bus architecture where the MCU and FPGA share access to both configuration EEPROMs.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],

@@ -9,11 +9,13 @@
       "description": "INCORRECT: The OPamp-noninverting schematic has R1 (1k) from the inverting input to GND and R2 (9k) from the inverting input to the output \u2014 a textbook non-inverting configuration with gain = 1 + R2/R1 = 10. The analyzer classifies it as 'transimpedance_or_buffer' instead of 'non_inverting'. The 'transimpedance_or_buffer' label implies either unity gain (voltage follower) or a transimpedance topology, neither of which applies here.",
       "created_from": "FND-00002200",
       "check": {
-        "path": "signal_analysis.opamp_circuits[0].configuration",
+        "path": "findings[0].configuration",
         "op": "equals",
-        "value": "non_inverting"
+        "value": "non_inverting",
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits[0].configuration"
     }
   ]
 }

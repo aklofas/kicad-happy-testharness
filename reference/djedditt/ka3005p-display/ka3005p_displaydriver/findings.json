@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The analyzer reports U18 (AZ1117-3.3) with input_rail='+3V3' and output_rail='__unnamed_69'. In the source schematic (KiCad 5 legacy), the +3V3 power symbol connects to both the U18 VI (input) pin and to the U1/U3 74HC595 logic pins, while the VO (output) drives an unnamed net with no downstream loads. This means the analyzer correctly reads the netlist as drawn, but the power rail topology implies the 3.3V-labeled net is the regulator's input \u2014 which is physically nonsensical for a 3.3V LDO (input must exceed 3.3V). The design_observations only note a missing output cap and do not flag the suspicious naming or the fact that the regulator output feeds no components.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -29,7 +30,7 @@
         },
         {
           "description": "In the source schematic, Q7 (MMBT3904) has its collector (pin 3) and emitter (pin 2) both drawn at nearly identical coordinates and both land on net __unnamed_55. This results in a C-E short circuit for Q7, which is almost certainly a schematic drawing error (wires placed at adjacent 50-mil grid points that accidentally merge). The analyzer faithfully reflects the netlist (collector_net == emitter_net == '__unnamed_55') but emits no warning about a transistor with its collector and emitter tied to the same net.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "suggestions": [],

@@ -20,33 +20,39 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002024",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002024-AST-03",
       "description": "INCORRECT: ",
       "created_from": "FND-00002024",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].drain_is_power",
+        "path": "findings[0].drain_is_power",
         "op": "equals",
-        "value": false
+        "value": false,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].drain_is_power"
     },
     {
       "id": "FND-00002024-AST-04",
       "description": "INCORRECT: ",
       "created_from": "FND-00002024",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00002024-AST-05",
@@ -86,11 +92,12 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002024",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: thermal_analysis.thermal_pads"
     },
     {
       "id": "FND-00002024-AST-09",
@@ -185,11 +192,12 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002024",
       "check": {
-        "path": "placement_analysis.edge_clearance_warnings",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
     },
     {
       "id": "FND-00002024-AST-18",

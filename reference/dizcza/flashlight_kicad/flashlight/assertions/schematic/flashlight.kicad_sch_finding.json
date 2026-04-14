@@ -19,11 +19,13 @@
       "description": "INCORRECT: The MT3608 (U2) boost converter shows both input_rail and output_rail as '__unnamed_27' (the VIN node). In this circuit, L1 connects VIN (__unnamed_27) to the SW node (__unnamed_28), which then feeds through Schottky diode D5 to the VOUT power rail. When tracing the inductor (L1) to find the output rail, the code finds L1's two nets are __unnamed_27 and __unnamed_28. Because SW is __unnamed_28, ind_n1 (__unnamed_27) != sw_net, so it assigns ind_n1 (__unnamed_27) as the output \u2014 the same as the input. The actual output VOUT goes through D5 and is a named power rail that is not traced. The boost converter topology requires following the diode past the SW node to find the true output rail.",
       "created_from": "FND-00002068",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/\"ref\":\\s*\"U2\"/"
+        "value": "/\"ref\":\\s*\"U2\"/",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

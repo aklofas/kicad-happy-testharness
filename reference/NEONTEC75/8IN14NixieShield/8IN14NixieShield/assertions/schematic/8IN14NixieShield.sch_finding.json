@@ -9,11 +9,13 @@
       "description": "INCORRECT: The top-level 8IN14NixieShield.sch.json aggregates all sub-sheets. The same WS2812B daisy-chain miscount from tubes.sch propagates here: 8 chains of length 1 are reported instead of 1 chain of length 8. The 8 WS2812B LEDs D1-D8 in tubes.sch are explicitly wired in sequence and form one chain driven from the NEOPIXEL signal via a 100-ohm series resistor.",
       "created_from": "FND-00000329",
       "check": {
-        "path": "signal_analysis.addressable_led_chains[0].chain_length",
+        "path": "findings[0].chain_length",
         "op": "eq",
-        "value": 8
+        "value": 8,
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains[0].chain_length"
     }
   ]
 }

@@ -30,20 +30,24 @@
       "description": "The analyzer correctly detects R20(680\u03a9)/C10(100nF) as a 2.34kHz low-pass filter on the -12V rail (power supply filtering for AS3310 VEE), and R19(10k\u03a9)/C6(10nF) as a 1.59kHz high-pass. Both are real signal conditioning filters in this ADSR design.",
       "created_from": "FND-00001977",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001977-AST-04",
       "description": "signal_analysis.decoupling_analysis correctly identifies +12V with 3 caps (100nF+100uF+100nF, total 100.2uF) and -12V with 2 caps (100nF+100uF, total 100.1uF). Both rails have bulk and bypass capacitors, matching the IDC Eurorack power header layout.",
       "created_from": "FND-00001977",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001977-AST-05",
@@ -60,11 +64,13 @@
       "description": "INCORRECT: The analyzer detects three voltage dividers (3k9/1k pairs) producing ratio ~0.204 on ATTACK, DECAY, RELEASE nets. These are resistor dividers that scale CV modulation inputs for the TL074 op-amp summing inputs driving the AS3310. While structurally they are dividers, functionally they are input attenuators for mixing. The detection is technically correct but context is useful.",
       "created_from": "FND-00001977",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00001977-AST-07",
@@ -82,11 +88,13 @@
       "description": "U1 (TL074) has 4 op-amp sections used as summing/inverting amplifiers for ATTACK, DECAY, SUSTAIN, RELEASE control. signal_analysis.opamp_circuits is empty []. The TL074 has explicit +/- input and output pins (pins 3/2/1, 5/6/7, 10/9/8, 12/13/14 visible in nets). These should be detected as op-amp circuits.",
       "created_from": "FND-00001977",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

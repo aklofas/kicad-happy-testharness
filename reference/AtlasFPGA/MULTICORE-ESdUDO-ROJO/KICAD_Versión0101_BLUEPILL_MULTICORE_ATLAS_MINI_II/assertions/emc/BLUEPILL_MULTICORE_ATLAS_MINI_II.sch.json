@@ -1,16 +1,17 @@
 {
   "file_pattern": "BLUEPILL_MULTICORE_ATLAS_MINI_II.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~35 (tolerance 10%)",
+      "description": "Finding count ~29 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 26,
+        "max": 32
       }
     },
     {
@@ -35,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~32",
+      "description": "low count ~24",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 28,
-        "max": 36
+        "min": 21,
+        "max": 27
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~81 (+-10)",
+      "description": "EMC risk score ~87.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 71,
-        "max": 91
+        "min": 77.5,
+        "max": 97.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "33 io_filtering finding(s)",
+      "description": "25 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 33
+        "value": 25
       }
     },
     {
@@ -95,11 +96,11 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "~26 probe point(s) in test plan",
+      "description": "~18 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 23
+        "value": 16
       }
     },
     {

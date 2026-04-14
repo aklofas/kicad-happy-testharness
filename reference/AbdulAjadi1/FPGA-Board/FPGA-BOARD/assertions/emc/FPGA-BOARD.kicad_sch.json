@@ -1,36 +1,37 @@
 {
   "file_pattern": "FPGA-BOARD.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~118 (tolerance 10%)",
+      "description": "Finding count ~117 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 112,
-        "max": 124
+        "min": 111,
+        "max": 123
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~36",
+      "description": "high count ~35",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 32,
-        "max": 40
+        "min": 31,
+        "max": 39
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~67",
+      "description": "medium count ~66",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 63,
-        "max": 71
+        "min": 62,
+        "max": 70
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~8.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
         "min": 0,
-        "max": 10
+        "max": 18.0
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "9 decoupling finding(s)",
+      "description": "7 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 9
+        "value": 7
       }
     },
     {

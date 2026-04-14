@@ -19,11 +19,13 @@
       "description": "INCORRECT: This design has R1 (4.7k) on SCL and R2 (2.2k) on SDA as I2C pull-ups, both switchable via JP2 (I2C solder jumper). The analyzer reports has_pullup=false, pullup_resistor=null for both SCL and SDA bus lines. The net data confirms R1 pin 2 connects to SCL, and R2 pin 2 to SDA, with the other ends of R1/R2 going through JP2 to 3.3V. This is the same failure mode as VEML7700 \u2014 the analyzer fails to trace pull-up topology through a 3-pin solder jumper to the power rail.",
       "created_from": "FND-00001418",
       "check": {
-        "path": "signal_analysis.design_observations[0].has_pullup",
+        "path": "findings[0].has_pullup",
         "value": true,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[0].has_pullup"
     }
   ]
 }

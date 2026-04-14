@@ -9,21 +9,25 @@
       "description": "The schematic contains U2=TL072 with lib_id 'Amplifier_Operational:TL072', a classic dual op-amp. The opamp_circuits section is empty and feedback_networks is empty, meaning the analyzer failed to identify the op-amp and its feedback topology. This is a false negative for a clearly-annotated op-amp part.",
       "created_from": "FND-00002438",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00002439-AST-02",
       "description": "The analyzer correctly identified Q1\u2013Q6 as BJT transistors (MMBT3904 and PZT3904), with base resistors noted. Q3 and Q4 are classified as 'transistor' load type while Q1/Q2/Q5/Q6 are 'other', which reflects the different circuit roles. The voltage divider formed by R13/R19 feeding Q6's collector is also correctly detected.",
       "created_from": "FND-00002439",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "equals",
-        "value": 6
-      }
+        "value": 6,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

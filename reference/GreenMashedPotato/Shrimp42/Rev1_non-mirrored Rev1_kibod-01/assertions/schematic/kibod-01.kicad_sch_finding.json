@@ -30,11 +30,13 @@
       "description": "signal_analysis.key_matrices is an empty array even though the schematic has nets named CL0, CL1, CL2, CL3, CL4, CL5 (columns) and RL0, RL1, RL2, RL3 (rows), along with 42 KEYSW components and 42 diodes connected in a classic diode-per-key matrix. The analyzer should detect a 4\u00d76 keyboard matrix but returns no results. The net names match common keyboard matrix naming conventions.",
       "created_from": "FND-00001355",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     }
   ]
 }

@@ -9,11 +9,13 @@
       "description": "INCORRECT: The backup DAC schematic (Kicad files_BACK_UP_ADACUS_DAC_ADACUS_sch) has identical RC filter misclassifications: rc_filters[0] groups C405+C403 as parallel across different nodes, and rc_filters[2] reports ground_net='OUT_AA_BUF_OUT' for the active filter feedback capacitor. This is the same circuit duplicated in the backup directory.",
       "created_from": "FND-00000361",
       "check": {
-        "path": "signal_analysis.rc_filters[2].ground_net",
+        "path": "findings[2].ground_net",
         "op": "eq",
-        "value": "GND"
+        "value": "GND",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters[2].ground_net"
     }
   ]
 }

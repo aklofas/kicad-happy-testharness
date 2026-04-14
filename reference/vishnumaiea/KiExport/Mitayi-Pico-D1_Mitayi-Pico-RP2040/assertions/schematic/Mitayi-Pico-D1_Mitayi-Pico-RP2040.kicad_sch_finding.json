@@ -9,7 +9,7 @@
       "description": "57 components, 31 unique parts, 2 DNP correctly identified. All BOM entries with MPNs correctly extracted. J6 (USB_B_Micro) correctly flagged dnp:true.",
       "created_from": "FND-00000741",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "power_regulators section correctly identifies U2 as LDO with VSYS input and 3.3V estimated output. topology='LDO' correct.",
       "created_from": "FND-00000741",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "memory_interfaces correctly identifies U1 as flash, U3 as processor, with 6 shared signal nets (QSPI_SCLK, QSPI_SS, QSPI_SD0-SD3).",
       "created_from": "FND-00000741",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "USB_D+ and USB_D- are correctly classified as 'high_speed' in net_classification. USB series resistors R5/R6 (27R) are correctly associated.",
       "created_from": "FND-00000741",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "statistics.power_rails is ['VSYS'] \u2014 correctly identified from net labels. The design uses local net labels for power (no explicit PWR_FLAG), so this is a reasonable detection.",
       "created_from": "FND-00000741",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -59,7 +59,7 @@
       "description": "test_coverage observations says 'No debug connectors (SWD/JTAG/UART) identified'. J5 is explicitly named 'SWD' and connects to SWCLK/SWDIO on U3 (RP2040). The SWD connector should be detected.",
       "created_from": "FND-00000741",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

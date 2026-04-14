@@ -1,36 +1,37 @@
 {
   "file_pattern": "esp32_midi.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~151 (tolerance 10%)",
+      "description": "Finding count ~155 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 143,
-        "max": 159
+        "min": 147,
+        "max": 163
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~137",
+      "description": "high count ~133",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 130,
-        "max": 144
+        "min": 126,
+        "max": 140
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~6",
+      "description": "medium count ~7",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -45,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~11 (+-10)",
+      "description": "EMC risk score ~26.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 1,
-        "max": 21
+        "min": 16.0,
+        "max": 36.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "133 decoupling finding(s)",
+      "description": "130 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 133
+        "value": 130
       }
     },
     {
@@ -155,11 +156,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~2 net(s) with EMC scores",
+      "description": "~3 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 1
+        "value": 2
       }
     }
   ]

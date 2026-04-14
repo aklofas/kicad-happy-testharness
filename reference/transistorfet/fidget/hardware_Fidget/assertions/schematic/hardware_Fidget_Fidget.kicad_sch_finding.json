@@ -9,20 +9,24 @@
       "description": "5-rail decoupling analysis correctly identified: +3.3V (18 caps, 4.5uF), +1V2 (3 caps, 1.11uF including C6 0.01uF high-freq), +5V (2 caps, 1.1uF), +2V5 (2 caps, 1.1uF), VBUS (9 caps, 0.9uF)",
       "created_from": "FND-00000214",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000214-AST-06",
       "description": "USB data lines USB_DN and USB_DP correctly flagged with has_esd_protection=false, noting only R6/R5 series resistors and U2 FPGA connections",
       "created_from": "FND-00000214",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000214-AST-07",

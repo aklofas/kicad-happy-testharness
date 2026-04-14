@@ -2,16 +2,17 @@
   "file_pattern": "rescue-backup_psu-2018-04-18-05-02-05.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "15 switching_emc finding(s)",
+      "description": "9 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 15
+        "value": 9
       }
     },
     {
@@ -26,16 +27,6 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "U12 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU12\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
       "description": "U13 in EMC findings",
       "check": {
         "path": "findings",
@@ -45,7 +36,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "U14 in EMC findings",
       "check": {
         "path": "findings",
@@ -55,23 +46,13 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "U15 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU15\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "U18 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU18\\b"
       }
     }
   ]

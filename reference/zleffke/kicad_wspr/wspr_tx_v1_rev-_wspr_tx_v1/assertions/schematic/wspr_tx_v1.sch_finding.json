@@ -9,11 +9,13 @@
       "description": "wspr_tx_v1.sch contains three separate 3-pole LC low-pass filter chains (9 inductors + 12 capacitors labeled L1-L9 and C4-C15), used for harmonic filtering of WSPR RF output. The signal_analysis.lc_filters array is empty despite the clear LC ladder topology. Similarly, rf_chains is empty even though SMA connectors J2/J3/J4 provide the RF output interface. The crystal oscillator circuit (Y1 + load caps) was also not detected. This is a significant missed detection for an RF design.",
       "created_from": "FND-00002499",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     }
   ]
 }

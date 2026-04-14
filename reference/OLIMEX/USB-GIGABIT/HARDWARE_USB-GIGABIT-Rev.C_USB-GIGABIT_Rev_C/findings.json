@@ -8,29 +8,32 @@
       "correct": [
         {
           "description": "The ethernet_interfaces detector correctly identifies U3 (RTL8153VC-CG) as the Ethernet PHY and LAN1 (TM211Q01FM22/LPJG16402AQNL) as the connector. The magnetics list is empty, which is accurate since the TM211Q01FM22 is a magjack with integrated magnetics \u2014 there is no separate magnetic transformer component in the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           }
         },
         {
           "description": "The power_regulators detector correctly identifies U4 (SY8089AAAC) as a switching buck converter with inductor L1, output rail V12, and feedback via R15/R12 (both 1.1K). The estimated Vout=1.2V using Vref=0.6V and ratio=0.5 is arithmetically correct for SY8089AAAC. The output rail V12 connects to the RTL8153 VDD10 pins (core voltage). The topology and inductor identification are accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "The crystal_circuits detector correctly identifies X1 (25MHz, 20pF rated) with load capacitors C7 and C8 (39pF each), computing an effective load capacitance of 22.5pF (series combination + stray). The 25MHz crystal is the clock source for the RTL8153. Both load caps are on the correct CKXTAL1/CKXTAL2 nets.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
@@ -233,20 +236,22 @@
       "correct": [
         {
           "description": "X1 (25MHz, 20pF spec) detected with C7 and C8 (39pF each) as load capacitors. Effective load calculated as 22.5pF (39/2 + ~3pF stray), which is close to but slightly over the 20pF spec \u2014 a reasonable observation. Crystal circuit section is correctly populated.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].reference",
+            "path": "findings",
             "value": "X1",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_crystal_circuits[0].reference"
           }
         },
         {
           "description": "U4 detected as a switching regulator with inductor L1, feedback resistors R15/R12 (1.1k/1.1k ratio 0.5), output rail V12, estimated Vout=1.2V (Vref=0.6V assumed). This matches the RTL8153 core voltage domain requirement. Input rail recorded as '__unnamed_0' (the VBUS net after ferrite bead FB1).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].estimated_vout",
+            "path": "findings",
             "value": 1.2,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].estimated_vout"
           }
         },
         {
@@ -345,11 +350,12 @@
       "missed": [
         {
           "description": "ethernet_interfaces[0].magnetics is empty []. The TM211Q01FM22 (also known as LPJG16402AQNL) is a RJ-45 jack with integrated Bob Smith termination and magnetics. The analyzer looks for a separate discrete magnetics transformer component rather than recognizing that this connector has built-in magnetics. A complete analysis would note that the design does not require a separate transformer because LAN1 provides integrated magnetics.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces[0].magnetics",
+            "path": "findings",
             "value": 0,
-            "op": "count_eq"
+            "op": "count_eq",
+            "detector_filter": "detect_ethernet_interfaces[0].magnetics"
           }
         },
         {

@@ -19,10 +19,12 @@
       "description": "The design_observations section correctly identifies that U1 (74HC238), U2 (74HC238), and U3 (74HC245) all lack bypass capacitors on the +5V rail. There are no capacitor components anywhere in the schematic BOM (no C* references), confirming the observation is accurate. This is a genuine design oversight in the diode ROM schematic.",
       "created_from": "FND-00002329",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
-      }
+        "value": 3,
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00002329-AST-03",

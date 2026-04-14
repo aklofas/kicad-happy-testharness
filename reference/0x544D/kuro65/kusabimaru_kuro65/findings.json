@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "Key matrix correctly detected: 5 rows x 16 columns, 69 switch-diode pairs, matrix structure valid",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "69 bypass capacitors (100nF each) correctly detected as decoupling, totaling 6.9uF",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],

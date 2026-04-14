@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "bus_analysis.i2c correctly identifies the shared I2C bus connecting Arduino A4/A5 to both U2 (MAX30102) and U3 (SSD1306). RC filter detection on button debounce networks (R+C pairs for SW1/SW2/SW3) is also correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Component count, types, BOM grouping, and power rails (+5V, GND) all correct. Missing MPN flagged for all 14 components as expected for a student project.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -29,9 +29,9 @@
       "missed": [
         {
           "description": "The schematic has SW1, SW2, SW3, D1 but the PCB footprints use references UP, DOWN, MENU, ALARM. The analyzer does not cross-reference schematic refs against PCB refs to detect this naming inconsistency.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -54,9 +54,9 @@
       "correct": [
         {
           "description": "Three courtyard overlaps reported: R3/R2 (14.94mm\u00b2), R1/R3 (7.588mm\u00b2), R4/C3 (3.03mm\u00b2). These are genuine DFM issues \u2014 resistors are placed 2-3mm apart with 9.6mm long courtyard outlines. GND copper zone correctly identified as filled on both F.Cu and B.Cu.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

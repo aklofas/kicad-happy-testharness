@@ -41,11 +41,13 @@
       "description": "",
       "created_from": "FND-00002008",
       "check": {
-        "path": "signal_analysis.power_regulators[0].ref",
+        "path": "findings[0].ref",
         "op": "equals",
-        "value": "U2"
+        "value": "U2",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].ref"
     },
     {
       "id": "FND-00002008-AST-05",
@@ -63,11 +65,13 @@
       "description": "",
       "created_from": "FND-00002008",
       "check": {
-        "path": "signal_analysis.power_regulators[0].topology",
+        "path": "findings[0].topology",
         "op": "equals",
-        "value": "switching"
+        "value": "switching",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].topology"
     },
     {
       "id": "FND-00002008-AST-07",
@@ -107,11 +111,13 @@
       "description": "",
       "created_from": "FND-00002008",
       "check": {
-        "path": "signal_analysis.decoupling_analysis[0].capacitors",
+        "path": "findings[0].capacitors",
         "op": "min_count",
-        "value": 9
+        "value": 9,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[0].capacitors"
     },
     {
       "id": "FND-00002008-AST-11",
@@ -217,22 +223,26 @@
       "description": "",
       "created_from": "FND-00002008",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00002008-AST-21",
       "description": "",
       "created_from": "FND-00002008",
       "check": {
-        "path": "signal_analysis.feedback_networks",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.feedback_networks"
     }
   ]
 }

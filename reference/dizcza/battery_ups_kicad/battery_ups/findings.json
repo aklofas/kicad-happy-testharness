@@ -30,11 +30,12 @@
       "missed": [
         {
           "description": "The design has U1 (footprint XL4015_StepDown, a 5A buck converter module) and U3 (footprint StepUp12V, a boost module) that form the power conversion chain. signal_analysis.power_regulators is empty. The analyzer lacks sufficient context from the custom module footprint names and blank values ('~') to identify these as power regulators. These are module-level regulators that lack schematic symbol pin names like EN/FB/SW, making detection difficult without value/footprint heuristics.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {

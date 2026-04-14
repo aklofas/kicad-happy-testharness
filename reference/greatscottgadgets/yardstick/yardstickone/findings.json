@@ -47,11 +47,12 @@
       "missed": [
         {
           "description": "No RF chain detection despite having a clear TX chain (CC1111 -> RF switch -> TX amp -> antenna) and RX chain (antenna -> RF switch -> LPF -> RX amp -> CC1111)",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],
@@ -69,11 +70,12 @@
         },
         {
           "description": "TX/RX antenna switching topology not identified. The two SKY13251 SP3T switches with SSM6L36FE driver MOSFETs form the antenna diversity/path selection circuit.",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],
@@ -82,11 +84,12 @@
         },
         {
           "description": "No RF matching network detection despite having matching components around the RF switches and amplifiers",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           },
           "detector": "rf_matching",
           "subject_refs": [],

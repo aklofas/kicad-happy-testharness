@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "LDO TLV1117LV33 and buck LM2576HVS-5 correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -21,11 +22,12 @@
         },
         {
           "description": "10 MOSFET circuits correctly identified with gate drivers",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -34,11 +36,12 @@
         },
         {
           "description": "8 protection devices (CDSOT23-SM712 TVS, polyfuses, USBLC6, TPD4E1U06) correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [],
@@ -47,11 +50,12 @@
         },
         {
           "description": "VMOT battery voltage sensing divider correctly identified with ADS1115 load",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [],
@@ -60,11 +64,12 @@
         },
         {
           "description": "WS2812B LED chain of 7 LEDs correctly detected",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           },
           "detector": "addressable_led_chains",
           "subject_refs": [],
@@ -73,11 +78,12 @@
         },
         {
           "description": "4 crystal circuits with load cap calculations correct",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -88,12 +94,13 @@
       "incorrect": [
         {
           "description": "TPS61040DBVR (U12) output_rail='+5V' but actual boost output is +12V \u2014 Schottky D11 cathode connects to +12V rail",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U12$"
+            "pattern": "^U12$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -105,7 +112,7 @@
         },
         {
           "description": "False key_matrix \u2014 7 independent SPDT config switches (SW2-SW7) with per-switch diodes resemble matrix topology; row nets are CAN/enable signals, not keyboard rows",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "detector": "key_matrices",
           "subject_refs": [
             "SW2",
@@ -122,11 +129,12 @@
       "missed": [
         {
           "description": "Ethernet interface not detected \u2014 CM4 pairs through TPD4E1U06 ESD to G2401CG transformer to RJ45",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],
@@ -135,12 +143,13 @@
         },
         {
           "description": "ISO1050DUB isolated CAN transceivers (U10/U11) not detected as isolation barriers \u2014 separate VCC1/VCC2 power domains",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U10$"
+            "pattern": "^U10$",
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [

@@ -28,31 +28,34 @@
       "incorrect": [
         {
           "description": "The key_matrices detector reports a 4\u00d714 matrix with estimated_keys=33 and switches_on_matrix=26. The 14-column figure comes from merging label-only nets col8\u2013col14 (which appear only as flat labels in the main sheet with no switch or diode pins) with col1\u2013col7 from the left-board sub-sheet. Columns col8\u2013col13 each have zero component pins; col14 connects only to connector P2. The actual populated left-side matrix is 4\u00d77 with 15 switches + a 4\u00d72 thumb extension = 23 diode-switched positions. The 14-column figure is a false positive caused by treating label-only nets as populated matrix columns.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].columns",
+            "path": "findings",
             "value": 9,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_key_matrices[0].columns"
           }
         }
       ],
       "missed": [
         {
           "description": "X1 is a Murata CSTCE16M0V53 ceramic resonator (datasheet field confirms the part number), paired with U1 (ATmega32U4). The crystal_circuits list is empty. Detection fails because the KiCad 5 legacy parser does not resolve pin-to-net mappings for the ATmega32U4 (U1 pins=[]) or the resonator (X1 pins=[]), so the topological matching for a crystal+MCU circuit cannot trigger. The design observation about a missing oscillator circuit is therefore also absent from design_observations.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "The design has 16 WS2812B LEDs (led1\u2013led16) split across two halves, intended to form daisy-chained groups. The analyzer produces 8 separate addressable_led_chains each with chain_length=1 and data_in_net=''. Chain stitching fails because KiCad 5 legacy parsing leaves all LED pin arrays empty (pins=[]), so the DIN\u2192DOUT connection topology cannot be traced. Additionally, led1\u2013led8 (right half) are missing from all three .sch files and are therefore not detected at all. The eight LEDs on the left-board sheet are detected individually but never linked.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains[0].chain_length",
+            "path": "findings",
             "value": 1,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_addressable_led_chains[0].chain_length"
           }
         }
       ],
@@ -73,22 +76,24 @@
       "correct": [
         {
           "description": "left-board.sch (2 sheets: left-board + left-thumb sub-sheet) reports a 4\u00d77 matrix with switches_on_matrix=26 and diodes_on_matrix=33 via net_name detection. The 15 left-board switches (SW16, SW24\u2013SW37) and 8 thumb diodes (for S3/S4 alps_4way contacts) account for 23 of the 33 diodes; the discrepancy reflects how estimated_keys is derived from matrix dimensions rather than actual switch count. The row/col net naming (row1\u2013row4, col1\u2013col7) is correctly parsed. Power rails (+5V, Earth) are also correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].rows",
+            "path": "findings",
             "value": 4,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_key_matrices[0].rows"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The left-board.sch 4\u00d77 matrix reports estimated_keys=33 but the actual diode count is 23 (15 left-board + 8 left-thumb). The value 33 appears to be row\u00d7col\u00d7something or an artifact of how the detector counts net intersections. A 4\u00d77 matrix has at most 28 positions; adding the 4\u00d72 thumb sub-matrix gives 36 theoretical max. The 33 figure does not correspond to any physically meaningful count and will mislead LLM reviewers about keyboard size.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].estimated_keys",
+            "path": "findings",
             "value": 28,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_key_matrices[0].estimated_keys"
           }
         }
       ],
@@ -119,11 +124,12 @@
         },
         {
           "description": "All signal analysis lists (voltage_dividers, rc_filters, power_regulators, etc.) are correctly empty. The only populated detector is key_matrices, which is accurate for a thumb cluster. Net classification correctly labels all 16 nets as signal since there are no power rails on this sheet (power enters via hierarchical connector P19).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],

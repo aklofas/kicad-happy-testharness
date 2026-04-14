@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "U2 (TLV1117-33) is correctly identified as an LDO regulator with input from +5V and output to +3.3V. The estimated_vout=3.3 is derived from the fixed_suffix of the part name, which is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -38,11 +39,12 @@
       "missed": [
         {
           "description": "U3 (ESP32-C6-MINI-1/U) is a ZigBee and WiFi SoC with an external antenna configuration. The project name ('external_antenna') and the PCB design indicate an RF signal path. The signal_analysis.rf_chains list is empty. The analyzer likely does not recognize ESP32-C6-MINI as an RF device, and without explicit antenna net names (e.g., ANT, RF_OUT), the RF chain detector does not fire.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           }
         }
       ],

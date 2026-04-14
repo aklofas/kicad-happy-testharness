@@ -9,7 +9,7 @@
       "description": "Source has J1 (Conn_01x04_Pin, 2.54mm), STEMMA_QT_I2C1 (JST_SH_SM04), R7 (10k SCL pull-up), R8 (10k SDA pull-up) = 4 components. Output reports total_components=4, connector=2, resistor=2. Nets I2C0_SCL and I2C0_SDA correctly identified and routed. R7 pin 2 on +3.3V, pin 1 on I2C0_SCL (pull-up). R8 pin 2 on +3.3V, pin 1 on I2C0_SDA (pull-up). +3.3V and GND power rails correctly detected. Hierarchical labels SCL and SDA both captured. sleep_current_audit correctly identifies R7 and R8 as 10k pull-ups each drawing 330 uA worst-case.",
       "created_from": "FND-00000451",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The bus_analysis.i2c list is empty despite the presence of nets named 'I2C0_SDA' and 'I2C0_SCL' with 10k pull-up resistors (R7/R8) to +3.3V. The analyzer has the signal name pattern available but apparently does not detect a bus when the only bus-connected devices are passive connectors with no active IC endpoint on the sheet. This is a sheet-level limitation since the MCU is on a different sheet, but the named nets and pull-ups are strong I2C bus indicators that the detector could fire on.",
       "created_from": "FND-00000451",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

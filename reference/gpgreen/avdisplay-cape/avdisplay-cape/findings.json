@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The MCP2515 CAN controller uses a 16 MHz crystal Y101 with two 30pF load capacitors (C103 and C104). The analyzer correctly identifies the crystal circuit, reports effective load capacitance of 18pF (series combination plus stray), and flags it in both signal_analysis.crystal_circuits and design_observations.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
@@ -46,22 +47,24 @@
       "incorrect": [
         {
           "description": "The transistor_circuits output for Q101 and Q102 (PSMN4R3-30BL power MOSFETs in an LTC4370 OR-controller circuit) both contain a 'led_driver' field associating them with D103 (status LED) via R110 and R111 (2.5m\u03a9 sense resistors). This is incorrect: R110 and R111 are current-sense resistors for the LTC4370 power OR controller, not current-limiting resistors for D103. D103's anode is on VDD_5V and its cathode connects to R113 (680\u03a9) to GND \u2014 Q101 and Q102 do not control D103. The false association occurs because R110/R111 share VDD_5V with D103's anode net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
       "missed": [
         {
           "description": "U103 (LTC4370xMS) is an OR-controller and current-sharing IC that controls two N-channel MOSFETs (Q101, Q102) for dual-input power ORing. It is a power management IC and could reasonably appear in signal_analysis.power_regulators. The analyzer's power_regulators list is empty for this design, missing the LTC4370 circuit. The subcircuits section does correctly detect U103 and its neighbors, but the regulator detector does not classify it.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 0,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

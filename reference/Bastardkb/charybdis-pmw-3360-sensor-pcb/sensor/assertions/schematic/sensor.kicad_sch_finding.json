@@ -19,11 +19,13 @@
       "description": "INCORRECT: The AP7335-WG-7 is an adjustable LDO with Vref=0.8V. With feedback resistors R1003=15k and R1004=10k, Vout = 0.8\u00d7(1 + 15k/10k) = 0.8\u00d72.5 = 2.0V, which exactly matches the 'VDD_2V' output net name. The analyzer uses Vref=0.6V (wrong), computing Vout=1.5V and then flagging a 25% mismatch with the net name voltage. The analyzer's lookup table for the AP7335 has the wrong Vref. The design observation incorrectly reports vout_net_mismatch with percent_diff=25.0 when there is actually no mismatch.",
       "created_from": "FND-00002306",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002306-AST-03",

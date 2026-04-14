@@ -2,77 +2,86 @@
   "file_pattern": "antmicro-hdmi-mipi-bridge-hw.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 connector_ground_audit",
+      "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 crystal_circuits",
+      "description": "Exactly 5 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Y1 in crystal_circuits",
+      "id": "STRUCT-00000004",
+      "description": "Y1 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Y1$"
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Y2 in crystal_circuits",
+      "id": "STRUCT-00000005",
+      "description": "Y2 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Y2$"
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 18 design_observations",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 18 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 18
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 5 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 5
-      }
-    },
-    {
       "id": "STRUCT-00000007",
-      "description": "Exactly 2 hdmi_dvi_interfaces",
+      "description": "Exactly 2 detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "J2 in hdmi_dvi_interfaces",
+      "description": "J2 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^J2$"
@@ -80,9 +89,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "J4 in hdmi_dvi_interfaces",
+      "description": "J4 in detect_hdmi_dvi_interfaces",
       "check": {
-        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "contains_match",
         "field": "connector",
         "pattern": "^J4$"
@@ -90,27 +100,30 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 4 power_regulators",
+      "description": "Exactly 4 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 2 protection_devices",
+      "description": "Exactly 2 detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000012",
-      "description": "U2 in protection_devices",
+      "description": "U2 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U2$"
@@ -118,9 +131,10 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "U5 in protection_devices",
+      "description": "U5 in detect_protection_devices",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U5$"
@@ -128,11 +142,32 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "equals",
         "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 1 validate_i2c_bus",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_i2c_bus",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "Exactly 14 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 14
       }
     }
   ]

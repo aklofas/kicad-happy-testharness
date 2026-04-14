@@ -9,11 +9,13 @@
       "description": "The KiCad 5 legacy parser correctly identifies a voltage divider formed by R23(10k) and potentiometer RV1(10k) with top_net=Vref feeding the non-inverting input of U1 pin 5. The KiCad 8 parser does not include this divider in its 5 voltage dividers. RV1 is a potentiometer (JST connector footprint) and may be excluded from divider detection because its symbol/lib_id does not match the standard resistor pattern, causing the divider formed with R23 to be dropped.",
       "created_from": "FND-00000370",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_value",
-        "value": 6
+        "value": 6,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     }
   ]
 }

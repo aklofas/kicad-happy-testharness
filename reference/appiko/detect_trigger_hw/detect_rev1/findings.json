@@ -38,8 +38,9 @@
             "path": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2.sch.json",
             "op": "min_count",
             "value": {
-              "path": "signal_analysis.power_regulators",
-              "count": 2
+              "path": "findings",
+              "count": 2,
+              "detector_filter": "detect_power_regulators"
             }
           }
         },
@@ -50,8 +51,9 @@
             "path": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2.sch.json",
             "op": "min_count",
             "value": {
-              "path": "signal_analysis.opamp_circuits",
-              "count": 1
+              "path": "findings",
+              "count": 1,
+              "detector_filter": "detect_opamp_circuits"
             }
           }
         },
@@ -74,8 +76,9 @@
             "path": "results/outputs/schematic/detect_trigger_hw/detect_rev1_detect_rev1.sch.json",
             "op": "contains_match",
             "value": {
-              "path": "signal_analysis.lc_filters[*].shared_net",
-              "pattern": "/DEC4/"
+              "path": "findings",
+              "pattern": "/DEC4/",
+              "detector_filter": "detect_lc_filters"
             }
           }
         },
@@ -98,8 +101,9 @@
             "path": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2.sch.json",
             "op": "min_count",
             "value": {
-              "path": "signal_analysis.rc_filters",
-              "count": 8
+              "path": "findings",
+              "count": 8,
+              "detector_filter": "detect_rc_filters"
             }
           }
         },

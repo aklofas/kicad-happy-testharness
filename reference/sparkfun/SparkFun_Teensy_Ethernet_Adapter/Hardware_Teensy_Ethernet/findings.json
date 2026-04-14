@@ -26,11 +26,12 @@
         },
         {
           "description": "Four RC low-pass filters are detected (R5, R6, R7, R8 each 75 ohm with C1 1nF, fc=2.12 MHz). Topologically correct: R7/R8 connect TXCT/RXCT pins to a node with C1, and R5/R6 connect unused RJ45 pairs (4,5 and 7,8) to the same center-tap node. While these are better described as Ethernet center-tap terminators than generic RC filters, the topology detection is valid.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -46,22 +47,24 @@
       "incorrect": [
         {
           "description": "The bus_analysis.uart section detects TX+, TX-, RX+, RX- as UART signals. These are Ethernet magnetics signals from the B10601S 10BASE-T transformer module (TX and RX differential pairs at the line side). The pin names on U1 are explicitly 'TX+', 'TX-', 'RX+', 'RX-' and connect to an RJ45 connector (J2), not to any UART-capable device. This is a false positive triggered by the TX/RX net name pattern matching.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bus_analysis.uart",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_bus_analysis.uart"
           }
         }
       ],
       "missed": [
         {
           "description": "ethernet_interfaces is empty ([]) even though U1 (B10601S) is a 10BASE-T Ethernet magnetics module with TX+, TX-, RX+, RX- (line-side differential pairs) and TD+, TD-, RD+, RD- (device-side connections to Teensy SWD header), plus TXCT/RXCT center-tap pins. The RJ45 connector J2 with TX+/TX-/RX+/RX- should trigger Ethernet interface detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           }
         }
       ],

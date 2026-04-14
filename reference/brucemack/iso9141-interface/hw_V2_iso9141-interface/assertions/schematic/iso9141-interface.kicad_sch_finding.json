@@ -9,10 +9,12 @@
       "description": "The analyzer correctly identified U1 as a 5V fixed LDO taking +12V as input and producing +5V for the microcontroller interface circuitry. The voltage divider (R6=47K, R7=22K) from KLINE to RX is also correctly detected, with ratio 0.319 that level-shifts the 12V K-line bus down to approximately 3.8V for the MCU RX input.",
       "created_from": "FND-00002224",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002224-AST-02",
@@ -29,7 +31,7 @@
       "description": "This design is explicitly an ISO9141 K-line automotive bus interface. The schematic uses NPN transistors (Q1, Q2) to drive the KLINE net and a voltage divider (R6/R7) to receive from it. The analyzer detects the UART-named signals TX/RX on the microcontroller side, but does not recognize the K-line topology (single-wire bidirectional, 12V logic, pull-up to +12V through resistor, open-collector NPN drivers). No bus_analysis entry or design_observation for ISO9141/K-line is emitted.",
       "created_from": "FND-00002224",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

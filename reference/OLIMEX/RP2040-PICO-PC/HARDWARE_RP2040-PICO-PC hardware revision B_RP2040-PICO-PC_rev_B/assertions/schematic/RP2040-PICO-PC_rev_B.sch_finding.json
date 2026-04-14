@@ -9,7 +9,7 @@
       "description": "FET2 transistor_circuit entry correctly identifies load_type='level_shifter', gate_net='+3.3V', drain_net='I2C1A_SCL_33', source_net='I2C1A_SCL_5', consistent with the standard bidirectional I2C level-shifter topology using gate tied to the high-voltage rail.",
       "created_from": "FND-00001160",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "hdmi_dvi_interfaces section correctly identifies HDMI1 (HDMI-SWM-19) as an HDMI connector. The design uses a RP2040 Pico driving HDMI via DVI-compatible differential pairs (PICO_D0+/-, PICO_D1+/-, PICO_D2+/-, PICO_CK+/-) through series 270R resistors to the HDMI connector.",
       "created_from": "FND-00001160",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The real I2C0 bus (I2C0_SCL and I2C0_SDA) is correctly detected with pull-up resistors R27 and R15 (both 2.2K to +3.3V), consistent with the PCB net data showing these resistors pulling to +3V3.",
       "created_from": "FND-00001160",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "U1 (BL4054B) is correctly identified in subcircuits with neighbors BAT_CON1 (battery connector), R1 (1.5K charge current resistor), and R4 (2K). The power domains correctly show +BATT and +5V rails associated with U1.",
       "created_from": "FND-00001160",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "The design has a clear SPI0 bus (SPI0_CLK, SPI0_MOSI, SPI0_MISO, SPI0_CSn0, SPI0_CSn1) connecting U2 (RP2040), MICRO_SD1 (SD card), and UEXT1 (10-pin expansion). The memory_interfaces list is empty, and there is no SPI bus entry in bus_analysis. The SD card connected via SPI should be detected.",
       "created_from": "FND-00001160",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -60,7 +60,7 @@
       "description": "USB1 (labeled USB-MINI but with MISB-SWMM-5B_LF footprint \u2014 appears to be micro-USB) provides +5V input via VBUS. No USB bus interface is detected in the signal_analysis (ethernet_interfaces, memory_interfaces all empty). This is only the power input, not USB data (USB1 D+ is connected to GND per the net data, D- is floating), so the USB data path is not truly active \u2014 but the power path via USB should be noted as a power source.",
       "created_from": "FND-00001160",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

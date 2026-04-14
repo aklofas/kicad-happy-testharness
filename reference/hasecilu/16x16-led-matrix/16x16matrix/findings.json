@@ -48,20 +48,22 @@
       "missed": [
         {
           "description": "The MAX7219 (U4) uses a 3-wire SPI interface. Nets CLK, DIN, and CS (LOAD pin) are all present and connected to connectors J7/J8 for daisy-chaining. The bus_analysis.spi array is empty. The DIN, CLK, and CS net names on an IC with lib_id 'Driver_LED:MAX7219' are clear SPI indicators that should be detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           }
         },
         {
           "description": "The circuit is a MAX7219 8x8 LED matrix driver \u2014 a classic LED driver topology. The signal_analysis.addressable_led_chains array is empty. While the MAX7219 drives a passive LED matrix (not individually addressable WS2812-style LEDs), it should still be detected as an LED driver circuit. The subcircuit section does identify U4 as 'LED driver' function, but no LED-specific signal analysis entry is generated.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "eq",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],

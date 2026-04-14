@@ -29,11 +29,12 @@
         },
         {
           "description": "D1 (BZT52H-C3V6,115) is a 3.6V Zener diode with cathode on VDD and anode on GND, forming a voltage clamp / ESD protection circuit on the power rail. The signal_analysis.protection_devices array is empty []. This is a clearly identifiable protection device \u2014 a Zener diode connected between a power rail and GND is a standard overvoltage clamp.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

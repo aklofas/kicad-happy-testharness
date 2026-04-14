@@ -31,17 +31,18 @@
         },
         {
           "description": "The single_pin_nets observation flags U2 pin '~RESET' on net RXCAN as an isolated connection. This is a secondary consequence of the pin coordinate mismatch: the RXCAN net label actually connects to MCP2515 pin 2 (RXCAN), but the analyzer incorrectly maps it to pin 17 (~RESET). Because pin 2 (RXCAN) ends up on an unnamed net, MCP2515's actual RXCAN pin appears unconnected and the RXCAN net appears to have only the ~RESET pin \u2014 both observations are artifacts of the mis-mapping.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The schematic connects ATmega328P (U1) to MCP2515 (U2) via SPI: MOSI, MISO, SCK, and SS_MCP nets are all present and named. The memory_interfaces (or equivalent SPI bus detector) reports no SPI bus detected. The MOSI/MISO nets also partially fail to include U2 pins due to the pin coordinate mismatch described separately.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],
@@ -73,40 +74,44 @@
       "incorrect": [
         {
           "description": "The analyzer detects 4 low-pass RC filters: R4+C6, R4+C5, R1+C3, R1+C4 (all using 1M ohm resistors with 22pF capacitors, cutoff 7.23 kHz). These are crystal bias resistors bridging the two crystal pins with load capacitors to ground \u2014 the standard HC-49 crystal oscillator circuit. They should be classified as crystal circuits, not RC filters. This is a direct consequence of crystal_circuits being empty: the 1M resistors and 22pF caps are freed up for RC filter matching.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "The analyzer reports a voltage divider with R_top=R13(120R)+R14(20k) chained in series from +5V, R_bottom=R15(20k) to GND, mid_net='B', ratio=0.499. In reality these three resistors form the RS-485 bias and termination network on the MAX485E: R13(120R) is the differential line termination between lines A and B, R14(20k) is a pull-up on B to +5V, and R15(20k) is a pull-down on A to GND. The chained-resistor voltage divider detector is treating the termination resistor and bias pull-up as a series R_top, which is a misclassification of RS-485 biasing as a general-purpose voltage divider.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
       "missed": [
         {
           "description": "EPSolar-CAN.sch contains Y1 (8MHz) and Y2 (16MHz), each with two 22pF load capacitors (C3/C4 and C5/C6) and a 1M bias resistor (R1, R4) \u2014 identical topology to CAN2Serial.sch where the analyzer correctly detects two crystal circuits. In EPSolar the crystals use a 'EPSolar-CAN-rescue' library prefix; their pins are empty in the output, so the crystal topology detector finds no connected load caps and produces crystal_circuits=[]. The RC filter detector then picks up the 1M+22pF pairs as low-pass filters instead.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "Same topology as CAN2Serial: ATmega328P connected to MCP2515 via SPI (MOSI, MISO, SCK, SS_MCP nets visible in the schematic). No SPI/memory_interfaces entry is produced. Additionally the MOSI/MISO/SCK nets show zero component pins because U2 (MCP2515 from EPSolar-CAN-rescue lib) has empty pins in the JSON.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],
@@ -139,20 +144,22 @@
       "missed": [
         {
           "description": "The schematic has 12 repeated RC low-pass filter cells on the cell voltage sensing inputs: one 100R resistor in series with one 10nF capacitor to the lower cell reference, giving a cutoff of approximately 159 kHz. Examples: R16+C17, R17+C18, R18+C19, etc. None are detected (rc_filters=[]). The root cause is that all components use the 'Nodo_BMS_1_1-rescue:...' library prefix, causing all pin lists to be empty in the JSON output. With no pin-to-net connectivity data, the topology detectors find nothing.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 12
+            "value": 12,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "The schematic contains 12 BSS308PE PMOS transistors (Q2-Q13), each forming a cell-balancing bypass switch: gate driven via a 1k resistor, drain through a 10R/2W ballast resistor to the cell bottom rail. The transistor_circuits detector returns an empty list. Same root cause as the RC filter miss: rescue library components have empty pin lists, so no transistor topology can be inferred.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 12
+            "value": 12,
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -185,20 +192,22 @@
       "missed": [
         {
           "description": "Sheet 1 contains Y1 and Y2 crystals (both with rescue-library prefix 'Nodo_BMS_1_1-rescue:...'). Their pin lists are empty in the output, so no connected load capacitors can be found and crystal_circuits=[] even though both crystals exist and have load caps nearby in the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "The analyzer correctly identifies U5 as an LTC6804-2 BMS IC. However, cell_voltage_pins=0, cell_count=0, cell_nets=[], and balance_resistors=0 are all reported as zero. The sheet hierarchy connects 13 cell voltage inputs (C0-C12) and 12 cell balancing outputs (B0-B11) to sheet 2 through named net labels, and sheet 2 has 12 balancing switch transistors (Q2-Q13) with 10R ballast resistors. Because the rescue-library components in both sheets have empty pin lists, the BMS detector cannot traverse the cell voltage or balancing connectivity and reports a structurally empty BMS entry.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bms_systems[0].cell_count",
+            "path": "findings",
             "op": "greater_than",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_bms_systems[0].cell_count"
           }
         }
       ],

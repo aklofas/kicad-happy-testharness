@@ -35,11 +35,12 @@
         },
         {
           "description": "SK6812 LEDs correctly recognized as addressable LED type with single-wire WS2812 protocol",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           },
           "detector": "addressable_led_chains",
           "subject_refs": [],
@@ -59,7 +60,7 @@
       "incorrect": [
         {
           "description": "41 separate single-LED chains detected instead of one 41-LED daisy chain -- the SK6812 LEDs are connected DOUT-to-DIN in series but the legacy .sch parser returns empty pin lists for all LED components, preventing chain detection",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "detector": "addressable_led_chains",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -69,11 +70,12 @@
       "missed": [
         {
           "description": "VBUS power rail decoupling not detected because capacitors have no pin-net associations in legacy .sch parse output (pins array is empty for all components)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],

@@ -135,11 +135,12 @@
         },
         {
           "description": "The bancouver40_cfx is a 40% keyboard with a 4-row \u00d7 10-column matrix. The analyzer correctly detects it via net_name method: row1-row4 and col1-col10 named nets, 36 switches on matrix, 36 diodes on matrix, estimated_keys=36. The switch count slightly undershoots 37 total switches as SW41 (power switch) is not on the matrix.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
@@ -162,11 +163,12 @@
         },
         {
           "description": "Neither U1 (Seeed XIAO BLE) nor U2 (74HC595) have decoupling capacitors on the VCC rail in this design. The analyzer correctly identifies both ICs in design_observations with category 'decoupling' and rails_without_caps: ['vcc'].",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

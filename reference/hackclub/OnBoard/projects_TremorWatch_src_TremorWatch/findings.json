@@ -40,11 +40,12 @@
         },
         {
           "description": "RN1 provides series protection resistors on SD card SPI lines (CS, DI, SCLK via pins 7,6,5) with pull-ups to +3V3 (pins 1-4). This level-shifting/protection topology is not noted.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [

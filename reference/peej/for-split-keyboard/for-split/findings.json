@@ -8,31 +8,34 @@
       "correct": [
         {
           "description": "The analyzer correctly identifies a 5-row, 12-column key matrix using net-name detection (Row0\u2013Row4, Col0\u2013Col11). The design is a single-schematic split keyboard where both halves are described together, with Col6\u2013Col11 fed via the COLS_RH1 connector to the right half. 30 diodes and 30 MX switches are correctly enumerated in the BOM.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].rows",
+            "path": "findings",
             "op": "equals",
-            "value": 5
+            "value": 5,
+            "detector_filter": "detect_key_matrices[0].rows"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The schematic has exactly 30 MX key switches and 30 diodes, but the key matrix detection reports switches_on_matrix=34 and diodes_on_matrix=36, with estimated_keys=36. The 6 columns Col6\u2013Col11 are connector-forwarded (right-half columns via COLS_RH1/COLS_LH1) with no actual key switches, but the topology detector counts them as contributing to the matrix, inflating the totals by 4\u20136 components.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "path": "findings",
             "op": "equals",
-            "value": 30
+            "value": 30,
+            "detector_filter": "detect_key_matrices[0].switches_on_matrix"
           }
         },
         {
           "description": "The analyzer flags U1 (ProMicro) RST pin connected to Row1 as a potential issue (reset_pin category, no pullup, no filter cap). In this split keyboard design, RST is intentionally wired to a matrix row to enable bootloader entry via a key combination during matrix scan. This is a standard technique for split keyboards using Pro Micro. The observation is technically correct as a factual net connection, but the concern framing is a false positive for this design pattern.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[1].category",
+            "path": "findings",
             "op": "equals",
-            "value": "reset_pin"
+            "value": "reset_pin",
+            "detector_filter": "detect_design_observations[1].category"
           }
         }
       ],

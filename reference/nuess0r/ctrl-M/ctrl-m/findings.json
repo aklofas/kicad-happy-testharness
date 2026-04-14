@@ -29,11 +29,12 @@
       "missed": [
         {
           "description": "This is a Model M keyboard controller. The schematic has 16 row signals (R0..R15) and 8 column signals (C0..C7) connecting STM32F072 GPIO pins to row/column connectors J7 and J8. The bus_topology correctly identifies these as named buses, but signal_analysis.key_matrices returns an empty list. The analyzer should recognize the R*/C* naming convention with matching GPIO connections as a keyboard matrix.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],

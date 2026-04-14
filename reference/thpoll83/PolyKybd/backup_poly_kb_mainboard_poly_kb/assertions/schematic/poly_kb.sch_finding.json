@@ -39,23 +39,27 @@
       "description": "INCORRECT: Spurious RC filter R9(22ohm)+C1(1u) at 7.23kHz \u2014 R9 is SWD debug header series protection, C1 is shared NRST cap",
       "created_from": "FND-00000292",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R9$"
+        "pattern": "^R9$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000292-AST-09",
       "description": "Key matrix not detected \u2014 KRow0-7/KCol0-20 GPIO matrix exists but switch components are on keyboard daughterboard, not in parsed sheets",
       "created_from": "FND-00000292",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     }
   ]
 }

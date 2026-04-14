@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "7 false positive RF matching networks detected - these are power supply LC filter components (L1 6.8uH, C7 10uF, C4 0.1uF) misidentified as antenna matching circuits",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "detector": "rf_matching",
           "subject_refs": [
             "C4",
@@ -40,7 +40,7 @@
         },
         {
           "description": "BD9G101G input rail shown as __unnamed_11 - should trace through diode bridge to 24VAC input",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -48,7 +48,7 @@
         },
         {
           "description": "AMS1117-3.3 missing input cap warning for +5V rail is incorrect - C7/C9 (10uF) are on the +5V rail from BD9G101G output",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "C7",
@@ -59,7 +59,7 @@
         },
         {
           "description": "BD9G101G estimated Vout=4.04V using 0.6V Vref heuristic - BD9G101G actual Vref is 0.75V giving Vout=5.04V which matches the +5V rail",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "field_value_equals",
@@ -67,31 +67,33 @@
           "field": "vout",
           "expected_value": 4.04,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "vout",
-            "value": 4.04
+            "value": 4.04,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "missed": [
         {
           "description": "Full-wave bridge rectifier (7x SS210 diodes) for 24VAC input not detected as a rectifier circuit",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Fuse F1 (140mA/340mA) on input not connected to protection_devices analysis",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^F1$"
+            "pattern": "^F1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -102,11 +104,12 @@
         },
         {
           "description": "USB-C connector (J4) present but no USB data analysis or ESD protection check",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [

@@ -1,7 +1,8 @@
 {
   "file_pattern": "power-layouts_sonar-dev-board-power-layouts.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -25,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~8",
+      "description": "medium count ~7",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 7,
-        "max": 9
+        "min": 6,
+        "max": 8
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~70 (+-10)",
+      "description": "EMC risk score ~79.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 60,
-        "max": 80
+        "min": 69.0,
+        "max": 89.0
       }
     },
     {
@@ -67,17 +68,6 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 thermal_emc finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^thermal_emc$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000008",
       "description": "1 via_stitching finding(s)",
       "check": {
         "path": "findings",
@@ -88,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -97,7 +87,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -106,7 +96,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -115,7 +105,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -124,8 +114,8 @@
       }
     },
     {
-      "id": "SEED-00000013",
-      "description": "~2 net(s) with EMC scores",
+      "id": "SEED-00000012",
+      "description": "~1 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",

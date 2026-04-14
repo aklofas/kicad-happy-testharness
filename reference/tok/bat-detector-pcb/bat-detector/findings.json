@@ -8,38 +8,42 @@
       "correct": [
         {
           "description": "Seven RC filters are detected covering frequencies from 102 Hz (R10/C4) to 116 kHz (R1/C1). These correspond to the NE555 timing network, microphone pre-amp filter caps, and the heterodyne mixing stage filters \u2014 all appropriate for a bat detector operating in the 40\u2013100 kHz range. Filter types (low-pass and RC-network) and cutoff frequencies appear correct based on component values from the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 7
+            "value": 7,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "Both BC548 NPN transistors are detected with correct topologies. Q1 collector is at GND net (common-emitter with inverted orientation), emitter connects to signal node. Q2 base is driven by the square_wave_1 net from the NE555, consistent with a switching/mixing transistor. Two transistor circuits reported matching two physical transistors.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "LS1 (value='Speaker') is detected in buzzer_speaker_circuits with type='speaker'. The has_transistor_driver=false is reasonable since the speaker is driven by LM386 (U3) audio amplifier output, not a discrete transistor.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.buzzer_speaker_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_buzzer_speakers"
           }
         },
         {
           "description": "design_observations correctly flags U1 (NE555), U2 (TL072), and U3 (LM386) as having VCC without nearby decoupling capacitors. The schematic indeed has no bypass caps on the VCC rails for these ICs, which is a real design concern for this ultrasound frequency design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_design_observations"
           }
         },
         {
@@ -66,11 +70,12 @@
       "missed": [
         {
           "description": "U2 is a TL072 dual op-amp (lib_id Amplifier_Operational:TL072) with two active amplifier units (unit 1 and unit 2, each having +/- inputs and output pin). The signal_analysis.opamp_circuits list is empty. The TL072 units form amplifier stages in the heterodyne bat detector circuit. The analyzer should detect these as op-amp configurations. LM386 (U3, lib_id Amplifier_Audio:LM386) is also not detected in opamp_circuits, though it is an audio amplifier.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],

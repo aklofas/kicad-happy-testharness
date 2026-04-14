@@ -9,7 +9,7 @@
       "description": "VBUS->+3V3 via NCP1117-3.3, topology=LDO, vref_source=fixed_suffix, estimated_vout=3.3V. All correct.",
       "created_from": "FND-00001188",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Crystal load capacitor pair correctly identified with series combination formula. 16.5pF effective load is reasonable for a 12MHz crystal.",
       "created_from": "FND-00001188",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "27\u03a9 USB series resistors on both D+ and D- detected correctly as dp_series_resistor=pass and dm_series_resistor=pass. VBUS decoupling (C2=10uF) also detected correctly.",
       "created_from": "FND-00001188",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "memory_interfaces correctly identifies W25Q128JVS connected to RP2040 via 6 nets (QSPI bus). Total pins=8 is correct for SOIC-8 flash.",
       "created_from": "FND-00001188",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "bus_analysis.spi=[] even though U3 (RP2040) connects to U2 (W25Q128JVS) via 6 shared signal nets (QSPI_SS, QSPI_SCLK, QSPI_SD0-SD3). The memory_interfaces section correctly identifies the connection, but the SPI bus detector misses it \u2014 likely because the net names use 'QSPI_' prefix rather than 'SPI_' or 'MOSI/MISO/SCK/CS'.",
       "created_from": "FND-00001188",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

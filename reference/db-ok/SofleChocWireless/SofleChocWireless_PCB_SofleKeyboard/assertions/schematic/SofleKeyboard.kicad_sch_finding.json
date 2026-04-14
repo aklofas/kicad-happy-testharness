@@ -9,11 +9,13 @@
       "description": "The kicad_sch analyzer detected the key matrix with rows=[row0..row4] and columns=[col0..col5], estimated_keys=31, switches_on_matrix=31, diodes_on_matrix=30. The SofleChocWireless is a 30-key (plus encoder) per-half design, so 31 keys (including encoder) is accurate.",
       "created_from": "FND-00001364",
       "check": {
-        "path": "signal_analysis.key_matrices[0].columns",
+        "path": "findings[0].columns",
         "value": 6,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].columns"
     },
     {
       "id": "FND-00001364-AST-02",
@@ -52,11 +54,13 @@
       "description": "The SofleChocWireless has SK6812 Mini-E addressable RGB LEDs integrated into each hotswap socket (footprint names include 'SK6812MiniE'). There is a net named 'LED' and a 'LED' signal in the schematic. The signal_analysis.addressable_led_chains array is empty, meaning the WS2812/SK6812 chain detection did not fire. The design has 30 per-key LEDs chained via the LED net.",
       "created_from": "FND-00001364",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     }
   ]
 }

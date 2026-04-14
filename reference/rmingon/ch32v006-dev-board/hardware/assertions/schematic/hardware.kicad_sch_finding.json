@@ -22,9 +22,18 @@
         "path": "statistics.power_rails",
         "op": "equals",
         "value": [
-          {"name": "+3.3V", "voltage": 3.3},
-          {"name": "GND", "voltage": null},
-          {"name": "VBUS", "voltage": null}
+          {
+            "name": "+3.3V",
+            "voltage": 3.3
+          },
+          {
+            "name": "GND",
+            "voltage": null
+          },
+          {
+            "name": "VBUS",
+            "voltage": null
+          }
         ]
       }
     },
@@ -33,30 +42,36 @@
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002010-AST-04",
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00002010-AST-05",
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002010-AST-06",
@@ -83,10 +98,12 @@
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00002010-AST-09",
@@ -158,11 +175,13 @@
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00002010-AST-16",
@@ -258,24 +277,28 @@
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00002010-AST-25",
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.design_observations[0].rails_without_caps",
+        "path": "findings[0].rails_without_caps",
         "op": "equals",
         "value": [
           "VDD_3.3V"
-        ]
+        ],
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations[0].rails_without_caps"
     },
     {
       "id": "FND-00002010-AST-26",
@@ -348,11 +371,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002010",
       "check": {
-        "path": "signal_analysis.power_regulators[0].estimated_vout",
+        "path": "findings[0].estimated_vout",
         "op": "equals",
-        "value": 1.5
+        "value": 1.5,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].estimated_vout"
     }
   ]
 }

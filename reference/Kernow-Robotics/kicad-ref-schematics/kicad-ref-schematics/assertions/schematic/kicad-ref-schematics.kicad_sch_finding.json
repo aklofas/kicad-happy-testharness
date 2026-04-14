@@ -9,22 +9,26 @@
       "description": "INCORRECT: The RP2040 12 MHz crystal X1 uses a lib_id from the easyeda2kicad library ('easyeda2kicad:X322512MSB4SI') with a footprint 'CRYSTAL-SMD_4P-L3.2-W2.5-BL'. The analyzer assigns it type 'connector' and category 'connector' rather than recognizing it as a crystal oscillator. As a result, crystal_circuits is empty even though X1 is connected to RP2040 pins XIN/XOUT with appropriate load capacitors (C1, C2) and a feedback resistor (R1). The crystal is also counted in the BOM under connectors, not crystals.",
       "created_from": "FND-00002260",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00002260-AST-02",
       "description": "INCORRECT: R1 (1k) and C2 (30p) on the XOUT net form the crystal oscillator feedback/damping network, not an independent RC filter. The analyzer reports this as a 5.31 MHz low-pass filter in rc_filters. Since X1 is not recognized as a crystal, the analyzer cannot suppress this spurious RC filter detection. This is a secondary consequence of the crystal misclassification.",
       "created_from": "FND-00002260",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00002260-AST-03",

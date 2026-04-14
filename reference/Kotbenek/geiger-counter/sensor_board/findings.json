@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Voltage divider R99 (4k7) / R100 (1k) correctly detected feeding Vref net to all 16 comparator non-inverting inputs (U1-U16 AP331A pin 3) with bypass caps",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R100$"
+            "pattern": "^R100$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -41,11 +42,12 @@
         },
         {
           "description": "32 BC849C BJT transistor circuits correctly analyzed with base resistors (2M2 for input stages, 220k for cascade stages), emitter resistors (1k), and correct base/collector/emitter net assignments",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -54,11 +56,12 @@
         },
         {
           "description": "66 RC filter stages correctly detected including 16 low-pass filters (220k + 100nF, ~7.23 Hz) for sensor biasing, 16 high-pass filters (10k + 100nF, ~159 Hz) for AC coupling, and 16 RC-networks (4k7 + 100nF) for collector pull-up filtering",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -85,11 +88,12 @@
         },
         {
           "description": "Decoupling analysis correctly identified 16x 100nF caps on Vcc rail (1.6uF total, bypass only, no bulk)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -110,12 +114,13 @@
       "missed": [
         {
           "description": "U17 MMTL431B is a shunt voltage reference/regulator generating the 18V bias rail but is not detected in power_regulators. The TL431 family are programmable shunt regulators commonly used for voltage regulation.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U17$"
+            "pattern": "^U17$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -126,12 +131,13 @@
         },
         {
           "description": "The 16 AP331A comparators (U1-U16) are used as signal discriminators for the photodiode channels but are not detected in opamp_circuits. While comparators are distinct from op-amps, they share the same topology and the analyzer should recognize comparator-based circuits.",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [

@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "AP7361C-33E (U5) correctly identified as LDO regulator with +5V input and +3.3V output at 3.3V estimated",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -24,12 +25,13 @@
         },
         {
           "description": "Q1 and Q2 (2N7002KT1G) correctly identified as MOSFET I2C level shifters between +3.3VA and +5V domains",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -77,12 +79,13 @@
         },
         {
           "description": "D3 PRTR5V0U2X correctly identified as ESD IC protecting USB_D_N and USB_D_P",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D3$"
+            "pattern": "^D3$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -93,12 +96,13 @@
         },
         {
           "description": "2 voltage dividers correctly detected: R59/R60 (100k/13.7k from +5V for ADC sensing) and R56/R57 (100k/100k from +3.3V for ESP32 ADC)",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R56$"
+            "pattern": "^R56$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -112,11 +116,12 @@
         },
         {
           "description": "Decoupling analysis correctly identified 7 caps on +5V (28.1uF total) and 3 caps on +3.3V (22.2uF total)",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -125,12 +130,13 @@
         },
         {
           "description": "F1 (MF-MSMF050-2-W2) correctly identified as fuse protecting +3.3VA from +3.3V",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^F1$"
+            "pattern": "^F1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -169,12 +175,13 @@
         },
         {
           "description": "D1 and D2 (PMEG6020AELRX Schottky diodes) classified as reverse_polarity protection but they are power ORing diodes for input source selection (barrel jack VCC->VDD and USB VBUS->+5V)",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -190,12 +197,13 @@
         },
         {
           "description": "ISL854102FRZ-T (U3) topology classified as 'unknown' \u2014 should be 'buck' converter (has VIN, PHASE, BOOT, FB, COMP, SS pins characteristic of synchronous buck)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -208,12 +216,13 @@
       "missed": [
         {
           "description": "ISL854102 output rail +5V not identified \u2014 the PHASE pin connects through L3 (10uH) to the +5V rail, and feedback divider R44 (100k) / R40 (13.7k) sets output to ~5.0V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^L3$"
+            "pattern": "^L3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -226,12 +235,13 @@
         },
         {
           "description": "Feedback network for ISL854102 buck converter not detected \u2014 R44 (100k) top and R40 (13.7k) bottom form FB divider from +5V output to U3 FB pin",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R40$"
+            "pattern": "^R40$",
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [
@@ -262,11 +272,12 @@
         },
         {
           "description": "96-LED charlieplexed matrix (11 ROW lines driven by RA4M1 MCU) not detected in any signal analysis category",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           },
           "detector": "addressable_led_chains",
           "subject_refs": [],

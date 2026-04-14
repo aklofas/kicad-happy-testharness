@@ -30,11 +30,12 @@
       "description": "INCORRECT: The placement_analysis reports G3 (OSHW_Logo, exclude_from_bom) with edge_clearance_mm=-82.93, implying it extends 82.93mm beyond the board edge. This is almost certainly the bounding box of the Creative_Commons_License footprint's courtyard being measured from a reference point far outside the board outline. G3 is a purely decorative/IP silkscreen graphic with no copper pads. Similarly J2 (header, -15.88mm) and J1 (DE9 connector, -5.2mm) also show negative clearance, likely because these components intentionally overhang the board edge. The same pattern appears on the Male PCB (G3 at -76.83mm). These should not be treated as DFM errors.",
       "created_from": "FND-00001387",
       "check": {
-        "path": "placement_analysis.edge_clearance_warnings",
+        "path": "findings",
         "value": [],
         "op": "equals"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
     },
     {
       "id": "FND-00001387-AST-04",

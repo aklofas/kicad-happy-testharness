@@ -9,44 +9,52 @@
       "description": "Decoupling analysis correctly identifies 4 rails (VCC, VAA, +5V, +3.3V) with appropriate capacitors",
       "created_from": "FND-00000194",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000194-AST-10",
       "description": "INCORRECT: L3 value '600R/200mA' parsed as 600H inductance; this is a ferrite bead rated at 600 ohms impedance at 100MHz, not a 600H inductor. The LC filter with C43 at resonant_hz=5.31kHz is nonsensical as a result.",
       "created_from": "FND-00000194",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "inductor.ref",
-        "pattern": "^L3$"
-      }
+        "pattern": "^L3$",
+        "detector_filter": "detect_lc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00000194-AST-11",
       "description": "INCORRECT: L2 value '600R/200mA' has the same ferrite bead misparsing issue (600H), making the LC filter calculation with C14/C7 (resonant_hz=2.04Hz) invalid",
       "created_from": "FND-00000194",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "inductor.ref",
-        "pattern": "^L2$"
-      }
+        "pattern": "^L2$",
+        "detector_filter": "detect_lc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00000194-AST-12",
       "description": "INCORRECT: U4 (AP7365-3.3) output_rail is 'GND' which is incorrect; the output should be the +3.3V rail. The input_rail is also unnamed when it should connect to a power source.",
       "created_from": "FND-00000194",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U4$"
+        "pattern": "^U4$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

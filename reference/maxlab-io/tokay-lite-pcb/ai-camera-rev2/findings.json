@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "Power regulators correctly detected (SY8089 buck, RT9166 LDO, XC6206 LDO)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -21,12 +22,13 @@
         },
         {
           "description": "Q1/Q2 bidirectional I2C level shifters correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -49,12 +51,13 @@
       "incorrect": [
         {
           "description": "Q8 AO3401A false led_driver for D7/R25 \u2014 D7 is on net __unnamed_32 (USR_LED), Q8 drain is on __unnamed_4; no connectivity. R25 (215k) is Q10 gate pull-down, not LED current resistor",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q10$"
+            "pattern": "^Q10$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -68,12 +71,13 @@
         },
         {
           "description": "Q5/Q7/Q9 has_snubber=true false positive \u2014 R18 (215k) is an open-drain pull-up, not a snubber",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q5$"
+            "pattern": "^Q5$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -91,12 +95,13 @@
         },
         {
           "description": "U11 MT9284-28J LED driver misclassified as switching regulator with output_rail=VBUS and estimated_vout=2.8V \u2014 drives 10 IR LEDs, not a voltage output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "estimated_vout",
-            "value": 2.8
+            "value": 2.8,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -133,11 +138,12 @@
       "correct": [
         {
           "description": "Power regulators correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -148,16 +154,17 @@
       "incorrect": [
         {
           "description": "Same Q8 false LED driver, TVS missed, CC check fail, snubber false positive, I2C pull-up inconsistency, MT9284 misclassification as rev2",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "U8/U7 input_rail=__unnamed_0 instead of named rail \u2014 +3.3VA label removed between rev2 and rev3.1",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [

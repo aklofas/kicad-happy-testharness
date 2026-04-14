@@ -8,72 +8,72 @@
       "correct": [
         {
           "description": "R1=560k (top), R2=100k (bottom) from VBUS to GND with mid-point UIN feeding STM32 PA2 ADC. Ratio 100k/660k=0.1515 is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Topology=LDO, input_rail=VBUS, output_rail=+3V3, estimated_vout=3.3V from fixed suffix. All correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Protected_nets includes all four USB signal lines. Correct identification of type=esd_ic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Q2: is_pchannel=True, load_type=connector, gate resistor R19=20ohm. Q1: type=bjt, emitter_is_ground=True, base resistor R9=2k37. Both correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Both SCL and SDA correctly show has_pullup=True with R3/R4 as pull-up resistors connected to +3V3.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "R? is a real 2k37 resistor on +3V3 that was left unannotated in the schematic. Correctly flagged in annotation_issues.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "VBUS comes from J1 USB-C connector but has no PWR_FLAG in schematic. The GND PWR_FLAG warning is standard but VBUS is a valid design observation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "U5 output feeds back via R15 (750k) and C16 (18pF) to the inverting input \u2014 this is a PI compensator/integrator topology used for tip temperature measurement signal conditioning. Classification is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -82,19 +82,19 @@
       "incorrect": [
         {
           "description": "design_observations reports rails_without_caps=['+3V3'] for U4, U2, U1, U5, U6, and U3, but C3-C11 and C18 (10 caps, 0.1uF and 1uF) are all on the +3V3/GND net. The analyzer fails to associate shared-rail caps with individual ICs when all ICs and caps connect to the same global +3V3 power net.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The STUSB4500QTR (U3) is a USB PD sink controller with built-in CC line 5.1k pull-down resistors. The USB compliance checker expects external discrete resistors and incorrectly fails this check. CC1 and CC2 connect directly to U3's CC pins (CC1DB, CC1, CC2, CC2DB), which is the correct design for an IC-managed PD sink.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "bus_topology.detected_bus_signals shows prefix='CC', width=6, range='CC1..CC2'. With only CC1 and CC2 present, the width should be 2. The width=6 value appears to be a calculation bug in the bus signal width detection.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "P1 is a Tag-Connect TC2030 SWD/JTAG programming header, not a USB connector. It is flagged in usb_compliance with vbus_esd_protection=fail. The connector has +3V3 and GND (for target power during programming) but is not USB. The analyzer is incorrectly including non-USB connectors that happen to have power pins in USB compliance checks.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -115,54 +115,54 @@
       "correct": [
         {
           "description": "All statistics consistent with schematic: 64 footprints matches 64 schematic components, 79 nets matches, routing_complete=True, unrouted=0.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The board uses 0.106mm tracks which is below standard 0.127mm but above advanced 0.1mm limit. dfm_tier='advanced' and one violation reported. This is a real design constraint.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "U4's 5.6x5.6mm exposed pad has 8 vias against recommended minimum of 15. Adequacy='insufficient' with untented warning. This is a real DFM concern for the large QFN package.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Q2 is a power MOSFET switching current to the heating element. Its 1.71x2.37mm exposed pad has zero thermal vias. For a device switching significant heater current, this is a real thermal concern worth flagging.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The board is extremely dense (84x10mm with 64 components). Multiple courtyard overlaps are reported and appear to reflect real tight placement on this narrow PCB.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "GND has zones on B.Cu/F.Cu/In2.Cu with 25 stitching vias. VBUS uses B.Cu/F.Cu/In1.Cu with 31 vias. +3V3 uses B.Cu/F.Cu with 19 vias. All consistent with 4-layer stackup.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -187,9 +187,9 @@
       "correct": [
         {
           "description": "Board is 84x10mm matching PCB analyzer. All required layers found, PTH and NPTH drills present. 108 vias (31x0.2mm + 77x0.3mm) consistent with PCB analysis. No alignment issues.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -214,9 +214,9 @@
       "correct": [
         {
           "description": "Layer extents are in inches (3.307in = 84.0mm, 3.543in = 90.0mm) while drill_PTH extents are in mm (85.001mm). Despite the mixed units the analyzer correctly reports alignment=True and board_dimensions in mm.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -225,7 +225,7 @@
       "incorrect": [
         {
           "description": "The 0.65mm (4x) holes in the panel set are panel alignment pins/tooling holes and should be classified as mounting holes. They are classified as component_holes because the older KiCad 5 gerbers lack X2 NPTH attributes. The diameter_heuristic classification_method is not distinguishing them properly.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -247,7 +247,7 @@
       "incorrect": [
         {
           "description": "The 'edgerails' gerber set is a PCB panel edge rail (frame board) with no components \u2014 it only has one NPTH mounting hole. The completeness check requires has_pth_drill=True but for a component-less panel frame, absence of PTH drill is correct and expected. This is a false positive.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

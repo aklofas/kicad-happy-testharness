@@ -1,7 +1,8 @@
 {
   "file_pattern": "MOSFET_connectors.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,64 +35,34 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "8 led_audit detected",
+      "description": "8 audit_led_circuits detected",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All led_audit have ref",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000007",
-      "description": "All led_audit type values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 8
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "All led_audit drive_method values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 8
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "2 suggested_certifications detected",
-      "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000007",
       "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -100,7 +71,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000008",
       "description": "Has 8 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -109,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000009",
       "description": "Has 8 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -118,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000010",
       "description": "Has 8 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -127,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000011",
       "description": "Has 24 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -29,21 +29,25 @@
       "description": "LM324 and LM358 opamps correctly identified",
       "created_from": "FND-00000169",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00000169-AST-04",
       "description": "No power regulators detected despite DC-DC converter and voltage regulation on board",
       "created_from": "FND-00000169",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000175-AST-01",
@@ -60,21 +64,25 @@
       "description": "LM324/LM358 opamp circuits correctly analyzed",
       "created_from": "FND-00000175",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00000175-AST-04",
       "description": "No power_regulators detected despite DC1 DCDC-Conv generating -12V/-5V",
       "created_from": "FND-00000175",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

@@ -17,11 +17,12 @@
         },
         {
           "description": "U1 (NCP186B) is correctly detected as an LDO with input_rail='VCC', output_rail='+3V', and fb_net='+3V'. The decoupling analysis correctly associates C4 (100n), C2 (1u), C5 (1u), C6 (100n) and others with the +3V rail. The total capacitance of 2.5 uF across 7 caps is correctly summed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "op": "equals",
-            "value": "LDO"
+            "value": "LDO",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         }
       ],
@@ -39,11 +40,12 @@
       "missed": [
         {
           "description": "U3 (INA219_SOT23-8) is a dedicated current-sense amplifier with shunt resistor inputs. The current_sense list is empty ([]) for both the original and Ref1.3 versions despite the INA219 and INA226 being standard current-sense ICs. The analyzer correctly identifies U3 as an 'ic' type and includes it in decoupling analysis, but never fires the current_sense detector for it.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_current_sense"
           }
         }
       ],
@@ -74,11 +76,12 @@
         },
         {
           "description": "In the Ref1.3 schematic, U1 (XC6220B281MR-G, substituted into a TLV71209 SOT23-5 footprint) is an LDO with its VIN pin connected via a wire to VCC (power symbol #PWR03 at position 1500 1200, close to U1's VIN pin). The analyzer output shows input_rail: None and output_rail: '__unnamed_40'. The input connection to VCC is not being traced correctly. The Ref1.1 original correctly shows input_rail: 'VCC' for its equivalent NCP186B LDO.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].input_rail",
+            "path": "findings",
             "op": "equals",
-            "value": "VCC"
+            "value": "VCC",
+            "detector_filter": "detect_power_regulators[0].input_rail"
           }
         }
       ],
@@ -219,11 +222,12 @@
       "incorrect": [
         {
           "description": "Q5 (AO3401 P-channel MOSFET) in the latch circuit is reported with drain_net='__unnamed_3' and source_net='__unnamed_3' \u2014 the same unnamed net for both pins. The source schematic places Q5 at position 4850 2050 with orientation (0 -1 -1 0), which is a mirrored orientation compared to Q2 and Q4 (0 1 -1 0). The gate of Q5 connects to R6 and the RC filter, while its source connects to Q2's gate and its drain connects to the output side. The identical drain/source assignment indicates the net-to-pin mapping fails when the symbol is mirrored vertically.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits[4].drain_net",
+            "path": "findings",
             "op": "equals",
-            "value": "__unnamed_3"
+            "value": "__unnamed_3",
+            "detector_filter": "detect_transistor_circuits[4].drain_net"
           }
         }
       ],

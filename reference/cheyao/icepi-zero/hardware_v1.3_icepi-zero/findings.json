@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Three TLV62569DBV switching regulators correctly identified with feedback dividers: U2 (+5V->+1V1), U3 (+5V->+2V5), U4 (+5V->+3V3)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -26,12 +27,13 @@
         },
         {
           "description": "Voltage divider ratios and estimated Vout values accurate: U2=1.1V (R6/R7), U3=2.515V (R8/R9), U4=3.327V (R10/R11) with Vref=0.6V",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R10$"
+            "pattern": "^R10$",
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [
@@ -50,12 +52,13 @@
         },
         {
           "description": "W9825G6KH SDRAM (U11) and W25Q128JVS SPI flash (U12) memory interfaces correctly detected with proper processor connections to ECP5 (U1)",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -68,12 +71,13 @@
         },
         {
           "description": "Four TPD2EUSB30A ESD protection ICs (U5, U7, U8, U10) correctly identified with protected differential pairs",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U10$"
+            "pattern": "^U10$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -87,12 +91,13 @@
         },
         {
           "description": "50MHz active oscillator Y1 (SG-8018CG) correctly identified with GLOBAL_CLK output net",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -166,11 +171,12 @@
         },
         {
           "description": "Decoupling analysis correctly covers all 4 power rails with accurate cap counts and values",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -211,12 +217,13 @@
         },
         {
           "description": "R42/C44 detected as an RC low-pass filter (1.59kHz) but this is actually the FT231XQ's 3V3OUT output decoupling. R42 (1k) connects D14 (LED anode) to 3V3OUT, while C44 (100nF) is decoupling on the 3V3OUT/VCCIO/~{RESET} net. Not a signal filter.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R42$"
+            "pattern": "^R42$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -235,12 +242,13 @@
       "missed": [
         {
           "description": "HDMI/DVI (GPDI) interface not detected. J2 is a GPDI Type-C connector (HDMI mini variant) with 4 TMDS differential pairs (D0+/-, D1+/-, D2+/-, CLK+/-) AC-coupled through 22nF capacitors (C36-C43) from ECP5 FPGA. The lib symbol has ki_keywords='hdmi conn' and ki_fp_filters='HDMI*C*'. This is a complete HDMI output interface.",
-          "analyzer_section": "signal_analysis.hdmi_dvi_interfaces",
+          "analyzer_section": "detect_hdmi_dvi_interfaces",
           "check": {
-            "path": "signal_analysis.hdmi_dvi_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "connector",
-            "pattern": "^C36$"
+            "pattern": "^C36$",
+            "detector_filter": "detect_hdmi_dvi_interfaces"
           },
           "detector": "hdmi_dvi_interfaces",
           "subject_refs": [
@@ -289,9 +297,9 @@
         },
         {
           "description": "Ferrite bead FB1 filtering the +2V5 rail to create FILTERED_2V5 for ECP5 VCCAUX not identified in any signal path detector. This is a common FPGA power supply filtering pattern.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -335,7 +343,7 @@
         },
         {
           "description": "U12 (W25Q128JVS) SPI flash correctly detected with 6 shared signal nets to U1",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "U1",
@@ -344,15 +352,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "U11 (W9825G6KH) SDRAM correctly detected with 39 shared signal nets to U1",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "U1",
@@ -361,15 +370,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "Three TLV62569DBV switching regulators U2/U3/U4 correctly identified with inductors and feedback dividers from +5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U2",
@@ -379,15 +389,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Y1 (SG-8018CG 50MHz MEMS) correctly detected as active_oscillator on GLOBAL_CLK",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "Y1"
@@ -395,10 +406,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
@@ -411,7 +423,7 @@
         },
         {
           "description": "ESD protection U5/U7/U8/U10 (TPD2EUSB30A) correctly identified on USB differential pairs",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "U10",
@@ -422,10 +434,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U10$"
+            "pattern": "^U10$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -458,7 +471,7 @@
       "missed": [
         {
           "description": "GPDI/HDMI-compatible interface not detected: J2 carries complete DVI-compatible differential video (GPDI_D0-2+/-, GPDI_CLK+/-) plus DDC I2C, HPD, CEC, UTIL from U1.",
-          "analyzer_section": "signal_analysis.hdmi_dvi_interfaces",
+          "analyzer_section": "detect_hdmi_dvi_interfaces",
           "detector": "hdmi_dvi_interfaces",
           "subject_refs": [
             "J2",
@@ -467,10 +480,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.hdmi_dvi_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "connector",
-            "pattern": "^J2$"
+            "pattern": "^J2$",
+            "detector_filter": "detect_hdmi_dvi_interfaces"
           }
         }
       ],

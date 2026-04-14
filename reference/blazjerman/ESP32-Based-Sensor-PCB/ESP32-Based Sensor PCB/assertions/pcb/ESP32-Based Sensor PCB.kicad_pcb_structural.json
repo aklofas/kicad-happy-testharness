@@ -2,14 +2,15 @@
   "file_pattern": "ESP32-Based Sensor PCB.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 decoupling_placement",
+      "description": "Exactly 7 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -64,6 +65,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "U1 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "U4 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

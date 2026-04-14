@@ -1,7 +1,8 @@
 {
   "file_pattern": "UI.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,26 +35,28 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "2 level_shifters detected",
+      "description": "2 detect_level_shifters detected",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All level_shifters have ref",
+      "description": "All detect_level_shifters have ref",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^$"
@@ -61,9 +64,10 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "All level_shifters type values are valid",
+      "description": "All detect_level_shifters type values are valid",
       "check": {
-        "path": "signal_analysis.level_shifters",
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
         "op": "count_matches",
         "field": "type",
         "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
@@ -72,9 +76,10 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "2 suggested_certifications detected",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }

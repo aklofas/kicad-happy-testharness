@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "Capacitors C1 and C2 have value '104', which is standard EIA capacitor code for 100 nF (10 \u00d7 10^4 pF). The analyzer parses this as 1.04e-10 F (104 pF), yielding a calculated self-resonant frequency of ~494 MHz \u2014 more than 30x too high. This causes the decoupling analysis for V_CONTROL rail to show total_capacitance_uF=0.0 (essentially zero) and 'has_bypass: false', which is incorrect. The actual capacitance is 0.2 uF (200 nF) across the two caps.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -37,11 +38,12 @@
       "missed": [
         {
           "description": "U2 is the MP1584 'Mini360' buck converter module with pin names '+Vin', '+Vout', '-Vin', '-Vout' and a description explicitly stating '6.5-24V input, 5V 1.8A output'. The signal_analysis.power_regulators list is empty. The analyzer only flagged a decoupling warning noting '+Vin' lacks capacitors but missed detecting the converter topology entirely. Given the pin names and description, this should be detectable as a switching regulator converting +Vin to +5V.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

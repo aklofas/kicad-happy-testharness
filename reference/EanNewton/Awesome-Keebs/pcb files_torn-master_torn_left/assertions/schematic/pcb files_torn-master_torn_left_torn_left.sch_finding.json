@@ -9,11 +9,13 @@
       "description": "INCORRECT: The left half has 21 SW_Push (including PB1/RESET and PB2/BOOT) and 3 Rotary_Encoder_Switch, for 24 total switches. The key matrix should contain 19 SW_Push + 3 rotary = 22 true keyboard switches, but the analyzer reports switches_on_matrix=25 and estimated_keys=25. The overcount by 1 occurs because PB2 (the BOOT push button) is wired to the same node as the ROW2 net in the schematic (via the GND/boot circuit at coordinates ~3650,6200 connecting through to the ATmega), so the matrix detector counts PB2 as a keyboard matrix switch. PB2 is not a keyboard key.",
       "created_from": "FND-00000390",
       "check": {
-        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "path": "findings[0].estimated_keys",
         "op": "less_than",
-        "value": 25
+        "value": 25,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].estimated_keys"
     }
   ]
 }

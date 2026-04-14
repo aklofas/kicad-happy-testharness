@@ -20,11 +20,13 @@
       "description": "The design has 60 discrete LEDs (D1-D60) grouped into four segments, each group switched by a PNP BC807 transistor (Q1-Q4) via a common emitter/VCC topology. The transistor_circuits correctly identifies all four as BJT switches with load_type=led. However, signal_analysis.addressable_led_chains and signal_analysis.key_matrices are both empty \u2014 the multiplexed LED display pattern (transistor row-enable + resistor current-limit per LED column) is not recognized as a display topology.",
       "created_from": "FND-00002171",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
+        "value": 4,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

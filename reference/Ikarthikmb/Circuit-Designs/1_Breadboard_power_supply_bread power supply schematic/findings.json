@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The nets JSON shows C1 pin 2 is on Vin (C1 is a polarized cap, pin 2 is the positive terminal) and C2 pin 2 is on Vout1. Both U1's input and output rails therefore have filter capacitors. Two design_observations fire incorrectly: one 'decoupling' observation listing Vin in rails_without_caps and one 'regulator_caps' observation claiming both input and output capacitors are missing for U1/LM7805.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_design_observations"
           }
         },
         {
@@ -29,11 +30,12 @@
       "missed": [
         {
           "description": "D1, D2, D3, D4 (all 1N4007) form a full-wave bridge rectifier: D1A/D3A join at Vin (positive DC rail), D2K/D4K join at V- (negative rail), D1K/D2A and D3K/D4A join the AC input terminals. The signal_analysis.bridge_circuits array is empty. This is a clear bridge rectifier topology that the analyzer should detect.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           }
         }
       ],
@@ -97,11 +99,12 @@
       "missed": [
         {
           "description": "The schematic has 6 BD249 NPN BJT instances (all sharing reference 'Q?' due to lack of annotation). The signal_analysis.transistor_circuits array contains only a single entry for 'Q?'. The other five BJT instances are ignored, and their connectivity (base_net, collector_net, emitter_net) is not analyzed. A correct analysis should either report all six instances or make clear that deduplication is occurring.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 6
+            "value": 6,
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -123,22 +126,24 @@
       "incorrect": [
         {
           "description": "V1 (5.5 V gate bias) and V2 (30 V drain supply) are pspice:VSOURCE ideal voltage sources used for SPICE simulation \u2014 not varistors (voltage-dependent resistors). The analyzer classifies both as type 'varistor' because the lib_id starts with 'pspice:V'. They then erroneously appear in signal_analysis.protection_devices as varistors clamping nets to GND, which is functionally incorrect. They should be classified as 'voltage_source' or 'power_supply' and not appear in protection_devices.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
       "missed": [
         {
           "description": "The circuit is a Gouriet-Clapp capacitive three-point (Colpitts-family) oscillator: IRF740 MOSFET Q1 with tank circuit formed by L1 (200 nH gate-source), L2 (2 \u00b5H drain-source), C1 (22 pF), C2 (1 \u00b5F), and C3 (100 \u00b5F bypass). The analyzer finds three independent LC filter pairs with resonant frequencies but misses the feedback loop connecting drain to gate through the LC network. The oscillator topology is not surfaced in any signal_analysis section.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "validate_feedback_stability"
           }
         }
       ],

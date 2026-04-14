@@ -21,9 +21,10 @@
       "summary": "Three-band LC low-pass filter bank not detected as lc_filters",
       "details": "wspr_tx_v1.sch contains three separate 3-pole LC low-pass filter chains (9 inductors + 12 capacitors labeled L1-L9 and C4-C15), used for harmonic filtering of WSPR RF output. The signal_analysis.lc_filters array is empty despite the clear LC ladder topology. Similarly, rf_chains is empty even though SMA connectors J2/J3/J4 provide the RF output interface. The crystal oscillator circuit (Y1 + load caps) was also not detected. This is a significant missed detection for an RF design.",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
       }
     },
     {
@@ -34,9 +35,10 @@
       "summary": "LC low-pass filter bank (6 inductors, 8 capacitors) not detected in lpf_filters sub-sheet",
       "details": "lpf_filters.sch is a dedicated low-pass filter bank sub-sheet with 6 inductors (L1-L6) and 8 capacitors (C9-C16). The component count is correctly reported (total_components=14), but signal_analysis.lc_filters remains empty. This is a two-band LC ladder filter network for WSPR transmitter harmonic suppression. The detector does not recognize the LC ladder topology formed by series inductors with shunt capacitors to GND.",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
       }
     },
     {

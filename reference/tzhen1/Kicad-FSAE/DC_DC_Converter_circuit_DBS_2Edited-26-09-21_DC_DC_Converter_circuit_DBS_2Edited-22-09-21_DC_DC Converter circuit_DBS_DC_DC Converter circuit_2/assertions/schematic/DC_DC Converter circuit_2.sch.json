@@ -1,7 +1,8 @@
 {
   "file_pattern": "DC_DC Converter circuit_2.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,9 +35,9 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
@@ -44,7 +45,8 @@
       "id": "SEED-00000005",
       "description": "1 connector_ground_audit detected",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "connector_ground_audit",
         "op": "min_count",
         "value": 1
       }
@@ -53,7 +55,8 @@
       "id": "SEED-00000006",
       "description": "1 decoupling_analysis detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "decoupling_analysis",
         "op": "min_count",
         "value": 1
       }
@@ -62,7 +65,8 @@
       "id": "SEED-00000007",
       "description": "1 design_observations detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "design_observations",
         "op": "min_count",
         "value": 1
       }
@@ -71,7 +75,8 @@
       "id": "SEED-00000008",
       "description": "5 esd_coverage_audit detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "esd_coverage_audit",
         "op": "min_count",
         "value": 1
       }
@@ -80,7 +85,8 @@
       "id": "SEED-00000009",
       "description": "All esd_coverage_audit have connector_ref",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "esd_coverage_audit",
         "op": "not_contains_match",
         "field": "connector_ref",
         "pattern": "^$"
@@ -90,7 +96,8 @@
       "id": "SEED-00000010",
       "description": "All esd_coverage_audit coverage values are valid",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "esd_coverage_audit",
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
@@ -101,7 +108,8 @@
       "id": "SEED-00000011",
       "description": "All esd_coverage_audit risk_level values are valid",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "esd_coverage_audit",
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
@@ -112,7 +120,8 @@
       "id": "SEED-00000012",
       "description": "1 protection_devices detected",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
+        "detector_filter": "protection_devices",
         "op": "min_count",
         "value": 1
       }
@@ -121,7 +130,8 @@
       "id": "SEED-00000013",
       "description": "2 suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "suggested_certifications",
         "op": "min_count",
         "value": 1
       }

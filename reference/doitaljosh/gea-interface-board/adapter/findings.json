@@ -9,31 +9,34 @@
       "incorrect": [
         {
           "description": "U1201 is an AMS1117-5.0 LDO regulator. The analyzer reports topology='unknown', input_rail=null, output_rail=null. In the schematic, U1201 is powered by +5V (supply side) and its output drives the +5V rail for downstream circuits \u2014 the component has a fixed 5.0V output so the output rail should be identifiable as +5V. The LM78M05 in the fuel_capacity_sensor design is correctly identified as 'LDO' with input/output rails, suggesting this is a library-id recognition gap for AMS1117.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "op": "equals",
-            "value": "LDO"
+            "value": "LDO",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         },
         {
           "description": "R102 and R202 are 120-ohm resistors used as CAN bus termination resistors on the GEA bus differential lines (the GEA appliance bus uses a CAN-like physical layer). The analyzer classified each as a low-pass RC filter paired with C103/C203 (100nF bypass caps), reporting a 13.26 kHz cutoff. These 120-ohm resistors are bus terminations, not filter elements \u2014 the 100nF caps are decoupling, not filter capacitors. This is a false positive RC filter detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "J1201 is a 20-pin 2.54mm header connector whose value field is literally 'UART' and whose schematic context is a GEA (General Electric Appliance) bus interface with UART signaling. The bus_analysis.uart list is empty. The analyzer should detect this UART interface either by the connector's value string or by tracing the TX/RX pin names through the net. This is a missed detection of an obvious protocol connector.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bus_analysis.uart",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_analysis.uart"
           }
         }
       ],

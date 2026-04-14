@@ -1,7 +1,8 @@
 {
   "file_pattern": "Meshinger_Meshinger.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,9 +35,9 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
@@ -44,7 +45,8 @@
       "id": "SEED-00000005",
       "description": "1 decoupling_analysis detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "decoupling_analysis",
         "op": "min_count",
         "value": 1
       }
@@ -53,7 +55,8 @@
       "id": "SEED-00000006",
       "description": "5 design_observations detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "design_observations",
         "op": "min_count",
         "value": 1
       }
@@ -62,7 +65,8 @@
       "id": "SEED-00000007",
       "description": "2 lc_filters detected",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "lc_filters",
         "op": "min_count",
         "value": 1
       }
@@ -71,7 +75,8 @@
       "id": "SEED-00000008",
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "lc_filters",
         "op": "not_contains_match",
         "field": "resonant_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
@@ -81,7 +86,8 @@
       "id": "SEED-00000009",
       "description": "1 power_regulators detected",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "power_regulators",
         "op": "min_count",
         "value": 1
       }
@@ -90,7 +96,8 @@
       "id": "SEED-00000010",
       "description": "All power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
@@ -100,7 +107,8 @@
       "id": "SEED-00000011",
       "description": "2 transistor_circuits detected",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "transistor_circuits",
         "op": "min_count",
         "value": 1
       }
@@ -109,7 +117,8 @@
       "id": "SEED-00000012",
       "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "transistor_circuits",
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"

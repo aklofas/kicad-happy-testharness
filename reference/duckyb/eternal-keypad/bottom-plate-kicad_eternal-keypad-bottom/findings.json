@@ -8,20 +8,22 @@
       "correct": [
         {
           "description": "The analyzer correctly identifies the keyboard matrix with ROW0-ROW4 (5 rows) and COL0-COL7 (8 columns), estimates 36 keys (not 40 = 5x8, because 4 positions are unpopulated), and confirms 36 diodes on the matrix. The 2 non-matrix switches (POWER1 SPDT and RSW1 reset push-button) are correctly excluded. Detection method is 'net_name', which is appropriate since nets are explicitly named ROW/COL.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].estimated_keys",
+            "path": "findings",
             "op": "equals",
-            "value": 36
+            "value": 36,
+            "detector_filter": "detect_key_matrices[0].estimated_keys"
           }
         },
         {
           "description": "The analyzer correctly identifies the 8-LED WS2812B chain (LED1-LED8) chained via the 'RGB' net from ProMicro1 TX pin, estimates 480mA current draw (8 LEDs x 60mA), and correctly identifies the protocol as 'single-wire (WS2812)'. The separate 'RGB VCC' power rail (routed through JP1 jumper) for LED power is also captured in the power net summary.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains[0].chain_length",
+            "path": "findings",
             "op": "equals",
-            "value": 8
+            "value": 8,
+            "detector_filter": "detect_addressable_led_chains[0].chain_length"
           }
         }
       ],

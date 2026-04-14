@@ -1,67 +1,68 @@
 {
   "file_pattern": "EPSolar-CAN.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~17 (tolerance 10%)",
+      "description": "Finding count ~12 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 15,
-        "max": 19
+        "min": 10,
+        "max": 14
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~4",
+      "description": "high count ~1",
       "check": {
         "path": "summary.high",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "medium count ~4",
+      "check": {
+        "path": "summary.medium",
         "op": "range",
         "min": 3,
         "max": 5
       }
     },
     {
-      "id": "SEED-00000003",
-      "description": "medium count ~5",
+      "id": "SEED-00000004",
+      "description": "low count ~5",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.low",
         "op": "range",
         "min": 4,
         "max": 6
       }
     },
     {
-      "id": "SEED-00000004",
-      "description": "low count ~8",
-      "check": {
-        "path": "summary.low",
-        "op": "range",
-        "min": 7,
-        "max": 9
-      }
-    },
-    {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~53 (+-10)",
+      "description": "EMC risk score ~82.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 43,
-        "max": 63
+        "min": 72.5,
+        "max": 92.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "5 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 1
       }
     },
     {
@@ -77,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "9 io_filtering finding(s)",
+      "description": "6 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 9
+        "value": 6
       }
     },
     {
@@ -106,11 +107,11 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "~10 probe point(s) in test plan",
+      "description": "~7 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 9
+        "value": 6
       }
     },
     {

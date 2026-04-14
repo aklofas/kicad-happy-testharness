@@ -9,7 +9,7 @@
       "description": "Correct: AMS1117-3.3 as LDO from VBUS\u2192+3.3V, I2C2 SDA/SCL with 1K5 pull-ups, USART1 TX/RX identified on U2, USB differential pair with J4+U2, series resistors R5 on USB, crystal Y1 at 16MHz with load caps C5/C9. Power domain grouping (+3.3V/+3.3VA for U2, VBUS for U1) is correct.",
       "created_from": "FND-00001312",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "J4 is USB_B_Micro with footprint='' \u2014 correctly reported in missing_footprint list. All other components have valid footprints.",
       "created_from": "FND-00001312",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "These nets connect passives and MCU input pins without a PWR/output driver symbol \u2014 correctly flagged as no_driver ERC warnings. These are expected in a raw KiCad schematic without explicit power symbols on those lines.",
       "created_from": "FND-00001312",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }

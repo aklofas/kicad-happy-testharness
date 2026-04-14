@@ -9,34 +9,40 @@
       "description": "AD8606ARZ dual opamp detected as comparator_or_open_loop \u2014 correct, no feedback network",
       "created_from": "FND-00000283",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00000283-AST-05",
       "description": "INCORRECT: LM2733YMF (U9) output_rail=__unnamed_18 (same as input) \u2014 true HV output is __unnamed_15 after rectifier diode D4 MBR0520LT, not traced past diode",
       "created_from": "FND-00000283",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U9$"
+        "pattern": "^U9$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000283-AST-06",
       "description": "INCORRECT: Q1/Q2 gate_driver_ics lists 9 ICs via +3V3 power net traversal \u2014 gates are statically biased, not driven by any IC",
       "created_from": "FND-00000283",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q1$"
+        "pattern": "^Q1$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

@@ -39,11 +39,12 @@
       "missed": [
         {
           "description": "R1 (LDR03) and R2 (10k) form a classic voltage divider: +5V -> R1 -> base_node -> R2 -> GND. The midpoint drives Q1's base. The transistor_circuits detector does correctly identify R1 and R2 as base_resistors and R2 as base_pulldown, but voltage_dividers is empty. This LDR-plus-fixed-resistor divider is the active sensing element of the design and its omission from voltage_dividers means the design's core light-sensing mechanism goes unreported.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],

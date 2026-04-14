@@ -20,7 +20,7 @@
       "missed": [
         {
           "description": "In a USB-C UFP (device) implementation, 5.1k resistors on CC1 and CC2 to GND are required by the USB-C spec for role detection. The design has R1 and R2 at 5.1k connected to the CC1 and CC2 pins of USB1. The usb_compliance checks report 'vbus_esd_protection: fail' and 'vbus_decoupling: fail' but never check for or report on CC termination resistors, which is a significant USB-C compliance item.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "suggestions": [],
@@ -41,7 +41,7 @@
       "incorrect": [
         {
           "description": "The Amphenol USB4215-03-A is an SMD USB Type-C connector (surface mount with optional through-hole pins for mechanical strength). The PCB analyzer classifies it as type='through_hole', which affects DFM analysis and SMD/THT counts. The schematic assembly_complexity section also reports smd_count=1 and tht_count=11, suggesting the USB connector alone is counted as SMD at the schematic level but the PCB analysis disagrees.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

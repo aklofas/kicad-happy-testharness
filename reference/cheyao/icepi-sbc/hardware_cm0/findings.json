@@ -56,11 +56,12 @@
       "missed": [
         {
           "description": "The power schematic contains 6 switching regulators generating +3V3_WIFI, +3V3_IO, +3V3_RTC, +1V5, +1V2_SYSTEM, and +1V1_CPUX rails from a +5V input, each with an inductor and multiple output capacitors. The analyzer correctly finds their feedback voltage dividers (is_feedback=true) but does not report any regulator topology, switcher type, or inductor-based power stage. There is no 'regulators' or 'switching_regulators' section in the output, leaving the core power architecture undescribed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],

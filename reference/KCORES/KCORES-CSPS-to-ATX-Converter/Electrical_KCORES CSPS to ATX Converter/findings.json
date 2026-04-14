@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "voltage_dividers correctly identifies R2=22K (top, +12V) and R3=3.3K (bottom, GND) with mid-point connected to U4 pin ~PSON, ratio 0.130 (\u224812V \u00d7 0.13 = 1.56V). This is a pull-down divider for ATX PS-ON logic level conditioning.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Six power rails (+12V, +12VSB, +5V, +5VSB, +3V3, GND) extracted correctly. Decoupling observations note missing bypass/high-frequency caps on all rails (only bulk 100uF Tantalum present). ERC no-driver for ~ATX_PSON is a real issue \u2014 the external CSPS drives this signal via the J1 connector but the connector pin is passive-typed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,15 +28,15 @@
       "incorrect": [
         {
           "description": "bus_analysis.uart contains {net: '~ATX_PSON', devices: ['U4'], pin_count: 4} and {net: 'ATX_PWOK', devices: ['U4'], pin_count: 3}. These are ATX power control signals (PS-ON open-collector control, power-good), not UART. The UART detector is triggering on net names or pin patterns that match PSON/PWOK spuriously. TPS3511 is a power supervisor IC, not a UART device.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "U1 (Mini560 5V), U2 (Mini560 3.3V), and U3 (Mini560 5V) are switching step-down converters providing the ATX 5V, 3.3V, and 5VSB rails from 12V. power_regulators is empty. The Mini560 is classified as 'ic' but not recognized by the regulator detector \u2014 likely because 'Mini560' is not in the known regulator keyword list.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -59,18 +59,18 @@
       "correct": [
         {
           "description": "Board dimensions, copper layer count, footprint count, and routing status all match source file. Power tracks correctly show 3.0mm max width on +12V and 1.5mm on +5V \u2014 appropriate for high-current ATX power rails.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "J7 (8-pin PCIe), J8 (4-pin ATX), J9 (24-pin ATX) are all at x=172.2 and stacked in Y (79.8, 100.8, 113.4mm). Given the 24-pin ATX connector is ~55mm long, overlap with neighboring connectors is plausible as a true courtyard issue (either intentional stacking or footprint courtyard over-extension). Correct to flag.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

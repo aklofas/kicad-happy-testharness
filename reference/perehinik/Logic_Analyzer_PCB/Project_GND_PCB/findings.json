@@ -10,9 +10,9 @@
       "missed": [
         {
           "description": "FPGA_Config.sch and LogAn.sch contain clear JTAG net names (TCK, TMS, TDI_FPGA, TDO_FPGA) used for FPGA programming/debugging. The bus_analysis output has no 'jtag' key at all, and the FPGA_Config output shows zero items across all bus types. This is a missed JTAG bus detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -37,9 +37,9 @@
       "missed": [
         {
           "description": "DDR3.sch contains IC301 (MT41K128M16JT-125K FBGA96 DDR3 SDRAM) with a full DDR3 bus (DDR3_CK_P/N, DDR3_DQS0/1_P/N, DDR3_A[0..14], DDR3_nRAS/nCAS/nWE). The LogAn.sch.json output reports memory_interfaces: 0 items. The differential pairs for DDR3_CK and DDR3_DQS are correctly detected, but the memory interface itself is not recognized.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -62,9 +62,9 @@
       "correct": [
         {
           "description": "Power_supply.sch has ADP2164 (buck) x2, ADP5052 (multi-output), and MAX5417 (digital pot for adjustable rail). The output correctly identifies 3 power regulator instances with switching topology, 6 inductors, correct rail names (VCC_2V5, VCC_ADJ, VREG), and I2C bus on TRIM_SDA/SCL. The missing MPN list is complete and accurate (no MPNs were filled in the source).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -89,9 +89,9 @@
       "correct": [
         {
           "description": "PCB analyzer correctly identifies 6 copper layers (F.Cu, In1-In4.Cu, B.Cu), 366 footprints, 1 unrouted net (Net-(J103-Pad1)), DFM tier 'advanced' due to 0.105mm tracks, board 74.94x52.0mm. The routing_complete:false and the specific unrouted net are accurate. Thermal analysis identifies GND zone stitching across 4 layers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -116,9 +116,9 @@
       "correct": [
         {
           "description": "Gerber analyzer correctly identifies all 13 functional layers (6 copper + mask/paste/silk + drill files), layer_count:6, board dimensions 74.94x52.0mm matching PCB. All copper layer x2 attributes parsed. The 'layer_function' field shows '?' for non-copper layers (CrtYd, Fab, etc.) but this is a minor display issue \u2014 the layer_type field is correctly populated for copper/mask/paste/silk layers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -143,9 +143,9 @@
       "correct": [
         {
           "description": "The GND_PCB is a simple 2-layer ground plane board with only NPTH mounting holes (no plated through-holes). The analyzer correctly reports complete:false with has_pth_drill:false. This is an accurate representation of the actual gerber set contents.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

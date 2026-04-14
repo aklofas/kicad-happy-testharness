@@ -9,7 +9,7 @@
       "description": "X1 (16MHz) with C8/C9 (10pF each) correctly identified; effective load CL computed correctly.",
       "created_from": "FND-00001309",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "+3.3VA has passive/power_in pins but no PWR_FLAG or driver; GND missing PWR_FLAG. Both are real ERC issues in this design.",
       "created_from": "FND-00001309",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "ESP32-WROOM-32 estimated at 240mA, STM32L031 at 10mA \u2014 realistic estimates for WiFi-active operation.",
       "created_from": "FND-00001309",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "UART_TX/UART_RX nets clearly connect STM32L0 (U2) to ESP32 (U3). The signal_analysis section has no UART bus detection or inter-IC communication topology report. The design comment explicitly states 'transmit data from STM32 to ESP32 via UART' but no bus protocol is detected.",
       "created_from": "FND-00001309",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

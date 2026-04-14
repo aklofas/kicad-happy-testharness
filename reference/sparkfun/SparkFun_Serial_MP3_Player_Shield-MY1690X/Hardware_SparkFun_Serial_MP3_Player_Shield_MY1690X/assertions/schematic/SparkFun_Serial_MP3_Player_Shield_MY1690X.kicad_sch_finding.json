@@ -35,10 +35,12 @@
       "description": "D5 (DT1042-04SO) is correctly classified as an esd_ic protecting the USB D+/D- lines, and F1 (6V/0.5A/1A) is correctly classified as a fuse on the VUSB rail. D5 protected_nets correctly includes both D+ and D-.",
       "created_from": "FND-00001485",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_protection_devices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001485-AST-04",
@@ -55,27 +57,31 @@
       "description": "Three decoupling caps on the 3.3V_P rail (C8 1.0uF, C2 10uF, C3 0.1uF, total 11.1uF) are correctly identified. The design observation correctly flags that U2's VCC rail has no bypass capacitor (the MY1690X VCC pin is powered via ferrite bead L1 with caps only on the 3.3V_P regulator output, not on VCC input). The decoupling_coverage observation correctly reports has_high_freq=false (no sub-100nF cap on 3.3V_P).",
       "created_from": "FND-00001485",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001485-AST-06",
       "description": "The signal_analysis correctly reports empty lists for voltage_dividers, rc_filters, lc_filters, crystal_circuits, and power_regulators. The MY1690X has an internal regulator (3.3V_P output), and the U2 subcircuit correctly identifies its power rails. None of the external resistor networks form a classical voltage divider \u2014 R2/R3 are USB-C CC pull-down resistors, not dividers.",
       "created_from": "FND-00001485",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "equals",
-        "value": []
-      }
+        "value": [],
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00001485-AST-07",
       "description": "INCORRECT: The signal_analysis.design_observations entry for net D- sets has_esd_protection=false. However D5 (DT1042-04SO) is a 4-line ESD IC whose pin 3 (I/O2) connects to D-, which is correctly listed in protection_devices[D5].protected_nets=[D+, D-]. The protection_devices section is correct but the design_observation contradicts it. Both D+ and D- are protected by D5.",
       "created_from": "FND-00001485",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "D5",
@@ -83,9 +89,11 @@
             "D+",
             "D-"
           ]
-        }
+        },
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001485-AST-08",
@@ -103,11 +111,13 @@
       "description": "INCORRECT: Q1 (BSS138 N-MOSFET) is a UART level shifter. Its gate (pin 1) is tied directly to the 3.3V_P power rail with no intervening resistor. R1 (2.2k) connects 3.3V_P to MY_RX_LV (the source/pin 2), making R1 a source pull-up resistor, not a gate resistor. The analyzer reports gate_resistors=[{R1, 2.2k}] because R1 is on the 3.3V_P net (same as gate_net), confusing source pull-up for gate resistor. Similarly, gate_driver_ics=[U2] is wrong: U2's MY_RX_LV pin is on the source net, not the gate. The gate is passively biased by 3.3V_P power. The topology=level_shifter identification is correct.",
       "created_from": "FND-00001485",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001485-AST-10",

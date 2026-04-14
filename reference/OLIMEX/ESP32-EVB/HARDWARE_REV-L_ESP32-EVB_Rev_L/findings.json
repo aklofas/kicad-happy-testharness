@@ -35,7 +35,7 @@
         },
         {
           "description": "Only 1 power regulator detected (TPS62A02 for 3.3V) but board has additional regulators - the SY8089 buck converter and battery charger circuit are not identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -45,12 +45,13 @@
       "missed": [
         {
           "description": "CAN transceiver SN65HVD230 (U6) not detected as a bus transceiver subcircuit - should identify CAN-TX/CAN-RX connections to ESP32 and CANH/CANL bus lines",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [
@@ -61,11 +62,12 @@
         },
         {
           "description": "Ethernet magnetics (transformer/common-mode choke between PHY and RJ45 connector) not linked to Ethernet PHY in ethernet_interfaces",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],
@@ -74,11 +76,12 @@
         },
         {
           "description": "No crystal circuit detected despite ESP32-WROOM module likely having internal crystal; the 50MHz crystal for the LAN8710A PHY is also not identified",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -87,12 +90,13 @@
         },
         {
           "description": "Relay driver circuits (Q1/Q2 driving REL1/REL2 with flyback diodes D1/D3) not identified as transistor switch circuits",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [

@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "6 LDO regulators (U1-U4, U6, U7, all HX6306P332MR) correctly identified with LDO topology and 3.3V estimated output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -29,12 +30,13 @@
         },
         {
           "description": "Y1 40MHz crystal with C9/C10 (10pF) correctly detected, effective load 8pF within ESP32-S2 spec",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -47,12 +49,13 @@
         },
         {
           "description": "R6(5.1k)/C2(1uF) RC filter (31.21Hz cutoff) correctly detected on GPIO0 reset path",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R6$"
+            "pattern": "^R6$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -75,7 +78,7 @@
       "incorrect": [
         {
           "description": "Decoupling analysis reports missing output capacitors on all 6 regulators, but caps are present via global label connectivity (VBUS, VDD3P3, etc. rails each have 2-4uF). Analyzer doesn't trace global label connections for decoupling verification.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",

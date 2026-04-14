@@ -9,7 +9,7 @@
       "description": "The 4k99 resistors (R2/R4) in BareRP2040 are part of a VBUS voltage divider with a 120R bottom, not CC pulldowns. The design genuinely lacks 5.1k CC resistors on three USB-C connectors. The Pico/RP2040Stamp variants have proper 5K11 resistors and correctly pass.",
       "created_from": "FND-00001150",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The I2C expansion header (J8) exposes I2C1-SDA and I2C1-SCL via global labels but no pull-up resistors exist in the schematic. The bus_analysis correctly reports has_pull_up=false for both lines.",
       "created_from": "FND-00001150",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "All four newer schematics correctly detect a 6-row x 15-column matrix. Row/Column net names are correctly enumerated, and diodes_on_matrix=83 matches the actual diode count for each matrix variant.",
       "created_from": "FND-00001150",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "Confirmed by source file inspection: none of the schematics contain PWR_FLAG symbols. The pwr_flag_warnings are legitimate ERC findings. The +1V1 rail in BareRP2040 is the RP2040 internal LDO output, and its warning is accurate.",
       "created_from": "FND-00001150",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }

@@ -8,20 +8,22 @@
       "correct": [
         {
           "description": "The beyblock20 is a 20-key macropad (4 rows x 5 columns). The key_matrices detector correctly identifies 4 rows (row1-row4), 5 columns (col1-col5), 20 switches, and 20 diodes using net_name detection. The 20 SW_SPST switches and 20 LL4148 diodes match the source schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         },
         {
           "description": "Two I2C bus observations are reported: SDA net with pullup R1 to +3.3V, and SCL net with pullup R2 to +3.3V. Devices on the bus include U1 (SeeeduinoXIAO), U2, and U3 (TRRS connectors carrying I2C for split keyboard). This matches the actual schematic where OLED modules communicate over I2C.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

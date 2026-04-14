@@ -20,11 +20,13 @@
       "description": "INCORRECT: The detector reports a 2-row \u00d7 17-column key matrix with row_nets=['BL', '__unnamed_28'] and diodes_on_matrix=17. In reality this is a gamepad using two 74HC165 parallel-in shift registers to read 17 buttons; there is no matrix. BL is the display backlight control signal; __unnamed_28 is the 5 V supply rail via BAT43 protection diodes D1 and D4. Only 3 physical diodes exist in the design (D1, D2, D4), none of which form a matrix. The estimated_keys=17 and diodes_on_matrix=17 are both wrong.",
       "created_from": "FND-00001634",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00001634-AST-03",

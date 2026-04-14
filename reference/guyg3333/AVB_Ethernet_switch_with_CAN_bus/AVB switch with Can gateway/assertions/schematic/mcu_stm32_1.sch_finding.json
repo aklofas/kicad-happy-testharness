@@ -9,12 +9,14 @@
       "description": "In mcu_stm32_1.sch, the 8MHz crystal Y2 load capacitors C79 and C80 carry value='20pF' but MPN=CL10C360JB8NNNC whose description reads 'CAP CER 36PF 50V C0G/NP0 0603'. The analyzer faithfully reports the schematic value (20pF) in the crystal_circuits effective load calculation (CL_eff = 13pF based on 20pF). The actual capacitors are 36pF (CL_eff = 21pF). This is a schematic data inconsistency (design note, not an analyzer bug) but the 20pF value is used in the crystal load calculation, making the reported CL_eff inaccurate relative to what will be built.",
       "created_from": "FND-00000356",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].load_caps[0].farads",
+        "path": "findings[0].load_caps[0].farads",
         "op": "eq",
-        "value": 3.6e-11
+        "value": 3.6e-11,
+        "detector_filter": "detect_crystal_circuits"
       },
       "aspirational": true,
-      "aspirational_reason": "op eq not supported, describes analyzer limitation"
+      "aspirational_reason": "op eq not supported, describes analyzer limitation",
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].load_caps[0].farads"
     },
     {
       "id": "FND-00000356-AST-02",

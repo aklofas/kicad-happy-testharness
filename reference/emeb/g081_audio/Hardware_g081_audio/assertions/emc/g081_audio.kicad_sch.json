@@ -1,78 +1,79 @@
 {
   "file_pattern": "g081_audio.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~12 (tolerance 10%)",
+      "description": "Finding count ~9 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 8,
+        "max": 10
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~5",
+      "description": "high count ~4",
       "check": {
         "path": "summary.high",
-        "op": "range",
-        "min": 4,
-        "max": 6
-      }
-    },
-    {
-      "id": "SEED-00000003",
-      "description": "medium count ~4",
-      "check": {
-        "path": "summary.medium",
         "op": "range",
         "min": 3,
         "max": 5
       }
     },
     {
+      "id": "SEED-00000003",
+      "description": "medium count ~2",
+      "check": {
+        "path": "summary.medium",
+        "op": "range",
+        "min": 1,
+        "max": 3
+      }
+    },
+    {
       "id": "SEED-00000004",
-      "description": "low count ~3",
+      "description": "low count ~1",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~59 (+-10)",
+      "description": "EMC risk score ~81.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 49,
-        "max": 69
+        "min": 71.5,
+        "max": 91.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "5 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 2
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "7 io_filtering finding(s)",
+      "description": "5 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 7
+        "value": 5
       }
     },
     {

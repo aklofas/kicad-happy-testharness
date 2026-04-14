@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "In mcu_stm32_1.sch, the 8MHz crystal Y2 load capacitors C79 and C80 carry value='20pF' but MPN=CL10C360JB8NNNC whose description reads 'CAP CER 36PF 50V C0G/NP0 0603'. The analyzer faithfully reports the schematic value (20pF) in the crystal_circuits effective load calculation (CL_eff = 13pF based on 20pF). The actual capacitors are 36pF (CL_eff = 21pF). This is a schematic data inconsistency (design note, not an analyzer bug) but the 20pF value is used in the crystal load calculation, making the reported CL_eff inaccurate relative to what will be built.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].load_caps[0].farads",
+            "path": "findings",
             "op": "eq",
-            "value": 3.6e-11
+            "value": 3.6e-11,
+            "detector_filter": "detect_crystal_circuits[0].load_caps[0].farads"
           }
         }
       ],
@@ -93,11 +94,12 @@
       "missed": [
         {
           "description": "The Ethernet interface for IC1 (KSZ8567) correctly identifies J4, J6, J7, J8 as connectors with value 'RJ45_Magjack_Connector'. However, the magnetics list is empty. MagJack (magnetics+jack) connectors have integrated transformers and should be classified as 'integrated_magnetics' in the magnetics list rather than plain connectors. The design has no separate discrete magnetics because the RJ45 MagJack connectors include them. The current output implies no magnetics are present, which is misleading for design review.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces[0].magnetics",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces[0].magnetics"
           }
         }
       ],

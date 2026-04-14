@@ -26,11 +26,12 @@
         },
         {
           "description": "This board is purely a passthrough breakout \u2014 FPC connector to PTH header with no active components, no regulators, no filters, and no decoupling caps. All signal_analysis arrays (voltage_dividers, rc_filters, power_regulators, protection_devices, etc.) are correctly empty.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

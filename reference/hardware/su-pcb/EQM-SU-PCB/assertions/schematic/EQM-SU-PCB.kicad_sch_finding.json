@@ -39,76 +39,90 @@
       "description": "7 NTC thermistor bias divider networks correctly identified",
       "created_from": "FND-00000288",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000288-AST-08",
       "description": "6 MOSFET transistor circuits correctly identified",
       "created_from": "FND-00000288",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000288-AST-10",
       "description": "RC valve coil snubbers (50ohm/100nF) correctly detected",
       "created_from": "FND-00000288",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000288-AST-12",
       "description": "INCORRECT: Voltage dividers falsely detected from opamp feedback T-networks (R156/R148, R158/R150 with ratio ~0.001 from opamp output/inverting-input)",
       "created_from": "FND-00000288",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "r_top.ref",
-        "pattern": "^R156$"
+        "pattern": "^R156$",
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000288-AST-13",
       "description": "INCORRECT: RC filter duplicate entry: R70+C49 reported in reverse direction alongside correct R70+C48 entry (shared-node bidirectional detection)",
       "created_from": "FND-00000288",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R70$"
+        "pattern": "^R70$",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000288-AST-14",
       "description": "MT29F64G NAND flash not detected as memory interface despite full EBI bus",
       "created_from": "FND-00000288",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     },
     {
       "id": "FND-00000288-AST-15",
       "description": "DRV8825 stepper motor driver not detected in bridge_circuits",
       "created_from": "FND-00000288",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     }
   ]
 }

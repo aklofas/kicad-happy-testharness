@@ -25,11 +25,12 @@
       "missed": [
         {
           "description": "Key matrix not detected despite explicit Row 0-4 and Column 0-13 net names with 61 switches and 61 diodes in classic keyboard matrix topology",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],

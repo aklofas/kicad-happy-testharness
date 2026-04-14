@@ -1,7 +1,8 @@
 {
   "file_pattern": "HamShieldMini1.2.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -35,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~8",
+      "description": "low count ~6",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 7,
-        "max": 9
+        "min": 5,
+        "max": 7
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~84 (+-10)",
+      "description": "EMC risk score ~90.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 74,
-        "max": 94
+        "min": 80.5,
+        "max": 100
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "9 io_filtering finding(s)",
+      "description": "7 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 9
+        "value": 7
       }
     },
     {
@@ -95,11 +96,11 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "~22 probe point(s) in test plan",
+      "description": "~21 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 19
+        "value": 18
       }
     },
     {

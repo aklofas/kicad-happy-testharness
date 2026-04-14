@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "U2 AP2112K-3.3 LDO correctly identified with topology=LDO, estimated_vout=3.3V, input/output rails correct",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "estimated_vout",
-            "value": 3.3
+            "value": 3.3,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -26,12 +27,13 @@
         },
         {
           "description": "Q1 and Q2 BSS138 N-MOSFETs correctly identified with proper gate/drain/source net mapping and connector load type",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -52,11 +54,12 @@
         },
         {
           "description": "Input/output decoupling capacitors for U2 correctly identified (C1+C2 input, C3+C4 output)",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [

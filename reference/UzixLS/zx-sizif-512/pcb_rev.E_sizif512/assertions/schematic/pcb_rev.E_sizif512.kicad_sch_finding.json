@@ -19,44 +19,52 @@
       "description": "LM2596 switching regulator correctly detected",
       "created_from": "FND-00000266",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000266-AST-03",
       "description": "RC filters for audio path correctly identified",
       "created_from": "FND-00000266",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000266-AST-04",
       "description": "INCORRECT: 10 transistors (Q5-Q12 2SA1175 PNP + Q13/Q14 ZVN2106A MOSFET) falsely identified as driving LED D1 \u2014 D1 is standalone (anode +5V, cathode through R3 470ohm to GND), no shared nets with any transistor",
       "created_from": "FND-00000266",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q5$"
+        "pattern": "^Q5$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000266-AST-05",
       "description": "INCORRECT: Q13/Q14 gate_driver_ics inflated to 19 ICs \u2014 gates statically biased at +3.3V, analyzer traverses entire +3.3V power net listing all connected ICs as gate drivers",
       "created_from": "FND-00000266",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q13$"
+        "pattern": "^Q13$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

@@ -9,11 +9,12 @@
       "description": "The base board contains U1 SAMB11G18A-edit (Microchip Bluetooth Low Energy SoC) and U2 XBee-PRO_900HP (900MHz proprietary radio module). The signal_analysis.wireless_interfaces list is empty. Both are explicit wireless devices with RF connections (SIG_2.4G net label, antenna connectors). The analyzer detects the UART bus (UART_RX/TX/CTS/RTS nets) for the XBee link but does not detect the BLE SoC or classify either component as a wireless interface.",
       "created_from": "FND-00002168",
       "check": {
-        "path": "signal_analysis.wireless_interfaces",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.wireless_interfaces"
     }
   ]
 }

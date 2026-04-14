@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Q2 32.768kHz RTC crystal and Q3 24MHz main clock correctly detected with accurate load capacitance calculations",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q2$"
+            "pattern": "^Q2$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -25,12 +26,13 @@
         },
         {
           "description": "Actual RC filters correctly detected: R82/C176 battery temp sense (7Hz), R85/C190 NMI debounce (16Hz), R89/C156 reset filter (1.6kHz), R92/C178 HSIC power filter (16Hz)",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R82$"
+            "pattern": "^R82$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -50,12 +52,13 @@
       "incorrect": [
         {
           "description": "R80+C143 misidentified as RC filter (1.93Hz cutoff) \u2014 R80 is the upper leg of MT3608 feedback divider (Ra in Vout=0.6*(1+Ra/Rb)). C143 is FB pin sense capacitor, not a signal filter.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "field_equals",
             "field": "vout",
-            "value": 0.6
+            "value": 0.6,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -69,12 +72,13 @@
         },
         {
           "description": "RC filter duplicates: R82/C176 and R90/C140 each reported twice (forward and reverse direction). Bidirectional traversal artifact inflates 4 real filters to 8 reported.",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R82$"
+            "pattern": "^R82$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [

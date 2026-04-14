@@ -36,14 +36,15 @@
       "incorrect": [
         {
           "description": "The HX711 is a 24-bit ADC specifically designed for weigh scales and load cell interfaces. Its VFB pin is the feedback pin for its built-in excitation voltage regulator for the load cell bridge supply \u2014 not a general-purpose power regulator. Classifying U5, U6, and U7 under power_regulators with topology 'ic_with_internal_regulator' is technically triggered by the VFB feedback divider pattern but is misleading: these are ADC/amplifier ICs, not regulators. The estimated_vout of 2.063V attributed to HX711 is a heuristic misread of the ADC bridge excitation circuit.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "ref": "U5",
               "topology": "ic_with_internal_regulator"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -61,13 +62,14 @@
       "missed": [
         {
           "description": "D5 is a SMF5V0A unidirectional TVS diode (SOD-123) placed on the USB VBUS line for overvoltage/ESD protection. The schematic shows it connected between the VBUS net and ground. The protection_devices list only contains D4 (VCAN26A2-03GHE3 ESD IC on D+/D-) and F2 (fuse). D5, which is explicitly a protection diode on a power rail, should also appear in protection_devices.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "D5"
-            }
+            },
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

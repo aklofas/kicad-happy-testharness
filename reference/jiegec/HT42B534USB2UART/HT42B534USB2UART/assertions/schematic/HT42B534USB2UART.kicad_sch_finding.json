@@ -9,7 +9,7 @@
       "description": "15 total components (1 IC, 7 caps, 3 connectors, 3 resistors, 1 LED) match the schematic. Net assignments for VDD, GND, VDDA, V33O, TX, RX, D+, D- are all correct.",
       "created_from": "FND-00000582",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "D+ / D- pair identified with R1 and R2 (33\u03a9 each) as series resistors, shared on U1, has_esd: true (IC provides internal ESD). This is accurate.",
       "created_from": "FND-00000582",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "Net RX has U1 pin 4 (RX, input) and J2 pin 2 (passive). Connector passive pins don't count as drivers, so the no_driver warning is legitimate \u2014 the external device driving RX is not modeled in the schematic.",
       "created_from": "FND-00000582",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "This is a USB-to-UART bridge (HT42B534) with USB D+/D- differential pair, series resistors, and ESD caps. The design_analysis.bus_analysis has no USB entry \u2014 only UART (TX/RX to J2) is detected. A USB FS interface should be identified.",
       "created_from": "FND-00000582",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

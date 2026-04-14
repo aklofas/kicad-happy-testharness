@@ -20,11 +20,12 @@
       "missed": [
         {
           "description": "J1 is a GCT USB4105-GF-A USB-C connector with explicitly USB-C signals (VBUS, GND, CC1, CC2, DP1, DN1, DP2, DN2, SBU1, SBU2, Shell). The analyzer produces an empty usb_interfaces list despite the connector being a named USB-C part. The value 'USB4105-GF-A' and the signal naming are unambiguous USB-C indicators.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.usb_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_usb_interfaces"
           }
         },
         {
@@ -136,11 +137,12 @@
       "correct": [
         {
           "description": "Despite the pin-to-net mapping error, the analyzer correctly identifies U1 as an esd_ic protecting D+ and D- differential nets. The fuse F1 is also correctly detected as a protection device on the VCC rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -167,11 +169,12 @@
       "missed": [
         {
           "description": "USB1 (Wurth-632723300011) is a USB-C connector with named USB signals (VBUS, GND, CC1, CC2, D+, D-, SBU1, SBU2). The analyzer returns an empty usb_interfaces list. The part name 'Wurth-632723300011' and presence of typical USB-C signals should trigger detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.usb_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_usb_interfaces"
           }
         }
       ],

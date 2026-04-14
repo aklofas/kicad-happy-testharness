@@ -17,15 +17,16 @@
         },
         {
           "description": "The analyzer correctly identifies U1's VDD (pin 14) and VDDIO (pin 1) on 3.3V with decoupling caps C3 (0.1uF) and C4 (10uF). GND pins 5 and 12 are on GND. RES (pin 10) tied to GND is correctly captured. ADC1/ADC2/ADC3 pins left unconnected are correctly noted. Total decoupling of 10.1uF on 3.3V rail is correctly computed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "rail": "3.3V",
               "cap_count": 2,
               "total_capacitance_uF": 10.1
-            }
+            },
+            "detector_filter": "detect_decoupling"
           }
         },
         {
@@ -62,31 +63,33 @@
         },
         {
           "description": "The design_observations entry for decoupling_coverage on 3.3V correctly identifies has_bulk=true (C4 at 10uF) and has_bypass=true (C3 at 0.1uF). has_high_freq=false is correct since there is no ceramic cap in the nF range. Total 10.1uF is correctly computed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "decoupling_coverage",
               "rail": "3.3V",
               "has_bulk": true,
               "has_bypass": true
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The Micro design has R1 (2.2k) on SDA and R6 (2.2k) on SCL as I2C pull-up resistors. Both connect from the I2C signal net through JP2 (a 3-pole closed/bridged solder jumper, value 'I2C') to 3.3V. The analyzer reports has_pullup=false and pull_ups=[] for both SCL and SDA in design_observations and bus_analysis. The resistors do appear on the I2C nets in ic_pin_analysis but the pull-up topology is not recognized. The jumper intervenes between the resistor free end and the 3.3V rail, creating an indirect path the analyzer does not traverse.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "i2c_bus",
               "net": "SCL",
               "has_pullup": true
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -141,15 +144,16 @@
       "incorrect": [
         {
           "description": "The Qwiic 1x1 design has R3 (2.2k) on SCL and R2 (2.2k) on SDA as I2C pull-ups, connected through JP2 (closed jumper) to 3.3V. The analyzer reports has_pullup=false and pull_ups=[] for both I2C lines. The resistors are visible in the net topology (R3 pin 1 on SCL net, R2 pin 1 on SDA net) and their other pins connect to unnamed nets that feed through JP2 to 3.3V. The indirect path through the jumper prevents the pull-up from being detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "i2c_bus",
               "net": "SDA",
               "has_pullup": true
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         },
         {

@@ -9,11 +9,13 @@
       "description": "INCORRECT: The OPamp-adding schematic is a summing/adding amplifier: three resistors (R1, R2, R3) all connect to the inverting input of U2, and R3 also serves as the feedback resistor. The analyzer detects it as a plain 'inverting' configuration using only R1 and R3 (input and feedback), missing that R2 is a second input resistor feeding the same summing node. A summing amplifier is a distinct topology (output is weighted sum of inputs) that warrants its own 'summing_inverting' or 'summing' configuration label and gain formula.",
       "created_from": "FND-00002203",
       "check": {
-        "path": "signal_analysis.opamp_circuits[0].configuration",
+        "path": "findings[0].configuration",
         "op": "equals",
-        "value": "inverting"
+        "value": "inverting",
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits[0].configuration"
     }
   ]
 }

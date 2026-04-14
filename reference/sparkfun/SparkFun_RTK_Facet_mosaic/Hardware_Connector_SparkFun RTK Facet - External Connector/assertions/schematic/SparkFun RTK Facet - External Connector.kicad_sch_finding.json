@@ -9,10 +9,12 @@
       "description": "F1 (6V/0.5A/1A on VBATT line) and F3 (6V/2.0A/4.0A on VUSB line) are correctly detected as fuse-type protection devices. The DT1042-04SO 4-line ESD protector D1 is correctly identified as an esd_ic protecting USB_DM, USB_DP, and the additional VBUS/battery lines.",
       "created_from": "FND-00001535",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
-      }
+        "value": 3,
+        "detector_filter": "detect_protection_devices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001535-AST-02",
@@ -29,15 +31,17 @@
       "description": "INCORRECT: The usb_data design observation for USB_DP reports has_esd_protection=false, but this is wrong. The DT1042-04SO (D1) pin 6 is connected directly to USB_DP as confirmed by net analysis. The protection_devices entry correctly lists USB_DP in D1's protected_nets. There is an inconsistency between the protection_devices detection (correct) and the usb_data observation (incorrect).",
       "created_from": "FND-00001535",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "usb_data",
           "net": "USB_DP",
           "has_esd_protection": false
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

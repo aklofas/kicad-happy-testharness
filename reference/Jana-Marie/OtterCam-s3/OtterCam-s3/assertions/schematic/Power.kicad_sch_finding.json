@@ -9,10 +9,12 @@
       "description": "SY8089 buck converter correctly identified with proper output voltage",
       "created_from": "FND-00000167",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00000167-AST-02",
@@ -39,10 +41,12 @@
       "description": "RC reset filter correctly detected",
       "created_from": "FND-00000167",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000181-AST-03",

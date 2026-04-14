@@ -9,13 +9,15 @@
       "description": "The analyzer reports key_matrices with rows=12, columns=10, estimated_keys=118, switches_on_matrix=118. The 11th column net COLK connects only rotary encoders SW1, SW2, and a U3 GPIO \u2014 correctly excluded from the key matrix. The repo is named 'Touch_Keyboard_10x12_KiCAD' (10 columns x 12 rows), matching the detection.",
       "created_from": "FND-00001615",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rows": 12,
           "columns": 10
-        }
-      }
+        },
+        "detector_filter": "detect_key_matrices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00001615-AST-02",
@@ -55,11 +57,13 @@
       "description": "INCORRECT: The design has 119 SK6812MINI-E addressable LEDs (DIN/DOUT chain protocol) grouped into sections via named nets (LEDS, LEDS0-1, LEDS1-2, LEDS2-3, LEDS3-4, LEDS4-5). The analyzer reports 119 separate chains each with chain_length=1 and data_in_net=''. Inspection of the net list shows all Net-(LED*-DOUT) and Net-(LED*-DIN) nets have zero component-pin entries \u2014 the analyzer fails to map the SK6812's DIN/DOUT pin UUIDs to the LED component references, breaking chain following. The PCB correctly shows LED0 pad 2 on 'Net-(LED0-DOUT)' and pad 4 on 'LEDS', confirming the physical connections exist but are missing from the schematic pin-net map.",
       "created_from": "FND-00001615",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "max_count",
-        "value": 10
+        "value": 10,
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     }
   ]
 }

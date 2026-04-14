@@ -18,13 +18,14 @@
         },
         {
           "description": "The protection_devices list includes VR1 (XL6009) classified as 'varistor' protecting net '__unnamed_2' (which is the EN pin net) with GND as the clamp net. This is entirely wrong on two levels: (1) VR1 is a boost converter IC, not a protection device, and (2) '__unnamed_2' contains only the EN pin of VR1 itself with a no_connect marker \u2014 it is not a signal being protected. The analyzer appears to have seen a 'VR'-prefixed component connected between a net and GND (via its GND pin) and incorrectly modeled it as a varistor clamping circuit.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "ref": "VR1"
-            }
+            },
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -38,22 +39,24 @@
         },
         {
           "description": "The lc_filters section reports an LC filter at 4 kHz formed by L1 (33uH) and C1+C2 (input caps, 47uF+1uF parallel on __unnamed_4/VIN node). In a boost converter, L1 is the series power inductor in the switching path (VIN \u2192 L1 \u2192 SW node), not one half of a passive LC filter. C1 and C2 are input bypass capacitors, not the shunt capacitor of a filter network. The DC/DC switching path (L1 \u2192 D1 \u2192 output) is the signal path, not an LC resonant filter. Reporting this as a 4 kHz LC filter is misleading because the LC resonance is incidental to the boost topology rather than being an intentional filter design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_lc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "The power_regulators list is empty, but VR1 (XL6009) is the central component of the design \u2014 a boost DC/DC converter IC with dedicated VIN, SW, EN, FB, and GND pins forming a complete switching regulator circuit. Because the component was misclassified as a varistor instead of a regulator, it was never evaluated for the power_regulators detector. An XL6009 in a standard boost topology (with L1, D1, feedback resistors to FB pin, and output caps) should appear here.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

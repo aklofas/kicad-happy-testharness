@@ -20,11 +20,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     },
     {
       "id": "FND-00002022-AST-03",
@@ -75,11 +77,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_matching"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     },
     {
       "id": "FND-00002022-AST-08",
@@ -130,11 +134,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00002022-AST-13",
@@ -174,33 +180,39 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].frequency",
+        "path": "findings[0].frequency",
         "op": "equals",
-        "value": 32768.0
+        "value": 32768.0,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].frequency"
     },
     {
       "id": "FND-00002022-AST-17",
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "max_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002022-AST-18",
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.power_regulators[0].ref",
+        "path": "findings[0].ref",
         "op": "equals",
-        "value": "U6"
+        "value": "U6",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].ref"
     },
     {
       "id": "FND-00002022-AST-19",
@@ -218,22 +230,26 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00002022-AST-21",
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
         "op": "max_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "analyze_thermal_pad_vias"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: thermal_pad_vias"
     },
     {
       "id": "FND-00002022-AST-22",
@@ -251,11 +267,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
         "op": "min_count",
-        "value": 5
+        "value": 5,
+        "detector_filter": "analyze_tombstoning_risk"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: tombstoning_risk"
     },
     {
       "id": "FND-00002022-AST-24",
@@ -273,11 +291,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00002022",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

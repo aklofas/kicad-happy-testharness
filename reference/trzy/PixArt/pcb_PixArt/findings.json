@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "4 components (1 IC, 2 caps, 1 connector), 3 power rails, 13 no-connects all match the design. Legacy KiCad 5 unnamed nets handled correctly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Both I2C interfaces identified with has_pull_up: false, which is accurate \u2014 no pull-up resistors exist in the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -29,18 +29,18 @@
       "missed": [
         {
           "description": "The decoupling_analysis section is empty. C1 and C2 are on net __unnamed_20 (their positive pins) while their negative pins go to GND. No decoupling relationship to VCC was detected \u2014 possibly because caps connect to an unnamed net rather than VCC directly in the legacy netlist.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Pins 14 (VSSD), 17 (VDDMA), 20 (VSSD_LED) have power_in type but sit on unnamed single-pin nets (__unnamed_14, __unnamed_17, __unnamed_10). These look like floating power pins \u2014 a real design concern not flagged in erc_warnings or design_observations.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -63,18 +63,18 @@
       "correct": [
         {
           "description": "All 5 vias have 0.1mm annular ring. Correctly classified as advanced tier DFM requirement.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Zone covers full board on B.Cu, fill_ratio 0.898, all 4 components in ground domain.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -83,15 +83,15 @@
       "incorrect": [
         {
           "description": "The edge_cuts section has 5 lines including a duplicate/redundant segment (128.27,100.33 to 128.27,81.28 overlaps the left side). This should be flagged as an outline anomaly but no warning is generated.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "U1 is an SMD footprint with 20 pads, yet pad_summary.smd_apertures = 0 and smd_ratio = 0.0. The smd_source is 'x2_aperture_function' which relies on gerber data not PCB data, so the PCB analyzer should derive SMD counts from footprint type directly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -114,18 +114,18 @@
       "correct": [
         {
           "description": "All required layers present. F.Paste absence for a board with SMD U1 is a valid recommendation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Components are placed asymmetrically (U1 near center, caps and connector in lower portion), so copper extents naturally differ from Edge.Cuts. The 19mm/14mm variance is genuine and correctly reported.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -150,9 +150,9 @@
       "correct": [
         {
           "description": "complete: false with missing_required [B.Mask, F.Mask] is accurate for this 6-file set.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -161,11 +161,11 @@
       "incorrect": [
         {
           "description": "The drill file named 'NonPlatedThroughHole' is classified as type PTH in the drills array. The NPTH indicator was missed (possibly the file lacks the Excellon NPTH header marker). This causes the 4 x 0.9mm holes to be counted as PTH and the has_npth_drill flag to be false.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The older B.Cu gerber reports width=182mm vs Edge.Cuts 49.53mm. This massive discrepancy (likely a mis-scaled or offset legacy export) causes alignment to flag a 151.8mm variance but no separate 'layer_outside_board' warning is generated.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

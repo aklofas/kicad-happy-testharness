@@ -8,7 +8,7 @@
       "correct": [
         {
           "description": "9 MountingHole components, zero nets, zero signal analysis \u2014 all expected for a base plate schematic.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [],
@@ -30,11 +30,11 @@
       "correct": [
         {
           "description": "196 total components (62 switches, 62 diodes, 62 LEDs, 1 IC, 9 mounting holes), key_matrices entry with rows=5 cols=13 is accurate, addressable_led_chains detected for 62-LED SK6812MINI chain.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The keyboard uses unnamed nets for power (no explicit PWR_FLAG/VCC symbols), so empty power_rails is correct behavior for this KiCad 5 format.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [],
@@ -56,7 +56,7 @@
       "correct": [
         {
           "description": "The mech50-plate project folder uses the same keyboard schematic (196 components). This is expected project structure; analyzer output is identical to keyboard schematic output, which is correct.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [],
@@ -78,7 +78,7 @@
       "correct": [
         {
           "description": "10 footprints (9 mounting holes + 1 logo), 0 track segments, 0 vias, copper_layers_used=0, board size 256x96mm correctly extracted.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [],
@@ -100,17 +100,17 @@
       "correct": [
         {
           "description": "PCB has 150 nets with 9 unrouted, correctly flagged as incomplete routing.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [
         {
           "description": "The board text 'MECH / 50+3 / V 0.3' clearly contains a version marker ('V 0.3'). The revision detector should recognize 'V 0.3' as a valid revision string but failed to match it.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "All 62 MX keyboard switches flagged as missing function labels. The 'missing_switch_labels' warning is intended for discrete push-buttons (reset, boot, power switches), not for keyboard matrix key switches. Firing for all 62 keys is pure noise for keyboard PCBs.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -131,7 +131,7 @@
       "correct": [
         {
           "description": "4 MX_Switch_Cutout footprints (all sharing ref S-A1 \u2014 duplicate refs in plate file), 0 tracks, 0 vias, copper_layers_used=0. Board outline via circles is correctly parsed.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [],
@@ -153,7 +153,7 @@
       "correct": [
         {
           "description": "All expected layers present, 9 drill holes at 3.2004mm (M3 mounting), F.Cu and B.Cu are empty (correct for mechanical board), layer completeness=true.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [],
@@ -175,13 +175,13 @@
       "correct": [
         {
           "description": "All expected layers found, has_pth_drill=true, layer completeness=true. Drill count consistent with 62 THT switches + diodes + mounting holes.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [
         {
           "description": "The height difference between copper/paste extents and edge cuts extents is expected on a keyboard: SMD paste only covers LED pads (smaller area) while edge cuts span the full board. This is not a real alignment defect \u2014 the layers are correctly positioned, just have different content extents.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -202,7 +202,7 @@
       "correct": [
         {
           "description": "All expected layers present, total_holes=0 is correct since MX_Switch_Cutout uses mask/copper flashes not drilled holes. Layer completeness=true.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "incorrect": [],

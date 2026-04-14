@@ -2,6 +2,7 @@
   "file_pattern": "Blinky.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -16,12 +17,12 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Rule DC-002 present",
+      "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-002$"
+        "pattern": "^DC\\-001$"
       }
     },
     {
@@ -32,6 +33,16 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
       }
     }
   ]

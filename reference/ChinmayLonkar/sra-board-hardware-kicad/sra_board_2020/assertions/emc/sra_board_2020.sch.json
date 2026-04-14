@@ -1,16 +1,17 @@
 {
   "file_pattern": "sra_board_2020.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~31 (tolerance 10%)",
+      "description": "Finding count ~15 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 13,
+        "max": 17
       }
     },
     {
@@ -45,22 +46,22 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~27",
+      "description": "low count ~9",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 24,
-        "max": 30
+        "min": 8,
+        "max": 10
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~61 (+-10)",
+      "description": "EMC risk score ~71.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 51,
-        "max": 71
+        "min": 61.5,
+        "max": 81.5
       }
     },
     {
@@ -87,13 +88,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "28 io_filtering finding(s)",
+      "description": "10 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 28
+        "value": 10
       }
     },
     {
@@ -116,11 +117,11 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~20 probe point(s) in test plan",
+      "description": "~11 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 18
+        "value": 9
       }
     },
     {

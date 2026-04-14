@@ -19,34 +19,40 @@
       "description": "Voltage dividers for biasing correctly detected",
       "created_from": "FND-00000265",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000265-AST-03",
       "description": "INCORRECT: NPN transistors with (1,0,0,-1) Y-flip transform have collector/emitter pins swapped \u2014 Q2 reports emitter=+5V (should be collector), Q1 reports collector=GND (should be emitter), Q3 has both C/E on same net",
       "created_from": "FND-00000265",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q2$"
+        "pattern": "^Q2$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000265-AST-04",
       "description": "INCORRECT: Q1 falsely identified as LED driver for D12/R13 \u2014 no shared nets, ~142mm apart on schematic",
       "created_from": "FND-00000265",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q1$"
+        "pattern": "^Q1$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     }
   ]
 }

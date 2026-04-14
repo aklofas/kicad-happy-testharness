@@ -20,11 +20,12 @@
       "missed": [
         {
           "description": "The design has Y1 (TSX-3225 16MHz crystal, lib_id='archive:Device_Crystal_GND24_Small', type=crystal) connected to the STM32F103C8Tx MCU (U2). Despite the type field being correctly set to 'crystal' and the crystal being present, signal_analysis.crystal_circuits=[] \u2014 no crystal circuit was extracted. This is likely a failure to match the GND24_Small footprint variant or the archive-prefixed lib_id against the detector's crystal template patterns.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],

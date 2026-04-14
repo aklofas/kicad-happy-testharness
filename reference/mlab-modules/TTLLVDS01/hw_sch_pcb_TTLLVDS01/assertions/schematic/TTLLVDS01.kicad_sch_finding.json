@@ -72,11 +72,13 @@
       "description": "C2 has pin 1 on VCC and pin 2 on GND; the PCB footprint confirms value '100nF'. Because the schematic analyzer reads the empty instance Value field and falls back to the symbol name 'C_Small', parsed_value is None. The decoupling detector requires a valid capacitance, so C2 is excluded and decoupling_analysis returns an empty list. The design_observations also incorrectly states U1's VCC rail has no decoupling caps at all.",
       "created_from": "FND-00001631",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

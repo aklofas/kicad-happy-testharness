@@ -13,11 +13,12 @@
       "correct": [
         {
           "description": "SG-210STF active oscillator correctly identified",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [],
@@ -26,12 +27,13 @@
         },
         {
           "description": "Thermistor RC filters (R401/C401 etc, 3.39Hz ADC anti-alias) correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R401$"
+            "pattern": "^R401$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -43,11 +45,12 @@
         },
         {
           "description": "Endstop debounce filters (10k/10u, 1.59Hz) correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -56,12 +59,13 @@
         },
         {
           "description": "ESP32 auto-reset BJT pair (Q1/Q2 2N3904) correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -73,12 +77,13 @@
         },
         {
           "description": "4 protection devices (fuses F101/F401/F402, USBLC6 USB ESD) correct",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^F101$"
+            "pattern": "^F101$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -91,11 +96,12 @@
         },
         {
           "description": "LC input filters for buck regulators (47uH/10nF, 232kHz) correct",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [],
@@ -104,12 +110,13 @@
         },
         {
           "description": "VBUS detection divider (R503/R506, ratio 0.68) correct",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R503$"
+            "pattern": "^R503$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -127,12 +134,13 @@
         },
         {
           "description": "T401/T404/T405 PMV40UN2 fan MOSFETs have drain/source inverted: drain_net='GND', source_net='Fan1_pwr' \u2014 should be source=GND, drain=Fan_pwr (load)",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^T401$"
+            "pattern": "^T401$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -145,12 +153,13 @@
         },
         {
           "description": "T401/T404/T405 each get false led_driver record pointing to D401 LED_YEL with R422 (100k) \u2014 D401 is in a different circuit section, no connectivity to fan MOSFETs",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^T401$"
+            "pattern": "^T401$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -165,12 +174,13 @@
         },
         {
           "description": "LM2675M-3.3 (U101) and LM2675M-5 (U102) both show input_rail=null and topology='unknown' \u2014 can't trace through input inductor to find +24V source",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U101$"
+            "pattern": "^U101$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -182,12 +192,13 @@
         },
         {
           "description": "SD_DETECT RC filter R216/C203 has wrong input_net='SD_DAT0' \u2014 should be +3.3V (R216 pulls up from +3.3V)",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R216$"
+            "pattern": "^R216$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [

@@ -19,20 +19,24 @@
       "description": "Y2 (24 MHz Crystal_GND24_Small) is correctly detected with load caps C12 and C14 (both 10 pF), giving an effective load of 8 pF. Y1 (26 MHz) correctly has no load-cap entry because it connects directly to the USB3343 REFCLK pin without discrete load caps.",
       "created_from": "FND-00001759",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00001759-AST-03",
       "description": "U1 (AMS1117-3.3) is correctly identified as an LDO with output rail +3.3V and estimated Vout 3.3 V. U5 (STM32F730R8Tx) is correctly identified as an IC with an internal regulator.",
       "created_from": "FND-00001759",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": 2,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001759-AST-04",
@@ -49,21 +53,25 @@
       "description": "R8/C20 (10 k/100 n, 159 Hz, BOOT0), R12/C27 (2.2 k/47 n, 1.54 kHz, NRST), and R9/C27 (4.7 k/47 n, 720 Hz, NRST) are correctly identified as low-pass RC filters.",
       "created_from": "FND-00001759",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "value": 3,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001759-AST-06",
       "description": "U3 (USBULC6-2M6, a 6-line USB ESD protection array) and U4 (ESDA14V2-2BF3, a dual ESD protection diode) are present in the schematic but the signal_analysis.protection_devices array is empty. The USB compliance checker separately recognises them via usb_esd_ic:pass, but the general protection_devices detector does not flag them. These are real protection devices that should appear in protection_devices.",
       "created_from": "FND-00001759",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

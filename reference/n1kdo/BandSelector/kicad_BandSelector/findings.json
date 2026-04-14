@@ -18,20 +18,22 @@
         },
         {
           "description": "Capacitors C9 and C10 have value '2.2' and C8 has value '220'. These are aluminum electrolytic capacitors (CP_Radial footprints) and the bare numeric convention for this component class is microfarads (2.2uF and 220uF). In signal_analysis.decoupling_analysis the farads values are 2.2e-12 and 2.2e-10 (picofarad range \u2014 wrong), causing total_capacitance_uF: 0.0 for +12V and +5V rails. In pdn_impedance the same caps are parsed as 2.2F and 220F (Farad range \u2014 also wrong). Neither interpretation is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+            "path": "findings",
             "op": "greater_than",
-            "value": 0.1
+            "value": 0.1,
+            "detector_filter": "detect_decoupling_analysis[0].total_capacitance_uF"
           }
         },
         {
           "description": "U2 (L7805) is a classic fixed positive linear voltage regulator from the 78xx series. It is NOT an LDO \u2014 it requires a dropout voltage of ~2V. The signal_analysis.power_regulators entry reports topology: 'LDO', which is incorrect. The correct classification is 'linear' or 'fixed_linear'. This also propagates to power_budget and inrush_analysis which also show topology: 'LDO'.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "op": "equals",
-            "value": "LDO"
+            "value": "LDO",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         }
       ],
@@ -76,11 +78,12 @@
       "missed": [
         {
           "description": "The display board interfaces a 2x20 HD44780-compatible LCD (U1) with a 4-bit parallel bus: RS, RW, E, D4, D5, D6, D7 signals are wired from J1 (the inter-board connector) to the LCD. The signal_analysis.memory_interfaces array is empty and bus_analysis shows no detected buses. The parallel HD44780 interface could be recognized as a character LCD protocol with the classic RS/RW/E control plus D4-D7 data lines.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "equals",
-            "value": []
+            "value": [],
+            "detector_filter": "detect_memory_interfaces"
           }
         }
       ],

@@ -28,12 +28,13 @@
       "incorrect": [
         {
           "description": "U6 and U7 (74LVC1G3157, SPDT analog switches) falsely classified as crystal_circuits/active_oscillator. These are analog signal routing switches used for RX/TX path selection, not oscillators.",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -49,12 +50,13 @@
         },
         {
           "description": "U3 (LNA, BGB741L7ESD) falsely identified as a power_regulator with topology=unknown. This is an RF low-noise amplifier, not a voltage regulator.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U3$"
+            "pattern": "^U3$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -89,11 +91,12 @@
         },
         {
           "description": "No RF chain detection. The board has a clear RF receive chain: SMA -> matching -> analog switch -> LNA/filter -> VGA -> ADC, but rf_chains is empty (only LC filters and RF matching found as fragments).",
-          "analyzer_section": "signal_analysis.rf_chains",
+          "analyzer_section": "detect_rf_chains",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           },
           "detector": "rf_chains",
           "subject_refs": [],

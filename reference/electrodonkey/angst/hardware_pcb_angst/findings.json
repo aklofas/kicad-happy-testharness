@@ -17,11 +17,12 @@
         },
         {
           "description": "The analyzer correctly identified three STSPIN233 3-phase motor driver ICs (U3, U4, U6) and grouped them under bridge_circuits analysis. The RSH1/RSH2/RSH3 shunt resistors (1\u03a9 0.5W) are found associated with these motor drivers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_bridge_circuits"
           }
         },
         {
@@ -46,40 +47,44 @@
       "incorrect": [
         {
           "description": "The RSH1, RSH2, and RSH3 components are 1\u03a9 0.5W resistors used as current-sense shunts for the three STSPIN233 motor drivers. The analyzer detected them as voltage_dividers (ratio 0.000999) because R_top=1k (from R16/R23/R29) and R_bottom=1\u03a9 match the voltage divider topology heuristic. However, these are clearly current-sense shunts: the 1\u03a9 resistor is in the motor current path with a dedicated reference 'RSH' prefix (shunt resistor), 0.5W power rating, and are paired one-to-one with motor driver ICs. current_sense is reported as empty []. The analyzer should identify these as current sense resistors rather than voltage dividers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "The analyzer reports an rf_matching entry with 'antenna': 'C1' (value 100n) and L1 (BK1608HS601-T ferrite bead) as the matching network component. C1 is a 100nF decoupling capacitor and L1 is a ferrite bead used for USB power filtering (+5V \u2192 +5VD via L1 and C1 to ground), not an RF antenna matching network. The BK1608HS601-T is a power-line ferrite bead, not an RF matching component. This is a false positive.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rf_matching"
           }
         },
         {
           "description": "Q1 is an IRLML6401TRPBF, which is a P-channel MOSFET (indicated by the 'P' in the part number and confirmed by Infineon datasheet). The analyzer reports is_pchannel: false, which is wrong. Additionally, the gate_net and source_net are both reported as '+BATT', which would suggest the MOSFET is always off (gate = source) \u2014 this is likely a net connectivity parsing error for the gate. The load_type is 'connector' which is plausible if the drain connects to a motor connector.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
       "missed": [
         {
           "description": "The crystal_circuits entry for Y1 reports frequency: null. The component value is 'Crystal_GND24', which is a KiCad library part name rather than a frequency value. However, in the KiCad 5 legacy .sch format the schematic title block shows a 32kHz oscillator name pattern. The analyzer should attempt frequency extraction from the lib_id name ('Crystal_GND24' suggests a 24MHz or ground-referenced 2-pad crystal) but cannot, so frequency remains null. This is an expected limitation for legacy parts without explicit frequency values, but worth noting.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],

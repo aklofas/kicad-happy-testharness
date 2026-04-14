@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "AS3935 supports both I2C and SPI. The schematic uses SCL and SDA_MOSI net labels; analyzer correctly detects I2C bus with R5 as pullup. I2C is the primary protocol signaled by the label naming.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The LIGHTNING01 schematic powers VCC/GND through connectors without PWR_FLAG symbols. The analyzer correctly flags both rails as lacking power_out or PWR_FLAG, which would cause ERC errors in KiCad.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "The four HOLE footprint components (M1-M4) with lib_id containing 'HOLE-MLAB_MECHANICAL' are classified as type='other'. They should be 'mounting_hole'. The classifier likely misses custom/library-specific hole symbols that don't match the standard KiCad mounting hole library names.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -49,9 +49,9 @@
       "correct": [
         {
           "description": "The LIGHTNING01A-NPTH_drill.drl file has hole_count=0, which is correctly handled. The NPTH drill file exists (possibly required by the CAM profile) but contains no actual holes, and this does not cause has_npth_drill=false incorrectly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -60,7 +60,7 @@
       "incorrect": [
         {
           "description": "The warning compares B.Cu (36.4mm) vs Edge.Cuts (40.1mm), a 3.7mm difference, which is normal board-edge clearance. However B.SilkS at 40.593mm genuinely exceeds Edge.Cuts by 0.46mm. The bulk alignment failure is triggered by comparing all layer widths together rather than identifying that copper-to-edge-cuts clearance is expected while silk-beyond-board-edge is the real issue.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

@@ -26,25 +26,27 @@
         },
         {
           "description": "Two power rails (3.3V, GND) are correctly identified. The single 0.1uF capacitor (C1) on the 3.3V rail is detected in decoupling_analysis with correct total_capacitance_uF=0.1. Net count of 32 matches the PCB output exactly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
       "incorrect": [
         {
           "description": "R13 (2.2k) is connected between the SDA net and JP6 pin1; R7 (2.2k) is connected between the SCL net and JP6 pin3; JP6 is a 3-pole closed solder jumper whose center pin (pin2) connects to 3.3V. The net trace is: SDA -> R13 -> unnamed_net -> JP6 -> 3.3V and SCL -> R7 -> unnamed_net -> JP6 -> 3.3V. These are I2C pullup resistors switched through a solder jumper. The analyzer fails to trace through the intermediate unnamed nets created by the solder jumper and therefore reports has_pullup: false for both SDA and SCL bus observations.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "category": "i2c_bus",
               "has_pullup": true
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

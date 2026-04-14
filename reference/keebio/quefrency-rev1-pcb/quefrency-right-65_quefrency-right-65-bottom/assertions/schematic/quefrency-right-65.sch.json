@@ -1,7 +1,8 @@
 {
   "file_pattern": "quefrency-right-65.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,36 +35,49 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 debug_interfaces detected",
+      "description": "1 audit_esd_protection detected",
       "check": {
-        "path": "signal_analysis.debug_interfaces",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All debug_interfaces have connector_ref",
+      "description": "1 detect_debug_interfaces detected",
       "check": {
-        "path": "signal_analysis.debug_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All detect_debug_interfaces have connector_ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
         "op": "not_contains_match",
         "field": "connector_ref",
         "pattern": "^$"
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "All debug_interfaces interface_type values are valid",
+      "id": "SEED-00000008",
+      "description": "All detect_debug_interfaces interface_type values are valid",
       "check": {
-        "path": "signal_analysis.debug_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
         "op": "count_matches",
         "field": "interface_type",
         "pattern": "^(swd|jtag|debug)$",
@@ -71,75 +85,47 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "3 design_observations detected",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000009",
-      "description": "1 esd_coverage_audit detected",
+      "description": "3 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "All esd_coverage_audit have connector_ref",
+      "description": "1 detect_key_matrices detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "not_contains_match",
-        "field": "connector_ref",
-        "pattern": "^$"
+        "path": "findings",
+        "detector_filter": "detect_key_matrices",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "All esd_coverage_audit coverage values are valid",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "coverage",
-        "pattern": "^(full|partial|none)$",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "All esd_coverage_audit risk_level values are valid",
+      "description": "1 validate_pullups detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "risk_level",
-        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000013",
-      "description": "1 key_matrices detected",
-      "check": {
-        "path": "signal_analysis.key_matrices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "2 suggested_certifications detected",
-      "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000015",
       "description": "Has 42 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -148,7 +134,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
       "description": "Has 6 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -157,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "Has 52 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

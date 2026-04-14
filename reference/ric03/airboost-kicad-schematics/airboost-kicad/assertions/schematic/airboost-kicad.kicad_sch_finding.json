@@ -19,15 +19,17 @@
       "description": "The analyzer correctly identifies an I2C bus on I2C.SCL and I2C.SDA with devices U2 (SCD30), U1 (OLED Display), and A1 (Arduino Nano). The has_pullup=False detection is accurate: R1 (150 ohm) is an LED current limiter connected between D1 cathode and GND, not an I2C pull-up resistor. There are genuinely no I2C pull-up resistors in this design.",
       "created_from": "FND-00001957",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "category": "i2c_bus",
           "has_pullup": false
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
       "aspirational": false,
-      "aspirational_reason": "contains_match does not support dict value matching"
+      "aspirational_reason": "contains_match does not support dict value matching",
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001957-AST-03",
@@ -48,10 +50,12 @@
       "description": "BZ1 is driven directly from Arduino Nano D8 (pin 11) with no transistor or driver IC in between. The analyzer correctly reports has_transistor_driver=false and direct_gpio_drive=true. The driver_ic is listed as A1 (Arduino Nano).",
       "created_from": "FND-00001957",
       "check": {
-        "path": "signal_analysis.buzzer_speaker_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_buzzer_speakers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.buzzer_speaker_circuits"
     },
     {
       "id": "FND-00001957-AST-05",

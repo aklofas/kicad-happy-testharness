@@ -9,7 +9,7 @@
       "description": "Source has R1 (150 ohm gate resistor), Q? (TK4R3E06PL N-MOSFET, unannotated), R2 (10k gate pull-down) = 3 components. Output correctly reports: total_components=3, resistor=2, transistor=1. MOSFET Q? identified as N-channel with gate_net=__unnamed_0 (the R1/R2 junction net), drain_net='drain', source_net='GND', source_is_ground=true. Gate pull-down R2 (10k) correctly identified. Gate resistor R1 (150 ohm) correctly identified. annotation_issues.unannotated=['Q?'] correctly flagged. Missing footprint for all 3 components correctly reported. generic_symbol_warnings for Q? correctly flags the generic DGS pin order.",
       "created_from": "FND-00000455",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The transistor_circuits entry for Q? correctly records has_flyback_diode=false. The load_type is 'other' (not 'inductive'), and no design_observation warns about the missing flyback diode despite this being a solenoid driver (the schematic title is 'solenoid_driver.kicad_sch' and the file name plus Toshiba app note reference in the text annotation clearly indicate an inductive load). The analyzer could emit a warning when has_flyback_diode=false and context suggests an inductive load, but currently does not.",
       "created_from": "FND-00000455",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

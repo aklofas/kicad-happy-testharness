@@ -9,7 +9,7 @@
       "description": "Zero opamp circuits, RC filters, voltage dividers correctly reported for switch-only board",
       "created_from": "FND-00000277",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,10 +29,12 @@
       "description": "14 decoupling warnings accurately reflect no bypass caps on board",
       "created_from": "FND-00000277",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

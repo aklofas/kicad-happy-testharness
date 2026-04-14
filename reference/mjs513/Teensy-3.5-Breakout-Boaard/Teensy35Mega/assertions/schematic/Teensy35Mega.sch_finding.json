@@ -9,10 +9,12 @@
       "description": "U1 (NCP1117ST50T3G_MountingTab) is identified as topology='LDO' with input_rail and output_rail populated. The SOT-223 LDO with VI/VO/GND pins is correctly recognized despite all rails being unnamed.",
       "created_from": "FND-00001732",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001732-AST-02",
@@ -29,11 +31,13 @@
       "description": "INCORRECT: The analyzer emits a 'regulator_caps' observation claiming missing_caps for both the input rail (__unnamed_74) and output rail (__unnamed_78). However, C1 and C2 both connect to __unnamed_74 (U1 VI input), and C3 connects to __unnamed_75 (U1 VO pin 2). The analyzer tracks only pin 4 (the tab VO) as the output rail but ignores pin 2 (also VO), so it misses C3 on the output side. Both input and output capacitors are present; the observation is incorrect.",
       "created_from": "FND-00001732",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "value": 0,
-        "op": "max_count"
+        "op": "max_count",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

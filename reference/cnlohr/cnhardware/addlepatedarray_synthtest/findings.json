@@ -9,12 +9,13 @@
       "incorrect": [
         {
           "description": "Y1 with lib_id 'Oscillator:CFPS-72' (active TCXO, value 'TG-5006CG-12H 26.0000M3') classified as crystal instead of oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [

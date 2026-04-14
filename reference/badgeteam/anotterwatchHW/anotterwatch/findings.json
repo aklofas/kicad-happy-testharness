@@ -17,14 +17,15 @@
         },
         {
           "description": "signal_analysis.addressable_led_chains reports chain_length=4, protocol='single-wire (WS2812)', led_type='SK6812MINI', data_in_net='IO0'. All four LEDs D1-D4 are confirmed in afe.sch as SK6812MINI with the correct footprint.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "chain_length": 4,
               "led_type": "SK6812MINI"
-            }
+            },
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {
@@ -41,14 +42,15 @@
         },
         {
           "description": "signal_analysis.protection_devices reports U9 as type='esd_ic' protecting PROBE1/PROBE2. The schematic (afe.sch) confirms USBLC6-4SC6 is connected to PROBE1 and PROBE2 (analog measurement probe lines), not USB_DP/USB_DN. The USB data lines have no ESD protection, which is a real design gap.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U9",
               "type": "esd_ic"
-            }
+            },
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -64,23 +66,25 @@
       "incorrect": [
         {
           "description": "signal_analysis.power_regulators reports U14 with topology='LDO'. The TPS63001 is a TI synchronous buck-boost converter (supports both step-up and step-down). It has two inductor pins (L1, L2), a separate PGND, and a VIN range of 1.8\u20135.5V with VOUT up to 5V, which is inconsistent with LDO operation. The pin-to-net mapping shows L1 and L2 switch pins present, confirming it is a switching converter.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U14",
               "topology": "buck_boost"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "signal_analysis.rf_matching contains two entries: one with antenna='C6' (4p7 cap) and one with antenna='C7' (3p9 cap). The actual antenna is AE1 (Texas SWRA117D 2.4GHz footprint). C6 and C7 are shunt capacitors to GND in the ESP32 RF matching network, with L1 as the series inductor between them and AE1. The detector inverted the topology and double-counted the same pi-network.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "max_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           }
         },
         {
@@ -105,23 +109,25 @@
       "missed": [
         {
           "description": "signal_analysis.buzzer_speaker_circuits reports has_transistor_driver=false and direct_gpio_drive=true for LS1. However, net tracing shows LS1 pin 2 connects to net __unnamed_108 which also connects to Q6 source (AO3400 NMOS). Q6 gate is driven by BUF_ENABLE from U6 (TCA9535 GPIO expander). The speaker is driven through Q6, making has_transistor_driver=false incorrect.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.buzzer_speaker_circuits",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "reference": "LS1",
               "has_transistor_driver": true
-            }
+            },
+            "detector_filter": "detect_buzzer_speakers"
           }
         },
         {
           "description": "signal_analysis.opamp_circuits is empty despite U7 (TLV9062S, dual op-amp) and U8 (OPA2322S, dual op-amp) being present in the AFE sheet as multi-unit amplifier instances. Both use the schematic symbol 'Amplifier_Operational:LTC6081xDD' with type='ic'. The detector likely fails to recognize these components as op-amps due to the library symbol name not matching expected op-amp identifiers. The AFE sheet has a precision analog front-end with multiple op-amp gain stages and buffers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],

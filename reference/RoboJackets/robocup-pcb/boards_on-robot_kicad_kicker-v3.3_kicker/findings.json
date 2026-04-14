@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Q10 BSS806N N-MOSFET correctly identified with gate=BB_TX, drain\u2192J5, source\u2192GND, load_type=connector",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q10$"
+            "pattern": "^Q10$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -56,12 +57,13 @@
       "correct": [
         {
           "description": "R16 7mohm current sense shunt with U3 LT3751FE CSN/CSP pins correctly detected, max current calculations accurate",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R16$"
+            "pattern": "^R16$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -73,12 +75,13 @@
         },
         {
           "description": "R15(22ohm) + C9(220pF) RC filter (32.88MHz cutoff) correctly detected as gate drive snubber for Q2",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R15$"
+            "pattern": "^R15$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -91,12 +94,13 @@
         },
         {
           "description": "Q2 IRFS4227 N-MOSFET correctly identified with gate drive from U3 HVGATE pin",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q2$"
+            "pattern": "^Q2$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -120,12 +124,13 @@
       "missed": [
         {
           "description": "R17(505k)/R18(113k) feedback voltage divider from V+ HV rail to U3 FB pin not detected. Ratio=18.3%, critical for boost converter output voltage regulation.",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "field_equals",
             "field": "ratio",
-            "value": 18.3
+            "value": 18.3,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [

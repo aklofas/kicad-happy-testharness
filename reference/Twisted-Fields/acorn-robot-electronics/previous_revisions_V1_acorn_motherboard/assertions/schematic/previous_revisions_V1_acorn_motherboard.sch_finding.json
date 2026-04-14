@@ -9,20 +9,24 @@
       "description": "7 voltage dividers correctly detected: 3 precision range-select sensing dividers and 4 RS-485 termination networks",
       "created_from": "FND-00000273",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000273-AST-02",
       "description": "8 CDSOT23-SM712 TVS protection devices on RS-485 lines correctly detected",
       "created_from": "FND-00000273",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_protection_devices"
+      },
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00000273-AST-03",
@@ -39,23 +43,27 @@
       "description": "INCORRECT: Q12 AO3401A reported as is_pchannel=false \u2014 AO3401A is a P-channel MOSFET",
       "created_from": "FND-00000273",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^Q12$"
+        "pattern": "^Q12$",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000273-AST-08",
       "description": "SPBW06F-12 (PS1) isolated converter (48V to 15V) classified as 'connector' preventing regulator detection",
       "created_from": "FND-00000273",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

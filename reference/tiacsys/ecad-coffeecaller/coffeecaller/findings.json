@@ -35,31 +35,33 @@
       "correct": [
         {
           "description": "The analyzer correctly identifies D1-D4 as a WS2812E-V5 chain of length 4, with data_in_net '__unnamed_35', protocol 'single-wire (WS2812)', and estimated current 240mA (4 \u00d7 60mA). The associated level-shifter MOSFET Q2 and data resistor R15 (820R) are also correctly linked.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The transistor circuit analysis for Q2 (2N7002 level shifter) shows gate_net as '+3V3' (correct \u2014 this is a source-follower level shifter with gate tied to supply). However, gate_driver_ics lists U4 (XC6206P332MR LDO regulator) and U5 (SHT40-CD1B-R3 humidity sensor) multiple times as gate drivers, simply because they are connected to the +3V3 rail. These are power supply and sensor ICs, not gate drivers. Only U1 (nRF52840) is a plausible signal driver here, and even that interpretation is debatable since the gate is statically biased.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
       "missed": [
         {
           "description": "The schematic has a clear I2C bus: nets SDA_qwIIC and SCL_qwIIC connect U1 (nRF52840, pins P0.20/P0.24), U5 (SHT40-CD1B-R3, pins SDA/SCL), and X1 (Qwiic connector). Pull-up resistors R12 and R13 are on these nets. The analyzer populates the nets and bus_topology.detected_bus_signals with prefixes like 'SW', 'LD', 'NFC', 'Servo', 'XC' but does not detect or report an I2C bus in signal_analysis. There is no i2c_buses key in signal_analysis at all.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "contains_match",
             "field": "i2c_buses",
             "pattern": ".*"

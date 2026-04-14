@@ -9,11 +9,13 @@
       "description": "The power sub-sheet contains U301 (MCP1754ST-3302E/MB), a 3.3 V LDO regulator with +5V input and +3V3 output. When analyzed as a standalone sheet, signal_analysis.power_regulators is empty and all signal_analysis fields are empty. The regulator is only detected in the top-level candleLight.sch (multi-sheet parse). This is expected behavior \u2014 per-sub-sheet analysis misses regulators because the input/output nets (+5V, +3V3) are hierarchical labels that don't carry power context without the parent sheet. However, it means per-sheet outputs for sub-sheets are significantly incomplete for multi-sheet designs.",
       "created_from": "FND-00002302",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

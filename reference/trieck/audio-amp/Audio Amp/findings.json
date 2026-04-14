@@ -30,11 +30,12 @@
       "incorrect": [
         {
           "description": "VCC1 is a Phoenix Contact 1935161 2-pin screw terminal block (power input connector), with lib_id 'dk_Terminal-Blocks-Wire-to-Board:1935161'. The analyzer classifies it as type 'varistor' and adds it to signal_analysis.protection_devices as a varistor clamp. The reference prefix 'VCC' or the 'V' in the lib MPN appears to trigger the varistor heuristic. The component is clearly a connector (footprint Connector_Phoenix_MC:PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical, category 'Connectors, Interconnects') with no varistor characteristics.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
@@ -110,11 +111,12 @@
         },
         {
           "description": "The three WS2812B LEDs (D1, D2, D3) are detected as three individual chains of length 1. Each is correctly identified with the single-wire protocol, estimated 60mA current, and 'ws2812b' LED type. The chain topology detection does not link them into one chain (the schematic daisy-chain wiring uses net labels not visible to the detector), but the individual detection is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "value": 3,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_addressable_leds"
           }
         },
         {

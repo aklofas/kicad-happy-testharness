@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "U5 (AP3012) is correctly classified as a switching regulator with topology 'switching', the associated inductor L1 is correctly linked, and the feedback divider (R1=18k, R2=2.1k connecting 12V to FB) is correctly extracted as a voltage divider and feedback network. The 5 capacitors (C1-C5) are correctly enumerated. The decoupling analysis for both 3.3V (C1+C4=5.7uF) and 12V (C2+C5=5.7uF) rails is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -28,26 +29,28 @@
       "incorrect": [
         {
           "description": "U5 (AP3012) is a boost converter (labeled 'Contrast Boost - AP3012' in schematic annotations) that takes 3.3V input and boosts to ~12V for the OLED contrast voltage. The SW output pin connects to local label '12V_OUT', which connects through Schottky diode D2 (PMEG4005EJ anode) to the 12V global power rail. The analyzer reports output_rail: '3.3V' (incorrectly matching the IC's input power rail) and input_rail: '3.3V' (correct). The true output_rail is '12V'. The estimated_vout of 5.743V is a heuristic approximation given the AP3012 Vref=0.6V and the R1=18k/R2=2.1k feedback divider, while the actual 12V output suggests a different Vref or the design targets VCOMH voltage not directly tied to the feedback.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U5",
               "output_rail": "3.3V"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "R4 (2.2k) connects SDA{slash}SDI to JP2 pin3 and R5 (2.2k) connects SCL{slash}SCK to JP2 pin1. JP2 is a 3-pole solder jumper (I2C jumper) whose center pin connects to 3.3V. These are I2C pullup resistors that can be disconnected by cutting the jumper. The analyzer reports no pullup detection (the bus is not even recognized due to {slash} encoding), missing the presence of switchable I2C pullups in this design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "not_contains_match",
             "value": {
               "category": "i2c_bus",
               "has_pullup": true
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

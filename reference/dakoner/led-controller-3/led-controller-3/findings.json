@@ -29,11 +29,12 @@
       "missed": [
         {
           "description": "The ESP32 (U1) has 38 pins but only 4 meaningful nets: VDD (5V), GND, and two GPIO pins (GPIO13, GPIO25) going to a 2-pin connector (J2). GPIO32 and GPIO33 go nowhere (single-pin nets not on connector). 30 of 38 pins are no-connects. The analyzer does not flag this as an incomplete design or raise any design_observation about the extremely high no-connect ratio (~79%). The connectivity_issues.single_pin_nets list is empty despite GPIO32/GPIO33 apparently being single-pin nets in the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

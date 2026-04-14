@@ -9,7 +9,7 @@
       "description": "All 34 component references are correctly identified. D1 (value='DNP', Device:D_Small) is correctly flagged as dnp=True and correctly placed on the VBUS (K/cathode) and +BATT (A/anode) nets, representing an optional reverse-current blocking diode. J10 is correctly identified as Conn_01x05_MountingPin (a 5-pin connector with mounting pin, vs the 4-pin J10 in v1.1). The LDO U2 (VBUS\u2192+3V3) and level-shifter topology for Q1/Q2/Q3 are also correctly detected.",
       "created_from": "FND-00000489",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The usb_compliance field in the v1 output is an empty object {}, whereas the v1.1 output produces a full USB compliance report (CC pulldown checks, ESD checks, decoupling checks). The v1 design has the same USB circuit as v1.1 (J9 USB-C, R1/R2 5k1 CC pulldowns, U3 USBLC6-4). The absence of USB compliance analysis is likely caused by downstream effects of the pin numbering errors: since D+/D- are assigned to wrong U1 pins (PA1/PA2 instead of PA9-PA12), the USB topology detector may fail to recognize the USB circuit.",
       "created_from": "FND-00000489",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

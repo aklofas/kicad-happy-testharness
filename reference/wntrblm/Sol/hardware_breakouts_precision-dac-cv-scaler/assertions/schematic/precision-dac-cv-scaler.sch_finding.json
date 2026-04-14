@@ -9,11 +9,13 @@
       "description": "The precision-dac-cv-scaler breakout is built around U1 (OPA4197, quad op-amp) with 14 precision resistors (0.1% tolerance, values like 4.70k, 9.09k, 2.91k, 1k) forming a precision scaling/buffering network for DAC CV outputs. This is a textbook multi-channel inverting amplifier topology. signal_analysis.opamp_circuits is empty. The design also has U2 (TMUX1134, analog mux) and a placeholder U? (OPA197). The op-amp detector is missing active op-amp circuits here due to likely pin naming differences in the custom library symbol (pins show as unnamed outputs rather than standard OUT/IN+/IN- names).",
       "created_from": "FND-00001374",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

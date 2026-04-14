@@ -29,11 +29,12 @@
       "description": "INCORRECT: The ESP32-C6-MINI-1/U footprint defines pad '49' (the exposed ground thermal pad) as one custom-shaped pad plus 8 rectangular sub-pads \u2014 a total of 9 pad definitions in the source file. The analyzer reports 8 identical entries in thermal_analysis.thermal_pads, all for (U3, pad '49'). These should be deduplicated into a single thermal pad entry. All 8 entries show 0 nearby_thermal_vias, which may also be inaccurate given the dense copper pour on the board.",
       "created_from": "FND-00001974",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
         "op": "max_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: thermal_analysis.thermal_pads"
     }
   ]
 }

@@ -99,20 +99,22 @@
         },
         {
           "description": "U2 TLV1117-33 is correctly identified as an LDO from +5V to +3.3V with estimated_vout=3.3 derived from the '-33' suffix. The topology and rail assignments match the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Three CPDQ5V0-HF TVS diodes (D4, D5, D6) are correctly identified as protection devices on USB_D+, USB_D-, and an additional net. The USB ESD protection is also noted in design_observations with has_esd_protection=True for both USB data lines.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 3,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {

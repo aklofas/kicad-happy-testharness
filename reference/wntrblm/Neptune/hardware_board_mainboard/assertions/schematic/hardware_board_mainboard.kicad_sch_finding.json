@@ -9,10 +9,12 @@
       "description": "30 opamp circuit entries for 6 TL074 chips with accurate gain values and configurations",
       "created_from": "FND-00000276",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00000276-AST-02",
@@ -29,52 +31,62 @@
       "description": "4 BJT VCA transistors (BCM847 NPN, MMBT3906 PNP) correctly typed with LED load detection",
       "created_from": "FND-00000276",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00000276-AST-04",
       "description": "31 RC filters with correct topology categorization (low-pass, high-pass, RC-network)",
       "created_from": "FND-00000276",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000276-AST-05",
       "description": "16 voltage dividers including TL431 reference and potentiometer bias correctly detected",
       "created_from": "FND-00000276",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
+      },
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000276-AST-06",
       "description": "Decoupling coverage for +12V/-12V (8 caps each, 20.6uF) correctly reported",
       "created_from": "FND-00000276",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00000276-AST-07",
       "description": "INCORRECT: U1 unit3 (+8VREF non-inverting amp, gain=3.2) misclassified as 'transimpedance_or_buffer' \u2014 has R205 (220k) feedback and R202 (100k) to GND, a standard non-inverting topology",
       "created_from": "FND-00000276",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "reference",
-        "pattern": "^U1$"
+        "pattern": "^U1$",
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     }
   ]
 }

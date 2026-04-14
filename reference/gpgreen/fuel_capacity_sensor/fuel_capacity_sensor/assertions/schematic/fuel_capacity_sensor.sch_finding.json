@@ -9,22 +9,25 @@
       "description": "The isolation_barriers detector correctly identified GND, GNDA, CAN-GND, and GNDS as four separate ground domains, and listed U3 (ADuM1201CR) as the isolation component. This is accurate: the design galvanically isolates the capacitive sensor measurement side (GNDS), the analog section (GNDA), the CAN bus side (CAN-GND), and the main digital section (GND).",
       "created_from": "FND-00002076",
       "check": {
-        "path": "signal_analysis.isolation_barriers[0].ground_domains",
+        "path": "findings[0].ground_domains",
         "op": "min_count",
-        "value": 4
+        "value": 4,
+        "detector_filter": "detect_isolation_barriers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.isolation_barriers[0].ground_domains"
     },
     {
       "id": "FND-00002076-AST-02",
       "description": "INCORRECT: The bus_analysis.can entry identifies the CAN network with U6 as both transceiver and the sole device. However U7 (AT90CAN64-16AU) is the CAN controller MCU that drives TXCAN/RXCAN through U3 (ADuM1201CR digital isolator) to U6. U7 should appear in the devices list as the CAN controller. The net-level cross_domain_signals section does correctly show TXCAN and RXCAN connecting U3 and U7, but the bus_analysis.can aggregation does not include U7 as a participant.",
       "created_from": "FND-00002076",
       "check": {
-        "path": "signal_analysis.bus_analysis.can[0].devices",
+        "path": "findings.can[0].devices",
         "op": "min_count",
         "value": 2
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.bus_analysis.can[0].devices"
     }
   ]
 }

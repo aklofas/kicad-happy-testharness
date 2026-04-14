@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "This schematic uses only global labels for connectivity (total_wires=0). The analyzer detects 6 components and 9 global labels correctly, but fails to resolve component pin connections through the labels. Net 'VCC_3V3' has point_count=3 (3 label occurrences) but pins=[] \u2014 the AMS1117-3.3 output pin is never associated with this net. Consequently U1 shows total_pins=0 in ic_pin_analysis, the power_regulators topology is 'unknown' with null input/output rails, and pwr_flag_warnings fire for +5V and GND rails that are actually driven. The design_observations correctly identify the AMS1117-3.3 as a linear regulator, but the absence of pin-to-net resolution means no decoupling, feedback, or power domain analysis is possible.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

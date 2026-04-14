@@ -9,7 +9,7 @@
       "description": "The scrclk net drives ~OE (active-low output enable) of both 74HC595s. A dedicated GPIO should drive this pin rather than leaving it with no explicit driver source. The ERC correctly identifies this.",
       "created_from": "FND-00000800",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "Arduino Nano runs at 3.3V logic, 74HC595s run at 5V. The sr_latch net crosses domains correctly identified as needing a level shifter.",
       "created_from": "FND-00000800",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The Arduino drives U1/U2 (74HC595) via mosi, scrclk, sr_latch signals which form an SPI-like interface. The bus_analysis shows spi=[] even though MOSI-equivalent data and clock signals are present. The non-standard net names (not labeled MOSI/SCK) likely prevent SPI detection.",
       "created_from": "FND-00000800",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

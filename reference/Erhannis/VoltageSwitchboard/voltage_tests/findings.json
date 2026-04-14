@@ -30,11 +30,12 @@
       "missed": [
         {
           "description": "POW1_10B1 (LM27313XMF) is a switching boost regulator from lib Regulator_Switching, but it is classified as type 'switch' rather than 'ic'. Because the power_regulator detector only runs on 'ic'-typed components, it is entirely absent from signal_analysis.power_regulators. The resistor divider on the FB pin (R1 100k from VOUT to FB, R2 14k from FB to GND) is also not detected as a voltage_divider or feedback_network. Both dc_boost_10v and dc_boost_8_5v have this same miss.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -84,22 +85,24 @@
       "correct": [
         {
           "description": "POW1_N10L1 (LM337L_SO8) is correctly detected as topology 'LDO' in signal_analysis.power_regulators with input_rail '-VIN' and output_rail '-VOUT'. The ic_pin_analysis correctly identifies the ADJ pin connected to R1B (75 ohm) and R2 (240 ohm). 6 components total is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The design_observation with category 'regulator_caps' reports {\"missing_caps\": {\"input\": \"-VIN\", \"output\": \"-VOUT\"}} for POW1_N10L1. However, C1_N10L1 (10uF) is present on -VIN and C2_N10L1 (10uF) is present on -VOUT, confirmed by ic_pin_analysis.decoupling_caps_by_rail. The decoupling_analysis array is empty (because -VIN and -VOUT are not recognized as power rails by the decoupling detector), causing the design_observation to falsely flag missing caps that are actually present and correctly wired. Same error in negative_ldo_-11v.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -148,20 +151,22 @@
       "correct": [
         {
           "description": "POW1_P1V8L1 (APE8865N-18-HF-3) is correctly identified as an LDO with estimated_vout=1.8 via fixed_suffix detection. Input/output rails VIN and VOUT are correct. Input and output decoupling capacitors (C1_P1V8L1 and C2_P1V8L1) are correctly found in decoupling_analysis. 3 components total is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "The APE8865N-18-HF-3 has '-18-' in its name indicating 1.8V output. The analyzer correctly extracts this as estimated_vout=1.8 with vref_source='fixed_suffix'.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -221,11 +226,12 @@
       "correct": [
         {
           "description": "REG1_UM1 (AP2112K-3.3) is correctly detected as an LDO with input_rail='+5V', output_rail='+3V3', and estimated_vout=3.3 via fixed_suffix. The +5V USB input and +3V3 output rails are correctly identified. 8 components total (1 USB connector, 3 resistors, 2 caps, 1 ESD, 1 LDO) is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
@@ -233,11 +239,12 @@
       "missed": [
         {
           "description": "ESD1_UM1 (USBLC6-2P6) is an ESD protection IC from lib Power_Protection:USBLC6-2P6 placed on the USB data lines. It is classified as type 'other' and is absent from signal_analysis.protection_devices. This is a missed detection \u2014 the USBLC6-2P6 is a well-known USB ESD protection part and should appear in protection_devices.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],
@@ -258,22 +265,24 @@
       "correct": [
         {
           "description": "POW1_VI1 (TC7662Bx0A) is correctly detected in power_regulators with topology='switching' and output_rail='V-'. The flying capacitor connections (CAP+/CAP- to C1_VI1) and input/output caps (C3 on V+, C2 on V-) are correctly mapped in ic_pin_analysis. 4 components total is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The design_observation with category 'regulator_caps' reports {\"missing_caps\": {\"output\": \"V-\"}} for POW1_VI1. However, C2_VI1 (10uF) is connected to V- as confirmed by ic_pin_analysis (pin 5 VOUT on V- has decoupling_caps=[C2_VI1]). The decoupling_analysis correctly shows C3_VI1 on V+ but misses V- because the net name 'V-' is not recognized as a power rail by the decoupling detector. The cap is present and correctly wired; the observation is incorrect.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
@@ -344,11 +353,12 @@
       "missed": [
         {
           "description": "voltage_tests aggregates all sub-sheets and finds 6 power_regulators, but should find 8: LM337L_SO8 x2 (negative LDOs), APE8865N-18-HF-3 x1 (positive LDO), AP2112K-3.3 x1 (USB LDO), TC7662Bx0A x2 (inverters), LM27313XMF x2 (boost converters). POW1_10B1 and POW1_85B1 are missing because they are typed 'switch' not 'ic'. This is the same issue as in the individual dc_boost schematics.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 8,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

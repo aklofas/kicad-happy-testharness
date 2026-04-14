@@ -35,11 +35,12 @@
         },
         {
           "description": "7 NTC thermistor bias divider networks correctly identified",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [],
@@ -48,12 +49,13 @@
         },
         {
           "description": "INA228 current sense with R64 (50mohm shunt) correctly identified",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "check": {
-            "path": "signal_analysis.current_sense",
+            "path": "findings",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R64$"
+            "pattern": "^R64$",
+            "detector_filter": "detect_current_sense"
           },
           "detector": "current_sense",
           "subject_refs": [
@@ -64,12 +66,13 @@
         },
         {
           "description": "Crystal Y5 (32.768kHz) with C9/C10 load caps correct",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y5$"
+            "pattern": "^Y5$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -82,12 +85,13 @@
         },
         {
           "description": "TCXO oscillators Y1-Y4 correctly classified as active_oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -101,11 +105,12 @@
         },
         {
           "description": "6 MOSFET transistor circuits correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -114,12 +119,13 @@
         },
         {
           "description": "ESD protection D1 on USB_VCC correctly identified",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -130,11 +136,12 @@
         },
         {
           "description": "RC valve coil snubbers (50ohm/100nF) correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -143,12 +150,13 @@
         },
         {
           "description": "DACC_USB DAC smoothing filter (R70=1k, C48=3.9u, 40.81Hz) correct",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R70$"
+            "pattern": "^R70$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -166,7 +174,7 @@
         },
         {
           "description": "INA228 current sense high/low nets reversed: high_net=PUMP_VCC_SENSE and low_net=+12V, should be swapped (IN+ connects to +12V side, IN- to load side)",
-          "analyzer_section": "signal_analysis.current_sense",
+          "analyzer_section": "detect_current_sense",
           "detector": "current_sense",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -174,12 +182,13 @@
         },
         {
           "description": "Voltage dividers falsely detected from opamp feedback T-networks (R156/R148, R158/R150 with ratio ~0.001 from opamp output/inverting-input)",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R148$"
+            "pattern": "^R148$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -193,12 +202,13 @@
         },
         {
           "description": "RC filter duplicate entry: R70+C49 reported in reverse direction alongside correct R70+C48 entry (shared-node bidirectional detection)",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R70$"
+            "pattern": "^R70$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -211,7 +221,7 @@
         },
         {
           "description": "INA228 (IC3) false missing-decoupling warning for +12V \u2014 IC3 supply is +3V3, +12V is only the measured rail",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -225,11 +235,12 @@
       "missed": [
         {
           "description": "MT29F64G NAND flash not detected as memory interface despite full EBI bus",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],
@@ -238,11 +249,12 @@
         },
         {
           "description": "DRV8825 stepper motor driver not detected in bridge_circuits",
-          "analyzer_section": "signal_analysis.bridge_circuits",
+          "analyzer_section": "detect_bridge_circuits",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           },
           "detector": "bridge_circuits",
           "subject_refs": [],

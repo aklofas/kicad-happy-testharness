@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "Design observation reports VBAT in rails_without_caps despite C1(10uF) and C163(100nF) present on that rail. Contradicts IC pin analysis which correctly identifies decoupling.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "C1",
@@ -62,11 +62,12 @@
       "correct": [
         {
           "description": "2 RF matching networks correctly identified: LNA_IN1 (antenna to CMX994E1) and ANT1 (antenna to RF switch), topologies and components verified",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           },
           "detector": "rf_matching",
           "subject_refs": [],
@@ -95,12 +96,13 @@
       "incorrect": [
         {
           "description": "23 LC filters overcounted \u2014 analyzer pairs every inductor-capacitor sharing a net. In RF designs these are impedance matching components, not discrete LC filters. L7 alone generates 4 pairs.",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "inductor.ref",
-            "pattern": "^L7$"
+            "pattern": "^L7$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [
@@ -113,12 +115,13 @@
       "missed": [
         {
           "description": "X2 26MHz crystal in SCT3811.kicad_sch not detected as crystal circuit. Primary clock source for RF design.",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X2$"
+            "pattern": "^X2$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [

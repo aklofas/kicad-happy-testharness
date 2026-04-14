@@ -34,9 +34,10 @@
       "summary": "key matrix overcounts switches_on_matrix (63) vs diodes_on_matrix (60) due to 2u alternate keys",
       "details": "The analyzer reports switches_on_matrix=63 but diodes_on_matrix=60. The 2 extra counted switches are optional 2u keycap alternate footprints, not additional matrix entries.",
       "check": {
-        "path": "signal_analysis.key_matrices.0.diodes_on_matrix",
+        "path": "findings",
         "op": "equals",
-        "value": 60
+        "value": 60,
+        "detector_filter": "detect_key_matrices"
       }
     },
     {

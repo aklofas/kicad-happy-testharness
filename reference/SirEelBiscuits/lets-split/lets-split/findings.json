@@ -8,30 +8,32 @@
       "correct": [
         {
           "description": "R1 (9.1k) and R2 (9.1k) form a 0.5-ratio divider from VCC to GND with mid-point HalfSelector connected to MCU pin B2. This is the standard technique used in Let's Split designs to let the MCU detect which half it's on. The analyzer correctly identifies both resistor values, the VCC/GND rails, and the MCU pin connection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The analyzer detects a 4-row x 6-col matrix (row_nets: Row1-Row4, col_nets: Col1-Col6) and correctly reports rows=4, columns=6. However, estimated_keys=48 and switches_on_matrix=48 instead of the correct 4*6=24. The actual component count is also 24 switches (SW1-SW24; SW25 is a reset button, not a key switch). The doubling suggests the analyzer is somewhere counting each switch twice \u2014 possibly iterating both row\u2192diode and diode\u2192switch paths.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "contains_match",
             "field": "estimated_keys",
-            "pattern": "24"
+            "pattern": "24",
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],
       "missed": [
         {
           "description": "J1 is a USB-C receptacle (GCT USB4085). R1 and R2 (both 9.1k) are connected to USB CC lines (PadA5/PadB5 net area) for USB 2.0 downstream-facing port configuration. However the analyzer classifies these resistors only as a voltage divider for the HalfSelector net, not as USB CC configuration resistors. It does not detect the USB 2.0 interface at all \u2014 no USB detection in signal_analysis. The CC resistors should be recognized as part of a USB-C configuration network rather than solely as a voltage divider.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "suggestions": [],

@@ -9,11 +9,13 @@
       "issue": "KH-116",
       "fix_type": "false_positive_fix",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "output_net",
-        "pattern": "^GND$"
-      }
+        "pattern": "^GND$",
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

@@ -20,22 +20,26 @@
       "description": "INCORRECT: Four crystal oscillator circuits detected (Y1\u2013Y4), one per DUT slot, each with two 27pF load caps giving 16.5pF effective load",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
+        "value": 4,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00002027-AST-03",
       "description": "INCORRECT: PAC1954x-x4MX four-channel power monitor (U1 in power sheet) not detected as current_sense despite four R_Shunt resistors (R11\u2013R14) on DUT power rails",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_current_sense"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.current_sense"
     },
     {
       "id": "FND-00002027-AST-04",
@@ -53,11 +57,13 @@
       "description": "INCORRECT: Four BSS138 N-channel MOSFETs (Q1\u2013Q4) correctly detected as open-drain reset drivers, one per DUT slot, each gate driven by TXU0102QDCURQ1 level translator",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
+        "value": 4,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002027-AST-06",
@@ -75,11 +81,12 @@
       "description": "INCORRECT: Six edge clearance warnings: mounting holes H2 and H4 at 0.16mm from board edge (below typical 0.2mm minimum), connectors J11/J14/J8/J5 at 0.34\u20130.66mm",
       "created_from": "FND-00002027",
       "check": {
-        "path": "placement_analysis.edge_clearance_warnings",
+        "path": "findings",
         "op": "min_count",
         "value": 6
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
     },
     {
       "id": "FND-00002027-AST-08",
@@ -119,22 +126,26 @@
       "description": "INCORRECT: Key matrix reports switches_on_matrix=130 and estimated_keys=130, but actual matrix is 5 rows x 15 cols = 75 keys; BOM confirms 75 MX-NoLED switch instances",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "op": "equals",
-        "value": 130
+        "value": 130,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     },
     {
       "id": "FND-00002027-AST-12",
       "description": "INCORRECT: WE-TVS-82400102 (U2) correctly detected as ESD IC protecting USB_D+, USB_D-, MCU_D+, MCU_D-; fuse F1 (500mA) on VCC correctly detected as fuse protection",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00002027-AST-13",
@@ -185,11 +196,13 @@
       "description": "INCORRECT: 32MHz crystal X2 (Q22FA12800025, EPSON FA-128) classified as 'connector' type, causing crystal_circuits to be empty \u2014 NRF52840 USB clock crystal entirely missed",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00002027-AST-18",
@@ -207,33 +220,39 @@
       "description": "INCORRECT: NRF52840 2.4GHz RF matching network (L1=4.7nH, L2=2.2nH, C1=1.0pF, C2=1.2pF) detected as generic lc_filters at 2.1\u20133.1GHz but not as rf_matching",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00002027-AST-20",
       "description": "INCORRECT: LDO XC6206P332MR correctly detected (VBUSnRF->+3V3), WS2812 4-LED chain correctly detected (240mA estimated), PRTR5V0U2X USB ESD correctly detected",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.power_regulators[0].ref",
+        "path": "findings[0].ref",
         "op": "equals",
-        "value": "U4"
+        "value": "U4",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].ref"
     },
     {
       "id": "FND-00002027-AST-21",
       "description": "INCORRECT: Q2 (2N7002) used as open-drain level converter with gate tied to +3V3; analyzer incorrectly lists XC6206 LDO (U4) and SHT40 sensor (U5) as gate_driver_ics",
       "created_from": "FND-00002027",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].gate_net",
+        "path": "findings[0].gate_net",
         "op": "equals",
-        "value": "+3V3"
+        "value": "+3V3",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].gate_net"
     },
     {
       "id": "FND-00002027-AST-22",

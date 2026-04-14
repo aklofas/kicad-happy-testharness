@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "FP6291 (U1) boost converter correctly detected as switching regulator with inductor L1, output rail BOOST, FB net, and feedback divider R5 (88k)/R6 (12k) giving ratio 0.12 and estimated Vout=5.0V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "vout",
-            "value": 5.0
+            "value": 5.0,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -29,12 +30,13 @@
         },
         {
           "description": "Feedback network R5/R6 correctly identified with is_feedback=true and connection to U1 pin 3 (FB)",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R5$"
+            "pattern": "^R5$",
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [
@@ -47,12 +49,13 @@
         },
         {
           "description": "L7805 (U6) correctly detected as LDO topology regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -64,12 +67,13 @@
         },
         {
           "description": "RC filter R29/C9 at 1.59 kHz correctly detected as low-pass filter",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R29$"
+            "pattern": "^R29$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -101,12 +105,13 @@
       "incorrect": [
         {
           "description": "U1 (FP6291) incorrectly listed in bms_systems. FP6291 is a boost converter, not a battery management IC. Only U2 (TP4056) should appear in bms_systems",
-          "analyzer_section": "signal_analysis.bms_systems",
+          "analyzer_section": "detect_bms_systems",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "bms_reference",
-            "pattern": "^U1$"
+            "pattern": "^U1$",
+            "detector_filter": "detect_bms_systems"
           },
           "detector": "bms_systems",
           "subject_refs": [
@@ -119,7 +124,7 @@
         },
         {
           "description": "Reset pin analysis for U4 (4017) and U5 (4017) reports has_pullup=true and has_filter_cap=true on GND net. The RESET pin of CD4017 is connected to GND (held low = not reset), which is correct design, but the analysis lists every component on the GND net as 'connected_components' (60+ entries including all power symbols, caps, resistors, connectors, ICs) - this is the global GND net, not a dedicated reset network",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "U4",
@@ -130,12 +135,13 @@
         },
         {
           "description": "RC filter RV1/C7 at 15.92 Hz: RV1 is a potentiometer (100k variable resistor) used as an adjustable voltage source for the 555 timer threshold, not a fixed RC filter. The cutoff frequency is meaningless for a variable component",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^RV1$"
+            "pattern": "^RV1$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -147,7 +153,7 @@
         },
         {
           "description": "Regulator caps observation for U1 (FP6291) reports missing output caps on BOOST net, but C2+C3+C4 (10uF+10uF+0.1uF) are the boost output caps - they were correctly detected in lc_filters but not cross-referenced",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "C2",
@@ -162,11 +168,12 @@
       "missed": [
         {
           "description": "LM555 timer (U3) driving CD4017 decade counters (U4, U5) to create LED sequencing pattern is not detected. This is a classic 555+4017 LED chaser circuit",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -179,12 +186,13 @@
         },
         {
           "description": "TP4056 (U2) no longer detected in bms_systems (was previously detected with NTC sensor TH1)",
-          "analyzer_section": "signal_analysis.bms_systems",
+          "analyzer_section": "detect_bms_systems",
           "check": {
-            "path": "signal_analysis.bms_systems",
+            "path": "findings",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_bms_systems"
           },
           "detector": "bms_systems",
           "subject_refs": [
@@ -196,12 +204,13 @@
         },
         {
           "description": "LC filter L1/C2+C3+C4 at 16.37 kHz on BOOST net no longer detected (boost converter output filter)",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L1$"
+            "pattern": "^L1$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [

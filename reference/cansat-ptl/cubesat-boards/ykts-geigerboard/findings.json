@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "AD8606ARZ dual opamp detected as comparator_or_open_loop \u2014 correct, no feedback network",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -21,12 +22,13 @@
         },
         {
           "description": "2 crystal circuits (Y1/Y2 8MHz) with 22pF load caps correct",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -38,12 +40,13 @@
         },
         {
           "description": "Voltage divider R6(100)/R4(12K) for Geiger pulse comparator input correct",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R4$"
+            "pattern": "^R4$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -55,12 +58,13 @@
         },
         {
           "description": "LC filter L3+C25/C26 (10uH+2.3uF) at 33kHz for boost output correct",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L3$"
+            "pattern": "^L3$",
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [
@@ -75,12 +79,13 @@
       "incorrect": [
         {
           "description": "LM2733YMF (U9) output_rail=__unnamed_18 (same as input) \u2014 true HV output is __unnamed_15 after rectifier diode D4 MBR0520LT, not traced past diode",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U9$"
+            "pattern": "^U9$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -92,7 +97,7 @@
         },
         {
           "description": "9 capacitors with unitless pF values (220, 470, 510, 1000, 2200) parsed as Farads \u2014 time constants up to 4.84 billion seconds, LC resonant frequencies of 0.00Hz",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -100,12 +105,13 @@
         },
         {
           "description": "Q1/Q2 gate_driver_ics lists 9 ICs via +3V3 power net traversal \u2014 gates are statically biased, not driven by any IC",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [

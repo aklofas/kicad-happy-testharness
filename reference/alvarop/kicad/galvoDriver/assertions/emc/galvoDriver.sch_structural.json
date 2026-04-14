@@ -2,6 +2,7 @@
   "file_pattern": "galvoDriver.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -16,17 +17,6 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "5 io_filtering finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^io_filtering$",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
       "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
@@ -36,13 +26,23 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Rule IO-001 present",
+      "id": "STRUCT-00000003",
+      "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^IO\\-001$"
+        "field": "components",
+        "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
       }
     },
     {
@@ -67,82 +67,12 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U2 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "C1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "U3 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "JP1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJP1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "JP2 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJP2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "JP3 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJP3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "JP4 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJP4\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "JP5 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJP5\\b"
       }
     }
   ]

@@ -2,67 +2,74 @@
   "file_pattern": "SmartwatchProject.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 audio_circuits",
+      "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
-        "path": "signal_analysis.audio_circuits",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 battery_chargers",
+      "description": "Exactly 2 audit_esd_protection",
       "check": {
-        "path": "signal_analysis.battery_chargers",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 buzzer_speaker_circuits",
+      "description": "Exactly 1 detect_audio_circuits",
       "check": {
-        "path": "signal_analysis.buzzer_speaker_circuits",
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "LS1 in buzzer_speaker_circuits",
+      "description": "Exactly 1 detect_battery_chargers",
       "check": {
-        "path": "signal_analysis.buzzer_speaker_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^LS1$"
+        "path": "findings",
+        "detector_filter": "detect_battery_chargers",
+        "op": "equals",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 connector_ground_audit",
+      "description": "Exactly 1 detect_buzzer_speakers",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "detect_buzzer_speakers",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 crystal_circuits",
+      "description": "Exactly 1 detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Y1 in crystal_circuits",
+      "description": "Y1 in detect_crystal_circuits",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Y1$"
@@ -70,122 +77,155 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 decoupling_analysis",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 10 design_observations",
+      "description": "Exactly 10 detect_design_observations",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 10
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 2 esd_coverage_audit",
+      "description": "Exactly 1 detect_lc_filters",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 1 lc_filters",
-      "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "L2 in lc_filters",
+      "id": "STRUCT-00000011",
+      "description": "L2 in detect_lc_filters",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L2$"
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 1 memory_interfaces",
+      "id": "STRUCT-00000012",
+      "description": "Exactly 1 detect_memory_interfaces",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_memory_interfaces",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "U7 in memory_interfaces",
+      "id": "STRUCT-00000013",
+      "description": "U7 in detect_memory_interfaces",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_memory_interfaces",
         "op": "contains_match",
         "field": "memory_reference",
         "pattern": "^U7$"
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "Exactly 1 power_regulators",
+      "id": "STRUCT-00000014",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000016",
-      "description": "U8 in power_regulators",
+      "id": "STRUCT-00000015",
+      "description": "U8 in detect_power_regulators",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U8$"
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 1 rf_matching",
+      "id": "STRUCT-00000016",
+      "description": "Exactly 1 detect_rf_matching",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
+        "detector_filter": "detect_rf_matching",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "Exactly 1 detect_rtc_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rtc_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 1 rtc_circuits",
+      "description": "Exactly 1 detect_sensor_interfaces",
       "check": {
-        "path": "signal_analysis.rtc_circuits",
+        "path": "findings",
+        "detector_filter": "detect_sensor_interfaces",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000019",
-      "description": "Exactly 1 sensor_interfaces",
+      "description": "Exactly 4 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.sensor_interfaces",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "Exactly 1 detect_wireless_modules",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_wireless_modules",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000020",
-      "description": "Exactly 4 suggested_certifications",
+      "id": "STRUCT-00000021",
+      "description": "Exactly 4 validate_pullups",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "validate_pullups",
         "op": "equals",
         "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "Exactly 2 validate_usb_bus",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_usb_bus",
+        "op": "equals",
+        "value": 2
       }
     }
   ]

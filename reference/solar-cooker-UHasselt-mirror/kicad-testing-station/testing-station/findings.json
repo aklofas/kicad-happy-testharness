@@ -39,15 +39,16 @@
       "missed": [
         {
           "description": "The 74HC4050D (IC3) is used as a 5V-to-3.3V SPI level buffer. Its VCC is +3.3V, but its inputs (1A=SCLK_5V, 2A=SDI_5V, 3A=CS) are driven from the 5V SPI domain, making it a voltage-domain translator between the microcontroller's 5V SPI interface and the 3.3V sensor SPI signals. The signal_analysis.isolation_barriers list is empty, and the cross_domain_signals entry for SDO marks needs_level_shifter=false despite IC3 being explicitly present for this purpose. There is no level-shifter/buffer detector in the signal path.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The design contains 10 x 1N4148 diodes (D3-D11, D13) which are classic signal protection/clamping diodes. The signal_analysis.protection_devices list is empty despite these components being present. The diodes are counted correctly in statistics (diode:10) but the analyzer does not classify them as protection elements or identify their circuit function.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

@@ -17,11 +17,12 @@
         },
         {
           "description": "VLFANT01B is a passive RF interconnect panel (VLF antenna signal router) with only connectors and mounting holes. All 21 signal path detectors correctly return empty arrays \u2014 no active components, no filters, no regulators, no protocols.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 0,
-            "op": "max_count"
+            "op": "max_count",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

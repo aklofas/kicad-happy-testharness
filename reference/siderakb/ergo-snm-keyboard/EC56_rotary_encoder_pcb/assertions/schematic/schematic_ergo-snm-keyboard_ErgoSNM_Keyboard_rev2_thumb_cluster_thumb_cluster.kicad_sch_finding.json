@@ -9,11 +9,13 @@
       "description": "INCORRECT: The thumb cluster has KEY1..KEY6 (6 true matrix keys each with a 1N4148 diode) plus EC1 (Alps EC11 rotary encoder with integrated push switch). EC1's S1 pin connects to COL_7, but its S2 pin connects to an unnamed net (a direct MCU input, not a ROW net). The key matrix detector counts EC1 as a matrix switch because S1 touches COL_7, resulting in switches_on_matrix=7 and diodes_on_matrix=6. The true key matrix has only 6 switches. EC1's click function is wired as a direct input, not through the row-column diode matrix. The mismatch (7 switches, 6 diodes) is numerically correct but logically misleading\u2014EC1 is not a matrix key.",
       "created_from": "FND-00002190",
       "check": {
-        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "path": "findings[0].switches_on_matrix",
         "op": "equals",
-        "value": 7
+        "value": 7,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
     }
   ]
 }

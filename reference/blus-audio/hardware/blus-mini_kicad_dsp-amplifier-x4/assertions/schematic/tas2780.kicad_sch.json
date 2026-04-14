@@ -1,7 +1,8 @@
 {
   "file_pattern": "tas2780.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,41 +35,87 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "4 decoupling_analysis detected",
+      "description": "1 detect_audio_circuits detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "7 design_observations detected",
+      "description": "All detect_audio_circuits have ref",
       "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "min_count",
-        "value": 1
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "2 suggested_certifications detected",
+      "description": "All detect_audio_circuits type values are valid",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "min_count",
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(audio_amplifier|audio_codec)$",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
+      "description": "4 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "7 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "2 detect_suggested_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "3 validate_pullups detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 13 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

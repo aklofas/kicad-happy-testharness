@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "R1(1M)/R2(110K) voltage divider correctly identified with ratio 0.099 for TPS61220 boost converter feedback",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R1$"
+            "pattern": "^R1$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -25,12 +26,13 @@
         },
         {
           "description": "R3(110K)/C7(100uF) RC filter correctly identified with 0.01Hz cutoff \u2014 extremely low-frequency filter for DC reference stabilization",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R3$"
+            "pattern": "^R3$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -42,11 +44,12 @@
         },
         {
           "description": "Decoupling analysis correct: V+ rail has 150uF total, Vbat has 110uF total",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],

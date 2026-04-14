@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "design_observations correctly identifies I2C buses on I2C3_SCL/I2C_SDA with pullups (R8, R7 to +3.3V) and I2C1 without pullups. MCP2551 CAN transceiver captured in subcircuits. AMS1117 regulator caps observation correctly flags missing caps.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "U2 STM32F407VGTx is listed in power_regulators with topology 'ic_with_internal_regulator'. While it has an internal regulator, it is a microcontroller first. Including it in the power_regulators array alongside AMS1117 LDOs is misleading and inflates the regulator count.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "U9 XB24CDMPIT-001 is an 802.15.4 RF transceiver module. The rf_chains and rf_matching arrays are both empty. The analyzer has subcircuits for this IC but fails to classify it as an RF device, missing an important design feature.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -52,9 +52,9 @@
       "missed": [
         {
           "description": "U4 TP4056 is a single-cell Li-Ion battery charger. The bms_systems array is empty. This is a distinct power management circuit that should be flagged \u2014 it controls charge current and has PROG pin for charge rate setting.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -78,7 +78,7 @@
       "incorrect": [
         {
           "description": "The power_regulators entry for U4 AMS1117-3.3 shows output_rail as '__unnamed_3' when the rail should resolve to +3.3V (listed in power_rails). This suggests the analyzer fails to connect the unnamed net to its named power symbol in this schematic, producing a less useful output.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -99,9 +99,9 @@
       "correct": [
         {
           "description": "Subcircuits identify MCP2551 CAN transceiver and ACS712 current sensor. signal_analysis correctly finds voltage divider (R14/R15 on +5V\u2192volt_measure), RC filter (R1/C1 for RESET), and regulator chain. IC analysis is thorough.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -126,9 +126,9 @@
       "correct": [
         {
           "description": "Overlaps between connectors (J9/J11: 81mm\u00b2, J8/J5: 27.4mm\u00b2) and Y1/SW1 (21.3mm\u00b2) are real placement issues. DFM tier 'standard' and dfm metrics look reasonable for a 2-layer board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -153,9 +153,9 @@
       "correct": [
         {
           "description": "U3 thermal pad (pad 57, 10.24mm\u00b2) with 2 thermal vias is correctly identified. Zone stitching shows GND across both layers with 31 vias. The 22 courtyard overlaps suggest a densely packed board worth flagging.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -181,7 +181,7 @@
       "incorrect": [
         {
           "description": "The .gbrjob only lists VCU-F_Cu.gbr as expected (one layer). The analyzer trusts the gbrjob definition of 'expected', so complete=True. However, the PCB has 2 copper layers (B.Cu+F.Cu), 45 vias, and 25 THT pads \u2014 none of which have drill files. Missing B.Cu and drill files should be flagged as an incomplete export, not reported as complete.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

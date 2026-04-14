@@ -20,11 +20,13 @@
       "description": "INCORRECT: SD2 (value: MicroSD-TF-06, lib_id: New_Library:MicroSD-TF-06) is classified as 'switch'. The SPI interface nets are present (SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS) but memory_interfaces remains empty. Same issue as the other three schematics.",
       "created_from": "FND-00000414",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

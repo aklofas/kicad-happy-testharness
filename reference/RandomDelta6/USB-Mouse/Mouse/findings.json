@@ -39,11 +39,12 @@
         },
         {
           "description": "The design has multiple decoupling capacitors on the VCC supply rail used by the optical sensor IC (U1). C14 (4.7uF) and C15 (0.1uF) are bulk/bypass on VCC, C8 and C9 (0.01uF each) are high-frequency bypass. However signal_analysis.decoupling_analysis=[] and design_observations=[] \u2014 no decoupling coverage analysis was generated. This is likely because VCC is a global label in the design (not a power symbol), and the decoupling analyzer does not connect the caps to the VCC rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

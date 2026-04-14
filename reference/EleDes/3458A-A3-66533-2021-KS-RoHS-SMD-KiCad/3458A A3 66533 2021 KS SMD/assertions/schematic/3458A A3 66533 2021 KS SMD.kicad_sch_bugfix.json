@@ -9,12 +9,14 @@
       "issue": "KH-148",
       "fix_type": "count_change_fix",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "count_matches",
         "field": "component",
         "pattern": "^U302$",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "BUGFIX-KH-150-01",
@@ -22,10 +24,12 @@
       "issue": "KH-150",
       "fix_type": "false_positive_fix",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
-      }
+        "value": 0,
+        "detector_filter": "detect_rf_matching"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     }
   ]
 }

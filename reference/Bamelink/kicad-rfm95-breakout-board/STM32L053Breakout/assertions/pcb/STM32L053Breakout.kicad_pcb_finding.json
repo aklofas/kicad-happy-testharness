@@ -9,11 +9,12 @@
       "description": "INCORRECT: The connectivity section reports 1 unrouted net named 'unconnected-(J100-Pad6)' with 8 pads, all listed as 'J100.6'. This is a data integrity issue: a single pad cannot appear 8 times in the same net. J100 is a USB Micro-B connector with a 17-pad footprint. The repeated pad reference likely indicates a bug in how the PCB analyzer resolves pad net assignments for multi-pin pads or shield/GND pads on the USB connector footprint.",
       "created_from": "FND-00002263",
       "check": {
-        "path": "connectivity.unrouted_count",
+        "path": "findings_count",
         "op": "equals",
         "value": 1
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: connectivity.unrouted_count"
     }
   ]
 }

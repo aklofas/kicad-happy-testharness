@@ -17,11 +17,12 @@
         },
         {
           "description": "NCV4274CST33T3G (mapped via Regulator_Linear:LM2936-3.3 lib) correctly classified as LDO topology with input_rail=VBUS, output_rail=+3V3, estimated_vout=3.3V using fixed_suffix method. This is accurate \u2014 the NCV4274CST33T3G is a fixed 3.3V LDO powered from VBUS.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -44,22 +45,24 @@
         },
         {
           "description": "R11 (100R) and C4 (100nF) form an RC network with cutoff_hz=15915 (~16kHz). The connections: R11 between unnamed nets, C4 between unnamed net and VDC rail. The detection and cutoff frequency calculation are arithmetically correct (1/(2\u03c0\u00d7100\u00d7100n) = 15.9kHz).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "incorrect": [
         {
           "description": "Q2 uses symbol MLAB_T:IRF7469PbF with ki_keywords 'transistor PMOS P-MOS P-MOSFET simulation' and ki_description 'P-MOSFET transistor, drain/source/gate, 40V, 9A, 12mOhm'. The actual value IRF9317TRPBF is also a P-channel MOSFET. The transistor_circuits analyzer reports is_pchannel=False, which is wrong. This likely means the analyzer is not reading the ki_keywords or ki_description fields to determine channel type, and the lib_id 'MLAB_T:IRF7469PbF' does not match the N-channel name pattern heuristics.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],

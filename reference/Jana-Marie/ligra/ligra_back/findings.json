@@ -8,23 +8,25 @@
       "correct": [
         {
           "description": "The design powers a 12V LED strip (via AL8843 boost/LED driver from VBUS), provides +12V via NCP1117-12 LDO, and +3V3 via NCP1117-3.3 LDO. All three regulators are correctly detected with their topologies (switching vs LDO), inductor association (L1 with U2), input rail (VBUS), and output rails. The STM32F030F4Px microcontroller (U7) and DRV8231 motor driver (U8) are also identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "incorrect": [
         {
           "description": "U4 is an NCP1117-12_SOT223, a fixed 12V LDO regulator. The analyzer extracts '12' from the part name suffix and interprets it as 1.2 (decimal) rather than 12V. This triggers a spurious vout_net_mismatch observation reporting 90% error between estimated 1.2V and the net name '+12V' (correctly identified as 12V). The NCP1117-3.3 (U5) is parsed correctly at 3.3V, so the bug is specific to multi-digit integer suffixes like '12' that are not decimal fractions.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "estimated_vout",
-            "pattern": "12"
+            "pattern": "12",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

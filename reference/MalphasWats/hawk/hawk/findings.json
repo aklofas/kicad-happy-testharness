@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The analyzer correctly identified U2 (AP7333-33SRG-7) as an LDO regulator with topology='LDO', input_rail='+BATT', output_rail='+3.3V', and estimated_vout=3.3 via the fixed_suffix method from the part number. The decoupling capacitors on both input (+BATT: C2=1uF) and output (+3.3V: C1=0.1uF, C3=1uF) are also correctly detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

@@ -26,11 +26,12 @@
         },
         {
           "description": "decoupling_analysis shows rail '3.3V' with C1 and C3 both at 0.1uF, total 0.2uF. This matches the BOM exactly. The observation correctly notes has_bulk=false (no bulk cap like 10uF), has_bypass=true, has_high_freq=false \u2014 appropriate for a pure I2C sensor board powered externally via Qwiic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].cap_count",
+            "path": "findings",
             "value": 2,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling_analysis[0].cap_count"
           }
         },
         {

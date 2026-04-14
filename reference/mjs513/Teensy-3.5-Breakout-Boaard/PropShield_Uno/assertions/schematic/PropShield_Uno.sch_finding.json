@@ -19,11 +19,13 @@
       "description": "D3 and D4 are D_Schottky diodes. D3 has its cathode on +5V and anode on an intermediate net; D4 has its cathode on that same net and anode feeding a board output. This is a Schottky diode OR / power-mux topology. The analyzer reports protection_devices=[] and no other classification. While this is not a classic reverse-polarity protector, it is a meaningful discrete power circuit worth noting. The false_negative category applies because the circuit has recognizable structure that goes undetected.",
       "created_from": "FND-00001729",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": 0,
-        "op": "max_count"
+        "op": "max_count",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

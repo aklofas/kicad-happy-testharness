@@ -1,57 +1,58 @@
 {
   "file_pattern": "berlin_bahn.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~327 (tolerance 10%)",
+      "description": "Finding count ~328 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 317,
-        "max": 337
+        "min": 318,
+        "max": 338
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~323",
+      "description": "high count ~321",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 313,
-        "max": 333
+        "min": 311,
+        "max": 331
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~4",
+      "description": "medium count ~5",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 4,
+        "max": 6
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~56 (+-10)",
+      "description": "EMC risk score ~58.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 46,
-        "max": 66
+        "min": 48.0,
+        "max": 68.0
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "325 decoupling finding(s)",
+      "description": "324 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 325
+        "value": 324
       }
     },
     {

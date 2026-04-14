@@ -17,52 +17,56 @@
         },
         {
           "description": "The power_regulators section correctly identifies U4 (RT9080-3.3) as an LDO with topology LDO, input_rail 5V, output_rail 3.3V, and estimated_vout 3.3 via fixed_suffix detection. The design_observations section also confirms this with the regulator_voltage category.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U4",
               "topology": "LDO",
               "input_rail": "5V",
               "output_rail": "3.3V"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Q5 (RE1C002UNTCL, N-MOSFET) is correctly detected as a level_shifter connecting TX1 to Interface_TX1, with gate on 3.3V and gate resistor R17. Q6 is similarly detected for RX1/Interface_RX1 with gate resistor R22. The gate_driver_ics list includes U2 (TMP102) which is a minor issue as TMP102 is on the 3.3V bus not the gate, but the topology detection is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "reference": "Q5",
               "topology": "level_shifter"
-            }
+            },
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "F2 (6V/0.5A/1A, resettable fuse) is correctly identified in protection_devices with type 'fuse', protected_net '5V', and clamp_net 'VBUS'. This accurately reflects the PPTC fuse placed between VBUS and the 5V rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "F2",
               "type": "fuse"
-            }
+            },
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "U3 (HX711) is classified as ic_with_internal_regulator, which is correct \u2014 the HX711 has an integrated regulator producing DVDD from its analog supply. The design_observations also correctly flag that DVDD lacks a dedicated decoupling cap (rails_without_caps: [DVDD]) while C4 decouples VDDA/5V.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "ref": "U3",
               "topology": "ic_with_internal_regulator"
-            }
+            },
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -87,26 +91,28 @@
       "incorrect": [
         {
           "description": "The rc_filters section lists two 'RC-network' type filters: R8+C1 (100 ohm, 0.1uF) with output_net A- and input_net __unnamed_9, and R5+C1 (100 ohm, 0.1uF) with output_net A+ and input_net __unnamed_15. These are actually series protection resistors on the load cell differential inputs, not RC filters. C1 is shared between both and does not form a proper low-pass RC filter; the 'ground_net' labeling is also incorrect. The R18+C14 filter for ESP_~{RESET} (15.92 Hz low-pass) is correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],
       "missed": [
         {
           "description": "The bus_analysis.i2c reports has_pull_up: false and pull_ups: [] for both SDA and SCL nets. However, R7 (2.2k) is on the SDA net and R2 (10k) is on an unnamed net. Looking at the PCB data, R7 connects SDA to Net-(JP2-C) and R2 connects Net-(JP5-B) to DVDD. The JP2 jumper (I2C) is a 3-pole jumper bridging I2C pullups. The SDA pullup R7 connects SDA to JP2-C rather than directly to 3.3V, causing the pullup detector to miss it. This is a false negative for I2C pullup detection when resistors are routed through jumpers.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "category": "i2c_bus",
               "net": "SDA",
               "has_pullup": false
-            }
+            },
+            "detector_filter": "detect_design_observations"
           }
         },
         {

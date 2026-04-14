@@ -19,22 +19,26 @@
       "description": "INCORRECT: transistor_circuits[0] shows gate_net='3.3V_P' for the BSS138 N-MOSFET level shifter. In the classic open-drain bidirectional level-shifter topology, the gate is connected through a resistor to the higher-voltage rail (here 3.3V_P via R1 2.2k), so the gate IS on the 3.3V_P net. This is technically correct for this specific topology. However, the analyzer also lists U2 (MY1690X-16S IC) as a gate_driver_ic for Q1, which is incorrect \u2014 U2 is on the MY_RX_LV net (drain side), not driving the gate. The gate_driver_ics inference is a false positive caused by U2 being connected to the same (drain-side) net rather than the gate net.",
       "created_from": "FND-00001415",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].gate_driver_ics",
+        "path": "findings[0].gate_driver_ics",
         "value": [],
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].gate_driver_ics"
     },
     {
       "id": "FND-00001415-AST-03",
       "description": "D2 and D3 (both BAT60A Schottky diodes) implement a power-OR / ideal diode OR circuit allowing operation from either USB (VUSB) or external VIN. This is a significant power management topology. The signal_analysis.protection_devices list is empty \u2014 D2 and D3 are not classified as power-path protection devices or as a diode-OR circuit. The analyzer correctly identifies D6 (DT1042-04SO) as an ESD IC, but misses the analog power-path topology formed by D2 and D3.",
       "created_from": "FND-00001415",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

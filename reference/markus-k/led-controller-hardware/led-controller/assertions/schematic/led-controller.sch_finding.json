@@ -9,10 +9,12 @@
       "description": "The analyzer correctly identified all 12 IRLML6344 N-channel MOSFETs (Q1-Q12) as transistor_circuits with load_type 'led', organized as 4 groups of 3 (RGB channels). Each transistor correctly shows a gate pull-down resistor (10k) and a gate series resistor (100 ohm). The topology matches the LED controller design intent: 4 connectors (J3-J6) for 4 LED groups, each with 3 PWM-driven MOSFET channels.",
       "created_from": "FND-00002377",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 12
-      }
+        "value": 12,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00002377-AST-02",
@@ -30,11 +32,13 @@
       "description": "U2 (LTV-814) is a well-known 4-pin optocoupler (phototransistor output type). It is classified as a generic 'ic' type and does not appear in signal_analysis.isolation_barriers. The optocoupler appears to be used for electrical isolation in a control signal path (context: LED controller with 12V power and MCU logic). Missing isolation detection means the cross-domain signal analysis also misses the isolated signal path.",
       "created_from": "FND-00002377",
       "check": {
-        "path": "signal_analysis.isolation_barriers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_isolation_barriers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.isolation_barriers"
     }
   ]
 }

@@ -19,21 +19,25 @@
       "description": "31 test points are correctly enumerated with their net assignments. The design_observations note that RT9080-3.3 (U3) output rail VBACKUP is missing output capacitors \u2014 this is accurate since VBACKUP is the battery backup supply and the schematic only connects it to the GNSS module backup pin. The SD card ESD protection (D2, DF5A5.6LFU) protecting SD_CLK, SD_CMD, SD_DAT0, SD_DAT3 is correctly identified.",
       "created_from": "FND-00001424",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001424-AST-03",
       "description": "INCORRECT: design_observations contains two usb_data entries claiming has_esd_protection=False for D+ and D-. However, D1 (DT1042-04SO 4-line USB ESD IC) is correctly listed in protection_devices with protected_nets ['__unnamed_26', '__unnamed_27', '__unnamed_5', '__unnamed_6']. The USB data lines connect to the transformer TR1 first, then to those unnamed nets. The USB ESD protection IS present but the analyzer fails to correlate the unnamed nets protected by D1 with the named D+ and D- nets that pass through TR1. This is a false negative for ESD protection on USB lines.",
       "created_from": "FND-00001424",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": 1,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001424-AST-04",

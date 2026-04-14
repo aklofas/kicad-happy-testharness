@@ -17,42 +17,46 @@
         },
         {
           "description": "The decoupling_analysis correctly groups: 3.3V rail has C5 (0.1uF), C8 (33pF), C2 (10uF) \u2014 total 10.1uF, 3 caps; VUSB rail has C7 (0.1uF) and C13 (1.0uF) \u2014 total 1.1uF, 2 caps; 5V rail has C1 (0.1uF), 1 cap. The design_observations correctly note that 3.3V has bulk+bypass+high_freq coverage and 5V lacks bulk capacitance. These observations are accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+            "path": "findings",
             "value": 10.0,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_decoupling_analysis[0].total_capacitance_uF"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The analyzer reports two LC filters (L1+C3 and L2+C3, resonant at 2.32 MHz). In reality, L1 and L2 are 47nH series inductors forming an RF matching network in the GNSS antenna signal path (SMA connector J5 -> L1 -> L2 -> U5.RF_IN). C3 (0.1uF) is a decoupling capacitor connected at the L1-L2 junction node via R6 to VCC_RF (the active antenna bias rail), not a filter capacitor. The 2.32 MHz resonance figure is nonsensical for a GNSS RF path operating at 1.2\u20131.6 GHz. This is a false positive that mischaracterizes an RF pi/L-network as low-frequency LC filters.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "value": [],
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_lc_filters"
           }
         },
         {
           "description": "The design_observations i2c_bus entry for SDA reports has_pullup=false and pullup_resistor=null. However R12 (2.2k) and R13 (2.2k) are physically connected to the SCL and SDA lines respectively. The other ends of R12/R13 connect to JP9 (a 3-pin solder jumper) which selects whether pullups are enabled and which rail they pull to. The detector likely fails because the pullup resistors do not connect directly to a named power rail \u2014 they go through a jumper first. This is a standard SparkFun Qwiic design pattern. The result is a false-negative: the I2C bus does have optional/configurable pullups.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[?category=='i2c_bus'].has_pullup",
+            "path": "findings",
             "value": true,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_design_observations[?category=='i2c_bus'].has_pullup"
           }
         }
       ],
       "missed": [
         {
           "description": "signal_analysis.rf_chains is empty. This design has a well-defined RF signal path: J5 (SMA edge connector) -> JP1 (RF/trace selector jumper) -> L1 -> L2 (47nH series matching inductors) -> U5.RF_IN (ZED-X20P GNSS receiver). There is also J10 (U.FL connector) on the same path via JP1. The RF_IN net explicitly connects J5, JP1, L1, L2, and U5. An RF chain should be detected here. Separately, the VCC_RF rail (active antenna bias) with L2 and C3 forms an antenna bias injection circuit that is also not characterized.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_rf_chains"
           }
         }
       ],

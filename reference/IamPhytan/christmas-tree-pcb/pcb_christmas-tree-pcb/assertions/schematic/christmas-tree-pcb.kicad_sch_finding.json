@@ -40,20 +40,24 @@
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/rails_without_caps/"
-      }
+        "value": "/rails_without_caps/",
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001998-AST-05",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "equals",
-        "value": []
-      }
+        "value": [],
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001998-AST-06",
@@ -159,87 +163,103 @@
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001998-AST-16",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001998-AST-17",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 4
+        "value": 4,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001998-AST-18",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_addressable_leds"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001998-AST-19",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 5
+        "value": 5,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00001998-AST-20",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/i2c_bus/"
-      }
+        "value": "/i2c_bus/",
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001998-AST-21",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001998-AST-22",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00001998-AST-23",
@@ -279,11 +299,12 @@
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: thermal_analysis.thermal_pads"
     },
     {
       "id": "FND-00001998-AST-27",
@@ -301,11 +322,12 @@
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "thermal_analysis.zone_stitching",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: thermal_analysis.zone_stitching"
     },
     {
       "id": "FND-00001998-AST-29",
@@ -334,55 +356,65 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/estimated_vout/"
+        "value": "/estimated_vout/",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001998-AST-32",
       "description": "INCORRECT: ",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/led_driver/"
+        "value": "/led_driver/",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001998-AST-33",
       "description": "INCORRECT: ",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/gate_driver_ics/"
+        "value": "/gate_driver_ics/",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001998-AST-34",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001998-AST-35",
       "description": "",
       "created_from": "FND-00001998",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "min_count",
-        "value": 5
+        "value": 5,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

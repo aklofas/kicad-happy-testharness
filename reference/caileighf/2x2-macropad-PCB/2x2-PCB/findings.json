@@ -8,31 +8,34 @@
       "correct": [
         {
           "description": "The ATmega32U4 has separate AVCC and VCC supplies. AVCC (pin 24) is on an unnamed floating net (__unnamed_12) with no decoupling capacitor detected. The UCAP pin (pin 6, internal USB regulator output) is on __unnamed_28 with no cap detected. The design also uses a VCC power symbol (separate from +5V) that carries the USB VBUS through the polyfuse F1, but no decoupling capacitors are assigned to VCC rail in the decoupling_analysis output. Only the +5V rail with C4-C7 is reported.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
       "incorrect": [
         {
           "description": "The schematic has a 2x2 key matrix (COL0/COL1 x ROW0/ROW1) with exactly 4 mechanical key switches (MX1-MX4) and 4 anti-ghosting diodes (D1-D4). The analyzer reports estimated_keys=7 and switches_on_matrix=7. SW1 is a tactile reset button (connected to ~RESET and GND via pull-up R1) and is not part of the key matrix. The matrix is straightforwardly 2 rows x 2 cols = 4 keys.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "path": "findings",
             "op": "eq",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_key_matrices[0].switches_on_matrix"
           }
         },
         {
           "description": "The 2x2 matrix has at most 4 keys (2 rows x 2 cols). The analyzer over-counts to 7, likely because SW1 (reset button) and extra LED/LEDGND pins on the MX switch footprint are being mistakenly included in the switch count. estimated_keys should equal 4.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].estimated_keys",
+            "path": "findings",
             "op": "eq",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_key_matrices[0].estimated_keys"
           }
         },
         {

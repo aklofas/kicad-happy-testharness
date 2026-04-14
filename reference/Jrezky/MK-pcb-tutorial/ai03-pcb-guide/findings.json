@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "Y1/C3/C4 crystal circuit and load capacitance calculation is correct. Decoupling on +5V with 4 caps also correctly identified.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "The key matrix is 2x2 (ROW0/ROW1, COL0/COL1) with 4 MX switches. SW1 is a tactile reset switch connected to GND and Net-(R3-Pad2), not to any row/col matrix nets. The analyzer reports switches_on_matrix=5 by counting all 5 switch-type components regardless of matrix connectivity. Only MX1-MX4 belong to the matrix.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The design has an ATmega32U4 USB controller with D+/D- global labels, USB1 connector, and R1/R2 (22-ohm) USB series resistors. The bus_analysis section reports no USB interfaces and differential_pairs is empty. These are textbook USB FS termination resistors that should be recognized.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -50,9 +50,9 @@
       "correct": [
         {
           "description": "Row/col net naming (row0-row4, col0-col6) is properly detected. estimated_keys=31 matches the 31 diodes present.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -61,7 +61,7 @@
       "incorrect": [
         {
           "description": "All 31 K_ components (lib_id keyboard_parts:KEYSW) are typed as 'relay' in statistics and component output. None are recognized as 'switch'. Additionally, switches_on_matrix=0 while the matrix has 31 keys \u2014 the analyzer detects the 31 diodes via net-name heuristic but completely misses the co-located switch components.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -82,9 +82,9 @@
       "correct": [
         {
           "description": "All 32 LEDs are distributed across 5 chains (6+6+6+7+7). Chain lengths and component membership are accurate. Protocol identified correctly as WS2812-compatible.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -93,11 +93,11 @@
       "incorrect": [
         {
           "description": "The schematic has 32 diode components. The 5x4 matrix yields a maximum of 20 key positions per half. However the analyzer reports diodes_on_matrix=41 (9 more than actual diode count) and estimated_keys=41. This appears to be a double-counting artifact where the net-name traversal counts diodes on both sides of the matrix signal path. switches_on_matrix=26 is plausible but the estimated_keys figure is clearly wrong.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "Two of five LED chains report data_in_net='VCC'. VCC is a power rail, not a data line. The first LED in each chain should receive its DIN from a GPIO pin of the ProMicro (likely the 'LED' net seen in single_pin_nets). This is a net-traversal error where the chain origin is misidentified.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -118,9 +118,9 @@
       "correct": [
         {
           "description": "Board dimensions (77.8x38.1mm), component counts, routing complete, Power net class (0.381mm trace width), decoupling placement for U1 at ~10mm, and DFM tier all look accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -129,7 +129,7 @@
       "incorrect": [
         {
           "description": "The Molex USB connector (USB1) is designed to mount at the board edge with an overhang. The -3.85mm edge clearance warning is technically a true measurement but will be a systematic false positive for any edge-mount USB connector. This pattern recurs across keyboard designs and needs context-aware suppression.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -150,9 +150,9 @@
       "correct": [
         {
           "description": "Both violations are real constraints for JLCPCB. The 132x94mm board does cost more and the 0.1mm annular ring requires advanced fab.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -161,7 +161,7 @@
       "incorrect": [
         {
           "description": "The analyzer flags every SW* component as needing a function label on silkscreen. For a keyboard PCB, key switches are intentionally unlabeled (key legends are on keycaps, not PCB silkscreen). The warning should be suppressed for components recognized as keyboard matrix switches.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -182,9 +182,9 @@
       "correct": [
         {
           "description": "Layer set is appropriate for a THT/SMD mixed keyboard. F.Paste is flagged as missing_recommended but the SMD components are LEDs and the ProMicro module \u2014 missing paste is a minor concern. Layer alignment is verified as aligned.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

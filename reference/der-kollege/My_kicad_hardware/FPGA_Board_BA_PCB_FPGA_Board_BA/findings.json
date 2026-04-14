@@ -17,29 +17,32 @@
         },
         {
           "description": "One H-bridge detected: Q5 (high-side MOSFET), Q6 (low-side MOSFET), with output net, power net, and gate control signals all correctly attributed. Consistent with motor controller topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           }
         },
         {
           "description": "Five regulators detected: U8 (TPS61022, switching), U4 (LM70860RRXR, ic_with_internal_regulator, +5V_Zynq), U3 (LM5143, ic_with_internal_regulator), U48 and U9 (MCP1703AT-5002EDB, LDO, +5VA_2/+5VA). UUID-path input rails for hierarchical nets are expected and correct behavior.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 4
+            "value": 4,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "All 13 instances of B72590D50H160 (Siemens TVS/varistors for motor phase protection) listed in signal_analysis.protection_devices with type=diode.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 13
+            "value": 13,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

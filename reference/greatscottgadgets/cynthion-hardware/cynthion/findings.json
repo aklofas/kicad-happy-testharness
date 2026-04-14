@@ -145,13 +145,14 @@
         {
           "type": "voltage_divider",
           "description": "R78(2.2k)/R79(10k) is BJT base bias for Q11, not a divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "related_issue": "#12",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R78$"
+            "pattern": "^R78$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -165,13 +166,14 @@
         {
           "type": "voltage_divider",
           "description": "R88(2.2k)/R89(10k) same pattern for Q8",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "related_issue": "#12",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R88$"
+            "pattern": "^R88$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -185,13 +187,14 @@
         {
           "type": "voltage_divider",
           "description": "R118(1k)/R102(5.1k) is series resistor + pulldown on FPGA config signal",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "related_issue": "#12",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R102$"
+            "pattern": "^R102$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [

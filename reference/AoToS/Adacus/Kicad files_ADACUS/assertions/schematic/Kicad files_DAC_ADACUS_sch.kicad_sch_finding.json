@@ -9,22 +9,26 @@
       "description": "INCORRECT: In the DAC anti-aliasing filter network, rc_filters[0] reports R403 with 'C403+C405 parallel' (1.15nF). However C403 (150p) is on net __unnamed_0 (R403 output side) while C405 (1n) is on net __unnamed_1 (R403 input side). These are shunt capacitors at different nodes of a 2-stage RC ladder, not in parallel. The parallel-cap detection is grouping capacitors that share R403 as a neighbor but are on opposite terminals.",
       "created_from": "FND-00000360",
       "check": {
-        "path": "signal_analysis.rc_filters[0].capacitor.parallel_caps",
+        "path": "findings[0].capacitor.parallel_caps",
         "op": "eq",
-        "value": null
+        "value": null,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters[0].capacitor.parallel_caps"
     },
     {
       "id": "FND-00000360-AST-02",
       "description": "INCORRECT: rc_filters[2] reports R404 as an 'RC-network' with ground_net='OUT_AA_BUF_OUT'. In the actual circuit, C405 pin2 connects to OUT_AA_BUF_OUT which is the MCP6001 opamp output (feedback node in a Sallen-Key-style active filter). This is not a ground node. Additionally, C405 and C404 are incorrectly grouped as parallel (C404 pin2 goes to GND; C405 pin2 goes to OUT_AA_BUF_OUT \u2014 they are not in parallel). The topology is an active low-pass filter where C405 is the feedback capacitor.",
       "created_from": "FND-00000360",
       "check": {
-        "path": "signal_analysis.rc_filters[2].ground_net",
+        "path": "findings[2].ground_net",
         "op": "eq",
-        "value": "GND"
+        "value": "GND",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters[2].ground_net"
     }
   ]
 }

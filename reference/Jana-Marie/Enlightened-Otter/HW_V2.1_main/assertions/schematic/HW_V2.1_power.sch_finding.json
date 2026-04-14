@@ -9,7 +9,7 @@
       "description": "power.sch contains 6 SK6812 MINI-E addressable LEDs (LED1, LED2, LED3, LED4, LED5, LED9) wired in a daisy chain with DOUT of each LED connected to DIN of the next. The analyzer reports each LED as a separate addressable_led_chains entry with chain_length=1 rather than detecting the DOUT\u2192DIN topology and reporting a single chain of length 6. The same issue is present in main.sch.json. The daisy-chain detection requires tracing DOUT nets to DIN pins across components; the same failure likely affects other SK6812/WS2812 designs in the corpus.",
       "created_from": "FND-00000534",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -20,7 +20,7 @@
       "description": "power.sch contains two MIC4416YC5-TR MOSFET gate driver ICs (IC2, IC3, SOT-143) driving Q2 and Q3 (NTMS4816NR2G N-channel MOSFETs) via gate resistors R35/R38. The transistor_circuits section correctly detects Q2 and Q3 with their gate resistors, but reports gate_driver_ics:[] for both \u2014 IC2 and IC3 are not identified as the gate drivers. The MIC4416 output pins are connected to the gate resistors and should be traced back to IC2/IC3 to populate gate_driver_ics.",
       "created_from": "FND-00000534",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

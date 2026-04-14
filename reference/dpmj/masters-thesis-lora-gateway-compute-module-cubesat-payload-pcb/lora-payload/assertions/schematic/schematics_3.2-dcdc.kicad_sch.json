@@ -1,7 +1,8 @@
 {
   "file_pattern": "schematics_3.2-dcdc.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,117 +35,117 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "5 decoupling_analysis detected",
+      "description": "5 detect_decoupling detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "15 design_observations detected",
+      "description": "15 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "2 feedback_networks detected",
+      "description": "3 detect_lc_filters detected",
       "check": {
-        "path": "signal_analysis.feedback_networks",
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "All feedback_networks have r_top ref present",
+      "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "not_contains_match",
-        "field": "r_top.ref",
-        "pattern": "^(None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "3 lc_filters detected",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "All lc_filters have non-zero resonant_hz",
-      "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
         "op": "not_contains_match",
         "field": "resonant_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "4 power_regulators detected",
+      "id": "SEED-00000009",
+      "description": "4 detect_power_regulators detected",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "All power_regulators have ref present",
+      "id": "SEED-00000010",
+      "description": "All detect_power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
       }
     },
     {
+      "id": "SEED-00000011",
+      "description": "2 detect_suggested_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "4 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
       "id": "SEED-00000013",
-      "description": "2 suggested_certifications detected",
+      "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "2 voltage_dividers detected",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000015",
-      "description": "All voltage_dividers have non-zero ratio",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "not_contains_match",
         "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
+      "description": "4 validate_pullups detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "Has 32 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

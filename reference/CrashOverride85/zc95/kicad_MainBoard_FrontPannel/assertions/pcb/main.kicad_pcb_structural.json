@@ -2,14 +2,15 @@
   "file_pattern": "main.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 23 decoupling_placement",
+      "description": "Exactly 22 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 23
+        "value": 22
       }
     },
     {
@@ -234,107 +235,53 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "U23 in decoupling_placement",
+      "description": "Exactly 6 thermal_pad_vias",
       "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U23$"
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "equals",
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000025",
-      "description": "Exactly 6 thermal_analysis.thermal_pads",
+      "description": "U13 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "equals",
-        "value": 6
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U13$"
       }
     },
     {
       "id": "STRUCT-00000026",
-      "description": "U13 in thermal_analysis.thermal_pads",
+      "description": "U17 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
-        "pattern": "^U13$"
+        "pattern": "^U17$"
       }
     },
     {
       "id": "STRUCT-00000027",
-      "description": "U17 in thermal_analysis.thermal_pads",
+      "description": "U8 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
-        "pattern": "^U17$"
+        "pattern": "^U8$"
       }
     },
     {
       "id": "STRUCT-00000028",
-      "description": "U2 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
-      "description": "U8 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000030",
-      "description": "Exactly 6 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000031",
-      "description": "U13 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U13$"
-      }
-    },
-    {
-      "id": "STRUCT-00000032",
-      "description": "U17 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U17$"
-      }
-    },
-    {
-      "id": "STRUCT-00000033",
-      "description": "U8 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000034",
       "description": "U2 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U2$"

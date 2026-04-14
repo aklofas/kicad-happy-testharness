@@ -9,10 +9,12 @@
       "description": "I2C bus with pull-ups R32/R33 on I2C_SDA/I2C_SCL correctly detected connecting U4 (BQ76952) and U5",
       "created_from": "FND-00000211",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000211-AST-09",
@@ -29,12 +31,14 @@
       "description": "INCORRECT: U3 LMR38010 estimated_vout=1.978V is wrong. The analyzer assumed Vref=0.6V (heuristic) but LMR38010 actual Vref is 1.0V per datasheet. Correct Vout = 1.0 / 0.303 = 3.30V, matching the +3V3 output rail",
       "created_from": "FND-00000211",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^U3$"
+        "pattern": "^U3$",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

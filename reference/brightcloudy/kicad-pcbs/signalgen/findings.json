@@ -19,20 +19,22 @@
       "incorrect": [
         {
           "description": "The analyzer reports U2 (ADP1715-3.3) with input_rail='+3.3V' and output_rail='+5V'. This is backwards: the ADP1715-3.3 is a 3.3V LDO linear regulator that takes +5V on its IN pin and outputs +3.3V on its OUT pin. The PCB net list confirms the +3.3V net is driven by U2's OUT pin (power_out type). The analyzer likely confused the voltage suffix in the part name ('-3.3') with the input rail rather than the output voltage.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Both U9 and U10 (ADA4805-1 op-amps) are classified as 'comparator_or_open_loop'. U9 has both inverting and non-inverting inputs on the same net (__unnamed_16), which typically indicates a unity-gain buffer or a measurement issue in the net extraction \u2014 not an open-loop comparator. U10 has both inputs connected to VOUT. This is likely an artifact of incomplete net tracing rather than genuinely open-loop configurations. The ADA4805-1 is a precision op-amp used here in an analog signal conditioning stage downstream of the AD9834 DDS.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
@@ -65,11 +67,12 @@
       "incorrect": [
         {
           "description": "The RC filter detector reports two RC networks (R2/C6 and R3/C6) with ground_net='USART1_TX'. USART1_TX is a hierarchical label connecting to the MCU's UART TX output \u2014 it is a signal net, not ground. The capacitor C6 (100n) has one pin on the unnamed node between R2/R3 and the other pin on the USART1_TX net. The MCU subsheet treats USART1_TX as a shared net but the top-level sheet likely uses it as a signal net. The analyzer should not classify a net named 'USART1_TX' as a ground reference.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],

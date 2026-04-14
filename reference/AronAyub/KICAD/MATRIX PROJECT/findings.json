@@ -26,12 +26,13 @@
         },
         {
           "description": "Eight 2N3055 BJT transistors (Q1-Q8) correctly detected as transistor_circuits with base/collector/emitter nets",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -49,12 +50,13 @@
         },
         {
           "description": "L78L05 (U7) correctly detected as LDO regulator with input_rail=VIN",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -65,12 +67,13 @@
         },
         {
           "description": "Voltage divider R42/R41 (1K/2K) at ratio 0.667 on TX net correctly detected - this is a 5V-to-3.3V level shifter for the Bluetooth module (J6)",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R41$"
+            "pattern": "^R41$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -83,12 +86,13 @@
         },
         {
           "description": "Crystal Y1 with 22pF load caps C1 and C2 giving effective 14pF load correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -101,11 +105,12 @@
         },
         {
           "description": "Decoupling analysis shows +5V rail with C6 (10uF) and VIN rail with C3 (10uF) correctly",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [
@@ -137,12 +142,13 @@
       "incorrect": [
         {
           "description": "Q1 transistor base_net=GND is incorrect. Q1 base connects to a shift register output (P8 net area), not to GND. The analyzer appears to have confused the global GND net with the transistor's actual base connection",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -154,12 +160,13 @@
         },
         {
           "description": "Q7 and Q8 transistors also show base_net=GND which is incorrect for the same reason",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q7$"
+            "pattern": "^Q7$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -171,12 +178,13 @@
         },
         {
           "description": "Q4 shows collector_net=QA and emitter_net=GND with emitter_is_ground=true, but Q2/Q3/Q5/Q6 show base=collector (e.g. Q2 base_net=P7, collector_net=P7) which indicates a pin mapping error - the base and collector pins are being conflated",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q2$"
+            "pattern": "^Q2$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -192,11 +200,12 @@
         },
         {
           "description": "U7 output_rail detected as '12_5_S' which is an unusual net name. This appears to be the regulated 5V output rail name in the schematic, but the net name is confusing and may indicate a parsing issue with the original schematic's net naming",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "equals",
-            "value": 7
+            "value": 7,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -208,7 +217,7 @@
         },
         {
           "description": "Regulator caps observation says missing output cap for U7 on '12_5_S' rail, but C5 (100nF) or C4 may be on that rail - need to verify if the analyzer is correctly tracing the output net",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [
             "C4",
@@ -222,11 +231,12 @@
       "missed": [
         {
           "description": "LED matrix topology not detected. The design is an 8x40 LED matrix (5 shift registers x 8 outputs = 40 columns, 8 transistor-driven rows) with multiplexed scanning. This is a key_matrices variant for LED displays",
-          "analyzer_section": "signal_analysis.key_matrices",
+          "analyzer_section": "detect_key_matrices",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           },
           "detector": "key_matrices",
           "subject_refs": [],
@@ -235,11 +245,12 @@
         },
         {
           "description": "SPI daisy-chain of 74HC595 shift registers (U1->U2->U3->U4->U5 via QH'->SER) not detected as a bus protocol",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [

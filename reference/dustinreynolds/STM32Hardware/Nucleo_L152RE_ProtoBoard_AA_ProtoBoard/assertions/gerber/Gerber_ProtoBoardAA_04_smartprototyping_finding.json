@@ -9,7 +9,7 @@
       "description": "The gerber set has 8 files (B.Cu, B.Mask, B.Paste, B.SilkS, F.Cu, F.Mask, F.Paste, F.SilkS) plus 1 drill file. No outline/Edge.Cuts file is present \u2014 correctly flagged as complete=false with missing_required=['Edge.Cuts']. Drill classification: 215 via holes (0.381mm), 167 component holes (1.016mm, 0.9906mm), 10 mounting holes (1.5748mm, 2.9972mm) all correctly categorized.",
       "created_from": "FND-00001280",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -21,7 +21,7 @@
       "description": "F.SilkS extents (68.708mm wide) slightly exceed the PCB board width (68.58mm) but alignment is reported as aligned=true with no issues. This is correct \u2014 silkscreen legends slightly outside the board edge is normal and expected, not a misalignment.",
       "created_from": "FND-00001280",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -33,7 +33,7 @@
       "description": "has_npth_drill=false and no note is raised. For a board with mounting holes (10 holes at 1.5748mm and 2.9972mm classified as PTH mounting holes), it would be worth noting the mounting holes are in the PTH file rather than a separate NPTH file. This is not necessarily wrong but could be flagged as an observation.",
       "created_from": "FND-00001280",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

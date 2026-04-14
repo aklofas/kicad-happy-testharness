@@ -1,16 +1,17 @@
 {
   "file_pattern": "Flex_Adapter.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~3 (tolerance 10%)",
+      "description": "Finding count ~4 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 3,
+        "max": 5
       }
     },
     {
@@ -25,33 +26,33 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "low count ~2",
+      "description": "low count ~1",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 1,
-        "max": 3
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~90 (+-10)",
+      "description": "EMC risk score ~95.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 80,
+        "min": 85.5,
         "max": 100
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "3 io_filtering finding(s)",
+      "description": "2 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -74,11 +75,11 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "~3 probe point(s) in test plan",
+      "description": "~2 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 2
+        "value": 1
       }
     },
     {

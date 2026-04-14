@@ -1,16 +1,17 @@
 {
   "file_pattern": "CartDiem_STM-backups_CartDiem_STM-2025-10-24_153137_CartDiem_STM.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~35 (tolerance 10%)",
+      "description": "Finding count ~38 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 34,
+        "max": 42
       }
     },
     {
@@ -25,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~14",
+      "description": "high count ~12",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 10,
+        "max": 14
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~12",
+      "description": "medium count ~10",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -55,23 +56,23 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~40.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 10
+        "min": 30.0,
+        "max": 50.0
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "9 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 9
+        "value": 5
       }
     },
     {

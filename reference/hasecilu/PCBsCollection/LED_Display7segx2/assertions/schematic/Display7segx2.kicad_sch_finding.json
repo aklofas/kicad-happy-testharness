@@ -9,10 +9,12 @@
       "description": "Four MMBT3904 NPN transistors (Q1-Q4) are all detected in transistor_circuits with correct base resistors (R9-R12, all 10k). Each transistor drives a segment of the 7-segment display. Base driver and pulldown detection is working correctly.",
       "created_from": "FND-00001706",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "value": 4,
-        "op": "min_count"
-      }
+        "op": "min_count",
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001706-AST-02",

@@ -1,16 +1,17 @@
 {
   "file_pattern": "audio-io-breakout-pajeromini.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~13 (tolerance 10%)",
+      "description": "Finding count ~8 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 7,
+        "max": 9
       }
     },
     {
@@ -25,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "low count ~11",
+      "description": "low count ~4",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 3,
+        "max": 5
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~89 (+-10)",
+      "description": "EMC risk score ~92.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 79,
-        "max": 99
+        "min": 82.0,
+        "max": 100
       }
     },
     {
@@ -56,13 +57,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "11 io_filtering finding(s)",
+      "description": "4 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 11
+        "value": 4
       }
     },
     {
@@ -85,11 +86,11 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "~9 probe point(s) in test plan",
+      "description": "~2 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 8
+        "value": 1
       }
     },
     {

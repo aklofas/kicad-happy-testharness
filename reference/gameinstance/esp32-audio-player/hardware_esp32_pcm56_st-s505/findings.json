@@ -8,33 +8,36 @@
       "correct": [
         {
           "description": "The 4570 dual op-amp (U7, Amplifier_Operational:RC4560) is correctly identified in inverting configuration for both left and right channels (units 1 and 2), with accurate gain calculation of -2.061 (6.3 dB), correctly identifying the feedback resistor (R22/R23 at 6.8k) and input resistor (R24/R25 at 3.3k), and identifying the feedback capacitor (C34/C35) for the HF rolloff. Output nets 'DAC Out (L)' and 'DAC Out (R)' are correctly named.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_opamp_circuits"
           }
         }
       ],
       "incorrect": [
         {
           "description": "U2 (LM79L05_TO92) is a negative-voltage linear regulator from the LM79 family. It takes a negative input rail and outputs a regulated negative voltage (-Vreg). The analyzer classifies it as topology='LDO', which is architecturally misleading \u2014 LDO implies a low-dropout positive regulator. The analyzer should recognize LM79xx lib_id prefixes as negative linear regulators and use a distinct topology label (e.g., 'negative_linear') to avoid confusion with positive LDO regulators.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
-            "value": "/LM79.*topology.*LDO/"
+            "value": "/LM79.*topology.*LDO/",
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],
       "missed": [
         {
           "description": "PS1 is a TMLM10105 from the KiCad library 'Converter_ACDC' \u2014 a TRACO POWER isolated AC/DC module with mains input (AC (L), AC (N), 12V AC (L)) producing isolated DC output. The schematic also has raw AC mains nets. The analyzer: (1) classifies PS1 as type='ic' instead of recognizing it as a power converter, (2) leaves isolation_barriers=[] despite a clear mains-to-SELV isolation boundary, and (3) does not flag the presence of mains voltages (AC (L), AC (N)) in the design. This is a safety-relevant omission.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           }
         },
         {

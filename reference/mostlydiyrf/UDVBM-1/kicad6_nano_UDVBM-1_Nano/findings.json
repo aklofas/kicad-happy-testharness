@@ -46,20 +46,22 @@
         },
         {
           "description": "C1, C3, C4, C6-C10, C12-C14 all have value='0.10' with footprint Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm \u2014 a disc ceramic/film capacitor. The analyzer parses '0.10' as 0.1 Farads, yielding parsed_value=0.1, farads=0.1 in decoupling_analysis and pdn_impedance. The correct interpretation is 100 nF (0.1 uF = 1e-7 F). This causes downstream errors: total_capacitance_uF=1100000 (should be ~1.1 uF for 11 caps), self_resonant_hz=15915 Hz (should be ~15.9 MHz for ceramic), and caps are classified as 'electrolytic/tantalum' in PDN analysis instead of 'ceramic'. The same error affects nano (12 caps, total_capacitance_uF=1200000) and xiao (7 caps, total_capacitance_uF=600000).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis.total_capacitance_uF",
+            "path": "findings",
             "op": "less_than",
-            "value": 10.0
+            "value": 10.0,
+            "detector_filter": "detect_decoupling_analysis.total_capacitance_uF"
           }
         },
         {
           "description": "U3 (LM7805) in pro-mini and nano designs is reported as power_regulators[].topology='LDO'. The LM7805 is a 78xx-series fixed positive voltage regulator with ~2V minimum input-output differential \u2014 it is explicitly NOT an LDO (Low Dropout Regulator, which requires <1V dropout). The correct topology label should be 'linear' or 'fixed_linear'. This also propagates to the power_budget regulator entry. The AZ1117-3.3 in xiao is correctly identified as 'LDO'.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators.topology",
+            "path": "findings",
             "op": "not_equals",
-            "value": "LDO"
+            "value": "LDO",
+            "detector_filter": "detect_power_regulators.topology"
           }
         }
       ],
@@ -129,11 +131,12 @@
         },
         {
           "description": "The power supply CLC filter consisting of L1=1.0mH and C5/C11=220uF each is correctly analyzed. Resonant frequency f = 1/(2\u03c0\u221a(LC)) = 1/(2\u03c0\u221a(0.001\u00d70.000220)) = 339.32 Hz is mathematically correct. Impedance at resonance = \u221a(L/C) = \u221a(0.001/0.000220) = 2.13 ohms is also correct. Two LC filter instances are reported (L1+C11 and L1+C5) sharing the inductor, which correctly models the pi-filter topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters.resonant_hz",
+            "path": "findings",
             "op": "equals",
-            "value": 339.32
+            "value": 339.32,
+            "detector_filter": "detect_lc_filters.resonant_hz"
           }
         }
       ],
@@ -257,49 +260,54 @@
       "correct": [
         {
           "description": "37 components correctly parsed. LM7805 (U3) correctly identified as power regulator. I2C bus on SDA/SCL with devices U2 (ArduinoPro_Mini) and U1 (Si5351A) correctly detected. SPI bus with MOSI/MISO/SCK detected on U2. Missing I2C pull-up resistors correctly flagged (no pull-up R on SDA/SCL in this schematic \u2014 the design relies on module-level pull-ups). Reset pin observation for U2.RST is substantively correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].ref",
+            "path": "findings",
             "value": "U3",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].ref"
           }
         }
       ],
       "incorrect": [
         {
           "description": "U3 (value='LM7805', lib_id='UDVBM-1-rescue:LM7905_TO220-Regulator_Linear') is classified as topology='LDO'. The LM7805 is a classic 3-terminal fixed positive voltage regulator with a minimum dropout of ~2V \u2014 it is definitively NOT a low-dropout regulator. LDO refers to regulators with dropout <1V (e.g., LM1117, AZ1117, MCP1700). The correct topology for LM7805 is 'linear'. Note also the lib_id references 'LM7905' (negative voltage version) while the value is 'LM7805' \u2014 this discrepancy in the source is not flagged.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
+            "path": "findings",
             "value": "LDO",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].topology"
           }
         },
         {
           "description": "The schematic uses '0.10' as the value string for disc ceramic capacitors (C1, C3, C4, C6\u2013C10, C12\u2013C14), meaning 0.10 \u00b5F = 100 nF. The value parser interprets '0.10' as a bare decimal = 0.1 F (farads), then converts to 1.0\u00d710\u2075 \u00b5F per cap. With 11 such caps on +5V, total_capacitance_uF = 1,100,000 \u00b5F (\u22481.1 F). The self_resonant_hz of 15,915 Hz (instead of ~15.9 MHz for 100 nF) confirms the wrong unit interpretation. The correct total should be ~1.1 \u00b5F. Same bug affects nano (1,200,000 \u00b5F for 12 caps) and xiao variants.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+            "path": "findings",
             "value": 1100000.0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_decoupling_analysis[0].total_capacitance_uF"
           }
         },
         {
           "description": "design_observations includes {category: 'regulator_caps', component: 'U3', missing_caps: {input: '__unnamed_0'}}. However, C2 (10 \u00b5F electrolytic) appears in the nets dict for '__unnamed_0' alongside U3 and R1. The false positive occurs because U3 and C2 have pins=None in the parsed output (net membership is known but pin-level connections are not), so the cap-checking logic cannot confirm that C2 is a bypass cap for U3. Same false positive appears in nano variant for U3, and xiao for U2 (AZ1117-3.3).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[0].category",
+            "path": "findings",
             "value": "regulator_caps",
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_design_observations[0].category"
           }
         },
         {
           "description": "signal_analysis.design_observations contains two identical entries for {category: 'reset_pin', component: 'U2', value: 'ArduinoPro_Mini', pin: 'RST', net: 'RST', has_pullup: False, has_filter_cap: False, connected_components: [{ref: 'J3'}, {ref: 'J2'}]}. The same duplication occurs in the nano variant. The substance of the observation (no pull-up, no filter cap, reset connected to breakout headers) is correct, but it should appear only once.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "value": 2,
-            "op": "count_where_category_eq_reset_pin"
+            "op": "count_where_category_eq_reset_pin",
+            "detector_filter": "detect_design_observations"
           }
         },
         {
@@ -393,11 +401,12 @@
       "correct": [
         {
           "description": "U2 (AZ1117-3.3) correctly identified: topology='LDO', output_rail='+3.3V', estimated_vout=3.3, vref_source='fixed_suffix'. The Xiao uses both +5V and +3.3V rails. 4 ICs detected: Si5351A (clock gen), AZ1117-3.3 (LDO), Seeed_XIAO (MCU module), M24C08-RMN (EEPROM). I2C bus on SDA/SCL with 3 devices (U1/U4/U3) correctly found.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].estimated_vout",
+            "path": "findings",
             "value": 3.3,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_power_regulators[0].estimated_vout"
           }
         }
       ],

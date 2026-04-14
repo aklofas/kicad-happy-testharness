@@ -20,11 +20,12 @@
       "missed": [
         {
           "description": "D1 is a Zener diode (BZV55C-5.6V, SMA package) with its cathode on the +3V3 rail and anode on GND. This is a standard overvoltage/reverse-polarity protection clamp for the power supply \u2014 especially relevant because the MAX4734 is rated for 1.6V\u20133.6V supply and D1 clamps overvoltage at 5.6V. The signal_analysis.protection_devices list is empty; D1 should be identified as a power supply protection device.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

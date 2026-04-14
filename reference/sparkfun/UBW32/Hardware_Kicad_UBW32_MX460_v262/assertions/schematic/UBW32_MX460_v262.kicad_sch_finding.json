@@ -9,52 +9,60 @@
       "description": "In Eagle-imported designs, quartz crystals use the 'Q' reference prefix (not 'Y' as in KiCad convention). The analyzer correctly resolves Q1 (SchmalzHaus CRYSTAL5X3) and Q2 (SchmalzHaus_CRYSTAL32-SMD) as type 'crystal' and includes them in crystal_circuits analysis with appropriate load cap detection (C14/C15 for Q1, C16/C17 for Q2). Load capacitance calculations are in typical range for both oscillators.",
       "created_from": "FND-00001619",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00001619-AST-02",
       "description": "INCORRECT: U2 uses lib_id 'V_REG_317SMD', an LM317-type adjustable linear regulator whose reference voltage is 1.25 V. The analyzer uses assumed_vref=0.6 V (heuristic) and computes estimated_vout = 0.6 \u00d7 (1 + R13/R14) = 0.6 \u00d7 (1 + 390/240) = 1.57 V, but reports 0.969 V (ratio math differs). The correct calculation is Vout = 1.25 \u00d7 (1 + 390/240) = 3.28 V, matching the net name '3.3V' and component value label. The analyzer itself flags a 70.6% vout_net_mismatch, confirming the wrong Vref. The assumed_vref heuristic of 0.6 V should not be applied to LM317-family devices.",
       "created_from": "FND-00001619",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "ref": "U2",
           "assumed_vref": 0.6
-        }
+        },
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001619-AST-03",
       "description": "INCORRECT: Both U2 ('3.3V', V_REG_317SMD) and U3 ('5V', V_REG_317SMD) are reported with topology='LDO'. The LM317 requires a minimum 3 V input-to-output differential and is an adjustable linear regulator, not a low-dropout device. The correct topology is 'linear_adjustable'. This misclassification also flows into the power_budget and design_observations sections.",
       "created_from": "FND-00001619",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "ref": "U2",
           "topology": "LDO"
-        }
+        },
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001619-AST-04",
       "description": "INCORRECT: For U2: C12 (10 \u00b5F) is on the 5V input rail and C6\u2013C13 (seven 0.1 \u00b5F/1 \u00b5F caps) are on the 3.3V output rail \u2014 well-decoupled. For U3: C1 (10 \u00b5F) is on the __unnamed_9 input rail and C2 (10 \u00b5F) plus C5 (10 \u00b5F) are on the 5V_ALT output rail. Both regulators have adequate decoupling. The false positive likely occurs because the input rails are unnamed or non-standard ('__unnamed_9' for U3 input, and caps on '5V_ALT' vs the expected '5V' label for U3's output).",
       "created_from": "FND-00001619",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "regulator_caps",
           "component": "U2"
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001619-AST-05",

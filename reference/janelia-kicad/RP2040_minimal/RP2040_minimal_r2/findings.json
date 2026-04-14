@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "Power regulators, memory interface, crystal circuit, USB compliance (ESD fail), and decoupling analysis all produced correct results. No false pwr_flag warnings. Cross-domain QSPI signals correctly detected with needs_level_shifter=False.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,11 +19,11 @@
       "incorrect": [
         {
           "description": "ABM8-272-T3 is a 12MHz crystal from Abracon. The value string does not contain a parseable frequency (no 'MHz' substring), so frequency=null. The analyzer should handle part numbers where frequency is only in the datasheet/MPN, but as a fallback should at least note inability to parse rather than silently returning null.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "test_coverage.uncovered_key_nets lists QSPI_SCLK with category='i2c'. QSPI_SCLK is clearly a QSPI/SPI clock net, not I2C. This is a net-category misclassification in the test coverage detector.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -44,9 +44,9 @@
       "correct": [
         {
           "description": "PCB stats are consistent with schematic: 34 footprints (34 schematic components), 52 nets, routing_complete=true, DFM standard tier with min track 0.15mm. Edge clearance warnings for J1/J4/J3 at 0-0.07mm are marginal but plausible for edge connectors. Decoupling placement correctly identifies 2 caps near U1 LDO and 13 near U3 RP2040.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

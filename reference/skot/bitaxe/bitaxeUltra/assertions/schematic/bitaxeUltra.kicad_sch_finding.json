@@ -9,11 +9,13 @@
       "description": "INCORRECT: R4 is PGOOD pull-up, C35/C44 are decoupling caps. Falsely detected as RC filter.",
       "created_from": "FND-00000036",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "field": "resistor.ref",
-        "pattern": "^R4$"
-      }
+        "pattern": "^R4$",
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

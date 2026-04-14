@@ -9,11 +9,13 @@
       "description": "CHECK_NEEDS_FIX: The RF chain detector correctly assembles the HackRF One signal chain from the hierarchical schematic (4 sheets parsed). It identifies all SKY13453 and SKY13317 RF switches, the RFFC5072 wideband fractional-N IQ mixer, MGA-81563 LNA amplifiers, MAX2837 transceiver (from the baseband sub-sheet), DEA/LP0603 filters, and four baluns. Net connections between RF switch stages are traced correctly (e.g., !MIX_BYPASS, RX, TX_AMP/AMP_BYPASS paths). Total RF component count of 20 is accurate.",
       "created_from": "FND-00002157",
       "check": {
-        "path": "signal_analysis.rf_chains[0].total_rf_components",
+        "path": "findings[0].total_rf_components",
         "op": "equals",
-        "value": 20
+        "value": 20,
+        "detector_filter": "detect_rf_chains"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_chains[0].total_rf_components"
     },
     {
       "id": "FND-00002157-AST-02",
@@ -41,11 +43,13 @@
       "description": "INCORRECT: The oscillator keyword 'sg-' (intended to match SG-series oscillators from Epson/SG Micro) accidentally matches any lib_id containing 'gsg-symbols' \u2014 the hackrf project's custom symbol library prefix. This causes 7x SKY13453 RF SPDT switches (U1, U2, U5, U6, U7, U10, U11) and the XC2C64A CPLD (U24) to appear in crystal_circuits as type='active_oscillator'. The exclude list contains 'spdt' but that string is not present in 'SKY13453' or the lib_id 'gsg-symbols:SKY13453', so the exclusion fails. These 8 false entries pollute the crystal_circuits output.",
       "created_from": "FND-00002157",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "max_count",
-        "value": 3
+        "value": 3,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00002157-AST-05",
@@ -63,7 +67,7 @@
       "description": "When the MCU sub-sheet (hardware_hackrf-one_mcu.kicad_sch) is analyzed independently, it reports I2C1_SDA and I2C1_SCL with has_pullup=false. In the top-level aggregated analysis (hackrf-one.kicad_sch), the same nets still report has_pullup=false. However, these are hierarchical labels that connect to a separate I2C bus serviced by R19/R20 pull-ups visible in the mcu.kicad_sch sheet. The pullups R27/R28 correctly serve the SDA/SCL nets while the I2C1_SDA/I2C1_SCL nets (routed to an external GPIO connector) legitimately may lack pull-ups \u2014 this is actually correct behavior in context, as the external host provides those pull-ups.",
       "created_from": "FND-00002157",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "The regulator topology, output rail, power budget (20mA for 2x MAX9321), inrush analysis, and sleep current audit for U3 are all accurately detected and reasonable.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The BOM correctly groups U1 and U2 as MAX9321 with proper footprint and datasheet. All 48 components extracted, 32 nets matched between schematic and PCB outputs (32 net_count in schematic stats matches PCB).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -29,9 +29,9 @@
       "missed": [
         {
           "description": "The design has 8 ADC differential pairs and 4 CLK differential pairs (N/P suffix nets). No differential pair detection or annotation is present in the output. This is a significant missed analysis for an RF IQ interface board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -54,9 +54,9 @@
       "correct": [
         {
           "description": "9 gerber files present, all expected layers found, 48 unique components extracted matching schematic count, 126 vias (0.4mm drill) correctly classified, 6 NPTH mounting holes correctly identified. F.Paste is empty (back-side SMD only) which is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -65,7 +65,7 @@
       "incorrect": [
         {
           "description": "The 12 NPTH 1.6mm holes appear in drill_classification.component_holes.tools as type='NPTH', but mounting_holes count is 0. 1.6mm NPTH holes are likely connector locating pins (SATA connectors use 1.6mm locating pegs), not mounting holes, so this may be debatable \u2014 but the mounting_holes bucket is empty when there are 12 NPTH holes which is worth flagging.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -86,9 +86,9 @@
       "correct": [
         {
           "description": "48 footprints, 12 THT + 36 SMD, 650 segments, 126 vias, 2 zones, fully routed \u2014 all consistent with the gerber output (195 total holes: 126 vias + 69 component holes matches PCB via_count).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

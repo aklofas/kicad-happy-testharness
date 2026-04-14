@@ -9,11 +9,13 @@
       "description": "INCORRECT: Both SY8009AAAC regulators (U2, U3) report input_rail=null in power_regulators. Investigation shows U2's IN pin (pin 4, type=input) is parsed onto the GND net in the legacy KiCad 5 format \u2014 a net assignment error likely caused by the pin coordinate-to-net lookup in legacy .sch parsing. The +5V net does contain U2 and U3, but only their EN and GND pins are found there. The regulator input detection logic apparently looks for a specific input-type pin connection to a named power net, but the legacy format coordinates mislead the parser. The correct input rail for both SY8009s is +5V (5V input, stepping down to 3.3V and 1.2V).",
       "created_from": "FND-00002212",
       "check": {
-        "path": "signal_analysis.power_regulators[0].input_rail",
+        "path": "findings[0].input_rail",
         "op": "equals",
-        "value": null
+        "value": null,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].input_rail"
     },
     {
       "id": "FND-00002212-AST-02",

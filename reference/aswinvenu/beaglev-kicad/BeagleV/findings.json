@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Correctly identified 5 crystal circuits (X1, X3, X4, X6, X?) with load capacitors and effective load pF calculations",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X1$"
+            "pattern": "^X1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -27,12 +28,13 @@
         },
         {
           "description": "Correctly detected 8 RC filter networks in the audio DAC output section (R265-R272 with C309-C314)",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R265$"
+            "pattern": "^R265$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -56,12 +58,13 @@
         },
         {
           "description": "Correctly identified R261/R264 voltage divider (49.9K/13.3K) as feedback for U13 LMR62014 boost converter",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R261$"
+            "pattern": "^R261$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -74,11 +77,12 @@
         },
         {
           "description": "Correctly detected 4 I2C buses (I2C0 SCL/SDA, I2C2 SCL/SDA) with pull-up resistors and connected devices",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [],
@@ -87,12 +91,13 @@
         },
         {
           "description": "Correctly detected Ethernet PHY U5 (KSZ9031RNXCA) in ethernet_interfaces",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [
@@ -103,12 +108,13 @@
         },
         {
           "description": "Correctly identified 2 power regulators: U13 (LMR62014 switching) and U14 (TPS65086100 PMIC)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U13$"
+            "pattern": "^U13$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -129,11 +135,12 @@
         },
         {
           "description": "Correctly detected RF matching network for ANT1 antenna (RFECA3216060A1T) with L3 10nH and C213 1pF",
-          "analyzer_section": "signal_analysis.rf_matching",
+          "analyzer_section": "detect_rf_matching",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           },
           "detector": "rf_matching",
           "subject_refs": [
@@ -145,12 +152,13 @@
         },
         {
           "description": "Correctly identified 6 protection devices including TVS diodes (D1, D2, D4, D5), Schottky (D52 SMBJ5.0CA), and fuse F2",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -166,12 +174,13 @@
         },
         {
           "description": "Correctly detected 4 MOSFET transistor circuits: Q1/Q3 (CJ1012 LED drivers), Q8 (IRLML6401 P-ch power switch), Q2 (USB power control)",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -203,11 +212,12 @@
         },
         {
           "description": "Decoupling analysis correctly identified 5 power rails with capacitor coverage details",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -218,12 +228,13 @@
       "incorrect": [
         {
           "description": "LMR62014 (U13) has both input_rail and output_rail set to +5V, which is impossible for a boost converter; the input should be a lower voltage rail (CTL5 or similar) and output should be VSYS_5V8/+5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U13$"
+            "pattern": "^U13$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -234,12 +245,13 @@
         },
         {
           "description": "TPS65086100 (U14) feedback_divider incorrectly identifies R100=100K and R167=4.7K as its feedback network; these are actually gate resistors for Q3 (CJ1012 LED driver MOSFET), not feedback for the PMIC which uses internally-set voltages",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U14$"
+            "pattern": "^U14$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -253,7 +265,7 @@
         },
         {
           "description": "LMR62014 estimated_vout of 2.851V uses assumed Vref=0.6V, but the LMR62014 datasheet specifies Vref=1.233V; correct Vout would be ~5.86V (matching VSYS_5V8 rail)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -261,12 +273,13 @@
         },
         {
           "description": "HDMI interface detection found P? (HDMI_1V8 power symbol) as the HDMI connector instead of J11 (ST-HD-010 actual HDMI connector) and missed U11 (TDA19988 HDMI transmitter IC) as the encoder",
-          "analyzer_section": "signal_analysis.hdmi_dvi_interfaces",
+          "analyzer_section": "detect_hdmi_dvi_interfaces",
           "check": {
-            "path": "signal_analysis.hdmi_dvi_interfaces",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "connector",
-            "pattern": "^J11$"
+            "pattern": "^J11$",
+            "detector_filter": "detect_hdmi_dvi_interfaces"
           },
           "detector": "hdmi_dvi_interfaces",
           "subject_refs": [
@@ -278,12 +291,13 @@
         },
         {
           "description": "Ethernet interface found U5 (KSZ9031RNXCA) but shows empty magnetics and connectors arrays; J6 (LPJG0801HBNL RJ45 with integrated magnetics) should be detected as the connector",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "phy_reference",
-            "pattern": "^J6$"
+            "pattern": "^J6$",
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [
@@ -305,12 +319,13 @@
       "missed": [
         {
           "description": "LPDDR4 memory interfaces not detected: U7 and U8 (32Gbit_RAM) are LPDDR4 chips with full address/data bus connections to U9 (VIC-V10 SoC)",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U7$"
+            "pattern": "^U7$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -323,11 +338,12 @@
         },
         {
           "description": "USB 3.0 hub (U1 GL3520-OS322) not identified as a bus hub/repeater in any signal analysis section; it connects upstream USB from VIC SoC to two downstream USB 3.0 Type-A ports",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -338,12 +354,13 @@
         },
         {
           "description": "PCMF2USB3S USB3 ESD protection ICs (D27-D32, 6 devices) not detected in protection_devices despite being dedicated USB ESD suppressors on the Type-A port data lines",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D27$"
+            "pattern": "^D27$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -359,11 +376,12 @@
         },
         {
           "description": "WiFi/BT combo module U12 (AP6236) not specifically identified in any signal analysis section; has dedicated 26MHz crystal (X4), antenna matching network, and SDIO/UART interfaces",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [
@@ -375,12 +393,13 @@
         },
         {
           "description": "Q6 and Q7 (CSD87381P NexFET power MOSFETs) used as external power stages for TPS65086100 PMIC not detected in transistor_circuits",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q6$"
+            "pattern": "^Q6$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -392,12 +411,13 @@
         },
         {
           "description": "Q9 (BCM857BS-7F-F dual PNP transistor) used in USB VBUS/OTG detection circuit not detected in transistor_circuits",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q9$"
+            "pattern": "^Q9$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -417,12 +437,13 @@
         },
         {
           "description": "D65 (PMEG3010CEJ) is a Schottky catch diode for LMR62014 boost converter but not linked to the regulator circuit or identified in protection_devices",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D65$"
+            "pattern": "^D65$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [

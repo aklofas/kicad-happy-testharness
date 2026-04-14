@@ -1,0 +1,68 @@
+{
+  "file_pattern": "open-running-watch_thermal",
+  "analyzer_type": "thermal",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Finding count ~93 (tolerance 10%)",
+      "check": {
+        "path": "summary.total_findings",
+        "op": "range",
+        "min": 88,
+        "max": 98
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "high count ~7",
+      "check": {
+        "path": "summary.high",
+        "op": "range",
+        "min": 6,
+        "max": 8
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "medium count ~7",
+      "check": {
+        "path": "summary.medium",
+        "op": "range",
+        "min": 6,
+        "max": 8
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "low count ~79",
+      "check": {
+        "path": "summary.low",
+        "op": "range",
+        "min": 75,
+        "max": 83
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Components analyzed ~7 (tolerance 10%)",
+      "check": {
+        "path": "summary.components_analyzed",
+        "op": "range",
+        "min": 6,
+        "max": 8
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Thermal score ~40 (+-10)",
+      "check": {
+        "path": "summary.thermal_score",
+        "op": "range",
+        "min": 30,
+        "max": 50
+      }
+    }
+  ]
+}

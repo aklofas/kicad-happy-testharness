@@ -20,11 +20,13 @@
       "description": "The analyzer reports switches_on_matrix=63 but diodes_on_matrix=60. The 2 extra counted switches are optional 2u keycap alternate footprints, not additional matrix entries.",
       "created_from": "FND-00002424",
       "check": {
-        "path": "signal_analysis.key_matrices.0.diodes_on_matrix",
+        "path": "findings.0.diodes_on_matrix",
         "op": "equals",
-        "value": 60
+        "value": 60,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices.0.diodes_on_matrix"
     }
   ]
 }

@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The 36-key le_chiffre keyboard matrix is correctly detected with all 4 row nets and 10 column nets. The analyzer correctly reports 36 switches on the matrix against a 4x10=40-capacity grid, accurately reflecting the partially-populated layout. The 11-LED SK6812MINI addressable chain (D101-D111) is also correctly identified with single-wire WS2812 protocol and 660mA estimated current.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],
@@ -29,23 +30,25 @@
         },
         {
           "description": "design_observations reports that U1 (STM32F072CBT6) lacks +3V3 decoupling and U? (XC6206 LDO) lacks both +5V and +3V3 caps. However, there are 9 unannotated C? capacitors (100nF and 1uF) all on the GND net, some also on +3V3. Because the components are unannotated (reference = 'C?'), the analyzer cannot resolve their net connections via pin_connections (which is empty for all C?), so it treats them as unconnected. The decoupling check fails to handle unannotated components connected via net membership in the pins list.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],
       "missed": [
         {
           "description": "The schematic has a full USB 2.0 device stack: USB-C connector (J1), PRTR5V0U2X ESD protection on D_P/D_N, a polyfuse (F1) on VBUS, and an STM32F072CBT6 which has a built-in USB FS peripheral. Despite having all these signals (VBUS, D_P, D_N), the bus_topology.detected_bus_signals contains only GPIO port prefixes (A, B, C, F) and the key matrix signals. No USB peripheral interface is reported in bus_topology or signal_analysis.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "contains_match",
             "field": "category",
-            "pattern": "usb"
+            "pattern": "usb",
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

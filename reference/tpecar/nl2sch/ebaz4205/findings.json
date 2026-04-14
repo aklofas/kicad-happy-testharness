@@ -17,12 +17,13 @@
         },
         {
           "description": "4x J37I switching regulators (U22, U26, U27, U28) correctly identified with topology=switching, inductors, and feedback dividers computing accurate output voltages (3.3V, 1.0V, 1.5V, 1.8V)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U22$"
+            "pattern": "^U22$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -36,12 +37,13 @@
         },
         {
           "description": "TPS51200AQDRCRQ1 (U72) correctly identified as LDO DDR termination regulator with VCC input and VCC1 output",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U72$"
+            "pattern": "^U72$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -52,11 +54,12 @@
         },
         {
           "description": "4 feedback networks correctly identified on J37I regulators connecting FB pins to voltage dividers",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [],
@@ -65,12 +68,13 @@
         },
         {
           "description": "Isolation barrier detected with 4 ground domains (GND, GND3, GNDA, GNDADC_0) and 4 optocouplers (U67, U68 EL817; U69, U70 PC817)",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U67$"
+            "pattern": "^U67$",
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [
@@ -84,12 +88,13 @@
         },
         {
           "description": "Ethernet PHY IP101GA (U24) correctly detected in ethernet_interfaces",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^U24$"
+            "pattern": "^U24$",
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [
@@ -100,12 +105,13 @@
         },
         {
           "description": "9 voltage dividers detected including DDR VREF (R2458/R2459 = 0.5 ratio into PS_DDR_VREF0), MIO VREF (R2432/R2433 = 0.5 into PS_MIO_VREF_501), and 4 regulator feedback dividers",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R2432$"
+            "pattern": "^R2432$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -146,12 +152,13 @@
         },
         {
           "description": "Y3 25MHz crystal correctly detected in crystal_circuits",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y3$"
+            "pattern": "^Y3$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -180,12 +187,13 @@
         },
         {
           "description": "Ethernet interface missing magnetics: T6 (BT16B03 Ethernet transformer) connects between PHY U24 and RJ45 U25 but is not listed in ethernet_interfaces magnetics array",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "phy_reference",
-            "pattern": "^T6$"
+            "pattern": "^T6$",
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [
@@ -208,12 +216,13 @@
       "missed": [
         {
           "description": "DDR3 memory interface not detected: U66 (EM6GD16EWKG-12H DDR3L SDRAM) connects to U31 Zynq via 76+ DDR signals (address, data, control, DQS) but memory_interfaces is empty",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U31$"
+            "pattern": "^U31$",
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [
@@ -225,12 +234,13 @@
         },
         {
           "description": "Transistor circuits not detected: U20 and U21 (MMBT3904 NPN BJTs) have surrounding passive components (capacitors, resistors) in power switching roles but transistor_circuits is empty",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U20$"
+            "pattern": "^U20$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -242,12 +252,13 @@
         },
         {
           "description": "X8 (33.333MHz crystal, lib_id ebaz4205:TXC-7C) not detected in crystal_circuits despite being typed as crystal; only Y3 and Y2 appear in the list",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^X8$"
+            "pattern": "^X8$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -260,12 +271,13 @@
         },
         {
           "description": "U65 SGM706-SYS8 voltage supervisor/watchdog not detected as a protection device; it monitors supply voltage and provides system reset functionality",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U65$"
+            "pattern": "^U65$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -276,12 +288,13 @@
         },
         {
           "description": "RJ45 connector U25 (8P8C_LED) not linked in ethernet_interfaces connectors array despite being in the same subcircuit as PHY U24 and magnetics T6",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^T6$"
+            "pattern": "^T6$",
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [
@@ -294,11 +307,12 @@
         },
         {
           "description": "RC/LC filters on power rails not detected despite numerous inductor+capacitor combinations on VCC, VCCP, VCCA, VCC-DDR rails used for power filtering/decoupling",
-          "analyzer_section": "signal_analysis.lc_filters",
+          "analyzer_section": "detect_lc_filters",
           "check": {
-            "path": "signal_analysis.lc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters"
           },
           "detector": "lc_filters",
           "subject_refs": [],
@@ -331,7 +345,7 @@
       "correct": [
         {
           "description": "Four J37I switching regulators (U22/U26/U27/U28) correctly identified with accurate voltages: VCC=3.3V, VCCP=1.0V, VCCA=1.8V, VCC-DDR=1.5V",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U22",
@@ -342,10 +356,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U22$"
+            "pattern": "^U22$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -354,7 +369,7 @@
         },
         {
           "description": "IP101GA Ethernet PHY (U24) correctly identified with RMII pins and 25MHz crystal Y3",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "detector": "ethernet_interfaces",
           "subject_refs": [
             "U24",
@@ -363,15 +378,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^U24$"
+            "pattern": "^U24$",
+            "detector_filter": "detect_ethernet_interfaces"
           }
         },
         {
           "description": "Four optocouplers (U67/U68 EL817, U69/U70 PC817) correctly detected in isolation_barriers with separate ground domains",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "detector": "isolation_barriers",
           "subject_refs": [
             "U67",
@@ -382,10 +398,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U67$"
+            "pattern": "^U67$",
+            "detector_filter": "detect_isolation_barriers"
           }
         },
         {
@@ -394,7 +411,7 @@
         },
         {
           "description": "DDR VREF divider R2432/R2433 (100K/100K) correctly identified at 1.65V",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R2432",
@@ -403,15 +420,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R2432$"
+            "pattern": "^R2432$",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "TPS51200AQDRCRQ1 (U72) DDR termination regulator correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U72"
@@ -419,10 +437,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U72$"
+            "pattern": "^U72$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -453,7 +472,7 @@
         },
         {
           "description": "False decoupling warnings for ICs on VCC rail which has 26 decoupling capacitors.",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -467,7 +486,7 @@
       "missed": [
         {
           "description": "DDR3 SDRAM interface not detected: U66 (EM6GD16EWKG-12H) with 16 DQ, differential DQS, 14 address, CK/CKE/CS/ODT/WE/CAS/RAS to Zynq. memory_interfaces is empty.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "U66"
@@ -475,15 +494,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U66$"
+            "pattern": "^U66$",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "NAND flash interface not detected: U12 (W29N01HVSINA 1Gbit) with 8 I/O, ALE, CLE, #CE, #RE, #WE to Zynq PS_MIO.",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "detector": "memory_interfaces",
           "subject_refs": [
             "U12"
@@ -491,15 +511,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U12$"
+            "pattern": "^U12$",
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "Ethernet transformer T6 (BT16B03) not linked to ethernet_interfaces. U25 (RJ45) also not linked.",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "detector": "ethernet_interfaces",
           "subject_refs": [
             "T6",
@@ -508,10 +529,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^T6$"
+            "pattern": "^T6$",
+            "detector_filter": "detect_ethernet_interfaces"
           }
         },
         {

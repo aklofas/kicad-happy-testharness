@@ -20,11 +20,12 @@
       "missed": [
         {
           "description": "U1 (ADC08100CIMTCX) is an 8-bit 100MSPS ADC with multiple supply pins (VA, AGND, DRVD, DRGND) all connecting to unnamed nets (__unnamed_2, __unnamed_4, __unnamed_7, __unnamed_8, etc.) that are filtered from the main +3.3V and GND rails by ferrite beads L1 and L2. Decoupling caps C3, C5, C6, C7 are correctly placed on these supply nets in the schematic, but the decoupling_analysis array is empty because the detector only searches for caps by matching named rail names. No decoupling coverage warning is generated for U1, and the design_observations only warn about U2 (buffer IC). This is a systematic limitation when ferrite-bead power filtering creates unnamed local supply domains.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

@@ -1,7 +1,8 @@
 {
   "file_pattern": "untitled.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,51 +35,88 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 design_observations detected",
+      "description": "1 detect_audio_circuits detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "10 rc_filters detected",
+      "description": "All detect_audio_circuits have ref",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "description": "All detect_audio_circuits type values are valid",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "path": "findings",
+        "detector_filter": "detect_audio_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(audio_amplifier|audio_codec)$",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "2 suggested_certifications detected",
+      "description": "1 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "10 detect_rc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "2 detect_suggested_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -87,7 +125,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "Has 12 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

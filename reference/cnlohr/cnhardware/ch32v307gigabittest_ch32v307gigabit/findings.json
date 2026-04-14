@@ -15,11 +15,12 @@
       "missed": [
         {
           "description": "Ethernet interface not detected -- RTL8211E PHY + G2406S magnetics + 8P8C RJ45 with GMII bus nets all present",
-          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "analyzer_section": "detect_ethernet_interfaces",
           "check": {
-            "path": "signal_analysis.ethernet_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_ethernet_interfaces"
           },
           "detector": "ethernet_interfaces",
           "subject_refs": [],

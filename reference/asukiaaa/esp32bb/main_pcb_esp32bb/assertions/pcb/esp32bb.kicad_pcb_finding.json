@@ -9,18 +9,19 @@
       "description": "INCORRECT: The thermal_analysis.thermal_pads list contains 9 entries for only 3 unique component+pad combinations: P3/pad6 appears 4 times (with varying nearby_thermal_vias: 0,1,0,0), U3/pad29 appears 4 times (all with nearby_thermal_vias=1), and U1/pad39 appears once. This is a bug in the thermal pad detection \u2014 the same pad is being reported multiple times, likely because the search algorithm iterates over multiple search radii or footprint instances and collects duplicates without deduplication.",
       "created_from": "FND-00002052",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
         "op": "max_count",
         "value": 3
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: thermal_analysis.thermal_pads"
     },
     {
       "id": "FND-00002052-AST-02",
       "description": "The PCB file contains two footprints with reference 'P3' (the USB OTG connector), visible in both the footprint reference list and the silkscreen values_visible_on_silk list which shows 'P3' twice. The PCB connector P3 is likely a through-hole USB connector with a mechanical mounting footprint duplicated. The analyzer does not flag this duplicate reference anywhere \u2014 not in DFM, placement, connectivity, or any other section. A duplicate reference check should be part of PCB validation.",
       "created_from": "FND-00002052",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "R805 (37k) / R804 (10.7k) voltage divider correctly detected with ratio=0.224",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "field_equals",
             "field": "ratio",
-            "value": 0.224
+            "value": 0.224,
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -39,12 +40,13 @@
       "missed": [
         {
           "description": "Voltage divider R805/R804 is feedback for LMR36506 (U802) but is_feedback not set, not linked in feedback_networks, no estimated_vout for U802",
-          "analyzer_section": "signal_analysis.feedback_networks",
+          "analyzer_section": "validate_feedback_stability",
           "check": {
-            "path": "signal_analysis.feedback_networks",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R804$"
+            "pattern": "^R804$",
+            "detector_filter": "validate_feedback_stability"
           },
           "detector": "feedback_networks",
           "subject_refs": [

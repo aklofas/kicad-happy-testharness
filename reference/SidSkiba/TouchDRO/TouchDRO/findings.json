@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "J1\u2013J4 use lib_id=Connector:USB_B_Micro (footprint='User Footprint Library:USB Breakout Board') and are correctly flagged in usb_compliance. J5\u2013J8 use lib_id=Connector_Generic:Conn_01x03 (3-pin TTL-scale headers) and are correctly excluded. The vbus_esd_protection=fail finding for J1\u2013J4 is also accurate (no TVS or ESD protection in the design).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The design uses a wired-OR-style input stage where each scale channel (X, Y, Z, W) has one DATA resistor and one CLK resistor both driving the same SCALE_VIN node through a shared capacitor. The analyzer correctly identifies all 8 R+C pairs (R1+C1 for X_D, R5+C1 for X_CLK, etc.) and their 33.86 Hz cutoff frequency.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

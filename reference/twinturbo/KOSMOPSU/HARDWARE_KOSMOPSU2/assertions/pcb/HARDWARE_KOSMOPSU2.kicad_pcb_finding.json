@@ -9,7 +9,7 @@
       "description": "15 nets, 200 track segments, fully routed, board 153.7x73.9mm \u2014 all consistent with PCB source. Layer transitions (nets spanning both Cu layers without vias) noted correctly. No zone fills (no copper pours), 2 SMD-free logo footprints identified.",
       "created_from": "FND-00000618",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -21,7 +21,7 @@
       "description": "LINE and NEUT are 240V mains nets routed with 0.5mm and 3.0mm tracks. The power_net_routing and current_capacity sections only analyze +12V and GND. LINE (28mm total, 0.5mm min width) and NEUT are mains voltage and should be analyzed for creepage/clearance and current capacity. The analyzer silently ignores them.",
       "created_from": "FND-00000618",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

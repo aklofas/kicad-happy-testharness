@@ -9,7 +9,7 @@
       "description": "All three schematics correctly report duplicate_references and unannotated for all refs ending in '?'. This is appropriate for design templates where component annotation is intentionally deferred.",
       "created_from": "FND-00000677",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "pwr_flag_warnings correctly identifies GND has no PWR_FLAG. label_shape_warnings correctly flags 'MCU VCC' as an undriven input-shaped label. Both are real design issues in this template.",
       "created_from": "FND-00000677",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "MIDI_IN is the canonical MIDI IN circuit which uses a 6N137 high-speed optocoupler (U?, lib_id: Isolator:6N137) as the core isolation barrier between the MIDI cable and the MCU. isolation_barriers=[] in the output. The 6N137 should be detectable by its lib_id prefix 'Isolator:' or its keywords 'optically coupled'.",
       "created_from": "FND-00000677",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -40,7 +40,7 @@
       "description": "MIDI_IN has two D? diodes (value: '1N4148/1N400x') used as protection diodes on the MIDI input. protection_devices=[] in the output. These should be identifiable as protection/clamping diodes given their placement on the input signal path.",
       "created_from": "FND-00000677",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

@@ -8,20 +8,22 @@
       "correct": [
         {
           "description": "Y1 (Device:Crystal, 4MHz) is correctly classified as type 'crystal'. The crystal_circuits entry has both 27pF load caps (C1, C2) identified, effective_load_pF=16.5 (computed as (27*27)/(27+27)+3pF stray), and in_typical_range=true. The ATmega162-16PU XTAL1/XTAL2 pins correctly connect to the crystal nets.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].frequency",
+            "path": "findings",
             "op": "equals",
-            "value": 4000000.0
+            "value": 4000000.0,
+            "detector_filter": "detect_crystal_circuits[0].frequency"
           }
         },
         {
           "description": "The design has only 2 capacitors (27pF crystal load caps C1/C2) and no bypass/bulk capacitors on the +5V rail. The design_observations correctly flag both U1 (ATmega162-16PU) and DS1 (HD44780) as lacking decoupling on +5V, with rails_with_caps=[]. This is accurate \u2014 no 100nF bypass caps are present in the source schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

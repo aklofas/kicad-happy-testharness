@@ -9,10 +9,12 @@
       "description": "The analyzer correctly identifies C4(4.7uF) and C5(100nF) on +1V8, and C2(4.7uF) and C3(1uF) on +3.3V. C1(1uF) is correctly omitted from decoupling because its pin1 connects to an eMMC NC pad row (at y=130.81 in schematic coordinates) rather than to a power rail. The 2-rail decoupling coverage (bulk+bypass for each) is accurately reported.",
       "created_from": "FND-00001578",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001578-AST-02",

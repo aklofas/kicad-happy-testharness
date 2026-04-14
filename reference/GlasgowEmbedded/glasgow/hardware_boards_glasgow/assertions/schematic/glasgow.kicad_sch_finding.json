@@ -19,10 +19,12 @@
       "description": "The analyzer detects U2 (CAT24M01X, 1Mbit EEPROM) and U3 (BL24C256A, 256kbit EEPROM) as memory interfaces. Both are correctly identified as connected to both U1 (CY7C68013A USB MCU) and U30 (ICE40HX8K FPGA) via 2 shared signal nets (I2C SDA/SCL). This is the Glasgow debug tool's I2C bus architecture where the MCU and FPGA share access to both configuration EEPROMs.",
       "created_from": "FND-00002099",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_memory_interfaces"
+      },
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

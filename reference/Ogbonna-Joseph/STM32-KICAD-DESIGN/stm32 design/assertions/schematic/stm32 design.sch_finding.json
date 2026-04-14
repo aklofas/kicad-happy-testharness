@@ -9,24 +9,28 @@
       "description": "Y1 (16MHz HSE crystal) correctly identifies C3 and C1 (both 12pF) as load caps, computes effective_load_pF=9.0. The 12pF caps giving 9pF effective load (6pF series + 3pF stray) is a standard and correct calculation for a 16MHz MCU crystal circuit.",
       "created_from": "FND-00001342",
       "check": {
-        "path": "signal_analysis.crystal_circuits[0].effective_load_pF",
+        "path": "findings[0].effective_load_pF",
         "value": 9.0,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_crystal_circuits"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].effective_load_pF"
     },
     {
       "id": "FND-00001342-AST-02",
       "description": "I2C1_SDA and I2C1_SCL nets are both detected as i2c_bus in design_observations, with R2 as SDA pull-up and R5 as SCL pull-up, both connected to the +3.3VA rail. This is accurate for a properly configured I2C bus on an STM32 design.",
       "created_from": "FND-00001342",
       "check": {
-        "path": "signal_analysis.design_observations[3].category",
+        "path": "findings[3].category",
         "value": "i2c_bus",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "aspirational_reason": "array index path may not match actual output structure"
+      "aspirational_reason": "array index path may not match actual output structure",
+      "migration_note": "Path migrated from: signal_analysis.design_observations[3].category"
     },
     {
       "id": "FND-00001342-AST-03",
@@ -43,22 +47,26 @@
       "description": "INCORRECT: Q1 is an AO3401A which is a P-channel MOSFET (confirmed by its datasheet \u2014 AO3401A is a P-ch MOSFET in SOT-23). The analyzer reports is_pchannel=false. Additionally, gate_net and source_net are both reported as '__unnamed_52', which suggests a pin connectivity parsing error \u2014 gate and source cannot share the same net in a functional circuit.",
       "created_from": "FND-00001342",
       "check": {
-        "path": "signal_analysis.transistor_circuits[0].is_pchannel",
+        "path": "findings[0].is_pchannel",
         "value": true,
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].is_pchannel"
     },
     {
       "id": "FND-00001342-AST-05",
       "description": "INCORRECT: U2 (MP2359DJ) is a step-down converter. The analyzer reports fb_net='BUCK_SW' (the switch node) instead of the correct feedback net 'BUCK_FB'. BUCK_FB is the actual feedback divider output connected to the FB pin of U2. BUCK_SW is the switching node (inductor drive), not the feedback net. This is a pin mapping error in the switching regulator detector.",
       "created_from": "FND-00001342",
       "check": {
-        "path": "signal_analysis.power_regulators[1].fb_net",
+        "path": "findings[1].fb_net",
         "value": "BUCK_FB",
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[1].fb_net"
     }
   ]
 }

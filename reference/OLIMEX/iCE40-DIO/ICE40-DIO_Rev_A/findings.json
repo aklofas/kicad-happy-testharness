@@ -17,11 +17,12 @@
         },
         {
           "description": "The analyzer correctly identifies VR1 (MCP1825-ADJE/DC) as an LDO regulator and detects the 15.92 Hz RC low-pass filter formed by R7 (100k/1%) and C5 (100nF) on the Vdac output. This filter smooths the I2C DAC output before feeding into the voltage regulation feedback network. The RC filter detection is technically correct; input and output nets are unnamed because the Vdac net is involved in the pin mapping error described separately.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters[0].cutoff_hz",
+            "path": "findings",
             "op": "equals",
-            "value": 15.92
+            "value": 15.92,
+            "detector_filter": "detect_rc_filters[0].cutoff_hz"
           }
         }
       ],

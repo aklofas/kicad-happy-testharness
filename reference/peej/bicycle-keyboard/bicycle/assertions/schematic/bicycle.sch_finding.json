@@ -19,30 +19,34 @@
       "description": "The analyzer correctly identifies the 5x6 keyboard matrix with Row0\u2013Row4 and Col0\u2013Col5 net names, and uses the net_name detection method. The row and column net listings are accurate.",
       "created_from": "FND-00001988",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rows": 5,
           "columns": 6
-        }
+        },
+        "detector_filter": "detect_key_matrices"
       },
       "aspirational": false,
-      "aspirational_reason": "contains_match does not support dict value matching"
+      "aspirational_reason": "contains_match does not support dict value matching",
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00001988-AST-03",
       "description": "The design_observations section correctly flags that U1 ARDUINO_PRO_MICRO has no bypass capacitors on the VCC rail. This is a genuine observation; the module relies on internal decoupling. The analyzer appropriately reports rails_without_caps=['VCC'] and rails_with_caps=[].",
       "created_from": "FND-00001988",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "category": "decoupling",
           "component": "U1"
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
       "aspirational": false,
-      "aspirational_reason": "contains_match does not support dict value matching"
+      "aspirational_reason": "contains_match does not support dict value matching",
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001988-AST-04",
@@ -71,13 +75,15 @@
       "description": "INCORRECT: The source schematic contains exactly 29 SWITCH_PUSH components (MX0:0-5, MX1:0-5, MX2:0-5, MX3:0-5, MX4:1-5 \u2014 note MX4:0 is absent, making Row4 have only 5 keys) and exactly 29 diodes. The key matrix detector using net_name method reports estimated_keys=33, switches_on_matrix=33, and diodes_on_matrix=33 for a 5-row x 6-col matrix, overcounting by 4. The 5x6 matrix topology is correctly identified but the actual populated key count is wrong.",
       "created_from": "FND-00001988",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "switches_on_matrix": 29
-        }
+        },
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     }
   ]
 }

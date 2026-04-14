@@ -20,22 +20,26 @@
       "description": "INCORRECT: The design_observations entry for 'regulator_caps' lists both input (__unnamed_3) and output (__unnamed_4) as missing caps. However, ic_pin_analysis for U1 pin VIN (__unnamed_3) shows has_decoupling_cap=true with C1 explicitly listed. The input cap is not missing. Additionally, the output_rail is misidentified as __unnamed_4 (the switching node between U1-OUT, D1, and L1) rather than the actual filtered output __unnamed_0 (where C2 actually lives), causing the output cap to also appear missing.",
       "created_from": "FND-00002294",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00002294-AST-03",
       "description": "R1 (1k) and R2 (3k) form the classic feedback resistor divider from the output to the FB pin of U1 (LM2596T-5), setting the output voltage. The ic_pin_analysis correctly identifies R1 and R2 as connected to the FB pin, but signal_analysis.feedback_networks is empty and signal_analysis.voltage_dividers is empty. This resistor divider is the primary feedback network of the switching regulator and should be detected.",
       "created_from": "FND-00002294",
       "check": {
-        "path": "signal_analysis.feedback_networks",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.feedback_networks"
     }
   ]
 }

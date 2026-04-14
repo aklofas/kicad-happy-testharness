@@ -22,20 +22,21 @@
       "missed": [
         {
           "description": "SK6812 addressable LED chain topology not detected - 100 LEDs in a daisy-chain DIN/DOUT pattern is a significant signal path",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "No power analysis despite 100 addressable LEDs drawing significant current (up to 6A at full white)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],

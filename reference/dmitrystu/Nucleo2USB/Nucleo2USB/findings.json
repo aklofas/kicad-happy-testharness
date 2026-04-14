@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "U3 protects OTGFS_DN/OTGFS_DP and U4 protects OTGHS_DN/OTGHS_DP, both detected as esd_ic type protection devices with correct net listings.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "D1, D2, D3 are PMEG2010EJ Schottky diodes used as power path ORing diodes (common anode on VBUS inputs, cathode to +5V0 bus), not reverse polarity protection. They are forward-biased power-path selectors, not reverse-polarity clamps. The protected_net and clamp_net are both '+5V0' which is wrong for a protection device.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "X1 and X2 are USB-OTG connectors with D+/D- signals routed through 22\u03a9 series resistors to the STM32 USB FS and HS peripherals. differential_pairs[] is empty. The design also has ESD protection (U3/U4 ESDAxxSC6) on both USB buses. The USB buses should be detectable as differential signal paths.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

@@ -57,20 +57,22 @@
         },
         {
           "description": "signal_analysis section reports rc_filters:[] and all other signal detectors empty. The schematic has R1-R8 (5.1k resistors) on the serial lines, but these are current-limiting/protection resistors in series with connector signals, not true RC filters. The empty result is correct for RC filters specifically.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "len_eq",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "The signal_analysis.decoupling_analysis array is empty. The design_observations correctly notes that U1 and U2 have rails_without_caps ['+3.3V', '+5V']. This is accurate: the Blackpill breakout modules have their own decoupling capacitors built in, so the adapter board intentionally has no decoupling caps. The finding is correct behavior.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "len_eq",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -86,11 +88,12 @@
         },
         {
           "description": "Nets rgb_l and rgb_r appear in net_classification as 'signal', and connectors J3/J4 are labeled 'RGB'. signal_analysis.addressable_led_chains is empty []. The analyzer should detect these as potential WS2812/addressable LED data lines.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "len_gte",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           }
         }
       ],

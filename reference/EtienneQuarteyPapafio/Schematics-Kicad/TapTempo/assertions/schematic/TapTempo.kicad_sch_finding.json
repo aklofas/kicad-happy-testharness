@@ -41,11 +41,13 @@
       "description": "D4 (1N4007) has its cathode (pin K) on net __unnamed_6 with K1 pin 1 and Daisy ADC_0, and its anode (pin A) on net __unnamed_13 with K1 pin 8. This is a standard flyback diode across the relay coil. The signal_analysis.protection_devices list is empty. This is the same miss as in the Crossfade Pedal \u2014 the analyzer does not correlate diodes placed across relay coil pins as protection devices.",
       "created_from": "FND-00001348",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "value": [],
-        "op": "equals"
+        "op": "equals",
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

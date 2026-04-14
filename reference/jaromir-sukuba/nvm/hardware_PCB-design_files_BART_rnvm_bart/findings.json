@@ -8,7 +8,7 @@
       "correct": [
         {
           "description": "MCP1700-33 (U8) correctly identified as LDO regulator, +5V input to +3V3 output, with proper input/output capacitor detection",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U8"
@@ -16,15 +16,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U8$"
+            "pattern": "^U8$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "U2 (OPA145) correctly identified as a buffer (unity gain) on the BOOT net -- input buffer stage for the nanovoltmeter",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "U2"
@@ -32,15 +33,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "U6 (OPA202) correctly identified as inverting amplifier with gain=-1 (R26=5k/R21=5k feedback), outputting to VR28N net",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "R21",
@@ -50,15 +52,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "U5 (OPA202) correctly identified as buffer driving VREF7 net from the R17/R22 divider",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "R17",
@@ -68,15 +71,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "R17 (18k20) / R22 (12k1) voltage divider with ratio 0.3993 feeding VREF7 correctly detected -- generates ~2.8V reference from 7V ADR1399",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R17",
@@ -86,14 +90,15 @@
           "confidence": 0.6,
           "expected_value": 7,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "equals",
-            "value": 7
+            "value": 7,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "TL431DBZ (U126, U128) correctly identified as voltage references driving Q3/Q4 current source transistors for the LNA floating PSU",
-          "analyzer_section": "signal_analysis.adc_circuits",
+          "analyzer_section": "detect_adc_circuits",
           "detector": "adc_circuits",
           "subject_refs": [
             "Q3",
@@ -106,7 +111,7 @@
         },
         {
           "description": "Q1/Q2 (BC847) and Q3/Q4 (BC847/BC857) transistor circuits correctly identified with base resistors and TL431 base drivers for floating power supply",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q1",
@@ -117,15 +122,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "RC filter R6 (24k) / C2 (470p) at 14.1 kHz correctly detected as anti-aliasing/input filter",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [
             "C2",
@@ -134,15 +140,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R6$"
+            "pattern": "^R6$",
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
           "description": "RC filter R19 (620R) / C7 (100n) at 2.57 kHz correctly detected as external VREF input filter",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "detector": "rc_filters",
           "subject_refs": [
             "C7",
@@ -151,10 +158,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R19$"
+            "pattern": "^R19$",
+            "detector_filter": "detect_rc_filters"
           }
         },
         {
@@ -167,7 +175,7 @@
         },
         {
           "description": "U119 (OPA2202) unit 2 correctly identified as inverting amplifier with gain=-3.333 (R357=40k/R349=12k) for ITRIM",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "R349",
@@ -177,15 +185,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U119$"
+            "pattern": "^U119$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "U119 (OPA2202) unit 1 correctly identified as inverting amplifier with gain=-0.006 (R354=40k/R351=6.2M) for VTRIM",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "R351",
@@ -195,43 +204,46 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U119$"
+            "pattern": "^U119$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "Decoupling analysis correctly identifies per-rail capacitor counts: +15V 9 caps, -15V 9 caps, +5V 2 caps, +3V3 1 cap, +9V/-9V 1x10uF each",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "detector": "decoupling_analysis",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
           "description": "ESD coverage audit correctly identifies all 4 connectors as having no ESD protection -- deliberate for nanovolt measurement accuracy",
-          "analyzer_section": "signal_analysis.esd_coverage_audit",
+          "analyzer_section": "audit_esd_protection",
           "detector": "esd_coverage_audit",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.esd_coverage_audit",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "audit_esd_protection"
           }
         }
       ],
       "incorrect": [
         {
           "description": "100 MCP6V51 opamps classified as 'compensator' topology due to R (10k) + C (1nF) feedback. These are transimpedance amplifiers (current-to-voltage converters) -- the 10k feedback R sets transimpedance gain, 1nF cap provides HF rolloff. The 100R input resistor is a current-sense resistor, not a divider bottom",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -239,7 +251,7 @@
         },
         {
           "description": "100 voltage dividers with ratio 0.009901 (10k/100R) are false detections. These are MCP6V51 transimpedance feedback (10k) and input sense (100R) resistor pairs. The midpoint is the opamp inverting input, not a divider output",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -247,7 +259,7 @@
         },
         {
           "description": "U123 (AD8628) classified as 'comparator_or_open_loop' but is a zero-drift integrating amplifier with C235=33nF feedback cap in the switchable-gain chain",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "C235",
@@ -256,15 +268,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U123$"
+            "pattern": "^U123$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "U124 (TL061) classified as 'comparator_or_open_loop' but is a second integrator/filter stage after U123 with C236=1nF feedback",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "C236",
@@ -274,15 +287,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U123$"
+            "pattern": "^U123$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "U121 unit 1 (LM324A) classified as 'unknown' with feedback_resistor R364=0R. A zero-ohm feedback is a voltage follower/buffer, not unknown",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "R364",
@@ -291,15 +305,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U121$"
+            "pattern": "^U121$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "100 spurious 'Capacitive load C177 (1nF) on output -- verify opamp stability' warnings. The 1nF cap is the intentional feedback capacitor of the transimpedance amplifier, not a load capacitance",
-          "analyzer_section": "signal_analysis.opamp_circuits",
+          "analyzer_section": "detect_opamp_circuits",
           "detector": "opamp_circuits",
           "subject_refs": [
             "C177"
@@ -307,15 +322,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^C177$"
+            "pattern": "^C177$",
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "R1 (12k) / R27 (3k) detected as voltage divider but this is in the opamp feedback/gain network around U6, not a passive divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "detector": "voltage_dividers",
           "subject_refs": [
             "R1",
@@ -325,21 +341,22 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R1$"
+            "pattern": "^R1$",
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
       "missed": [
         {
           "description": "Parallel LNA architecture (110 opamps noise-averaging) is the defining feature. 10 parallel Level-2 channels each containing 10 Level-1 transimpedance stages plus a summing stage. Averages uncorrelated noise by sqrt(N) for ~3.2x noise reduction",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "LTC1664IGN (U120) quad 10-bit DAC for offset/current compensation (VTRIM and ITRIM) connected via SPI (CS, DIN, SCK). Not detected as DAC or SPI bus",
-          "analyzer_section": "signal_analysis.adc_circuits",
+          "analyzer_section": "detect_adc_circuits",
           "detector": "adc_circuits",
           "subject_refs": [
             "U120"
@@ -349,31 +366,31 @@
         },
         {
           "description": "DG408 (U3) 8-channel analog multiplexer for input range selection, controlled by MS_A0/A1/A2 from J4 connector",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "DG442 (U125) quad SPST analog switch for gain switching (x1/x10/x100) around U123/U124 switchable gain amplifier",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "Relay-based input switching with K1/K2 (G6KU-2 DPDT) and K3/K4 (SIL reed) for low-thermal-EMF signal switching and ACAL source routing",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "LM393 dual comparator (U1) as LNA overvoltage comparator with threshold at ~+/-0.31V. Not detected as comparator circuit",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "74LVC125 tri-state buffers (U4) used as relay drivers via Q1/Q2 BJT switches",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "Floating PSU for input opamp using Q3/BC847 + U126/TL431 (positive) and Q4/BC857 + U128/TL431 (negative). Critical precision technique to prevent ground currents",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "SPI bus protocol for LTC1664 DAC communication (CS, DIN, DOUT, SCK) through hierarchical sheet to J4 connector",
-          "analyzer_section": "signal_analysis.bus_protocols",
+          "analyzer_section": "detect_bus_protocols",
           "detector": "bus_protocols",
           "subject_refs": [
             "J4"
@@ -383,15 +400,15 @@
         },
         {
           "description": "Multi-ground-domain architecture (GND digital, GND1 analog, GNDS signal) with 0R bridging resistors (R12, R23) and ferrite bead (FB1). Critical for nanovolt measurement",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "Per-opamp supply filtering: each MCP6V51 has dedicated ferrite bead (FB2-FB101) on supply pin. 100 ferrite beads for individual noise filtering",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "SM6T6V8A TVS diodes (D1, D2) providing input overvoltage protection not detected in protection_devices (which is empty)",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "D1",
@@ -400,10 +417,11 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D1$"
+            "pattern": "^D1$",
+            "detector_filter": "detect_protection_devices"
           }
         }
       ],

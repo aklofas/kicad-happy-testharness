@@ -17,29 +17,32 @@
         },
         {
           "description": "U3 (SY8201) detected as a switching regulator with L1, VIN input, +3V3 output. Feedback divider R6=100k\u03a9, R7=22k\u03a9 gives Vout = 0.6 \u00d7 (1 + 100k/22k) = 3.327V. Output shows estimated_vout=3.327 with vref_source='lookup'. This matches the SY8201 datasheet Vref=0.6V.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "R6/R7 (100k/22k) forms the SY8201 feedback divider from +3V3 to GND (is_feedback=true), and R14/R15 (100k/22k) forms a VBUS monitoring divider into PA0/ADC. Both are correctly identified with proper top/bottom/mid net names and ratios (0.180328 each).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "value": 2,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
           "description": "U1 (USBLC6-4) is correctly identified as an ESD IC protecting CC1, CC2, USB_N, and USB_P. The vbus_esd_protection:fail result is also accurate\u2014VBUS itself has no dedicated ESD clamp device, only a decoupling capacitor.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -84,11 +87,12 @@
       "missed": [
         {
           "description": "R14 (100k\u03a9) is connected in series between VBUS and PA0, while C12 (100nF) is connected from PA0 to GND, forming an RC low-pass filter for the VBUS ADC monitoring path. The signal_analysis.rc_filters list is empty (0 items). The divider topology (R14 in series, R15 and C12 in parallel to GND) may not match the filter detector's expected R-C topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "value": 0,
-            "op": "equals"
+            "op": "equals",
+            "detector_filter": "detect_rc_filters"
           }
         }
       ],

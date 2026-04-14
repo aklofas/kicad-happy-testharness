@@ -22,8 +22,14 @@
         "path": "statistics.power_rails",
         "op": "equals",
         "value": [
-          {"name": "3.3V", "voltage": 3.3},
-          {"name": "GND", "voltage": null}
+          {
+            "name": "3.3V",
+            "voltage": 3.3
+          },
+          {
+            "name": "GND",
+            "voltage": null
+          }
         ]
       }
     },
@@ -32,14 +38,16 @@
       "description": "The analyzer correctly finds C1-C4 (4x 2.2uF) and C5 (10uF) as decoupling capacitors on the 3.3V rail, totalling 18.8 uF. The BMV080 datasheet requires decoupling on each VDD pin. The analyzer correctly flags 'has_bypass': false because all caps are bulk (>=1uF) with no 100nF or smaller bypass caps.",
       "created_from": "FND-00001505",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rail": "3.3V",
           "cap_count": 5,
           "total_capacitance_uF": 18.8
-        }
-      }
+        },
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001505-AST-04",
@@ -111,15 +119,17 @@
       "description": "INCORRECT: R3 (2.2k) and R5 (2.2k) are I2C pull-up resistors. R3 has pin1=SCL and pin2 connected to JP4 pin B (__unnamed_3). R5 has pin1=SDA and pin2 connected to JP4 pin A (__unnamed_8). JP4 is a 3-pole net-tie solder jumper (SolderJumper_3_Bridged123_No_Silk) with pin C bridged to 3.3V. The schematic text explicitly says 'To remove pull-up resistors on SDA/SCL, cut traces in jumper, JP4 (I2C)'. The analyzer fails to trace the pull-up path through the JP4 net-tie to discover that R3/R5 are pulled to 3.3V. Instead it labels them as 'series' resistors to unnamed nets and reports has_pullup=false.",
       "created_from": "FND-00001505",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "i2c_bus",
           "line": "SDA",
           "has_pullup": false
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001505-AST-11",

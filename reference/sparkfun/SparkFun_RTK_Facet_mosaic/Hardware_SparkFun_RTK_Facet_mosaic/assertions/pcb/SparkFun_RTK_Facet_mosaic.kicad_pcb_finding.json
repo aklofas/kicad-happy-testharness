@@ -39,10 +39,12 @@
       "description": "34 0402 capacitors on B.Cu are correctly flagged as medium tombstoning risk because one pad is connected to the GND copper zone and the other is not. This thermal imbalance during reflow is a legitimate concern, especially for back-side components.",
       "created_from": "FND-00001537",
       "check": {
-        "path": "tombstoning_risk",
+        "path": "findings",
         "op": "min_count",
-        "value": 30
-      }
+        "value": 30,
+        "detector_filter": "analyze_tombstoning_risk"
+      },
+      "migration_note": "Path migrated from: tombstoning_risk"
     },
     {
       "id": "FND-00001537-AST-05",

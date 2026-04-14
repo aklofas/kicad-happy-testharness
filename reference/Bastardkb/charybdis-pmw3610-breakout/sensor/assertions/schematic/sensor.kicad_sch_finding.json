@@ -29,20 +29,24 @@
       "description": "",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/AP7335/"
-      }
+        "value": "/AP7335/",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001997-AST-04",
       "description": "",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001997-AST-05",
@@ -82,11 +86,13 @@
       "description": "",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/ROW_/"
+        "value": "/ROW_/",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00001997-AST-09",
@@ -137,11 +143,13 @@
       "description": "",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/estimated_keys/"
+        "value": "/estimated_keys/",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00001997-AST-14",
@@ -214,11 +222,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/regulator_voltage/"
+        "value": "/regulator_voltage/",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001997-AST-21",
@@ -236,11 +246,13 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.key_matrices",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/switches_on_matrix/"
+        "value": "/switches_on_matrix/",
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
       "id": "FND-00001997-AST-23",
@@ -258,33 +270,39 @@
       "description": "INCORRECT: ",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.key_matrices[0].diodes_on_matrix",
+        "path": "findings[0].diodes_on_matrix",
         "op": "equals",
-        "value": 42
+        "value": 42,
+        "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].diodes_on_matrix"
     },
     {
       "id": "FND-00001997-AST-25",
       "description": "INCORRECT: ",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/single_pin_nets/"
+        "value": "/single_pin_nets/",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001997-AST-26",
       "description": "",
       "created_from": "FND-00001997",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

@@ -35,20 +35,21 @@
         },
         {
           "description": "ADS124S06 precision delta-sigma ADCs (24-bit) not classified as measurement/instrumentation components",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "No power regulators detected despite the board needing regulated 3.3V and 5V for the RP2040 and ADCs",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -66,9 +67,9 @@
         },
         {
           "description": "Load cell / force sensor application context not identified from the ADC input topology (multiple differential ADC channels with anti-aliasing)",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

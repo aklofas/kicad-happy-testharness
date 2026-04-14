@@ -19,31 +19,35 @@
       "description": "INCORRECT: C3 ('10 \u03bcF') is parsed as farads=1e-11 (should be 1e-5 F). C1, C2, C4 ('0.1 \u03bcF') are parsed as farads=0.1 (should be 1e-7 F). The Unicode \u00b5 prefix is not handled, treating '0.1 \u03bcF' as 0.1 F (100,000 \u00b5F) and '10 \u03bcF' as something around 10 pF. This cascades to decoupling analysis (total_capacitance_uF reports 200000.0 \u00b5F instead of ~10.2 \u00b5F) and RC filter time constants (RC = 100s instead of ~100\u00b5s for R=1k\u03a9, C=0.1\u00b5F).",
       "created_from": "FND-00001591",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rail": "+5V",
           "total_capacitance_uF": {
             "less_than": 100
           }
-        }
+        },
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001591-AST-03",
       "description": "INCORRECT: Two RC filter instances are detected (R2+C4 and R1+C4), both reporting cutoff_hz=0.0 and enormous time constants (100s and 1000s respectively). The correct cutoff for R2(1k\u03a9)+C4(0.1\u00b5F) is ~1592 Hz and for R1(10k\u03a9)+C4(0.1\u00b5F) is ~159 Hz. The root cause is the \u00b5F\u2192F conversion bug. Additionally, R1 (10k\u03a9 pull-up) and C4 do not actually form a standalone RC filter \u2014 C4 is the SW1 debounce capacitor connected between the switch output and GND, not between R1 and GND, making one of the two detections a false positive.",
       "created_from": "FND-00001591",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "cutoff_hz": {
             "greater_than": 100
           }
-        }
+        },
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00001591-AST-04",

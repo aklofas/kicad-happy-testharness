@@ -30,22 +30,26 @@
       "description": "INCORRECT: The analyzer reports U11 (NE555P) with output_net='VCC' in crystal_circuits. This is technically accurate: U11 pin 3 (OUT) is literally on net VCC and pin 8 (VCC) is on net GND in the source schematic \u2014 the power pins are wired backwards. The analyzer faithfully reports what the schematic says. The source design has a wiring error (the NE555 is powered with VCC/GND swapped), but the analyzer output is not incorrect \u2014 it reflects the source accurately. No fix needed in the analyzer; this is a correct detection of a broken source design.",
       "created_from": "FND-00002013",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/\"reference\":\\s*\"U11\"/"
+        "value": "/\"reference\":\\s*\"U11\"/",
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     },
     {
       "id": "FND-00002013-AST-04",
       "description": "Because XTAL1 is typed 'other', detect_crystal_circuits() skips it. The crystal_circuits list contains only the NE555P (U11) as an active_oscillator, missing the actual passive crystal. A correct output should include XTAL1 with its two connected RC components (R3/R4 feedback resistors, C1/C2 load caps at 22pF) as a crystal circuit associated with U1 (74HC4060 ripple counter/oscillator).",
       "created_from": "FND-00002013",
       "check": {
-        "path": "signal_analysis.crystal_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
     }
   ]
 }

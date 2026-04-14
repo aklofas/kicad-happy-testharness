@@ -31,7 +31,7 @@
       "incorrect": [
         {
           "description": "SIT8008 MEMS oscillator classified as crystal \u2014 it is a packaged oscillator, not a crystal requiring load caps",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -39,11 +39,11 @@
         },
         {
           "description": "All 3 voltage dividers duplicated in feedback_networks (same R5/R6, R9/R10, R13/R14 pairs)",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "TLV62569 estimated Vout=1.1V for all three regulators despite different output rails (+1V1, +2V5, +3V3)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "field_value_equals",
@@ -51,10 +51,11 @@
           "field": "vout",
           "expected_value": 1.1,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "vout",
-            "value": 1.1
+            "value": 1.1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {

@@ -9,11 +9,13 @@
       "issue": "KH-118",
       "fix_type": "detection_fix",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U19$"
-      }
+        "pattern": "^U19$",
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "BUGFIX-KH-119-01",
@@ -21,10 +23,12 @@
       "issue": "KH-119",
       "fix_type": "count_change_fix",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 15
-      }
+        "value": 15,
+        "detector_filter": "detect_lc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "BUGFIX-KH-120-01",
@@ -32,10 +36,12 @@
       "issue": "KH-120",
       "fix_type": "detection_fix",
       "check": {
-        "path": "signal_analysis.rf_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rf_chains"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rf_chains"
     }
   ]
 }

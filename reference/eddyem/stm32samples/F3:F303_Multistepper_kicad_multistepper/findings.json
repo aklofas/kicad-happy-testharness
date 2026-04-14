@@ -12,7 +12,7 @@
         },
         {
           "description": "U3 USBLC6 and D24 PESD1CAN ESD protection correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [
             "D24",
@@ -21,15 +21,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D24$"
+            "pattern": "^D24$",
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
           "description": "Y1 8MHz crystal with 6pF load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "detector": "crystal_circuits",
           "subject_refs": [
             "Y1"
@@ -37,15 +38,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "U6/U8 LM1117-3.3 LDOs correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "U6",
@@ -54,15 +56,16 @@
           "expected_relation": "in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U6$"
+            "pattern": "^U6$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "J1 SWD debug interface correctly detected",
-          "analyzer_section": "signal_analysis.debug_interfaces",
+          "analyzer_section": "detect_debug_interfaces",
           "detector": "debug_interfaces",
           "subject_refs": [
             "J1"
@@ -78,7 +81,7 @@
         },
         {
           "description": "U5 LM2576-5.0 classified as LDO \u2014 it's a switching buck with L1 and D27 freewheeling diode",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [
             "D27",
@@ -88,15 +91,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U5$"
+            "pattern": "^U5$",
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Q2 IRF9310 has is_pchannel=false but description says 'P-MOSFET', keywords include 'PMOS'",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [
             "Q2"
@@ -104,15 +108,16 @@
           "expected_relation": "not_in_detector",
           "confidence": 0.9,
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q2$"
+            "pattern": "^Q2$",
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
           "description": "Caps with value '0.1' (12 caps) parsed as 0.1F instead of 0.1uF \u2014 inflates decoupling totals to 100047uF, RC filters show 0 Hz cutoff",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "detector": "decoupling_analysis",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -122,33 +127,35 @@
       "missed": [
         {
           "description": "8 stepper motor driver modules (XX1-XX8) not in motor_drivers despite 'stepper_module' value",
-          "analyzer_section": "signal_analysis.motor_drivers",
+          "analyzer_section": "detect_motor_drivers",
           "detector": "motor_drivers",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.motor_drivers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_motor_drivers"
           }
         },
         {
           "description": "ISO1050 CAN transceiver isolation barrier not detected",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "detector": "isolation_barriers",
           "subject_refs": [],
           "expected_relation": "in_detector",
           "confidence": 0.7,
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           }
         },
         {
           "description": "CAN bus protocol not detected despite ISO1050 + CANH/CANL + termination",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "suggestions": [

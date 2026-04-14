@@ -17,20 +17,22 @@
         },
         {
           "description": "crystal_circuits detects Y1 (12MHz 50ppm 16-20pF) with frequency=12000000 Hz and load_caps=[]. The XR22417 USB hub IC integrates internal crystal load capacitors and does not require external load caps. The XI and XO nets only connect Y1 pins to U1 (XR22417) pins with no capacitors, confirming load_caps=[] is accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "18 protection devices correctly identified: 14 TVS diodes (AR0521P1, 0.5pF 3.3V) on U1D+/U1D- through U7D+/U7D- (7 downstream port pairs), 2 TVS on D+/D- (upstream), and 2 diodes D24/D25 (5V D5V0H1B2LP) on VIN and +5V. All 16 TVS diodes and 2 ESD diodes for power are correctly attributed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 16
+            "value": 16,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -44,11 +46,12 @@
         },
         {
           "description": "voltage_dividers correctly identifies the VBUS sensing network: R1 (10k top) and R2 (100k bottom) between +5V and GND, midpoint connected to U1 pin 41 (VBUS_SENSE). Ratio 0.909 is correct (10k/(10k+100k) \u2248 0.909, which actually makes the mid-point higher than a simple 5V divider midpoint \u2014 this senses the 5V VBUS rail adequately for the XR22417).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         }
       ],
@@ -66,11 +69,12 @@
       "missed": [
         {
           "description": "power_regulators=[] but the XR22417 (U1) has a '1V8_OUT' pin that generates the +1V8 rail (decoupled by C4, C11, C12, C13). The +1V8 rail powers the internal logic of the hub IC. While this is an integrated regulator (not a standalone IC), the analyzer could flag the IC pin named '1V8_OUT' as a power output. This is a missed detection for integrated power generation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_power_regulators"
           }
         }
       ],

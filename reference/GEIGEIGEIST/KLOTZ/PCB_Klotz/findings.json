@@ -8,27 +8,27 @@
       "correct": [
         {
           "description": "The key_matrices detector correctly identifies the 4x5 matrix with row0-row3 and col0-col4 nets, 17 key switches and 17 flyback diodes. The encoder (SW18) and special switches are correctly excluded from the matrix count.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "The design uses a battery-powered nice!nano with no explicit PWR_FLAG symbols on GND and VCC. The pwr_flag_warnings correctly flags both rails as ERC issues.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "design_observations correctly notes U1's RST pin on the RESET net, connected to RSW1 (reset switch), with has_pullup=false. The nice!nano has internal pull-up, so this is an accurate structural observation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -37,15 +37,15 @@
       "incorrect": [
         {
           "description": "Components L1/L2/L3 use lib_id 'Device:LED' with keywords 'LED diode', but the analyzer assigns type='inductor' and category='inductor' to all three, based on the 'L' reference prefix. The BOM also groups them under value 'LED' with type 'inductor'. This is a reference-prefix heuristic misfiring \u2014 'L' prefix is normally inductors, but these are clearly LEDs. The type should be 'led' or at minimum 'diode'.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The bus_analysis reports I2C on net 'LED1' (SCL line) and '__unnamed_22' (SDA line) because U1 (nice!nano) has pin names '3/D0/SCL' and '2/D1/SDA'. However, those GPIO pins are used here as LED PWM outputs (LED1/LED2/LED3 nets) and encoder inputs \u2014 not I2C. The I2C detection is triggering purely on pin name substrings without checking whether a real I2C device (with pull-ups and matching SCL/SDA partners) is present.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The schematic assembly_complexity section shows smd_count=55, tht_count=0. The PCB analyzer correctly identifies smd_count=7, tht_count=43. The schematic analyzer is deriving assembly type from schematic footprint strings using custom KLOTZ library names (e.g. 'Kailh_socket_PG1350_optional_reversible', 'LED_3mm_reversible', 'Diode_SOD123') that it cannot resolve and defaults to treating as SMD.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -67,11 +67,11 @@
       "incorrect": [
         {
           "description": "The switchplate PCB uses exclusively gr_curve (cubic bezier) elements for the complex keyboard cutout outline on Edge.Cuts \u2014 no gr_line or gr_arc elements. The PCB analyzer only collects 'line' and 'arc' type edges, completely missing gr_curve, resulting in edge_count=0 and board_outline.bounding_box=null. The gerber analyzer correctly computes board dimensions (120.5x85.48mm) from the actual gerber file, confirming a real outline exists.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "Because the board_outline bounding_box is null (due to the gr_curve parsing failure), the DFM analyzer cannot compute board dimensions, so dfm_tier is left as 'standard' and metrics are empty. The main PCB correctly detects this same physical size as exceeding the 100x100mm threshold and issues a board_size violation. The switchplate should show the same board_size DFM warning.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -92,18 +92,18 @@
       "correct": [
         {
           "description": "The main keyboard PCB has 0.3mm via drill with 0.25mm tracks giving a 0.05mm annular ring, correctly flagged as below the advanced process minimum. The board_size violation for 120x85mm is also correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Net count (46), footprint count (56), via count (106), 2-layer copper, and routing_complete=true all match what is visible in the PCB file content.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -128,9 +128,9 @@
       "correct": [
         {
           "description": "All required layers present (F.Cu, B.Cu, F/B.Mask, F/B.Paste, F/B.SilkS, Edge.Cuts). 106 via holes (0.3mm PTH) and 199 component holes correctly classified. 104 NPTH holes include 51x3.0mm and 17x3.429mm switch cutouts (Kailh socket NPTH stabilizers) and 34x1.702mm NPTH.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -155,9 +155,9 @@
       "correct": [
         {
           "description": "Board dimensions 120.5x85.48mm match the physical board. The 8 NPTH mounting holes (5 M2.2 for stabilizers/spacers and 3 M3.2 mounting holes) are correctly classified. Empty F.Cu/B.Cu/F.Paste/B.Paste are correctly identified as zero-aperture files, appropriate for a non-electrical plate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -166,7 +166,7 @@
       "incorrect": [
         {
           "description": "The completeness section shows has_pth_drill=true because a PTH .drl file is present, but it contains 0 holes (only an empty header). This is a false positive \u2014 a switchplate with no electrical connections legitimately has no PTH holes. The flag should reflect whether any PTH holes actually exist, not merely whether the file is present.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

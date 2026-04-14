@@ -1,36 +1,37 @@
 {
   "file_pattern": "layer4.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~48 (tolerance 10%)",
+      "description": "Finding count ~46 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 43,
-        "max": 53
+        "min": 41,
+        "max": 51
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~20",
+      "description": "high count ~18",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 16,
+        "max": 20
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~12",
+      "description": "medium count ~10",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~32 (+-10)",
+      "description": "EMC risk score ~47.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 22,
-        "max": 42
+        "min": 37.0,
+        "max": 57.0
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "29 decoupling finding(s)",
+      "description": "25 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 29
+        "value": 25
       }
     },
     {

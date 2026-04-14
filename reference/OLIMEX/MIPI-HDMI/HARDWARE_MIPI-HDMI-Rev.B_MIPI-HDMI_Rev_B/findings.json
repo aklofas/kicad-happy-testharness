@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "hdmi_dvi_interfaces correctly identifies U2 (LT8912B) as bridge_ic and HDMI1 (HDMI-SWM-19) as hdmi_connector. RCLAMP0524P ESD arrays (U3/U4/U5) correctly detected as esd_ic protecting TMDS and HPD/I2C lines. Crystal Q1 (25MHz) detected with 27pF load caps.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,23 +19,23 @@
       "incorrect": [
         {
           "description": "VR1 is the adjustable LDO generating VCC_1.8V. The analyzer reports estimated_vout=3.977V. The actual formula gives Vout = Vref*(1 + R_top/R_bottom) = 1.25*(1+240/110) = 3.98V. However, swapping the resistor roles gives 1.25*(1+110/240) = 1.82V, matching the net name VCC_1.8V. The analyzer has R_top (240R=R2) and R_bottom (110R=R3) assigned correctly per the voltage divider detector, but the LDO formula maps R2 to the output-to-ADJ resistor (which should be the larger value for lower output). The issue is the feedback divider topology is inverted \u2014 the 110R is between ADJ and GND (R_bottom) and 240R is between OUT and ADJ (R_top), so Vout = 1.25*(1+240/110) = 3.98V is actually mathematically correct for this orientation. The net name VCC_1.8V suggests the designer may have the resistors labeled differently, or R2/R3 are swapped from the standard orientation. This needs source file verification.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The design places PWR_FLAG symbols (7 instances) on a net literally named 'PWR_FLAG' rather than directly on +5V/+3.3V/GND. This is a valid but non-standard KiCad usage where Olimex uses a global PWR_FLAG net. The analyzer fires pwr_flag_warnings for +5V, +3.3V, and GND because it doesn't recognize the custom library's PWR_FLAG symbols as satisfying the KiCad PWR_FLAG requirement. The +5V rail also has a power_out pin from U1 (ME2188C50M5G output), which should further suppress the warning.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "LT8912_SDA/SCL and HSDA/HSCL are flagged with has_pull_up=false. The LT8912B has internal pull-ups on its I2C interface for host communication, and the HDMI DDC lines (HSCL/HSDA) are handled by the ESD array U5. However, no explicit external pull-up resistors to +3.3V are visible for the LT8912B configuration I2C lines \u2014 this could be a real design issue or the pull-ups could be integrated in the LT8912B. The HSDA/HSCL lines showing U5/U5 as 'devices' twice each is also suspect (ESD clamp misidentified as I2C device).",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "The design has a MIPI-DSI1 FPC connector with DSI_CLKP/N and DSI_DATA0/1 P/N pairs routed to the LT8912B. The differential_pairs list is empty in both signal_analysis and design_analysis. These are clearly named differential pairs (P/N suffix) and should be detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -58,9 +58,9 @@
       "correct": [
         {
           "description": "PCB correctly shows 4 copper layers (F.Cu, In1.Cu, In2.Cu, B.Cu), 70 footprints, 162 vias, fully routed (0 unrouted), 24x60mm board. DFM tier 'advanced' with 0.127mm min track/spacing. These match expectations for a MIPI-to-HDMI converter board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -85,9 +85,9 @@
       "correct": [
         {
           "description": "All 11 gerber files present (F.Cu, B.Cu, In1.Cu, In2.Cu, F/B.Mask, F/B.Paste, F/B.SilkS, Edge.Cuts) plus PTH+NPTH drill files. Layer count=4, board 24x60mm, complete=true, aligned=true. 162 vias classified correctly (127x 0.3mm, 2x 0.4mm, 33x 0.6mm). X2 attributes consistent with KiCad 7.0.9.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -96,11 +96,11 @@
       "incorrect": [
         {
           "description": "The PTH drill file contains tool T5 with diameter 0.8mm but hole_count=0. The analyzer includes it in drill_tools output (count=0). This is a benign artifact from how KiCad exports drill files (unused tools get included), but it creates noise in the drill_tools summary and could cause false assertions.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "F.Mask correctly reports min_feature_mm=0.1016mm (fine SMD pads), but B.Mask reports 1.4016mm as the minimum feature. The back side has only 7 components with 4 THT pads and some SMD pads (aperture_count=4, flash_count=9). A 1.4mm minimum is plausible for through-hole annular rings, but it's suspiciously large. The large B.Mask min_feature could reflect a region (frame boundary) rather than actual pad apertures \u2014 similar to how F.Mask shows 0.1016 because it correctly picks the smallest aperture.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

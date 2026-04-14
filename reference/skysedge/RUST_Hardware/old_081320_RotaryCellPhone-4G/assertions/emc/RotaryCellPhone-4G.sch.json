@@ -1,16 +1,17 @@
 {
   "file_pattern": "RotaryCellPhone-4G.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~24 (tolerance 10%)",
+      "description": "Finding count ~22 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 19,
+        "max": 25
       }
     },
     {
@@ -35,12 +36,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~6",
+      "description": "medium count ~3",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 2,
+        "max": 4
       }
     },
     {
@@ -55,12 +56,12 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~23 (+-10)",
+      "description": "EMC risk score ~57.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 13,
-        "max": 33
+        "min": 47.0,
+        "max": 67.0
       }
     },
     {
@@ -76,13 +77,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "7 decoupling finding(s)",
+      "description": "4 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 7
+        "value": 4
       }
     },
     {

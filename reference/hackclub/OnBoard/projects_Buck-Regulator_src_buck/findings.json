@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "LM2596S-12 is a FIXED 12V output regulator - the -12 suffix indicates fixed output. The feedback divider analysis calculates estimated_vout=14.135V using Vref=1.285V which is wrong. For fixed output versions, pin 4 (ON/OFF) is not a feedback pin, and the resistor divider likely serves as enable/UVLO control, not output voltage setting.",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "field_value_equals",
@@ -36,10 +36,11 @@
           "field": "estimated_vout",
           "expected_value": 14.135,
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "field_equals",
             "field": "estimated_vout",
-            "value": 14.135
+            "value": 14.135,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
@@ -52,7 +53,7 @@
         },
         {
           "description": "Output rail shown as __unnamed_1 instead of being associated with Vout net",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -62,11 +63,12 @@
       "missed": [
         {
           "description": "LM2596 variant identification (-12 = fixed 12V, -5 = fixed 5V, -3.3 = fixed 3.3V, -ADJ = adjustable) should drive different analysis paths",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],

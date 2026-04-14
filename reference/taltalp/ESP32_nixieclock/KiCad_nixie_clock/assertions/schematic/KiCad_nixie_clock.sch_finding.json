@@ -9,7 +9,7 @@
       "description": "The top-level nixie_clock.sch correctly parses all 4 sub-sheets (nixie_clock.sch, ESP32.sch, nixie.sch, power.sch) and aggregates 72 total components. Component types are correct: 9 ICs (U1, U2, U3, U4, U5, U6, U7, U8, U9), 10 net_ties (NT1-NT10), 29 resistors, 6 LEDs, 5 connectors (P1-P4 + CON1), 2 transistors (Q1, Q2), 2 diodes (D7, D8), 7 capacitors (C1-C7), 1 inductor (L1), 1 varistor (VR1). Power rails correctly include +9V which appears only in power.sch. Total components 72 and unique_parts 29 match the source.",
       "created_from": "FND-00000502",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The isolation_barriers analysis correctly identifies the boundary between the main GND domain and the nixie cathode ground domain 'ngnd'. All 5 optocoupler instances (U2 unit1, U2 unit2, U3 unit1, U3 unit2, U4 unit1, U4 unit2, U7 unit1, U7 unit2, U6) are listed as isolation components. The ground_domains split between 'main: [GND]' and 'N: [ngnd]' is accurate.",
       "created_from": "FND-00000502",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "U5 (SN74141, BCD-to-decimal decoder for Nixie tube driving) is correctly extracted with DIP-16 footprint. It appears in the subcircuits entry with neighbor P2 (CONN_02X05). The +5V and GND pins are correctly mapped. The BCD input signals nxea, nxeb, nxec, nxed are present as single-pin nets (listed in design_observations single_pin_nets), which is correct since the matching outputs are on the ESP32 side connected via global labels.",
       "created_from": "FND-00000502",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "The power.sch sub-sheet contains U9 (NJM7805S, a 5V linear regulator in TO-252 package) and U8 (NJM2360A, a step-up/boost switching controller with L1=470uH inductor, Q1=2SK3234 N-MOSFET, D7=UF2010 Schottky diode, C2=10uF/400V output cap) forming a boost converter to generate the ~170V VNXE rail for the nixie tubes. The signal_analysis.power_regulators array is empty in both power.sch.json and nixie_clock.sch.json. The analyzer should detect at least the NJM7805S as a linear regulator (it has a named 'Vout' power_out pin on net __unnamed_103 going to +5V decoupled by C6 and C7). The NJM2360A boost circuit (U8 + L1 + Q1 + D7 + C2 + VR1) should be detected as a boost converter generating VNXE.",
       "created_from": "FND-00000502",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -50,7 +50,7 @@
       "description": "In power.sch, L1 (LHL13NB471K, 470uH) and C2 (10uF/400V) form the output LC stage of the NJM2360A-based boost converter generating ~170V VNXE. The lc_filters array is empty. L1 is on a net connecting the +9V input side through the MOSFET switch (Q1 drain side) and D7 (UF2010 Schottky fly-back diode) to the VNXE output. C2 is connected across VNXE. This is a classic boost topology that the analyzer does not detect.",
       "created_from": "FND-00000502",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

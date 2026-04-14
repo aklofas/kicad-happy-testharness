@@ -21,9 +21,10 @@
       "summary": "Correctly detected analog power domain (+3.3VA) with ferrite bead isolation and separate decoupling",
       "details": "The analyzer identified +3.3VA as a distinct power rail with its own decoupling capacitors (1uF + 100nF) and separately classified it from the digital +3.3V domain. The FB1 ferrite bead (100R) in the schematic creates this analog supply. The decoupling_analysis correctly reports two entries \u2014 one for +3.3V and one for +3.3VA \u2014 reflecting a proper analog/digital domain split. Component types correctly include ferrite_bead as a distinct category.",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
-        "value": null
+        "value": null,
+        "detector_filter": "detect_decoupling"
       }
     },
     {
@@ -34,9 +35,10 @@
       "summary": "LDO regulator input rails reported as unnamed nets instead of resolving to the actual supply rail name",
       "details": "The power_regulators list shows both U1 (LD1117S33) and U2 (LD1117S50) with input_rail values of '__unnamed_1' and '__unnamed_3' respectively. Examining the net contents, these unnamed nets connect the regulator VI pin to fuse outputs and input capacitors, meaning the upstream supply (likely a raw DC input connector) was not given a named power symbol in the schematic. While technically correct per the netlist, the analyzer could attempt to resolve a descriptive name from the connected components (e.g., 'VIN' via the fuse chain), or at minimum flag this as an unresolved input rail rather than silently using an unnamed net identifier.",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "contains_match",
-        "value": null
+        "value": null,
+        "detector_filter": "detect_power_regulators"
       }
     },
     {

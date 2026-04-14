@@ -2,132 +2,101 @@
   "file_pattern": "kill-switch-reciever.sch",
   "analyzer_type": "schematic",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 led_audit",
+      "description": "Exactly 4 audit_led_circuits",
       "check": {
-        "path": "signal_analysis.led_audit",
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "Exactly 10 detect_led_drivers",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 10 transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_led_drivers",
         "op": "equals",
         "value": 10
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Q16 in transistor_circuits",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 detect_suggested_certifications",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q16$"
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 5 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Q22 in transistor_circuits",
+      "description": "R38 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q22$"
+        "field": "r_top.ref",
+        "pattern": "^R38$"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Q17 in transistor_circuits",
+      "description": "R39 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q17$"
+        "field": "r_top.ref",
+        "pattern": "^R39$"
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Q23 in transistor_circuits",
+      "description": "R40 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q23$"
+        "field": "r_top.ref",
+        "pattern": "^R40$"
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Q18 in transistor_circuits",
+      "description": "R54 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q18$"
+        "field": "r_top.ref",
+        "pattern": "^R54$"
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Q24 in transistor_circuits",
+      "description": "R55 in detect_voltage_dividers",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q24$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Q25 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q25$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Q29 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q29$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "Q26 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q26$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "Q30 in transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q30$"
+        "field": "r_top.ref",
+        "pattern": "^R55$"
       }
     }
   ]

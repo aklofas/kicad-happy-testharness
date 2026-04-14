@@ -8,18 +8,18 @@
       "correct": [
         {
           "description": "AMS1117-3.3 (VBUS\u2192+3V3) detected as LDO. USB-C J3 CC pulldown resistors pass, VBUS ESD fail is real (no TVS). Four 100k/100n RC filters on PWM_R/G/B/PWM_1 correctly classified as low-pass. SK6812 chain=1 in this schematic is correct since remaining LEDs are on the LED board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "VBUS is supplied by USB-C connector J3. GND and VBUS both lack PWR_FLAG symbols. The warnings are accurate and expected for a USB-powered design without explicit PWR_FLAG placement.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "E75_TX/E75_RX connect to ESP32 (U1) through series resistors R6/R7, creating unnamed intermediate nets. The analyzer lists 4 UART nets each with only one IC device (U2 or U1), missing the U2\u2194U1 UART interface. The cross-connection through passives is not followed to identify the paired interface.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -49,18 +49,18 @@
       "correct": [
         {
           "description": "Chain from D1 to D44, data_in_net=DIN, protocol=single-wire (WS2812), SK6812 type. The 44\u00d760mA=2640mA estimate is accurate for full-white operation. 44 decoupling 100n caps also correctly inventoried.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "J2 pin 1 (passive) and D1 DIN (input) on DIN net with no output driver in this isolated schematic. This is expected for a daughterboard design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -85,9 +85,9 @@
       "correct": [
         {
           "description": "52 footprints (2 are logo G***), 2-layer fully routed. ESP32 thermal pad detected with 8 nearby vias. GND zone stitching on both copper layers with 76 vias. DFM standard tier, no violations. Tombstoning risk correctly flagged on 0402 caps near GND zones.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -112,9 +112,9 @@
       "correct": [
         {
           "description": "Every 100n cap has pad 1 on VBUS (signal) and pad 2 on GND zone, creating thermal asymmetry. The analyzer correctly identifies all 44 as medium risk. No false positives or misses.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -124,9 +124,9 @@
       "missed": [
         {
           "description": "The LED board carries VBUS to 44 SK6812 LEDs with a maximum current of ~2640mA at full brightness. The PCB has VBUS tracks as narrow as 0.2mm (rated ~0.5A at 1oz Cu). The current_capacity section lists VBUS min=0.2mm but raises no warning. narrow_signal_nets is empty and no current headroom advisory is generated for this power net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

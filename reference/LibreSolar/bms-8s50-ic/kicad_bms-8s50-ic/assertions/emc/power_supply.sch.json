@@ -1,20 +1,31 @@
 {
   "file_pattern": "power_supply.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~1 (tolerance 10%)",
+      "description": "Finding count ~5 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
+        "op": "range",
+        "min": 4,
+        "max": 6
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "high count ~1",
+      "check": {
+        "path": "summary.high",
         "op": "range",
         "min": 0,
         "max": 2
       }
     },
     {
-      "id": "SEED-00000002",
+      "id": "SEED-00000003",
       "description": "medium count ~1",
       "check": {
         "path": "summary.medium",
@@ -24,28 +35,28 @@
       }
     },
     {
-      "id": "SEED-00000003",
-      "description": "EMC risk score ~97 (+-10)",
+      "id": "SEED-00000004",
+      "description": "EMC risk score ~94.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 87,
+        "min": 84.5,
         "max": 100
       }
     },
     {
-      "id": "SEED-00000004",
-      "description": "1 switching_emc finding(s)",
+      "id": "SEED-00000005",
+      "description": "2 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "SEED-00000005",
+      "id": "SEED-00000006",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -54,7 +65,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -63,7 +74,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -72,7 +83,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",

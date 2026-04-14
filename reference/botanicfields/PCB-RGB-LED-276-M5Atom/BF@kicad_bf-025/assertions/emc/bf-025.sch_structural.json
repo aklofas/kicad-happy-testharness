@@ -2,6 +2,7 @@
   "file_pattern": "bf-025.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -38,12 +39,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Rule DC-002 present",
+      "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-002$"
+        "pattern": "^DC\\-001$"
       }
     },
     {
@@ -78,16 +79,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U101 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU101\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "J101 in EMC findings",
       "check": {
         "path": "findings",
@@ -97,7 +88,37 @@
       }
     },
     {
+      "id": "STRUCT-00000009",
+      "description": "U101 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU101\\b"
+      }
+    },
+    {
       "id": "STRUCT-00000010",
+      "description": "C907 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC907\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C1001 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1001\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "J102 in EMC findings",
       "check": {
         "path": "findings",
@@ -107,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "J103 in EMC findings",
       "check": {
         "path": "findings",

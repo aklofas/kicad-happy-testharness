@@ -30,11 +30,13 @@
       "description": "The RC filter R1+C4 (10K+1uF, fc=15.92 Hz) is correctly detected, but its functional role is a power-on reset timing circuit for the ESP32-S3 EN (enable) pin. The same circuit in esp32bb (R3+C1, same component values, same topology) is labeled 'RC-network' instead of 'low-pass'. Inconsistent type labeling ('low-pass' vs 'RC-network') for identical topologies suggests the classification criterion is unstable.",
       "created_from": "FND-00002049",
       "check": {
-        "path": "signal_analysis.rc_filters[0].type",
+        "path": "findings[0].type",
         "op": "equals",
-        "value": "low-pass"
+        "value": "low-pass",
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters[0].type"
     }
   ]
 }

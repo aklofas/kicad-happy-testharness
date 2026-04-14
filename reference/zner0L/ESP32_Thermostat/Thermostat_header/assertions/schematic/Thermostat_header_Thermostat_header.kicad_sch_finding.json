@@ -9,7 +9,7 @@
       "description": "All 14 components are correctly identified: 8 resistors (R1-R8, all 4.7k, 0603) and 6 connectors (J1-J6). References, values, footprints, positions, pin UUIDs, in_bom flags (J5/J6 are false, resistors are true), and DNP status all match the source schematic exactly.",
       "created_from": "FND-00000499",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The 3.3V net correctly includes J2 pin 20 (3V3, power_out), all 8 resistor pin-2 connections (R1-R8), J4 pin 1, J5 pins 1/4/7/10, J6 pins 1/4/7/10, and J1 pin 1. The GND net correctly includes J2 pin 1, J5 pins 3/6/9/12, and J6 pins 3/6/9/12. Both match the schematic wiring.",
       "created_from": "FND-00000499",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "For each of the 8 connected ESP32 GPIO pins on J2 (G23, G22, G21, G19, G18, G17, G16, G4), the analyzer correctly identifies a 4.7k resistor in series with a screw terminal, and flags the resistor direction as 'series' with to_net '3.3V'. This matches the schematic: each screw terminal output (J5 pins 2/5/8/11 and J6 pins 2/5/8/11) connects to a resistor whose other end ties to 3.3V.",
       "created_from": "FND-00000499",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -39,7 +39,7 @@
       "description": "J2 uses a custom local lib symbol 'Conn_02x10_Top_Bottom_1' with ESP32-specific pin names (G23, G22, TXD, RXD, G21, G19, G18, G5, G17, G16, G4, G0, G2, G15, SD1, SD0, CLK, 3V3, GND) rather than the generic library symbol's Pin_N names. The analyzer correctly reads these from the local lib_symbols section and uses them throughout the net and pin analysis.",
       "created_from": "FND-00000499",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -49,7 +49,7 @@
       "description": "J2 pins 4 (TXD), 5 (RXD), 10 (G5), 14 (G0), 15 (G2), 16 (G15), 17 (SD1), 18 (SD0), 19 (CLK) all have connected_to=[] in the ic_pin_analysis, correctly reflecting that these signals are broken out on J2 but not connected to anything else in this header schematic.",
       "created_from": "FND-00000499",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -59,7 +59,7 @@
       "description": "J2 has pin 4 named 'TXD' (output type) and pin 5 named 'RXD' (input type) \u2014 canonical UART signal names. The signal_analysis.bus_analysis.uart list is empty. The analyzer should detect the UART interface present on J2 based on pin names. Both pins are also currently unconnected in this schematic (on single-pin unnamed nets), which is consistent with a header footprint exposing ESP32 UART signals.",
       "created_from": "FND-00000499",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -70,7 +70,7 @@
       "description": "J2 exposes pin 18 'SD0' (bidirectional), pin 17 'SD1' (bidirectional), and pin 19 'CLK' (input), which are ESP32 QSPI/flash interface signals. The signal_analysis section has empty spi and memory_interfaces lists. These pin names match SPI bus signals (CLK, MOSI/MISO), though they are unconnected in this header schematic. At minimum, the CLK signal together with SD0/SD1 could be recognized as potential SPI/memory bus signals.",
       "created_from": "FND-00000499",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

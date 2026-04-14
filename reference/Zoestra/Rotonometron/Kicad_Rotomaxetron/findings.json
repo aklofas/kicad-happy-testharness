@@ -9,7 +9,7 @@
       "incorrect": [
         {
           "description": "lib_id is 'Custom:RP2040+', value is 'RP2040+'. The analyzer apparently mapped the 'RP' prefix to resistor (resistor pack convention). Should be 'ic' or 'mcu'. Also PWR_FLAG warnings fire on GND/+5V for this handwired board \u2014 likely false positives for a board using a dev board as power source.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -32,9 +32,9 @@
       "missed": [
         {
           "description": "Board has 44 switches routed via PCA9506BS I2C I/O expanders (not a direct row/col net pattern), so key_matrices=[] is understandable \u2014 but worth noting. Separately, 'Antenna_Dipole' (ref AE1) is typed as 'ic' instead of 'connector' or 'other'. The addressable LED chain (31x SK6812) is correctly detected.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -57,9 +57,9 @@
       "correct": [
         {
           "description": "111 components correctly parsed with proper type breakdown (switches, LEDs, resistor_network, ICs). Power rails +5V/GND detected. Missing MPN list is complete. The resistor_network type for RA* refs is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -84,9 +84,9 @@
       "correct": [
         {
           "description": "Rotomaxetron is explicitly a handwired keyboard (title: 'RotoMaxetron Handwired'). PCB file is used only for footprint placement/reference, not routing. analyzer correctly reports copper_layers_used=0, track_segments=0. Board outline at 217x168mm is also correctly computed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -112,7 +112,7 @@
       "incorrect": [
         {
           "description": "The Edge.Cuts geometry is embedded inside footprint fp_rect entries rather than as top-level gr_line/gr_arc objects. The analyzer only parses top-level board outline graphics, so it reports 0 edges and null dimensions. This is a known limitation \u2014 the analyzer cannot extract board dimensions when the outline lives inside footprint courtyard/edge rectangles. The 4-layer routed board (3160 segments, 147 footprints, net_count=184) is otherwise correctly analyzed.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -133,9 +133,9 @@
       "correct": [
         {
           "description": "Source file confirms all segments use '(net 0)', meaning this is a partially-placed board where routes haven't been assigned to named nets yet. routing_complete=true is technically correct (no ratsnest unrouted count). Board dimensions 168x154mm are correctly computed from top-level Edge.Cuts.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -161,7 +161,7 @@
       "incorrect": [
         {
           "description": "The directory contains drill files (.drl) which are correctly parsed (770 total holes, PTH/NPTH classified). However gerber_files=0 and found_layers=[] with all 5 required layers missing. The gerber .gbr/.gtl/.gbl files are either not present in this directory or have non-standard extensions not recognized by the analyzer. This triggers a false 'incomplete=true' but the drill data itself is fully correct.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -182,9 +182,9 @@
       "correct": [
         {
           "description": "Both gerber directories (PCB and PCB_rev2) contain only drill files, no copper/mask/silkscreen gerbers. The drill classification using X2 attributes is accurate: 223 vias at 0.4mm, component holes, and mounting holes all correctly identified. The layer_count=4 sourced from X2 FileFunction attribute is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

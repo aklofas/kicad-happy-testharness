@@ -17,11 +17,12 @@
         },
         {
           "description": "The power_regulators section correctly identifies U2 as an AMS1117-3.3 LDO with input rail +5V and output rail LDO_+3.3V at 3.3V, using the fixed_suffix vref method. The RC filter on R9/C4 (10k/10uF, 1.59Hz cutoff) driving the ESP32-S2 EN pin is also correctly detected as a power-on reset delay circuit.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].ref",
+            "path": "findings",
             "op": "equals",
-            "value": "U2"
+            "value": "U2",
+            "detector_filter": "detect_power_regulators[0].ref"
           }
         }
       ],
@@ -39,11 +40,12 @@
       "missed": [
         {
           "description": "The statistics section correctly counts 12 transistors, but signal_analysis.transistor_circuits contains only 8 entries covering Q1\u2013Q4 and Q9\u2013Q12 (all AO3401A/AO3400A MOSFETs). Q5, Q6, Q7, and Q8 are MMDT2907A-7-F (footprint MMDT3906), dual PNP BJT packages used for power switching (+5V\u2192Ext_+5V, +3.3V\u2192Ext_+3.3V paths). The transistor circuit analyzer handles MOSFETs but silently skips BJTs, leaving 4 BJT-based power switching circuits uncharacterized.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 12
+            "value": 12,
+            "detector_filter": "detect_transistor_circuits"
           }
         },
         {
@@ -73,11 +75,12 @@
       "correct": [
         {
           "description": "The crystal circuit analyzer detects Y1 (32.768kHz) connected to the PCF8523T RTC (U1) and reports load_caps=[] (empty). This is correct\u2014the PCF8523 has integrated crystal load capacitors internally, so no external load caps are needed or present in the schematic. The crystal connects directly to OSCI/OSCO pins of the PCF8523.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].load_caps",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_crystal_circuits[0].load_caps"
           }
         }
       ],

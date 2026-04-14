@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "signal_analysis.isolation_barriers lists three ground domains (GND, GNDPLL0, GNDPLL1) and flags VCCIO_B as an isolated_power_rail, yet isolation_components is an empty list. GNDPLL0 and GNDPLL1 are legitimate iCE40 PLL ground pins that are named separately per the iCE40 datasheet to reduce PLL noise, but they connect to the same physical ground plane through the PCB \u2014 they are not truly isolated. Flagging them as isolated domains without any barrier components (ferrite beads, inductors, transformers) is misleading.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "max_count",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_isolation_barriers"
           }
         }
       ],

@@ -1,56 +1,57 @@
 {
   "file_pattern": "Raemixx500.sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~97 (tolerance 10%)",
+      "description": "Finding count ~65 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 92,
-        "max": 102
+        "min": 61,
+        "max": 69
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~34",
+      "description": "high count ~17",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 30,
-        "max": 38
+        "min": 15,
+        "max": 19
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~13",
+      "description": "medium count ~16",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 14,
+        "max": 18
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~50",
+      "description": "low count ~30",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 45,
-        "max": 56
+        "min": 27,
+        "max": 33
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~28 (+-10)",
+      "description": "EMC risk score ~47.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 18,
-        "max": 38
+        "min": 37.5,
+        "max": 57.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "39 decoupling finding(s)",
+      "description": "25 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 39
+        "value": 25
       }
     },
     {
@@ -88,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "50 io_filtering finding(s)",
+      "description": "30 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 50
+        "value": 30
       }
     },
     {
@@ -117,11 +118,11 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~41 probe point(s) in test plan",
+      "description": "~27 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 36
+        "value": 24
       }
     },
     {

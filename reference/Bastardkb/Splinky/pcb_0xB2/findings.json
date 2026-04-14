@@ -17,38 +17,42 @@
         },
         {
           "description": "power_regulators correctly identifies U3 as an LDO topology, input from +5V, output to +3.3V, estimated_vout=3.3V, vref_source='fixed_suffix' (inferring 3.3V from the '332' in the part number). The lib_id 'Regulator_Linear:AP2127K-3.3' further confirms the 3.3V output assignment.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "crystal_circuits detects Y1 (Crystal_GND24, frequency=null because value string has no frequency) with two 15pF load caps (C3, C4), effective load CL=10.5pF. The frequency=null is correct because the value field 'Crystal_GND24' does not encode a frequency. The 12MHz frequency is only visible in the part selection context.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "memory_interfaces correctly identifies U2 (GD25Q80CEIGR) as flash connected to U1 (RP2040) with 6 shared signal nets. The QSPI_D0-D3/QSPI_SCLK/QSPI_CS nets are used for the QSPI flash interface, which is distinct from the SPI header break-out pins (MISO/MOSI/SCLK on J3).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           }
         },
         {
           "description": "voltage_dividers correctly identifies the VBUS sensing divider: R10 (5.1k top) and R11 (10k bottom) from VBUS to GND, midpoint VBUS_DET connected to RP2040 GPIO19 (pin 30). Ratio 0.662 correctly calculated. This divides 5V VBUS to approximately 3.3V for safe ADC reading by the 3.3V RP2040.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -62,11 +66,12 @@
         },
         {
           "description": "protection_devices correctly identifies F1 (Polyfuse) as a protection device on the VBUS net path. The polyfuse provides overcurrent protection for the USB power line, which is standard practice for keyboard designs.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {

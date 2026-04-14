@@ -19,10 +19,12 @@
       "description": "Q1 (RE1C002UNTCL N-MOSFET) is correctly identified in signal_analysis.transistor_circuits as a MOSFET with gate_net=DISP_BL, source_net=GND, gate_driver_ics=[U2], load_type=connector. The MOSFET is used to switch display backlight via the I2C expander IO0.",
       "created_from": "FND-00001475",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_transistor_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001475-AST-03",
@@ -45,8 +47,14 @@
         "path": "statistics.power_rails",
         "op": "equals",
         "value": [
-          {"name": "3.3V", "voltage": 3.3},
-          {"name": "GND", "voltage": null}
+          {
+            "name": "3.3V",
+            "voltage": 3.3
+          },
+          {
+            "name": "GND",
+            "voltage": null
+          }
         ]
       }
     },
@@ -55,38 +63,44 @@
       "description": "The analyzer correctly finds C2=0.1uF as the only decoupling capacitor on the 3.3V rail, correctly notes absence of bulk capacitance, and flags has_bypass=true. This matches the schematic where C2 is the only bypass cap placed near U2.",
       "created_from": "FND-00001475",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001475-AST-06",
       "description": "INCORRECT: R2 (100k) is the gate resistor for Q1 NMOS. In ic_pin_analysis for U2 pin IO0, R2 is classified as direction='series' to_net='3.3V'. However, R2 connects U2 IO0 to Q1 gate \u2014 it is a gate series resistor, not a pull-up or connection to 3.3V. The 'to_net: 3.3V' annotation is incorrect; R2 sits between DISP_BL and Q1.G with no direct 3.3V connection.",
       "created_from": "FND-00001475",
       "check": {
-        "path": "signal_analysis.transistor_circuits",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "reference": "Q1",
           "gate_net": "DISP_BL"
-        }
+        },
+        "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
     },
     {
       "id": "FND-00001475-AST-07",
       "description": "The design_observations for the I2C bus (SCL, SDA) both report has_pullup=false with pullup_resistor=null. However, R3 and R4 are 2.2k resistors connecting SDA and SCL respectively to 3.3V (via JP1 solder jumper), constituting standard I2C pull-up resistors. The analyzer failed to resolve the pull-up path through the jumper JP1.",
       "created_from": "FND-00001475",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "category": "i2c_bus",
           "has_pullup": true
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00001475-AST-08",

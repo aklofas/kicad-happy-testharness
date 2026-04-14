@@ -8,12 +8,13 @@
       "correct": [
         {
           "description": "Q1 transistor correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q1$"
+            "pattern": "^Q1$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [
@@ -27,11 +28,12 @@
       "missed": [
         {
           "description": "Missing I2C pullup resistors on SCL/SDA lines not flagged",
-          "analyzer_section": "signal_analysis.bus_interfaces",
+          "analyzer_section": "detect_bus_interfaces",
           "check": {
-            "path": "signal_analysis.bus_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bus_interfaces"
           },
           "detector": "bus_interfaces",
           "subject_refs": [],

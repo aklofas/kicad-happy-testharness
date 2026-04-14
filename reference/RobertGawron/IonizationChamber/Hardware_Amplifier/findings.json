@@ -9,23 +9,23 @@
       "incorrect": [
         {
           "description": "R38 (100G ohm, expressed as '2*50G') connects the output net __unnamed_0 to the inverting input net __unnamed_1 of U1A, forming a classic TIA topology used for the ionization chamber detector current. The analyzer correctly identified R38 as bridging these two nets, but failed to parse the compound value '2*50G' (parsed_value is None), so no feedback_resistor was found and the unit was classified as open-loop/comparator instead of inverting with feedback. The fix should extend the resistor value parser to handle arithmetic expressions like '2*50G'.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The ionization chamber sensor has reference designator V31 and lib_id 'Sensor:Nuclear-Radiation_Detector'. The analyzer assigned it type 'varistor' based on the 'V' reference prefix. The library name 'Sensor' strongly indicates this is a sensor, not a varistor. The classifier should check the lib_id library name (e.g., 'Sensor:') before falling back to the reference prefix heuristic.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "The statistics section correctly counts 36 components. The assembly_complexity section reports 40 total_components. This is an internal inconsistency \u2014 the assembly complexity calculator is counting a different set of items (possibly including power symbols or hierarchical sheet instances). Both numbers should reflect the same 36 real components.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "C46 has value 'not mounted', and C47/C48 use resistor values in capacitor symbols ('0R resistor') \u2014 these are clearly optional/configuration parts. The KiCad DNP attribute is not set on these parts, so the analyzer correctly reports dnp=False. However, the design_observations or assembly_complexity sections could flag these as unusual values warranting attention. Not filing as high-impact.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -48,9 +48,9 @@
       "correct": [
         {
           "description": "All four regulators detected with correct topologies. TPS60403 correctly flagged as inverting switched-capacitor. LDO classification for L78L05/L78L33 is accurate (they are positive-output fixed-voltage linear regulators). The PDN impedance, inrush analysis, and power_budget sections are all populated appropriately.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -59,7 +59,7 @@
       "incorrect": [
         {
           "description": "The PowerSupply and SignalProcessor sheets are sub-sheets of the DataProcessingUnit hierarchy. PWR_FLAG symbols exist in the parent sheet context, so these sub-sheet warnings about missing PWR_FLAGs for GND, -3V3, +3.3V, +5V are ERC-false-positives when the full hierarchy is considered. This is a known limitation of single-sheet analysis \u2014 not a critical bug but worth noting.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -80,9 +80,9 @@
       "correct": [
         {
           "description": "The STM8 MCU communicates with the MCP3425 delta-sigma ADC over I2C. Both SCL and SDA have 2.2k pull-ups to +5V, which is correctly identified. UART pins are also detected. Reset pin with filter cap is noted in design_observations.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -107,9 +107,9 @@
       "correct": [
         {
           "description": "Component placement matches the schematic (36 footprints). The board is correctly identified as 2-layer with 25 SMD and 11 through-hole parts. front_side=3 (C40, V31, C42 on F.Cu), back_side=33 are all verified accurate. Decoupling placement analysis for U1 and U2 is correctly computed.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -134,9 +134,9 @@
       "correct": [
         {
           "description": "The DataProcessingUnit PCB matches the schematic component count (72). All components on F.Cu (front_side=72, back_side=0). Net count (44) matches the schematic. DFM standard tier with no violations and standard track widths (0.254mm min).",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

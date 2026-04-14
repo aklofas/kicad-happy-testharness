@@ -9,11 +9,13 @@
       "description": "INCORRECT: Components V1 and V3 use lib_id 'Simulation_SPICE:VPULSE' and are classified as type='varistor' by the analyzer. This triggers two false entries in signal_analysis.protection_devices, where V3 is reported as protecting net 'in' and V1 as protecting net 'gg' \u2014 both are purely simulation stimuli with no physical protection function. The same pattern occurs in the 741 schematic where VDC and VSIN sources are also typed as varistor. Simulation_SPICE library components should be classified as a distinct 'simulation_source' type, not matched against physical component heuristics.",
       "created_from": "FND-00002272",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     },
     {
       "id": "FND-00002272-AST-02",
@@ -31,11 +33,13 @@
       "description": "The Boost2 schematic contains a textbook boost converter: inductor L1 connects input to the switching node, NMOS Q1 switches the node to GND, diode D1 rectifies to output capacitor C2. The transistor_circuit entry correctly identifies Q1 with load_type='inductive', but power_regulators remains empty. The same issue applies to the Buck3 schematic where an IRF540N high-side MOSFET with L, D, and C forms a classic synchronous buck. The analyzer only detects IC-based regulators, completely missing discrete switching converter topologies.",
       "created_from": "FND-00002272",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "U2 TPS63900DSKR identified as switching regulator with inductor L1, input +ESC_5V, output +3V3. Correct topology detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "X1 (XL2EL89COI-111YLC-26M, lib:CRYSTAL-SMD_4P-L3.2-W2.5-BL_SIT8008BI) is typed 'connector' in the BOM section. The component itself is classified 'ic' but BOM entry says type='connector'. Should be 'crystal' or at minimum not 'connector'.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "signal_analysis.crystal_circuits is empty. X1 is a 26MHz SMD crystal with 18pF load caps C10/C11 connected to STM32F411 pins XIN/XOT. The crystal circuit detector missed this, likely because the custom lib_id ('lib:CRYSTAL-SMD_4P-L3.2-W2.5-BL_SIT8008BI') isn't recognized as a crystal symbol.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -50,18 +50,18 @@
       "correct": [
         {
           "description": "Both U.FL connectors correctly identified as antenna endpoints with matching network components (L1 10nH, C11 47pF) targeting the LoRa antenna AE1. LC filters at GHz-range resonant frequencies are plausible for 915MHz LoRa.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "SCL and SDA detected with 5 devices (U9 STM32, U7 TLV493D, U4 GZP6816D, U3 ICM-42688-P, U1 AHT20) and pull-up resistors R10/R9 to +3V3. Correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -70,7 +70,7 @@
       "incorrect": [
         {
           "description": "AE1 (value 'Antenna_LoRa 915', footprint '915:915LoRa Antenna') is classified as type='ic' in both BOM and component list. It should be classified as 'antenna' or similar, not 'ic'. This is a library symbol using a custom lib that doesn't match standard patterns.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -91,18 +91,18 @@
       "correct": [
         {
           "description": "routing_complete=true, unrouted_net_count=0, 570 track segments, 144 vias, 76 nets. All consistent with a fully-routed 2-layer design.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "back_side=2 matches the 2 B.Cu footprints visible in the gerber (B.Mask has 17 flash/openings from back-side pads but only 2 footprints reported in PCB analyzer), seems consistent.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -111,7 +111,7 @@
       "incorrect": [
         {
           "description": "The PCB has a circular outline (Edge.Cuts contains a single circle with radius ~35mm). The bounding box computes min_y=max_y=92.775 (circle center), giving height=0.0. The correct height should equal the width (35.0mm diameter). The circle endpoint/center extraction is incorrect for bounding box purposes.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],
@@ -132,18 +132,18 @@
       "correct": [
         {
           "description": "complete=true with all required layers (F.Cu, B.Cu, F.Mask, B.Mask, F.SilkS, B.SilkS, Edge.Cuts). F.Paste missing_recommended is a valid observation for SMD-heavy boards that may need stencils.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Drill file shows 144 via holes (0.2997mm) and 58 PTH component holes (1.0008mm) + 3 NPTH, matching PCB via_count=144. Consistent cross-file validation.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -152,7 +152,7 @@
       "incorrect": [
         {
           "description": "Edge.Cuts has height=0.0 (the circle is stored as center+endpoint, so the gerber extents only capture one axis), while copper layers have heights ~66-69mm. This triggers 'Height varies by 2.8mm across copper/edge layers' as a false alignment issue. Root cause is the same circle bounding box bug as in PCB analyzer.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

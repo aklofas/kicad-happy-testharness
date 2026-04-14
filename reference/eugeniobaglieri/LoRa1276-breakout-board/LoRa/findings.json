@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "bus_analysis.spi correctly identifies the SPI interface on U1 with SCK, MISO, MOSI signals in full_duplex mode. NSS chip select not counted (0) because it is on an unnamed single-pin net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,15 +19,15 @@
       "incorrect": [
         {
           "description": "14 unnamed nets each containing only 1 pin of U1, indicating the KiCad 5 net tracing failed to connect U1 pins to J1 connector pins despite them being routed together on the PCB. The PCB correctly shows all U1/J1 nets linked. The schematic analyzer loses connectivity for this KiCad 5 file.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "rf_chains is empty. U1 LORA1276 has an ANT pin (pin 14, net __unnamed_5) connected to J1 via PCB trace. The analyzer has no detection for LoRa/SX127x modules as RF chains. This is a coverage gap.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -50,9 +50,9 @@
       "correct": [
         {
           "description": "copper_layers_used=1, all 42 track segments on F.Cu, via_count=0, routing_complete=true. Accurate for this minimal LoRa breakout board.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -61,7 +61,7 @@
       "incorrect": [
         {
           "description": "C1 courtyard: min_x=137.16, max_x=137.16, min_y=76.01, max_y=78.76 \u2014 a degenerate zero-width bounding box. This indicates the courtyard polygon data for the CP_Radial footprint was not parsed correctly, potentially causing false courtyard overlap analysis.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

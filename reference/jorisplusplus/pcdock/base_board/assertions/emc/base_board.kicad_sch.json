@@ -1,16 +1,17 @@
 {
   "file_pattern": "base_board.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~34 (tolerance 10%)",
+      "description": "Finding count ~42 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 30,
-        "max": 38
+        "min": 37,
+        "max": 47
       }
     },
     {
@@ -25,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~17",
+      "description": "medium count ~14",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 15,
-        "max": 19
+        "min": 12,
+        "max": 16
       }
     },
     {
@@ -45,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~48 (+-10)",
+      "description": "EMC risk score ~74.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 38,
-        "max": 58
+        "min": 64.0,
+        "max": 84.0
       }
     },
     {
@@ -66,12 +67,12 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "2 decoupling finding(s)",
+      "description": "2 inductor_leakage finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^decoupling$",
+        "pattern": "^inductor_leakage$",
         "value": 2
       }
     },
@@ -110,17 +111,6 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "3 thermal_emc finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^thermal_emc$",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -129,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -138,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "~29 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -147,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -156,7 +146,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -165,8 +155,8 @@
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "~11 net(s) with EMC scores",
+      "id": "SEED-00000016",
+      "description": "~10 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",

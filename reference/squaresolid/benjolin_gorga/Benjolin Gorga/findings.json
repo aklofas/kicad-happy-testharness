@@ -17,29 +17,32 @@
         },
         {
           "description": "Both linear regulators are identified: IC7 (lm78l09) as LDO with input VCC / output V+, and IC8 (lm79l09) as LDO with input VEE / output V-. This matches the actual schematic where IC7 produces the positive 9V rail and IC8 produces the negative 9V rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_power_regulators"
           }
         },
         {
           "description": "Multiple op-amp configurations are detected across IC2, IC4, IC5, IC6, IC9 (TL074D and TL072D). Inverting and comparator/open-loop configurations are correctly identified. The Benjolin is an analog noise/chaos circuit using op-amps as comparators and integrators, and the multi-unit decomposition per op-amp package unit is correct.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.opamp_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 10
+            "value": 10,
+            "detector_filter": "detect_opamp_circuits"
           }
         },
         {
           "description": "Q1 is detected as BJT with base on unnamed net (driven by IC), collector connected to the rungler circuit, and emitter at GND. Base resistor R17 (100k) is identified. This matches the actual schematic topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           }
         }
       ],
@@ -55,11 +58,12 @@
         },
         {
           "description": "The design_observations list includes a 'regulator_caps' entry for IC8 (lm79l09) noting missing input and output caps. However, IC7 (lm78l09) similarly lacks dedicated bypass capacitors on VCC (input) and V+ (output) beyond the shared op-amp decoupling caps on V+. IC7's subcircuit shows no neighbor capacitors. The omission of an IC7 regulator_caps observation is asymmetric with the IC8 treatment and likely a false negative.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 3
+            "value": 3,
+            "detector_filter": "detect_design_observations"
           }
         }
       ],

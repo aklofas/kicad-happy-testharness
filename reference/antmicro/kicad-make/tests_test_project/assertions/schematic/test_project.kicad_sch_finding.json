@@ -41,11 +41,13 @@
       "description": "U6 is an RT9742AGJ5F, a 500mA LDO regulator from Richtek in the Power_Management library. Only U4 (AP2112K-1.8) is detected in signal_analysis.power_regulators. U6 appears only in power_budget.rails.+3V3.ics. The RT9742AGJ5F is not in the analyzer's known-regulator list, causing a false negative for regulator detection.",
       "created_from": "FND-00002252",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     }
   ]
 }

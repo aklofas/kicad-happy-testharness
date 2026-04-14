@@ -28,12 +28,13 @@
       "incorrect": [
         {
           "description": "Voltage divider detection false positive: R7 (100 ohm) / R11 (10K) with ratio 0.99 is actually a series resistor + pulldown on a PWM output, not a signal-conditioning divider",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R11$"
+            "pattern": "^R11$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -45,7 +46,7 @@
         },
         {
           "description": "NRST pin flagged as connected to Neopixel net - this is likely a net naming/mapping error in the legacy parser, NRST would not be intentionally connected to a Neopixel data line",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -53,7 +54,7 @@
         },
         {
           "description": "MOSFET load_type reported as led for all 4 channels - these are general-purpose PWM outputs for fans/heaters/LEDs, not specifically LED loads",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "detector": "transistor_circuits",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -63,12 +64,13 @@
       "missed": [
         {
           "description": "AP2127K-3.3 LDO (U2) not detected as power regulator despite being present in BOM with correct value",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
+            "pattern": "^U2$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -79,18 +81,18 @@
         },
         {
           "description": "No SWD debug interface detection despite SWDIO net being classified as debug",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Neopixel/WS2812 level-shifted output circuit not characterized",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

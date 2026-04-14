@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "bus_analysis.i2c correctly identifies SCL and SDA nets connecting U$16 (NODEMCU) and U$17 (PCF8523_RTC). Missing pull-up detection (has_pull_up=false) is worth verifying against the schematic.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -19,19 +19,19 @@
       "incorrect": [
         {
           "description": "bus_analysis.spi has two phantom entries (bus_id 'pin_U$16', 'pin_U$19') where MISO resolves to the GND net and contains 7 devices. This is a false positive from legacy .sch pin-name matching conflating unrelated GND-connected pins with SPI MISO. The third bus entry (bus_id '0') appears correct.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "statistics.power_rails lists only 'GND'. The board uses '3V3' as a local net label throughout but without a KiCad power symbol, so the analyzer misses it as a power rail. This is expected behavior but means decoupling_analysis is empty and LDO output rail is untracked.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "IotaWatt is a current/voltage monitoring board with many resistive divider networks for scaling AC signals from current transformers to ADC range. The analyzer detects no voltage_dividers despite 62 resistors. This is a significant false negative, likely because the KiCad 5 legacy net naming (N$x) prevents net-topology tracing that the divider detector relies on.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -54,9 +54,9 @@
       "correct": [
         {
           "description": "The file is an Eagle import stub with explicit 'DUMMY SAVE FILE' warning text. The analyzer returns 0 footprints/tracks and surfaces the silkscreen warning text. Appropriate handling of this degenerate case.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

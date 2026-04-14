@@ -9,10 +9,12 @@
       "description": "The signal_analysis.addressable_led_chains correctly identifies one chain of 4 APA102-2020 LEDs (D8\u2192D7\u2192D6\u2192D5), data_in_net='APA102 DAT', protocol='SPI (APA102)', estimated_current_mA=160. The daisy-chain topology with CI/CO and DI/DO connections is correctly traced. D5 is correctly noted as the last LED with CO/DO floating.",
       "created_from": "FND-00001479",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001479-AST-02",
@@ -29,13 +31,15 @@
       "description": "D5 is the last LED in the chain. Its CO (pin 1) and DO (pin 4) are correctly mapped to single-element nets '__unnamed_4' and '__unnamed_6' respectively, each with only that pin. This accurately reflects the intentional open-circuit termination of the daisy chain.",
       "created_from": "FND-00001479",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "last_led": "D5",
           "chain_length": 4
-        }
-      }
+        },
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001479-AST-04",
@@ -54,11 +58,13 @@
       "description": "R1 and R2 are 330 ohm resistors placed in series between GND and the cathodes of D4 (White 1206) and D2 (Blue 0603) respectively, with anodes at 3.3V. These are classic LED current-limiting resistors. The signal_analysis has no entry for these simple LED drive circuits, and no protection_devices or other detection captures them. The design_observations section is also empty.",
       "created_from": "FND-00001479",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

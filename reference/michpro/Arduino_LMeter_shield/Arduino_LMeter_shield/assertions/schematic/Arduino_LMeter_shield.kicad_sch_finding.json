@@ -9,11 +9,13 @@
       "description": "INCORRECT: The analyzer detects an RC high-pass filter at 72.34 kHz comprising R3 (2k2) and C2 (1n) with input_net '__unnamed_0' and output_net 'GND'. In reality, R3 is the emitter degeneration resistor of Q1 and C2 is a coupling/bypass capacitor in the oscillator tank circuit between the collector (__unnamed_4) and a shared node (__unnamed_0). The circuit is not functioning as a filter with an intentional signal path from __unnamed_0 to GND through R3; R3 sets the emitter DC operating point.",
       "created_from": "FND-00000371",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "eq",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000371-AST-02",
@@ -31,11 +33,13 @@
       "description": "The design is an inductance meter that uses Q1 (2SC3356 NPN BJT), L1 (1uH), C2 (1n), C4 (1n), and R1/R2/R4 to form an LC oscillator whose frequency is measured by the 74HC590 counter to determine unknown inductance. The analyzer reports lc_filters:[], crystal_circuits:[], and feedback_networks:[] \u2014 none of these detectors fires. The transistor_circuits entry for Q1 correctly identifies the BJT with emitter resistor R3 and base resistors R1/R2, but the oscillator topology (L1 in collector, tank capacitors C2/C4 coupling base to emitter) is not recognized as an LC oscillator.",
       "created_from": "FND-00000371",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_value",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00000371-AST-04",

@@ -15,11 +15,12 @@
       "correct": [
         {
           "description": "STM32H743IITx MCU correctly identified with internal regulator topology",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -28,11 +29,12 @@
         },
         {
           "description": "3 I2C buses (I2C1-I2C3) correctly detected with pull-up resistors (1.5k to MCU_3V3)",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [],
@@ -68,11 +70,12 @@
         },
         {
           "description": "USBLC6-2 ESD protection on USB data lines correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [],
@@ -90,12 +93,13 @@
         },
         {
           "description": "RC filter on NRST pin (R7=10k, C8=100nF, fc=159 Hz) correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R7$"
+            "pattern": "^R7$",
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [
@@ -107,11 +111,12 @@
         },
         {
           "description": "Reset pin analysis identifies pullup, filter cap, switch, debug connector",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "check": {
-            "path": "signal_analysis.design_observations",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_design_observations"
           },
           "detector": "design_observations",
           "subject_refs": [],
@@ -129,11 +134,12 @@
         },
         {
           "description": "FM25V05-G FRAM correctly detected in memory_interfaces with SPI to STM32",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],
@@ -169,11 +175,12 @@
         },
         {
           "description": "9 decoupling rail analyses covering all major power rails",
-          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "analyzer_section": "detect_decoupling",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           },
           "detector": "decoupling_analysis",
           "subject_refs": [],
@@ -196,12 +203,13 @@
         },
         {
           "description": "U14 (MIC5330) output_rail is __unnamed_9 (BYP pin) instead of MCU_3V3 (VOUT1 pin 8, the primary output)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U14$"
+            "pattern": "^U14$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -212,12 +220,13 @@
         },
         {
           "description": "U16 (MIC5330) output_rail is __unnamed_27 (VOUT2) instead of VDD_3V3_PWM (VOUT1 pin 8)",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U16$"
+            "pattern": "^U16$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -228,12 +237,13 @@
         },
         {
           "description": "U15 (MIC5330) only reports SD_3V3 output but misses second output SENSOR_3V3 -- dual-output LDO",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U15$"
+            "pattern": "^U15$",
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -250,12 +260,13 @@
       "missed": [
         {
           "description": "6 voltage dividers for LTC4417 UV/OV thresholds: R21(453k)/R22(56k), R23(105k)/R22, R34(453k)/R35(56k), R36(105k)/R35, R37(453k)/R38(56k), R39(105k)/R38",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R21$"
+            "pattern": "^R21$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -274,11 +285,12 @@
         },
         {
           "description": "LTC4417CUF power path priority controller not classified as power management IC -- selects from 3 input sources to VDD_5V_IN",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -296,11 +308,12 @@
         },
         {
           "description": "4x TXS0108ERGYR level shifter/buffer ICs not detected as level translation despite lib_id 'Level-Shifting:TXS0108ERGYR'",
-          "analyzer_section": "signal_analysis.isolation_barriers",
+          "analyzer_section": "detect_isolation_barriers",
           "check": {
-            "path": "signal_analysis.isolation_barriers",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_isolation_barriers"
           },
           "detector": "isolation_barriers",
           "subject_refs": [],
@@ -309,12 +322,13 @@
         },
         {
           "description": "EMIF06-MSD02N16 (U11) SD card EMI filter + ESD protection not flagged in protection_devices",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U11$"
+            "pattern": "^U11$",
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [
@@ -325,11 +339,12 @@
         },
         {
           "description": "Power path switch topology (LTC4417 + 3x SIS903DN P-FETs) not recognized as prioritized power selection circuit",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [],
@@ -364,11 +379,12 @@
         },
         {
           "description": "Multiple power regulators detected including LDOs and buck converters",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_power_regulators"
           },
           "detector": "power_regulators",
           "subject_refs": [],
@@ -395,11 +411,12 @@
         },
         {
           "description": "USBLC6-2 detected as protection device",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [],
@@ -408,11 +425,12 @@
         },
         {
           "description": "RC filters on UART/sensor inputs correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters",
+          "analyzer_section": "detect_rc_filters",
           "check": {
-            "path": "signal_analysis.rc_filters",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rc_filters"
           },
           "detector": "rc_filters",
           "subject_refs": [],
@@ -427,7 +445,7 @@
         },
         {
           "description": "USBLC6-2 (USB_ESD_Protection library) classified as varistor instead of ESD protection IC",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "detector": "protection_devices",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -437,12 +455,13 @@
       "missed": [
         {
           "description": "6 voltage dividers for UV/OV monitoring (R21/R22, R23/R22, R34/R35, R36/R35, R37/R38, R39/R38 feeding UV1/OV1/UV2/OV2/UV3/OV3 pins) not detected",
-          "analyzer_section": "signal_analysis.voltage_dividers",
+          "analyzer_section": "detect_voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R21$"
+            "pattern": "^R21$",
+            "detector_filter": "detect_voltage_dividers"
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -470,11 +489,12 @@
         },
         {
           "description": "EMIF06-MSD02N16 SD card EMI/ESD filter not detected as protection device",
-          "analyzer_section": "signal_analysis.protection_devices",
+          "analyzer_section": "detect_protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_protection_devices"
           },
           "detector": "protection_devices",
           "subject_refs": [],

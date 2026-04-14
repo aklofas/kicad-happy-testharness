@@ -31,11 +31,13 @@
       "description": "INCORRECT: The analyzer reports estimated_vout=1.364V for U1 (LM317) with R11=249\u03a9 as r_top (VPOS side) and R12=2.73k\u03a9 as r_bottom (GND side). The correct LM317 formula is Vout = Vref*(1 + R_bottom/R_top) = 1.25*(1 + 2730/249) \u2248 14.96V. The analyzer instead computes 1.25*(1 + 249/2730) \u2248 1.364V, meaning it treats R11 as the feedback resistor (bottom) and R12 as the reference resistor (top), which is inverted. The voltage divider ratio 0.916415 = 2730/2979 further confirms R12 is being treated as r_top. The estimated output is off by a factor of ~11.",
       "created_from": "FND-00000391",
       "check": {
-        "path": "signal_analysis.power_regulators[1].estimated_vout",
+        "path": "findings[1].estimated_vout",
         "op": "greater_than",
-        "value": 10.0
+        "value": 10.0,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[1].estimated_vout"
     },
     {
       "id": "FND-00000391-AST-04",
@@ -53,22 +55,26 @@
       "description": "The schematic has a symmetric dual-supply design. U1 (LM317) uses R11=249\u03a9 (VPOS\u2192ADJ_P) and R12=2.73k\u03a9 (ADJ_P\u2192GND) as its feedback divider \u2014 detected. U2 (LM337) uses an identical topology: R21=249\u03a9 (VNEG\u2192ADJ_N) and R22=2.73k\u03a9 (ADJ_N\u2192GND). signal_analysis.voltage_dividers contains only the R11/R12 divider. The R21/R22 divider for the LM337 is absent from voltage_dividers.",
       "created_from": "FND-00000391",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "count_matches",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000391-AST-06",
       "description": "The schematic implements a dual half-wave rectifier: D11 (AC\u2192__unnamed_5) and D21 (AC\u2192__unnamed_1) feed the positive and negative rectified rails from the AC input (J1/J2). signal_analysis.bridge_circuits is empty and there is no detection of the rectifier or the C11/C21 bulk reservoir capacitors as a rectifier+filter topology.",
       "created_from": "FND-00000391",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
         "op": "count_matches",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_bridge_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
     }
   ]
 }

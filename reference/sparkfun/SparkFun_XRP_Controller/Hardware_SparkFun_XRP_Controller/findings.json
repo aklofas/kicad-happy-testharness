@@ -28,7 +28,7 @@
       "incorrect": [
         {
           "description": "AP63357 buck converter Vref reported as 0.6V but datasheet specifies 0.765V reference",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -38,11 +38,12 @@
       "missed": [
         {
           "description": "QSPI flash memory interface to W25Q128 not detected as memory bus",
-          "analyzer_section": "signal_analysis.bus_interfaces",
+          "analyzer_section": "detect_bus_interfaces",
           "check": {
-            "path": "signal_analysis.bus_interfaces",
+            "path": "findings",
             "op": "equals",
-            "value": 128
+            "value": 128,
+            "detector_filter": "detect_bus_interfaces"
           },
           "detector": "bus_interfaces",
           "subject_refs": [],
@@ -90,12 +91,13 @@
         },
         {
           "description": "Crystal Y1 12MHz with 15pF load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits",
+          "analyzer_section": "detect_crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y1$"
+            "pattern": "^Y1$",
+            "detector_filter": "detect_crystal_circuits"
           },
           "detector": "crystal_circuits",
           "subject_refs": [
@@ -115,11 +117,12 @@
         },
         {
           "description": "D4 WS2812B addressable LED chain detected",
-          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "analyzer_section": "detect_addressable_leds",
           "check": {
-            "path": "signal_analysis.addressable_led_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_addressable_leds"
           },
           "detector": "addressable_led_chains",
           "subject_refs": [
@@ -132,7 +135,7 @@
       "incorrect": [
         {
           "description": "AP63357 output voltage calculated as 3.873V using wrong Vref=0.6V (correct Vref=0.765V gives 4.94V matching 5V rail)",
-          "analyzer_section": "signal_analysis.design_observations",
+          "analyzer_section": "detect_design_observations",
           "detector": "design_observations",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -146,11 +149,12 @@
       "missed": [
         {
           "description": "QSPI memory interface between RP2350B and W25Q128/APS6404L not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces",
+          "analyzer_section": "detect_memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_memory_interfaces"
           },
           "detector": "memory_interfaces",
           "subject_refs": [],

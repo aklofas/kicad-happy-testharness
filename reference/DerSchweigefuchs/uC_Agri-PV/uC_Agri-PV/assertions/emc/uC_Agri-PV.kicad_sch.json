@@ -1,56 +1,57 @@
 {
   "file_pattern": "uC_Agri-PV.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~66 (tolerance 10%)",
+      "description": "Finding count ~52 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 62,
-        "max": 70
+        "min": 49,
+        "max": 55
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~12",
+      "description": "high count ~9",
       "check": {
         "path": "summary.high",
+        "op": "range",
+        "min": 8,
+        "max": 10
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "medium count ~12",
+      "check": {
+        "path": "summary.medium",
         "op": "range",
         "min": 10,
         "max": 14
       }
     },
     {
-      "id": "SEED-00000003",
-      "description": "medium count ~20",
-      "check": {
-        "path": "summary.medium",
-        "op": "range",
-        "min": 18,
-        "max": 22
-      }
-    },
-    {
       "id": "SEED-00000004",
-      "description": "low count ~34",
+      "description": "low count ~27",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 30,
-        "max": 38
+        "min": 24,
+        "max": 30
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~24.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 10
+        "min": 14.5,
+        "max": 34.5
       }
     },
     {
@@ -66,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "13 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 13
+        "value": 5
       }
     },
     {
@@ -88,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "37 io_filtering finding(s)",
+      "description": "30 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 37
+        "value": 30
       }
     },
     {
@@ -110,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "5 switching_emc finding(s)",
+      "description": "2 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 5
+        "value": 2
       }
     },
     {
@@ -139,11 +140,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "~54 probe point(s) in test plan",
+      "description": "~49 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 51
+        "value": 44
       }
     },
     {

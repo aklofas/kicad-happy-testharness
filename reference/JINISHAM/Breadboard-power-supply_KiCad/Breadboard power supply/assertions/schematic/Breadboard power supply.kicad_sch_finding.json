@@ -9,25 +9,29 @@
       "description": "INCORRECT: R1 (330\u03a9) is the LM317 feedback resistor between the output rail (3.3V) and the ADJ node (__unnamed_0). C3 (1\u00b5F) is a bypass capacitor from the 3.3V output rail to GND. They are not in a series RC filter topology. The RC filter detector identified the path ADJ\u21923.3V through R1 with C3 on 3.3V-to-GND as a low-pass filter (482 Hz), but this is a voltage regulator feedback network, not an RC filter. The cutoff frequency calculation is also meaningless in this context.",
       "created_from": "FND-00000416",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "max_count",
-        "value": 0
+        "value": 0,
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000416-AST-02",
       "description": "INCORRECT: The design_observations section reports U1 (LM7805) as missing caps on its input rail '12V' and output rail '5V'. However, C1 (10\u00b5F) is connected between the 12V rail and GND (decoupling the LM7805 input), and C2 (0.1\u00b5F) is connected between the 5V rail and GND (decoupling the LM7805 output). The inrush_analysis section correctly identifies both caps. The design_observations detector is incorrectly ignoring these caps when generating the missing_caps warning for U1.",
       "created_from": "FND-00000416",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "component": "U1",
           "category": "regulator_caps"
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000416-AST-03",
@@ -67,7 +71,7 @@
       "description": "INCORRECT: The design_observations reports U2 (LM317) as missing a cap on input rail '12 V'. While the output cap (C3 on 3.3V) is acknowledged in the inrush section, the input cap for '12 V' is genuinely absent in the schematic. The input bypass cap for the LM317 is correctly missing \u2014 however the design_observations also flags the output ('3.3 V') as missing a cap, which is wrong since C3 (1\u00b5F) is on the 3.3V rail. This is a partial false positive: the input cap warning for U2 is correct, but reporting the output ('3.3 V') as missing a cap is incorrect given C3 exists.",
       "created_from": "FND-00000416",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "component": "U2",
@@ -75,9 +79,11 @@
           "missing_caps": {
             "output": "3.3 V"
           }
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     }
   ]
 }

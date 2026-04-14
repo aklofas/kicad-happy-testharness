@@ -9,7 +9,7 @@
       "description": "Source has U1 (Pico), J1/J2 (Conn_01x20), J3 (Conn_01x03) = 4 total components. Output reports total_components=4, ic=1, connector=3. All 43 pin UUIDs for U1 captured. Power rail GND and PWR_FLAG both detected. 36 nets and 61 wires match the dense wiring. kicad_version reported as 'unknown' because file_version 20211123 predates the version-to-release mapping used by the analyzer, which is acceptable behavior.",
       "created_from": "FND-00000449",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "The Pico's GPIO4 (I2C0 SDA) and GPIO5 (I2C0 SCL) pins are connected to J1 rows. The schematic nets are unnamed (no I2C net labels at this sheet level), so the bus_analysis.i2c list is empty. This is correct behavior for a raw breakout board \u2014 no I2C bus labeling is present \u2014 so this is a true negative, not an error.",
       "created_from": "FND-00000449",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

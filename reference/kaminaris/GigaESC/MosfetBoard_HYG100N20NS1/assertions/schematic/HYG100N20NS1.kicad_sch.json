@@ -1,7 +1,8 @@
 {
   "file_pattern": "HYG100N20NS1.kicad_sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,129 +35,106 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "1 bridge_circuits detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 connector_ground_audit detected",
+      "description": "1 audit_esd_protection detected",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "3 current_sense detected",
+      "description": "1 detect_bridge_circuits detected",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
+        "detector_filter": "detect_bridge_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "All current_sense have shunt ref present",
+      "description": "3 detect_current_sense detected",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All detect_current_sense have shunt ref present",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
         "op": "not_contains_match",
         "field": "shunt.ref",
         "pattern": "^(None|)$"
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "3 design_observations detected",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000010",
-      "description": "1 esd_coverage_audit detected",
+      "description": "3 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "All esd_coverage_audit have connector_ref",
+      "description": "6 detect_rc_filters detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "not_contains_match",
-        "field": "connector_ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "All esd_coverage_audit coverage values are valid",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "coverage",
-        "pattern": "^(full|partial|none)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All esd_coverage_audit risk_level values are valid",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "risk_level",
-        "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "6 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "id": "SEED-00000012",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "not_contains_match",
         "field": "cutoff_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000016",
-      "description": "2 suggested_certifications detected",
+      "id": "SEED-00000013",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000014",
       "description": "Has 36 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -165,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000015",
       "description": "Has 5 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -174,7 +152,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000016",
       "description": "Has 24 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -183,7 +161,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000017",
       "description": "Has 12 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

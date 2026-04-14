@@ -29,14 +29,15 @@
       "missed": [
         {
           "description": "C2 (1 \u00b5F) has pin 1 connected to __unnamed_0 (the AVDD power-in pin of U1) and pin 2 to GND. The net is classified 'power_internal' rather than a named rail, so the decoupling_analysis only reports C1 (100 nF) on +3.3V with cap_count=1, total=0.1 \u00b5F. C2's role as AVDD decoupling for the TS4231's analog supply is not captured. The design_observations correctly notes that +3.3V has no bulk capacitor, but doesn't account for AVDD decoupling.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "contains_match",
             "value": {
               "rail": "+3.3V",
               "cap_count": 1
-            }
+            },
+            "detector_filter": "detect_decoupling"
           }
         }
       ],
@@ -68,7 +69,7 @@
       "incorrect": [
         {
           "description": "J1 is a 1\u00d74 2.54 mm pitch through-hole pin header placed at (129.2, 54.9) rotated 90\u00b0. At 90\u00b0 rotation the four pins extend along the Y axis, reaching to approximately Y=59.7 mm \u2014 well beyond the board edge at Y=56.9 mm. This is a deliberate design choice (connector intended to be soldered flush with the board edge for mating). The edge_clearance_warnings entry with edge_clearance_mm=-7.2 is technically correct but not a manufacturing defect in context.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [],

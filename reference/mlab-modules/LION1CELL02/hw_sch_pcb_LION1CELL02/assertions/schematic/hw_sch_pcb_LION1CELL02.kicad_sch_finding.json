@@ -9,7 +9,7 @@
       "description": "USB-C connector J1 (USB4105-GF-A) has CC1/CC2 5.1k pulldowns (pass), VBUS decoupling (pass), but no VBUS ESD protection (fail). The analyzer correctly identifies this gap with 1 fail, 3 pass, 3 info.",
       "created_from": "FND-00000806",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -19,7 +19,7 @@
       "description": "U3 detected as switching topology with L2 inductor, +VSW input, +3.3V output, feedback via R8/R9 voltage divider (511k/91k). Estimated Vout=3.308V from Vref=0.5V lookup. This is accurate for the TPS631000.",
       "created_from": "FND-00000806",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       }
@@ -29,7 +29,7 @@
       "description": "The design is explicitly a Li-ion BMS (title: 'Single cell Li-ion battery management with USB-C charger'). U1=BQ34Z100 (fuel gauge), U2=BQ25628E (charger), U5=BQ29700DSER (cell protection). bms_systems=[] in signal_analysis. The BMS detector apparently does not recognize these TI BQ-series parts.",
       "created_from": "FND-00000806",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },

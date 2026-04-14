@@ -20,11 +20,13 @@
       "description": "INCORRECT: C1 (0.1uF) connects directly between (+3.3) and (GND), the same power rails used by U1 (MCP7940N) and U2 (74HC1G14GW). The design_observations section correctly reports both ICs have rails_without_caps, and the PCB decoupling_placement section correctly finds C1 nearby. However, signal_analysis.decoupling_analysis is completely empty \u2014 it should list C1 as a decoupling cap associated with the power rail, even if the spatial proximity cannot be confirmed from schematic coordinates alone. The observations section shows the right data but is nested under design_observations rather than the dedicated decoupling_analysis list.",
       "created_from": "FND-00002196",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00002196-AST-03",

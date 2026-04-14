@@ -29,39 +29,40 @@
       "missed": [
         {
           "description": "Thermocouple/temperature sensing circuit for soldering tip not identified - critical for PID temperature control",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "PWM heater control circuit (MCU -> gate driver -> P-MOSFET -> heating element) not identified as a thermal control loop",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "USB Power Delivery (PD) negotiation IC not identified despite USB-C connector and VBUS power path",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Complementary pair Q3 (NPN SS8050) + Q4 (PNP BC807) forms a push-pull output stage, not identified as such",
-          "analyzer_section": "signal_analysis.transistor_circuits",
+          "analyzer_section": "detect_transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits",
+            "path": "findings",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q3$"
+            "pattern": "^Q3$",
+            "detector_filter": "detect_transistor_circuits"
           },
           "detector": "transistor_circuits",
           "subject_refs": [

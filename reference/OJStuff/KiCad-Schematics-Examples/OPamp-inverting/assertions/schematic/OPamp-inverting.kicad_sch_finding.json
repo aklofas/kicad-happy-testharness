@@ -9,10 +9,12 @@
       "description": "The OPamp-inverting schematic is correctly detected as 'inverting' configuration. The gain is reported as -10.0 (gain_dB=20.0), matching the actual R2/R1 ratio of 10k/1k = 10. The feedback_resistor (R2=10k) and input_resistor (R1=1k) are correctly identified.",
       "created_from": "FND-00002202",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
+      },
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00002202-AST-02",

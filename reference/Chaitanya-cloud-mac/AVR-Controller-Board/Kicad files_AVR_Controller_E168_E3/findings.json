@@ -9,11 +9,12 @@
       "incorrect": [
         {
           "description": "The design_observations entry for U3 (L7805) states missing_caps={input: '__unnamed_5'}, but C8 (1uF) is explicitly on net __unnamed_5 (U3 pin 1 IN). The ic_pin_analysis section for U3 correctly shows has_decoupling_cap=true with C8 on the input pin. The two output sections are internally inconsistent \u2014 the design_observations regulator_caps check is failing to look up caps already identified by the ic_pin_analysis pass.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.design_observations[?category=='regulator_caps' && component=='U3'].missing_caps.input",
+            "path": "findings",
             "op": "eq",
-            "value": null
+            "value": null,
+            "detector_filter": "detect_design_observations[?category=='regulator_caps' && component=='U3'].missing_caps.input"
           }
         },
         {

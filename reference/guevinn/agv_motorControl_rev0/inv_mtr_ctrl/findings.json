@@ -8,20 +8,22 @@
       "correct": [
         {
           "description": "signal_analysis.bridge_circuits correctly identifies a three_phase topology with 3 half-bridges: (Q1/Q2 \u2192 SHA), (Q3/Q4 \u2192 SHB), (Q5/Q6 \u2192 SHC), all driven from VDC rail. This matches the actual design with 6\u00d7 BSC067N06LS3G N-MOSFETs in a 3-phase bridge driven by DRV8328B.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "len_eq",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           }
         },
         {
           "description": "Analyzer detects voltage_dividers with R3(141k\u03a9)/R4(10k\u03a9) from VCC to GND producing ratio 0.066, with midpoint connected to U1 pin 26 (VDSLVL \u2014 voltage drain sense level). This is a correct identification of the threshold-setting divider for the DRV8328B's drain-source overvoltage protection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "len_gte",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -35,11 +37,12 @@
         },
         {
           "description": "signal_analysis.decoupling_analysis correctly identifies the VDC rail with C1(10uF), C2(.1uF), C8(100uF), C9(100uF), C10(100uF), C11(.01uF) for 310.11uF total. Note: C9/C10 are DNP in the schematic; the analyzer includes DNP parts in the decoupling analysis which may inflate the 'active' capacitance.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "len_gte",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_decoupling"
           }
         },
         {
@@ -55,20 +58,22 @@
       "incorrect": [
         {
           "description": "signal_analysis.bridge_circuits[0].driver_ics:[] despite U1=DRV8328B being a dedicated gate driver IC for this 3-phase bridge (connected to all 6 MOSFET gates via GHA/GHB/GHC/GLA/GLB/GLC nets). The DRV8328B provides bootstrap gate driving directly to the 6 gate resistors. The analyzer fails to associate U1 with the bridge.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.bridge_circuits",
+            "path": "findings",
             "op": "len_eq",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_bridge_circuits"
           }
         },
         {
           "description": "The analyzer detects R6(31\u03a9)/R8(10k\u03a9) as a 'voltage divider' (ratio 0.99691, top_net GLA, bottom GND). R6 is actually a gate resistor (between GLA driver output and MOSFET gate Q2), and R8 is a 10k\u03a9 pull-down to GND (to discharge the gate when driver is off). This is a gate drive circuit, not a voltage divider. The 31\u03a9/10k\u03a9 pair appears across 5 more gate drive pairs.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "len_gte",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {

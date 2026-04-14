@@ -19,11 +19,12 @@
         },
         {
           "description": "The SY8201 buck converter (U2) output filter consists of L1 (10uH) and a single 4.7uF capacitor on the LX switching node (__unnamed_5). Because the wrong-project reference collision makes nine distinct capacitors all appear as 'C5', the LC filter detector combines them as '9 caps parallel' (total 900nF) and uses ref 'C5' throughout. The actual single output filter capacitor is the component with UUID 37f45d72, which has Caffeinated-AFTONSPARV instance reference C3 (4.7uF). The resonant frequency and impedance calculations (53.05 kHz, 3.33\u03a9) are therefore wrong; the correct single-cap values would be ~75.7 kHz and 1.63\u03a9.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.lc_filters[0].capacitor.parallel_caps",
+            "path": "findings",
             "op": "max_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_lc_filters[0].capacitor.parallel_caps"
           }
         }
       ],
@@ -48,11 +49,12 @@
         },
         {
           "description": "The voltage_dividers list contains an entry with r_top=R5 (20\u03a9) and r_bottom=R1 (10k\u03a9), top_net='__unnamed_0', mid_net='LED-B'. This is not a voltage divider. R5 is a gate series resistor for Q3 (N-channel MOSFET, AO3400A) limiting gate current, and R1 is a gate pull-down resistor to GND. The mid-point net 'LED-B' connects to U1 GPIO6 which drives the MOSFET gate. A 20\u03a9:10k\u03a9 ratio would produce a 0.998 division ratio, which makes no sense as a voltage divider but is correct for a GPIO-driven gate drive where the pull-down holds the gate low when the GPIO is tristated. The transistor_circuits section already correctly identifies Q3 with gate_resistors=[R5], confirming R5's true role.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.voltage_dividers",
+            "path": "findings",
             "op": "max_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_voltage_dividers"
           }
         },
         {
@@ -68,11 +70,12 @@
       "missed": [
         {
           "description": "The schematic has four 100nF bypass capacitors on +3.3V (C4, C7, C11 on various 3.3V sub-rails) and one on +24V (C1). All appear as duplicate 'C5' references due to the multi-project reference resolution bug, so the decoupling analyzer cannot associate them with the correct power rails. The decoupling_analysis section only finds C22 (100\u00b5F on +24V) and misses: (1) C1/100nF bypass on +24V, (2) all three 100nF bypass caps on +3.3V. The design observation for U1 correctly notes '+3.3V' is without caps, but this is because the caps exist and are wired correctly \u2014 they just have wrong references in the output.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis",
+            "path": "findings",
             "op": "count_matches",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_decoupling"
           }
         }
       ],

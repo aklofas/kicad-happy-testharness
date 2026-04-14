@@ -52,10 +52,12 @@
       "description": "The LC filter detector correctly identifies L1 (33nH) forming resonant circuits with C4+C6 (parallel, ~100pF) at 2.77 MHz and with C7 (47pF) at 127.8 MHz. These are the RF matching/filtering elements on the antenna path between J5 (SMA) and U3 RF_IN. The analysis is structurally correct.",
       "created_from": "FND-00001562",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_lc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
       "id": "FND-00001562-AST-05",
@@ -119,7 +121,7 @@
       "description": "INCORRECT: The RC filter detector finds R7 (1k) and C3 (1.0uF) forming a 159 Hz low-pass structure on the V_BCKP rail. In reality, R7 is a protection/isolation resistor between D5 (Schottky diode that trickle-charges from 3.3V_A) and C3 (bulk decoupling for the NEO-F10N V_BCKP backup pin). This is a power supply protection circuit, not a signal filter. The cutoff frequency label is misleading in context.",
       "created_from": "FND-00001562",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "resistor": {
@@ -128,9 +130,11 @@
           "capacitor": {
             "ref": "C3"
           }
-        }
+        },
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     }
   ]
 }

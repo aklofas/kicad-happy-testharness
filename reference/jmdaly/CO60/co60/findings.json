@@ -19,20 +19,22 @@
       "incorrect": [
         {
           "description": "The NPN transistor Q1 (FMMT493TA) is wired as an emitter-follower for LED PWM control: emitter goes to 'LEDGND' (the controlled LED ground rail driven by the MCU's LEDPWM signal via RC1), and collector goes to actual GND. The analyzer sets emitter_is_ground=True because 'LEDGND' contains the string 'GND', but LEDGND is a distinct named net \u2014 the controlled sink for LED current, not a power ground. This misclassification misrepresents the circuit topology; it is an emitter-follower (common-collector), not a simple common-emitter switch with emitter to ground.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.transistor_circuits[0].emitter_is_ground",
+            "path": "findings",
             "op": "equals",
-            "value": true
+            "value": true,
+            "detector_filter": "detect_transistor_circuits[0].emitter_is_ground"
           }
         },
         {
           "description": "The CO60 keyboard schematic (Matrix.sch) contains 91 MX keyboard switches and 68 matrix diodes across a 5-row \u00d7 15-column matrix. The combined analysis reports switches_on_matrix=111 and estimated_keys=111, overcounting by 20. The individual Matrix.sch analysis separately reports switches_on_matrix=0 (because keyboard switches have no ROW/COL net labels on their pins directly \u2014 only via unnamed junction nets). The combined roll-up produces an inflated count. The correct value is 91 switches on the matrix.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "path": "findings",
             "op": "equals",
-            "value": 111
+            "value": 111,
+            "detector_filter": "detect_key_matrices[0].switches_on_matrix"
           }
         },
         {
@@ -57,11 +59,12 @@
       "missed": [
         {
           "description": "The LDO regulator detector reports input_rail=null for U2 because the pin inversion error (from the transform matrix bug) places the IN pin on the GND net rather than +5V. The detector correctly looks at the IN pin's net but finds 'GND' which is not a valid power supply rail, so it sets input_rail=null. The correct input_rail is '+5V'. The output_rail is also misidentified as '__unnamed_3' rather than '+3.3V', though '+3.3V' is reached via a short wire segment creating an internal net.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.power_regulators[0].input_rail",
+            "path": "findings",
             "op": "equals",
-            "value": null
+            "value": null,
+            "detector_filter": "detect_power_regulators[0].input_rail"
           }
         }
       ],
@@ -86,11 +89,12 @@
       "incorrect": [
         {
           "description": "Matrix.sch has 91 MX keyboard switches (K_* refs) and 68 diodes. When analyzed standalone, the key_matrix detector finds switches_on_matrix=0 because the keyboard switches connect to unnamed junction nets rather than directly to ROW/COL-labeled nets (the labels are hierarchical ports on the sheet boundary). The estimated_keys=68 is derived from the diode count, which is less than the actual 91 switches. The correct switch count for this sheet is 91.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "path": "findings",
             "op": "equals",
-            "value": 0
+            "value": 0,
+            "detector_filter": "detect_key_matrices[0].switches_on_matrix"
           }
         }
       ],

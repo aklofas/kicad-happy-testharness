@@ -9,13 +9,15 @@
       "description": "thermal_pad_vias reports U1 pad 9 (2.6\u00d73.1 mm solder pad) with 8 footprint via-pads (thermal vias embedded in footprint), via density 0.993/mm\u00b2, and adequacy='adequate'. The recommended minimum is 5 vias and ideal is 9; 8 meets the threshold. The PCB file confirms 8 thru-hole via-pads plus additional standalone vias in the vicinity.",
       "created_from": "FND-00001626",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "component": "U1",
           "adequacy": "adequate"
-        }
-      }
+        },
+        "detector_filter": "analyze_thermal_pad_vias"
+      },
+      "migration_note": "Path migrated from: thermal_pad_vias"
     },
     {
       "id": "FND-00001626-AST-02",

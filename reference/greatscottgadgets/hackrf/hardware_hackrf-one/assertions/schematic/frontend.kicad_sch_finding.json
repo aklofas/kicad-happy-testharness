@@ -9,11 +9,13 @@
       "description": "The hackrf-one frontend sheet contains explicit RF impedance matching LC networks around the RFFC5072 mixer inputs/outputs (via T1 MIX_IN_BALUN and T2 MIX_OUT_BALUN), around the RX/TX baluns (T3 RX_BALUN, T4 TX_BALUN), and around each of the 10 RF switches. The 33pF capacitors (24 instances) are specifically chosen for 50-ohm matching at the target frequencies. rf_matching returns [] for all hackrf schematic files. The same is true for the marzipan, neapolitan, lollipop, and jawbreaker frontend sheets. The RF matching detector appears to only look for explicit antenna-to-IC single-stage pi/L/T networks, missing distributed switch-network matching topologies.",
       "created_from": "FND-00002160",
       "check": {
-        "path": "signal_analysis.rf_matching",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_rf_matching"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rf_matching"
     }
   ]
 }

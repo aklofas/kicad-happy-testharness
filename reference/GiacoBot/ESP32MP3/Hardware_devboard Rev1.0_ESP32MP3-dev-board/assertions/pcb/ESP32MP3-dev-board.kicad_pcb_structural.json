@@ -2,18 +2,29 @@
   "file_pattern": "ESP32MP3-dev-board.kicad_pcb",
   "analyzer_type": "pcb",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 decoupling_placement",
+      "description": "Exactly 5 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U3 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "U4 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -23,7 +34,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "U1 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -33,7 +44,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "U2 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -43,7 +54,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "U5 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -53,29 +64,21 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 4 thermal_analysis.thermal_pads",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 4 thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 4
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "U3 in thermal_analysis.thermal_pads",
-      "check": {
-        "path": "thermal_analysis.thermal_pads",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U3$"
-      }
-    },
-    {
       "id": "STRUCT-00000008",
-      "description": "U4 in thermal_analysis.thermal_pads",
+      "description": "U4 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U4$"
@@ -83,9 +86,10 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "U2 in thermal_analysis.thermal_pads",
+      "description": "U2 in thermal_pad_vias",
       "check": {
-        "path": "thermal_analysis.thermal_pads",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U2$"
@@ -93,38 +97,10 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 4 thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "equals",
-        "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "U4 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "U2 in thermal_pad_vias",
-      "check": {
-        "path": "thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
       "description": "U3 in thermal_pad_vias",
       "check": {
-        "path": "thermal_pad_vias",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^U3$"

@@ -8,9 +8,9 @@
       "correct": [
         {
           "description": "Power.sch is a sub-sheet referenced by the top-level; it contains only power symbols (no components), so zero components and zero nets is correct. The top-level schematic aggregates it properly.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -35,27 +35,27 @@
       "correct": [
         {
           "description": "Top-level schematic includes Z80.sch and Power.sch sub-sheets. Component count (91), power rails (+3.3V, +5V, GND), BOM groupings, and i2c bus detection (SCL/SDA with MCP23017 devices) all look accurate.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "Q2 and Q3 (BSS138) are correctly classified as MOSFETs with gate_net on i2C_SCL/i2C_SDA and drain connected to the 5V-side SCL/SDA \u2014 correctly reflecting the open-drain level-shifter topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
         },
         {
           "description": "7 caps on +5V (4.7uF bulk + 5x100nF bypass) and 4 caps on +3.3V (4.7uF + 3x100nF) are accurately enumerated.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -64,23 +64,23 @@
       "incorrect": [
         {
           "description": "Q1 (AO3400A N-channel MOSFET) shows gate_net='GND' in transistor_circuits, which would mean it is always off and non-functional. The BZ_GPIO22 net drives the buzzer circuit so Q1's gate should be driven by a GPIO or via a resistor network \u2014 'GND' is almost certainly a net resolution/connectivity bug in the legacy .sch parser rather than the true gate net.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "Same issue as Q1: Q4 (AO3400A) has gate_net='GND' which makes no functional sense. Likely a net naming/connectivity resolution failure in the legacy KiCad 5 parser for this sheet.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         },
         {
           "description": "design_analysis.bus_analysis.i2c contains four entries \u2014 SCL, SDA, GND (classified as SDA line), and +5V (classified as SDA line). GND and +5V are power rails, not i2c signal lines. The BSS138 level-shifter topology (where source connects to +3.3V/+5V and gate to 3.3V-side SDA/SCL) is confusing the bus detector into enumerating power nets as i2c lines.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "findings"
         }
       ],
       "missed": [
         {
           "description": "Q2+Q3 with R5/R6 form a classic bidirectional i2c level-shifter between 3.3V and 5V domains. The analyzer identifies the individual transistors but does not produce a higher-level 'level_shifter' or 'i2c_level_shifter' detection in design_observations.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -103,9 +103,9 @@
       "correct": [
         {
           "description": "Component breakdown matches the LED matrix + Z80 CPU + MCP23017 GPIO expanders design. 30 no-connects on Z80 is plausible for unused address/data lines.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }
@@ -130,9 +130,9 @@
       "correct": [
         {
           "description": "Footprint count matches schematic component count exactly. Board dimensions, via count (539), track length (5102mm), and routing_complete=true are all plausible for a 2-layer RPi hat with Z80 and 32 LEDs.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

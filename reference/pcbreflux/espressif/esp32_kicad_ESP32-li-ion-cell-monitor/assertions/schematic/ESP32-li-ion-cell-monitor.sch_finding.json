@@ -20,11 +20,13 @@
       "description": "U1 (NCP186B) is correctly detected as an LDO with input_rail='VCC', output_rail='+3V', and fb_net='+3V'. The decoupling analysis correctly associates C4 (100n), C2 (1u), C5 (1u), C6 (100n) and others with the +3V rail. The total capacitance of 2.5 uF across 7 caps is correctly summed.",
       "created_from": "FND-00002082",
       "check": {
-        "path": "signal_analysis.power_regulators[0].topology",
+        "path": "findings[0].topology",
         "op": "equals",
-        "value": "LDO"
+        "value": "LDO",
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].topology"
     },
     {
       "id": "FND-00002082-AST-03",
@@ -42,11 +44,13 @@
       "description": "U3 (INA219_SOT23-8) is a dedicated current-sense amplifier with shunt resistor inputs. The current_sense list is empty ([]) for both the original and Ref1.3 versions despite the INA219 and INA226 being standard current-sense ICs. The analyzer correctly identifies U3 as an 'ic' type and includes it in decoupling analysis, but never fires the current_sense detector for it.",
       "created_from": "FND-00002082",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_current_sense"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.current_sense"
     }
   ]
 }

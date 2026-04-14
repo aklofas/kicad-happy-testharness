@@ -30,11 +30,12 @@
       "missed": [
         {
           "description": "signal_analysis.key_matrices is an empty array even though the schematic has nets named CL0, CL1, CL2, CL3, CL4, CL5 (columns) and RL0, RL1, RL2, RL3 (rows), along with 42 KEYSW components and 42 diodes connected in a classic diode-per-key matrix. The analyzer should detect a 4\u00d76 keyboard matrix but returns no results. The net names match common keyboard matrix naming conventions.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],
@@ -67,11 +68,12 @@
       "missed": [
         {
           "description": "signal_analysis.key_matrices is empty for the Rev2 Mirrored half-board schematic which has nets CL0-CL5 and RL0-RL3 with 21 KEYSW switches and 21 diodes \u2014 a standard 3-or-4-row \u00d7 6-column keyboard half matrix. The TRRS connector (U2) and ProMicro (U1) confirm it is a split half PCB. The matrix detector fails to trigger even with canonical row/column net names.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.key_matrices",
+            "path": "findings",
             "value": 1,
-            "op": "min_count"
+            "op": "min_count",
+            "detector_filter": "detect_key_matrices"
           }
         }
       ],

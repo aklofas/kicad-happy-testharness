@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "Despite the pin-to-net mapping error, the analyzer correctly identifies U1 as an esd_ic protecting D+ and D- differential nets. The fuse F1 is also correctly detected as a protection device on the VCC rail.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.protection_devices",
+            "path": "findings",
             "op": "min_count",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_protection_devices"
           }
         },
         {
@@ -39,11 +40,12 @@
       "missed": [
         {
           "description": "USB1 (Wurth-632723300011) is a USB-C connector with named USB signals (VBUS, GND, CC1, CC2, D+, D-, SBU1, SBU2). The analyzer returns an empty usb_interfaces list. The part name 'Wurth-632723300011' and presence of typical USB-C signals should trigger detection.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.usb_interfaces",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_usb_interfaces"
           }
         }
       ],

@@ -8,11 +8,12 @@
       "correct": [
         {
           "description": "The AMS1117-3.3 (U100) is correctly classified as an LDO with input_rail 'VCC', output_rail '+3.3V', and estimated_vout 3.3V. The crystal Y500 (Crystal_GND24) is correctly detected in crystal_circuits with two 10pF load capacitors (C501, C502) and calculated effective load of 8.0pF. The STM32L053 is also detected as an ic_with_internal_regulator.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_crystal_circuits"
           }
         }
       ],
@@ -30,11 +31,12 @@
       "missed": [
         {
           "description": "U600 is an RFM95W-868S2 LoRa RF transceiver module (868 MHz). Despite being the main distinguishing feature of this 'rfm95-breakout-board' design, rf_chains and rf_matching are both empty arrays. The module is connected via SPI1 to the STM32L053 MCU. The analyzer should at minimum flag the presence of an RF module component even if full chain analysis is not possible for integrated modules.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_chains",
+            "path": "findings",
             "op": "min_count",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_chains"
           }
         }
       ],

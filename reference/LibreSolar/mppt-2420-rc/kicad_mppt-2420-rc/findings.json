@@ -29,9 +29,10 @@
       "summary": "TLV9001 differential-input opamp current-sense circuit not detected",
       "details": "U3 (TLV9001) forms a classic differential amplifier current-sense topology with R10/R11 and R8/R9. Both opamp_circuits and current_sense are empty. The lib_id uses a generic name rather than a recognized opamp library entry.",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_opamp_circuits"
       }
     }
   ]

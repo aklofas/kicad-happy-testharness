@@ -9,11 +9,13 @@
       "description": "The analyzer correctly identifies U3 (W25Q128JVS, a 128Mbit SPI NOR flash) connected to U4 (RP2040) with 6 shared signal nets. The memory_interfaces detection properly reports total_pins=8 and the connected processor. The QSPI bus signals (QSPI_D0..D3, QSPI_CLK, QSPI_CS) are also reflected in bus_topology.detected_bus_signals for QSPI_D. The 12MHz crystal circuit (Y1 with 20pF load caps) is correctly detected with calculated effective load of 13pF.",
       "created_from": "FND-00002187",
       "check": {
-        "path": "signal_analysis.memory_interfaces[0].connected_processors[0].reference",
+        "path": "findings[0].connected_processors[0].reference",
         "op": "equals",
-        "value": "U4"
+        "value": "U4",
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces[0].connected_processors[0].reference"
     }
   ]
 }

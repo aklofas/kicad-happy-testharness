@@ -51,11 +51,12 @@
       "description": "INCORRECT: The edge_clearance_warnings list includes G1 with edge_clearance_mm=-71.75, suggesting it is 71.75mm outside the board outline. G1 is the OSHW logo in the schematic-only area of the PCB file and has no sch_path link. Its position (232.41, 159.385) is indeed far outside the 135-161mm board boundary. This is expected for decorative/documentation symbols placed off-board; the warning is correct but may be noise for the use case.",
       "created_from": "FND-00001478",
       "check": {
-        "path": "placement_analysis.edge_clearance_warnings",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
     }
   ]
 }

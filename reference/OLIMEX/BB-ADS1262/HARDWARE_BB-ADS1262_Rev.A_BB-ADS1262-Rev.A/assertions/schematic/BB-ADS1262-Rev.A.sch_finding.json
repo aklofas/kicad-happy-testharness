@@ -9,7 +9,7 @@
       "description": "The SPI bus (MISO/MOSI/SCK/CS#) is correctly detected with U1 (ADS1262) as the device. Power rails +3.3VD, +5VA, GNDA, GNDD are all correctly identified. All 26 components are counted accurately with correct type breakdown: 6 resistors, 9 capacitors, 3 ICs, 3 connectors, 1 inductor, 2 diodes, 1 ferrite bead, 1 jumper. Both boost converter (U2/MT3608) and LDO (U3/AP2127K-ADJ) are detected as power regulators.",
       "created_from": "FND-00000384",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "min_count",
         "value": 1
       },
@@ -21,22 +21,26 @@
       "description": "Identical to Rev.A1: R17 (12.1K_1%) + R18 (1.05K_1%) form the feedback voltage divider for MT3608 boost converter U2, and R27 (5.6K_1%) + R28 (1.05K_1%) form the feedback divider for AP2127K-ADJ LDO U3. Both 'voltage_dividers' and 'feedback_networks' arrays are empty. The mid-point of each divider connects back to the regulator's feedback pin \u2014 a classic adjustable regulator feedback network that should be detected.",
       "created_from": "FND-00000384",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     },
     {
       "id": "FND-00000384-AST-03",
       "description": "Same as Rev.A1: C18 (22uF/6.3V), C19 (22uF/10V), and C21 (1uF) all sit on unnamed internal power nets and are omitted from the decoupling_analysis. Only C3 (100nF on +5VA), C22 (1uF on +5VA), and C2 (100nF on +3.3VD) are reported. The 22uF bulk storage caps for the switching and LDO regulators are invisible to the analysis.",
       "created_from": "FND-00000384",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "count_matches",
-        "value": 2
+        "value": 2,
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

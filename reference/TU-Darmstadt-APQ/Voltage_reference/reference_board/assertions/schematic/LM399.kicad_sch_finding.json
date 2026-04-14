@@ -40,22 +40,26 @@
       "description": "INCORRECT: The sub-schematic analysis independently misclassifies U3 (LT1001) as 'comparator_or_open_loop'. The feedback path from V_zener- (output) through NT4 to RN1.pin3, then RN1.pin2 to U3 inverting input is again broken by the net tie boundary. The true configuration is non-inverting amplifier with gain set by RN1 (17k/20k). Both the top-level and sub-schematic analyses make the same error.",
       "created_from": "FND-00001750",
       "check": {
-        "path": "signal_analysis.opamp_circuits",
+        "path": "findings",
         "value": "non_inverting_amplifier",
-        "op": "contains_match"
+        "op": "contains_match",
+        "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
       "id": "FND-00001750-AST-05",
       "description": "statistics.power_rails lists only ['GND', 'V+']. V- (connected to U3.pin4, type power_in) is absent. In net_classification V- is labeled 'signal' rather than 'power'. Because V- is a hierarchical port with no explicit power symbol in the sub-sheet, the analyzer does not recognize it as a supply rail. Consequently C5 (100n on V-) is not reported in decoupling_analysis, and the negative supply of the LT1001 appears unmonitored.",
       "created_from": "FND-00001750",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "value": 2,
-        "op": "min_count"
+        "op": "min_count",
+        "detector_filter": "detect_decoupling"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     }
   ]
 }

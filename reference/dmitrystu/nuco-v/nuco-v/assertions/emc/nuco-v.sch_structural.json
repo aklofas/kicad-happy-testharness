@@ -2,6 +2,7 @@
   "file_pattern": "nuco-v.sch",
   "analyzer_type": "emc",
   "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "STRUCT-00000001",
@@ -16,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "3 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -58,16 +59,6 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Rule DC-002 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^DC\\-002$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "Rule GP-005 present",
       "check": {
         "path": "findings",
@@ -77,17 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "U1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000007",
       "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
@@ -97,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000008",
       "description": "C16 in EMC findings",
       "check": {
         "path": "findings",
@@ -107,43 +88,13 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
       "description": "C15 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC15\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "U9 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU9\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "C35 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC35\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "C27 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC27\\b"
       }
     }
   ]

@@ -9,7 +9,7 @@
       "description": "INCORRECT: The analyzer reports R1 (330\u03a9) and C1 (10\u00b5F) as forming a 48.23 Hz RC low-pass filter with input_net='__unnamed_1' and output_net='12V'. However, R1 is the LED current-limiting resistor (its pin 1 is on the 12V net and pin 2 connects to D1 anode on net __unnamed_1), and C1 is a bulk bypass capacitor on the 12V rail to GND. These two components share a node on 12V but are in completely different functional paths \u2014 they do not form an RC filter. The RC filter topology requires R and C in series between the signal and ground with the output taken at their junction, which is not the case here.",
       "created_from": "FND-00000394",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "resistor": {
@@ -18,16 +18,18 @@
           "capacitor": {
             "ref": "C1"
           }
-        }
+        },
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000394-AST-02",
       "description": "INCORRECT: The analyzer reports R2 (330\u03a9) and C3 (1\u00b5F) as forming a 482.29 Hz RC low-pass filter with input_net='__unnamed_0' (the LM317 ADJ node) and output_net='3.3V'. R2 is the upper resistor in the LM317 feedback network (from the VO output at 3.3V to the ADJ pin), and C3 is the output bypass capacitor on the 3.3V rail. These are distinct functional elements of the LM317 adjustable regulator circuit. They share the 3.3V node but do not form an RC filter \u2014 C3 connects between 3.3V and GND as a bypass cap, while R2 connects between 3.3V and the ADJ pin as a feedback element.",
       "created_from": "FND-00000394",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "resistor": {
@@ -36,9 +38,11 @@
           "capacitor": {
             "ref": "C3"
           }
-        }
+        },
+        "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00000394-AST-03",
@@ -69,14 +73,16 @@
       "description": "INCORRECT: The design_observations section flags both U2 (LM317) and U1 (LM7805) under 'regulator_caps' as having missing_caps for input and output rails. In reality: U1 has C1 (10\u00b5F) on its 12V input and C2 (0.1\u00b5F) on its 5V output \u2014 both confirmed present in ic_pin_analysis. U2 has C1 (10\u00b5F) on its 12V input and C3 (1\u00b5F) on its 3.3V output \u2014 also confirmed present. The decoupling_caps_by_rail field for both U1 and U2 in ic_pin_analysis correctly lists these caps. The design_observations 'missing_caps' flag contradicts the analyzer's own ic_pin_analysis findings.",
       "created_from": "FND-00000394",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
         "op": "not_contains_match",
         "value": {
           "category": "regulator_caps",
           "component": "U1"
-        }
+        },
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations"
     },
     {
       "id": "FND-00000394-AST-06",
@@ -94,11 +100,13 @@
       "description": "The LM317 circuit uses R2 (330\u03a9, from VO/3.3V to ADJ) and R3 (560\u03a9, from ADJ to GND) as the standard feedback resistor divider that sets the output voltage. This is a classic voltage divider topology. The signal_analysis.voltage_dividers array is empty, even though R2 and R3 form a textbook resistive divider from the 3.3V output to GND with the tap connected to the LM317 ADJ pin. The expected output voltage would be Vref*(1 + R2/R3) + Iadj*R2 \u2248 1.25*(1 + 330/560) \u2248 1.25*1.589 \u2248 ~2.0V (close to the labeled 3.3V with component tolerances and Iadj). This feedback divider is the primary design feature of the adjustable regulator sub-circuit and its omission from voltage_dividers is a missed detection.",
       "created_from": "FND-00000394",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     }
   ]
 }

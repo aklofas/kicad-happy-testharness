@@ -59,22 +59,26 @@
       "description": "Ethernet PHY interface not detected",
       "created_from": "FND-00000180",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_ethernet_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.ethernet_interfaces"
     },
     {
       "id": "FND-00000180-AST-06",
       "description": "DDR memory interface not detected",
       "created_from": "FND-00000180",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }

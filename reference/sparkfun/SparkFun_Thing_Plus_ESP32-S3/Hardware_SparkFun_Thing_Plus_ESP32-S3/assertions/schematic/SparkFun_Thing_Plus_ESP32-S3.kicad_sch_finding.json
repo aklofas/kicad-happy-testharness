@@ -9,22 +9,26 @@
       "description": "signal_analysis.power_regulators correctly identifies both U6 (VIN\u21923.3V) and U1 (VIN\u21923.3V_P) as RT9080 LDO regulators with ldo topology. Output rails and input rails are accurately captured.",
       "created_from": "FND-00001571",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001571-AST-02",
       "description": "signal_analysis.addressable_led_chains correctly identifies D6 as a WS2812B single-LED chain, with the correct chain length of 1 and proper net connections.",
       "created_from": "FND-00001571",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "D6"
-        }
-      }
+        },
+        "detector_filter": "detect_addressable_leds"
+      },
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
     },
     {
       "id": "FND-00001571-AST-03",
@@ -76,13 +80,15 @@
       "description": "The schematic contains U2, a DT1042-04SO USB ESD protection IC on the USB D+/D- lines. The signal_analysis.protection_devices array is empty. The DT1042-04SO is a 4-channel TVS array specifically for USB ESD protection and should be recognized as a protection device.",
       "created_from": "FND-00001571",
       "check": {
-        "path": "signal_analysis.protection_devices",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "ref": "U2"
-        }
+        },
+        "detector_filter": "detect_protection_devices"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices"
     }
   ]
 }

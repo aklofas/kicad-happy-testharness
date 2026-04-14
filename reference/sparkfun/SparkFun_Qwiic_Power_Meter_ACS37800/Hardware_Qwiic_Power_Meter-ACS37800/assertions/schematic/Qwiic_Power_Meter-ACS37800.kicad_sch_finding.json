@@ -19,13 +19,15 @@
       "description": "The decoupling_analysis correctly identifies C1 (0.1uF) as the only decoupling capacitor on the 3.3V rail, calculates total_capacitance_uF=0.1, and notes has_bulk: false and has_bypass: true. This is accurate for this design which uses only one bypass cap for the ACS37800.",
       "created_from": "FND-00001514",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "findings",
         "op": "contains_match",
         "value": {
           "rail": "3.3V",
           "cap_count": 1
-        }
-      }
+        },
+        "detector_filter": "detect_decoupling"
+      },
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
     },
     {
       "id": "FND-00001514-AST-03",
@@ -45,22 +47,26 @@
       "description": "U1 (ACS37800) is a dedicated power monitoring current sensor IC with IP+/IP- current sense inputs (pins 1-8) and VINP/VINN voltage sense inputs. The signal_analysis.current_sense array is empty despite U1 being the core current-sensing element of this design. The IP+/IP- differential pair is detected correctly in design_analysis.differential_pairs, but the IC's primary function as a current sensor is not reflected in current_sense. The ACS37800 has 'sensor IC' function classification in ic_pin_analysis but this does not propagate to the signal-level current_sense detector.",
       "created_from": "FND-00001514",
       "check": {
-        "path": "signal_analysis.current_sense",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_current_sense"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.current_sense"
     },
     {
       "id": "FND-00001514-AST-05",
       "description": "The ACS37800 design uses R3 (8.2k) as a sense resistor between the high-voltage input and VINN, and R9 (1M), R11 (1M) as series input protection/divider resistors to VINP. The schematic text explicitly states 'For 60VDC maximum input, with RSENSE = 8.2kOhms, VINP - VINN will be 245mV'. These resistors form a voltage sensing/divider network on the VINP and VINN inputs. The signal_analysis.voltage_dividers array is empty, missing this voltage measurement front-end network.",
       "created_from": "FND-00001514",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "findings",
         "op": "equals",
-        "value": []
+        "value": [],
+        "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
     }
   ]
 }

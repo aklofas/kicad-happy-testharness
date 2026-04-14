@@ -34,7 +34,7 @@
       "incorrect": [
         {
           "description": "STM32F411VETx classified as power_regulator with topology=ic_with_internal_regulator \u2014 this is an MCU, not a regulator",
-          "analyzer_section": "signal_analysis.power_regulators",
+          "analyzer_section": "detect_power_regulators",
           "detector": "power_regulators",
           "subject_refs": [],
           "expected_relation": "not_in_detector",
@@ -48,9 +48,9 @@
       "missed": [
         {
           "description": "No barometric pressure sensor or IMU detection despite being a flight computer",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis",
+            "path": "findings",
             "op": "min_count",
             "value": 1
           }

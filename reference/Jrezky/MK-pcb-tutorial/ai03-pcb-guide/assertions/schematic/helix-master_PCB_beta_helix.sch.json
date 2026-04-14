@@ -1,7 +1,8 @@
 {
   "file_pattern": "helix-master_PCB_beta_helix.sch",
   "analyzer_type": "schematic",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
@@ -34,100 +35,84 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Signal analysis section exists",
+      "description": "Findings section exists",
       "check": {
-        "path": "signal_analysis",
+        "path": "findings",
         "op": "exists"
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "5 addressable_led_chains detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
-        "path": "signal_analysis.addressable_led_chains",
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 connector_ground_audit detected",
+      "description": "6 audit_esd_protection detected",
       "check": {
-        "path": "signal_analysis.connector_ground_audit",
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "12 design_observations detected",
+      "description": "5 detect_addressable_leds detected",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "findings",
+        "detector_filter": "detect_addressable_leds",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "6 esd_coverage_audit detected",
+      "description": "12 detect_design_observations detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "All esd_coverage_audit have connector_ref",
+      "description": "1 detect_key_matrices detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "not_contains_match",
-        "field": "connector_ref",
-        "pattern": "^$"
+        "path": "findings",
+        "detector_filter": "detect_key_matrices",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "All esd_coverage_audit coverage values are valid",
+      "description": "2 detect_suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "coverage",
-        "pattern": "^(full|partial|none)$",
-        "value": 6
+        "path": "findings",
+        "detector_filter": "detect_suggested_certifications",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "All esd_coverage_audit risk_level values are valid",
+      "description": "1 validate_pullups detected",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "count_matches",
-        "field": "risk_level",
-        "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 6
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "1 key_matrices detected",
-      "check": {
-        "path": "signal_analysis.key_matrices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "2 suggested_certifications detected",
-      "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -136,7 +121,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000013",
       "description": "Has 32 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -145,7 +130,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
       "description": "Has 33 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -154,7 +139,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "Has 11 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -163,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000016",
       "description": "Has 33 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

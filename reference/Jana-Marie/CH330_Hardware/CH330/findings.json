@@ -57,11 +57,12 @@
       "missed": [
         {
           "description": "C2 (100n) is connected between the V3 rail (U1 pin 8, internal 3.3V regulator output) and GND, serving as a decoupling capacitor for the V3 power domain. The decoupling_analysis only reports C1 on VBUS; C2 on V3 is entirely absent from the decoupling_analysis section.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?(@.rail=='V3')]",
+            "path": "findings",
             "op": "exists",
-            "value": null
+            "value": null,
+            "detector_filter": "detect_decoupling_analysis[?(@.rail=='V3')]"
           }
         }
       ],

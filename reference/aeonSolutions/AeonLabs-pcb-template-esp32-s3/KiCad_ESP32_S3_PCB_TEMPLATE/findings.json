@@ -29,20 +29,22 @@
       "missed": [
         {
           "description": "The schematic has two crystal oscillator circuits: ECY1 (32.768MHz, Device:Crystal_GND24_Small) with load caps EC12/EC15 (22pF) connected to ESP32-S3 GPIO15/GPIO16 XTAL_32K pins, and ECY2 (40MHz, Device:Crystal_GND24_Small) with load caps EC14/EC17 (22pF) connected to ESP32-S3 XTAL_P/XTAL_N pins. The signal_analysis.crystal_circuits array is empty. Both ECY1 and ECY2 are also mistyped as other instead of crystal.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.crystal_circuits",
+            "path": "findings",
             "op": "min_value",
-            "value": 2
+            "value": 2,
+            "detector_filter": "detect_crystal_circuits"
           }
         },
         {
           "description": "The schematic has a classic ESP32-S3 RF front-end: EL1 (1.8nH series inductor) and EC6/EC9 (2.7pF shunt capacitors) form a pi/L matching network between the ESP32-S3 LNA_IN/RF pin (pin 1) and the antenna path (J3 U.FL connector and ANT1 PCB antenna). Both rf_matching and rf_chains arrays are empty. This is a standard single-chip RF matching topology.",
-          "analyzer_section": "signal_analysis",
+          "analyzer_section": "findings",
           "check": {
-            "path": "signal_analysis.rf_matching",
+            "path": "findings",
             "op": "min_value",
-            "value": 1
+            "value": 1,
+            "detector_filter": "detect_rf_matching"
           }
         }
       ],

@@ -19,31 +19,37 @@
       "description": "U4 (ICE40UP5K-SG48I) function=FPGA (Xilinx). U2 (MIC5504-1.2YM5) detected as LDO with input_rail=+3V3, output_rail=+1V2, estimated_vout=1.2V (correct, from fixed suffix). U3 (AT25SF081-SSH) detected as SPI flash in memory_interfaces with processor=U4 and 4 shared SPI nets.",
       "created_from": "FND-00002005",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 2
-      }
+        "value": 2,
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002005-AST-03",
       "description": "R4 (100R) series with C5 (10uF) and C6 (100nF) in parallel to GND. Total capacitance 10.1uF, cutoff 157.6 Hz. Input net +1V2, output to unnamed decoupling node. Topology matches source schematic.",
       "created_from": "FND-00002005",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
-      }
+        "value": 1,
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "Path migrated from: signal_analysis.rc_filters"
     },
     {
       "id": "FND-00002005-AST-04",
       "description": "INCORRECT: The TPS22919DCK is a 5V/3A single-channel load switch (MOSFET pass element with no voltage regulation). IN=+3V3, OUT=VCCIO_1 \u2014 output is simply switched +3V3. Analyzer classifies it topology=LDO. This cascades into a false positive in cross_domain_signals: the analyzer treats VCCIO_1 as a distinct regulated voltage domain rather than recognizing it equals +3V3.",
       "created_from": "FND-00002005",
       "check": {
-        "path": "signal_analysis.power_regulators",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00002005-AST-05",
@@ -61,11 +67,13 @@
       "description": "Net names SPI_SCK, SPI_SI, SPI_SO, SPI_SS unambiguously identify an SPI bus. U4 pins 14-17 and U3 pins 1,2,5,6 all connect to these nets. memory_interfaces correctly identifies 4 shared signal nets between U3 and U4, but bus_analysis.spi remains empty. The SPI bus should appear there.",
       "created_from": "FND-00002005",
       "check": {
-        "path": "signal_analysis.memory_interfaces",
+        "path": "findings",
         "op": "min_count",
-        "value": 1
+        "value": 1,
+        "detector_filter": "detect_memory_interfaces"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
     }
   ]
 }
