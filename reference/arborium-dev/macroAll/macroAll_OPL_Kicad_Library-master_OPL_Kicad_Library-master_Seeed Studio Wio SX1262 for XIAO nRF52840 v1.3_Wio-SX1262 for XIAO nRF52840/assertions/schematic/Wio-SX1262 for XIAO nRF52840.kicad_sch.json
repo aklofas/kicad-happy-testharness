@@ -46,7 +46,7 @@
       "description": "1 connector_ground_audit detected",
       "check": {
         "path": "findings",
-        "detector_filter": "connector_ground_audit",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "min_count",
         "value": 1
       }
@@ -56,7 +56,7 @@
       "description": "1 decoupling_analysis detected",
       "check": {
         "path": "findings",
-        "detector_filter": "decoupling_analysis",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
@@ -66,7 +66,7 @@
       "description": "2 design_observations detected",
       "check": {
         "path": "findings",
-        "detector_filter": "design_observations",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
@@ -76,7 +76,7 @@
       "description": "2 esd_coverage_audit detected",
       "check": {
         "path": "findings",
-        "detector_filter": "esd_coverage_audit",
+        "detector_filter": "audit_esd_protection",
         "op": "min_count",
         "value": 1
       }
@@ -86,7 +86,7 @@
       "description": "All esd_coverage_audit have connector_ref",
       "check": {
         "path": "findings",
-        "detector_filter": "esd_coverage_audit",
+        "detector_filter": "audit_esd_protection",
         "op": "not_contains_match",
         "field": "connector_ref",
         "pattern": "^$"
@@ -97,7 +97,7 @@
       "description": "All esd_coverage_audit coverage values are valid",
       "check": {
         "path": "findings",
-        "detector_filter": "esd_coverage_audit",
+        "detector_filter": "audit_esd_protection",
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
@@ -109,7 +109,7 @@
       "description": "All esd_coverage_audit risk_level values are valid",
       "check": {
         "path": "findings",
-        "detector_filter": "esd_coverage_audit",
+        "detector_filter": "audit_esd_protection",
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
@@ -121,7 +121,7 @@
       "description": "2 suggested_certifications detected",
       "check": {
         "path": "findings",
-        "detector_filter": "suggested_certifications",
+        "detector_filter": "detect_suggested_certifications",
         "op": "min_count",
         "value": 1
       }

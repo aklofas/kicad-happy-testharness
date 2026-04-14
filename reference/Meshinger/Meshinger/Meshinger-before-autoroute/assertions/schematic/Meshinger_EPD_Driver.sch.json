@@ -46,7 +46,7 @@
       "description": "2 lc_filters detected",
       "check": {
         "path": "findings",
-        "detector_filter": "lc_filters",
+        "detector_filter": "detect_lc_filters",
         "op": "min_count",
         "value": 1
       }
@@ -56,7 +56,7 @@
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
-        "detector_filter": "lc_filters",
+        "detector_filter": "detect_lc_filters",
         "op": "not_contains_match",
         "field": "resonant_hz",
         "pattern": "^(0(\\.0+)?|None|)$"

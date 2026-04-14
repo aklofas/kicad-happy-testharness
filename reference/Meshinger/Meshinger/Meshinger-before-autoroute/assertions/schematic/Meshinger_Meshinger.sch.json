@@ -46,7 +46,7 @@
       "description": "1 decoupling_analysis detected",
       "check": {
         "path": "findings",
-        "detector_filter": "decoupling_analysis",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
@@ -56,7 +56,7 @@
       "description": "5 design_observations detected",
       "check": {
         "path": "findings",
-        "detector_filter": "design_observations",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
@@ -66,7 +66,7 @@
       "description": "2 lc_filters detected",
       "check": {
         "path": "findings",
-        "detector_filter": "lc_filters",
+        "detector_filter": "detect_lc_filters",
         "op": "min_count",
         "value": 1
       }
@@ -76,7 +76,7 @@
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
-        "detector_filter": "lc_filters",
+        "detector_filter": "detect_lc_filters",
         "op": "not_contains_match",
         "field": "resonant_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
@@ -87,7 +87,7 @@
       "description": "1 power_regulators detected",
       "check": {
         "path": "findings",
-        "detector_filter": "power_regulators",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
@@ -97,7 +97,7 @@
       "description": "All power_regulators have ref present",
       "check": {
         "path": "findings",
-        "detector_filter": "power_regulators",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
@@ -108,7 +108,7 @@
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "findings",
-        "detector_filter": "transistor_circuits",
+        "detector_filter": "detect_transistor_circuits",
         "op": "min_count",
         "value": 1
       }
@@ -118,7 +118,7 @@
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "findings",
-        "detector_filter": "transistor_circuits",
+        "detector_filter": "detect_transistor_circuits",
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"

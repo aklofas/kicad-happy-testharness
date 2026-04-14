@@ -46,7 +46,7 @@
       "description": "3 design_observations detected",
       "check": {
         "path": "findings",
-        "detector_filter": "design_observations",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
       }
@@ -56,7 +56,7 @@
       "description": "1 power_regulators detected",
       "check": {
         "path": "findings",
-        "detector_filter": "power_regulators",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
@@ -66,7 +66,7 @@
       "description": "All power_regulators have ref present",
       "check": {
         "path": "findings",
-        "detector_filter": "power_regulators",
+        "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
@@ -77,7 +77,7 @@
       "description": "1 protection_devices detected",
       "check": {
         "path": "findings",
-        "detector_filter": "protection_devices",
+        "detector_filter": "detect_protection_devices",
         "op": "min_count",
         "value": 1
       }
