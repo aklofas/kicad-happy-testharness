@@ -363,15 +363,10 @@ def build_repo_entry(repo_name, categories, repo_urls):
     # Design domains (detectors that fired)
     detectors_fired = {}
     for data in sch_outputs:
-        sa = data.get("signal_analysis", {})
-        for det, items in sa.items():
-            count = 0
-            if isinstance(items, list):
-                count = len(items)
-            elif isinstance(items, dict):
-                count = 1 if items else 0
-            if count > 0:
-                detectors_fired[det] = detectors_fired.get(det, 0) + count
+        for finding in data.get("findings", []):
+            det = finding.get("detector", "")
+            if det:
+                detectors_fired[det] = detectors_fired.get(det, 0) + 1
 
     entry["design_domains"] = sorted(d for d, c in detectors_fired.items() if c > 0)
     entry["detectors_fired"] = dict(sorted(detectors_fired.items()))

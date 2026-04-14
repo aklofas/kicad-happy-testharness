@@ -52,11 +52,16 @@ def collect_detector_stats(detector_filter=None, repos=None):
                     data = json.loads(f.read_text(encoding="utf-8"))
                 except Exception:
                     continue
-                sa = data.get("signal_analysis", {})
-                for det, items in sa.items():
+                # Group findings by detector
+                grouped = {}
+                for finding in data.get("findings", []):
+                    det = finding.get("detector", "")
+                    if det:
+                        grouped.setdefault(det, []).append(finding)
+                for det, items in grouped.items():
                     if detector_filter and det != detector_filter:
                         continue
-                    if not isinstance(items, list) or not items:
+                    if not items:
                         continue
                     s = stats[det]
                     s["files"] += 1

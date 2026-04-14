@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import OUTPUTS_DIR, add_repo_filter_args, resolve_repos, list_repos
 
-# Schematic signal_analysis key → SPICE subcircuit_type
+# Schematic findings detector → SPICE subcircuit_type
 DETECTOR_SPICE_MAP = {
     "voltage_dividers": "voltage_divider",
     "rc_filters": "rc_filter",
@@ -47,12 +47,18 @@ _SPICE_TO_DETECTOR = {v: k for k, v in DETECTOR_SPICE_MAP.items()}
 
 def count_detections(schematic_data):
     """Count detections per detector type from a schematic output."""
-    signal = schematic_data.get("signal_analysis", {})
+    # Group findings by detector
+    grouped = {}
+    for f in schematic_data.get("findings", []):
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
     counts = {}
     for det_key in DETECTOR_SPICE_MAP:
-        items = signal.get(det_key, [])
-        if isinstance(items, list):
-            counts[det_key] = len(items)
+        # Match with detect_ prefix
+        full_name = f"detect_{det_key}"
+        items = grouped.get(full_name, [])
+        counts[det_key] = len(items)
     return counts
 
 

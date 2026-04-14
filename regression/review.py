@@ -59,8 +59,8 @@ def _score_file(source_path):
     total = stats.get("total_components", 0)
 
     # Count signal detections
-    sa = data.get("signal_analysis", {})
-    signal_count = sum(len(v) for v in sa.values() if isinstance(v, list))
+    findings = data.get("findings", [])
+    signal_count = len(findings) if isinstance(findings, list) else 0
 
     # Check if top-level (has hierarchical sheet references)
     is_top = bool(data.get("hierarchical_sheets"))
@@ -213,7 +213,7 @@ For field_value_equals, add "field" and "expected_value" keys.
 For count_equals, add "expected_value" key.
 
 Rules: Name specific components (U1, R3). Every incorrect/missed needs
-analyzer_section (dotted path like signal_analysis.voltage_dividers).
+analyzer_section (dotted path like findings.detect_voltage_dividers).
 Include subject_refs with component designators. Don't fabricate issues --
 if the analyzer did well, say so."""
 

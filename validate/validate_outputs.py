@@ -57,8 +57,8 @@ def validate_structural(ctx, name, data, is_modern):
 
     if is_modern and total_comps > 0:
         ctx.stats["modern_with_comps"] += 1
-        if "signal_analysis" not in data:
-            ctx.anomalies["missing_signal_analysis"].append((name, f"{total_comps} comps but no signal_analysis"))
+        if "findings" not in data:
+            ctx.anomalies["missing_findings"].append((name, f"{total_comps} comps but no findings"))
         if "design_analysis" not in data:
             ctx.anomalies["missing_design_analysis"].append((name, f"{total_comps} comps but no design_analysis"))
 
@@ -131,20 +131,27 @@ def validate_nets(ctx, name, data, total_comps):
             ctx.anomalies["huge_net"].append((name, f"net '{net_name}' has {pin_count} pins"))
 
 
-def validate_signal_analysis(ctx, name, data):
-    """Check signal analysis plausibility for modern files."""
-    if "signal_analysis" not in data:
+def validate_findings(ctx, name, data):
+    """Check findings plausibility for modern files."""
+    findings = data.get("findings", [])
+    if not isinstance(findings, list):
         return
 
-    sa = data["signal_analysis"]
+    # Group findings by detector for per-detector counts
+    grouped = {}
+    for f in findings:
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
 
-    for key, items in sa.items():
-        if isinstance(items, list) and len(items) > 200:
-            ctx.anomalies["signal_explosion"].append((name, f"signal_analysis.{key} has {len(items)} entries"))
+    for det, items in grouped.items():
+        if len(items) > 200:
+            ctx.anomalies["signal_explosion"].append((name, f"findings[{det}] has {len(items)} entries"))
 
-    da = sa.get("decoupling_analysis", {})
-    if isinstance(da, dict):
-        ics = da.get("ics_analyzed", 0)
+    # Check decoupling findings count
+    decoupling = grouped.get("detect_decoupling_analysis", [])
+    if decoupling:
+        ics = len(decoupling)
         if ics > 200:
             ctx.anomalies["decoupling_explosion"].append((name, f"decoupling analyzed {ics} ICs"))
 
@@ -282,7 +289,7 @@ def _validate_schematics(schematics):
         validate_structural(ctx, name, data, is_modern)
         validate_components(ctx, name, data)
         validate_nets(ctx, name, data, total_comps)
-        validate_signal_analysis(ctx, name, data)
+        validate_findings(ctx, name, data)
         validate_design_analysis(ctx, name, data)
         validate_design_intent(ctx, name, data)
         if is_modern and total_comps > 0:

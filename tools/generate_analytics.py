@@ -159,11 +159,13 @@ def collect_signal_detector_coverage():
         total_repos.add(repo)
         try:
             data = json.loads(Path(f).read_text(encoding="utf-8"))
-            sa = data.get("signal_analysis", {})
-            for key, val in sa.items():
-                if isinstance(val, list) and len(val) > 0:
-                    detector_repos[key].add(repo)
-                elif isinstance(val, dict) and val:
+            grouped = {}
+            for finding in data.get("findings", []):
+                det = finding.get("detector", "")
+                if det:
+                    grouped.setdefault(det, []).append(finding)
+            for key, items in grouped.items():
+                if items:
                     detector_repos[key].add(repo)
         except Exception:
             pass

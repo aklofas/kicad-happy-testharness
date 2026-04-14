@@ -100,8 +100,8 @@ def _collect_outputs(repo):
             try:
                 d = json.loads(j.read_text(encoding="utf-8"))
                 tc = d.get("statistics", {}).get("total_components", 0)
-                sa = d.get("signal_analysis", {})
-                sc = sum(len(v) for v in sa.values() if isinstance(v, list))
+                findings = d.get("findings", [])
+                sc = len(findings) if isinstance(findings, list) else 0
                 source = _find_source_path(repo, atype, str(j))
                 files.append({
                     "path": str(j),
@@ -247,8 +247,8 @@ def _unreviewed_repos(max_count=None):
                     d = json.loads(j.read_text(encoding="utf-8"))
                     tc = d.get("statistics", {}).get("total_components", 0)
                     total_components += tc
-                    sa = d.get("signal_analysis", {})
-                    sc = sum(len(v) for v in sa.values() if isinstance(v, list))
+                    findings = d.get("findings", [])
+                    sc = len(findings) if isinstance(findings, list) else 0
                     signal_count += sc
                     score = tc + sc
                     if score > best_score:

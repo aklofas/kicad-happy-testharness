@@ -1364,7 +1364,7 @@ def _resolve_datasheet_path(mpn):
     return path if path.exists() else None
 
 
-# Map signal_analysis section names to the constant names (in signal_detectors.py
+# Map findings detector names to the constant names (in signal_detectors.py
 # or kicad_utils.py) that drive their detection.  This lets us measure which
 # detector functions fire across the corpus.
 _SECTION_TO_CONSTANTS = {
@@ -1438,7 +1438,8 @@ def cmd_corpus(args):
         total_repos.add(repo)
 
         # --- Regulator Vref lookup hits ---
-        for reg in data.get("signal_analysis", {}).get("power_regulators", []):
+        for reg in [f for f in data.get("findings", [])
+                    if f.get("detector") == "detect_power_regulators"]:
             if reg.get("vref_source") == "lookup":
                 value = reg.get("value", "")
                 prefix = _match_vref_prefix(value, vref_entries)
@@ -1458,9 +1459,14 @@ def cmd_corpus(args):
                 if prefix:
                     type_hits.setdefault(prefix, set()).add(repo)
 
-        # --- Signal analysis section hits ---
-        for section, items in data.get("signal_analysis", {}).items():
-            if isinstance(items, list) and len(items) > 0:
+        # --- Findings detector hits ---
+        _det_groups = {}
+        for _f in data.get("findings", []):
+            _det = _f.get("detector", "")
+            if _det:
+                _det_groups.setdefault(_det, []).append(_f)
+        for section, items in _det_groups.items():
+            if items:
                 section_hits.setdefault(section, set()).add(repo)
 
     print(f"Scanned {files_scanned} files across {len(total_repos)} repos\n")

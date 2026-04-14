@@ -98,9 +98,9 @@ def _delete_path(data, path):
 def mutate_delete_list_item(data, rng):
     """Remove a random item from a non-empty list."""
     paths = _find_list_paths(data, "")
-    # Prefer signal_analysis paths
-    sa_paths = [p for p in paths if "signal_analysis" in p]
-    target_paths = sa_paths if sa_paths else paths
+    # Prefer findings paths
+    findings_paths = [p for p in paths if "findings" in p]
+    target_paths = findings_paths if findings_paths else paths
     if not target_paths:
         return None, None
 
@@ -142,49 +142,49 @@ def mutate_change_numeric(data, rng, factor_range=(0.3, 0.7)):
 
 
 def mutate_remove_key(data, rng):
-    """Remove an entire key from the top-level or signal_analysis."""
+    """Remove all findings for a random detector, or a top-level key."""
     candidates = []
-    sa = data.get("signal_analysis", {})
-    for k, v in sa.items():
-        if isinstance(v, list) and len(v) > 0:
-            candidates.append(f"signal_analysis.{k}")
-    # Also consider top-level keys
-    for k in ("statistics", "components", "signal_analysis"):
+    grouped = {}
+    for f in data.get("findings", []):
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
+    for det_name in grouped:
+        candidates.append(("findings_detector", det_name))
+    for k in ("statistics", "components", "findings"):
         if k in data:
-            candidates.append(k)
+            candidates.append(("top_level", k))
     if not candidates:
         return None, None
 
-    path = rng.choice(candidates)
-    _delete_path(data, path)
-    desc = f"remove_key: deleted {path}"
-    return data, desc
+    kind, key = rng.choice(candidates)
+    if kind == "findings_detector":
+        data["findings"] = [f for f in data.get("findings", [])
+                            if f.get("detector") != key]
+        return data, f"remove_key: removed all {key} findings"
+    else:
+        del data[key]
+        return data, f"remove_key: deleted {key}"
 
 
 def mutate_change_ref(data, rng):
     """Change a component reference string to a nonexistent one."""
-    sa = data.get("signal_analysis", {})
+    findings = data.get("findings", [])
     ref_locations = []
-    for det_name, dets in sa.items():
-        if not isinstance(dets, list):
+    for i, finding in enumerate(findings):
+        if not isinstance(finding, dict):
             continue
-        for i, det in enumerate(dets):
-            if not isinstance(det, dict):
-                continue
-            for key, val in det.items():
-                if isinstance(val, dict) and "ref" in val and val["ref"]:
-                    ref_locations.append(
-                        (f"signal_analysis.{det_name}[{i}].{key}.ref", val["ref"]))
+        for key, val in finding.items():
+            if isinstance(val, dict) and "ref" in val and val["ref"]:
+                ref_locations.append((i, key, val["ref"]))
     if not ref_locations:
         return None, None
 
-    path, old_ref = rng.choice(ref_locations)
+    idx, key, old_ref = rng.choice(ref_locations)
     new_ref = "XMUT999"
-    try:
-        _set_path(data, path, new_ref)
-    except (KeyError, IndexError, TypeError):
-        return None, None
-    desc = f"change_ref: {path} {old_ref} -> {new_ref}"
+    data["findings"][idx][key]["ref"] = new_ref
+    det = data["findings"][idx].get("detector", "?")
+    desc = f"change_ref: findings[{idx}].{key}.ref ({det}) {old_ref} -> {new_ref}"
     return data, desc
 
 
@@ -194,7 +194,8 @@ def mutate_change_ref(data, rng):
 
 def mutate_remove_divider_resistor(data, rng):
     """Remove one resistor from a random voltage divider."""
-    dividers = data.get("signal_analysis", {}).get("voltage_dividers", [])
+    dividers = [f for f in data.get("findings", [])
+                if f.get("detector") == "detect_voltage_dividers"]
     if not dividers:
         return None, None
     div = rng.choice(dividers)
@@ -211,7 +212,8 @@ def mutate_remove_divider_resistor(data, rng):
 
 def mutate_swap_divider_polarity(data, rng):
     """Swap r_top and r_bottom in a voltage divider (inverts ratio)."""
-    dividers = data.get("signal_analysis", {}).get("voltage_dividers", [])
+    dividers = [f for f in data.get("findings", [])
+                if f.get("detector") == "detect_voltage_dividers"]
     dividers_with_both = [d for d in dividers
                           if "r_top" in d and "r_bottom" in d]
     if not dividers_with_both:
@@ -225,72 +227,64 @@ def mutate_swap_divider_polarity(data, rng):
 
 def mutate_break_bus_detection(data, rng):
     """Rename a bus net to break bus/protocol detection."""
-    sa = data.get("signal_analysis", {})
-    # Look for detectors with net-like fields
+    findings = data.get("findings", [])
+    # Look for findings from bus/protocol detectors with net-like fields
+    bus_detector_names = (
+        "detect_isolation_barriers", "detect_ethernet_interfaces",
+        "detect_memory_interfaces", "detect_hdmi_dvi_interfaces",
+        "detect_rc_filters", "detect_lc_filters",
+    )
     bus_dets = []
-    for det_name in ("isolation_barriers", "ethernet_interfaces",
-                     "memory_interfaces", "hdmi_dvi_interfaces"):
-        items = sa.get(det_name, [])
-        if isinstance(items, list) and items:
-            for i, item in enumerate(items):
-                if isinstance(item, dict):
-                    for k, v in item.items():
-                        if isinstance(v, str) and ("net" in k.lower() or "bus" in k.lower()):
-                            bus_dets.append((det_name, i, k, v))
-    # Also check rc_filters and voltage_dividers for net fields
-    for det_name in ("rc_filters", "lc_filters"):
-        items = sa.get(det_name, [])
-        if isinstance(items, list):
-            for i, item in enumerate(items):
-                if isinstance(item, dict):
-                    for k, v in item.items():
-                        if "net" in k.lower() and isinstance(v, str) and v:
-                            bus_dets.append((det_name, i, k, v))
+    for i, finding in enumerate(findings):
+        det = finding.get("detector", "")
+        if det not in bus_detector_names:
+            continue
+        for k, v in finding.items():
+            if isinstance(v, str) and v and ("net" in k.lower() or "bus" in k.lower()):
+                bus_dets.append((i, det, k, v))
     if not bus_dets:
         return None, None
-    det_name, idx, key, old_net = rng.choice(bus_dets)
-    data["signal_analysis"][det_name][idx][key] = "XMUT_BROKEN"
+    idx, det_name, key, old_net = rng.choice(bus_dets)
+    data["findings"][idx][key] = "XMUT_BROKEN"
     return data, f"break_bus: {det_name}[{idx}].{key} '{old_net}' -> 'XMUT_BROKEN'"
 
 
 def mutate_remove_protection(data, rng):
-    """Remove a protection device from esd_coverage_audit or protection_devices."""
-    sa = data.get("signal_analysis", {})
+    """Remove a protection device finding."""
+    findings = data.get("findings", [])
+    protection_dets = ("audit_esd_protection", "detect_protection_devices")
     targets = []
-    for det_name in ("esd_coverage_audit", "protection_devices"):
-        items = sa.get(det_name, [])
-        if isinstance(items, list) and len(items) > 0:
-            targets.append(det_name)
+    for i, f in enumerate(findings):
+        if f.get("detector") in protection_dets:
+            targets.append(i)
     if not targets:
         return None, None
-    det_name = rng.choice(targets)
-    items = data["signal_analysis"][det_name]
-    idx = rng.randrange(len(items))
-    removed = items.pop(idx)
+    idx = rng.choice(targets)
+    removed = findings.pop(idx)
+    det_name = removed.get("detector", "?")
     ref = removed.get("ref", removed.get("connector_ref", "?"))
     return data, f"remove_protection: removed {ref} from {det_name}"
 
 
 def mutate_scale_filter(data, rng):
     """Scale a filter cutoff frequency by 10× (should break frequency assertions)."""
-    sa = data.get("signal_analysis", {})
+    findings = data.get("findings", [])
+    filter_dets = ("detect_rc_filters", "detect_lc_filters")
     filters = []
-    for det_name in ("rc_filters", "lc_filters"):
-        items = sa.get(det_name, [])
-        if isinstance(items, list):
-            for i, item in enumerate(items):
-                if isinstance(item, dict) and item.get("cutoff_hz"):
-                    filters.append((det_name, i))
+    for i, f in enumerate(findings):
+        if f.get("detector") in filter_dets and f.get("cutoff_hz"):
+            filters.append(i)
     if not filters:
         return None, None
-    det_name, idx = rng.choice(filters)
-    item = data["signal_analysis"][det_name][idx]
+    idx = rng.choice(filters)
+    item = data["findings"][idx]
+    det_name = item.get("detector", "?")
     old_freq = item["cutoff_hz"]
     factor = 10.0 if rng.random() < 0.5 else 0.1
     item["cutoff_hz"] = old_freq * factor
     if "cutoff_formatted" in item:
         item["cutoff_formatted"] = f"{item['cutoff_hz']:.1f} Hz"
-    return data, f"scale_filter: {det_name}[{idx}] cutoff {old_freq:.1f} -> {old_freq * factor:.1f} Hz (×{factor})"
+    return data, f"scale_filter: {det_name} cutoff {old_freq:.1f} -> {old_freq * factor:.1f} Hz (×{factor})"
 
 
 # All mutation operators

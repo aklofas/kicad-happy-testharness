@@ -49,13 +49,12 @@ def _find_output(source_path, analyzer_type):
 def _summarize_schematic_output(data):
     """Extract review-relevant summary from schematic analyzer output."""
     stats = data.get("statistics", {})
-    sa = data.get("signal_analysis", {})
 
     signal_summary = {}
-    if isinstance(sa, dict):
-        for key, val in sa.items():
-            if isinstance(val, list):
-                signal_summary[key] = len(val)
+    for finding in data.get("findings", []):
+        det = finding.get("detector", "")
+        if det:
+            signal_summary[det] = signal_summary.get(det, 0) + 1
 
     return {
         "total_components": stats.get("total_components", 0),
@@ -415,8 +414,8 @@ def select_risk(count, analyzer_type, repo=None):
                     continue
 
                 components = len(output.get("components", []))
-                signal = output.get("signal_analysis", {})
-                detections = sum(len(v) for v in signal.values() if isinstance(v, list))
+                findings = output.get("findings", [])
+                detections = len(findings) if isinstance(findings, list) else 0
 
                 score = components + detections * 2
                 if out_file.name not in reviewed:

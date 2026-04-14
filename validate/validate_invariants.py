@@ -41,9 +41,15 @@ def check_invariants(data, filepath=""):
     def _add(desc):
         violations.append((filepath, desc))
 
+    # Group findings by detector
+    grouped = {}
+    for f in data.get("findings", []):
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
+
     # --- Voltage divider ratio: 0 < ratio < 1 ---
-    sa = data.get("signal_analysis", {})
-    for i, vd in enumerate(sa.get("voltage_dividers", [])):
+    for i, vd in enumerate(grouped.get("detect_voltage_dividers", [])):
         ratio = vd.get("ratio")
         if ratio is None:
             continue
@@ -53,7 +59,7 @@ def check_invariants(data, filepath=""):
             _add(f"voltage_dividers[{i}].ratio={ratio} >= 1")
 
     # --- RC filter cutoff_hz > 0 ---
-    for i, rc in enumerate(sa.get("rc_filters", [])):
+    for i, rc in enumerate(grouped.get("detect_rc_filters", [])):
         cutoff = rc.get("cutoff_hz")
         if cutoff is None:
             continue
@@ -61,7 +67,7 @@ def check_invariants(data, filepath=""):
             _add(f"rc_filters[{i}].cutoff_hz={cutoff} <= 0")
 
     # --- LC filter resonant_hz > 0 ---
-    for i, lc in enumerate(sa.get("lc_filters", [])):
+    for i, lc in enumerate(grouped.get("detect_lc_filters", [])):
         resonant = lc.get("resonant_hz")
         if resonant is None:
             continue
@@ -69,14 +75,14 @@ def check_invariants(data, filepath=""):
             _add(f"lc_filters[{i}].resonant_hz={resonant} <= 0")
 
     # --- Crystal effective_load_pF > 0 ---
-    for i, xtal in enumerate(sa.get("crystal_circuits", [])):
+    for i, xtal in enumerate(grouped.get("detect_crystal_circuits", [])):
         load = xtal.get("effective_load_pF")
         if load is None:
             continue
         if load <= 0:
             _add(f"crystal_circuits[{i}].effective_load_pF={load} <= 0")
 
-    # --- Every net referenced in signal_analysis exists in extracted nets ---
+    # --- Every net referenced in findings exists in extracted nets ---
     nets = data.get("nets", {})
     if isinstance(nets, dict):
         net_names = set(nets.keys())
@@ -85,10 +91,8 @@ def check_invariants(data, filepath=""):
     else:
         net_names = set()
 
-    if net_names and sa:
-        for det_name, items in sa.items():
-            if not isinstance(items, list):
-                continue
+    if net_names and grouped:
+        for det_name, items in grouped.items():
             for i, item in enumerate(items):
                 if not isinstance(item, dict):
                     continue

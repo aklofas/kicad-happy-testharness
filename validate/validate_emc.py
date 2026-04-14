@@ -50,7 +50,8 @@ def cross_validate_file(schematic_data, pcb_data, emc_data):
 
     # 2. Crystal frequencies (schematic)
     if schematic_data:
-        sch_crystals = schematic_data.get("signal_analysis", {}).get("crystal_circuits", [])
+        sch_crystals = [f for f in schematic_data.get("findings", [])
+                        if f.get("detector") == "detect_crystal_circuits"]
         sch_freqs = sorted(set(x.get("frequency", 0) for x in sch_crystals if x.get("frequency")))
         emc_freqs = sorted(board_info.get("crystal_frequencies_hz", []))
         if sch_freqs or emc_freqs:
@@ -93,7 +94,8 @@ def cross_validate_file(schematic_data, pcb_data, emc_data):
 
     # 5. Switching regulator count (schematic vs EMC SW-001 findings)
     if schematic_data:
-        regulators = schematic_data.get("signal_analysis", {}).get("power_regulators", [])
+        regulators = [f for f in schematic_data.get("findings", [])
+                      if f.get("detector") == "detect_power_regulators"]
         non_ldo = [r for r in regulators
                    if r.get("topology") not in ("ldo", "linear", None, "")]
         sw_findings = [f for f in emc_data.get("findings", [])
@@ -122,8 +124,10 @@ def cross_validate_file(schematic_data, pcb_data, emc_data):
     if test_plan and schematic_data:
         bands = test_plan.get("frequency_bands", [])
         # Bands with sources should only reference crystals/regulators that exist
-        sch_crystals = schematic_data.get("signal_analysis", {}).get("crystal_circuits", [])
-        sch_regs = schematic_data.get("signal_analysis", {}).get("power_regulators", [])
+        sch_crystals = [f for f in schematic_data.get("findings", [])
+                        if f.get("detector") == "detect_crystal_circuits"]
+        sch_regs = [f for f in schematic_data.get("findings", [])
+                    if f.get("detector") == "detect_power_regulators"]
         sch_refs = set()
         for x in sch_crystals:
             sch_refs.add(x.get("reference", ""))

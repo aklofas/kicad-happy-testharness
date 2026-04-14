@@ -157,7 +157,7 @@ def compare_one_project(repo_name, project_name, project_path, analyzer_types):
                 for field, detail in changes.items():
                     if field == "signal_counts":
                         for sig_field in detail:
-                            field_hits[f"signal_analysis.{sig_field}"] += 1
+                            field_hits[f"findings.{sig_field}"] += 1
                     elif field == "sections":
                         for s in detail.get("new", []):
                             new_sections[s] += 1

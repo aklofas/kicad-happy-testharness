@@ -7,7 +7,7 @@ pairing errors, stale outputs, or extraction bugs.
 Checks:
   schematic↔PCB:  component vs footprint count, net count
   PCB↔EMC:        via count, layer count (exact)
-  schematic↔SPICE: component refs exist in signal_analysis
+  schematic↔SPICE: component refs exist in findings
 
 Usage:
     python3 validate/cross_analyzer.py
@@ -192,28 +192,24 @@ def cross_validate_pcb_emc(pcb_data, emc_data):
 
 
 def cross_validate_schematic_spice(sch_data, spice_data):
-    """Verify SPICE simulation component refs exist in schematic signal_analysis.
+    """Verify SPICE simulation component refs exist in schematic findings.
 
     Returns list of {check, source, target, status, detail}.
     """
     results = []
 
-    # Collect all component refs from schematic (components array + signal_analysis)
+    # Collect all component refs from schematic (components array + findings)
     sa_refs = set()
     for comp in sch_data.get("components", []):
         ref = comp.get("reference", "")
         if ref:
             sa_refs.add(ref)
-    sa = sch_data.get("signal_analysis", {})
-    for detector_name, detections in sa.items():
-        if not isinstance(detections, list):
+    for finding in sch_data.get("findings", []):
+        if not isinstance(finding, dict):
             continue
-        for det in detections:
-            if not isinstance(det, dict):
-                continue
-            for key, val in det.items():
-                if isinstance(val, dict) and "ref" in val:
-                    sa_refs.add(val["ref"])
+        for key, val in finding.items():
+            if isinstance(val, dict) and "ref" in val:
+                sa_refs.add(val["ref"])
 
     sim_results = spice_data.get("simulation_results", [])
     orphan_refs = []

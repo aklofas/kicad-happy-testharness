@@ -33,7 +33,12 @@ def cross_validate_file(schematic_json, spice_json):
     Returns list of {type, components, analyzer_value, spice_value, delta_pct, status}.
     """
     results = []
-    sa = schematic_json.get("signal_analysis", {})
+    # Group findings by detector
+    grouped = {}
+    for f in schematic_json.get("findings", []):
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
     spice_results = spice_json.get("simulation_results", [])
 
     # Index SPICE results by (subcircuit_type, sorted components)
@@ -45,7 +50,7 @@ def cross_validate_file(schematic_json, spice_json):
         spice_by_key[key] = sr
 
     # voltage_dividers: compare ratio
-    for det in sa.get("voltage_dividers", []):
+    for det in grouped.get("detect_voltage_dividers", []):
         r_top = det.get("r_top", {})
         r_bot = det.get("r_bottom", {})
         if not isinstance(r_top, dict) or not isinstance(r_bot, dict):
@@ -71,7 +76,7 @@ def cross_validate_file(schematic_json, spice_json):
             })
 
     # rc_filters: compare cutoff frequency
-    for det in sa.get("rc_filters", []):
+    for det in grouped.get("detect_rc_filters", []):
         r = det.get("resistor", {})
         c = det.get("capacitor", {})
         if not isinstance(r, dict) or not isinstance(c, dict):
@@ -96,7 +101,7 @@ def cross_validate_file(schematic_json, spice_json):
             })
 
     # lc_filters: compare resonant frequency
-    for det in sa.get("lc_filters", []):
+    for det in grouped.get("detect_lc_filters", []):
         ind = det.get("inductor", {})
         cap = det.get("capacitor", {})
         if not isinstance(ind, dict) or not isinstance(cap, dict):
@@ -121,7 +126,7 @@ def cross_validate_file(schematic_json, spice_json):
             })
 
     # feedback_networks: compare feedback voltage
-    for det in sa.get("feedback_networks", []):
+    for det in grouped.get("detect_feedback_networks", []):
         r_top = det.get("r_top", {})
         r_bot = det.get("r_bottom", {})
         if not isinstance(r_top, dict) or not isinstance(r_bot, dict):
@@ -147,7 +152,7 @@ def cross_validate_file(schematic_json, spice_json):
             })
 
     # opamp_circuits: compare gain
-    for det in sa.get("opamp_circuits", []):
+    for det in grouped.get("detect_opamp_circuits", []):
         ref = det.get("reference", "")
         if not ref:
             continue
@@ -171,7 +176,7 @@ def cross_validate_file(schematic_json, spice_json):
             })
 
     # regulator_feedback: compare feedback voltage
-    for det in sa.get("power_regulators", []):
+    for det in grouped.get("detect_power_regulators", []):
         fb = det.get("feedback_divider", {})
         if not isinstance(fb, dict) or not fb:
             continue
@@ -199,7 +204,7 @@ def cross_validate_file(schematic_json, spice_json):
             })
 
     # current_sense: compare I at 50mV
-    for det in sa.get("current_sense", []):
+    for det in grouped.get("detect_current_sense", []):
         shunt = det.get("shunt", {})
         if not isinstance(shunt, dict):
             continue

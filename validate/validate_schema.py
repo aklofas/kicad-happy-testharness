@@ -28,8 +28,8 @@ from utils import (OUTPUTS_DIR, DATA_DIR, list_repos,
 
 INVENTORY_FILE = DATA_DIR / "schema_inventory.json"
 
-# Analyzer types that have signal_analysis detectors
-SCHEMATIC_DETECTORS_PATH = "signal_analysis"
+# Analyzer types that have findings detectors
+SCHEMATIC_DETECTORS_PATH = "findings"
 PCB_SECTIONS = [
     "connectivity", "dfm", "thermal_analysis", "assembly_analysis",
 ]
@@ -46,7 +46,7 @@ def _collect_fields(items):
 
 
 def scan_schematic_outputs(repos):
-    """Scan schematic outputs and build field inventory for signal_analysis detectors.
+    """Scan schematic outputs and build field inventory for findings detectors.
 
     Returns {detector_name: {field_name: count_of_items_with_field}}.
     """
@@ -64,21 +64,18 @@ def scan_schematic_outputs(repos):
                 continue
 
             file_count += 1
-            sa = data.get(SCHEMATIC_DETECTORS_PATH, {})
-            if not isinstance(sa, dict):
+            findings = data.get(SCHEMATIC_DETECTORS_PATH, [])
+            if not isinstance(findings, list):
                 continue
 
-            for detector, items in sa.items():
-                if not isinstance(items, list):
-                    # Some detectors (decoupling_analysis) can be a dict
-                    if isinstance(items, dict):
-                        for key in items:
-                            inventory[detector][key] += 1
+            for item in findings:
+                if not isinstance(item, dict):
                     continue
-                for item in items:
-                    if isinstance(item, dict):
-                        for key in item:
-                            inventory[detector][key] += 1
+                detector = item.get("detector", "")
+                if not detector:
+                    continue
+                for key in item:
+                    inventory[detector][key] += 1
 
     return dict({k: dict(v) for k, v in inventory.items()}), file_count
 
@@ -537,7 +534,7 @@ def generate_seed_for_new_fields(changes):
         field = c["field"]
         cat = c["category"]
         if cat == "schematic":
-            path = f"signal_analysis.{det}"
+            path = f"findings.{det}"
         else:
             path = det
         assertions.append({

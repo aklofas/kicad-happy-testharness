@@ -70,9 +70,13 @@ def count_corpus_hits():
                     continue
                 try:
                     data = json.loads(f.read_text(encoding="utf-8"))
-                    sa = data.get("signal_analysis", {})
-                    for det, items in sa.items():
-                        if isinstance(items, list) and len(items) > 0:
+                    grouped = {}
+                    for finding in data.get("findings", []):
+                        det = finding.get("detector", "")
+                        if det:
+                            grouped.setdefault(det, []).append(finding)
+                    for det, items in grouped.items():
+                        if items:
                             if det not in hits:
                                 hits[det] = 0
                             hits[det] += 1
@@ -99,9 +103,10 @@ def count_assertions():
             path = a.get("check", {}).get("path", "")
             aid = a.get("id", "")
             prefix = aid.split("-")[0] if "-" in aid else ""
-            # Match detector from path like "signal_analysis.voltage_dividers"
+            # Match detector from path or detector_filter
+            det_filter = a.get("check", {}).get("detector_filter", "")
             for det in _load_detectors():
-                if f"signal_analysis.{det}" in path:
+                if det_filter == det or f"findings.{det}" in path or det in path:
                     if prefix in counts[det]:
                         counts[det][prefix] += 1
                     break

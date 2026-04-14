@@ -51,14 +51,13 @@ REVIEW_DIR = Path(__file__).resolve().parent.parent / "results" / "figure_review
 # The output_type tells which results/outputs/{type}/ directory to scan.
 
 def _count_signal(data: dict, detector_name: str) -> int:
-    """Count hits for a detector in signal_analysis."""
-    sa = data.get("signal_analysis", {})
-    hits = sa.get(detector_name, [])
-    return len(hits) if isinstance(hits, list) else 0
+    """Count hits for a detector in findings."""
+    return sum(1 for f in data.get("findings", [])
+               if f.get("detector") == detector_name)
 
 
 def _check_power_tree(data: dict) -> int:
-    return _count_signal(data, "power_regulators")
+    return _count_signal(data, "detect_power_regulators")
 
 
 def _check_architecture(data: dict) -> int:
@@ -69,13 +68,14 @@ def _check_architecture(data: dict) -> int:
 
 def _check_bus_topology(data: dict) -> int:
     total = 0
-    for det in ("i2c_buses", "spi_buses", "uart_interfaces", "can_interfaces"):
+    for det in ("detect_i2c_buses", "detect_spi_buses",
+                "detect_uart_interfaces", "detect_can_interfaces"):
         total += _count_signal(data, det)
     return total
 
 
 def _check_pinout(data: dict) -> int:
-    return _count_signal(data, "connectors")
+    return _count_signal(data, "detect_connectors")
 
 
 def _check_schematic_overview(data: dict) -> int:
@@ -84,8 +84,12 @@ def _check_schematic_overview(data: dict) -> int:
 
 
 def _check_schematic_crop(data: dict) -> int:
-    sa = data.get("signal_analysis", {})
-    return sum(1 for v in sa.values() if isinstance(v, list) and v)
+    grouped = {}
+    for f in data.get("findings", []):
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
+    return len(grouped)
 
 
 def _check_has_data(data: dict) -> int:
@@ -262,11 +266,11 @@ def load_analysis(repo: str, output_file: str) -> dict:
     repo_dir_spice = OUTPUTS_DIR / "spice" / repo
 
     # If primary wasn't schematic, try to load schematic as base
-    if "signal_analysis" not in analysis:
+    if "findings" not in analysis:
         for f in sorted(repo_dir_sch.glob("*.json")) if repo_dir_sch.exists() else []:
             if not f.name.startswith("_"):
                 sch_data = safe_load_json(f)
-                if sch_data and "signal_analysis" in sch_data:
+                if sch_data and "findings" in sch_data:
                     # Merge schematic under analysis, don't overwrite primary
                     merged = dict(sch_data)
                     merged.update(analysis)
