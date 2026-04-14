@@ -151,35 +151,31 @@ def diff_schematic(baseline, current):
     ]
     result["count_deltas"] = _diff_counts(baseline, current, count_paths)
 
-    # Signal analysis deltas
-    base_sa = baseline.get("signal_analysis", {})
-    curr_sa = current.get("signal_analysis", {})
-    if isinstance(base_sa, dict) and isinstance(curr_sa, dict):
-        all_keys = set(base_sa.keys()) | set(curr_sa.keys())
-        for key in sorted(all_keys):
-            base_items = base_sa.get(key, [])
-            curr_items = curr_sa.get(key, [])
-            if not isinstance(base_items, list) or not isinstance(curr_items, list):
-                # Scalar or dict value — just compare counts
-                bcount = len(base_items) if isinstance(base_items, (list, dict)) else (1 if base_items else 0)
-                ccount = len(curr_items) if isinstance(curr_items, (list, dict)) else (1 if curr_items else 0)
-                if bcount != ccount:
-                    result["signal_deltas"][key] = {
-                        "baseline_count": bcount,
-                        "current_count": ccount,
-                        "delta": ccount - bcount,
-                    }
-                continue
+    # Findings deltas (grouped by detector)
+    def _group(data):
+        g = {}
+        for f in data.get("findings", []):
+            det = f.get("detector", "")
+            if det:
+                g.setdefault(det, []).append(f)
+        return g
 
-            id_fields = SIGNAL_IDENTITY_FIELDS.get(key, ["reference", "references", "component"])
-            diff = _diff_lists(base_items, curr_items, id_fields)
-            if diff["new_count"] > 0 or diff["lost_count"] > 0:
-                result["signal_deltas"][key] = {
-                    "baseline_count": len(base_items),
-                    "current_count": len(curr_items),
-                    "new_count": diff["new_count"],
-                    "lost_count": diff["lost_count"],
-                }
+    base_sa = _group(baseline)
+    curr_sa = _group(current)
+    all_keys = set(base_sa.keys()) | set(curr_sa.keys())
+    for key in sorted(all_keys):
+        base_items = base_sa.get(key, [])
+        curr_items = curr_sa.get(key, [])
+
+        id_fields = SIGNAL_IDENTITY_FIELDS.get(key, ["reference", "references", "component"])
+        diff = _diff_lists(base_items, curr_items, id_fields)
+        if diff["new_count"] > 0 or diff["lost_count"] > 0:
+            result["signal_deltas"][key] = {
+                "baseline_count": len(base_items),
+                "current_count": len(curr_items),
+                "new_count": diff["new_count"],
+                "lost_count": diff["lost_count"],
+            }
 
     # Design analysis deltas
     design_count_paths = [
@@ -305,16 +301,13 @@ def extract_manifest_entry(data, analyzer_type):
     """
     if analyzer_type == "schematic":
         stats = data.get("statistics", {})
-        sa = data.get("signal_analysis", {})
         da = data.get("design_analysis", {})
 
         signal_counts = {}
-        if isinstance(sa, dict):
-            for key, val in sa.items():
-                if isinstance(val, list):
-                    signal_counts[key] = len(val)
-                elif isinstance(val, dict):
-                    signal_counts[key] = len(val)
+        for finding in data.get("findings", []):
+            det = finding.get("detector", "")
+            if det:
+                signal_counts[det] = signal_counts.get(det, 0) + 1
 
         type_dist = _component_type_distribution(data)
         sections = sorted(k for k in data.keys() if k != "file")
