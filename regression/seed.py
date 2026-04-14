@@ -405,15 +405,28 @@ def generate_schematic_assertions(data, tolerance=0.10, include_empty=False):
     # Empty-detector assertions: detectors with 0 items stay at 0
     # Only for schematics with enough components to be meaningful
     if include_empty and total_comps >= 50:
+        # sa is keyed by full detector names; known detectors may be short
+        present_detectors = set(sa.keys())
         for det in _load_known_detectors():
-            det_items = sa.get(det, [])
-            if isinstance(det_items, list) and len(det_items) == 0:
-                assertions.append({
-                    "id": f"SEED-{ast_num:08d}",
-                    "description": f"No {det} expected",
-                    "check": _findings_check(det, op="max_count", value=0),
-                })
-                ast_num += 1
+            # Find the full name matching this short name
+            full_name = det
+            if det not in present_detectors:
+                for prefix in ("detect_", "validate_", "audit_", "analyze_"):
+                    candidate = f"{prefix}{det}"
+                    if candidate in present_detectors:
+                        full_name = candidate
+                        break
+                else:
+                    # Not present — use detect_ as default prefix for the assertion
+                    full_name = f"detect_{det}"
+            if full_name in present_detectors:
+                continue  # detector has items, skip
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"No {full_name} expected",
+                "check": _findings_check(full_name, op="max_count", value=0),
+            })
+            ast_num += 1
 
     # Component types exist
     comp_types = stats.get("component_types", {})

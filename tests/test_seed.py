@@ -110,7 +110,7 @@ def test_datasheets_assertions_empty():
 
 def test_quality_voltage_dividers():
     detections = [{"ratio": 0.5, "r_top": {"ref": "R1"}}]
-    qa, next_num = _quality_assertions("voltage_dividers", detections, 100)
+    qa, next_num = _quality_assertions("detect_voltage_dividers", detections, 100)
     assert len(qa) == 1
     assert qa[0]["check"]["op"] == "not_contains_match"
     assert qa[0]["check"]["field"] == "ratio"
@@ -118,7 +118,7 @@ def test_quality_voltage_dividers():
 
 def test_quality_rc_filters():
     detections = [{"cutoff_hz": 1000.0}]
-    qa, _ = _quality_assertions("rc_filters", detections, 1)
+    qa, _ = _quality_assertions("detect_rc_filters", detections, 1)
     assert len(qa) == 1
     assert qa[0]["check"]["field"] == "cutoff_hz"
 
@@ -129,13 +129,17 @@ def test_quality_unknown_detector():
     assert num == 1
 
 def test_quality_checks_coverage():
-    """All quality check detectors are recognized signal types."""
+    """All quality check detectors are recognized signal types (full or short name)."""
+    known = _load_known_detectors()
+    # Build a set that accepts both short names and full-name variants
+    known_variants = set(known)
+    for short in known:
+        known_variants.add(f"detect_{short}")
+        known_variants.add(f"validate_{short}")
+    # Also accept known mappings where the suffix differs from the short name
+    known_variants.add("validate_feedback_stability")  # short name: feedback_networks
     for det in _QUALITY_CHECKS:
-        assert det in _load_known_detectors() or det in (
-            "voltage_dividers", "rc_filters", "lc_filters",
-            "current_sense", "power_regulators", "crystal_circuits",
-            "opamp_circuits", "transistor_circuits", "feedback_networks",
-        ), f"{det} not a recognized detector"
+        assert det in known_variants, f"{det} not a recognized detector"
 
 
 # === generate_schematic_assertions with quality ===
@@ -144,14 +148,15 @@ def test_schematic_includes_quality():
     """Quality assertions appear after min_count for qualified detectors."""
     data = {
         "statistics": {"total_components": 20, "total_nets": 10, "component_types": {}},
-        "signal_analysis": {
-            "voltage_dividers": [{"ratio": 0.5, "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}}],
-        },
+        "findings": [
+            {"detector": "detect_voltage_dividers", "ratio": 0.5,
+             "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}},
+        ],
         "bom": [{"references": ["R1"], "quantity": 1}],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10)
     ops = [(a["check"]["op"], a.get("description", "")) for a in assertions]
-    # Should have both min_count and not_contains_match for voltage_dividers
+    # Should have both min_count and not_contains_match for detect_voltage_dividers
     has_min = any(op == "min_count" and "voltage_dividers" in desc for op, desc in ops)
     has_quality = any(op == "not_contains_match" and "ratio" in desc for op, desc in ops)
     assert has_min, "Missing min_count for voltage_dividers"
@@ -161,9 +166,9 @@ def test_schematic_no_quality_for_unknown():
     """No quality assertions for detectors without _QUALITY_CHECKS entry."""
     data = {
         "statistics": {"total_components": 20, "total_nets": 10, "component_types": {}},
-        "signal_analysis": {
-            "rf_chains": [{"total_rf_components": 5}],
-        },
+        "findings": [
+            {"detector": "detect_rf_chains", "total_rf_components": 5},
+        ],
         "bom": [],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10)
@@ -177,10 +182,10 @@ def test_empty_detectors_included():
     """With include_empty and 50+ comps, absent detectors get max_count=0."""
     data = {
         "statistics": {"total_components": 60, "total_nets": 30, "component_types": {}},
-        "signal_analysis": {
-            "voltage_dividers": [{"ratio": 0.5}],
+        "findings": [
+            {"detector": "detect_voltage_dividers", "ratio": 0.5},
             # All other detectors are absent
-        },
+        ],
         "bom": [],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10, include_empty=True)
@@ -188,7 +193,7 @@ def test_empty_detectors_included():
                         if a["check"]["op"] == "max_count" and a["check"]["value"] == 0]
     # Should have max_count=0 for each _LIST_DETECTOR that's absent
     assert len(empty_assertions) > 0
-    # voltage_dividers is present, so should NOT have max_count=0
+    # detect_voltage_dividers is present, so should NOT have max_count=0
     vd_empty = [a for a in empty_assertions if "voltage_dividers" in a["description"]]
     assert len(vd_empty) == 0
 
@@ -196,7 +201,7 @@ def test_empty_detectors_not_included_by_default():
     """Without include_empty, no max_count=0 assertions."""
     data = {
         "statistics": {"total_components": 60, "total_nets": 30, "component_types": {}},
-        "signal_analysis": {},
+        "findings": [],
         "bom": [],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10, include_empty=False)
@@ -207,7 +212,7 @@ def test_empty_detectors_skip_small_schematics():
     """Empty-detector assertions only for schematics with 50+ components."""
     data = {
         "statistics": {"total_components": 20, "total_nets": 10, "component_types": {}},
-        "signal_analysis": {},
+        "findings": [],
         "bom": [],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10, include_empty=True)
@@ -224,7 +229,7 @@ def test_component_type_tolerance_tighter():
             "total_components": 100, "total_nets": 50,
             "component_types": {"resistor": 100},
         },
-        "signal_analysis": {},
+        "findings": [],
         "bom": [],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10)
@@ -241,7 +246,7 @@ def test_component_type_tolerance_small():
             "total_components": 20, "total_nets": 10,
             "component_types": {"inductor": 5},
         },
-        "signal_analysis": {},
+        "findings": [],
         "bom": [],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10)
@@ -263,15 +268,26 @@ def test_schematic_roundtrip():
             "total_components": 80, "total_nets": 40,
             "component_types": {"resistor": 30, "capacitor": 20, "ic": 10},
         },
-        "signal_analysis": {
-            "voltage_dividers": [
-                {"ratio": 0.5, "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}},
-                {"ratio": 0.33, "r_top": {"ref": "R3"}, "r_bottom": {"ref": "R4"}},
-            ],
-            "rc_filters": [
-                {"cutoff_hz": 1000.0, "resistor": {"ref": "R5"}, "capacitor": {"ref": "C1"}},
-            ],
-        },
+        "findings": [
+            {"detector": "detect_voltage_dividers", "ratio": 0.5,
+             "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"},
+             "rule_id": "VD-DET", "severity": "info", "confidence": "deterministic",
+             "evidence_source": "topology", "summary": "", "description": "",
+             "components": ["R1", "R2"], "nets": [], "pins": [], "recommendation": "",
+             "report_context": {}},
+            {"detector": "detect_voltage_dividers", "ratio": 0.33,
+             "r_top": {"ref": "R3"}, "r_bottom": {"ref": "R4"},
+             "rule_id": "VD-DET", "severity": "info", "confidence": "deterministic",
+             "evidence_source": "topology", "summary": "", "description": "",
+             "components": ["R3", "R4"], "nets": [], "pins": [], "recommendation": "",
+             "report_context": {}},
+            {"detector": "detect_rc_filters", "cutoff_hz": 1000.0,
+             "resistor": {"ref": "R5"}, "capacitor": {"ref": "C1"},
+             "rule_id": "RC-DET", "severity": "info", "confidence": "deterministic",
+             "evidence_source": "topology", "summary": "", "description": "",
+             "components": ["R5", "C1"], "nets": [], "pins": [], "recommendation": "",
+             "report_context": {}},
+        ],
         "bom": [{"references": ["R1"], "quantity": 1}],
     }
     assertions = generate_schematic_assertions(data, tolerance=0.10, include_empty=True)
