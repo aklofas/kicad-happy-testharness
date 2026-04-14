@@ -31,12 +31,22 @@ from utils import (
 from regression.refextract import REF_FIELD_MAP, PCB_REF_FIELD_MAP, get_ref_from_item
 
 
+def _group_findings(data):
+    """Group flat findings[] by detector name."""
+    grouped = {}
+    for f in data.get("findings", []):
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
+    return grouped
+
+
 def generate_structural_assertions(data, strict=True):
     """Generate structural assertions from a schematic analyzer output.
 
     Returns list of assertion dicts.
     """
-    sa = data.get("signal_analysis", {})
+    sa = _group_findings(data)
     if not sa:
         return []
 
@@ -54,7 +64,8 @@ def generate_structural_assertions(data, strict=True):
                 "id": f"STRUCT-{ast_num:08d}",
                 "description": f"Exactly {count} {det_name}",
                 "check": {
-                    "path": f"signal_analysis.{det_name}",
+                    "path": "findings",
+                    "detector_filter": det_name,
                     "op": "equals",
                     "value": count,
                 },
@@ -66,7 +77,8 @@ def generate_structural_assertions(data, strict=True):
                 "id": f"STRUCT-{ast_num:08d}",
                 "description": f"~{count} {det_name} (±1)",
                 "check": {
-                    "path": f"signal_analysis.{det_name}",
+                    "path": "findings",
+                    "detector_filter": det_name,
                     "op": "range",
                     "min": lo,
                     "max": hi,
@@ -74,7 +86,6 @@ def generate_structural_assertions(data, strict=True):
             })
         ast_num += 1
 
-        # Per-ref assertions
         ref_field = REF_FIELD_MAP.get(det_name)
         if not ref_field:
             continue
@@ -88,7 +99,8 @@ def generate_structural_assertions(data, strict=True):
                     "id": f"STRUCT-{ast_num:08d}",
                     "description": f"{ref} in {det_name}",
                     "check": {
-                        "path": f"signal_analysis.{det_name}",
+                        "path": "findings",
+                        "detector_filter": det_name,
                         "op": "contains_match",
                         "field": ref_field,
                         "pattern": f"^{re.escape(ref)}$",
@@ -102,39 +114,53 @@ def generate_structural_assertions(data, strict=True):
 def generate_pcb_structural_assertions(data, strict=True):
     """Generate structural assertions from a PCB analyzer output.
 
-    Covers: decoupling_placement, thermal_pad_vias,
-    thermal_analysis.thermal_pads, tombstoning_risk.
+    Covers both top-level sections (decoupling_placement) and findings[]
+    entries (thermal_pad_vias, thermal_pads, tombstoning_risk).
 
     Returns list of assertion dicts.
     """
     assertions = []
     ast_num = 1
 
+    # Group findings by detector for sections that moved to findings[]
+    findings_grouped = _group_findings(data)
+
     for section_path, ref_field in sorted(PCB_REF_FIELD_MAP.items()):
-        # Navigate dotted path (e.g., "thermal_analysis.thermal_pads")
-        parts = section_path.split(".")
-        items = data
-        for part in parts:
-            if isinstance(items, dict):
-                items = items.get(part)
-            else:
-                items = None
-                break
+        items = None
+        use_findings = False
+        section_path_for_check = section_path
+
+        # Detector names live in findings[]
+        if any(section_path.startswith(p) for p in ("analyze_", "detect_", "audit_", "validate_")):
+            items = findings_grouped.get(section_path, [])
+            use_findings = bool(items)
+            section_path_for_check = section_path
+        else:
+            # Top-level section (e.g., decoupling_placement)
+            parts = section_path.split(".")
+            items = data
+            for part in parts:
+                if isinstance(items, dict):
+                    items = items.get(part)
+                else:
+                    items = None
+                    break
 
         if not isinstance(items, list) or not items:
             continue
 
         # Count assertion
         count = len(items)
+        if use_findings:
+            check_base = {"path": "findings", "detector_filter": section_path_for_check}
+        else:
+            check_base = {"path": section_path}
+
         if strict:
             assertions.append({
                 "id": f"STRUCT-{ast_num:08d}",
                 "description": f"Exactly {count} {section_path}",
-                "check": {
-                    "path": section_path,
-                    "op": "equals",
-                    "value": count,
-                },
+                "check": {**check_base, "op": "equals", "value": count},
             })
         else:
             lo = max(0, count - 1)
@@ -142,12 +168,7 @@ def generate_pcb_structural_assertions(data, strict=True):
             assertions.append({
                 "id": f"STRUCT-{ast_num:08d}",
                 "description": f"~{count} {section_path} (±1)",
-                "check": {
-                    "path": section_path,
-                    "op": "range",
-                    "min": lo,
-                    "max": hi,
-                },
+                "check": {**check_base, "op": "range", "min": lo, "max": hi},
             })
         ast_num += 1
 
@@ -161,7 +182,7 @@ def generate_pcb_structural_assertions(data, strict=True):
                     "id": f"STRUCT-{ast_num:08d}",
                     "description": f"{ref} in {section_path}",
                     "check": {
-                        "path": section_path,
+                        **check_base,
                         "op": "contains_match",
                         "field": ref_field,
                         "pattern": f"^{re.escape(ref)}$",
