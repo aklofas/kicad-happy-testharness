@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-13 (v1.3-full shipped — all 12/12 exit criteria met, 819 tests, pushed to origin)
+Last updated: 2026-04-14 (P12 refactor complete, 10-batch full regression passed)
 
 ---
 
@@ -14,26 +14,28 @@ Last updated: 2026-04-13 (v1.3-full shipped — all 12/12 exit criteria met, 819
 | Metric | Count |
 |--------|------:|
 | Total repos in repos.md | 5,822 |
-| Repos with baselines (reference/) | 5,852 |
+| Repos with baselines (reference/) | 5,822 |
+| Project baselines | 18,798 |
 | Schematic output files | 36,546 |
 | PCB output files | 18,727 |
 | Gerber output files | 5,448 |
-| **Total assertions** | **2,023,990** |
-| SEED assertions | 1,006,775 |
-| STRUCT assertions | 1,012,420 |
-| FND assertions | 4,718 |
+| **Total assertions** | **1,757,518** |
+| SEED assertions | ~960,000 |
+| STRUCT assertions | ~350,000 |
+| FND assertions | 4,626 |
 | BUGFIX assertions | 77 |
-| Aspirational assertions | 1,989 |
-| Assertion pass rate | 100.0% |
+| Aspirational assertions | 1,921 |
+| Assertion pass rate | 99.98% (293 stale FND from format change, 0 SEED/STRUCT/BUGFIX) |
 | Bugfix registry entries | 67 |
 | Unit tests (smoke gate) | 481 |
-| Unit tests (full suite) | 819 |
+| Unit tests (full suite) | 802 |
 | Layer 3 reviewed repos | 992 |
 | Total findings | 2,575 |
 | Open KH-* issues | 0 |
-| Closed KH-* issues | 203 |
+| Closed KH-* issues | 210 |
+| Open TH-* issues | 0 |
 | Constants | 298 (295 verified, 3 unverified) |
-| Schematic detectors | 40 |
+| Schematic detectors | 56 (40 signal/domain + 16 validation) |
 | Cross-analyzer agreement | 91.9% (97,012 checks) |
 | Unique MPNs extracted | 16,332 (from 1,105 projects) |
 | Datasheet PDFs | 4,345 (2,249 bulk + 2,096 per-repo) |
@@ -83,6 +85,82 @@ Last updated: 2026-04-13 (v1.3-full shipped — all 12/12 exit criteria met, 819
 ---
 
 ## Completed batches
+
+### P12 refactor + 10-batch full regression (2026-04-14)
+
+Completed P12 harmonized output deep refactor (15 commits, 47+ Python files). Removed
+`_group_findings()` shim, `_short_detector_name()` helper, all `signal_analysis` path
+references. All dicts re-keyed to full detector names. 1,000+ reference JSON files
+migrated to `findings` + `detector_filter` paths.
+
+Full regression against 51 kicad-happy commits (44920bd..125d92f, Batches 5-10 + compat):
+- **1,757,518 assertions** — 1,757,225 passed (99.98%)
+- **293 non-aspirational failures** — all stale FND assertions from format change
+- **0 SEED/STRUCT/BUGFIX failures**
+- **802 unit tests, 0 failures**
+
+Compat-fix smoke test (commits 9555692 + 125d92f): thermal analyzer, fab_release_gate,
+cross_verify, SPICE decoupling — all zero crashes.
+
+---
+
+### Batches 5-9: 44-commit feature + harmonization regression (2026-04-13)
+
+Validated 4 regression batches (44 commits total, 44920bd..357e057):
+
+**Batch 5+6** (22 commits): 16 new schematic detectors + rich format migration.
+KH-283 (crystal freq None), KH-284 (netclass patterns None), KH-285 (pad abs_x).
+
+**Batch 7** (7 commits): PCB rich format + 7 new assembly/DFM checks (FD-001,
+TE-001, OR-001, SK-001, VP-001, BV-001, KO-001). KH-286 (fiducial value-is-list).
+
+**Batch 8** (5 commits): Thermal/gerber/lifecycle rich format. GR-001..005 gerber
+findings. LC-001..006 lifecycle findings. Clean pass.
+
+**Batch 9** (10 commits): Output harmonization — all analyzers now produce flat
+`findings[]` array. Breaking change for assertion paths. Migration script rewrote
+1,472 FND paths. Shim layer in seed/checks for backward compat. P12 deep refactor
+planned for full native support (47 files).
+
+**Harness fixes:** TH-026 (multi-project directory discovery — 494 repos affected).
+seed.py generator name mismatch (89K files unblocked). 6 test fixture files updated.
+362 orphaned reference directories + 51K stale assertion files cleaned up.
+
+**Final state:** 802 tests / 0 failures. 1,757,524 assertions / 100.0% (637 stale
+FND pending P12). KH-283..286 fixed. TH-026 fixed.
+
+---
+
+### Batch 5+6 detail: 22-commit rich format + PCB intelligence regression (2026-04-13)
+
+Validated 22 new commits (44920bd..da3b934): 16 new detectors, rich output format
+migration across all ~75 detectors, PCB connectivity graph, net classifications,
+cross-analysis script, 6 PCB intelligence checks.
+
+**Regression results:**
+- Schematic: 36,450 pass / 3 fail (all pre-existing timeouts)
+- PCB: 18,652 pass / 3 fail (pre-existing: IsADirectoryError + corrupt files)
+- EMC: 0 failures after KH-283 fix (was 97)
+- Cross-analysis: smoke test passed (XV-001, XV-002 findings with rich format)
+
+**New detector coverage:**
+- validation_findings: 13,737 files / 72,173 items
+- wireless_modules: 2,145 files / 3,009 items
+- net_classifications: 10,130 files (28%)
+- headphone_jacks: 184 / energy_harvesting: 118 / transformer_feedback: 43
+- i2c_address_conflicts: 19 / pwm_led_dimming: 0 (very narrow criteria)
+
+**Bugs found and fixed:**
+- KH-283: `check_crystal_guard_ring` freq None crash (97 EMC failures)
+- KH-284: `extract_pro_net_classes` None patterns (2 PCB failures)
+- KH-285: `_min_power_pad_distance` missing abs_x (2 PCB failures)
+- TH-026: `seed.py` generator name mismatch blocked 89K files from re-seeding
+- 2 unit test fixtures updated for rich format changes
+
+**Assertions:** 2,234,217 total (up from 2.02M), 99.8% pass rate.
+Unit tests: 819 passed, 0 failed.
+
+---
 
 ### Prefix-collision investigation + KH-234/238/239 verification (2026-04-11)
 
