@@ -284,11 +284,11 @@ def test_no_inverse_for_transistor():
 
 
 # ============================================================
-# 3c. Schema completeness — every signal_analysis key covered
+# 3c. Schema completeness — every findings detector covered
 # ============================================================
 
 def test_schema_completeness_zebra_x():
-    """Every signal_analysis key in a real output has a SCHEMAS entry."""
+    """Every findings detector in a real output has a SCHEMAS entry."""
     output_path = (
         HARNESS_DIR / "results" / "outputs" / "schematic"
         / "Dylanfg123" / "Zebra-X" / "ZeBra-X.kicad_sch.json"
@@ -298,23 +298,38 @@ def test_schema_completeness_zebra_x():
         return
     with open(output_path) as f:
         data = json.load(f)
-    sa_keys = set(data.get("signal_analysis", {}).keys())
+    # Extract unique detector short names from findings[]
+    findings = data.get("findings", [])
+    detector_keys = set()
+    for f in findings:
+        det = f.get("detector", "")
+        if det.startswith("detect_"):
+            detector_keys.add(det[len("detect_"):])
+        elif det.startswith("validate_"):
+            # Map validate_feedback_stability -> feedback_networks
+            detector_keys.add(det)
+        elif det.startswith("audit_"):
+            detector_keys.add(det)
+        elif det.startswith("analyze_"):
+            detector_keys.add(det)
+        elif det:
+            detector_keys.add(det)
     schema_keys = set(SCHEMAS.keys())
-    # Not every signal_analysis key needs a schema (only detection types with
+    # Not every detector needs a schema (only detection types with
     # identity/derived fields need one). But every SCHEMAS key should be a valid
-    # signal_analysis key. Check for overlap.
-    # Specifically: all SCHEMAS keys should appear in at least one output.
-    # We check both directions and report gaps.
+    # detector. Check for overlap.
     missing_schemas = []
-    for key in sa_keys:
+    for key in detector_keys:
         # These are informational sections, not detection types
         if key in ("design_observations", "esd_coverage_audit", "led_audit",
-                    "power_sequencing_validation", "power_path"):
+                    "power_sequencing_validation", "power_path",
+                    "audit_esd_protection", "audit_led_circuits",
+                    "detect_design_observations"):
             continue
         if key not in schema_keys:
             missing_schemas.append(key)
     assert missing_schemas == [], (
-        f"signal_analysis keys missing from SCHEMAS: {missing_schemas}"
+        f"findings detector keys missing from SCHEMAS: {missing_schemas}"
     )
 
 
@@ -432,7 +447,7 @@ def test_derived_fields_are_derived_field():
 # KH-232 closed 2026-04-10 PM (same commit) — 1 entry removed.
 KNOWN_FAILURES = {
     # KH-233: SCHEMAS dict has not kept up with detector additions in
-    # analyze_schematic.py — 22 signal_analysis output keys lack a
+    # analyze_schematic.py — 22 findings detector keys lack a
     # corresponding SCHEMAS entry as of 2026-04-10. Deferred to a
     # dedicated kicad-happy plan.
     "test_schema_completeness_zebra_x": "KH-233",

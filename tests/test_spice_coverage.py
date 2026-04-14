@@ -15,10 +15,11 @@ from spice_coverage import (
 
 def test_count_detections_basic():
     data = {
-        "signal_analysis": {
-            "voltage_dividers": [{"ref": "R1"}, {"ref": "R2"}],
-            "rc_filters": [{"ref": "R1"}],
-        }
+        "findings": [
+            {"detector": "detect_voltage_dividers", "ref": "R1"},
+            {"detector": "detect_voltage_dividers", "ref": "R2"},
+            {"detector": "detect_rc_filters", "ref": "R1"},
+        ]
     }
     counts = count_detections(data)
     assert counts["voltage_dividers"] == 2
@@ -31,10 +32,10 @@ def test_count_detections_empty():
 
 
 def test_count_detections_ignores_non_list():
-    """Non-list values in signal_analysis are skipped."""
-    data = {"signal_analysis": {"voltage_dividers": "not_a_list"}}
+    """Non-list findings value (malformed) produces zero counts."""
+    data = {"findings": "not_a_list"}
     counts = count_detections(data)
-    assert "voltage_dividers" not in counts
+    assert counts.get("voltage_dividers", 0) == 0
 
 
 def test_count_simulations_basic():

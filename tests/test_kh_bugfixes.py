@@ -171,8 +171,8 @@ def test_kh221_tia_in_corpus():
             continue
         for f in repo_dir.rglob("*.json"):
             data = json.loads(f.read_text(encoding="utf-8"))
-            sa = data.get("signal_analysis", {})
-            opamps = sa.get("opamp_analysis", [])
+            opamps = [f for f in data.get("findings", [])
+                      if f.get("detector") in ("detect_opamp_circuits", "detect_opamp_analysis")]
             for o in opamps:
                 if o.get("configuration") == "transimpedance":
                     assert "feedback_resistor" in o, \
@@ -204,8 +204,8 @@ def test_kh222_no_duplicate_led_audit_refs():
     """biomimetics/MRIRobot_PCB led_audit should have no duplicate refs."""
     outputs = _load_outputs("biomimetics/MRIRobot_PCB")
     for data in outputs:
-        sa = data.get("signal_analysis", {})
-        la = sa.get("led_audit", [])
+        la = [f for f in data.get("findings", [])
+              if f.get("detector") == "audit_led_circuits"]
         if not la:
             continue
         refs = [e.get("reference", e.get("ref", "")) for e in la]

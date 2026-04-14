@@ -171,13 +171,34 @@ def test_error_only_one_run_previous_requested():
 # 3b. Change attribution (3 tests)
 # ============================================================
 
-def _make_schematic_json(components, signal_analysis):
-    """Build a minimal schematic JSON."""
+def _make_rc_filter_finding(r_ref, r_ohms, c_ref, c_farads, cutoff_hz):
+    """Build a minimal rc_filter finding in the new findings[] format."""
+    return {
+        "detector": "detect_rc_filters",
+        "resistor": {"ref": r_ref, "ohms": r_ohms},
+        "capacitor": {"ref": c_ref, "farads": c_farads},
+        "cutoff_hz": cutoff_hz,
+        "rule_id": "RC-DET", "severity": "info", "confidence": "deterministic",
+        "evidence_source": "topology", "summary": "", "description": "",
+        "components": [r_ref, c_ref], "nets": [], "pins": [],
+        "recommendation": "", "report_context": {},
+    }
+
+
+def _make_schematic_json(components, rc_filters=None):
+    """Build a minimal schematic JSON with findings[] format."""
+    findings = []
+    for f in (rc_filters or []):
+        findings.append(_make_rc_filter_finding(
+            f["resistor"]["ref"], f["resistor"]["ohms"],
+            f["capacitor"]["ref"], f["capacitor"]["farads"],
+            f["cutoff_hz"],
+        ))
     return {
         "analyzer_type": "schematic",
         "statistics": {"total_components": len(components)},
         "components": components,
-        "signal_analysis": signal_analysis,
+        "findings": findings,
         "bom": [],
         "connectivity_issues": {},
         "design_analysis": {},
@@ -191,26 +212,22 @@ def test_attribution_exists_when_component_and_signal_change():
             {"reference": "R5", "value": "10k", "footprint": "R_0402"},
             {"reference": "C1", "value": "100nF", "footprint": "C_0402"},
         ],
-        signal_analysis={
-            "rc_filters": [
-                {"resistor": {"ref": "R5", "ohms": 10000},
-                 "capacitor": {"ref": "C1", "farads": 1e-7},
-                 "cutoff_hz": 159.15}
-            ],
-        },
+        rc_filters=[
+            {"resistor": {"ref": "R5", "ohms": 10000},
+             "capacitor": {"ref": "C1", "farads": 1e-7},
+             "cutoff_hz": 159.15}
+        ],
     )
     head = _make_schematic_json(
         components=[
             {"reference": "R5", "value": "4.7k", "footprint": "R_0402"},
             {"reference": "C1", "value": "100nF", "footprint": "C_0402"},
         ],
-        signal_analysis={
-            "rc_filters": [
-                {"resistor": {"ref": "R5", "ohms": 4700},
-                 "capacitor": {"ref": "C1", "farads": 1e-7},
-                 "cutoff_hz": 338.63}
-            ],
-        },
+        rc_filters=[
+            {"resistor": {"ref": "R5", "ohms": 4700},
+             "capacitor": {"ref": "C1", "farads": 1e-7},
+             "cutoff_hz": 338.63}
+        ],
     )
     result = diff_analysis.diff_schematic(base, head, threshold=1.0)
 
@@ -235,13 +252,11 @@ def test_attribution_only_with_both_component_and_signal():
             {"reference": "R5", "value": "10k", "footprint": "R_0402"},
             {"reference": "C1", "value": "100nF", "footprint": "C_0402"},
         ],
-        signal_analysis={
-            "rc_filters": [
-                {"resistor": {"ref": "R5", "ohms": 10000},
-                 "capacitor": {"ref": "C1", "farads": 1e-7},
-                 "cutoff_hz": 159.15}
-            ],
-        },
+        rc_filters=[
+            {"resistor": {"ref": "R5", "ohms": 10000},
+             "capacitor": {"ref": "C1", "farads": 1e-7},
+             "cutoff_hz": 159.15}
+        ],
     )
     # Head: signal changes but NO component changes
     head = _make_schematic_json(
@@ -249,13 +264,11 @@ def test_attribution_only_with_both_component_and_signal():
             {"reference": "R5", "value": "10k", "footprint": "R_0402"},
             {"reference": "C1", "value": "100nF", "footprint": "C_0402"},
         ],
-        signal_analysis={
-            "rc_filters": [
-                {"resistor": {"ref": "R5", "ohms": 10000},
-                 "capacitor": {"ref": "C1", "farads": 1e-7},
-                 "cutoff_hz": 340.0}
-            ],
-        },
+        rc_filters=[
+            {"resistor": {"ref": "R5", "ohms": 10000},
+             "capacitor": {"ref": "C1", "farads": 1e-7},
+             "cutoff_hz": 340.0}
+        ],
     )
     result = diff_analysis.diff_schematic(base, head, threshold=1.0)
 
@@ -275,13 +288,11 @@ def test_no_attribution_when_signal_changes_unrelated():
             {"reference": "C1", "value": "100nF", "footprint": "C_0402"},
             {"reference": "U1", "value": "LM317", "footprint": "SOT-223"},
         ],
-        signal_analysis={
-            "rc_filters": [
-                {"resistor": {"ref": "R5", "ohms": 10000},
-                 "capacitor": {"ref": "C1", "farads": 1e-7},
-                 "cutoff_hz": 159.15}
-            ],
-        },
+        rc_filters=[
+            {"resistor": {"ref": "R5", "ohms": 10000},
+             "capacitor": {"ref": "C1", "farads": 1e-7},
+             "cutoff_hz": 159.15}
+        ],
     )
     # Head: U1 value changes but rc_filter cutoff also shifts (unrelated)
     head = _make_schematic_json(
@@ -290,13 +301,11 @@ def test_no_attribution_when_signal_changes_unrelated():
             {"reference": "C1", "value": "100nF", "footprint": "C_0402"},
             {"reference": "U1", "value": "LM7805", "footprint": "SOT-223"},
         ],
-        signal_analysis={
-            "rc_filters": [
-                {"resistor": {"ref": "R5", "ohms": 10000},
-                 "capacitor": {"ref": "C1", "farads": 1e-7},
-                 "cutoff_hz": 340.0}
-            ],
-        },
+        rc_filters=[
+            {"resistor": {"ref": "R5", "ohms": 10000},
+             "capacitor": {"ref": "C1", "farads": 1e-7},
+             "cutoff_hz": 340.0}
+        ],
     )
     result = diff_analysis.diff_schematic(base, head, threshold=1.0)
 
@@ -549,13 +558,9 @@ def _make_schematic_with_cutoff(cutoff_hz):
             {"reference": "R1", "value": "10k"},
             {"reference": "C1", "value": "100nF"},
         ],
-        "signal_analysis": {
-            "rc_filters": [
-                {"resistor": {"ref": "R1", "ohms": 10000},
-                 "capacitor": {"ref": "C1", "farads": 1e-7},
-                 "cutoff_hz": cutoff_hz}
-            ],
-        },
+        "findings": [
+            _make_rc_filter_finding("R1", 10000, "C1", 1e-7, cutoff_hz),
+        ],
     }
 
 

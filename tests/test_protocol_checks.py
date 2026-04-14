@@ -307,17 +307,15 @@ def test_usb_vbus_capacitance_pass():
 def test_ethernet_impedance_advisory_present():
     """Ethernet interface has impedance_advisory field."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for eth in sa.get("ethernet_interfaces", []):
-            if "impedance_advisory" in eth:
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_ethernet_interfaces" and "impedance_advisory" in f:
                 return True
         return False
 
     data, path = _find_output_with("schematic", check, max_scan=5000)
     if _skip_if_none(data, "Ethernet impedance_advisory"):
         return
-    sa = data["signal_analysis"]
-    for eth in sa["ethernet_interfaces"]:
+    for eth in [f for f in data["findings"] if f.get("detector") == "detect_ethernet_interfaces"]:
         if "impedance_advisory" not in eth:
             continue
         ia = eth["impedance_advisory"]
@@ -331,18 +329,17 @@ def test_ethernet_impedance_advisory_present():
 def test_ethernet_impedance_advisory_magnetics_pass():
     """Ethernet with magnetics gets pass on impedance_advisory."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for eth in sa.get("ethernet_interfaces", []):
-            ia = eth.get("impedance_advisory", {})
-            if ia.get("status") == "pass" and eth.get("magnetics"):
-                return True
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_ethernet_interfaces":
+                ia = f.get("impedance_advisory", {})
+                if ia.get("status") == "pass" and f.get("magnetics"):
+                    return True
         return False
 
     data, path = _find_output_with("schematic", check, max_scan=8000)
     if _skip_if_none(data, "Ethernet impedance_advisory pass with magnetics"):
         return
-    sa = data["signal_analysis"]
-    for eth in sa["ethernet_interfaces"]:
+    for eth in [f for f in data["findings"] if f.get("detector") == "detect_ethernet_interfaces"]:
         ia = eth.get("impedance_advisory", {})
         if ia.get("status") == "pass" and eth.get("magnetics"):
             assert len(eth["magnetics"]) > 0
@@ -356,17 +353,15 @@ def test_ethernet_impedance_advisory_magnetics_pass():
 def test_hdmi_termination_field_present():
     """HDMI/DVI interface entry has termination check field."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for h in sa.get("hdmi_dvi_interfaces", []):
-            if "termination" in h:
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_hdmi_dvi_interfaces" and "termination" in f:
                 return True
         return False
 
     data, path = _find_output_with("schematic", check, max_scan=15000)
     if _skip_if_none(data, "HDMI termination"):
         return
-    sa = data["signal_analysis"]
-    for h in sa["hdmi_dvi_interfaces"]:
+    for h in [f for f in data["findings"] if f.get("detector") == "detect_hdmi_dvi_interfaces"]:
         if "termination" not in h:
             continue
         term = h["termination"]
@@ -380,18 +375,17 @@ def test_hdmi_termination_field_present():
 def test_hdmi_termination_warning_no_resistors():
     """HDMI without termination resistors gets warning."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for h in sa.get("hdmi_dvi_interfaces", []):
-            term = h.get("termination", {})
-            if isinstance(term, dict) and term.get("status") == "warning":
-                return True
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_hdmi_dvi_interfaces":
+                term = f.get("termination", {})
+                if isinstance(term, dict) and term.get("status") == "warning":
+                    return True
         return False
 
     data, path = _find_output_with("schematic", check, max_scan=15000)
     if _skip_if_none(data, "HDMI termination warning"):
         return
-    sa = data["signal_analysis"]
-    for h in sa["hdmi_dvi_interfaces"]:
+    for h in [f for f in data["findings"] if f.get("detector") == "detect_hdmi_dvi_interfaces"]:
         term = h.get("termination", {})
         if isinstance(term, dict) and term.get("status") == "warning":
             assert "100" in term["detail"] or "termination" in term["detail"].lower(), \
@@ -404,16 +398,14 @@ def test_hdmi_termination_warning_no_resistors():
 # ===========================================================================
 
 def test_lvds_interfaces_detected():
-    """LVDS interfaces are detected in signal_analysis."""
+    """LVDS interfaces are detected in findings."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        return len(sa.get("lvds_interfaces", [])) > 0
+        return any(f.get("detector") == "detect_lvds_interfaces" for f in data.get("findings", []))
 
     data, path = _find_output_with("schematic", check, max_scan=5000)
     if _skip_if_none(data, "LVDS interfaces"):
         return
-    sa = data["signal_analysis"]
-    lvds = sa["lvds_interfaces"]
+    lvds = [f for f in data["findings"] if f.get("detector") == "detect_lvds_interfaces"]
     assert len(lvds) > 0
     entry = lvds[0]
     assert "reference" in entry, "LVDS entry must have reference"
@@ -425,17 +417,15 @@ def test_lvds_interfaces_detected():
 def test_lvds_impedance_requirement():
     """LVDS entries include impedance_required field."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for l in sa.get("lvds_interfaces", []):
-            if "impedance_required" in l:
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_lvds_interfaces" and "impedance_required" in f:
                 return True
         return False
 
     data, path = _find_output_with("schematic", check, max_scan=5000)
     if _skip_if_none(data, "LVDS impedance_required"):
         return
-    sa = data["signal_analysis"]
-    for entry in sa["lvds_interfaces"]:
+    for entry in [f for f in data["findings"] if f.get("detector") == "detect_lvds_interfaces"]:
         if "impedance_required" in entry:
             assert "100" in entry["impedance_required"], \
                 "LVDS should require 100 ohm differential impedance"

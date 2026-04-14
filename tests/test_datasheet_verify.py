@@ -421,7 +421,7 @@ def test_orchestrator_full_integration():
                  "pin_nets": {"1": "+5V"}},
             ],
             "nets": {},
-            "signal_analysis": {"rail_voltages": {}},
+            "rail_voltages": {},
         }
 
         result = datasheet_verify.run_datasheet_verification(

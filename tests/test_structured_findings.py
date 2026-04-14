@@ -20,7 +20,8 @@ def test_in_detector_correct():
     check = _check_from_structured(item, "correct")
     assert check is not None
     assert check["op"] == "contains_match"
-    assert check["path"] == "signal_analysis.voltage_dividers"
+    assert check["path"] == "findings"
+    assert check["detector_filter"] == "detect_voltage_dividers"
     assert check["field"] == "r_top.ref"
     assert "R15" in check["pattern"]
 
@@ -48,7 +49,8 @@ def test_in_detector_missed():
     check = _check_from_structured(item, "missed")
     assert check is not None
     assert check["op"] == "contains_match"
-    assert check["path"] == "signal_analysis.power_regulators"
+    assert check["path"] == "findings"
+    assert check["detector_filter"] == "detect_power_regulators"
     assert check["field"] == "ref"
     assert "U3" in check["pattern"]
 
@@ -80,7 +82,8 @@ def test_count_equals():
     check = _check_from_structured(item, "correct")
     assert check is not None
     assert check["op"] == "equals"
-    assert check["path"] == "signal_analysis.voltage_dividers"
+    assert check["path"] == "findings"
+    assert check["detector_filter"] == "detect_voltage_dividers"
     assert check["value"] == 3
 
 
@@ -94,7 +97,8 @@ def test_section_exists_correct():
     check = _check_from_structured(item, "correct")
     assert check is not None
     assert check["op"] == "exists"
-    assert check["path"] == "signal_analysis.power_regulators"
+    assert check["path"] == "findings"
+    assert check["detector_filter"] == "detect_power_regulators"
 
 
 def test_section_exists_incorrect():
@@ -152,11 +156,9 @@ def test_roundtrip_in_detector():
         "check": check,
     }
     output = {
-        "signal_analysis": {
-            "power_regulators": [
-                {"ref": "U1", "value": "LM7805"},
-            ]
-        }
+        "findings": [
+            {"detector": "detect_power_regulators", "ref": "U1", "value": "LM7805"},
+        ]
     }
     result = evaluate_assertion(assertion, output)
     assert result["passed"], f"Round-trip failed: {result}"
@@ -173,11 +175,9 @@ def test_roundtrip_not_in_detector():
     assertion = {"id": "TEST-002", "description": "R15 not divider", "check": check}
 
     output = {
-        "signal_analysis": {
-            "voltage_dividers": [
-                {"r_top": {"ref": "R15", "value": "10k"}, "r_bottom": {"ref": "R16", "value": "10k"}, "ratio": 0.5},
-            ]
-        }
+        "findings": [
+            {"detector": "detect_voltage_dividers", "r_top": {"ref": "R15", "value": "10k"}, "r_bottom": {"ref": "R16", "value": "10k"}, "ratio": 0.5},
+        ]
     }
     result = evaluate_assertion(assertion, output)
     assert not result["passed"], f"not_in_detector should fail when ref present: {result}"

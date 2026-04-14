@@ -245,13 +245,12 @@ def test_spice_manifest_zero_sims():
 def test_cross_validate_voltage_divider():
     """Matching voltage divider values should produce 'match' status."""
     schematic = {
-        "signal_analysis": {
-            "voltage_dividers": [{
-                "r_top": {"ref": "R3", "value": 10000},
-                "r_bottom": {"ref": "R4", "value": 10000},
-                "ratio": 0.5,
-            }],
-        },
+        "findings": [
+            {"detector": "detect_voltage_dividers",
+             "r_top": {"ref": "R3", "value": 10000},
+             "r_bottom": {"ref": "R4", "value": 10000},
+             "ratio": 0.5},
+        ],
     }
     spice = {
         "simulation_results": [{
@@ -269,13 +268,12 @@ def test_cross_validate_voltage_divider():
 def test_cross_validate_rc_filter():
     """Matching RC filter frequency should produce 'match'."""
     schematic = {
-        "signal_analysis": {
-            "rc_filters": [{
-                "resistor": {"ref": "R1", "value": 1000},
-                "capacitor": {"ref": "C1", "value": 1e-7},
-                "cutoff_hz": 1591.5,
-            }],
-        },
+        "findings": [
+            {"detector": "detect_rc_filters",
+             "resistor": {"ref": "R1", "value": 1000},
+             "capacitor": {"ref": "C1", "value": 1e-7},
+             "cutoff_hz": 1591.5},
+        ],
     }
     spice = {
         "simulation_results": [{
@@ -291,12 +289,11 @@ def test_cross_validate_rc_filter():
 def test_cross_validate_mismatch():
     """10% frequency mismatch should be detected."""
     schematic = {
-        "signal_analysis": {
-            "rc_filters": [{
-                "resistor": {"ref": "R1"}, "capacitor": {"ref": "C1"},
-                "cutoff_hz": 1000.0,
-            }],
-        },
+        "findings": [
+            {"detector": "detect_rc_filters",
+             "resistor": {"ref": "R1"}, "capacitor": {"ref": "C1"},
+             "cutoff_hz": 1000.0},
+        ],
     }
     spice = {
         "simulation_results": [{
@@ -313,12 +310,11 @@ def test_cross_validate_mismatch():
 def test_cross_validate_no_matching_spice():
     """Components in analyzer but not in SPICE should produce no results."""
     schematic = {
-        "signal_analysis": {
-            "voltage_dividers": [{
-                "r_top": {"ref": "R99"}, "r_bottom": {"ref": "R100"},
-                "ratio": 0.5,
-            }],
-        },
+        "findings": [
+            {"detector": "detect_voltage_dividers",
+             "r_top": {"ref": "R99"}, "r_bottom": {"ref": "R100"},
+             "ratio": 0.5},
+        ],
     }
     spice = {"simulation_results": []}
     results = cross_validate_file(schematic, spice)
@@ -330,12 +326,11 @@ def test_cross_validate_empty():
 
 def test_cross_validate_current_sense():
     schematic = {
-        "signal_analysis": {
-            "current_sense": [{
-                "shunt": {"ref": "R5", "value": 0.1},
-                "max_current_50mV_A": 0.5,
-            }],
-        },
+        "findings": [
+            {"detector": "detect_current_sense",
+             "shunt": {"ref": "R5", "value": 0.1},
+             "max_current_50mV_A": 0.5},
+        ],
     }
     spice = {
         "simulation_results": [{

@@ -377,9 +377,10 @@ def test_crossval_layer_count_mismatch():
 
 def test_crossval_crystal_frequencies():
     emc = {"board_info": {"crystal_frequencies_hz": [8e6, 32768]}, "findings": []}
-    sch = {"signal_analysis": {"crystal_circuits": [
-        {"frequency": 8e6}, {"frequency": 32768}
-    ]}, "statistics": {}}
+    sch = {"findings": [
+        {"detector": "detect_crystal_circuits", "frequency": 8e6},
+        {"detector": "detect_crystal_circuits", "frequency": 32768},
+    ], "statistics": {}}
     results = cross_validate_file(sch, None, emc)
     xtal_r = [r for r in results if r["check"] == "crystal_frequencies"]
     assert len(xtal_r) == 1
@@ -387,7 +388,7 @@ def test_crossval_crystal_frequencies():
 
 def test_crossval_component_count():
     emc = {"board_info": {"total_components": 42}, "findings": []}
-    sch = {"statistics": {"total_components": 42}, "signal_analysis": {}}
+    sch = {"statistics": {"total_components": 42}, "findings": []}
     results = cross_validate_file(sch, None, emc)
     comp_r = [r for r in results if r["check"] == "component_count"]
     assert len(comp_r) == 1
@@ -421,8 +422,10 @@ def test_crossval_test_plan_bands():
                {"band": "30-88MHz", "source_count": 2, "sources": ["U1", "Y1"]},
                {"band": "88-216MHz", "source_count": 0, "sources": []},
            ]}}
-    sch = {"signal_analysis": {"crystal_circuits": [{"reference": "Y1", "frequency": 8e6}],
-                               "power_regulators": [{"ref": "U1", "topology": "buck"}]},
+    sch = {"findings": [
+               {"detector": "detect_crystal_circuits", "reference": "Y1", "frequency": 8e6},
+               {"detector": "detect_power_regulators", "ref": "U1", "topology": "buck"},
+           ],
            "statistics": {}}
     results = cross_validate_file(sch, None, emc)
     tp_r = [r for r in results if r["check"] == "test_plan_frequency_bands"]

@@ -37,23 +37,28 @@ def _make_footprints(*refs_and_positions):
             for ref, x, y in refs_and_positions]
 
 
-def _make_schematic(regulators):
-    """Build minimal schematic_data dict."""
-    return {"signal_analysis": {"power_regulators": regulators}}
-
-
 def _make_regulator(ref="U1", topology="switching", inductor="L1",
                     input_caps=None, value="TPS54331"):
-    """Build a single regulator dict matching schematic output format."""
+    """Build a single regulator finding matching schematic findings[] format."""
     if input_caps is None:
         input_caps = [{"ref": "C1"}]
     return {
+        "detector": "detect_power_regulators",
         "ref": ref,
         "topology": topology,
         "inductor": inductor,
         "input_capacitors": input_caps,
         "value": value,
+        "rule_id": "PR-DET", "severity": "info", "confidence": "deterministic",
+        "evidence_source": "topology", "summary": "", "description": "",
+        "components": [ref], "nets": [], "pins": [],
+        "recommendation": "", "report_context": {},
     }
+
+
+def _make_schematic(regulators):
+    """Build minimal schematic_data dict with findings[] format."""
+    return {"findings": regulators}
 
 
 # ---------------------------------------------------------------------------
@@ -143,7 +148,7 @@ def test_no_schematic_data():
     """Empty schematic_data → empty result."""
     footprints = _make_footprints(("U1", 5.0, 5.0))
     assert _compute_switching_loop_areas(footprints, {}) == []
-    assert _compute_switching_loop_areas(footprints, {"signal_analysis": {}}) == []
+    assert _compute_switching_loop_areas(footprints, {"findings": []}) == []
     print("  PASS  test_no_schematic_data")
 
 

@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "validate"))
 from validate_outputs import (
     ValidationContext, validate_structural, validate_components,
-    validate_nets, validate_signal_analysis, validate_design_analysis,
+    validate_nets, validate_findings, validate_design_analysis,
     validate_new_sections, validate_design_intent,
 )
 
@@ -25,7 +25,7 @@ def _minimal_modern():
         "no_connects": [],
         "bom": [{"references": ["R1"], "quantity": 1}],
         "statistics": {"total_components": 1, "total_nets": 1},
-        "signal_analysis": {},
+        "findings": [],
         "design_analysis": {},
         "annotation_issues": {},
         "label_shape_warnings": {},
@@ -56,21 +56,21 @@ def test_structural_missing_required_key():
     assert "missing_key" in ctx.anomalies
     assert any("bom" in d for _, d in ctx.anomalies["missing_key"])
 
-def test_structural_missing_signal_analysis():
+def test_structural_missing_findings():
     ctx = ValidationContext()
     data = _minimal_modern()
-    del data["signal_analysis"]
+    del data["findings"]
     validate_structural(ctx, "test.kicad_sch", data, is_modern=True)
-    assert "missing_signal_analysis" in ctx.anomalies
+    assert "missing_findings" in ctx.anomalies
 
-def test_structural_legacy_no_signal_analysis_ok():
-    """Legacy files don't require signal_analysis."""
+def test_structural_legacy_no_findings_ok():
+    """Legacy files don't require findings."""
     ctx = ValidationContext()
     data = _minimal_modern()
-    del data["signal_analysis"]
+    del data["findings"]
     del data["design_analysis"]
     validate_structural(ctx, "test.sch", data, is_modern=False)
-    assert "missing_signal_analysis" not in ctx.anomalies
+    assert "missing_findings" not in ctx.anomalies
 
 def test_structural_zero_components():
     ctx = ValidationContext()
@@ -160,29 +160,29 @@ def test_nets_list_format():
     assert "high_comp_net_ratio" not in ctx.anomalies
 
 
-# === validate_signal_analysis ===
+# === validate_findings ===
 
 def test_signal_normal():
     ctx = ValidationContext()
-    data = {"signal_analysis": {"voltage_dividers": [{"ratio": 0.5}] * 10}}
-    validate_signal_analysis(ctx, "test", data)
+    data = {"findings": [{"detector": "detect_voltage_dividers", "ratio": 0.5}] * 10}
+    validate_findings(ctx, "test", data)
     assert "signal_explosion" not in ctx.anomalies
 
 def test_signal_explosion():
     ctx = ValidationContext()
-    data = {"signal_analysis": {"voltage_dividers": [{"ratio": 0.5}] * 250}}
-    validate_signal_analysis(ctx, "test", data)
+    data = {"findings": [{"detector": "detect_voltage_dividers", "ratio": 0.5}] * 250}
+    validate_findings(ctx, "test", data)
     assert "signal_explosion" in ctx.anomalies
 
 def test_signal_missing():
     ctx = ValidationContext()
-    validate_signal_analysis(ctx, "test", {})
+    validate_findings(ctx, "test", {})
     assert "signal_explosion" not in ctx.anomalies
 
 def test_signal_decoupling_explosion():
     ctx = ValidationContext()
-    data = {"signal_analysis": {"decoupling_analysis": {"ics_analyzed": 300}}}
-    validate_signal_analysis(ctx, "test", data)
+    data = {"findings": [{"detector": "detect_decoupling_analysis"}] * 300}
+    validate_findings(ctx, "test", data)
     assert "decoupling_explosion" in ctx.anomalies
 
 

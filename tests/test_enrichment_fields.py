@@ -202,18 +202,18 @@ def test_bus_controller_field():
 def test_switching_regulator_power_dissipation():
     """Switching regulators have power_dissipation with efficiency and topology."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for reg in sa.get("power_regulators", []):
-            pd = reg.get("power_dissipation", {})
-            if pd.get("topology") == "switching":
-                return True
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_power_regulators":
+                pd = f.get("power_dissipation", {})
+                if pd.get("topology") == "switching":
+                    return True
         return False
 
     data, path = _find_output_with("schematic", check)
     if _skip_if_none(data, path, "switching regulator with power_dissipation"):
         return
-    sa = data["signal_analysis"]
-    reg = next(r for r in sa["power_regulators"]
+    regs = [f for f in data["findings"] if f.get("detector") == "detect_power_regulators"]
+    reg = next(r for r in regs
                if r.get("power_dissipation", {}).get("topology") == "switching")
     pd = reg["power_dissipation"]
     assert "efficiency_assumed" in pd, "must have efficiency_assumed"
@@ -230,18 +230,18 @@ def test_switching_regulator_power_dissipation():
 def test_ldo_regulator_power_dissipation():
     """LDO regulators have power_dissipation with dropout_V."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for reg in sa.get("power_regulators", []):
-            pd = reg.get("power_dissipation", {})
-            if "dropout_V" in pd:
-                return True
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_power_regulators":
+                pd = f.get("power_dissipation", {})
+                if "dropout_V" in pd:
+                    return True
         return False
 
     data, path = _find_output_with("schematic", check)
     if _skip_if_none(data, path, "LDO regulator with power_dissipation"):
         return
-    sa = data["signal_analysis"]
-    reg = next(r for r in sa["power_regulators"]
+    regs = [f for f in data["findings"] if f.get("detector") == "detect_power_regulators"]
+    reg = next(r for r in regs
                if "dropout_V" in r.get("power_dissipation", {}))
     pd = reg["power_dissipation"]
     assert "vin_estimated_V" in pd, "must have vin_estimated_V"
@@ -260,17 +260,16 @@ def test_ldo_regulator_power_dissipation():
 def test_crystal_target_load_pF():
     """Crystal circuits have target_load_pF field."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for x in sa.get("crystal_circuits", []):
-            if "target_load_pF" in x:
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_crystal_circuits" and "target_load_pF" in f:
                 return True
         return False
 
     data, path = _find_output_with("schematic", check)
     if _skip_if_none(data, path, "crystal circuit with target_load_pF"):
         return
-    sa = data["signal_analysis"]
-    xtal = next(x for x in sa["crystal_circuits"] if "target_load_pF" in x)
+    xtals = [f for f in data["findings"] if f.get("detector") == "detect_crystal_circuits"]
+    xtal = next(x for x in xtals if "target_load_pF" in x)
     tl = xtal["target_load_pF"]
     # target_load_pF can be None if no target could be determined
     if tl is not None:
@@ -281,21 +280,21 @@ def test_crystal_target_load_pF():
 def test_crystal_load_cap_validation():
     """Crystal circuits with effective_load_pF have error_pct and status."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for x in sa.get("crystal_circuits", []):
-            if "load_cap_status" in x and "load_cap_error_pct" in x:
-                return True
+        for f in data.get("findings", []):
+            if f.get("detector") == "detect_crystal_circuits":
+                if "load_cap_status" in f and "load_cap_error_pct" in f:
+                    return True
         return False
 
     data, path = _find_output_with("schematic", check)
     if _skip_if_none(data, path, "crystal circuit with load_cap_status"):
         return
-    sa = data["signal_analysis"]
-    xtal = next(x for x in sa["crystal_circuits"]
+    xtals = [f for f in data["findings"] if f.get("detector") == "detect_crystal_circuits"]
+    xtal = next(x for x in xtals
                 if "load_cap_status" in x and "load_cap_error_pct" in x)
     assert isinstance(xtal["load_cap_error_pct"], (int, float)), \
         "load_cap_error_pct must be numeric"
-    assert xtal["load_cap_status"] in ("ok", "marginal", "out_of_spec"), \
+    assert xtal["load_cap_status"] in ("ok", "marginal", "out_of_spec", "unverified"), \
         f"unexpected load_cap_status: {xtal['load_cap_status']}"
     # If status is ok, error should be within 10%
     if xtal["load_cap_status"] == "ok":
@@ -309,17 +308,17 @@ def test_crystal_load_cap_validation():
 def test_esd_device_details_exist():
     """ESD coverage audit entries have esd_device_details list."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for e in sa.get("esd_coverage_audit", []):
-            if "esd_device_details" in e and e["esd_device_details"]:
-                return True
+        for f in data.get("findings", []):
+            if f.get("detector") == "audit_esd_protection":
+                if "esd_device_details" in f and f["esd_device_details"]:
+                    return True
         return False
 
     data, path = _find_output_with("schematic", check)
     if _skip_if_none(data, path, "ESD coverage with device details"):
         return
-    sa = data["signal_analysis"]
-    entry = next(e for e in sa["esd_coverage_audit"]
+    esd_findings = [f for f in data["findings"] if f.get("detector") == "audit_esd_protection"]
+    entry = next(e for e in esd_findings
                  if e.get("esd_device_details"))
     details = entry["esd_device_details"]
     assert isinstance(details, list), "esd_device_details must be a list"
@@ -329,17 +328,17 @@ def test_esd_device_details_exist():
 def test_esd_device_detail_structure():
     """Each esd_device_details entry has ref, value, lib_id keys."""
     def check(data):
-        sa = data.get("signal_analysis", {})
-        for e in sa.get("esd_coverage_audit", []):
-            if "esd_device_details" in e and e["esd_device_details"]:
-                return True
+        for f in data.get("findings", []):
+            if f.get("detector") == "audit_esd_protection":
+                if "esd_device_details" in f and f["esd_device_details"]:
+                    return True
         return False
 
     data, path = _find_output_with("schematic", check)
     if _skip_if_none(data, path, "ESD coverage with device details"):
         return
-    sa = data["signal_analysis"]
-    entry = next(e for e in sa["esd_coverage_audit"]
+    esd_findings = [f for f in data["findings"] if f.get("detector") == "audit_esd_protection"]
+    entry = next(e for e in esd_findings
                  if e.get("esd_device_details"))
     for detail in entry["esd_device_details"]:
         assert isinstance(detail, dict), "each detail must be a dict"
@@ -426,11 +425,12 @@ def test_emc_category_summary_structure():
         assert cat_info["count"] > 0, \
             f"count must be > 0 for present category {cat_name}"
 
-    # Verify sum of all category counts equals total findings
+    # Verify sum of all category counts equals summary.total_findings
+    # (findings list may be shorter due to deduplication/merging)
     total_from_cats = sum(info["count"] for info in cs.values())
-    findings_count = len(data.get("findings", []))
-    assert total_from_cats == findings_count, \
-        f"category count sum ({total_from_cats}) != findings count ({findings_count})"
+    total_findings = data.get("summary", {}).get("total_findings", 0)
+    assert total_from_cats == total_findings, \
+        f"category count sum ({total_from_cats}) != summary.total_findings ({total_findings})"
 
 
 # ---------------------------------------------------------------------------

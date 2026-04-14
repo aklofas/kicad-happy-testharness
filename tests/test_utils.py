@@ -2,10 +2,12 @@
 
 TIER = "unit"
 
+import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import utils
 from utils import project_prefix, resolve_path
 
 
@@ -79,8 +81,8 @@ def test_resolve_bracket_out_of_range():
     assert resolve_path(data, "items[5].name") is None
 
 def test_resolve_bracket_nested():
-    data = {"signal_analysis": {"crystal_circuits": [{"frequency": 8000000}]}}
-    assert resolve_path(data, "signal_analysis.crystal_circuits[0].frequency") == 8000000
+    data = {"findings": [{"detector": "detect_crystal_circuits", "frequency": 8000000}]}
+    assert resolve_path(data, "findings[0].frequency") == 8000000
 
 def test_resolve_bracket_missing_key():
     data = {"items": [{"name": "a"}]}
@@ -89,6 +91,46 @@ def test_resolve_bracket_missing_key():
 def test_resolve_bracket_not_list():
     data = {"items": "not a list"}
     assert resolve_path(data, "items[0]") is None
+
+
+# === discover_projects ===
+
+def test_discover_projects_multi_pro_same_dir():
+    """Multiple .kicad_pro files in one directory → separate projects."""
+    import tempfile, shutil
+    tmp = tempfile.mkdtemp()
+    try:
+        # Create a fake repo with 3 .kicad_pro files in one dir
+        kicad_dir = os.path.join(tmp, "KiCAD")
+        os.makedirs(kicad_dir)
+        for name in ["Alpha", "Beta", "Gamma"]:
+            with open(os.path.join(kicad_dir, f"{name}.kicad_pro"), "w") as f:
+                f.write("{}")
+
+        # Monkey-patch REPOS_DIR to point at parent of our fake repo
+        old_repos = utils.REPOS_DIR
+        utils.REPOS_DIR = Path(tmp).parent
+        # Clear the LRU cache so discover_projects re-scans
+        utils.discover_projects.cache_clear()
+        try:
+            repo_name = Path(tmp).name
+            projects = utils.discover_projects(repo_name)
+            names = sorted(p["name"] for p in projects)
+            # Each .kicad_pro should be its own project
+            assert len(projects) == 3, f"Expected 3 projects, got {names}"
+            # All names should be unique
+            assert len(set(names)) == 3, f"Duplicate names: {names}"
+            # All should share the same path
+            paths = [p["path"] for p in projects]
+            assert all(p == "KiCAD" for p in paths), f"Expected all paths='KiCAD', got {paths}"
+            # Stems should be the .kicad_pro basenames
+            stems = sorted(p["stem"] for p in projects)
+            assert stems == ["Alpha", "Beta", "Gamma"], f"Got stems: {stems}"
+        finally:
+            utils.REPOS_DIR = old_repos
+            utils.discover_projects.cache_clear()
+    finally:
+        shutil.rmtree(tmp)
 
 
 # === Runner ===

@@ -63,7 +63,7 @@ def test_kh276_zero_ohm_rc_not_detected():
     data = run_analyzer(sch)
     if data is None:
         return  # skip if kicad-happy not available
-    rc = data.get("signal_analysis", {}).get("rc_filters", [])
+    rc = [f for f in data.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     # Bug: zero-ohm R produced cutoff_hz=0. Fix: excluded from detection.
     for f in rc:
         assert f.get("cutoff_hz", 0) != 0, \
@@ -116,7 +116,7 @@ def test_kh236_lm7805_vout():
     data = run_analyzer(sch)
     if data is None:
         return
-    regs = data.get("signal_analysis", {}).get("power_regulators", [])
+    regs = [f for f in data.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     u1 = [r for r in regs if r.get("ref") == "U1"]
     assert len(u1) >= 1, f"U1 not found in power_regulators: {regs}"
     vout = u1[0].get("estimated_vout")
@@ -149,7 +149,7 @@ def test_kh236b_tps7a4901_vref():
     data = run_analyzer(sch)
     if data is None:
         return
-    regs = data.get("signal_analysis", {}).get("power_regulators", [])
+    regs = [f for f in data.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     u1 = [r for r in regs if r.get("ref") == "U1"]
     if not u1:
         return  # detector may not fire without FB divider — acceptable skip
@@ -185,7 +185,7 @@ def test_kh237_tps54302_freq():
     data = run_analyzer(sch)
     if data is None:
         return
-    regs = data.get("signal_analysis", {}).get("power_regulators", [])
+    regs = [f for f in data.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     u1 = [r for r in regs if r.get("ref") == "U1"]
     assert len(u1) >= 1, f"U1 not found in power_regulators"
     freq = u1[0].get("switching_frequency_hz")
@@ -218,7 +218,7 @@ def test_kh237b_tps62203_freq():
     data = run_analyzer(sch)
     if data is None:
         return
-    regs = data.get("signal_analysis", {}).get("power_regulators", [])
+    regs = [f for f in data.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     u1 = [r for r in regs if r.get("ref") == "U1"]
     assert len(u1) >= 1, f"U1 not found in power_regulators"
     freq = u1[0].get("switching_frequency_hz")
@@ -245,7 +245,7 @@ def test_kh240_batt_minus_is_ground():
     data = run_analyzer(sch)
     if data is None:
         return
-    vd = data.get("signal_analysis", {}).get("voltage_dividers", [])
+    vd = [f for f in data.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
     # Bug: BATT- not classified as ground → divider not detected.
     # Fix: battery-negative patterns recognized as ground.
     assert len(vd) >= 1, \
@@ -294,7 +294,7 @@ def test_kh238_feedback_divider_detected():
     data = run_analyzer(sch)
     if data is None:
         return
-    regs = data.get("signal_analysis", {}).get("power_regulators", [])
+    regs = [f for f in data.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     u1 = [r for r in regs if r.get("ref") == "U1"]
     assert len(u1) >= 1, f"U1 not found in power_regulators"
     fb = u1[0].get("feedback_divider")
@@ -337,7 +337,7 @@ def test_kh247_no_fabricated_package():
     data = run_analyzer(sch)
     if data is None:
         return
-    regs = data.get("signal_analysis", {}).get("power_regulators", [])
+    regs = [f for f in data.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     u1 = [r for r in regs if r.get("ref") == "U1"]
     if not u1:
         return  # detector may not fire — acceptable skip
@@ -372,7 +372,14 @@ def test_kh239_led_series_r_not_pullup():
     if data is None:
         return
     # Check that R1 is NOT listed as a pull_up in sleep current analysis
-    sleep = data.get("signal_analysis", {}).get("sleep_current_analysis", {})
+    # sleep_current_analysis is a nested section under design_analysis (not findings)
+    design = data.get("design_analysis", {})
+    # Check design_analysis first, then fall back to findings
+    sleep = design.get("sleep_current_analysis", {})
+    if not sleep:
+        sleep_findings = [f for f in data.get("findings", [])
+                         if f.get("detector") == "detect_sleep_current_analysis"]
+        sleep = sleep_findings[0] if sleep_findings else {}
     pullups = sleep.get("pullup_resistors", sleep.get("pull_up_resistors", []))
     if isinstance(pullups, list):
         pullup_refs = [p.get("ref", p.get("reference", "")) for p in pullups]
@@ -404,7 +411,7 @@ def test_kh276_valid_rc_still_detected():
     data = run_analyzer(sch)
     if data is None:
         return
-    rc = data.get("signal_analysis", {}).get("rc_filters", [])
+    rc = [f for f in data.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     # Guard: valid RC filter must still be detected after KH-276 fix.
     assert len(rc) >= 1, f"Guard failed: valid RC filter not detected"
     assert rc[0]["cutoff_hz"] > 0, f"Guard: cutoff_hz should be > 0"

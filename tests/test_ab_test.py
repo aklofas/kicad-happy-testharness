@@ -58,7 +58,10 @@ def _make_schematic_output(n_components=5, n_nets=3, signal_counts=None):
         for i in range(n_components)
     ]
     sc = signal_counts or {}
-    sa = {k: [{"ref": "R1"}] * v for k, v in sc.items()}
+    findings = []
+    for k, v in sc.items():
+        for _ in range(v):
+            findings.append({"detector": f"detect_{k}", "ref": "R1"})
     return {
         "file": "test.kicad_sch",
         "components": components,
@@ -73,7 +76,7 @@ def _make_schematic_output(n_components=5, n_nets=3, signal_counts=None):
             "total_labels": 0,
             "total_power_symbols": 0,
         },
-        "signal_analysis": sa,
+        "findings": findings,
         "design_analysis": {},
     }
 
@@ -113,10 +116,10 @@ def test_compare_signal_count_change_detected():
 
 def test_compare_new_section_detected():
     base = {"sections": ["components", "nets"]}
-    curr = {"sections": ["components", "nets", "signal_analysis"]}
+    curr = {"sections": ["components", "nets", "findings"]}
     result = _compare_manifest_entries(base, curr)
     assert "sections" in result
-    assert "signal_analysis" in result["sections"]["new"]
+    assert "findings" in result["sections"]["new"]
     assert result["sections"]["lost"] == []
 
 
@@ -238,7 +241,7 @@ def test_compare_project_signal_count_change():
     assert "schematic" in result
     r = result["schematic"]
     assert r["changed"] == 1
-    assert "signal_analysis.voltage_dividers" in r["field_hits"], \
+    assert "findings.detect_voltage_dividers" in r["field_hits"], \
         f"Expected signal field in hits, got {r['field_hits']}"
 
 

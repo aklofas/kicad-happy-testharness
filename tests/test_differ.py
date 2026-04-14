@@ -15,15 +15,19 @@ from _differ import extract_manifest_entry
 def test_schematic_basic():
     data = {
         "statistics": {"total_components": 50, "total_nets": 30, "total_labels": 5, "total_power_symbols": 3},
-        "signal_analysis": {"rc_filters": [1, 2], "voltage_dividers": [1]},
+        "findings": [
+            {"detector": "detect_rc_filters", "x": 1},
+            {"detector": "detect_rc_filters", "x": 2},
+            {"detector": "detect_voltage_dividers", "x": 1},
+        ],
         "design_analysis": {},
         "bom": [{"ref": "R1"}, {"ref": "R2"}],
     }
     entry = extract_manifest_entry(data, "schematic")
     assert entry["total_components"] == 50
     assert entry["total_nets"] == 30
-    assert entry["signal_counts"]["rc_filters"] == 2
-    assert entry["signal_counts"]["voltage_dividers"] == 1
+    assert entry["signal_counts"]["detect_rc_filters"] == 2
+    assert entry["signal_counts"]["detect_voltage_dividers"] == 1
     assert entry["bom_lines"] == 2
 
 def test_schematic_empty():
@@ -31,10 +35,15 @@ def test_schematic_empty():
     assert entry["total_components"] == 0
     assert entry["signal_counts"] == {}
 
-def test_schematic_signal_dict():
-    data = {"signal_analysis": {"bus_topology": {"spi": {}, "i2c": {}}}, "statistics": {}}
+def test_schematic_signal_multiple_detectors():
+    data = {"findings": [
+        {"detector": "detect_spi_buses", "bus": "spi"},
+        {"detector": "detect_spi_buses", "bus": "spi2"},
+        {"detector": "detect_i2c_buses", "bus": "i2c"},
+    ], "statistics": {}}
     entry = extract_manifest_entry(data, "schematic")
-    assert entry["signal_counts"]["bus_topology"] == 2
+    assert entry["signal_counts"]["detect_spi_buses"] == 2
+    assert entry["signal_counts"]["detect_i2c_buses"] == 1
 
 
 # === extract_manifest_entry: pcb ===

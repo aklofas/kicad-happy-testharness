@@ -11,8 +11,25 @@ from validate_spice import cross_validate_file
 
 
 def _make_sch(detectors):
-    """Build minimal schematic JSON with signal_analysis detectors."""
-    return {"signal_analysis": detectors}
+    """Build minimal schematic JSON with findings detectors."""
+    findings = []
+    _DETECTOR_MAP = {
+        "voltage_dividers": "detect_voltage_dividers",
+        "rc_filters": "detect_rc_filters",
+        "lc_filters": "detect_lc_filters",
+        "current_sense": "detect_current_sense",
+        "feedback_networks": "validate_feedback_stability",
+        "opamp_circuits": "detect_opamp_circuits",
+        "power_regulators": "detect_power_regulators",
+    }
+    for key, items in detectors.items():
+        det_name = _DETECTOR_MAP.get(key, f"detect_{key}")
+        if isinstance(items, list):
+            for item in items:
+                entry = dict(item)
+                entry["detector"] = det_name
+                findings.append(entry)
+    return {"findings": findings}
 
 
 def _make_spice(results):
@@ -394,7 +411,7 @@ def test_all_seven_types():
 
 # === edge cases ===
 
-def test_empty_signal_analysis():
+def test_empty_findings():
     results = cross_validate_file({}, _make_spice([]))
     assert results == []
 

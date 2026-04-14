@@ -26,12 +26,12 @@ def _clean_output():
             "total_components": 3,
             "component_types": {"resistor": 2, "capacitor": 1},
         },
-        "signal_analysis": {
-            "voltage_dividers": [{"ratio": 0.5}],
-            "rc_filters": [{"cutoff_hz": 159.15}],
-            "lc_filters": [{"resonant_hz": 7234.32}],
-            "crystal_circuits": [{"effective_load_pF": 14.0}],
-        },
+        "findings": [
+            {"detector": "detect_voltage_dividers", "ratio": 0.5},
+            {"detector": "detect_rc_filters", "cutoff_hz": 159.15},
+            {"detector": "detect_lc_filters", "resonant_hz": 7234.32},
+            {"detector": "detect_crystal_circuits", "effective_load_pF": 14.0},
+        ],
         "annotation_issues": {"duplicate_references": []},
     }
 
@@ -46,7 +46,8 @@ def test_clean_output_no_violations():
 # 2. Divider ratio > 1 -> violation
 def test_divider_ratio_above_one():
     data = _clean_output()
-    data["signal_analysis"]["voltage_dividers"] = [{"ratio": 1.5}]
+    data["findings"] = [f for f in data["findings"] if f.get("detector") != "detect_voltage_dividers"]
+    data["findings"].append({"detector": "detect_voltage_dividers", "ratio": 1.5})
     violations = check_invariants(data, "test.json")
     assert len(violations) == 1
     assert "ratio=1.5 >= 1" in violations[0][1]
@@ -55,7 +56,8 @@ def test_divider_ratio_above_one():
 # 3. Divider ratio = 0 -> violation
 def test_divider_ratio_zero():
     data = _clean_output()
-    data["signal_analysis"]["voltage_dividers"] = [{"ratio": 0}]
+    data["findings"] = [f for f in data["findings"] if f.get("detector") != "detect_voltage_dividers"]
+    data["findings"].append({"detector": "detect_voltage_dividers", "ratio": 0})
     violations = check_invariants(data, "test.json")
     assert len(violations) == 1
     assert "ratio=0 <= 0" in violations[0][1]
@@ -64,7 +66,8 @@ def test_divider_ratio_zero():
 # 4. Divider ratio negative -> violation
 def test_divider_ratio_negative():
     data = _clean_output()
-    data["signal_analysis"]["voltage_dividers"] = [{"ratio": -0.3}]
+    data["findings"] = [f for f in data["findings"] if f.get("detector") != "detect_voltage_dividers"]
+    data["findings"].append({"detector": "detect_voltage_dividers", "ratio": -0.3})
     violations = check_invariants(data, "test.json")
     assert len(violations) == 1
     assert "ratio=-0.3 <= 0" in violations[0][1]
@@ -73,7 +76,8 @@ def test_divider_ratio_negative():
 # 5. RC filter negative cutoff -> violation
 def test_rc_filter_negative_cutoff():
     data = _clean_output()
-    data["signal_analysis"]["rc_filters"] = [{"cutoff_hz": -100}]
+    data["findings"] = [f for f in data["findings"] if f.get("detector") != "detect_rc_filters"]
+    data["findings"].append({"detector": "detect_rc_filters", "cutoff_hz": -100})
     violations = check_invariants(data, "test.json")
     assert len(violations) == 1
     assert "cutoff_hz=-100 <= 0" in violations[0][1]
@@ -82,7 +86,8 @@ def test_rc_filter_negative_cutoff():
 # 6. LC filter zero resonance -> violation
 def test_lc_filter_zero_resonance():
     data = _clean_output()
-    data["signal_analysis"]["lc_filters"] = [{"resonant_hz": 0}]
+    data["findings"] = [f for f in data["findings"] if f.get("detector") != "detect_lc_filters"]
+    data["findings"].append({"detector": "detect_lc_filters", "resonant_hz": 0})
     violations = check_invariants(data, "test.json")
     assert len(violations) == 1
     assert "resonant_hz=0 <= 0" in violations[0][1]
@@ -91,7 +96,8 @@ def test_lc_filter_zero_resonance():
 # 7. Crystal negative load -> violation
 def test_crystal_negative_load():
     data = _clean_output()
-    data["signal_analysis"]["crystal_circuits"] = [{"effective_load_pF": -5.0}]
+    data["findings"] = [f for f in data["findings"] if f.get("detector") != "detect_crystal_circuits"]
+    data["findings"].append({"detector": "detect_crystal_circuits", "effective_load_pF": -5.0})
     violations = check_invariants(data, "test.json")
     assert len(violations) == 1
     assert "effective_load_pF=-5.0 <= 0" in violations[0][1]
@@ -139,12 +145,12 @@ def test_duplicate_refs_ignored_when_known():
 # 11. Null values skipped gracefully
 def test_null_values_skipped():
     data = _clean_output()
-    data["signal_analysis"] = {
-        "voltage_dividers": [{"ratio": None}],
-        "rc_filters": [{"cutoff_hz": None}],
-        "lc_filters": [{"resonant_hz": None}],
-        "crystal_circuits": [{"effective_load_pF": None}],
-    }
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": None},
+        {"detector": "detect_rc_filters", "cutoff_hz": None},
+        {"detector": "detect_lc_filters", "resonant_hz": None},
+        {"detector": "detect_crystal_circuits", "effective_load_pF": None},
+    ]
     violations = check_invariants(data, "test.json")
     assert violations == [], f"Expected no violations for null values, got: {violations}"
 
@@ -165,24 +171,24 @@ def test_total_components_gte_list():
     assert not any("len(components)" in v[1] for v in violations)
 
 
-# 14. Net in signal_analysis not in nets -> violation
+# 14. Net in findings not in nets -> violation
 def test_signal_net_not_in_nets():
     data = _clean_output()
     data["nets"] = {"GND": {"name": "GND", "pins": []}, "VCC": {"name": "VCC", "pins": []}}
-    data["signal_analysis"]["voltage_dividers"] = [
-        {"ratio": 0.5, "top_net": "VCC", "mid_net": "MISSING_NET", "bottom_net": "GND"}
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "top_net": "VCC", "mid_net": "MISSING_NET", "bottom_net": "GND"}
     ]
     violations = check_invariants(data, "test.json")
     assert any("MISSING_NET" in v[1] and "not in nets" in v[1] for v in violations)
 
 
-# 15. All signal_analysis nets present -> no violation
+# 15. All findings nets present -> no violation
 def test_signal_nets_all_present():
     data = _clean_output()
     data["nets"] = {"GND": {"name": "GND", "pins": []}, "VCC": {"name": "VCC", "pins": []},
                     "MID": {"name": "MID", "pins": []}}
-    data["signal_analysis"]["voltage_dividers"] = [
-        {"ratio": 0.5, "top_net": "VCC", "mid_net": "MID", "bottom_net": "GND"}
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "top_net": "VCC", "mid_net": "MID", "bottom_net": "GND"}
     ]
     violations = check_invariants(data, "test.json")
     assert not any("not in nets" in v[1] for v in violations)
@@ -192,8 +198,8 @@ def test_signal_nets_all_present():
 def test_empty_nets_skips_cross_check():
     data = _clean_output()
     data["nets"] = {}
-    data["signal_analysis"]["voltage_dividers"] = [
-        {"ratio": 0.5, "top_net": "VCC", "mid_net": "MID", "bottom_net": "GND"}
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "top_net": "VCC", "mid_net": "MID", "bottom_net": "GND"}
     ]
     violations = check_invariants(data, "test.json")
     assert not any("not in nets" in v[1] for v in violations)
@@ -223,8 +229,10 @@ def test_corpus_spot_check():
                     data = json.load(f)
             except (json.JSONDecodeError, OSError):
                 continue
-            sa = data.get("signal_analysis", {})
-            if sa.get("voltage_dividers") or sa.get("rc_filters"):
+            findings = data.get("findings", [])
+            has_vd = any(f.get("detector") == "detect_voltage_dividers" for f in findings)
+            has_rc = any(f.get("detector") == "detect_rc_filters" for f in findings)
+            if has_vd or has_rc:
                 violations = check_invariants(data, str(sub))
                 checked += 1
                 if not violations:
