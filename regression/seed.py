@@ -38,27 +38,27 @@ from utils import (
 # Quality checks: detector field → (field_path, description, regex matching BAD values).
 # Each generates a not_contains_match assertion: "no item should have this bad value".
 _QUALITY_CHECKS = {
-    "voltage_dividers": ("ratio", "non-zero ratio", r"^(0(\.0+)?|None|)$"),
-    "rc_filters": ("cutoff_hz", "non-zero cutoff_hz", r"^(0(\.0+)?|None|)$"),
-    "lc_filters": ("resonant_hz", "non-zero resonant_hz", r"^(0(\.0+)?|None|)$"),
-    "current_sense": ("shunt.ref", "shunt ref present", r"^(None|)$"),
-    "power_regulators": ("ref", "ref present", r"^(None|\?|)$"),
-    "crystal_circuits": ("reference", "reference present", r"^(None|\?|)$"),
-    "opamp_circuits": ("reference", "reference present", r"^(None|\?|)$"),
-    "transistor_circuits": ("reference", "reference present", r"^(None|\?|)$"),
-    "feedback_networks": ("r_top.ref", "r_top ref present", r"^(None|)$"),
+    "detect_voltage_dividers": ("ratio", "non-zero ratio", r"^(0(\.0+)?|None|)$"),
+    "detect_rc_filters": ("cutoff_hz", "non-zero cutoff_hz", r"^(0(\.0+)?|None|)$"),
+    "detect_lc_filters": ("resonant_hz", "non-zero resonant_hz", r"^(0(\.0+)?|None|)$"),
+    "detect_current_sense": ("shunt.ref", "shunt ref present", r"^(None|)$"),
+    "detect_power_regulators": ("ref", "ref present", r"^(None|\?|)$"),
+    "detect_crystal_circuits": ("reference", "reference present", r"^(None|\?|)$"),
+    "detect_opamp_circuits": ("reference", "reference present", r"^(None|\?|)$"),
+    "detect_transistor_circuits": ("reference", "reference present", r"^(None|\?|)$"),
+    "validate_feedback_stability": ("r_top.ref", "r_top ref present", r"^(None|)$"),
 }
 
 # Known detectors loaded dynamically from schema inventory.
 # Fallback used only if schema_inventory.json doesn't exist.
 _FALLBACK_DETECTORS = [
-    "addressable_led_chains", "bms_systems", "bridge_circuits",
-    "buzzer_speaker_circuits", "crystal_circuits", "current_sense",
-    "ethernet_interfaces", "feedback_networks", "hdmi_dvi_interfaces",
-    "isolation_barriers", "key_matrices", "lc_filters", "memory_interfaces",
-    "opamp_circuits", "power_regulators", "protection_devices", "rc_filters",
-    "rf_chains", "rf_matching", "snubbers", "transistor_circuits",
-    "voltage_dividers",
+    "detect_addressable_leds", "detect_bms_systems", "detect_bridge_circuits",
+    "detect_buzzer_speakers", "detect_crystal_circuits", "detect_current_sense",
+    "detect_ethernet_interfaces", "validate_feedback_stability", "detect_hdmi_dvi_interfaces",
+    "detect_isolation_barriers", "detect_key_matrices", "detect_lc_filters", "detect_memory_interfaces",
+    "detect_opamp_circuits", "detect_power_regulators", "detect_protection_devices", "detect_rc_filters",
+    "detect_rf_chains", "detect_rf_matching", "detect_transistor_circuits",
+    "detect_voltage_dividers",
 ]
 
 _known_detectors_cache = None
@@ -86,33 +86,33 @@ def _load_known_detectors():
 # enum constraints. Used by _field_spec_assertions() to auto-generate
 # quality assertions during seeding. Add entries for new detectors here.
 _DETECTOR_FIELD_SPECS = {
-    "battery_chargers": {
+    "detect_battery_chargers": {
         "required_fields": ["charger_reference", "charger_type"],
         "enum_fields": {
             "charger_type": ["single_cell_linear", "single_cell_switching",
                             "standalone_protection"],
         },
     },
-    "motor_drivers": {
+    "detect_motor_drivers": {
         "required_fields": ["driver_reference", "driver_type"],
         "enum_fields": {
             "driver_type": ["stepper", "dc_brushed_h_bridge"],
         },
     },
-    "esd_coverage_audit": {
+    "audit_esd_protection": {
         "required_fields": ["connector_ref", "coverage", "risk_level"],
         "enum_fields": {
             "coverage": ["full", "partial", "none"],
             "risk_level": ["high_risk", "medium_risk", "low_risk"],
         },
     },
-    "debug_interfaces": {
+    "detect_debug_interfaces": {
         "required_fields": ["connector_ref", "interface_type"],
         "enum_fields": {
             "interface_type": ["swd", "jtag", "debug"],
         },
     },
-    "power_path": {
+    "detect_power_path": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["load_switch", "ideal_diode", "power_mux",
@@ -120,51 +120,51 @@ _DETECTOR_FIELD_SPECS = {
         },
     },
     # Batch 4
-    "adc_circuits": {
+    "detect_adc_circuits": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["external_adc", "voltage_reference"],
         },
     },
-    "reset_supervisors": {
+    "detect_reset_supervisors": {
         "required_fields": ["type"],
         "enum_fields": {
             "type": ["voltage_supervisor", "watchdog", "rc_reset"],
         },
     },
-    "clock_distribution": {
+    "detect_clock_distribution": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["clock_generator", "pll", "oscillator_output"],
         },
     },
     # Batch 5
-    "display_interfaces": {
+    "detect_display_interfaces": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["display", "touch_controller"],
         },
     },
-    "sensor_interfaces": {
+    "detect_sensor_interfaces": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["motion", "environmental", "magnetic"],
         },
     },
-    "level_shifters": {
+    "detect_level_shifters": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["level_shifter_ic", "discrete_level_shifter"],
         },
     },
     # Batch 6
-    "audio_circuits": {
+    "detect_audio_circuits": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["audio_amplifier", "audio_codec"],
         },
     },
-    "led_driver_ics": {
+    "detect_led_driver_ics": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["pwm_led_driver", "matrix_led_driver",
@@ -172,21 +172,21 @@ _DETECTOR_FIELD_SPECS = {
                      "led_driver"],
         },
     },
-    "rtc_circuits": {
+    "detect_rtc_circuits": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["rtc"],
         },
     },
     # Batch 7
-    "led_audit": {
+    "audit_led_circuits": {
         "required_fields": ["ref", "type", "drive_method"],
         "enum_fields": {
             "type": ["indicator_led"],
             "drive_method": ["resistor_limited", "direct_drive", "ic_direct"],
         },
     },
-    "thermocouple_rtd": {
+    "detect_thermocouple_rtd": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
             "type": ["thermocouple_amplifier", "rtd_interface"],
@@ -222,7 +222,8 @@ def _field_spec_assertions(sig_type, detections, ast_num):
                 "id": f"SEED-{ast_num:08d}",
                 "description": f"All {sig_type} have {field}",
                 "check": {
-                    "path": f"signal_analysis.{sig_type}",
+                    "path": "findings",
+                    "detector_filter": sig_type,
                     "op": "not_contains_match",
                     "field": field,
                     "pattern": r"^$",
@@ -248,7 +249,8 @@ def _field_spec_assertions(sig_type, detections, ast_num):
                 "id": f"SEED-{ast_num:08d}",
                 "description": f"All {sig_type} {field} values are valid",
                 "check": {
-                    "path": f"signal_analysis.{sig_type}",
+                    "path": "findings",
+                    "detector_filter": sig_type,
                     "op": "count_matches",
                     "field": field,
                     "pattern": pattern,
@@ -282,7 +284,8 @@ def _quality_assertions(sig_type, detections, ast_num):
         "id": f"SEED-{ast_num:08d}",
         "description": f"All {sig_type} have {desc}",
         "check": {
-            "path": f"signal_analysis.{sig_type}",
+            "path": "findings",
+            "detector_filter": sig_type,
             "op": "not_contains_match",
             "field": field,
             "pattern": pattern,
@@ -315,10 +318,25 @@ def _range_bounds(value, tolerance):
     return lo, hi
 
 
+def _group_findings(data):
+    """Group flat findings[] by detector name."""
+    grouped = {}
+    for f in data.get("findings", []):
+        det = f.get("detector", "")
+        if det:
+            grouped.setdefault(det, []).append(f)
+    return grouped
+
+
+def _findings_check(detector_name, **extra):
+    """Build a check dict for the findings[] path with detector_filter."""
+    return {"path": "findings", "detector_filter": detector_name, **extra}
+
+
 def generate_schematic_assertions(data, tolerance=0.10, include_empty=False):
     """Generate assertions from a schematic analyzer output dict."""
     stats = data.get("statistics", {})
-    sa = data.get("signal_analysis", {})
+    sa = _group_findings(data)
     bom = data.get("bom", [])
 
     assertions = []
@@ -357,32 +375,31 @@ def generate_schematic_assertions(data, tolerance=0.10, include_empty=False):
         })
         ast_num += 1
 
-    # Signal analysis exists
+    # Findings exist
     if sa:
         assertions.append({
             "id": f"SEED-{ast_num:08d}",
-            "description": "Signal analysis section exists",
-            "check": {"path": "signal_analysis", "op": "exists"},
+            "description": "Findings section exists",
+            "check": {"path": "findings", "op": "exists"},
         })
         ast_num += 1
 
-    # Assertions for each detected signal type with count > 0
-    for sig_type, detections in sorted(sa.items()):
+    # Assertions for each detector with count > 0
+    for det_name, detections in sorted(sa.items()):
         if not isinstance(detections, list) or len(detections) == 0:
             continue
         count = len(detections)
         assertions.append({
             "id": f"SEED-{ast_num:08d}",
-            "description": f"{count} {sig_type} detected",
-            "check": {"path": f"signal_analysis.{sig_type}",
-                      "op": "min_count", "value": 1},
+            "description": f"{count} {det_name} detected",
+            "check": _findings_check(det_name, op="min_count", value=1),
         })
         ast_num += 1
 
         # Field-completeness: critical fields must be non-zero/present
-        qa, ast_num = _quality_assertions(sig_type, detections, ast_num)
+        qa, ast_num = _quality_assertions(det_name, detections, ast_num)
         assertions.extend(qa)
-        fsa, ast_num = _field_spec_assertions(sig_type, detections, ast_num)
+        fsa, ast_num = _field_spec_assertions(det_name, detections, ast_num)
         assertions.extend(fsa)
 
     # Empty-detector assertions: detectors with 0 items stay at 0
@@ -394,8 +411,7 @@ def generate_schematic_assertions(data, tolerance=0.10, include_empty=False):
                 assertions.append({
                     "id": f"SEED-{ast_num:08d}",
                     "description": f"No {det} expected",
-                    "check": {"path": f"signal_analysis.{det}",
-                              "op": "max_count", "value": 0},
+                    "check": _findings_check(det, op="max_count", value=0),
                 })
                 ast_num += 1
 
@@ -1235,7 +1251,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
 
             if out_file.exists():
                 existing = json.loads(out_file.read_text(encoding="utf-8"))
-                if existing.get("generated_by") != "seed.py":
+                if existing.get("generated_by") not in ("seed.py", "generate_seed_assertions.py"):
                     continue
 
             out_file.write_text(json.dumps(assertion_data, indent=2) + "\n", encoding="utf-8")
