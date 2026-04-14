@@ -336,33 +336,47 @@ def discover_projects(repo_name):
     if not repo_dir.exists():
         return []
 
-    # Find project directories: prefer .kicad_pro, fall back to .kicad_pcb
-    project_dirs = {}  # rel_path -> marker_file_stem
-    for pro in repo_dir.rglob("*.kicad_pro"):
-        rel = str(pro.parent.relative_to(repo_dir))
-        if rel not in project_dirs:
-            project_dirs[rel] = pro.stem
+    # Find projects: each .kicad_pro is a separate project (multiple can share a dir)
+    seen = set()  # (rel_dir, stem) dedup
+    project_entries = []  # list of (rel_dir, stem)
 
-    for pcb in repo_dir.rglob("*.kicad_pcb"):
+    for pro in sorted(repo_dir.rglob("*.kicad_pro")):
+        rel = str(pro.parent.relative_to(repo_dir))
+        key = (rel, pro.stem)
+        if key not in seen:
+            seen.add(key)
+            project_entries.append(key)
+
+    # Fall back to .kicad_pcb for dirs with no .kicad_pro
+    dirs_with_pro = {rel for rel, _ in project_entries}
+    for pcb in sorted(repo_dir.rglob("*.kicad_pcb")):
         rel = str(pcb.parent.relative_to(repo_dir))
-        if rel not in project_dirs:
-            project_dirs[rel] = pcb.stem
+        if rel not in dirs_with_pro:
+            key = (rel, pcb.stem)
+            if key not in seen:
+                seen.add(key)
+                project_entries.append(key)
+                dirs_with_pro.add(rel)
 
     # KiCad 4/5 .pro files — check header to confirm KiCad format
-    for pro5 in repo_dir.rglob("*.pro"):
+    for pro5 in sorted(repo_dir.rglob("*.pro")):
         rel = str(pro5.parent.relative_to(repo_dir))
-        if rel not in project_dirs:
-            try:
-                first_line = pro5.read_text(errors="replace", encoding="utf-8").split("\n", 1)[0].strip()
-                if (first_line.startswith("update=")
-                        or first_line.startswith("[pcbnew")
-                        or first_line.startswith("[eeschema")):
-                    project_dirs[rel] = pro5.stem
-            except OSError:
-                pass
+        if rel not in dirs_with_pro:
+            key = (rel, pro5.stem)
+            if key not in seen:
+                try:
+                    first_line = pro5.read_text(errors="replace", encoding="utf-8").split("\n", 1)[0].strip()
+                    if (first_line.startswith("update=")
+                            or first_line.startswith("[pcbnew")
+                            or first_line.startswith("[eeschema")):
+                        seen.add(key)
+                        project_entries.append(key)
+                        dirs_with_pro.add(rel)
+                except OSError:
+                    pass
 
     projects = []
-    for pdir, stem in sorted(project_dirs.items()):
+    for pdir, stem in sorted(project_entries):
         projects.append({"name": project_key(pdir, stem), "path": pdir, "stem": stem})
 
     # Resolve conflicts symmetrically: if two or more projects share a name,
@@ -528,7 +542,7 @@ def iter_output_repos(base_dir, repo_filter=None):
 
 # Minimum required top-level keys per analyzer type (signature check)
 EXPECTED_KEYS = {
-    "schematic": {"components", "statistics", "signal_analysis"},
+    "schematic": {"components", "statistics", "findings"},
     "pcb": {"footprints", "statistics", "connectivity"},
     "gerber": {"layers", "summary"},
     "emc": {"findings", "summary"},
@@ -591,11 +605,14 @@ def _print_detector_aggregate(sch_output_dir):
             for f in repo_dir.glob("*.json"):
                 try:
                     data = json.loads(f.read_text(encoding="utf-8"))
-                    sa = data.get("signal_analysis", {})
-                    for det, items in sa.items():
-                        if isinstance(items, list) and items:
-                            detector_files[det] += 1
-                            detector_items[det] += len(items)
+                    grouped = {}
+                    for finding in data.get("findings", []):
+                        det = finding.get("detector", "")
+                        if det:
+                            grouped.setdefault(det, []).append(finding)
+                    for det, items in grouped.items():
+                        detector_files[det] += 1
+                        detector_items[det] += len(items)
                 except Exception:
                     continue
     if detector_files:
