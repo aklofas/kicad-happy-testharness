@@ -127,41 +127,41 @@ def test_ordered_deduplication():
 # === get_ref_from_item ===
 
 def test_get_ref_simple():
-    assert get_ref_from_item("protection_devices", {"ref": "D1"}) == "D1"
+    assert get_ref_from_item("detect_protection_devices", {"ref": "D1"}) == "D1"
 
 def test_get_ref_nested():
     item = {"r_top": {"ref": "R5", "value": "10k"}}
-    assert get_ref_from_item("voltage_dividers", item) == "R5"
+    assert get_ref_from_item("detect_voltage_dividers", item) == "R5"
 
 def test_get_ref_nested_rc():
     item = {"resistor": {"ref": "R9", "value": "10k"}, "capacitor": {"ref": "C1"}}
-    assert get_ref_from_item("rc_filters", item) == "R9"
+    assert get_ref_from_item("detect_rc_filters", item) == "R9"
 
 def test_get_ref_nested_lc():
     item = {"inductor": {"ref": "L1"}, "capacitor": {"ref": "C5"}}
-    assert get_ref_from_item("lc_filters", item) == "L1"
+    assert get_ref_from_item("detect_lc_filters", item) == "L1"
 
 def test_get_ref_nested_current_sense():
     item = {"shunt": {"ref": "R3"}}
-    assert get_ref_from_item("current_sense", item) == "R3"
+    assert get_ref_from_item("detect_current_sense", item) == "R3"
 
 def test_get_ref_no_field_map():
     # Detectors with None field map should return None
-    assert get_ref_from_item("rf_matching", {"antenna": "ANT1"}) is None
-    assert get_ref_from_item("design_observations", {"category": "test"}) is None
-    assert get_ref_from_item("key_matrices", {"rows": 4}) is None
+    assert get_ref_from_item("detect_rf_matching", {"antenna": "ANT1"}) is None
+    assert get_ref_from_item("detect_design_observations", {"category": "test"}) is None
+    assert get_ref_from_item("detect_key_matrices", {"rows": 4}) is None
 
 def test_get_ref_missing_field():
-    assert get_ref_from_item("protection_devices", {"type": "TVS"}) is None
+    assert get_ref_from_item("detect_protection_devices", {"type": "TVS"}) is None
 
 def test_get_ref_composite_value():
     # "R163 442k" -> extract "R163"
     item = {"ref": "R163 442k"}
-    assert get_ref_from_item("power_regulators", item) == "R163"
+    assert get_ref_from_item("detect_power_regulators", item) == "R163"
 
 def test_get_ref_question_mark():
     item = {"ref": "?"}
-    assert get_ref_from_item("protection_devices", item) is None
+    assert get_ref_from_item("detect_protection_devices", item) is None
 
 def test_get_ref_unknown_detector():
     assert get_ref_from_item("nonexistent_detector", {"ref": "R1"}) is None
@@ -172,22 +172,22 @@ def test_get_ref_unknown_detector():
 def test_ref_field_map_completeness():
     """Verify all expected detector types are in REF_FIELD_MAP."""
     expected = {
-        "opamp_circuits", "voltage_dividers", "protection_devices",
-        "transistor_circuits", "power_regulators", "crystal_circuits",
-        "rc_filters", "lc_filters", "led_drivers", "current_sense",
-        "rf_matching", "design_observations", "key_matrices",
-        "feedback_networks", "snubbers", "decoupling_analysis",
-        "buzzer_speaker_circuits", "bridge_circuits", "isolation_barriers",
-        "ethernet_interfaces", "hdmi_dvi_interfaces", "memory_interfaces",
-        "rf_chains", "bms_systems", "addressable_led_chains",
+        "detect_opamp_circuits", "detect_voltage_dividers", "detect_protection_devices",
+        "detect_transistor_circuits", "detect_power_regulators", "detect_crystal_circuits",
+        "detect_rc_filters", "detect_lc_filters", "detect_led_drivers", "detect_current_sense",
+        "detect_rf_matching", "detect_design_observations", "detect_key_matrices",
+        "validate_feedback_stability", "detect_decoupling",
+        "detect_buzzer_speakers", "detect_bridge_circuits", "detect_isolation_barriers",
+        "detect_ethernet_interfaces", "detect_hdmi_dvi_interfaces", "detect_memory_interfaces",
+        "detect_rf_chains", "detect_bms_systems", "detect_addressable_leds",
     }
     assert set(REF_FIELD_MAP.keys()) == expected
 
 def test_pcb_ref_field_map():
     """Verify PCB field map has expected entries."""
     assert "decoupling_placement" in PCB_REF_FIELD_MAP
-    assert "thermal_pad_vias" in PCB_REF_FIELD_MAP
-    assert "tombstoning_risk" in PCB_REF_FIELD_MAP
+    assert "analyze_thermal_pad_vias" in PCB_REF_FIELD_MAP
+    assert "analyze_tombstoning_risk" in PCB_REF_FIELD_MAP
 
 
 # === Runner ===
