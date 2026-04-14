@@ -11,6 +11,71 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-14 — KH-304..306 (issue #14 sub-sheet redirect edge cases)
+
+### KH-304 (MEDIUM): Intermediate sub-sheets misclassified as root
+
+- **Where fixed:** kicad-happy repo, `analyze_schematic.py:detect_sub_sheet()` Tier 2
+- **Root cause:** Files with `(sheet ...)` blocks were always classified as root.
+  Intermediate hierarchy nodes (sub-sheets that also have children) were misclassified.
+- **Fix:** Tier 2 now checks whether the file is referenced by a sibling's sheet block.
+  If so, it's an intermediate node, not the root.
+- **Verification:** CDFER/Auckland-LED-Train-Map `NAL-NIMT-1.kicad_sch` — was 118
+  components (partial), now matches root (249). 7/7 targeted tests pass.
+- **Commit:** 699fa94
+
+### KH-305 (MEDIUM): discover_root_schematic only searches same directory
+
+- **Where fixed:** kicad-happy repo, `kicad_utils.py:discover_root_schematic()`
+- **Root cause:** `os.listdir(parent_dir)` only searched the sub-sheet's directory.
+  Sub-sheets in subdirectories (e.g. `sheets/video.kicad_sch`) couldn't find the
+  `.kicad_pro` in the parent directory.
+- **Fix:** Walks up parent directories (up to 5 levels) looking for `.kicad_pro`,
+  then verifies sheet-tree membership.
+- **Verification:** Board-Folk/NeoGeoAES-3.5 `sheets/video.kicad_sch` — was 35
+  components (isolated), now matches root (365). 7/7 targeted tests pass.
+- **Commit:** 699fa94
+
+### KH-306 (LOW): First .kicad_pro wins in multi-project directories
+
+- **Where fixed:** kicad-happy repo, `kicad_utils.py:discover_root_schematic()` and
+  `analyze_schematic.py:detect_sub_sheet()` Tier 3
+- **Root cause:** When multiple `.kicad_pro` files shared a directory, both functions
+  used the first one from `os.listdir()` without checking sheet-tree membership.
+- **Fix:** Scans each candidate `.kicad_pro`'s root schematic sheet tree to find
+  which one actually references the target file.
+- **Verification:** ghent360/PrntrBoardV2 `mcu.kicad_sch` — was redirecting to
+  WiFi-Addon (wrong project, 33 components), now correctly redirects to
+  PrntrBoardV2 (304 components). No stale warning. 7/7 targeted tests pass.
+- **Commit:** 699fa94
+
+---
+
+## 2026-04-14 — TH-027 (assertion filenames exceed eCryptfs 143-byte limit)
+
+### TH-027 (MEDIUM): Assertion filenames exceed eCryptfs 143-byte NAME_MAX
+
+- **Where fixed:** `regression/seed.py`, `regression/seed_structural.py`,
+  `regression/findings.py`, `regression/generate_bugfix_assertions.py`
+- **Symptom:** `git pull` on eCryptfs-encrypted home fails with "File name too
+  long" on 43 assertion files across 5 repos (flisboac/mixlib-tps7a26-kicad-block,
+  arborium-dev/macroAll, JaytirthJOSHI/hackpad, DaAwesomeP/prox-sense,
+  AmbassadorDoge/Solder-Start). Same root cause as TH-013.
+- **Root cause:** TH-013 fixed `project_key()` and `project_prefix()` in `utils.py`
+  to cap generated directory names at 143 bytes. But the **assertion filename
+  construction** in 4 regression scripts appended suffixes (`_structural.json`,
+  `_finding.json`, `_bugfix.json`) to already-long `file_pattern` strings without
+  re-applying the length cap. The `file_pattern` includes the source filename
+  (e.g. `pmic-vreg-ldo-tps7a2601-extcontrol_widevout.kicad_pcb`) which can be
+  very long for deeply nested KiCad block libraries.
+- **Fix:** Wrap the final filename (including `.json` extension) in
+  `_truncate_with_hash()` before constructing the output path. Deleted 43
+  overlong files and re-seeded the 5 affected repos.
+- **Verification:** 0 overlong files remaining in reference/. 820 unit tests pass.
+  18,823/18,826 assertions pass (same 3 pre-existing stale FND).
+
+---
+
 ## 2026-04-14 — KH-295..303 (bc-breakout round-2: 6 new detectors + summary tool)
 
 ### KH-295 (LOW, enhancement): CP-001 over-noisy on GND-under-bypass-cap cases

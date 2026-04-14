@@ -465,7 +465,7 @@ def promote_to_assertion(finding_id, dry_run=False):
     out_dir = data_dir(repo, target_proj, "assertions") / atype
     out_dir.mkdir(parents=True, exist_ok=True)
     # Use _finding suffix to avoid collision with seed assertions
-    out_file = out_dir / f"{safe}_finding.json"
+    out_file = out_dir / _truncate_with_hash(f"{safe}_finding.json")
 
     # Merge with existing if present
     if out_file.exists():

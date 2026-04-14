@@ -34,7 +34,7 @@ Last updated: 2026-04-14
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-304**. Next TH number: **TH-027**.
+maximum. Next KH number: **KH-307**. Next TH number: **TH-028**.
 
 > 0 open issues.
 
@@ -51,13 +51,13 @@ maximum. Next KH number: **KH-304**. Next TH number: **TH-027**.
 
 ## kicad-happy Analyzer Issues
 
-(None currently open — KH-282 fixed in main-repo commit 4e84f6f.)
+(None currently open — KH-304/305/306 fixed in commit 699fa94.)
 
 ---
 
 ## Test Harness Issues
 
-(No open TH-* issues — TH-026 fixed this session.)
+(No open TH-* issues — TH-027 fixed this session.)
 
 ---
 

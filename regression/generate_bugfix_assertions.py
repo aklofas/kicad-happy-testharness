@@ -96,7 +96,7 @@ def generate_bugfix_assertions(issue_filter=None, dry_run=True):
             # Write assertion file
             out_dir = data_dir(repo, project, "assertions") / atype
             out_dir.mkdir(parents=True, exist_ok=True)
-            out_file = out_dir / f"{safe}_bugfix.json"
+            out_file = out_dir / _truncate_with_hash(f"{safe}_bugfix.json")
 
             assertion_data = {
                 "file_pattern": safe,

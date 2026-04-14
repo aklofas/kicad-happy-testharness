@@ -32,6 +32,7 @@ from utils import (
     DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
     discover_projects, data_dir, list_repos,
     project_prefix, filter_project_outputs,
+    _truncate_with_hash,
 )
 
 
@@ -1260,7 +1261,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
             # Write to data/{repo}/{project}/assertions/{type}/
             out_dir = data_dir(repo_name, proj_name, "assertions") / atype
             out_dir.mkdir(parents=True, exist_ok=True)
-            out_file = out_dir / f"{file_pattern}.json"
+            out_file = out_dir / _truncate_with_hash(f"{file_pattern}.json")
 
             if out_file.exists():
                 existing = json.loads(out_file.read_text(encoding="utf-8"))
