@@ -13,7 +13,7 @@ from generate_finding_checks import _check_from_structured
 def test_in_detector_correct():
     """correct item + in_detector → contains_match."""
     item = {
-        "detector": "voltage_dividers",
+        "detector": "detect_voltage_dividers",
         "subject_refs": ["R15", "R16"],
         "expected_relation": "in_detector",
     }
@@ -29,7 +29,7 @@ def test_in_detector_correct():
 def test_not_in_detector_incorrect():
     """incorrect item + not_in_detector → not_contains_match."""
     item = {
-        "detector": "voltage_dividers",
+        "detector": "detect_voltage_dividers",
         "subject_refs": ["R15"],
         "expected_relation": "not_in_detector",
     }
@@ -42,7 +42,7 @@ def test_not_in_detector_incorrect():
 def test_in_detector_missed():
     """missed item + in_detector → contains_match."""
     item = {
-        "detector": "power_regulators",
+        "detector": "detect_power_regulators",
         "subject_refs": ["U3"],
         "expected_relation": "in_detector",
     }
@@ -58,7 +58,7 @@ def test_in_detector_missed():
 def test_field_value_equals():
     """field_value_equals → field_equals check."""
     item = {
-        "detector": "voltage_dividers",
+        "detector": "detect_voltage_dividers",
         "subject_refs": ["R1", "R2"],
         "expected_relation": "field_value_equals",
         "field": "ratio",
@@ -74,7 +74,7 @@ def test_field_value_equals():
 def test_count_equals():
     """count_equals → equals check on section length."""
     item = {
-        "detector": "voltage_dividers",
+        "detector": "detect_voltage_dividers",
         "subject_refs": [],
         "expected_relation": "count_equals",
         "expected_value": 3,
@@ -90,27 +90,28 @@ def test_count_equals():
 def test_section_exists_correct():
     """correct + section_exists → exists."""
     item = {
-        "detector": "power_regulators",
+        "detector": "detect_power_regulators",
         "subject_refs": [],
         "expected_relation": "section_exists",
     }
     check = _check_from_structured(item, "correct")
     assert check is not None
-    assert check["op"] == "exists"
+    assert check["op"] == "min_count"
     assert check["path"] == "findings"
     assert check["detector_filter"] == "detect_power_regulators"
 
 
 def test_section_exists_incorrect():
-    """incorrect + section_exists → not_exists."""
+    """incorrect + section_exists → max_count 0."""
     item = {
-        "detector": "rf_chains",
+        "detector": "detect_rf_chains",
         "subject_refs": [],
         "expected_relation": "section_exists",
     }
     check = _check_from_structured(item, "incorrect")
     assert check is not None
-    assert check["op"] == "not_exists"
+    assert check["op"] == "max_count"
+    assert check["value"] == 0
 
 
 def test_unknown_detector_returns_none():
@@ -127,7 +128,7 @@ def test_unknown_detector_returns_none():
 def test_in_detector_no_refs_fallback():
     """in_detector with empty subject_refs → min_count fallback."""
     item = {
-        "detector": "voltage_dividers",
+        "detector": "detect_voltage_dividers",
         "subject_refs": [],
         "expected_relation": "in_detector",
     }
@@ -143,7 +144,7 @@ from checks import evaluate_assertion
 def test_roundtrip_in_detector():
     """Round-trip: structured item → check → evaluate against mock output."""
     item = {
-        "detector": "power_regulators",
+        "detector": "detect_power_regulators",
         "subject_refs": ["U1"],
         "expected_relation": "in_detector",
     }
@@ -167,7 +168,7 @@ def test_roundtrip_in_detector():
 def test_roundtrip_not_in_detector():
     """Round-trip: not_in_detector check should fail when ref IS present."""
     item = {
-        "detector": "voltage_dividers",
+        "detector": "detect_voltage_dividers",
         "subject_refs": ["R15"],
         "expected_relation": "not_in_detector",
     }

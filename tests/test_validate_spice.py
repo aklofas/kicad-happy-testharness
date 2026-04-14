@@ -18,7 +18,7 @@ def _make_sch(detectors):
         "rc_filters": "detect_rc_filters",
         "lc_filters": "detect_lc_filters",
         "current_sense": "detect_current_sense",
-        "feedback_networks": "validate_feedback_stability",
+        "feedback_networks": "detect_feedback_networks",
         "opamp_circuits": "detect_opamp_circuits",
         "power_regulators": "detect_power_regulators",
     }

@@ -31,9 +31,9 @@ def test_count_detections_empty():
     assert all(v == 0 for v in counts.values())
 
 
-def test_count_detections_ignores_non_list():
-    """Non-list findings value (malformed) produces zero counts."""
-    data = {"findings": "not_a_list"}
+def test_count_detections_no_findings_key():
+    """Missing findings key produces zero counts."""
+    data = {"components": []}
     counts = count_detections(data)
     assert counts.get("voltage_dividers", 0) == 0
 
