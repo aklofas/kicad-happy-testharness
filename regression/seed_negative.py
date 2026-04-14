@@ -102,8 +102,9 @@ def generate_negative_assertions(candidates):
                 "description": (f"[Negative] {cand['description'][:120]} "
                                 f"(from {cand['finding_id']})"),
                 "check": {
-                    "path": cand["analyzer_section"] or "signal_analysis",
-                    "op": "exists",
+                    "path": "findings",
+                    "op": "min_count",
+                    "value": 1,
                 },
                 "aspirational": True,
                 "_needs_manual_check": True,
