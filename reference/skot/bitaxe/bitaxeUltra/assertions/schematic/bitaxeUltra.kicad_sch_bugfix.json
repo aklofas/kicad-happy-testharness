@@ -26,6 +26,43 @@
         "field": "mpn",
         "pattern": "CSD17311"
       }
+    },
+    {
+      "id": "BUGFIX-KH-297-01",
+      "description": "KH-297: no NT-001 finding has pin_type in skip set",
+      "issue": "KH-297",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_connectivity",
+        "op": "not_contains_match",
+        "field": "pin_type",
+        "pattern": "^(no_connect|free|unspecified|unconnected)$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-299-01",
+      "description": "KH-299: at least 7 LB-001 label alias findings",
+      "issue": "KH-299",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "BUGFIX-KH-300-01",
+      "description": "KH-300: at least 2 PP-001 power-pin DC path findings",
+      "issue": "KH-300",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "min_count",
+        "value": 2
+      }
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "hackrf-one.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-154-01",
+      "description": "KH-154: hackrf-one has 4 copper layers (was 5 before fix)",
+      "issue": "KH-154",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      }
+    }
+  ]
+}

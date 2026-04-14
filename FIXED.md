@@ -11,6 +11,271 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-14 — KH-295..303 (bc-breakout round-2: 6 new detectors + summary tool)
+
+### KH-295 (LOW, enhancement): CP-001 over-noisy on GND-under-bypass-cap cases
+
+- **Where fixed:** kicad-happy repo, `analyze_pcb.py:analyze_copper_presence`
+- **Symptom:** ~35 of 38 CP-001 warnings on bc-breakout were decoupling caps sitting
+  over the GND pour — the intended layout, not a clearance violation.
+- **Fix:** CP-001 emits severity=info when every foreign zone under a component is
+  ground-family AND the component has a GND pad. Total count unchanged (demote, not
+  suppress).
+- **Commit:** d58345a
+
+### KH-296 (MEDIUM, enhancement): Sourcing gap invisible to severity rollups
+
+- **Where fixed:** kicad-happy repo, new `analyze_schematic.audit_sourcing_gate`
+- **Symptom:** 0/132 MPN coverage surfaced only as INFO in design-observations;
+  `--stage pre_fab` filter didn't flag the pre-fab-blocking problem.
+- **Fix:** New `audit_sourcing_gate` emits SS-001 (high, <50%), SS-002 (warning,
+  50-80%), SS-003 (info, 80-100%) based on MPN coverage. All registered in `pre_fab`.
+- **Commit:** 0668dae
+
+### KH-297 (LOW, enhancement): Single-pin nets not weighted by pin type
+
+- **Where fixed:** kicad-happy repo, `analyze_schematic.analyze_connectivity`
+- **Symptom:** Single-pin nets were a plain list with no findings path. `__unnamed_*`
+  blanket-suppressed — a power_in pin on `__unnamed_0` is a real wiring bug but was
+  silently filtered.
+- **Fix:** NT-001 finding with pin-type-weighted severity. Signal pins → warning;
+  power_out/passive → info; no_connect/free/unspecified/unconnected → skip.
+  `__unnamed_*` nets emit findings when warranted; legacy `single_pin_nets` list
+  remains filtered.
+- **Commit:** 1466598 (+ 5888aea followup)
+
+### KH-298 (MEDIUM, enhancement): Rails lack a source-audit rule
+
+- **Where fixed:** kicad-happy repo, new `signal_detectors.audit_rail_sources`
+- **Symptom:** Power rails sourced through solder jumpers had no declared source.
+  Reviewers manually traced e.g. +3.3V → JP23 (bridged) → REGIN_3V3 → MAX5035.
+- **Fix:** RS-001 info (bridged jumper path), RS-001 warning (no path), RS-002 high
+  (open jumper only). Traces one hop through solder jumpers using SJ-DET classifier.
+  3-pin selector jumpers conservatively skipped.
+- **Commit:** 3b5f194 (+ eefcac8 followup)
+
+### KH-299 (LOW, enhancement): Net aliases not flagged
+
+- **Where fixed:** kicad-happy repo, `analyze_schematic.build_net_map` + new
+  `signal_detectors.detect_label_aliases`
+- **Symptom:** Multiple global/hierarchical labels on the same net (e.g. SLS1 ↔ RS1P)
+  went unnoticed — footgun on next edit.
+- **Fix:** `build_net_map` records `labels: [{name, type}]` on every net. LB-001 info
+  for ≥2 distinct global/hierarchical label names. Power nets excluded (Kelvin return
+  pattern).
+- **Commit:** f083d0f (+ 98bea8d followup)
+
+### KH-300 (HIGH, enhancement): IC power pins can AC-couple to GND silently
+
+- **Where fixed:** kicad-happy repo, new `signal_detectors.audit_power_pin_dc_paths`
+- **Symptom:** A power_in pin reaching GND only through a capacitor is a silent wiring
+  bug — ERC passes, but the IC supply floats DC.
+- **Fix:** PP-001 high. BFS ≤2 hops: capacitor → REJECT; resistor ≤1Ω/inductor/ferrite
+  bead/bridged jumper → bridge. Three suppression guards (ground start, connector-hosted,
+  no-cap-seen). Known limitation: series protection diodes NOT treated as DC bridges
+  (v1.3.1 follow-up). REGIN_x/REGOUT_x added to `is_power_net_name`.
+- **Commit:** c80e967 (+ 38c331b followup)
+
+### KH-301 (LOW, tooling): No cross-run finding summary
+
+- **Where fixed:** kicad-happy repo, new `summarize_findings.py`
+- **Symptom:** Reviewers manually walked `analysis/<run>/*.json` to tabulate findings.
+- **Fix:** Reads current run via manifest.json, groups by (rule_id, severity), prints
+  top-N table. Flags: `--top`, `--severity` (with aliases), `--run`, `--json` (schema
+  version + totals). Stdlib-only, Python 3.8+.
+- **Commit:** 772e774 (+ 8390275 followup)
+
+### KH-302 (LOW, enhancement): Unnamed nets show as `__unnamed_N` in reports
+
+- **Where fixed:** kicad-happy repo, `analyze_schematic.py` post-processing
+- **Symptom:** ~30% of interesting nets (boot caps, LX nodes) are auto-named
+  `__unnamed_N`, requiring pin-by-pin tracing.
+- **Fix:** Annotates `nets[name].display_name = "Ref.PinName"` when an `__unnamed_N`
+  net has exactly one named pin on an IC-type component. Does NOT rename the net key —
+  additive field only.
+- **Commit:** f7a83b4
+
+### KH-303 (docs-only): SKILL.md misses new rule IDs and summary tool
+
+- **Where fixed:** kicad-happy repo, `SKILL.md`
+- **Fix:** Added rule-ID tables (SS/NT/RS/LB/PP), "Findings Summary" section for
+  `summarize_findings.py`, CP-001 severity-split note.
+- **Commit:** dec8593
+
+---
+
+## 2026-04-14 — KH-291..294 (solder-jumper detector, datasheet banner, thermal dedup)
+
+### KH-291 (LOW, enhancement): Solder jumpers don't report default state
+
+- **Where fixed:** kicad-happy repo, new `signal_detectors.detect_solder_jumpers` +
+  `kicad_utils.classify_jumper_default_state`
+- **Symptom:** Reviewers flagged "rail has no active source" on rails sourced through
+  bridged-by-default solder jumpers. The analyzer had no way to surface that KiCad
+  encodes jumper default state in symbol/footprint names.
+- **Fix:** New `detect_solder_jumpers` detector (SJ-DET) emits one INFO finding per
+  jumper with `default_state` in {bridged, open, switchable, unknown}, the two nets
+  it straddles, and which are power/ground.
+- **Verification:** 330 schematic outputs tested, 38 files with SJ-DET findings (126
+  items). 0 state misclassifications. Schematic assertions: pass (see below).
+- **Commit:** a92d61c
+
+### KH-292 (MEDIUM, enhancement): Datasheet gap was silent
+
+- **Where fixed:** kicad-happy repo, new `analyze_schematic.audit_datasheet_coverage`
+- **Symptom:** Designs with no datasheets/ dir and no MPNs passed through analysis
+  silently, and downstream reviewers wrote "verified per datasheet" language for parts
+  with no datasheet evidence.
+- **Fix:** New `audit_datasheet_coverage` emits DS-001 (HIGH, no datasheets AND no
+  MPNs), DS-002 (MEDIUM, MPNs exist but no datasheets dir), DS-003 (INFO, partial
+  coverage < 90%). Recommendation text tells reviewer to drop "verified" wording.
+- **Verification:** 330 outputs tested: DS-001=114, DS-002=97, DS-003=37, none=82.
+  All severities correct.
+- **Commit:** a92d61c
+
+### KH-293 (LOW): TP-DET and TV-001 reported contradictory via counts
+
+- **Where fixed:** kicad-happy repo, `analyze_pcb.py:analyze_pcb()`
+- **Symptom:** `analyze_thermal_vias` (TP-DET, proximity count) and
+  `analyze_thermal_pad_vias` (TV-001, copper-verified) both emitted as findings,
+  producing contradictory via counts on the same thermal pad.
+- **Fix:** TP-DET entries no longer appended to `findings[]`; raw data preserved under
+  `result.thermal_pad_scan`. TV-001 is the sole authoritative thermal-pad finding.
+- **Verification:** 141 freshly-run PCB outputs: 0 with TP-DET, 92 with TV-001. PCB
+  assertions: pass (see below).
+- **Commit:** a92d61c
+
+### KH-294 (LOW, docs-only): SKILL.md cheat sheet described non-existent subcircuits layout
+
+- **Where fixed:** kicad-happy repo, `SKILL.md` field cheat sheet
+- **Symptom:** Reviewers looked for `subcircuits.power_regulators` keyed-dict paths
+  that never existed in v1.3 output.
+- **Fix:** Cheat sheet now correctly describes `subcircuits[]` as IC-neighborhood
+  grouping and points to `findings[]` + `get_findings(data, Det.*)` for detections.
+- **Verification:** Docs-only change, no code impact.
+- **Commit:** a92d61c
+
+---
+
+## 2026-04-14 — KH-287..290 (EMC NameError + analysis-cache coherence)
+
+### KH-287 (HIGH): check_inductor_leakage crashes with undefined `signal` variable
+
+- **Where fixed:** kicad-happy repo, `emc_rules.py:3946` (`check_inductor_leakage`)
+- **Root cause:** ML-001 rule referenced `signal.get('adc_circuits',...)` but `signal`
+  was never defined. The entire EMC analysis crashed with `NameError` on any project
+  with switching regulators plus ADCs, opamps, crystals, or RF circuits.
+- **Fix:** Replaced `signal.get(...)` calls with `get_findings(schematic, Det.*)` using
+  the v1.3 rich-finding API (ADC_CIRCUITS, OPAMP_CIRCUITS, CRYSTAL_CIRCUITS, RF_CHAINS).
+- **Verification:** 20 repos tested, 0 NameError crashes. EMC smoke (20 repos): all pass,
+  `inductor_leakage` category now fires 5 findings. EMC assertions: 4,410/4,410 (100%).
+- **Commit:** 442388c
+
+### KH-288 (HIGH): Sequential analyzer runs create duplicate run folders
+
+- **Where fixed:** kicad-happy repo, `analysis_cache.py` (`should_create_new_run`,
+  `overwrite_current`, `create_run`)
+- **Root cause:** `should_create_new_run` returned True when a new output type (pcb.json)
+  appeared in a run that only had schematic.json, treating "new file" as "new run."
+  Also `overwrite_current` wiped `source_hashes` wholesale (running pcb after schematic
+  erased the schematic hash), and `create_run` copy-forward was all-or-nothing on hash
+  mismatch (re-running schematic stripped pcb.json from the new folder).
+- **Fix:** New output types extend the current run; `source_hashes` merge instead of
+  replace; copy-forward is per-file keyed to source extensions via `_OUTPUT_SOURCE_EXT`.
+- **Verification:** 26 projects tested, all produced exactly 1 run folder with both
+  schematic.json and pcb.json. Schematic assertions: 9,125/9,125 (100%).
+- **Commit:** 442388c
+
+### KH-289 (MEDIUM): Derived-analysis outputs written to analysis/ root
+
+- **Where fixed:** kicad-happy repo, `analyze_thermal.py`, `cross_analysis.py`,
+  `analyze_gerbers.py` (all `main()` functions)
+- **Root cause:** These analyzers wrote to `analysis/thermal.json`,
+  `analysis/cross_analysis.json`, `analysis/gerbers.json` instead of
+  `analysis/<run_id>/<name>.json`, leaving them orphaned from the manifest.
+- **Fix:** Route through `overwrite_current` into the current run folder and register
+  in the manifest. Added `cross_analysis` to `CANONICAL_OUTPUTS`.
+- **Verification:** thermal.json confirmed in run folder (not root) on test project.
+  Gerber smoke: 33/33 pass (100%). Gerber assertions: 199/199 (100%).
+- **Commit:** 442388c
+
+### KH-290 (MEDIUM): EMC creates recursive analysis/<run>/analysis/<run>/ nesting
+
+- **Where fixed:** kicad-happy repo, `analyze_emc.py` (`main()`)
+- **Root cause:** Passing a schematic JSON already inside the analysis tree (e.g.
+  `analysis/2026-04-14_1807/schematic.json`) with `--analysis-dir analysis` caused EMC
+  to anchor the output path on the schematic's parent, producing
+  `analysis/<run>/analysis/<run>/emc.json`.
+- **Fix:** Resolve `--analysis-dir` relative to CWD via `os.path.abspath`, matching
+  the other analyzers.
+- **Verification:** 13 repos tested, no nested `analysis` directories found. EMC
+  assertions: 4,410/4,410 (100%).
+- **Commit:** 442388c
+
+---
+
+## 2026-04-13 — KH-286 (analyze_fiducials value-is-list crash)
+
+### KH-286 (LOW): analyze_fiducials crashes when footprint value is a list
+
+- **Where fixed:** kicad-happy repo, `analyze_pcb.py:5205`
+- **Root cause:** `fp.get("value", "")` returns a list on some PCB files (TI92-revive). String concatenation with `+` then raises TypeError.
+- **Fix:** Added `if not isinstance(val, str): val = str(val)` guard.
+- **Verification:** ccadic/TI92-revive both pass. Full PCB corpus: 18,652 pass / 3 fail (pre-existing).
+
+---
+
+## 2026-04-13 — TH-026 (multi-project directory discovery)
+
+### TH-026 (LOW): discover_projects() collapsed multiple .kicad_pro in same directory
+
+- **Where fixed:** `utils.py:discover_projects()` lines 339-362
+- **Root cause:** `project_dirs` dict was keyed by directory path alone. When multiple
+  `.kicad_pro` files share a directory (e.g., `KiCAD/PCB1_Mainboard.kicad_pro` and
+  `KiCAD/Startlight-Baerenkeller.kicad_pro`), only the first was discovered. The
+  snapshot/seed code then only processed one project, leaving assertion files for the
+  other project(s) stale and never regenerated.
+- **Impact:** 494 repos have multiple .kicad_pro in same directory. ~3,457 stale
+  structural assertions across schematic/EMC/PCB.
+- **Fix:** Changed `project_dirs` from `dict[str, str]` to `list[tuple[str, str]]`
+  keyed by `(directory, stem)` so every `.kicad_pro` becomes its own project.
+- **Verification:** Full re-snapshot + re-seed. 2,415,216 assertions at 100.0% pass
+  rate. 820 unit tests, 0 failures. 1,466 new project baselines discovered.
+
+---
+
+## 2026-04-13 — KH-283, KH-284, KH-285 (None/type crashes from rich format migration)
+
+### KH-285 (LOW): _min_power_pad_distance KeyError on pads without abs_x/abs_y
+
+- **Where fixed:** kicad-happy repo, `analyze_pcb.py:1677`
+- **Root cause:** `_min_power_pad_distance` accessed `ip["abs_x"]` directly. Some PCB files have pads parsed without absolute position fields, causing KeyError.
+- **Impact:** 2 PCB analysis failures (circuit-synth ESP32_C6_Dev_Board, generated variant).
+- **Fix:** Changed to `.get()` with None check and `continue`.
+- **Verification:** Both files now pass.
+
+### KH-284 (LOW): extract_pro_net_classes crashes when netclass_patterns is None
+
+- **Where fixed:** kicad-happy repo, `kicad_utils.py:1450`
+- **Root cause:** `.get('netclass_patterns', [])` returns `None` when key exists with value `None` in .kicad_pro JSON. Iterating over `None` raises TypeError.
+- **Impact:** 2 PCB analysis failures (eugenio/zigbee_plant_sensor_solar_node quilter outputs).
+- **Fix:** Changed to `ns.get('netclass_patterns') or []`.
+- **Verification:** Both files now pass.
+
+---
+
+## 2026-04-13 — KH-283 (crystal guard ring freq None crash)
+
+### KH-283 (MEDIUM): check_crystal_guard_ring crashes when crystal frequency is None
+
+- **Where fixed:** kicad-happy repo, `emc_rules.py:1120`
+- **Root cause:** Rich format migration changed crystal_circuits entries so `frequency` key can be `None` (not just absent). `xtal.get('frequency', 0)` returns `None` when the key exists with value `None`, causing `freq > 1e6` to raise TypeError.
+- **Impact:** 97 EMC analysis failures across the corpus (every project with crystals lacking parsed frequency values).
+- **Fix:** Changed `xtal.get('frequency', 0)` to `xtal.get('frequency') or 0`.
+- **Verification:** Full EMC corpus rerun — 0 failures (was 97). All 97 `.err` files contained the same TypeError traceback.
+
+---
+
 ## 2026-04-12 — Batch 53: KH-282 (ML-001 inductor shielding)
 
 ### KH-282 (LOW): classify_inductor_shielding hyphen/underscore mismatch

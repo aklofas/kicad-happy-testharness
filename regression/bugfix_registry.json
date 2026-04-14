@@ -1413,5 +1413,163 @@
     "type": "documentation_fix",
     "summary": "DFM fab capability thresholds not canonicalized in reference docs",
     "assertions": []
+  },
+  {
+    "issue": "KH-291",
+    "type": "detection_fix",
+    "summary": "Solder jumpers now report default state via SJ-DET",
+    "assertions": [
+      {
+        "repo": "sparkfun/SparkFun_GNSS_mosaic-T",
+        "project": "Hardware_SparkFun_GNSS_mosaic-T",
+        "source_file": "SparkFun_GNSS_mosaic-T.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_solder_jumpers",
+          "op": "min_count",
+          "value": 8
+        },
+        "description": "KH-291: at least 8 SJ-DET bridged solder jumper findings"
+      }
+    ]
+  },
+  {
+    "issue": "KH-293",
+    "type": "detection_fix",
+    "summary": "TP-DET removed from findings, superseded by TV-001",
+    "assertions": [
+      {
+        "repo": "greatscottgadgets/hackrf",
+        "project": "hardware_hackrf-one",
+        "source_file": "hackrf-one.kicad_pcb",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "field": "rule_id",
+          "pattern": "^TP-DET$"
+        },
+        "description": "KH-293: no TP-DET findings in PCB output (superseded by TV-001)"
+      },
+      {
+        "repo": "greatscottgadgets/hackrf",
+        "project": "hardware_hackrf-one",
+        "source_file": "hackrf-one.kicad_pcb",
+        "check": {
+          "path": "findings",
+          "detector_filter": "analyze_thermal_pad_vias",
+          "op": "min_count",
+          "value": 22
+        },
+        "description": "KH-293: TV-001 thermal pad via findings present (replacement for TP-DET)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-295",
+    "type": "detection_fix",
+    "summary": "CP-001 demoted to info on GND-under-bypass-cap",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "bitaxeUltra.kicad_pcb",
+        "check": {
+          "path": "findings",
+          "detector_filter": "analyze_copper_presence",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-295: CP-001 findings present including info-severity GND demotes"
+      }
+    ]
+  },
+  {
+    "issue": "KH-297",
+    "type": "detection_fix",
+    "summary": "NT-001 pin-type-weighted single-pin nets (skip set enforced)",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "bitaxeUltra.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "analyze_connectivity",
+          "op": "not_contains_match",
+          "field": "pin_type",
+          "pattern": "^(no_connect|free|unspecified|unconnected)$"
+        },
+        "description": "KH-297: no NT-001 finding has pin_type in skip set"
+      }
+    ]
+  },
+  {
+    "issue": "KH-298",
+    "type": "detection_fix",
+    "summary": "RS-001/002 rail source audit with jumper-aware tracing",
+    "assertions": [
+      {
+        "repo": "sparkfun/SparkFun_GNSS_mosaic-T",
+        "project": "Hardware_SparkFun_GNSS_mosaic-T",
+        "source_file": "SparkFun_GNSS_mosaic-T.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "audit_rail_sources",
+          "op": "min_count",
+          "value": 4
+        },
+        "description": "KH-298: at least 4 RS-001/002 rail source findings"
+      }
+    ]
+  },
+  {
+    "issue": "KH-299",
+    "type": "detection_fix",
+    "summary": "LB-001 label alias detection with power-net suppression",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "bitaxeUltra.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_label_aliases",
+          "op": "min_count",
+          "value": 7
+        },
+        "description": "KH-299: at least 7 LB-001 label alias findings"
+      }
+    ]
+  },
+  {
+    "issue": "KH-300",
+    "type": "detection_fix",
+    "summary": "PP-001 IC power-pin DC path audit (capacitor-only paths flagged)",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "bitaxeUltra.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "audit_power_pin_dc_paths",
+          "op": "min_count",
+          "value": 2
+        },
+        "description": "KH-300: at least 2 PP-001 power-pin DC path findings"
+      }
+    ]
+  },
+  {
+    "issue": "KH-302",
+    "type": "detection_fix",
+    "summary": "Unnamed nets annotated with Ref.PinName display_name",
+    "assertions": []
+  },
+  {
+    "issue": "KH-303",
+    "type": "documentation_fix",
+    "summary": "SKILL.md rule-ID tables and summarize_findings usage",
+    "assertions": []
   }
 ]

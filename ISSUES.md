@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-04-12
+Last updated: 2026-04-14
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-04-12
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-283**. Next TH number: **TH-026**.
+maximum. Next KH number: **KH-304**. Next TH number: **TH-027**.
 
 > 0 open issues.
 
@@ -57,7 +57,7 @@ maximum. Next KH number: **KH-283**. Next TH number: **TH-026**.
 
 ## Test Harness Issues
 
-(All TH-016..TH-025 fixed in Batches 51-52. No open TH-* issues.)
+(No open TH-* issues — TH-026 fixed this session.)
 
 ---
 

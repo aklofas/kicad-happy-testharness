@@ -13,6 +13,30 @@
         "op": "equals",
         "value": 4
       }
+    },
+    {
+      "id": "BUGFIX-KH-293-01",
+      "description": "KH-293: no TP-DET findings in PCB output (superseded by TV-001)",
+      "issue": "KH-293",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "field": "rule_id",
+        "pattern": "^TP-DET$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-293-02",
+      "description": "KH-293: TV-001 thermal pad via findings present (replacement for TP-DET)",
+      "issue": "KH-293",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "min_count",
+        "value": 22
+      }
     }
   ]
 }

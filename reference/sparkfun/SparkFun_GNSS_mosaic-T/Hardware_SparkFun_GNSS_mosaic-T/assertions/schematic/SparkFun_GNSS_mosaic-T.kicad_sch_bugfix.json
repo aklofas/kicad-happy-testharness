@@ -28,6 +28,30 @@
         "detector_filter": "detect_protection_devices"
       },
       "migration_note": "Path migrated from: signal_analysis.protection_devices"
+    },
+    {
+      "id": "BUGFIX-KH-291-01",
+      "description": "KH-291: at least 8 SJ-DET bridged solder jumper findings",
+      "issue": "KH-291",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_solder_jumpers",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "BUGFIX-KH-298-01",
+      "description": "KH-298: at least 4 RS-001/002 rail source findings",
+      "issue": "KH-298",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 4
+      }
     }
   ]
 }
