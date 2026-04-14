@@ -9,8 +9,9 @@
         "project": "hardware_ubertooth-one_ubertooth-one",
         "source_file": "ubertooth-one.sch",
         "check": {
-          "path": "signal_analysis",
-          "op": "exists"
+          "path": "findings",
+          "op": "min_count",
+          "value": 1
         },
         "description": "KH-015: signal_analysis section exists on legacy .sch file"
       },
@@ -19,9 +20,10 @@
         "project": "hardware_ubertooth-one_ubertooth-one",
         "source_file": "ubertooth-one.sch",
         "check": {
-          "path": "signal_analysis.voltage_dividers",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_voltage_dividers"
         },
         "description": "KH-015: At least 1 voltage divider detected on legacy ubertooth-one"
       }
@@ -111,9 +113,10 @@
         "project": "analog-toolkit",
         "source_file": "analog-toolkit.kicad_sch",
         "check": {
-          "path": "signal_analysis.rf_matching",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_rf_matching"
         },
         "description": "KH-041: No false RF matching on non-RF analog design"
       }
@@ -166,9 +169,10 @@
         "project": "hardware_esp-rust-board_esp-rust-board",
         "source_file": "esp-rust-board.kicad_sch",
         "check": {
-          "path": "signal_analysis.addressable_led_chains",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_addressable_leds"
         },
         "description": "KH-051: At least 1 addressable LED chain detected (WS2812B)"
       }
@@ -184,9 +188,10 @@
         "project": "LNA1109",
         "source_file": "LNA1109.sch",
         "check": {
-          "path": "signal_analysis.rf_chains",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_rf_chains"
         },
         "description": "KH-054: RF chain detected on LNA1109 (BGB741L7ESD amplifier)"
       },
@@ -195,9 +200,10 @@
         "project": "LNA1109",
         "source_file": "LNA1109.sch",
         "check": {
-          "path": "signal_analysis.power_regulators",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_power_regulators"
         },
         "description": "KH-054: BGB741L7ESD not falsely detected as power regulator"
       }
@@ -232,9 +238,10 @@
         "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
         "source_file": "ESP32-P4-PC_Rev_B.kicad_sch",
         "check": {
-          "path": "signal_analysis.crystal_circuits",
+          "path": "findings",
           "op": "min_count",
-          "value": 3
+          "value": 3,
+          "detector_filter": "detect_crystal_circuits"
         },
         "description": "KH-064: At least 3 crystal circuits detected (Q-prefix crystals classified correctly)"
       }
@@ -250,9 +257,10 @@
         "project": "HARDWARE_REV-F_ESP32-EVB_Rev_F",
         "source_file": "ESP32-EVB_Rev_F.sch",
         "check": {
-          "path": "signal_analysis.ethernet_interfaces",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_ethernet_interfaces"
         },
         "description": "KH-066: At least 1 Ethernet interface detected on ESP32-EVB"
       }
@@ -289,9 +297,10 @@
         "project": "electronic_design_development_ethersweep407_CAN_ethersweep",
         "source_file": "ethersweep.kicad_sch",
         "check": {
-          "path": "signal_analysis.current_sense",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_current_sense"
         },
         "description": "KH-081: No false current sense on ethersweep Ethernet design"
       }
@@ -307,9 +316,10 @@
         "project": "GEODE_rev2_SMPS_Motherboard_smps_legged_robot",
         "source_file": "Project Architecture.kicad_sch",
         "check": {
-          "path": "signal_analysis.power_regulators",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_power_regulators"
         },
         "description": "KH-083: Power regulators detected after lib_name resolution fix"
       }
@@ -325,9 +335,10 @@
         "project": "hardware_hackrf-one_hackrf-one",
         "source_file": "hackrf-one.kicad_sch",
         "check": {
-          "path": "signal_analysis.rf_chains",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_rf_chains"
         },
         "description": "KH-085: At least 1 RF chain detected on hackrf-one"
       }
@@ -362,9 +373,10 @@
         "project": "ripples_hardware_design_pcb_KiCad_ripples_v40",
         "source_file": "ripples_v40.kicad_sch",
         "check": {
-          "path": "signal_analysis.opamp_circuits",
+          "path": "findings",
           "op": "min_count",
-          "value": 10
+          "value": 10,
+          "detector_filter": "detect_opamp_circuits"
         },
         "description": "KH-088: >= 10 opamp circuits detected after Eagle-import power net fix"
       }
@@ -546,10 +558,11 @@
         "project": "OtterCam-s3",
         "source_file": "OtterCam-s3.kicad_sch",
         "check": {
-          "path": "signal_analysis.power_regulators",
+          "path": "findings",
           "op": "not_contains_match",
           "field": "ref",
-          "pattern": "^U4$"
+          "pattern": "^U4$",
+          "detector_filter": "detect_power_regulators"
         },
         "description": "KH-100: AP6236 WiFi module not falsely in power_regulators"
       }
@@ -615,9 +628,10 @@
         "project": "Hardware_SparkFun_IoT_RedBoard-RP2350",
         "source_file": "power.kicad_sch",
         "check": {
-          "path": "signal_analysis.rc_filters",
+          "path": "findings",
           "op": "max_count",
-          "value": 5
+          "value": 5,
+          "detector_filter": "detect_rc_filters"
         },
         "description": "KH-107: RC filters <= 5 on power sheet (crystal components excluded)"
       }
@@ -633,10 +647,11 @@
         "project": "Hardware_SparkFun_IoT_RedBoard-RP2350",
         "source_file": "power.kicad_sch",
         "check": {
-          "path": "signal_analysis.power_regulators",
+          "path": "findings",
           "op": "not_contains_match",
           "field": "value",
-          "pattern": "LM66200"
+          "pattern": "LM66200",
+          "detector_filter": "detect_power_regulators"
         },
         "description": "KH-108: LM66200 ideal diode not falsely in power_regulators"
       }
@@ -673,10 +688,11 @@
         "project": "Software_LCD2x16_oldRoaster_CoffeeRoasterV2c",
         "source_file": "CoffeeRoasterV2c.kicad_sch",
         "check": {
-          "path": "signal_analysis.rc_filters",
+          "path": "findings",
           "op": "not_contains_match",
           "field": "output_net",
-          "pattern": "^GND$"
+          "pattern": "^GND$",
+          "detector_filter": "detect_rc_filters"
         },
         "description": "KH-116: No RC filters with output_net == GND (was false positive)"
       }
@@ -692,10 +708,11 @@
         "project": "boards_on-robot_kicad_kicker-v3.3_kicker",
         "source_file": "kicker.kicad_sch",
         "check": {
-          "path": "signal_analysis.protection_devices",
+          "path": "findings",
           "op": "contains_match",
           "field": "ref",
-          "pattern": "^RV1$"
+          "pattern": "^RV1$",
+          "detector_filter": "detect_protection_devices"
         },
         "description": "KH-117: RV1 (500V varistor) detected as protection device"
       }
@@ -711,10 +728,11 @@
         "project": "sicomm_slaveboard_BK4819_v2",
         "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
         "check": {
-          "path": "signal_analysis.power_regulators",
+          "path": "findings",
           "op": "contains_match",
           "field": "ref",
-          "pattern": "^U19$"
+          "pattern": "^U19$",
+          "detector_filter": "detect_power_regulators"
         },
         "description": "KH-118: U19 TPLP5907 detected as LDO regulator"
       }
@@ -730,9 +748,10 @@
         "project": "sicomm_slaveboard_BK4819_v2",
         "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
         "check": {
-          "path": "signal_analysis.lc_filters",
+          "path": "findings",
           "op": "max_count",
-          "value": 14
+          "value": 14,
+          "detector_filter": "detect_lc_filters"
         },
         "description": "KH-119: LC filters at most 14 (was 23 from overcounting)"
       }
@@ -748,9 +767,10 @@
         "project": "sicomm_slaveboard_BK4819_v2",
         "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
         "check": {
-          "path": "signal_analysis.rf_chains",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_rf_chains"
         },
         "description": "KH-120: At least 1 RF chain detected"
       }
@@ -780,9 +800,10 @@
         "project": "kusabimaru_kuro65",
         "source_file": "kuro65.kicad_sch",
         "check": {
-          "path": "signal_analysis.addressable_led_chains",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_addressable_leds"
         },
         "description": "KH-122: Addressable LED chain detected"
       }
@@ -798,9 +819,10 @@
         "project": "Kicad Files_Hub",
         "source_file": "Hub.kicad_sch",
         "check": {
-          "path": "signal_analysis.bms_systems",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_bms_systems"
         },
         "description": "KH-123: MCP73871 charger not falsely detected as BMS"
       }
@@ -816,9 +838,10 @@
         "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
         "source_file": "Power Supply, Extensions and MiPi-DSI .sch",
         "check": {
-          "path": "signal_analysis.power_regulators",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_power_regulators"
         },
         "description": "KH-124: At least 1 power regulator detected on Power Supply sheet"
       }
@@ -834,9 +857,10 @@
         "project": "DEVLPR",
         "source_file": "DEVLPR.sch",
         "check": {
-          "path": "signal_analysis.opamp_circuits",
+          "path": "findings",
           "op": "min_count",
-          "value": 2
+          "value": 2,
+          "detector_filter": "detect_opamp_circuits"
         },
         "description": "KH-125: At least 2 opamp circuits detected on main sheet"
       }
@@ -852,9 +876,10 @@
         "project": "Hardware_SparkFun_GNSS_mosaic-T",
         "source_file": "SparkFun_GNSS_mosaic-T.kicad_sch",
         "check": {
-          "path": "signal_analysis.protection_devices",
+          "path": "findings",
           "op": "max_count",
-          "value": 15
+          "value": 15,
+          "detector_filter": "detect_protection_devices"
         },
         "description": "KH-126: Protection devices <= 15 (was ~40 from per-net overcounting)"
       }
@@ -870,10 +895,11 @@
         "project": "KP08Hub_keypad_KP08Hub_keypad",
         "source_file": "KP08Hub_keypad.kicad_sch",
         "check": {
-          "path": "signal_analysis.power_regulators",
+          "path": "findings",
           "op": "not_contains_match",
           "field": "ref",
-          "pattern": "^U3$"
+          "pattern": "^U3$",
+          "detector_filter": "detect_power_regulators"
         },
         "description": "KH-127: CY7C65642 USB hub not falsely in power_regulators"
       }
@@ -889,9 +915,10 @@
         "project": "Hardware_SparkFun_GNSS_mosaic-T",
         "source_file": "SparkFun_GNSS_mosaic-T.kicad_sch",
         "check": {
-          "path": "signal_analysis.protection_devices",
+          "path": "findings",
           "op": "max_count",
-          "value": 20
+          "value": 20,
+          "detector_filter": "detect_protection_devices"
         },
         "description": "KH-143: Protection devices <= 20 (no duplicate multi-unit TVS entries)"
       }
@@ -907,9 +934,10 @@
         "project": "hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb",
         "source_file": "eurorack-pmod-pcb.kicad_sch",
         "check": {
-          "path": "signal_analysis.rc_filters",
+          "path": "findings",
           "op": "max_count",
-          "value": 3
+          "value": 3,
+          "detector_filter": "detect_rc_filters"
         },
         "description": "KH-145: No more than 3 RC filters (was 15 before fix)"
       }
@@ -925,10 +953,11 @@
         "project": "hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb",
         "source_file": "eurorack-pmod-pcb.kicad_sch",
         "check": {
-          "path": "signal_analysis.transistor_circuits",
+          "path": "findings",
           "op": "contains_match",
           "field": "type",
-          "pattern": "^jfet$"
+          "pattern": "^jfet$",
+          "detector_filter": "detect_transistor_circuits"
         },
         "description": "KH-146: MMBFJ111 classified as JFET not MOSFET"
       }
@@ -944,9 +973,10 @@
         "project": "pcb_rev.E_sizif512",
         "source_file": "sizif512.kicad_sch",
         "check": {
-          "path": "signal_analysis.led_drivers",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_led_drivers"
         },
         "description": "KH-147: No false LED drivers on zx-sizif-512"
       },
@@ -955,9 +985,10 @@
         "project": "ai-camera-rev3.2_ai-camera-rev3.2",
         "source_file": "ai-camera-rev3.2.kicad_sch",
         "check": {
-          "path": "signal_analysis.led_drivers",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_led_drivers"
         },
         "description": "KH-147: No false LED drivers on tokay-lite-pcb"
       }
@@ -973,11 +1004,12 @@
         "project": "3458A A3 66533 2021 KS SMD",
         "source_file": "3458A A3 66533 2021 KS SMD.kicad_sch",
         "check": {
-          "path": "signal_analysis.design_observations",
+          "path": "findings",
           "op": "count_matches",
           "field": "component",
           "pattern": "^U302$",
-          "value": 1
+          "value": 1,
+          "detector_filter": "detect_design_observations"
         },
         "description": "KH-148: Exactly 1 design_observation for U302 (not 7 duplicates)"
       }
@@ -993,9 +1025,10 @@
         "project": "3458A A3 66533 2021 KS SMD",
         "source_file": "3458A A3 66533 2021 KS SMD.kicad_sch",
         "check": {
-          "path": "signal_analysis.rf_matching",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_rf_matching"
         },
         "description": "KH-150: No false RF matching on precision DC measurement board"
       }
@@ -1032,9 +1065,10 @@
         "project": "ykts-power_ykts-power",
         "source_file": "ykts-power.sch",
         "check": {
-          "path": "signal_analysis.key_matrices",
+          "path": "findings",
           "op": "max_count",
-          "value": 0
+          "value": 0,
+          "detector_filter": "detect_key_matrices"
         },
         "description": "KH-152: No false key matrix on solar cell array board"
       }
