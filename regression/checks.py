@@ -107,6 +107,12 @@ def evaluate_assertion(assertion, data):
     result = {"id": aid, "description": desc, "passed": False}
     val = resolve_path(data, path)
 
+    # detector_filter: pre-filter findings[] by detector name before evaluation
+    detector_filter = check.get("detector_filter")
+    if detector_filter and isinstance(val, list):
+        val = [item for item in val
+               if isinstance(item, dict) and item.get("detector") == detector_filter]
+
     if op == "range":
         count = _countable(val)
         lo, hi = check.get("min", 0), check.get("max", float("inf"))

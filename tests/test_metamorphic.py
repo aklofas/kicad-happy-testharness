@@ -122,8 +122,8 @@ def test_vd_invariance_r_scaling():
     d2 = run_analyzer(_build_divider("100k", "100k"))
     if d1 is None or d2 is None:
         return
-    vd1 = d1["signal_analysis"]["voltage_dividers"]
-    vd2 = d2["signal_analysis"]["voltage_dividers"]
+    vd1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
+    vd2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
     assert len(vd1) == 1 and len(vd2) == 1
     assert abs(vd1[0]["ratio"] - vd2[0]["ratio"]) < 0.01, \
         f"R-scaling changed ratio: {vd1[0]['ratio']} vs {vd2[0]['ratio']}"
@@ -135,8 +135,8 @@ def test_vd_covariance_r_bottom_increases_ratio():
     d2 = run_analyzer(_build_divider("10k", "22k"))
     if d1 is None or d2 is None:
         return
-    vd1 = d1["signal_analysis"]["voltage_dividers"]
-    vd2 = d2["signal_analysis"]["voltage_dividers"]
+    vd1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
+    vd2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
     assert len(vd1) == 1 and len(vd2) == 1
     assert vd2[0]["ratio"] > vd1[0]["ratio"], \
         f"Larger R_bottom should increase ratio: {vd1[0]['ratio']} vs {vd2[0]['ratio']}"
@@ -150,8 +150,8 @@ def test_rc_invariance_constant_product():
     d2 = run_analyzer(_build_rc_lowpass("10k", "100n"))
     if d1 is None or d2 is None:
         return
-    rc1 = d1["signal_analysis"]["rc_filters"]
-    rc2 = d2["signal_analysis"]["rc_filters"]
+    rc1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_rc_filters"]
+    rc2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     assert len(rc1) >= 1 and len(rc2) >= 1
     fc1, fc2 = rc1[0]["cutoff_hz"], rc2[0]["cutoff_hz"]
     # Same RC product → same cutoff (within 10% tolerance for rounding)
@@ -165,8 +165,8 @@ def test_rc_covariance_doubling_r_halves_fc():
     d2 = run_analyzer(_build_rc_lowpass("2k", "1u"))
     if d1 is None or d2 is None:
         return
-    rc1 = d1["signal_analysis"]["rc_filters"]
-    rc2 = d2["signal_analysis"]["rc_filters"]
+    rc1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_rc_filters"]
+    rc2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     assert len(rc1) >= 1 and len(rc2) >= 1
     fc1, fc2 = rc1[0]["cutoff_hz"], rc2[0]["cutoff_hz"]
     ratio = fc1 / fc2
@@ -183,8 +183,8 @@ def test_reg_invariance_ref_relabel():
     d2 = run_analyzer(_build_regulator("U2", "LM7805", "Regulator_Linear:LM7805"))
     if d1 is None or d2 is None:
         return
-    r1 = d1["signal_analysis"].get("power_regulators", [])
-    r2 = d2["signal_analysis"].get("power_regulators", [])
+    r1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_power_regulators"]
+    r2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     assert len(r1) >= 1 and len(r2) >= 1
     v1 = r1[0].get("estimated_vout")
     v2 = r2[0].get("estimated_vout")
@@ -199,8 +199,8 @@ def test_reg_covariance_different_part_different_vout():
     d2 = run_analyzer(_build_regulator("U1", "LM7812", "Regulator_Linear:LM7812"))
     if d1 is None or d2 is None:
         return
-    r1 = d1["signal_analysis"].get("power_regulators", [])
-    r2 = d2["signal_analysis"].get("power_regulators", [])
+    r1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_power_regulators"]
+    r2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     assert len(r1) >= 1 and len(r2) >= 1
     v1 = r1[0].get("estimated_vout")
     v2 = r2[0].get("estimated_vout")
@@ -227,7 +227,7 @@ def test_prot_invariance_ref_relabel():
         data = run_analyzer(sch)
         if data is None:
             return
-        pd = data["signal_analysis"].get("protection_devices", [])
+        pd = [f for f in data.get("findings", []) if f.get("detector") == "detect_protection_devices"]
         assert len(pd) >= 1, f"Protection device {ref} not detected"
 
 
@@ -263,8 +263,8 @@ def test_prot_covariance_adding_device_increases_count():
     d2 = run_analyzer(sch2)
     if d1 is None or d2 is None:
         return
-    pd1 = d1["signal_analysis"].get("protection_devices", [])
-    pd2 = d2["signal_analysis"].get("protection_devices", [])
+    pd1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_protection_devices"]
+    pd2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_protection_devices"]
     assert len(pd2) > len(pd1), \
         f"Adding TVS should increase count: {len(pd1)} vs {len(pd2)}"
 
@@ -277,8 +277,8 @@ def test_crystal_invariance_load_cap_value():
     d2 = run_analyzer(_build_crystal("16MHz", "22p"))
     if d1 is None or d2 is None:
         return
-    cc1 = d1["signal_analysis"]["crystal_circuits"]
-    cc2 = d2["signal_analysis"]["crystal_circuits"]
+    cc1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_crystal_circuits"]
+    cc2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_crystal_circuits"]
     assert len(cc1) >= 1 and len(cc2) >= 1
     f1, f2 = cc1[0]["frequency"], cc2[0]["frequency"]
     assert f1 == f2, f"Load cap change altered frequency: {f1} vs {f2}"
@@ -290,8 +290,8 @@ def test_crystal_covariance_different_frequency():
     d2 = run_analyzer(_build_crystal("8MHz", "18p"))
     if d1 is None or d2 is None:
         return
-    cc1 = d1["signal_analysis"]["crystal_circuits"]
-    cc2 = d2["signal_analysis"]["crystal_circuits"]
+    cc1 = [f for f in d1.get("findings", []) if f.get("detector") == "detect_crystal_circuits"]
+    cc2 = [f for f in d2.get("findings", []) if f.get("detector") == "detect_crystal_circuits"]
     assert len(cc1) >= 1 and len(cc2) >= 1
     f1, f2 = cc1[0]["frequency"], cc2[0]["frequency"]
     assert f1 > f2, f"16MHz should be > 8MHz: {f1} vs {f2}"
