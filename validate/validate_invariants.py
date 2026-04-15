@@ -245,6 +245,40 @@ def check_invariants(data, filepath=""):
                         _add(f"trust_summary.bom_coverage.{pct_key}={pct} "
                              f"not in [0, 100]")
 
+            # --- trust_level threshold consistency ---
+            if ts_total and ts_total > 0 and by_conf is not None:
+                heu_pct = 100 * by_conf.get("heuristic", 0) / ts_total
+                unk = ts.get("unknown_confidence", 0)
+                expected_level = ("low" if (heu_pct > 50 or unk > 0)
+                                  else "mixed" if heu_pct > 20
+                                  else "high")
+                if tl and tl != expected_level:
+                    _add(f"trust_summary.trust_level='{tl}' but expected "
+                         f"'{expected_level}' (heu={heu_pct:.1f}%, unk={unk})")
+
+            # --- provenance_coverage_pct cross-check ---
+            if prov_pct is not None and ts_total is not None:
+                findings = data.get("findings", [])
+                actual_prov = sum(1 for f in findings
+                                 if isinstance(f, dict) and "provenance" in f)
+                expected_pct = (round(100 * actual_prov / ts_total, 1)
+                                if ts_total else 100.0)
+                if abs(prov_pct - expected_pct) > 0.2:
+                    _add(f"trust_summary.provenance_coverage_pct={prov_pct} "
+                         f"but actual={expected_pct}%")
+
+            # --- BOM coverage cross-check ---
+            if bom_cov is not None:
+                bom = data.get("bom", data.get("components", []))
+                actual_total = sum(
+                    1 for c in bom if isinstance(c, dict)
+                    and c.get("type") not in
+                    ("power_symbol", "power_flag", "flag"))
+                reported_total = bom_cov.get("total_components", 0)
+                if actual_total != reported_total:
+                    _add(f"trust_summary.bom_coverage.total_components="
+                         f"{reported_total} but actual={actual_total}")
+
     return violations
 
 

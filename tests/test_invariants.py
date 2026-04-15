@@ -328,13 +328,15 @@ def test_evidence_source_all_valid_enums():
 # 28. trust_summary — valid structure passes
 def test_trust_summary_valid():
     data = _clean_output()
+    # 4 findings, 2 heuristic → trust_level=mixed (20% < heu=50% <= 50%)
+    # 0 findings have provenance key → provenance_coverage_pct=0.0
     data["trust_summary"] = {
         "total_findings": 4,
         "trust_level": "mixed",
         "by_confidence": {"deterministic": 2, "heuristic": 2, "datasheet-backed": 0},
         "by_evidence_source": {"datasheet": 1, "topology": 1, "heuristic_rule": 2,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
-        "provenance_coverage_pct": 50.0,
+        "provenance_coverage_pct": 0.0,
     }
     violations = check_invariants(data, "test.json")
     assert not any("trust_summary" in v[1] for v in violations)
@@ -409,7 +411,82 @@ def test_trust_summary_bom_coverage_invalid_pct():
     assert any("mpn_pct=150.0" in v[1] for v in violations)
 
 
-# 34. Corpus spot-check (run on a real output)
+# 34. trust_level threshold — high correct
+def test_trust_level_threshold_high():
+    data = _clean_output()
+    data["findings"] = [{"detector": "test", "confidence": "deterministic"}] * 8 + \
+                       [{"detector": "test", "confidence": "heuristic"}] * 2
+    data["trust_summary"] = {
+        "total_findings": 10,
+        "trust_level": "high",
+        "by_confidence": {"deterministic": 8, "heuristic": 2, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 10,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,
+    }
+    violations = check_invariants(data, "test.json")
+    assert not any("trust_level" in v[1] and "expected" in v[1] for v in violations)
+
+
+# 35. trust_level threshold — should be mixed but says high
+def test_trust_level_threshold_wrong():
+    data = _clean_output()
+    data["findings"] = [{"detector": "test", "confidence": "deterministic"}] * 7 + \
+                       [{"detector": "test", "confidence": "heuristic"}] * 3
+    data["trust_summary"] = {
+        "total_findings": 10,
+        "trust_level": "high",  # wrong: 30% heuristic should be mixed
+        "by_confidence": {"deterministic": 7, "heuristic": 3, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 10,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("expected 'mixed'" in v[1] for v in violations)
+
+
+# 36. provenance_coverage_pct cross-check — mismatch
+def test_provenance_pct_cross_check():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "test", "confidence": "deterministic", "provenance": {"evidence": "test"}},
+        {"detector": "test", "confidence": "deterministic"},
+    ]
+    data["trust_summary"] = {
+        "total_findings": 2,
+        "trust_level": "high",
+        "by_confidence": {"deterministic": 2, "heuristic": 0, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 2,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,  # wrong: should be 50.0
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("provenance_coverage_pct" in v[1] and "actual=50.0%" in v[1] for v in violations)
+
+
+# 37. BOM coverage cross-check — total_components mismatch
+def test_bom_coverage_total_mismatch():
+    data = _clean_output()
+    data["bom"] = [
+        {"reference": "R1", "type": "resistor"},
+        {"reference": "C1", "type": "capacitor"},
+        {"reference": "#PWR01", "type": "power_symbol"},
+    ]
+    data["trust_summary"] = {
+        "total_findings": 4,
+        "trust_level": "high",
+        "by_confidence": {"deterministic": 4, "heuristic": 0, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,
+        "bom_coverage": {"total_components": 5, "with_mpn": 0, "with_datasheet": 0,
+                         "mpn_pct": 0.0, "datasheet_pct": 0.0},
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("bom_coverage.total_components=5" in v[1] and "actual=2" in v[1] for v in violations)
+
+
+# 38. Corpus spot-check (run on a real output)
 def test_corpus_spot_check():
     # Use known real outputs that should have valid invariants.
     # Only check modern (.kicad_sch) outputs — legacy .sch files
