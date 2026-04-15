@@ -65,6 +65,8 @@ SMOKE_TESTS = [
     "tests/test_metamorphic.py",     # 10 tests — invariance/covariance (P5)
     "tests/test_structured_findings.py",  # 11 tests — structured finding checks (P3.A)
     "tests/test_manufacturer_match.py",  # 11 tests — manufacturer prefix matching (DS-2)
+    "tests/test_finding_schema.py",  # 26 tests — finding_schema.py contract (P13)
+    "tests/test_downstream_tools.py",  # 12 tests — downstream tool smoke tests (P13)
 ]
 
 
