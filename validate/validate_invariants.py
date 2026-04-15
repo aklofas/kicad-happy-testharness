@@ -82,6 +82,15 @@ def check_invariants(data, filepath=""):
         if load <= 0:
             _add(f"crystal_circuits[{i}].effective_load_pF={load} <= 0")
 
+    # --- Confidence taxonomy: must be in declared set when present ---
+    VALID_CONFIDENCES = {"deterministic", "heuristic", "datasheet-backed"}
+    for i, finding in enumerate(data.get("findings", [])):
+        conf = finding.get("confidence")
+        if conf is not None and conf not in VALID_CONFIDENCES:
+            det = finding.get("detector", "?")
+            _add(f"findings[{i}] ({det}).confidence='{conf}' "
+                 f"not in {VALID_CONFIDENCES}")
+
     # --- Every net referenced in findings exists in extracted nets ---
     nets = data.get("nets", {})
     if isinstance(nets, dict):

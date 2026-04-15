@@ -205,7 +205,39 @@ def test_empty_nets_skips_cross_check():
     assert not any("not in nets" in v[1] for v in violations)
 
 
-# 17. Corpus spot-check (run on a real output)
+# 17. Confidence taxonomy — valid values pass
+def test_confidence_valid_values():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "confidence": "deterministic"},
+        {"detector": "detect_rc_filters", "cutoff_hz": 159.0, "confidence": "heuristic"},
+        {"detector": "detect_lc_filters", "resonant_hz": 7234.0, "confidence": "datasheet-backed"},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert not any("confidence" in v[1] for v in violations)
+
+
+# 18. Confidence taxonomy — invalid value flagged
+def test_confidence_invalid_value():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "confidence": "high"},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert any("confidence='high'" in v[1] for v in violations)
+
+
+# 19. Confidence taxonomy — absent confidence is OK
+def test_confidence_absent_ok():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_suggested_certifications"},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert not any("confidence" in v[1] for v in violations)
+
+
+# 20. Corpus spot-check (run on a real output)
 # (renumbered from 12 after adding invariant tests above)
 def test_corpus_spot_check():
     # Use known real outputs that should have valid invariants.
