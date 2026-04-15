@@ -350,9 +350,13 @@ def generate_emc_structural_assertions(data, strict=True):
 def generate_thermal_structural_assertions(data, strict=True):
     """Generate structural assertions from thermal analysis output.
 
-    For each component ref in thermal_assessments, asserts presence.
+    For each component ref in TH-DET findings (thermal assessments),
+    asserts presence via detector_filter on findings[].
     """
-    assessments = data.get("thermal_assessments", [])
+    findings = data.get("findings", [])
+    assessments = [f for f in findings
+                   if f.get("detector") == "analyze_thermal"
+                   and f.get("rule_id") == "TH-DET"]
     if not assessments:
         return []
 
@@ -369,9 +373,10 @@ def generate_thermal_structural_assertions(data, strict=True):
         seen_refs.add(ref)
         assertions.append({
             "id": f"STRUCT-{ast_num:08d}",
-            "description": f"{ref} in thermal_assessments",
+            "description": f"{ref} in thermal assessments",
             "check": {
-                "path": "thermal_assessments",
+                "path": "findings",
+                "detector_filter": "analyze_thermal",
                 "op": "contains_match",
                 "field": "ref",
                 "pattern": rf"^{re.escape(ref)}$",
