@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Property-based invariant checker for schematic analyzer outputs.
+"""Property-based invariant checker for analyzer outputs.
 
 Checks mathematical and structural invariants that must always hold:
 - Voltage divider ratio: 0 < ratio < 1
@@ -13,10 +13,11 @@ Checks mathematical and structural invariants that must always hold:
 - No unexpected duplicate component refs
 
 Usage:
-    python3 validate/validate_invariants.py
-    python3 validate/validate_invariants.py --repo owner/repo
+    python3 validate/validate_invariants.py                          # all types, all repos
+    python3 validate/validate_invariants.py --type schematic         # schematic only
+    python3 validate/validate_invariants.py --type thermal --repo X  # thermal, one repo
+    python3 validate/validate_invariants.py --type all --cross-section smoke
     python3 validate/validate_invariants.py --summary
-    python3 validate/validate_invariants.py --cross-section smoke --jobs 16
 """
 
 import argparse
@@ -28,13 +29,13 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import (OUTPUTS_DIR, MANIFESTS_DIR, REPOS_DIR, list_repos,
+from utils import (list_repos,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
-                   _truncate_with_hash)
+                   iter_output_files)
 
 
 def check_invariants(data, filepath=""):
-    """Check invariants on a schematic analyzer output dict.
+    """Check invariants on an analyzer output dict.
 
     Returns a list of (filepath, violation_description) tuples.
     Null values are skipped (not flagged).
@@ -257,36 +258,25 @@ def _check_file(json_path):
     return check_invariants(data, filepath=str(json_path))
 
 
-def _check_repo(repo_pair):
-    """Check all schematic outputs for a repo. Picklable worker."""
-    repo, schematics = repo_pair
-    repos_dir = str(REPOS_DIR)
+def _check_type_batch(work_item):
+    """Check all output files for a (type, repo) pair. Picklable worker."""
+    output_type, repo_name, file_paths = work_item
     all_violations = []
+    for json_path in file_paths:
+        all_violations.extend(_check_file(json_path))
+    return output_type, repo_name, all_violations
 
-    for sch_path in schematics:
-        relpath = sch_path
-        if sch_path.startswith(repos_dir):
-            relpath = sch_path[len(repos_dir):].lstrip("/").lstrip(os.sep)
 
-        parts = relpath.replace("\\", "/").split("/", 2)
-        if len(parts) < 3:
-            continue
-        owner = parts[0]
-        repo_name = parts[1]
-        within_repo = parts[2]
-        safe_name = _truncate_with_hash(within_repo.replace(os.sep, "_").replace("/", "_"))
-
-        json_path = OUTPUTS_DIR / "schematic" / owner / repo_name / f"{safe_name}.json"
-        if json_path.exists():
-            all_violations.extend(_check_file(json_path))
-
-    return repo, all_violations
+VALID_TYPES = ("schematic", "pcb", "emc", "thermal", "gerber")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Check mathematical/structural invariants in schematic outputs")
+        description="Check mathematical/structural invariants in analyzer outputs")
     add_repo_filter_args(parser)
+    parser.add_argument("--type", "-t", default="all",
+                        choices=list(VALID_TYPES) + ["all"],
+                        help="Output type to check (default: all)")
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--summary", action="store_true",
@@ -298,32 +288,20 @@ def main():
     if repos is None:
         repos = list_repos()
 
-    schematics_list = MANIFESTS_DIR / "all_schematics.txt"
-    if not schematics_list.exists():
-        print(f"Error: {schematics_list} not found. Run discover.py first.")
-        sys.exit(1)
+    types_to_check = VALID_TYPES if args.type == "all" else (args.type,)
 
-    with open(schematics_list) as f:
-        all_schematics = [line.strip() for line in f if line.strip()]
+    # Collect work items: (type, repo, [json_paths])
+    by_repo = defaultdict(lambda: defaultdict(list))
+    total_files = 0
+    for otype in types_to_check:
+        for json_path, repo_name in iter_output_files(otype, repos):
+            by_repo[otype][repo_name].append(json_path)
+            total_files += 1
 
-    # Group schematics by repo
-    repos_dir = str(REPOS_DIR)
-    repo_set = set(repos)
-    by_repo = defaultdict(list)
-    for s in all_schematics:
-        relpath = s
-        if s.startswith(repos_dir):
-            relpath = s[len(repos_dir):].lstrip("/").lstrip(os.sep)
-        parts = relpath.replace("\\", "/").split("/")
-        if len(parts) >= 2:
-            repo_name = f"{parts[0]}/{parts[1]}"
-        else:
-            repo_name = parts[0]
-        if repo_name in repo_set:
-            by_repo[repo_name].append(s)
-
-    total_schematics = sum(len(v) for v in by_repo.values())
-    work_items = list(by_repo.items())
+    work_items = []
+    for otype in types_to_check:
+        for repo_name, paths in sorted(by_repo[otype].items()):
+            work_items.append((otype, repo_name, paths))
 
     all_violations = []
     violations_by_repo = {}
@@ -331,18 +309,20 @@ def main():
 
     if jobs > 1 and len(work_items) > 1:
         with ProcessPoolExecutor(max_workers=min(jobs, len(work_items))) as pool:
-            futures = {pool.submit(_check_repo, item): item[0]
+            futures = {pool.submit(_check_type_batch, item): item
                        for item in work_items}
             for future in as_completed(futures):
-                repo, viols = future.result()
+                otype, repo, viols = future.result()
                 if viols:
-                    violations_by_repo[repo] = viols
+                    key = f"{otype}:{repo}"
+                    violations_by_repo[key] = viols
                     all_violations.extend(viols)
     else:
         for item in work_items:
-            repo, viols = _check_repo(item)
+            otype, repo, viols = _check_type_batch(item)
             if viols:
-                violations_by_repo[repo] = viols
+                key = f"{otype}:{repo}"
+                violations_by_repo[key] = viols
                 all_violations.extend(viols)
 
     # Categorize violations
@@ -369,8 +349,9 @@ def main():
 
     if args.json:
         output = {
-            "schematics_checked": total_schematics,
-            "repos_checked": len(by_repo),
+            "types_checked": list(types_to_check),
+            "files_checked": total_files,
+            "repos_checked": len(set(r for _, r, _ in work_items)),
             "total_violations": len(all_violations),
             "repos_with_violations": len(violations_by_repo),
             "categories": dict(categories),
@@ -380,7 +361,9 @@ def main():
         print(json.dumps(output, indent=2))
         return
 
-    print(f"Checked {total_schematics} schematics across {len(by_repo)} repos")
+    type_label = ", ".join(types_to_check)
+    print(f"Checked {total_files} files ({type_label}) across "
+          f"{len(set(r for _, r, _ in work_items))} repos")
     print(f"Violations: {len(all_violations)} across "
           f"{len(violations_by_repo)} repos")
     print()
@@ -392,9 +375,9 @@ def main():
         print()
 
     if all_violations and not args.summary:
-        for repo in sorted(violations_by_repo.keys()):
-            viols = violations_by_repo[repo]
-            print(f"--- {repo} ({len(viols)}) ---")
+        for key in sorted(violations_by_repo.keys()):
+            viols = violations_by_repo[key]
+            print(f"--- {key} ({len(viols)}) ---")
             for fp, desc in viols[:20]:
                 short = os.path.basename(fp) if fp else "(unknown)"
                 print(f"  {short}: {desc}")
