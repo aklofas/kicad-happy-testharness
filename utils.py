@@ -536,6 +536,26 @@ def iter_output_repos(base_dir, repo_filter=None):
             yield repo_name, repo_dir
 
 
+def iter_output_files(output_type, repos=None):
+    """Yield (json_path, repo_name) for all output files of a given type.
+
+    Args:
+        output_type: One of 'schematic', 'pcb', 'emc', 'thermal', 'gerber', 'spice'.
+        repos: Optional list of 'owner/repo' strings to filter. None = all.
+    """
+    type_dir = OUTPUTS_DIR / output_type
+    if not type_dir.exists():
+        return
+    repo_set = set(repos) if repos else None
+    for repo_name, repo_dir in iter_output_repos(type_dir, repo_filter=None):
+        if repo_set and repo_name not in repo_set:
+            continue
+        for jf in sorted(repo_dir.glob("*.json")):
+            if jf.name.startswith("_"):
+                continue
+            yield jf, repo_name
+
+
 # ---------------------------------------------------------------------------
 # Output validation
 # ---------------------------------------------------------------------------
