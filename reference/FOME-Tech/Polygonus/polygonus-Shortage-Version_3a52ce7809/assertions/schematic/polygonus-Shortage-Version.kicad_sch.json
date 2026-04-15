@@ -502,16 +502,6 @@
     },
     {
       "id": "SEED-00000048",
-      "description": "2 detect_suggested_certifications detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000049",
       "description": "19 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -521,7 +511,7 @@
       }
     },
     {
-      "id": "SEED-00000050",
+      "id": "SEED-00000049",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -529,6 +519,16 @@
         "op": "not_contains_match",
         "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000050",
+      "description": "2 suggest_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

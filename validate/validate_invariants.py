@@ -6,6 +6,9 @@ Checks mathematical and structural invariants that must always hold:
 - RC filter cutoff: cutoff_hz > 0 (when R > 0 and C > 0)
 - LC filter resonance: resonant_hz > 0 (when L > 0 and C > 0)
 - Crystal: effective_load_pF > 0
+- Confidence taxonomy: must be in {deterministic, heuristic, datasheet-backed}
+- Evidence source taxonomy: must be in {datasheet, topology, heuristic_rule, symbol_footprint, bom, geometry, api_lookup}
+- trust_summary: shape, totals, and enum validity when present
 - Component count: total_components >= sum of component_types counts
 - No unexpected duplicate component refs
 
@@ -90,6 +93,16 @@ def check_invariants(data, filepath=""):
             det = finding.get("detector", "?")
             _add(f"findings[{i}] ({det}).confidence='{conf}' "
                  f"not in {VALID_CONFIDENCES}")
+
+    # --- Evidence source taxonomy: must be in declared set when present ---
+    VALID_EVIDENCE_SOURCES = {"datasheet", "topology", "heuristic_rule",
+                              "symbol_footprint", "bom", "geometry", "api_lookup"}
+    for i, finding in enumerate(data.get("findings", [])):
+        ev = finding.get("evidence_source")
+        if ev is not None and ev not in VALID_EVIDENCE_SOURCES:
+            det = finding.get("detector", "?")
+            _add(f"findings[{i}] ({det}).evidence_source='{ev}' "
+                 f"not in {VALID_EVIDENCE_SOURCES}")
 
     # --- Provenance structure: when present, must have valid shape ---
     PROV_REQUIRED = {"evidence", "confidence", "claimed_components",
@@ -179,6 +192,57 @@ def check_invariants(data, filepath=""):
             if count > 1 and ref not in known_dupes:
                 _add(f"duplicate ref '{ref}' appears {count} times "
                      f"(not in annotation_issues)")
+
+    # --- trust_summary: when present, must have valid shape ---
+    VALID_TRUST_LEVELS = {"high", "mixed", "low"}
+    ts = data.get("trust_summary")
+    if ts is not None:
+        if not isinstance(ts, dict):
+            _add("trust_summary is not a dict")
+        else:
+            findings_count = len(data.get("findings", []))
+            ts_total = ts.get("total_findings")
+            if ts_total is not None and ts_total != findings_count:
+                _add(f"trust_summary.total_findings={ts_total} "
+                     f"!= len(findings)={findings_count}")
+
+            tl = ts.get("trust_level")
+            if tl is not None and tl not in VALID_TRUST_LEVELS:
+                _add(f"trust_summary.trust_level='{tl}' "
+                     f"not in {VALID_TRUST_LEVELS}")
+
+            by_conf = ts.get("by_confidence")
+            if isinstance(by_conf, dict):
+                if set(by_conf.keys()) != VALID_CONFIDENCES:
+                    _add(f"trust_summary.by_confidence keys "
+                         f"{set(by_conf.keys())} != {VALID_CONFIDENCES}")
+                conf_sum = sum(by_conf.values()) + ts.get("unknown_confidence", 0)
+                if ts_total is not None and conf_sum != ts_total:
+                    _add(f"trust_summary by_confidence sum ({conf_sum}) "
+                         f"!= total_findings ({ts_total})")
+
+            by_ev = ts.get("by_evidence_source")
+            if isinstance(by_ev, dict):
+                if set(by_ev.keys()) != VALID_EVIDENCE_SOURCES:
+                    _add(f"trust_summary.by_evidence_source keys "
+                         f"{set(by_ev.keys())} != {VALID_EVIDENCE_SOURCES}")
+                ev_sum = sum(by_ev.values()) + ts.get("unknown_evidence_source", 0)
+                if ts_total is not None and ev_sum != ts_total:
+                    _add(f"trust_summary by_evidence_source sum ({ev_sum}) "
+                         f"!= total_findings ({ts_total})")
+
+            prov_pct = ts.get("provenance_coverage_pct")
+            if prov_pct is not None and not (0 <= prov_pct <= 100):
+                _add(f"trust_summary.provenance_coverage_pct={prov_pct} "
+                     f"not in [0, 100]")
+
+            bom_cov = ts.get("bom_coverage")
+            if isinstance(bom_cov, dict):
+                for pct_key in ("mpn_pct", "datasheet_pct"):
+                    pct = bom_cov.get(pct_key)
+                    if pct is not None and not (0 <= pct <= 100):
+                        _add(f"trust_summary.bom_coverage.{pct_key}={pct} "
+                             f"not in [0, 100]")
 
     return violations
 
@@ -296,6 +360,10 @@ def main():
             categories["component_count"] += 1
         elif "duplicate ref" in desc:
             categories["duplicate_ref"] += 1
+        elif "evidence_source" in desc:
+            categories["evidence_source"] += 1
+        elif "trust_summary" in desc:
+            categories["trust_summary"] += 1
         else:
             categories["other"] += 1
 

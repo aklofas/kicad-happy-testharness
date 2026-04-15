@@ -11,6 +11,116 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-15 — KH-310 (format-report device reference key)
+
+### KH-310 (LOW): `format-report.py` line 516 tries `reference` but devices use `ref`
+
+- **Where fixed:** kicad-happy repo, `action/format-report.py` line 516
+- **Symptom:** Buses & Protocols section rendered raw dicts instead of
+  component references (e.g., `{'ref': 'U1', 'value': ...}` instead of `U1`).
+- **Root cause:** `d.get('reference', str(d))` but protocol_compliance device
+  dicts use `'ref'` not `'reference'`.
+- **Fix:** Added `d.get('ref', ...)` fallback.
+- **Verification:** `format-report.py` on macropad output renders `U1` cleanly.
+- **Commit:** 28faedc
+
+---
+
+## 2026-04-15 — KH-308..309 (Batch 16 trust_summary bugs)
+
+### KH-308 (MEDIUM): `compute_trust_summary` checks `_provenance` instead of `provenance`
+
+- **Where fixed:** kicad-happy repo, `finding_schema.py` line 157
+- **Symptom:** `provenance_coverage_pct` always 0.0% despite ~80% of schematic
+  findings having provenance dicts from KH-263 Phase 1.
+- **Root cause:** Typo — `f.get('_provenance')` instead of `f.get('provenance')`.
+  The `**extra` kwargs in `make_finding()` store provenance without underscore prefix.
+- **Fix:** Changed `'_provenance'` to `'provenance'`.
+- **Verification:** After re-run, provenance_coverage_pct: median 62.1%, p75 81.8%
+  (was 0.0% everywhere). Confirmed working.
+- **Commit:** 0b1ad2d
+
+### KH-309 (LOW): `detect_suggested_certifications` emits raw dicts without `make_finding()`
+
+- **Where fixed:** kicad-happy repo, `domain_detectors.py:suggest_certifications()`
+- **Symptom:** 100% of schematic outputs had `trust_level: "low"` because 74,076
+  certification suggestion findings lacked `confidence` and `evidence_source` fields.
+- **Root cause:** Only detector not using `make_finding()`. Raw dicts had no
+  confidence/evidence_source, triggering `unknown_confidence > 0` → "low".
+- **Fix:** Annotated all suggestion dicts with `detector='suggest_certifications'`,
+  `rule_id='CERT-001'`, `confidence='heuristic'`, `evidence_source='topology'`.
+- **Verification:** After re-run, unknown_confidence = 0 across all 36,314 outputs.
+  Trust level distribution: high 30.4%, mixed 53.0%, low 16.6% (was 100% low).
+- **Commit:** 0b1ad2d
+
+---
+
+## 2026-04-15 — KH-307 (incomplete Batch 14 evidence_source fix in thermal)
+
+### KH-307 (MEDIUM): Thermal TS-*/TP-* findings emit invalid evidence_source
+
+- **Where fixed:** kicad-happy repo, `analyze_thermal.py` lines 503–710
+- **Symptom:** 5,451 thermal findings had `evidence_source` set to
+  `"deterministic"` or `"heuristic"` — valid confidence values but not
+  valid evidence_source enums. Caught by new `evidence_source` invariant
+  in `validate_invariants.py`.
+- **Root cause:** Batch 14 (c7eae6f) fixed the TH-DET assessment dict but
+  missed 7 finding creation points: 4 in `_generate_findings()` copied the
+  `confidence` variable into `evidence_source`, and 3 in TS-004/TP-001/TP-002
+  hardcoded `"deterministic"` as the evidence_source string.
+- **Fix:** TS-001/002/003/005: derive `ev_source` from
+  `a["rtheta_ja_source"]` (same logic as line 437). TS-004/TP-001/TP-002:
+  use `"geometry"` (these check PCB via presence and proximity distances).
+- **Verification:** After fix + full corpus re-run (16,101 files):
+  `evidence_source` values are `datasheet` (3,455), `geometry` (3,362),
+  `heuristic_rule` (851). Zero invalid values. Invariant check passes.
+
+---
+
+## 2026-04-15 — TH-028..029 (release-readiness findings)
+
+### TH-028 (HIGH): `validate/` import collision breaks smoke gate on stock environments
+
+- **Where fixed:** Added `validate/__init__.py` (empty)
+- **Symptom:** `python3 run_tests.py --smoke` failed with `ModuleNotFoundError` on
+  4 tests (`test_datasheet_db_storage`, `test_datasheet_db_manifest`, `test_ab_test`,
+  `test_manufacturer_match`) on machines with the system `validate` package installed.
+- **Root cause:** The harness `validate/` directory had no `__init__.py`, so
+  `import validate.*` resolved to the system `validate` package instead of the
+  harness directory when the system package was installed.
+- **Fix:** Added empty `validate/__init__.py` to make it a proper package.
+- **Verification:** `run_tests.py --smoke` passes 489/489 tests, 0 failures.
+
+### TH-029 (MEDIUM): RUNBOOK references nonexistent `validate/invariants.py`
+
+- **Where fixed:** `RUNBOOK.md` lines 84 and 49
+- **Symptom:** RUNBOOK Checklist 2 step 1c3 referenced `validate/invariants.py` which
+  doesn't exist. Also described `quick_200` as "100-repo subset" when it's ~200 repos.
+- **Root cause:** Stale command from before the script was renamed to
+  `validate/validate_invariants.py`. Description copy-paste error.
+- **Fix:** Changed `validate/invariants.py` → `validate/validate_invariants.py` and
+  `100-repo subset` → `~200-repo subset` in RUNBOOK.md.
+- **Verification:** File exists at the corrected path. Cross-sections.json confirms
+  quick_200 has 255 repos.
+
+### TH-030 (LOW): Data directories cause slow/noisy traversal for code-scanning tools
+
+- **Where fixed:** `README.md` and `CLAUDE.md`
+- **Symptom:** `python3 -m compileall .` takes 55 seconds traversing 464,000
+  directories (99.99% data, 0 `.py` files). Discovered by an OpenAI Codex agent
+  doing a standard Python syntax check on cold read.
+- **Root cause:** The repo mixes ~130 code files across 7 directories with ~470,000
+  data directories (`repos/` 290k, `reference/` 114k, `results/` 65k). Python tools
+  don't read `.gitignore`, so they traverse everything. No documentation existed to
+  warn about the code/data split.
+- **Fix:** Added "Project layout" table to README.md separating code from data
+  directories. Added "Code vs data" note to CLAUDE.md with explicit scoping example.
+  Both include a bolded "never run recursive tools on `.`" warning.
+- **Verification:** Scoped compileall (0.02s) vs naive (55s). Documentation clearly
+  identifies which 7 dirs contain code vs which contain data.
+
+---
+
 ## 2026-04-14 — KH-304..306 (issue #14 sub-sheet redirect edge cases)
 
 ### KH-304 (MEDIUM): Intermediate sub-sheets misclassified as root

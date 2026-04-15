@@ -108,16 +108,6 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "3 detect_suggested_certifications detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "136 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -127,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -135,6 +125,16 @@
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "3 suggest_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

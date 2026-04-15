@@ -279,16 +279,6 @@
     },
     {
       "id": "SEED-00000027",
-      "description": "2 detect_suggested_certifications detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000028",
       "description": "3 detect_thermocouple_rtd detected",
       "check": {
         "path": "findings",
@@ -298,7 +288,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000028",
       "description": "All detect_thermocouple_rtd have ref",
       "check": {
         "path": "findings",
@@ -309,7 +299,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000029",
       "description": "All detect_thermocouple_rtd type values are valid",
       "check": {
         "path": "findings",
@@ -321,7 +311,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000030",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -331,7 +321,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000031",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -339,6 +329,16 @@
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000032",
+      "description": "2 suggest_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

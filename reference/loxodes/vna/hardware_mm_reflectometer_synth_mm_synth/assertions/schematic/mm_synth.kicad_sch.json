@@ -564,16 +564,6 @@
     },
     {
       "id": "SEED-00000054",
-      "description": "2 detect_suggested_certifications detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000055",
       "description": "7 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -583,7 +573,7 @@
       }
     },
     {
-      "id": "SEED-00000056",
+      "id": "SEED-00000055",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -594,7 +584,7 @@
       }
     },
     {
-      "id": "SEED-00000057",
+      "id": "SEED-00000056",
       "description": "26 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -604,7 +594,7 @@
       }
     },
     {
-      "id": "SEED-00000058",
+      "id": "SEED-00000057",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -612,6 +602,16 @@
         "op": "not_contains_match",
         "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000058",
+      "description": "2 suggest_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

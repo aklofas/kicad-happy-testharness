@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-04-14
+Last updated: 2026-04-15
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-04-14
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-307**. Next TH number: **TH-028**.
+maximum. Next KH number: **KH-311**. Next TH number: **TH-031**.
 
 > 0 open issues.
 
@@ -51,16 +51,16 @@ maximum. Next KH number: **KH-307**. Next TH number: **TH-028**.
 
 ## kicad-happy Analyzer Issues
 
-(None currently open — KH-304/305/306 fixed in commit 699fa94.)
+(None currently open.)
 
 ---
 
 ## Test Harness Issues
 
-(No open TH-* issues — TH-027 fixed this session.)
+(None currently open.)
 
 ---
 
 ## Priority Queue
 
-0 open issues. Remaining work tracked in `TODO-v1.3-roadmap.md`.
+0 open issues.

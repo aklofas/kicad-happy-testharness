@@ -281,8 +281,135 @@ def test_provenance_absent_ok():
     assert not any("provenance" in v[1] for v in violations)
 
 
-# 24. Corpus spot-check (run on a real output)
-# (renumbered from 12 after adding invariant tests above)
+# 24. Evidence source taxonomy — valid values pass
+def test_evidence_source_valid_values():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "evidence_source": "topology"},
+        {"detector": "detect_rc_filters", "cutoff_hz": 159.0, "evidence_source": "heuristic_rule"},
+        {"detector": "detect_lc_filters", "resonant_hz": 7234.0, "evidence_source": "datasheet"},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert not any("evidence_source" in v[1] for v in violations)
+
+
+# 25. Evidence source taxonomy — invalid value flagged
+def test_evidence_source_invalid_value():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "evidence_source": "package_table"},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert any("evidence_source='package_table'" in v[1] for v in violations)
+
+
+# 26. Evidence source taxonomy — absent evidence_source is OK
+def test_evidence_source_absent_ok():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_suggested_certifications"},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert not any("evidence_source" in v[1] for v in violations)
+
+
+# 27. Evidence source taxonomy — all valid enum values accepted
+def test_evidence_source_all_valid_enums():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "test", "evidence_source": src}
+        for src in ("datasheet", "topology", "heuristic_rule",
+                    "symbol_footprint", "bom", "geometry", "api_lookup")
+    ]
+    violations = check_invariants(data, "test.json")
+    assert not any("evidence_source" in v[1] for v in violations)
+
+
+# 28. trust_summary — valid structure passes
+def test_trust_summary_valid():
+    data = _clean_output()
+    data["trust_summary"] = {
+        "total_findings": 4,
+        "trust_level": "mixed",
+        "by_confidence": {"deterministic": 2, "heuristic": 2, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 1, "topology": 1, "heuristic_rule": 2,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 50.0,
+    }
+    violations = check_invariants(data, "test.json")
+    assert not any("trust_summary" in v[1] for v in violations)
+
+
+# 29. trust_summary — total_findings mismatch flagged
+def test_trust_summary_total_mismatch():
+    data = _clean_output()
+    data["trust_summary"] = {
+        "total_findings": 99,
+        "trust_level": "high",
+        "by_confidence": {"deterministic": 99, "heuristic": 0, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 99,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("total_findings=99" in v[1] and "len(findings)=4" in v[1] for v in violations)
+
+
+# 30. trust_summary — invalid trust_level flagged
+def test_trust_summary_invalid_trust_level():
+    data = _clean_output()
+    data["trust_summary"] = {
+        "total_findings": 4,
+        "trust_level": "medium",
+        "by_confidence": {"deterministic": 4, "heuristic": 0, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("trust_level='medium'" in v[1] for v in violations)
+
+
+# 31. trust_summary — by_confidence sum mismatch flagged
+def test_trust_summary_confidence_sum_mismatch():
+    data = _clean_output()
+    data["trust_summary"] = {
+        "total_findings": 4,
+        "trust_level": "high",
+        "by_confidence": {"deterministic": 1, "heuristic": 0, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("by_confidence sum (1)" in v[1] for v in violations)
+
+
+# 32. trust_summary — absent is OK (backward compat)
+def test_trust_summary_absent_ok():
+    data = _clean_output()
+    violations = check_invariants(data, "test.json")
+    assert not any("trust_summary" in v[1] for v in violations)
+
+
+# 33. trust_summary — bom_coverage pct out of range flagged
+def test_trust_summary_bom_coverage_invalid_pct():
+    data = _clean_output()
+    data["trust_summary"] = {
+        "total_findings": 4,
+        "trust_level": "low",
+        "by_confidence": {"deterministic": 0, "heuristic": 4, "datasheet-backed": 0},
+        "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
+                               "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+        "provenance_coverage_pct": 0.0,
+        "bom_coverage": {"total_components": 10, "with_mpn": 5, "with_datasheet": 3,
+                         "mpn_pct": 150.0, "datasheet_pct": 30.0},
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("mpn_pct=150.0" in v[1] for v in violations)
+
+
+# 34. Corpus spot-check (run on a real output)
 def test_corpus_spot_check():
     # Use known real outputs that should have valid invariants.
     # Only check modern (.kicad_sch) outputs — legacy .sch files

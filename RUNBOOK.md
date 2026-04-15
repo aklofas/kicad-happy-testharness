@@ -46,7 +46,7 @@ python3 run/run_thermal.py --jobs 8             # if thermal affected (needs sch
 ```
 
 Add `--repo {repo}` to test a single repo first before full corpus.
-Add `--cross-section quick_200` to test a balanced 100-repo subset.
+Add `--cross-section quick_200` to test a balanced ~200-repo subset.
 Add `--validate` to check output JSON structure.
 All tools auto-parallelize (default `--jobs` = cpu count).
 
@@ -81,7 +81,7 @@ does not cover.
 ### 1c3. Run property invariants (v1.3+)
 
 ```bash
-python3 validate/invariants.py --cross-section quick_200
+python3 validate/validate_invariants.py --cross-section quick_200
 ```
 
 Universal structural rules (e.g., divider ratio ∈ (0, 1), filter cutoff > 0 when

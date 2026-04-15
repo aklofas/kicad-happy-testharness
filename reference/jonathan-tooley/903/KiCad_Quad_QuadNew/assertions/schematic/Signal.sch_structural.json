@@ -81,16 +81,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 3 detect_suggested_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_suggested_certifications",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -100,7 +90,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "R4 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -111,7 +101,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "R8 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -122,7 +112,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "R9 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -133,7 +123,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "R11 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -141,6 +131,16 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Exactly 3 suggest_certifications",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "equals",
+        "value": 3
       }
     }
   ]
