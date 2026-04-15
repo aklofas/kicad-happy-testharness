@@ -31,7 +31,7 @@ INVENTORY_FILE = DATA_DIR / "schema_inventory.json"
 # Analyzer types that have findings detectors
 SCHEMATIC_DETECTORS_PATH = "findings"
 PCB_SECTIONS = [
-    "connectivity", "dfm", "thermal_analysis", "assembly_analysis",
+    "connectivity", "dfm_summary", "placement_density",
 ]
 
 

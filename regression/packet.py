@@ -93,7 +93,8 @@ def _summarize_pcb_output(data):
         "dfm_violation_count": dfm.get("violation_count", 0),
         "decoupling_count": len(data.get("decoupling_placement", [])),
         "power_net_count": len(data.get("power_net_routing", [])),
-        "thermal_pad_vias": len(data.get("thermal_pad_vias", [])),
+        "thermal_pad_vias": sum(1 for f in data.get("findings", [])
+                                if f.get("detector") == "analyze_thermal_pad_vias"),
         "sections_present": sorted(k for k in data.keys() if k != "file"),
     }
 

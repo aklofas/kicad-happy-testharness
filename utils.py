@@ -547,7 +547,7 @@ EXPECTED_KEYS = {
     "gerber": {"layers", "summary"},
     "emc": {"findings", "summary"},
     "spice": {"simulation_results", "summary"},
-    "thermal": {"findings", "summary", "thermal_assessments"},
+    "thermal": {"findings", "summary"},
 }
 
 

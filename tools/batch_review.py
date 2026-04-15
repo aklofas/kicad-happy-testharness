@@ -200,9 +200,8 @@ def _collect_outputs(repo):
             try:
                 d = json.loads(thermal_path.read_text(encoding="utf-8"))
                 # Include if there are any thermal assessments or findings
-                assessments = d.get("thermal_assessments", [])
                 findings = d.get("findings", [])
-                if assessments or findings:
+                if findings:
                     best_result["thermal"] = [{
                         "path": str(thermal_path),
                         "source": best_result["pcb"][0]["source"],

@@ -402,7 +402,6 @@ def extract_manifest_entry(data, analyzer_type):
             "high": summary.get("high", 0),
             "medium": summary.get("medium", 0),
             "low": summary.get("low", 0),
-            "thermal_assessments": len(data.get("thermal_assessments", [])),
         }
 
     return {}
