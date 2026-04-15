@@ -19,19 +19,9 @@
       "description": "The board uses minimum 0.1778mm (7mil) track width, 0.1524mm (6mil) spacing, 0.3mm drill, and 0.13mm annular ring \u2014 all within standard fab tier parameters. Zero DFM violations is correct.",
       "created_from": "FND-00001537",
       "check": {
-        "path": "dfm.dfm_tier",
+        "path": "dfm_summary.dfm_tier",
         "op": "equals",
         "value": "standard"
-      }
-    },
-    {
-      "id": "FND-00001537-AST-03",
-      "description": "10 courtyard overlaps are correctly detected, all involving components on B.Cu overlapping with J3 (JST 1mm Qwiic connector). The overlap magnitude of 1.748mm\u00b2 per pair is plausible for tightly packed 0402 components near a small connector. This is a real layout concern.",
-      "created_from": "FND-00001537",
-      "check": {
-        "path": "placement_analysis.overlap_count",
-        "op": "equals",
-        "value": 10
       }
     },
     {

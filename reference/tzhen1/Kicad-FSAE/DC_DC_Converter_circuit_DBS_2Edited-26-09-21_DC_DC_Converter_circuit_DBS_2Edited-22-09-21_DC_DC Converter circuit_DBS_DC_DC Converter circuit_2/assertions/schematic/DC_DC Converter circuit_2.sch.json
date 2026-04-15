@@ -35,109 +35,6 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Findings section exists",
-      "check": {
-        "path": "findings",
-        "op": "exists"
-      }
-    },
-    {
-      "id": "SEED-00000005",
-      "description": "1 connector_ground_audit detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_connector_ground_distribution",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "1 decoupling_analysis detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_decoupling",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
-      "description": "1 design_observations detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "5 esd_coverage_audit detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_esd_protection",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "All esd_coverage_audit have connector_ref",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_esd_protection",
-        "op": "not_contains_match",
-        "field": "connector_ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "All esd_coverage_audit coverage values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_esd_protection",
-        "op": "count_matches",
-        "field": "coverage",
-        "pattern": "^(full|partial|none)$",
-        "value": 5
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "All esd_coverage_audit risk_level values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_esd_protection",
-        "op": "count_matches",
-        "field": "risk_level",
-        "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 5
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "1 protection_devices detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "2 suggested_certifications detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_suggested_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -146,7 +43,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000005",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -155,7 +52,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000006",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

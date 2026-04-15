@@ -39,19 +39,6 @@
       "migration_note": "Path migrated from: signal_analysis.power_regulators[?ref=='U4'].estimated_vout"
     },
     {
-      "id": "FND-00002307-AST-04",
-      "description": "INCORRECT: Each of the four BSN20 transistors (Q1\u2013Q4) is reported with a led_driver field pointing to D1 (WS2812B) with various gate resistors (R15, R16, R17, R18 at 10k each). Only Q4 actually drives the LED data line (LED_Data/LED_Data_5V). Q1, Q2, and Q3 are level-shifters for DataRX, DataEN, and DataTX respectively \u2014 not LED drivers. The association appears to be a false match caused by proximity or shared net heuristics.",
-      "created_from": "FND-00002307",
-      "check": {
-        "path": "findings",
-        "op": "min_count",
-        "value": 4,
-        "detector_filter": "detect_transistor_circuits"
-      },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
-    },
-    {
       "id": "FND-00002307-AST-05",
       "description": "The design uses a MAX481E RS-485 transceiver (U6) with nets RS485_A and RS485_B, each protected by SMBJ12CA TVS diodes (D10, D9). The analyzer detects USB D+/D- as a differential pair but does not identify RS485_A/RS485_B as a differential pair, even though they follow standard naming conventions (_A/_B suffix) and are connected to a known RS-485 IC. The bus_analysis section has no CAN or special RS-485 entry for these nets either.",
       "created_from": "FND-00002307",

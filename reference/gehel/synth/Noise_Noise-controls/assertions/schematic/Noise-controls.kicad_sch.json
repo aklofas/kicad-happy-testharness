@@ -53,6 +53,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "1 audit_datasheet_coverage detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_datasheet_coverage",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "7 audit_esd_protection detected",
       "check": {
         "path": "findings",
@@ -62,7 +72,42 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
+      "description": "All audit_esd_protection have connector_ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All audit_esd_protection coverage values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All audit_esd_protection risk_level values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "1 audit_led_circuits detected",
       "check": {
         "path": "findings",
@@ -72,7 +117,52 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000012",
+      "description": "All audit_led_circuits have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All audit_led_circuits type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All audit_led_circuits drive_method values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "1 audit_sourcing_gate detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_sourcing_gate",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "2 detect_suggested_certifications detected",
       "check": {
         "path": "findings",
@@ -82,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000017",
       "description": "1 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -92,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000018",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

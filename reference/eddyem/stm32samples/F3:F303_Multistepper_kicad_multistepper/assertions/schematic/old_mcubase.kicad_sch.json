@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "55 analyze_connectivity detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_connectivity",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
@@ -52,7 +62,17 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
+      "description": "1 audit_datasheet_coverage detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_datasheet_coverage",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "6 audit_esd_protection detected",
       "check": {
         "path": "findings",
@@ -62,7 +82,72 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
+      "description": "All audit_esd_protection have connector_ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All audit_esd_protection coverage values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All audit_esd_protection risk_level values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "6 audit_power_pin_dc_paths detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "4 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "1 audit_sourcing_gate detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_sourcing_gate",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -72,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000016",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -83,7 +168,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000017",
       "description": "1 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
@@ -93,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000018",
       "description": "All detect_debug_interfaces have connector_ref",
       "check": {
         "path": "findings",
@@ -104,7 +189,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000019",
       "description": "All detect_debug_interfaces interface_type values are valid",
       "check": {
         "path": "findings",
@@ -116,7 +201,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000020",
       "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -126,7 +211,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000021",
       "description": "8 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -136,7 +221,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000022",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -146,7 +231,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000023",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -157,7 +242,17 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000024",
+      "description": "1 detect_solder_jumpers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_solder_jumpers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000025",
       "description": "2 detect_suggested_certifications detected",
       "check": {
         "path": "findings",
@@ -167,7 +262,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000026",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -177,7 +272,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000027",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -188,7 +283,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000028",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -198,7 +293,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000029",
       "description": "Has 9 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -207,7 +302,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000030",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -216,7 +311,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000031",
       "description": "Has 22 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -225,7 +320,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000032",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -234,7 +329,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000033",
       "description": "Has 6 resistor_network(s)",
       "check": {
         "path": "statistics.component_types.resistor_network",

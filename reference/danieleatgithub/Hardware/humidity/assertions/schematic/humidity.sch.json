@@ -53,6 +53,51 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All audit_esd_protection have connector_ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All audit_esd_protection coverage values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All audit_esd_protection risk_level values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "2 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "2 detect_suggested_certifications detected",
       "check": {
         "path": "findings",
@@ -62,7 +107,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000011",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -72,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000012",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -83,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000013",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

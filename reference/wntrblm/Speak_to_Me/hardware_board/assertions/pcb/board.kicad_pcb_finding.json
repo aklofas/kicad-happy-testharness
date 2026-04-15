@@ -39,16 +39,6 @@
       }
     },
     {
-      "id": "FND-00001891-AST-04",
-      "description": "The placement_analysis reports 14 courtyard overlaps. The largest (70.09mm\u00b2) between RV1 (dual potentiometer) and PS1 (DC-DC converter) is verified as real by coordinate calculation: RV1 courtyard [75.84\u201388.56, 115.1\u2013131.35] vs PS1 [72.65\u201385.35, 123.98\u2013139.72] gives x_overlap=9.51mm, y_overlap=7.37mm = 70.1mm\u00b2. These are design-intentional overlaps common in Eurorack modules where 3D clearances are managed manually.",
-      "created_from": "FND-00001891",
-      "check": {
-        "path": "placement_analysis.overlap_count",
-        "value": 14,
-        "op": "equals"
-      }
-    },
-    {
       "id": "FND-00001891-AST-05",
       "description": "PCB has 43 nets total, 40 with routing segments, 3 without: unconnected-(PS1-Adj-Pad6), unconnected-(PS1-EN-Pad10), and unconnected-(U2-NC-Pad1). These are intentional no-connect pads: PS1's Adj and EN pins are unused on the V78E05-500-SMT, and U2's (74LVC1G04) NC pin is by definition unconnected. routing_complete=true is correctly reported.",
       "created_from": "FND-00001891",

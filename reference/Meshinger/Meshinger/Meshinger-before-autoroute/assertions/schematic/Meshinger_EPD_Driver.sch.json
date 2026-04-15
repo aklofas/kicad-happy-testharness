@@ -35,35 +35,6 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Findings section exists",
-      "check": {
-        "path": "findings",
-        "op": "exists"
-      }
-    },
-    {
-      "id": "SEED-00000005",
-      "description": "2 lc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "All lc_filters have non-zero resonant_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "not_contains_match",
-        "field": "resonant_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "Has 10 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

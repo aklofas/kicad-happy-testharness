@@ -43,6 +43,26 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "56 analyze_connectivity detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_connectivity",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 audit_datasheet_coverage detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_datasheet_coverage",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "21 audit_esd_protection detected",
       "check": {
         "path": "findings",
@@ -52,7 +72,62 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000008",
+      "description": "All audit_esd_protection have connector_ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All audit_esd_protection coverage values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 21
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All audit_esd_protection risk_level values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_esd_protection",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 21
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "2 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "1 audit_sourcing_gate detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_sourcing_gate",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "7 detect_adc_circuits detected",
       "check": {
         "path": "findings",
@@ -62,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000014",
       "description": "All detect_adc_circuits have ref",
       "check": {
         "path": "findings",
@@ -73,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000015",
       "description": "All detect_adc_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -85,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000016",
       "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -95,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000017",
       "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -105,7 +180,17 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000018",
+      "description": "10 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -115,7 +200,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000020",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -126,7 +211,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000021",
       "description": "14 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -136,7 +221,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000022",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -147,7 +232,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000023",
       "description": "2 detect_suggested_certifications detected",
       "check": {
         "path": "findings",
@@ -157,7 +242,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000024",
       "description": "2 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -167,7 +252,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000025",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -178,7 +263,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000026",
       "description": "8 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -188,7 +273,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000027",
       "description": "Has 41 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -197,7 +282,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000028",
       "description": "Has 21 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -206,7 +291,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000029",
       "description": "Has 11 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -215,7 +300,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000030",
       "description": "Has 27 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
