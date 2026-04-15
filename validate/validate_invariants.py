@@ -91,6 +91,33 @@ def check_invariants(data, filepath=""):
             _add(f"findings[{i}] ({det}).confidence='{conf}' "
                  f"not in {VALID_CONFIDENCES}")
 
+    # --- Provenance structure: when present, must have valid shape ---
+    PROV_REQUIRED = {"evidence", "confidence", "claimed_components",
+                     "excluded_by", "suppressed_candidates"}
+    for i, finding in enumerate(data.get("findings", [])):
+        prov = finding.get("provenance")
+        if prov is None:
+            continue
+        if not isinstance(prov, dict):
+            det = finding.get("detector", "?")
+            _add(f"findings[{i}] ({det}).provenance is not a dict")
+            continue
+        det = finding.get("detector", "?")
+        for key in PROV_REQUIRED:
+            if key not in prov:
+                _add(f"findings[{i}] ({det}).provenance missing '{key}'")
+        pconf = prov.get("confidence", "")
+        if pconf and pconf not in VALID_CONFIDENCES:
+            _add(f"findings[{i}] ({det}).provenance.confidence='{pconf}' "
+                 f"not in {VALID_CONFIDENCES}")
+        pev = prov.get("evidence")
+        if pev is not None and (not isinstance(pev, str) or not pev):
+            _add(f"findings[{i}] ({det}).provenance.evidence is empty/non-string")
+        for lk in ("claimed_components", "excluded_by", "suppressed_candidates"):
+            val = prov.get(lk)
+            if val is not None and not isinstance(val, list):
+                _add(f"findings[{i}] ({det}).provenance.{lk} is not a list")
+
     # --- Every net referenced in findings exists in extracted nets ---
     nets = data.get("nets", {})
     if isinstance(nets, dict):

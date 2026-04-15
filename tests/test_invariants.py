@@ -237,7 +237,51 @@ def test_confidence_absent_ok():
     assert not any("confidence" in v[1] for v in violations)
 
 
-# 20. Corpus spot-check (run on a real output)
+# 20. Provenance — valid structure passes
+def test_provenance_valid():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "confidence": "deterministic",
+         "provenance": {"evidence": "vd_two_resistor", "confidence": "deterministic",
+                        "claimed_components": ["R1", "R2"], "excluded_by": [],
+                        "suppressed_candidates": []}},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert not any("provenance" in v[1] for v in violations)
+
+
+# 21. Provenance — missing required field flagged
+def test_provenance_missing_field():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "confidence": "deterministic",
+         "provenance": {"evidence": "vd_two_resistor", "confidence": "deterministic"}},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert any("missing 'claimed_components'" in v[1] for v in violations)
+
+
+# 22. Provenance — invalid confidence flagged
+def test_provenance_invalid_confidence():
+    data = _clean_output()
+    data["findings"] = [
+        {"detector": "detect_voltage_dividers", "ratio": 0.5, "confidence": "deterministic",
+         "provenance": {"evidence": "vd_test", "confidence": "high",
+                        "claimed_components": [], "excluded_by": [],
+                        "suppressed_candidates": []}},
+    ]
+    violations = check_invariants(data, "test.json")
+    assert any("provenance.confidence='high'" in v[1] for v in violations)
+
+
+# 23. Provenance absent is OK (not all detectors have it yet)
+def test_provenance_absent_ok():
+    data = _clean_output()
+    violations = check_invariants(data, "test.json")
+    assert not any("provenance" in v[1] for v in violations)
+
+
+# 24. Corpus spot-check (run on a real output)
 # (renumbered from 12 after adding invariant tests above)
 def test_corpus_spot_check():
     # Use known real outputs that should have valid invariants.
