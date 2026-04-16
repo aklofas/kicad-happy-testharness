@@ -34,9 +34,9 @@ Last updated: 2026-04-16
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-322**. Next TH number: **TH-035**.
+maximum. Next KH number: **KH-323**. Next TH number: **TH-035**.
 
-> 2 open issues.
+> 3 open issues.
 
 ---
 
@@ -152,6 +152,44 @@ via `validate/verify_constants_online.py --constant _KNOWN_FREQS`.
 
 ---
 
+### KH-322 — LOW — Duplicate `# EQ-089:` tag in two files (collision)
+
+**Symptom:** `audit_equations.py scan` found `# EQ-089:` tagged in two
+different functions, causing the registry to collapse them into a single
+entry with incoherent formula/source fields.
+
+| File:Function | Line | Formula |
+|---|---|---|
+| `analyze_schematic.py:_detect_i2c_buses` | 3920 | `t_r = 0.8473 × R × C` (I2C rise time to 70% VDD per NXP I2C spec) |
+| `emc_formulas.py:cap_value_for_srf` | 551 | `C = 1/(4π²f²ESL)` (capacitor self-resonant freq → required capacitance) |
+
+**Root cause:** Tag numbering drift — EQ-089 was assigned twice during
+parallel analyzer work (schematic vs EMC domains) without cross-check.
+Both formulas are independently correct; only the tag is duplicated.
+
+**Fix (applied locally in harness working tree, pending upstream):**
+- In `analyze_schematic.py:3920`, renumber `# EQ-089:` → `# EQ-097:`
+  (EQ-097 was unused; only referenced in CONTRIBUTING.md as an example)
+- Keep `emc_formulas.py:cap_value_for_srf` at `# EQ-089:` (has more
+  downstream registry references as the "original" holder)
+
+The local kicad-happy working tree has this rename applied. Main-repo
+agent needs to land it upstream for the state to stabilize. If preferred
+to use a different target ID, advise and we'll re-reconcile the harness
+registry.
+
+**Harness side:** Registry entry `EQ-097` added with the schematic-side
+formula + I2C rise time verification; `EQ-089` now exclusively the EMC
+cap-SRF formula. Both verified. Baked into commit `2f587c5`.
+
+**Priority:** LOW. Collisions don't produce wrong findings — just confused
+verification records. Can land in v1.3.x.
+
+**Source:** Pre-v1.3 audit per RUNBOOK 11j, 2026-04-16, final registry
+scan caught the duplicate ID.
+
+---
+
 ## Test Harness Issues
 
 _No open test-harness issues._
@@ -160,9 +198,10 @@ _No open test-harness issues._
 
 ## Priority Queue
 
-2 open issues.
+3 open issues.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
 | 1 | KH-320 | LOW | Small — add `# EQ-NNN:` tags to 10 math functions in kicad-happy source |
 | 2 | KH-321 | LOW | Tiny — fix 2 values in `_KNOWN_FREQS` + consider restricting `SY820` key |
+| 3 | KH-322 | LOW | Tiny — land EQ-089 → EQ-097 rename in `analyze_schematic.py:3920` (locally applied, needs upstream commit) |
