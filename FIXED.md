@@ -19,7 +19,7 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 - **Symptom:** `seed_structural.py` emitted `\bR5\b`-style patterns with `field="components"` for SPICE and EMC findings. `components` is a list of refdes strings, but the three evaluator ops stringified the whole list (`str(['R5', 'C3'])` → `"['R5', 'C3']"`) and regex-searched that. Functional only by accident — would break silently if list repr changed.
 - **Root cause:** `regression/checks.py` lines 214, 231, 248 did `str(_item_field(item, field))` unconditionally, losing the distinction between scalar and list fields.
 - **Fix:** Added `_field_strings(field_val)` helper that returns a list of strings (single-element for scalars, `str()` of each element for lists). All three ops iterate this list and regex-match each string; for `count_matches` an item counts once if any element matches.
-- **Verification:** `python3 tests/test_checks.py` runs 6 new TH-031 tests plus 3 direct `_field_strings` unit tests — all pass alongside the existing suite (52 total). `python3 regression/run_checks.py --cross-section smoke` still reports 0 value mismatches on the re-seeded smoke corpus.
+- **Verification:** `python3 tests/test_checks.py` → 54 pass, 0 fail (was 43 pre-TH-031; added 8 list-field integration tests + 3 `_field_strings` direct unit tests). Full unit suite: 903 pass, 0 fail (was 894). `python3 regression/run_checks.py --cross-section smoke` still reports 0 value mismatches on the re-seeded smoke corpus.
 - **Commits:** 092146a0b15 (tests), d8f6b6ef880 (fix + `_field_strings` direct tests).
 
 ---

@@ -316,6 +316,20 @@ def test_not_contains_match_list_field_hit():
               field="components", pattern=r"^U3$")
     assert not r["passed"], f"Expected no match to pass, got {r}"
 
+def test_not_contains_match_list_field_no_repr_leak():
+    """not_contains_match must not see the `[` from Python's list repr.
+
+    Pre-fix, pattern `\\[` accidentally matched str(['U3', 'J1']) and
+    caused not_contains_match to fail. Post-fix, it passes because no
+    individual element contains `[`.
+    """
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["U3", "J1"]},
+    ]}
+    r = _eval("not_contains_match", "findings", data,
+              field="components", pattern=r"\[")
+    assert r["passed"], f"Should pass (no `[` in any element), got {r}"
+
 def test_count_matches_list_field():
     """count_matches counts items whose list field contains any matching element."""
     data = {"findings": [
@@ -327,6 +341,22 @@ def test_count_matches_list_field():
               field="components", pattern=r"^U3$", value=2)
     assert r["passed"], f"Expected count=2, got {r}"
     assert r["actual"] == 2
+
+def test_count_matches_list_field_no_repr_leak():
+    """count_matches must not see the `[` from Python's list repr.
+
+    Pre-fix, pattern `\\[` matched str(['U3']) on every item, so count=3.
+    Post-fix, no element contains `[`, so count=0.
+    """
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["J1", "U3"]},
+        {"rule_id": "DC-001", "components": ["U3"]},
+        {"rule_id": "GP-002", "components": ["C1"]},
+    ]}
+    r = _eval("count_matches", "findings", data,
+              field="components", pattern=r"\[", value=0)
+    assert r["passed"], f"Expected count=0, got {r}"
+    assert r["actual"] == 0
 
 
 # === dotted path resolution ===
