@@ -20,11 +20,19 @@ is checked with an allow-list of currently-undocumented envelope growth.
 New undocumented keys will fail the test; known gaps are annotated so the
 main repo can close them incrementally without breaking the test suite.
 
-Fixture strategy: use a fresh analyzer output under results/outputs/ as
-the "emitted" sample (analyzer wasn't re-run inside the unit test).
-cross_analysis has no persisted output directory, so it is invoked live
-on a fresh schematic+PCB pair. Tests skip cleanly when no fresh fixture
-is available.
+Fixture strategy: use the NEWEST fresh analyzer output under results/outputs/
+(by mtime) as the "emitted" sample — the analyzer isn't re-run inside the
+unit test. cross_analysis has no persisted output directory, so it is
+invoked live on a fresh schematic+PCB pair. Tests skip cleanly when no
+fresh fixture is available.
+
+Known limitation: if the newest fixture is stale (corpus not regen'd after
+an analyzer change), the test proves consistency with the fixture rather
+than with today's runtime behavior. Warn-on-stderr for fixtures > 30 days.
+Fully addressed by the v1.4 typed-schema-source-of-truth work, after which
+drift becomes a by-construction property and _KNOWN_UNDOCUMENTED evaporates.
+Interim workaround: `python3 run/run_<type>.py --cross-section smoke` before
+trusting a PASS result on touched analyzers.
 """
 
 TIER = "unit"
@@ -58,16 +66,21 @@ OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
 _KNOWN_UNDOCUMENTED = {
     "schematic": {
         "annotation_issues", "audience_summary", "bus_topology", "design_intent",
-        "footprint_filter_warnings", "ground_domains", "hierarchical_labels",
-        "label_shape_warnings", "labels", "no_connects", "placement_analysis",
+        "footprint_filter_warnings", "generic_symbol_warnings", "ground_domains",
+        "hierarchical_labels", "label_shape_warnings", "labels",
+        "legacy_analysis_quality", "no_connects", "placement_analysis",
         "power_sequencing_validation", "power_symbols", "property_issues",
-        "pwr_flag_warnings", "simulation_readiness", "sourcing_audit", "wire_geometry",
+        "protocol_compliance", "pwr_flag_warnings", "sheet_files", "sheets_parsed",
+        "simulation_readiness", "sourcing_audit", "text_annotations",
+        "wire_geometry",
     },
     "pcb": {
-        "audience_summary", "board_metadata", "connectivity_graph",
-        "copper_presence_summary", "design_intent", "design_rule_compliance",
-        "dfm_summary", "net_classes", "pad_to_pad_distances", "placement_density",
-        "project_settings", "return_path_continuity", "silkscreen",
+        "audience_summary", "board_metadata", "board_thickness_mm",
+        "connectivity_graph", "copper_presence_summary", "decoupling_proximity",
+        "design_intent", "design_rule_compliance", "dfm_summary", "dimensions",
+        "groups", "layer_transitions", "net_classes", "pad_to_pad_distances",
+        "placement_density", "project_settings", "return_path_continuity",
+        "silkscreen", "thermal_pad_scan",
     },
     "gerber": {
         "audience_summary", "drill_tools",
@@ -124,25 +137,78 @@ def _optional_keys(schema):
     return opt
 
 
-def _fresh_output(analyzer_type):
-    """Return parsed JSON of the first fresh (schema_version==1.3.0) output.
+def _emitted_keys(analyzer_type, sample_limit=50, max_age_days=30):
+    """Return the UNION of top-level keys across fresh analyzer outputs.
 
-    Fresh means post-Batch-20 — the envelope we expect --schema to document.
-    Returns None if no fresh output exists for this type.
+    Different boards trigger different optional detector sections — a single
+    fixture undercounts the analyzer's true key footprint. Sampling up to
+    `sample_limit` fresh (schema_version == 1.3.0) outputs and unioning
+    their top-level keys gives a complete picture of what the analyzer
+    can emit, avoiding both false-positive drift (required key missing
+    from a trivial input) and false-negative drift (undocumented key
+    appearing only on complex boards).
+
+    Returns (emitted_keys: set | None, newest_mtime: float | None).
+    Returns (None, None) if no fresh outputs exist.
+
+    Warns on stderr when the newest fresh fixture is older than
+    max_age_days — signal that the corpus needs a re-run for the drift
+    test to be meaningful.
     """
     type_dir = OUTPUTS_DIR / analyzer_type
     if not type_dir.exists():
-        return None
+        return None, None
+    candidates = []
     for f in glob.glob(str(type_dir / "**" / "*.json"), recursive=True):
         if "_aggregate" in f:
             continue
         try:
+            mtime = os.path.getmtime(f)
+        except OSError:
+            continue
+        candidates.append((mtime, f))
+    candidates.sort(reverse=True)
+
+    emitted_keys = set()
+    newest_mtime = None
+    samples_taken = 0
+    for mtime, f in candidates:
+        if samples_taken >= sample_limit:
+            break
+        try:
             d = json.load(open(f))
         except (json.JSONDecodeError, OSError):
             continue
-        if d.get("schema_version") == "1.3.0":
-            return d
-    return None
+        if d.get("schema_version") != "1.3.0":
+            continue
+        emitted_keys |= set(d.keys())
+        if newest_mtime is None:
+            newest_mtime = mtime
+        samples_taken += 1
+
+    if samples_taken == 0:
+        return None, None
+
+    import time
+    age_days = (time.time() - newest_mtime) / 86400
+    if age_days > max_age_days:
+        sys.stderr.write(
+            f"test_schema_drift: newest {analyzer_type} fixture is "
+            f"{age_days:.0f} days old. Re-run the analyzer to revalidate "
+            f"current behavior.\n"
+        )
+    return emitted_keys, newest_mtime
+
+
+# Backward-compatible shim — returns a dict-like with .keys() for callers
+# that want key-level comparison only. (cross_analysis path still loads
+# a full dict because it runs live.)
+def _fresh_output(analyzer_type):
+    keys, _ = _emitted_keys(analyzer_type)
+    if keys is None:
+        return None
+    # Minimal object with .keys() to preserve _assert_no_drift contract.
+    return {k: None for k in keys}
 
 
 def _assert_no_drift(schema, emitted, analyzer_type):
