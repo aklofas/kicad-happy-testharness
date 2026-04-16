@@ -31,6 +31,7 @@ REGISTRY_FILE = DATA_DIR / "constants_registry.json"
 VERIFIABLE_CONSTANTS = {
     "_REGULATOR_VREF": "reference_voltage",
     "known_freqs": "switching_frequency",
+    "_KNOWN_FREQS": "switching_frequency",
     "_iq_estimates_uA": "quiescent_current",
 }
 
