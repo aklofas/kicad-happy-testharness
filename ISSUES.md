@@ -34,9 +34,9 @@ Last updated: 2026-04-15
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-312**. Next TH number: **TH-032**.
+maximum. Next KH number: **KH-313**. Next TH number: **TH-033**.
 
-> 2 open issues.
+> 4 open issues.
 
 ---
 
@@ -74,6 +74,26 @@ should show 0 trust_summary violations.
 
 ---
 
+### KH-312 — LOW — `sync_datasheets_digikey.py` needs `--mpn-list` batch mode
+
+**Symptom:** Harness batch extraction requires downloading datasheets for a
+list of MPNs. The sync script only accepts `.kicad_sch` or analyzer JSON as
+input, requiring a full project context.
+
+**Root cause:** The sync script extracts MPNs from analyzer output, then
+downloads. There's no mode to accept a plain text list of MPNs.
+
+**Fix:** Add `--mpn-list mpns.txt` flag to `sync_datasheets_digikey.py` (and
+optionally the other distributor sync scripts) that reads one MPN per line
+and downloads datasheets for each.
+
+**Workaround:** Use `fetch_datasheet_digikey.py --search <MPN>` per MPN in
+a loop. Works but doesn't update the `datasheets/index.json` manifest.
+
+**Source:** Datasheet v2 extraction spec (2026-04-15).
+
+---
+
 ## Test Harness Issues
 
 ### TH-031 — LOW — SPICE/EMC structural seeders use fragile stringified-list matching
@@ -104,11 +124,30 @@ use the scalar `ref` field instead. SPICE/EMC findings don't have a scalar
 
 ---
 
+### TH-032 — LOW — `test_datasheet_verify.py` imports missing `datasheet_verify` module
+
+**Symptom:** `tests/test_datasheet_verify.py` fails with `ModuleNotFoundError:
+No module named 'datasheet_verify'`. The test imports from
+`kicad-happy/skills/kicad/scripts/datasheet_verify.py` which does not exist.
+
+**Root cause:** The test was written for a module that was either renamed, moved,
+or not yet created in the main repo. No file matching `datasheet_verify*` exists
+in the kicad-happy scripts directory.
+
+**Fix:** Either create the module in kicad-happy, or update the test to import
+from the correct location if it was renamed.
+
+**Source:** Pre-existing failure discovered during Phase 2 harness preparation (2026-04-15).
+
+---
+
 ## Priority Queue
 
-2 open issues.
+4 open issues.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
 | 1 | KH-311 | MEDIUM | Small — compute trust_summary after filtering in EMC |
-| 2 | TH-031 | LOW | Small-medium — depends on chosen approach |
+| 2 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
+| 3 | TH-031 | LOW | Small-medium — depends on chosen approach |
+| 4 | TH-032 | LOW | Small — find/create the missing module |

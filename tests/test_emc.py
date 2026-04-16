@@ -225,6 +225,24 @@ def test_emc_seed_no_critical():
     descs = [a["description"] for a in assertions]
     assert not any("critical count" in d for d in descs)
 
+def test_emc_seed_by_severity():
+    """Phase 4 by_severity generates additional assertions."""
+    data = dict(EMC_OUTPUT)
+    data["summary"] = dict(data["summary"])
+    data["summary"]["by_severity"] = {"error": 5, "warning": 8, "info": 6}
+    assertions = generate_emc_assertions(data)
+    by_sev = [a for a in assertions if "by_severity" in a["description"]]
+    assert len(by_sev) == 3  # error, warning, info all non-zero
+    for a in by_sev:
+        result = evaluate_assertion(a, data)
+        assert result["passed"], f"{a['id']} failed: {a['description']}"
+
+def test_emc_seed_by_severity_absent():
+    """Pre-Phase-4 output without by_severity generates no by_severity assertions."""
+    assertions = generate_emc_assertions(EMC_OUTPUT)
+    by_sev = [a for a in assertions if "by_severity" in a["description"]]
+    assert len(by_sev) == 0
+
 
 # ---------------------------------------------------------------------------
 # Structural assertion generation

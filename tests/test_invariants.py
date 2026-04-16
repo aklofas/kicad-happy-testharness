@@ -528,6 +528,93 @@ def test_corpus_spot_check():
         "No clean outputs found for spot-check"
 
 
+# 39. trust_summary works on cross_analysis-style output (Phase 1 addition)
+def test_trust_summary_cross_analysis():
+    data = {
+        "analyzer_type": "cross_analysis",
+        "schema_version": "1.3.0",
+        "findings": [
+            {"detector": "sch_pcb_ref_count", "confidence": "deterministic",
+             "evidence_source": "topology"},
+        ],
+        "trust_summary": {
+            "total_findings": 1,
+            "trust_level": "high",
+            "by_confidence": {"deterministic": 1, "heuristic": 0, "datasheet-backed": 0},
+            "by_evidence_source": {"datasheet": 0, "topology": 1, "heuristic_rule": 0,
+                                   "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
+            "provenance_coverage_pct": 0.0,
+        },
+        "elapsed_s": 0.5,
+    }
+    violations = check_invariants(data, "test.json")
+    assert not any("trust_summary" in v[1] for v in violations)
+    assert not any("schema_version" in v[1] for v in violations)
+
+
+# 40. schema_version — valid semver passes
+def test_schema_version_valid():
+    data = _clean_output()
+    data["schema_version"] = "1.3.0"
+    violations = check_invariants(data, "test.json")
+    assert not any("schema_version" in v[1] for v in violations)
+
+
+# 40. schema_version — invalid string flagged
+def test_schema_version_invalid():
+    data = _clean_output()
+    data["schema_version"] = "1.3"
+    violations = check_invariants(data, "test.json")
+    assert any("schema_version='1.3'" in v[1] for v in violations)
+
+
+# 41. schema_version — non-string flagged
+def test_schema_version_non_string():
+    data = _clean_output()
+    data["schema_version"] = 1.3
+    violations = check_invariants(data, "test.json")
+    assert any("schema_version is float" in v[1] for v in violations)
+
+
+# 42. schema_version — absent is OK (backward compat)
+def test_schema_version_absent_ok():
+    data = _clean_output()
+    violations = check_invariants(data, "test.json")
+    assert not any("schema_version" in v[1] for v in violations)
+
+
+# 43. by_severity — valid {error, warning, info} passes
+def test_by_severity_valid():
+    data = _clean_output()
+    data["summary"] = {"total_findings": 10, "by_severity": {"error": 3, "warning": 5, "info": 2}}
+    violations = check_invariants(data, "test.json")
+    assert not any("by_severity" in v[1] for v in violations)
+
+
+# 44. by_severity — wrong keys flagged
+def test_by_severity_wrong_keys():
+    data = _clean_output()
+    data["summary"] = {"total_findings": 5, "by_severity": {"critical": 1, "high": 2, "medium": 2}}
+    violations = check_invariants(data, "test.json")
+    assert any("by_severity keys" in v[1] for v in violations)
+
+
+# 45. by_severity — sum mismatch flagged
+def test_by_severity_sum_mismatch():
+    data = _clean_output()
+    data["summary"] = {"total_findings": 10, "by_severity": {"error": 1, "warning": 1, "info": 1}}
+    violations = check_invariants(data, "test.json")
+    assert any("by_severity sum (3)" in v[1] and "total_findings (10)" in v[1] for v in violations)
+
+
+# 46. by_severity — absent is OK (pre-Phase-4 outputs)
+def test_by_severity_absent_ok():
+    data = _clean_output()
+    data["summary"] = {"total_findings": 5}
+    violations = check_invariants(data, "test.json")
+    assert not any("by_severity" in v[1] for v in violations)
+
+
 # === Runner ===
 
 if __name__ == "__main__":

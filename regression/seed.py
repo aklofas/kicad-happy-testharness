@@ -833,7 +833,7 @@ def generate_emc_assertions(data, tolerance=0.10):
     })
     ast_num += 1
 
-    # Per-severity counts (range for non-zero)
+    # Per-severity counts (range for non-zero) — raw counts
     for sev in ("critical", "high", "medium", "low"):
         count = summary.get(sev, 0)
         if count > 0:
@@ -845,6 +845,21 @@ def generate_emc_assertions(data, tolerance=0.10):
                           "min": lo, "max": hi},
             })
             ast_num += 1
+
+    # Normalized by_severity (Phase 4: {error, warning, info})
+    by_sev = summary.get("by_severity")
+    if isinstance(by_sev, dict):
+        for sev_key in ("error", "warning", "info"):
+            count = by_sev.get(sev_key, 0)
+            if count > 0:
+                lo, hi = _range_bounds(count, tolerance)
+                assertions.append({
+                    "id": f"SEED-{ast_num:08d}",
+                    "description": f"by_severity.{sev_key} ~{count}",
+                    "check": {"path": f"summary.by_severity.{sev_key}", "op": "range",
+                              "min": lo, "max": hi},
+                })
+                ast_num += 1
 
     # EMC risk score range
     score = summary.get("emc_risk_score", 0)
@@ -973,7 +988,7 @@ def generate_thermal_assertions(data, tolerance=0.10):
         })
         ast_num += 1
 
-    # Per-severity counts (range for non-zero)
+    # Per-severity counts (range for non-zero) — raw counts
     for sev in ("critical", "high", "medium", "low"):
         count = summary.get(sev, 0)
         if count > 0:
@@ -985,6 +1000,21 @@ def generate_thermal_assertions(data, tolerance=0.10):
                           "min": lo, "max": hi},
             })
             ast_num += 1
+
+    # Normalized by_severity (Phase 4: {error, warning, info})
+    by_sev = summary.get("by_severity")
+    if isinstance(by_sev, dict):
+        for sev_key in ("error", "warning", "info"):
+            count = by_sev.get(sev_key, 0)
+            if count > 0:
+                lo, hi = _range_bounds(count, tolerance)
+                assertions.append({
+                    "id": f"SEED-{ast_num:08d}",
+                    "description": f"by_severity.{sev_key} ~{count}",
+                    "check": {"path": f"summary.by_severity.{sev_key}", "op": "range",
+                              "min": lo, "max": hi},
+                })
+                ast_num += 1
 
     # Components analyzed count range
     if components_analyzed > 0:

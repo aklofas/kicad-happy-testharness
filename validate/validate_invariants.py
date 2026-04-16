@@ -279,7 +279,38 @@ def check_invariants(data, filepath=""):
                     _add(f"trust_summary.bom_coverage.total_components="
                          f"{reported_total} but actual={actual_total}")
 
+    # --- schema_version: when present, must be a valid semver string ---
+    sv = data.get("schema_version")
+    if sv is not None:
+        if not isinstance(sv, str):
+            _add(f"schema_version is {type(sv).__name__}, expected str")
+        elif not _SEMVER_RE.match(sv):
+            _add(f"schema_version='{sv}' is not valid semver (expected X.Y.Z)")
+
+    # --- by_severity normalization: when present, must have {error, warning, info} ---
+    # Phase 4 adds normalized by_severity to EMC, gerber, and thermal outputs.
+    # Validate structure when present, and cross-check against raw counts if available.
+    summary = data.get("summary", {})
+    if isinstance(summary, dict):
+        by_sev = summary.get("by_severity")
+        if isinstance(by_sev, dict):
+            expected_keys = {"error", "warning", "info"}
+            actual_keys = set(by_sev.keys())
+            if actual_keys != expected_keys:
+                _add(f"summary.by_severity keys {actual_keys} "
+                     f"!= expected {expected_keys}")
+            # Cross-check: sum(by_severity) == total_findings (when both present)
+            total = summary.get("total_findings", summary.get("total_checks"))
+            if total is not None:
+                sev_sum = sum(v for v in by_sev.values() if isinstance(v, (int, float)))
+                if sev_sum != total:
+                    _add(f"summary.by_severity sum ({sev_sum}) "
+                         f"!= total_findings ({total})")
+
     return violations
+
+
+_SEMVER_RE = __import__("re").compile(r"^\d+\.\d+\.\d+$")
 
 
 def _check_file(json_path):
@@ -378,6 +409,10 @@ def main():
             categories["evidence_source"] += 1
         elif "trust_summary" in desc:
             categories["trust_summary"] += 1
+        elif "schema_version" in desc:
+            categories["schema_version"] += 1
+        elif "by_severity" in desc:
+            categories["by_severity"] += 1
         else:
             categories["other"] += 1
 

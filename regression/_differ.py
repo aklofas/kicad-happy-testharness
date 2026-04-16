@@ -365,7 +365,7 @@ def extract_manifest_entry(data, analyzer_type):
         for f in data.get("findings", []):
             cat = f.get("category", "other")
             by_category[cat] = by_category.get(cat, 0) + 1
-        return {
+        entry = {
             "total_findings": summary.get("total_checks", 0),
             "critical": summary.get("critical", 0),
             "high": summary.get("high", 0),
@@ -375,6 +375,10 @@ def extract_manifest_entry(data, analyzer_type):
             "target_standard": data.get("target_standard", ""),
             "by_category": by_category,
         }
+        by_sev = summary.get("by_severity")
+        if isinstance(by_sev, dict):
+            entry["by_severity"] = by_sev
+        return entry
 
     elif analyzer_type == "datasheets":
         parts = data.get("parts", {})
@@ -394,7 +398,7 @@ def extract_manifest_entry(data, analyzer_type):
 
     elif analyzer_type == "thermal":
         summary = data.get("summary", {})
-        return {
+        entry = {
             "components_analyzed": summary.get("components_analyzed", 0),
             "thermal_score": summary.get("thermal_score", 0),
             "total_findings": summary.get("total_findings", summary.get("total_checks", 0)),
@@ -403,5 +407,9 @@ def extract_manifest_entry(data, analyzer_type):
             "medium": summary.get("medium", 0),
             "low": summary.get("low", 0),
         }
+        by_sev = summary.get("by_severity")
+        if isinstance(by_sev, dict):
+            entry["by_severity"] = by_sev
+        return entry
 
     return {}
