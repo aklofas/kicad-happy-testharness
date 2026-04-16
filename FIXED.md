@@ -11,6 +11,27 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-16 — TH-034 (run_datasheets missing datasheets/scripts sys.path)
+
+### TH-034 (LOW): `run_datasheets.py --validate-only` crashed with ModuleNotFoundError
+
+- **Where fixed:** `run/run_datasheets.py`, lines 46–49
+- **Symptom:** `python3 run/run_datasheets.py --repo X --validate-only` raised
+  `ModuleNotFoundError: No module named 'datasheet_extract_cache'` when
+  `validate_extractions()` called `from datasheet_extract_cache import ...`.
+- **Root cause:** `run_datasheets.py` inserted only `skills/kicad/scripts` into
+  `sys.path` at module-load time, but `datasheet_extract_cache.py` lives in
+  `skills/datasheets/scripts`. The validate path is only reached at runtime
+  (inside `validate_extractions()`), so the missing path went unnoticed.
+- **Fix:** Added `_ds_scripts = _kicad_happy / "skills" / "datasheets" / "scripts"`
+  and `sys.path.insert(0, str(_ds_scripts))` alongside the existing kicad/scripts
+  insertion.
+- **Verification:** `python3 run/run_datasheets.py --repo jgrip/commodorelcd
+  --validate-only --jobs 1` exits 0. New integration test
+  `test_run_datasheets_validate_only_no_crash` passes.
+
+---
+
 ## 2026-04-16 — KH-314, KH-315, KH-316, KH-317 (Session 11 harness-filed bugs)
 
 ### KH-317 (MEDIUM): XT-001 suppression read wrong `differential_pairs` path

@@ -46,7 +46,9 @@ from utils import (
 # Resolve kicad-happy once at module level
 _kicad_happy = resolve_kicad_happy_dir()
 _kicad_scripts = _kicad_happy / "skills" / "kicad" / "scripts"
+_ds_scripts = _kicad_happy / "skills" / "datasheets" / "scripts"
 sys.path.insert(0, str(_kicad_scripts))
+sys.path.insert(0, str(_ds_scripts))
 
 
 def find_repos_with_schematics():
