@@ -36,7 +36,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-320**. Next TH number: **TH-035**.
 
-> 1 open issue.
+> 0 open issues.
 
 ---
 
@@ -51,23 +51,7 @@ maximum. Next KH number: **KH-320**. Next TH number: **TH-035**.
 
 ## kicad-happy Analyzer Issues
 
-### KH-312 — LOW — `sync_datasheets_digikey.py` needs `--mpn-list` batch mode
-
-**Symptom:** Harness batch extraction requires downloading datasheets for a
-list of MPNs. The sync script only accepts `.kicad_sch` or analyzer JSON as
-input, requiring a full project context.
-
-**Root cause:** The sync script extracts MPNs from analyzer output, then
-downloads. There's no mode to accept a plain text list of MPNs.
-
-**Fix:** Add `--mpn-list mpns.txt` flag to `sync_datasheets_digikey.py` (and
-optionally the other distributor sync scripts) that reads one MPN per line
-and downloads datasheets for each.
-
-**Workaround:** Use `fetch_datasheet_digikey.py --search <MPN>` per MPN in
-a loop. Works but doesn't update the `datasheets/index.json` manifest.
-
-**Source:** Datasheet v2 extraction spec (2026-04-15).
+_No open analyzer issues._
 
 ---
 
@@ -79,8 +63,4 @@ _No open test-harness issues._
 
 ## Priority Queue
 
-1 open issue.
-
-| Priority | Issue | Severity | Effort |
-|----------|-------|----------|--------|
-| 1 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
+_0 open issues._

@@ -11,6 +11,48 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-16 — KH-312 (sync scripts --mpn-list batch mode)
+
+### KH-312 (LOW): Sync scripts needed `--mpn-list` batch mode
+
+- **Where fixed:** kicad-happy commit `f49469c`,
+  `skills/datasheets/scripts/sync_datasheets_{digikey,mouser,lcsc,element14}.py`.
+- **Symptom:** Harness batch extraction had no way to download datasheets
+  for a bare MPN list — sync scripts only accepted a `.kicad_sch` or
+  analyzer JSON as positional input. Workaround (`fetch_datasheet_digikey.py
+  --search <MPN>` in a loop) skipped the `datasheets/index.json` manifest
+  update.
+- **Root cause:** Input parsing assumed project context. No MPN-list
+  fast path.
+- **Fix:** Added `--mpn-list FILE` to all 4 distributor sync scripts
+  (ticket scope was DigiKey; user elected to do all 4 for consistency).
+  - `--mpn-list` is mutually exclusive with the positional input argument.
+  - Reads one MPN per line; skips blank lines and `#` comments
+    (full-line and inline); filters via `is_real_mpn()`; de-duplicates.
+  - When `--mpn-list` is given without `--output`, output dir defaults
+    to `./datasheets/` in cwd.
+  - **Latent bug fixed:** `index["schematic"] = str(input_path)` would
+    have written `"None"` into the manifest in MPN-list mode. Now uses
+    `str(mpn_list or input_path)` at all 12 sites (3 per script × 4 scripts).
+- **Verification (main repo):**
+  - `--help` on all 4 shows `[input]` and `[--mpn-list FILE]` as alternatives
+  - Synthetic MPN list (3 valid + DNP + dup + comments): all 4 scripts
+    report `Loaded 3 unique MPNs`, dedupe, filter DNP correctly
+  - Mutex errors: both `(input AND --mpn-list)` and `(neither)` produce
+    clear argparse errors
+  - 7-CLI analyzer `--help` smoke green (no regression)
+- **Harness impact:** None (new CLI surface, not an analyzer behavior
+  change — no re-seed needed). Batch extraction workflows can now target
+  any of the 4 distributors with an MPN list.
+- **Known non-blocking followups** (deferred to v1.4 polish):
+  - `element14` api_key guard fires before dry-run evaluation (other 3
+    allow dry-run without credentials; harness has the key, no current impact)
+  - `index["schematic"]` field semantics doc — in MPN-list mode the field
+    holds the MPN-list path, which is correct for staleness semantics but
+    the field name is slightly misleading
+
+---
+
 ## 2026-04-16 — TH-033 (KiCad 10 fixture discoverability + coverage)
 
 ### TH-033 (MEDIUM): No KiCad 10.0.0 test fixtures in the corpus
