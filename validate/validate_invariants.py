@@ -306,6 +306,32 @@ def check_invariants(data, filepath=""):
                 if sev_sum != total:
                     _add(f"summary.by_severity sum ({sev_sum}) "
                          f"!= total_findings ({total})")
+            # Cross-check EMC/thermal mapping: error == critical+high,
+            # warning == medium+low, info == info. Only applies when raw
+            # keys are present alongside by_severity (EMC/thermal retain
+            # them; gerber does not).
+            raw_crit = summary.get("critical")
+            raw_high = summary.get("high")
+            raw_med = summary.get("medium")
+            raw_low = summary.get("low")
+            raw_info = summary.get("info")
+            if raw_crit is not None and raw_high is not None:
+                expected_err = raw_crit + raw_high
+                actual_err = by_sev.get("error", 0)
+                if actual_err != expected_err:
+                    _add(f"summary.by_severity.error={actual_err} "
+                         f"!= critical({raw_crit})+high({raw_high})={expected_err}")
+            if raw_med is not None and raw_low is not None:
+                expected_warn = raw_med + raw_low
+                actual_warn = by_sev.get("warning", 0)
+                if actual_warn != expected_warn:
+                    _add(f"summary.by_severity.warning={actual_warn} "
+                         f"!= medium({raw_med})+low({raw_low})={expected_warn}")
+            if raw_info is not None:
+                actual_info = by_sev.get("info", 0)
+                if actual_info != raw_info:
+                    _add(f"summary.by_severity.info={actual_info} "
+                         f"!= info({raw_info})")
 
     return violations
 

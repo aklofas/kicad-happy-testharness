@@ -615,6 +615,53 @@ def test_by_severity_absent_ok():
     assert not any("by_severity" in v[1] for v in violations)
 
 
+# 47. by_severity — EMC/thermal mapping matches raw counts (error = critical+high)
+def test_by_severity_emc_mapping_valid():
+    data = _clean_output()
+    data["summary"] = {
+        "total_findings": 10,
+        "critical": 1, "high": 2, "medium": 3, "low": 2, "info": 2,
+        "by_severity": {"error": 3, "warning": 5, "info": 2},
+    }
+    violations = check_invariants(data, "test.json")
+    assert not any("by_severity" in v[1] for v in violations)
+
+
+# 48. by_severity — error mapping mismatch flagged
+def test_by_severity_emc_error_mismatch():
+    data = _clean_output()
+    data["summary"] = {
+        "total_findings": 10,
+        "critical": 1, "high": 2, "medium": 3, "low": 2, "info": 2,
+        "by_severity": {"error": 5, "warning": 5, "info": 2},
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("by_severity.error=5" in v[1] and "critical(1)+high(2)=3" in v[1]
+               for v in violations)
+
+
+# 49. by_severity — warning mapping mismatch flagged
+def test_by_severity_emc_warning_mismatch():
+    data = _clean_output()
+    data["summary"] = {
+        "total_findings": 10,
+        "critical": 1, "high": 2, "medium": 3, "low": 2, "info": 2,
+        "by_severity": {"error": 3, "warning": 0, "info": 2},
+    }
+    violations = check_invariants(data, "test.json")
+    assert any("by_severity.warning=0" in v[1] and "medium(3)+low(2)=5" in v[1]
+               for v in violations)
+
+
+# 50. by_severity — gerber without raw keys passes (Phase 4 wraps flat keys)
+def test_by_severity_gerber_no_raw_keys():
+    data = _clean_output()
+    data["summary"] = {"total_findings": 4, "by_severity": {"error": 1, "warning": 2, "info": 1}}
+    violations = check_invariants(data, "test.json")
+    # No critical/high/medium/low raw keys → no mapping cross-check triggered
+    assert not any("by_severity" in v[1] for v in violations)
+
+
 # === Runner ===
 
 if __name__ == "__main__":

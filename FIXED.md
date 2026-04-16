@@ -11,6 +11,23 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-15 — TH-032 (datasheet_verify import path)
+
+### TH-032 (LOW): `test_datasheet_verify.py` imported from old `skills/kicad/scripts/` path
+
+- **Where fixed:** harness repo, `tests/test_datasheet_verify.py` lines 14-15
+- **Symptom:** `ModuleNotFoundError: No module named 'datasheet_verify'`.
+- **Root cause:** Session 8 commit 6f321cd moved `datasheet_verify.py` from
+  `skills/kicad/scripts/` to `skills/datasheets/scripts/`. Test still pointed
+  at the old path.
+- **Fix:** Added `skills/datasheets/scripts/` to sys.path for the import, kept
+  `skills/kicad/scripts/` too because datasheet_verify imports `kicad_utils`
+  from there.
+- **Verification:** `python3 tests/test_datasheet_verify.py` → 27/27 pass.
+- **Commit:** (this session)
+
+---
+
 ## 2026-04-15 — KH-310 (format-report device reference key)
 
 ### KH-310 (LOW): `format-report.py` line 516 tries `reference` but devices use `ref`

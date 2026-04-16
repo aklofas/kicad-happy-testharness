@@ -12,6 +12,7 @@ from pathlib import Path
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
+sys.path.insert(0, os.path.join(_KH, "skills", "datasheets", "scripts"))
 import datasheet_verify
 
 

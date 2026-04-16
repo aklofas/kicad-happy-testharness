@@ -34,7 +34,7 @@ Last updated: 2026-04-15
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-313**. Next TH number: **TH-033**.
+maximum. Next KH number: **KH-314**. Next TH number: **TH-033**.
 
 > 4 open issues.
 
@@ -94,6 +94,33 @@ a loop. Works but doesn't update the `datasheets/index.json` manifest.
 
 ---
 
+### KH-313 — MEDIUM — `check_inductor_leakage` crashes when RF chain component is a string
+
+**Symptom:** 2 EMC outputs on smoke set (OLIMEX/DIY-LAPTOP/HARDWARE_A64-TERES_*)
+crash with `AttributeError: 'str' object has no attribute 'get'` at
+`emc_rules.py:4006` inside `check_inductor_leakage`.
+
+**Repro:** `python3 run/run_emc.py --repo OLIMEX/DIY-LAPTOP` →
+`HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.B_TERES_PCB1-A64-MAIN_Rev.B.sch.err`.
+
+**Root cause:** `emc_rules.py:4006` does
+`r = comp.get('ref') or comp.get('reference', '')` over
+`rf.get('components', [])`, but `components` can contain bare strings
+(refdes) not just dicts. A similar loop at line 4000 already handles this:
+`ic_ref = conn if isinstance(conn, str) else conn.get('ref', '')`.
+
+**Fix:** Apply the same isinstance check at line 4006:
+```python
+r = comp if isinstance(comp, str) else (comp.get('ref') or comp.get('reference', ''))
+```
+
+**Verification:** `python3 run/run_emc.py --repo OLIMEX/DIY-LAPTOP` produces
+22 EMC outputs with 0 .err files.
+
+**Source:** Discovered during Phase 5 smoke validation (2026-04-15). Session 8 regression.
+
+---
+
 ## Test Harness Issues
 
 ### TH-031 — LOW — SPICE/EMC structural seeders use fragile stringified-list matching
@@ -124,30 +151,13 @@ use the scalar `ref` field instead. SPICE/EMC findings don't have a scalar
 
 ---
 
-### TH-032 — LOW — `test_datasheet_verify.py` imports missing `datasheet_verify` module
-
-**Symptom:** `tests/test_datasheet_verify.py` fails with `ModuleNotFoundError:
-No module named 'datasheet_verify'`. The test imports from
-`kicad-happy/skills/kicad/scripts/datasheet_verify.py` which does not exist.
-
-**Root cause:** The test was written for a module that was either renamed, moved,
-or not yet created in the main repo. No file matching `datasheet_verify*` exists
-in the kicad-happy scripts directory.
-
-**Fix:** Either create the module in kicad-happy, or update the test to import
-from the correct location if it was renamed.
-
-**Source:** Pre-existing failure discovered during Phase 2 harness preparation (2026-04-15).
-
----
-
 ## Priority Queue
 
-4 open issues.
+3 open issues.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
 | 1 | KH-311 | MEDIUM | Small — compute trust_summary after filtering in EMC |
-| 2 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
-| 3 | TH-031 | LOW | Small-medium — depends on chosen approach |
-| 4 | TH-032 | LOW | Small — find/create the missing module |
+| 2 | KH-313 | MEDIUM | Trivial — isinstance check at emc_rules.py:4006 |
+| 3 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
+| 4 | TH-031 | LOW | Small-medium — depends on chosen approach |
