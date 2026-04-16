@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "regression"))
-from checks import evaluate_assertion, _countable, _item_field
+from checks import evaluate_assertion, _countable, _item_field, _field_strings
 
 
 def _eval(op, path, data, **check_kwargs):
@@ -41,6 +41,23 @@ def test_item_field():
     assert _item_field({"a": 1}, "missing") == ""
     assert _item_field("not a dict", "a") == ""
     assert _item_field({}, "a") == ""
+
+
+# === _field_strings ===
+
+def test_field_strings_scalar():
+    assert _field_strings("R5") == ["R5"]
+    assert _field_strings(42) == ["42"]
+    assert _field_strings("") == [""]
+
+def test_field_strings_list():
+    assert _field_strings(["R5", "C3"]) == ["R5", "C3"]
+    assert _field_strings([1, 2]) == ["1", "2"]
+
+def test_field_strings_empty_list():
+    # Empty list yields no iterations — the outer operator treats the item
+    # as non-matching. This is the intended behavior post-TH-031.
+    assert _field_strings([]) == []
 
 
 # === range ===

@@ -86,6 +86,20 @@ def _item_field(item, field):
     return val
 
 
+def _field_strings(field_val):
+    """Normalize a field value into an iterable of strings for regex matching.
+
+    For scalars, returns a single-element list with str(field_val).
+    For lists, returns str() of each element. This lets contains_match /
+    not_contains_match / count_matches iterate list-typed fields (e.g., a
+    finding's `components: ["R5", "C3"]`) without relying on Python's
+    list repr. Fixes TH-031.
+    """
+    if isinstance(field_val, list):
+        return [str(v) for v in field_val]
+    return [str(field_val)]
+
+
 def _countable(val):
     if val is None:
         return 0
@@ -209,14 +223,15 @@ def evaluate_assertion(assertion, data):
             return result
         field = check.get("field", "")
         pattern = check.get("pattern", "")
+        pat = _compile(pattern)
         for item in val:
             if isinstance(item, dict):
-                field_val = str(_item_field(item, field))
-                if _compile(pattern).search(field_val):
-                    result["passed"] = True
-                    result["actual"] = field_val
-                    result["expected"] = f"match for /{pattern}/"
-                    return result
+                for s in _field_strings(_item_field(item, field)):
+                    if pat.search(s):
+                        result["passed"] = True
+                        result["actual"] = s
+                        result["expected"] = f"match for /{pattern}/"
+                        return result
         result["actual"] = f"no match in {len(val)} items"
         result["expected"] = f"match for /{pattern}/"
     elif op == "not_contains_match":
@@ -226,14 +241,15 @@ def evaluate_assertion(assertion, data):
             return result
         field = check.get("field", "")
         pattern = check.get("pattern", "")
+        pat = _compile(pattern)
         for item in val:
             if isinstance(item, dict):
-                field_val = str(_item_field(item, field))
-                if _compile(pattern).search(field_val):
-                    result["passed"] = False
-                    result["actual"] = field_val
-                    result["expected"] = f"no match for /{pattern}/"
-                    return result
+                for s in _field_strings(_item_field(item, field)):
+                    if pat.search(s):
+                        result["passed"] = False
+                        result["actual"] = s
+                        result["expected"] = f"no match for /{pattern}/"
+                        return result
         result["passed"] = True
         result["actual"] = f"no match in {len(val)} items"
         result["expected"] = f"no match for /{pattern}/"
@@ -244,8 +260,17 @@ def evaluate_assertion(assertion, data):
             field = check.get("field", "")
             pattern = check.get("pattern", ".*")
             pat = _compile(pattern)
-            count = sum(1 for item in val if isinstance(item, dict)
-                        and pat.search(str(_item_field(item, field))))
+            count = 0
+            for item in val:
+                if not isinstance(item, dict):
+                    continue
+                # Count the item once if any element of the (possibly-list)
+                # field matches the pattern. This preserves semantics for
+                # scalar fields and adds native list support.
+                for s in _field_strings(_item_field(item, field)):
+                    if pat.search(s):
+                        count += 1
+                        break
             result["actual"] = count
         expected = check.get("value", 0)
         result["passed"] = result["actual"] == expected
