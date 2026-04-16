@@ -1,0 +1,22 @@
+{
+  "file_pattern": "ESP32-S3-DevKit-LiPo_Rev_B.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-092-02",
+      "description": "KH-092: T1 (BC817-40) classified as transistor not transformer",
+      "issue": "KH-092",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "T1",
+        "assert_field": "type",
+        "assert_value": "transistor"
+      }
+    }
+  ]
+}

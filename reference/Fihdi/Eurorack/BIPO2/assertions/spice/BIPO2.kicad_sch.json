@@ -1,0 +1,60 @@
+{
+  "file_pattern": "BIPO2.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~20 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 18,
+        "max": 22
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 8 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "10 opamp_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^opamp_circuit$",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "2 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "8 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 8
+      }
+    }
+  ]
+}

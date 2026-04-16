@@ -1,0 +1,49 @@
+{
+  "file_pattern": "afe.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~20 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 18,
+        "max": 22
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 16 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 16
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "18 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 18
+      }
+    }
+  ]
+}

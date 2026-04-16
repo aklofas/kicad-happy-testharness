@@ -94,6 +94,65 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-16 — KH-320, KH-321, KH-322 (pre-v1.3 audit followups)
+
+### KH-320 (LOW): 10 untagged math functions tagged as EQ-098..EQ-107
+
+- **Where fixed:** kicad-happy commit `db277fe`, across `analyze_pcb.py`,
+  `emc_formulas.py`, `emc_rules.py`, `kicad_utils.py`.
+- **Fix:** Added `# EQ-NNN:` comment blocks for 10 math functions
+  (EQ-098 through EQ-107). 7 self-evident geometry primitives (distance
+  formulas) tagged as "Self-evident — 2D Euclidean distance" etc.; 3
+  substantive functions cited real sources:
+  - EQ-105 `estimate_inductor_h_field` — Jackson "Classical Electrodynamics"
+    3rd ed. §5.6, Ott "EMC Engineering" Ch. 11
+  - EQ-106 `check_inductor_leakage` — Ott "EMC Engineering" Ch. 11
+    (15mm proximity threshold + EQ-105 H-field)
+  - EQ-107 `snap_to_e_series` — IEC 60063 (E-series tables)
+- **Harness side:** No re-seed needed (pure doc change). Next
+  `audit_equations.py scan` picks up the 10 new tags.
+- **Known tool-convention mismatch:** 9 of 10 tags were placed ABOVE the
+  `def` line; `audit_equations.py find_untagged` looks inside function
+  bodies so still flags them as untagged. Tags and sources are present —
+  only the locator convention differs. Not filing as a new issue since
+  the tags are valid; can be normalized during future audit tooling work.
+
+### KH-321 (LOW): Corrected TPS62160, TPS63000 frequencies + narrowed SY820 prefix
+
+- **Where fixed:** kicad-happy commit `b22bee4`, `kicad_utils.py:_KNOWN_FREQS`.
+- **Fix:**
+  - `TPS62160`: 2.5 MHz → **2.25 MHz** (TI SLVSAK8 §7.5 confirms fSW = 2.25 MHz typ)
+  - `TPS63000`: 2.4 MHz → **1.5 MHz** (−37%; TI SLVS590M §7.5 confirms fS range 1.25–1.5 MHz)
+  - `SY820` prefix narrowed to exact `SY8208` (800 kHz applies only to
+    SY8208, not SY8200-series which is 500 kHz)
+- **Harness re-seed:**
+  - Re-ran schematic + PCB + SPICE + EMC on smoke + quick_200. Pre-re-seed
+    check showed 3,772 assertion flips concentrated in (a) the KH-321
+    cascade on boards with these parts, and (b) a separate stale baseline
+    issue for `suggest_certifications` (985 boards) from the pre-existing
+    c497fa6 CERT-001 hobby-gating change that predated our last smoke+quick_200
+    re-seed — the `full` corpus projects were seeded before c497fa6 and
+    quick_200's growth over time pulled them in.
+  - Re-seeded SEED + STRUCT on smoke + quick_200 absorbed both cascades.
+    Post-re-seed: 801,347/801,349 pass (1 pre-existing empty-.sch FND
+    failure unrelated).
+  - Bugfix registry regenerated (85 assertions). Unit suite 973/0/2.
+- **Handoff source:** main-repo agent `2026-04-16` post-audit handoff.
+
+### KH-322 (LOW): EQ-089 duplicate tag collision resolved upstream
+
+- **Where fixed:** kicad-happy commit `e09b642`, `analyze_schematic.py:3920`.
+- **Fix:** Renamed `# EQ-089:` → `# EQ-097:` at the I2C rise-time site in
+  `_detect_i2c_buses`. The EMC cap-SRF site in `emc_formulas.py:cap_value_for_srf`
+  retains EQ-089 (original holder).
+- **Harness side:** Registry already aligned with this state in commit
+  `2f587c5` (Pre-v1.3 audit sweep) — my local kicad-happy working tree
+  had the rename applied pending upstream. Upstream now matches.
+- **Verification:** `audit_equations.py scan` shows EQ-089 and EQ-097 as
+  two distinct verified entries. No collision.
+
+---
+
 ## 2026-04-16 — TH-035 (stray project dirs broke `--quick-sanity`)
 
 ### TH-035 (LOW): 16 stray project dirs in `reference/` had assertions/ but no baselines/

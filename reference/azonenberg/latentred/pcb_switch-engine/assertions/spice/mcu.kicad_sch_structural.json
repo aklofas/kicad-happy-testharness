@@ -1,0 +1,171 @@
+{
+  "file_pattern": "mcu.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "L1 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C100 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC100\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C91 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC91\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C158 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC158\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C88 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC88\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C93 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC93\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C87 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC87\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C79 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC79\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C75 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC75\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C77 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC77\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C99 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC99\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "C101 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "C73 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC73\\b"
+      }
+    }
+  ]
+}

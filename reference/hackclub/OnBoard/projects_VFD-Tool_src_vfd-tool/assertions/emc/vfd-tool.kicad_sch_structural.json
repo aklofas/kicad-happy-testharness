@@ -228,12 +228,12 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "Rule EF-002 present",
+      "description": "Rule EF-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^EF\\-002$"
+        "pattern": "^EF\\-001$"
       }
     },
     {
@@ -428,6 +428,16 @@
     },
     {
       "id": "STRUCT-00000042",
+      "description": "U10 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU10\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000043",
       "description": "U7 in EMC findings",
       "check": {
         "path": "findings",
@@ -437,23 +447,13 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000044",
       "description": "U8 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU8\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000044",
-      "description": "U10 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU10\\b"
       }
     },
     {

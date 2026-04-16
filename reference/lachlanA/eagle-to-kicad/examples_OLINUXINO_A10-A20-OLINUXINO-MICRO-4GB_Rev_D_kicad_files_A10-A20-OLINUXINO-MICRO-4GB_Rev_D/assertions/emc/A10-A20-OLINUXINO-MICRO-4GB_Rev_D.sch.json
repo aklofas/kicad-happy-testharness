@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~74 (tolerance 10%)",
+      "description": "Finding count ~76 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 70,
-        "max": 78
+        "min": 72,
+        "max": 80
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~12",
+      "description": "high count ~14",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 12,
+        "max": 16
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "by_severity.error ~12",
+      "description": "by_severity.error ~14",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 12,
+        "max": 16
       }
     },
     {
@@ -76,12 +76,12 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "EMC risk score ~10.5 (+-10)",
+      "description": "EMC risk score ~2.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0.5,
-        "max": 20.5
+        "min": 0,
+        "max": 12.5
       }
     },
     {
@@ -174,13 +174,13 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "13 switching_emc finding(s)",
+      "description": "15 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 13
+        "value": 15
       }
     },
     {
@@ -230,11 +230,11 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "~27 net(s) with EMC scores",
+      "description": "~29 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 24
+        "value": 26
       }
     }
   ]
