@@ -358,7 +358,7 @@ def _check_type_batch(work_item):
     return output_type, repo_name, all_violations
 
 
-VALID_TYPES = ("schematic", "pcb", "emc", "thermal", "gerber")
+VALID_TYPES = ("schematic", "pcb", "emc", "thermal", "gerber", "spice", "lifecycle")
 
 
 def main():
