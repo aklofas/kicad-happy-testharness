@@ -1,0 +1,49 @@
+{
+  "file_pattern": "ICL8038.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~53 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 50,
+        "max": 56
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 42 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 42
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "52 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 52
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    }
+  ]
+}

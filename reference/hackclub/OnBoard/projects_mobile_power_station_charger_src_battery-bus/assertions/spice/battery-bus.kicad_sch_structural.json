@@ -1,0 +1,543 @@
+{
+  "file_pattern": "battery-bus.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 9 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 9
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 8 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 10 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 10
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Rch_IIN1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_IIN1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Cch_IIN2 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCch_IIN2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Rch_LO4 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_LO4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Ruc7 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRuc7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Cuc5 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCuc5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Ruc4 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRuc4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Rch_LO1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_LO1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Rch_bat1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_bat1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "Cch_bat1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCch_bat1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Rch_Vc1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_Vc1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "Cch_Vc1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCch_Vc1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "Rch_SS1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_SS1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "Cch_SS1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCch_SS1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "Rch_RT1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_RT1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "Rch_RT2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_RT2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "Ruc9 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRuc9\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "Ruc8 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRuc8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "Rc_fbt1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRc_fbt1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "Rc_fbb1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRc_fbb1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "Ruc5 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRuc5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "Ruc6 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRuc6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "Rv3 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRv3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
+      "description": "Rv4 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRv4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "Rv1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRv1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "Rv2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRv2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
+      "description": "Rch_fbL2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_fbL2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000032",
+      "description": "Rch_fbL1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_fbL1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
+      "description": "Rch_LO5 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_LO5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000034",
+      "description": "Rch_LO7 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_LO7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000035",
+      "description": "Rch_LO2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_LO2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000036",
+      "description": "Rch_LO3 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRch_LO3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000037",
+      "description": "Qch_3 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQch_3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000038",
+      "description": "Qch_switch1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQch_switch1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000039",
+      "description": "Qch_4 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQch_4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000040",
+      "description": "Quc1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQuc1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000041",
+      "description": "Qch_1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQch_1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000042",
+      "description": "Qch_EN1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQch_EN1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000043",
+      "description": "Qch_2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQch_2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000044",
+      "description": "Qch_5 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQch_5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000045",
+      "description": "Rc_fbt1 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRc_fbt1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000046",
+      "description": "Rc_fbb1 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRc_fbb1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000047",
+      "description": "C3 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000048",
+      "description": "Cdac1 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCdac1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000049",
+      "description": "C2 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000050",
+      "description": "Cadc2 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCadc2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000051",
+      "description": "C4 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000052",
+      "description": "Cc_out1 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCc_out1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000053",
+      "description": "Cc_out2 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCc_out2\\b"
+      }
+    }
+  ]
+}

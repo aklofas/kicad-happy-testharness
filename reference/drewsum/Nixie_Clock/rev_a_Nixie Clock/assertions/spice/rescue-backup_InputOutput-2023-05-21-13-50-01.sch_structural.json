@@ -1,0 +1,90 @@
+{
+  "file_pattern": "rescue-backup_InputOutput-2023-05-21-13-50-01.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 4 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q1202 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1202\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q1203 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1203\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q1204 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1204\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q1201 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1201\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C1202 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1202\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C1205 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1205\\b"
+      }
+    }
+  ]
+}

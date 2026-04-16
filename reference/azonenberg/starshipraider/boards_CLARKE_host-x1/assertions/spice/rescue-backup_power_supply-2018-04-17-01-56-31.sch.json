@@ -1,0 +1,49 @@
+{
+  "file_pattern": "rescue-backup_power_supply-2018-04-17-01-56-31.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~10 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 9,
+        "max": 11
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 8 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "6 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "4 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 4
+      }
+    }
+  ]
+}

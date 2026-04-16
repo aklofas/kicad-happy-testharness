@@ -1,0 +1,60 @@
+{
+  "file_pattern": "BQ76952 8T.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~44 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 39,
+        "max": 49
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 35 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 35
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 bms_balance simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^bms_balance$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "29 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 29
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "14 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 14
+      }
+    }
+  ]
+}

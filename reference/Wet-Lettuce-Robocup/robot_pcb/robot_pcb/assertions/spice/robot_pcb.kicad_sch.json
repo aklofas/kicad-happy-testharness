@@ -1,0 +1,137 @@
+{
+  "file_pattern": "robot_pcb.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~72 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 68,
+        "max": 76
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 45 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 45
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 bms_balance simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^bms_balance$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 bridge_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^bridge_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "2 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "5 current_sense simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^current_sense$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "22 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 22
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "5 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "10 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "6 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "6 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "14 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 14
+      }
+    }
+  ]
+}

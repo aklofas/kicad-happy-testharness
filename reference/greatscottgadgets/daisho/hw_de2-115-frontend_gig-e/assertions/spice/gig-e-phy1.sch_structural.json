@@ -1,0 +1,151 @@
+{
+  "file_pattern": "gig-e-phy1.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "RP301 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRP301\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R301 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR301\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R302 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR302\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "X301 simulated as crystal_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bX301\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C326 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC326\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C328 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC328\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C329 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC329\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C348 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC348\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C349 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC349\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C341 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC341\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C344 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC344\\b"
+      }
+    }
+  ]
+}

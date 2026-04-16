@@ -1,0 +1,104 @@
+{
+  "file_pattern": "Audio_daughterboard.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~200 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 190,
+        "max": 210
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 117 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 117
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "7 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "3 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "48 opamp_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^opamp_circuit$",
+        "value": 48
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "118 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 118
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "3 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "2 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "19 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 19
+      }
+    }
+  ]
+}

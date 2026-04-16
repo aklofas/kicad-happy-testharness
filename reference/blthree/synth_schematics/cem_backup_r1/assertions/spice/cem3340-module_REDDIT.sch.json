@@ -1,0 +1,60 @@
+{
+  "file_pattern": "cem3340-module_REDDIT.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~14 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 12,
+        "max": 16
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 11 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 11
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "4 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "5 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "5 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 5
+      }
+    }
+  ]
+}

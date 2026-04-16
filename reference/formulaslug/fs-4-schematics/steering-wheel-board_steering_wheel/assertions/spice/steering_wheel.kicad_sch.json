@@ -1,0 +1,71 @@
+{
+  "file_pattern": "steering_wheel.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~13 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 11,
+        "max": 15
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 9 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "5 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "3 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "3 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 2
+      }
+    }
+  ]
+}
