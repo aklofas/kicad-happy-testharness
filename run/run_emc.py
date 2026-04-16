@@ -35,7 +35,8 @@ from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
 
 
 def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
-                standard="fcc-class-b", timeout=30, spice_enhanced=False):
+                standard="fcc-class-b", timeout=30, spice_enhanced=False,
+                compact=False):
     """Run analyze_emc.py on one schematic (+optional PCB) output.
 
     Returns:
@@ -44,8 +45,9 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
     cmd = [sys.executable, str(analyzer_script),
            "--schematic", str(schematic_json),
            "--output", str(output_json),
-           "--compact",
            "--standard", standard]
+    if compact:
+        cmd.append("--compact")
     if pcb_json:
         cmd.extend(["--pcb", str(pcb_json)])
     if spice_enhanced:
@@ -78,7 +80,7 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
 
 
 def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
-                     resume, analyzer):
+                     resume, analyzer, compact):
     """Top-level function for ProcessPoolExecutor (must be picklable)."""
     repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
     out_dir = emc_out_dir / repo_name
@@ -93,7 +95,7 @@ def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
     returncode, summary, elapsed = run_one_emc(
         analyzer, input_json, pcb_json, output_json,
         standard=standard, timeout=timeout,
-        spice_enhanced=spice_enhanced,
+        spice_enhanced=spice_enhanced, compact=compact,
     )
     return input_json, returncode, summary, output_json, pcb_json is not None, elapsed
 
@@ -117,6 +119,10 @@ def main():
                         "filter checks (requires ngspice)")
     parser.add_argument("--resume", action="store_true",
                         help="Skip files that already have valid output JSON")
+    parser.add_argument("--compact", action="store_true",
+                        help="Pass --compact to analyze_emc.py (strips INFO "
+                        "findings; hides GP-001 and other INFO-gated visibility "
+                        "signals). Default: off (full output).")
     args = parser.parse_args()
 
     # Resolve paths
@@ -175,7 +181,8 @@ def main():
                          timeout=args.timeout,
                          spice_enhanced=args.spice_enhanced,
                          resume=args.resume,
-                         analyzer=analyzer)
+                         analyzer=analyzer,
+                         compact=args.compact)
 
     results_list = []
     if args.jobs <= 1:

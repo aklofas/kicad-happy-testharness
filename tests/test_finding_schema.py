@@ -135,7 +135,8 @@ def test_trust_summary_empty():
     ts = compute_trust_summary([])
     assert ts["total_findings"] == 0
     assert ts["trust_level"] == "high"
-    assert ts["provenance_coverage_pct"] == 100.0
+    # Empty findings: no denominator, so pct is None (nothing to measure)
+    assert ts["provenance_coverage_pct"] is None
     assert all(v == 0 for v in ts["by_confidence"].values())
 
 

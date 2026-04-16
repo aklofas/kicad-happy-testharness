@@ -6,7 +6,12 @@ Usage:
     python3 run/run_pcb.py --repo OpenMower
     python3 run/run_pcb.py --repo OpenMower --jobs 4
     python3 run/run_pcb.py --cross-section smoke --jobs 16
-    python3 run/run_pcb.py --repo OpenMower --full   # include trace segments for parasitics
+    python3 run/run_pcb.py --repo OpenMower --no-full  # skip trace segment data
+
+By default, passes --full to analyze_pcb.py to enable return_path_continuity,
+via-in-pad tenting, board-edge via clearance, and related PCB geometry
+detectors that downstream analyzers (especially EMC GP-001) depend on.
+Use --no-full to opt out for faster runs if those analyses aren't needed.
 
 Environment:
     KICAD_HAPPY_DIR  Path to kicad-happy repo (required if not at ../kicad-happy)
@@ -25,11 +30,14 @@ def _summarize(data):
 
 
 if __name__ == "__main__":
-    # Pre-parse --full before run_analyzer handles the standard args
-    extra = []
+    # Default: pass --full. Opt out with --no-full.
+    extra = ["--full"]
+    if "--no-full" in sys.argv:
+        sys.argv.remove("--no-full")
+        extra = []
+    # Backward compat: explicit --full is redundant but harmless.
     if "--full" in sys.argv:
         sys.argv.remove("--full")
-        extra = ["--full"]
 
     run_analyzer({
         "type_name": "pcb",
