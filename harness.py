@@ -224,7 +224,6 @@ subcommands:
     p_run.add_argument("--smoke", action="store_true", help="Smoke pack (20 repos)")
     p_run.add_argument("--repo", help="Single repo")
     p_run.add_argument("--cross-section", help="Named cross-section")
-    p_run.add_argument("--full", action="store_true", help="Full corpus")
     p_run.add_argument("--resume", action="store_true", help="Skip existing outputs")
     p_run.add_argument("--skip-spice", action="store_true", help="Skip SPICE")
     p_run.add_argument("--skip-emc", action="store_true", help="Skip EMC")
