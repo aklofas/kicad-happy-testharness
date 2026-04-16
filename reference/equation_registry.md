@@ -2,18 +2,18 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-04-03T00:45:34.875406+00:00
+**Last scan:** 2026-04-16T19:46:56.419088+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 95 |
-| Verified | 95 |
+| Total equations | 96 |
+| Verified | 96 |
 | Unverified | 0 |
 | Stale | 0 |
 | Critical impact | 10 |
-| High impact | 34 |
+| High impact | 35 |
 | Medium impact | 36 |
 | Low impact | 15 |
 
@@ -50,6 +50,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **verified** |
 | EQ-064 | `analyze_wire_geometry` | L = √(Δx²+Δy²) (wire segment length) | filter_design | high | **verified** |
 | EQ-065 | `apply_rotation` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | filter_design | high | **verified** |
+| EQ-097 | `_detect_i2c_buses` | t_r = 0.8473 * R_pullup * C_bus (RC time constant to 70% VDD) | filter_design | high | **verified** |
 
 ## emc_formulas.py
 

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_scan": "2026-04-16T19:07:10.827747+00:00",
+  "last_scan": "2026-04-16T19:46:56.419088+00:00",
   "equations": [
     {
       "id": "EQ-001",
@@ -1370,6 +1370,20 @@
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": "Source corrected: originally cited 'Power Distribution Network Design Methodologies Ch. 6' which is by Nov\u00e1k. The actual implementation is more sophisticated than simple P/V \u2014 it models topology-dependent AC current components (buck: I_peak*(1-D), boost: 30% of I_in_avg)."
+    },
+    {
+      "id": "EQ-097",
+      "formula": "t_r = 0.8473 * R_pullup * C_bus (RC time constant to 70% VDD)",
+      "file": "analyze_schematic.py",
+      "line": 3920,
+      "function": "_detect_i2c_buses",
+      "sources": [],
+      "content_hash": "sha256:c14614adda9f1669",
+      "status": "verified",
+      "category": "filter_design",
+      "impact": "high",
+      "verification_source": "I2C rise time: t_r = 0.8473 * R * C (ln(0.7^-1) * RC = 0.3567*RC to 70% VDD threshold); NXP I2C-bus spec \u00a73.1; confirmed correct coefficient [Re-confirmed 2026-04-16 post-analyzer-refactor; renumbered from collision with EQ-089 in emc_formulas.py]",
+      "notes": null
     }
   ]
 }
