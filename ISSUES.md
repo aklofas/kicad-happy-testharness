@@ -34,9 +34,9 @@ Last updated: 2026-04-15
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-317**. Next TH number: **TH-033**.
+maximum. Next KH number: **KH-318**. Next TH number: **TH-033**.
 
-> 4 open issues.
+> 5 open issues.
 
 ---
 
@@ -154,15 +154,88 @@ analyzers.
 
 ---
 
+### KH-317 — MEDIUM — XT-001 suppression reads wrong differential_pairs path
+
+**Symptom:** XT-001 (crosstalk 3H rule) fires on nets that ARE listed in
+the schematic's `design_analysis.differential_pairs`, when it should
+suppress those findings because labelled diff pairs are intentionally
+close-coupled.
+
+**Scale:** 63 confirmed suppression misses across 730 corpus boards
+with XT-001 findings after enabling `--proximity` default in the PCB
+runner. Example: `BlueJayRacing/bjr_kicad/21xt_main_bulkhead` fires
+XT-001 on P2B_P/P2B_N, M0A_P/M0A_N, P0C_P/P0C_N, etc. — all of which
+are present in the schematic's `design_analysis.differential_pairs`
+(28 diff pairs listed).
+
+**Root cause:** `emc_rules.py:2460-2477` (`check_crosstalk_3h_rule`)
+reads diff pairs from two paths:
+
+```python
+_buses = (schematic.get('design_analysis', {}) or {}).get('buses', {}) or {}
+_dp_sources = [
+    _buses.get('differential_pairs') or [],
+    schematic.get('differential_pairs') or [],
+]
+```
+
+But the schematic analyzer emits diff pairs at
+`schematic.design_analysis.differential_pairs` (no `buses.` intermediate).
+Neither path reads that, so the suppression set is empty on every board
+and every diff pair "slips through" to become an XT-001 finding.
+
+**Repro:**
+```bash
+python3 run/run_pcb.py --repo BlueJayRacing/bjr_kicad --jobs 1
+python3 run/run_emc.py --repo BlueJayRacing/bjr_kicad --jobs 1
+python3 -c "
+import json
+d = json.load(open('results/outputs/emc/BlueJayRacing/bjr_kicad/21xt_main_bulkhead_main_bulkhead.kicad_sch.json'))
+s = json.load(open('results/outputs/schematic/BlueJayRacing/bjr_kicad/21xt_main_bulkhead_main_bulkhead.kicad_sch.json'))
+dp = {(p['positive'], p['negative']) for p in s['design_analysis'].get('differential_pairs', [])}
+xt_pairs = [f['nets'] for f in d['findings'] if f.get('rule_id') == 'XT-001']
+misses = [nets for nets in xt_pairs if tuple(sorted(nets)) in {tuple(sorted(p)) for p in dp}]
+print(f'XT-001 suppression misses: {len(misses)}')
+"
+# Expected: 0. Actual: many.
+```
+
+**Fix:** Add the correct path to `_dp_sources`:
+```python
+_design = schematic.get('design_analysis', {}) or {}
+_dp_sources = [
+    _design.get('differential_pairs') or [],           # actual location
+    _design.get('buses', {}).get('differential_pairs') or [],  # legacy
+    schematic.get('differential_pairs') or [],         # top-level fallback
+]
+```
+
+**Verification:** After the fix, re-run EMC on
+`BlueJayRacing/bjr_kicad/21xt_main_bulkhead` and confirm no XT-001
+finding references a net pair that is also in
+`design_analysis.differential_pairs`.
+
+**Source:** Surfaced after enabling `--proximity` default in the
+harness `run_pcb.py` (commit TBD, 2026-04-16). XT-001 was previously
+dark across the entire corpus because no PCB had trace_proximity data;
+now that it runs on 730 boards, the latent suppression-path bug became
+visible.
+
+**Related:** KH-316 (schematic/pcb findings-order nondeterminism) also
+uncovered by activating more detectors.
+
+---
+
 ## Test Harness Issues
 
 ## Priority Queue
 
-4 open issues.
+5 open issues.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
-| 1 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
-| 2 | KH-314 | LOW | Trivial — add --schema branch to analyze_thermal.py |
-| 3 | KH-315 | LOW | Trivial — reconcile hierarchy_context key |
-| 4 | KH-316 | LOW | Small — sort findings[] before serialization |
+| 1 | KH-317 | MEDIUM | Trivial — add `design_analysis.differential_pairs` to `_dp_sources` |
+| 2 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
+| 3 | KH-314 | LOW | Trivial — add --schema branch to analyze_thermal.py |
+| 4 | KH-315 | LOW | Trivial — reconcile hierarchy_context key |
+| 5 | KH-316 | LOW | Small — sort findings[] before serialization |
