@@ -36,7 +36,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-314**. Next TH number: **TH-033**.
 
-> 4 open issues.
+> 2 open issues.
 
 ---
 
@@ -50,29 +50,6 @@ maximum. Next KH number: **KH-314**. Next TH number: **TH-033**.
 ---
 
 ## kicad-happy Analyzer Issues
-
-### KH-311 — MEDIUM — EMC `trust_summary.total_findings` doesn't match `len(findings)`
-
-**Symptom:** 161 EMC outputs on the smoke pack have `trust_summary.total_findings`
-and `summary.total_findings` higher than actual `len(findings)`. The diff is
-consistently 2 (e.g., reports 3 findings, actual 1).
-
-**Root cause:** The EMC analyzer computes `summary` and `trust_summary` from the
-full findings list, then filters some findings out before writing the output JSON.
-The summary/trust_summary reflect the pre-filter count.
-
-**Repro:** `results/outputs/emc/0101shift/Business_Card_AI/Business_card_AI.sch.json` —
-`trust_summary.total_findings=3`, `summary.total_findings=3`, `len(findings)=1`.
-
-**Fix:** In `analyze_emc.py`, either compute trust_summary after filtering, or
-include all findings in the output.
-
-**Verification:** `python3 validate/validate_invariants.py --type emc --cross-section smoke`
-should show 0 trust_summary violations.
-
-**Source:** Discovered by extending invariant checker to EMC outputs (P13, 2026-04-15).
-
----
 
 ### KH-312 — LOW — `sync_datasheets_digikey.py` needs `--mpn-list` batch mode
 
@@ -91,33 +68,6 @@ and downloads datasheets for each.
 a loop. Works but doesn't update the `datasheets/index.json` manifest.
 
 **Source:** Datasheet v2 extraction spec (2026-04-15).
-
----
-
-### KH-313 — MEDIUM — `check_inductor_leakage` crashes when RF chain component is a string
-
-**Symptom:** 2 EMC outputs on smoke set (OLIMEX/DIY-LAPTOP/HARDWARE_A64-TERES_*)
-crash with `AttributeError: 'str' object has no attribute 'get'` at
-`emc_rules.py:4006` inside `check_inductor_leakage`.
-
-**Repro:** `python3 run/run_emc.py --repo OLIMEX/DIY-LAPTOP` →
-`HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.B_TERES_PCB1-A64-MAIN_Rev.B.sch.err`.
-
-**Root cause:** `emc_rules.py:4006` does
-`r = comp.get('ref') or comp.get('reference', '')` over
-`rf.get('components', [])`, but `components` can contain bare strings
-(refdes) not just dicts. A similar loop at line 4000 already handles this:
-`ic_ref = conn if isinstance(conn, str) else conn.get('ref', '')`.
-
-**Fix:** Apply the same isinstance check at line 4006:
-```python
-r = comp if isinstance(comp, str) else (comp.get('ref') or comp.get('reference', ''))
-```
-
-**Verification:** `python3 run/run_emc.py --repo OLIMEX/DIY-LAPTOP` produces
-22 EMC outputs with 0 .err files.
-
-**Source:** Discovered during Phase 5 smoke validation (2026-04-15). Session 8 regression.
 
 ---
 
@@ -153,11 +103,9 @@ use the scalar `ref` field instead. SPICE/EMC findings don't have a scalar
 
 ## Priority Queue
 
-3 open issues.
+2 open issues.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
-| 1 | KH-311 | MEDIUM | Small — compute trust_summary after filtering in EMC |
-| 2 | KH-313 | MEDIUM | Trivial — isinstance check at emc_rules.py:4006 |
-| 3 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
-| 4 | TH-031 | LOW | Small-medium — depends on chosen approach |
+| 1 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
+| 2 | TH-031 | LOW | Small-medium — depends on chosen approach |

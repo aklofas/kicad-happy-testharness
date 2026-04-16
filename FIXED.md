@@ -11,6 +11,47 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-16 — KH-311, KH-313 (Phase 5 harness-found bugs)
+
+### KH-311 (MEDIUM): EMC `trust_summary.total_findings` doesn't match `len(findings)`
+
+- **Where fixed:** kicad-happy repo, `skills/emc/scripts/analyze_emc.py` lines 510–522
+- **Symptom:** 161 EMC outputs on smoke had `trust_summary.total_findings`
+  higher than actual `len(findings)`. The diff was consistently 2.
+- **Root cause:** `compute_trust_summary()` was called inside the result
+  dict literal, **before** the `--compact` filter stripped INFO findings
+  and before `apply_output_filters()` ran. So trust_summary reflected the
+  pre-filter count while findings[] reflected the post-filter count.
+- **Fix:** Removed `trust_summary` from the initial result dict literal.
+  Re-added it as `result['trust_summary'] = compute_trust_summary(result['findings'])`
+  after both filters run. Now reflects what's actually in the output.
+- **Verification:** On Thinkpad-USB-keyboard schematic with `--compact`:
+  `findings[]: 18`, `trust_summary.total_findings: 18`. Matching.
+- **Commit:** a8f4d41
+
+### KH-313 (MEDIUM): `check_inductor_leakage` crashes when RF chain component is a string
+
+- **Where fixed:** kicad-happy repo, `skills/emc/scripts/emc_rules.py` lines 4004–4010
+- **Symptom:** 2 EMC outputs on smoke crashed with `AttributeError: 'str'
+  object has no attribute 'get'` inside `check_inductor_leakage`.
+- **Root cause:** `emc_rules.py:4006` did `r = comp.get('ref') or comp.get('reference', '')`
+  over `rf.get('components', [])`, but `components` can contain bare refdes strings,
+  not just dicts. A similar loop at line 4000 already handled this with an
+  `isinstance` check.
+- **Fix:** Applied the same pattern at line 4006:
+  ```python
+  if isinstance(comp, str):
+      r = comp
+  else:
+      r = comp.get('ref') or comp.get('reference', '')
+  ```
+- **Verification:** `py_compile` + smoke test pass. The 2 OLIMEX/DIY-LAPTOP
+  EMC outputs that previously errored will now produce clean output on
+  next harness run.
+- **Commit:** a8f4d41
+
+---
+
 ## 2026-04-15 — TH-032 (datasheet_verify import path)
 
 ### TH-032 (LOW): `test_datasheet_verify.py` imported from old `skills/kicad/scripts/` path
