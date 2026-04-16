@@ -1,16 +1,17 @@
 {
   "file_pattern": "blocks_mixlib-pmic-vreg.kicad_blocks_pmic-vreg-ldo-tps7a2601-extcontrol_midvout.kicad_block_pmic-vreg-ldo-tps7a2601-extcontrol_midvout.kicad_sch",
   "analyzer_type": "emc",
-  "generated_by": "generate_seed_assertions.py",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~10 (tolerance 10%)",
+      "description": "Finding count ~8 (tolerance 10%)",
       "check": {
-        "path": "summary.total_checks",
+        "path": "summary.total_findings",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 7,
+        "max": 9
       }
     },
     {
@@ -25,33 +26,32 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "low count ~3",
+      "description": "by_severity.error ~7",
       "check": {
-        "path": "summary.low",
+        "path": "summary.by_severity.error",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 6,
+        "max": 8
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~73 (+-10)",
+      "description": "by_severity.info ~1",
       "check": {
-        "path": "summary.emc_risk_score",
+        "path": "summary.by_severity.info",
         "op": "range",
-        "min": 63,
-        "max": 83
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "3 io_filtering finding(s)",
+      "description": "EMC risk score ~76.0 (+-10)",
       "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^io_filtering$",
-        "value": 3
+        "path": "summary.emc_risk_score",
+        "op": "range",
+        "min": 66.0,
+        "max": 86.0
       }
     },
     {
@@ -85,15 +85,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "~3 probe point(s) in test plan",
-      "check": {
-        "path": "test_plan.probe_points",
-        "op": "min_count",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -102,7 +93,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",

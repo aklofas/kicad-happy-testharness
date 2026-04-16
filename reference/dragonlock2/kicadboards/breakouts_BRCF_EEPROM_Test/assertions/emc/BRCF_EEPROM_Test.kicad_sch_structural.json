@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 ground_plane finding(s)",
+      "description": "3 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -39,6 +39,16 @@
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Rule GP-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Rule GP-004 present",
       "check": {
         "path": "findings",
@@ -48,7 +58,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -58,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Rule VS-001 present",
       "check": {
         "path": "findings",
@@ -68,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",

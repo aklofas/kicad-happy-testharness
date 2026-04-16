@@ -6,17 +6,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 clock_routing finding(s)",
+      "description": "2 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "19 ground_plane finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^ground_plane$",
+        "value": 19
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "6 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -27,7 +38,18 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
+      "description": "7 return_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^return_path$",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Rule CK-001 present",
       "check": {
         "path": "findings",
@@ -37,7 +59,27 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
+      "description": "Rule CK-003 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^CK\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Rule GP-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -47,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000009",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
@@ -57,7 +99,27 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000010",
+      "description": "Rule RP-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^RP\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "J104 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "J101 in EMC findings",
       "check": {
         "path": "findings",
@@ -67,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000013",
       "description": "J102 in EMC findings",
       "check": {
         "path": "findings",
@@ -77,23 +139,13 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000014",
       "description": "J103 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ103\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "J104 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJ104\\b"
       }
     }
   ]

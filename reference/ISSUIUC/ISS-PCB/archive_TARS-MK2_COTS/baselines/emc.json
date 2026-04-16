@@ -3,10 +3,16 @@
     "by_category": {
       "decoupling": 1,
       "emi_filter": 1,
-      "ground_plane": 1,
+      "emission_estimate": 2,
+      "ground_plane": 2,
       "io_filtering": 1,
-      "switching_emc": 1,
+      "switching_emc": 3,
       "via_stitching": 1
+    },
+    "by_severity": {
+      "error": 1,
+      "info": 5,
+      "warning": 5
     },
     "critical": 1,
     "emc_risk_score": 77.0,
@@ -18,33 +24,51 @@
   },
   "COTS.kicad_sch.json": {
     "by_category": {
-      "ground_plane": 1,
+      "emission_estimate": 1,
+      "ground_plane": 9,
       "io_filtering": 19
     },
+    "by_severity": {
+      "error": 5,
+      "info": 1,
+      "warning": 23
+    },
     "critical": 1,
-    "emc_risk_score": 82.0,
-    "high": 0,
+    "emc_risk_score": 70.0,
+    "high": 4,
     "low": 19,
-    "medium": 0,
+    "medium": 4,
     "target_standard": "fcc-class-b",
     "total_findings": 0
   },
   "COTS.sch.json": {
     "by_category": {
-      "ground_plane": 1,
+      "emission_estimate": 1,
+      "ground_plane": 9,
       "io_filtering": 19
     },
+    "by_severity": {
+      "error": 5,
+      "info": 1,
+      "warning": 23
+    },
     "critical": 1,
-    "emc_risk_score": 82.0,
-    "high": 0,
+    "emc_risk_score": 70.0,
+    "high": 4,
     "low": 19,
-    "medium": 0,
+    "medium": 4,
     "target_standard": "fcc-class-b",
     "total_findings": 0
   },
   "DAQ.sch.json": {
     "by_category": {
+      "ground_plane": 1,
       "via_stitching": 1
+    },
+    "by_severity": {
+      "error": 0,
+      "info": 1,
+      "warning": 1
     },
     "critical": 0,
     "emc_risk_score": 98.5,
@@ -56,35 +80,56 @@
   },
   "FCB-Lite.sch.json": {
     "by_category": {
-      "clock_routing": 1,
-      "decoupling": 2,
-      "io_filtering": 15
+      "clock_routing": 3,
+      "decoupling": 9,
+      "emission_estimate": 1,
+      "ground_plane": 13,
+      "io_filtering": 15,
+      "return_path": 22
+    },
+    "by_severity": {
+      "error": 12,
+      "info": 1,
+      "warning": 50
     },
     "critical": 0,
-    "emc_risk_score": 77.0,
-    "high": 5,
+    "emc_risk_score": 31.0,
+    "high": 12,
     "low": 12,
-    "medium": 1,
+    "medium": 38,
     "target_standard": "fcc-class-b",
     "total_findings": 0
   },
   "FCB.sch.json": {
     "by_category": {
-      "clock_routing": 6,
-      "decoupling": 4,
-      "ground_plane": 3,
-      "io_filtering": 18
+      "clock_routing": 16,
+      "decoupling": 5,
+      "emission_estimate": 1,
+      "esd_path": 1,
+      "ground_plane": 217,
+      "io_filtering": 18,
+      "return_path": 22
     },
-    "critical": 0,
-    "emc_risk_score": 52.0,
-    "high": 9,
-    "low": 11,
-    "medium": 11,
+    "by_severity": {
+      "error": 188,
+      "info": 1,
+      "warning": 91
+    },
+    "critical": 75,
+    "emc_risk_score": 0,
+    "high": 113,
+    "low": 17,
+    "medium": 74,
     "target_standard": "fcc-class-b",
     "total_findings": 0
   },
   "MCU_AC.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -95,6 +140,11 @@
   },
   "MCU_HYBRID.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -105,6 +155,11 @@
   },
   "MPU.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -116,15 +171,22 @@
   "POWER.sch.json": {
     "by_category": {
       "board_edge": 1,
-      "decoupling": 7,
-      "ground_plane": 2,
-      "io_filtering": 14
+      "decoupling": 9,
+      "emission_estimate": 1,
+      "ground_plane": 7,
+      "io_filtering": 14,
+      "return_path": 5
+    },
+    "by_severity": {
+      "error": 7,
+      "info": 1,
+      "warning": 29
     },
     "critical": 0,
-    "emc_risk_score": 74.5,
-    "high": 6,
+    "emc_risk_score": 52.5,
+    "high": 7,
     "low": 14,
-    "medium": 4,
+    "medium": 15,
     "target_standard": "fcc-class-b",
     "total_findings": 0
   },
@@ -132,10 +194,16 @@
     "by_category": {
       "decoupling": 14,
       "emi_filter": 1,
-      "ground_plane": 1,
+      "emission_estimate": 2,
+      "ground_plane": 2,
       "io_filtering": 11,
-      "switching_emc": 1,
+      "switching_emc": 3,
       "via_stitching": 1
+    },
+    "by_severity": {
+      "error": 13,
+      "info": 5,
+      "warning": 16
     },
     "critical": 1,
     "emc_risk_score": 61.0,
@@ -147,6 +215,11 @@
   },
   "ZOE-M8Q.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,

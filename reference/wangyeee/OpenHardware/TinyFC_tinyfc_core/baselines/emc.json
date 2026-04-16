@@ -1,6 +1,11 @@
 {
   "B2BConnector.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -11,6 +16,11 @@
   },
   "IMU.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -21,6 +31,11 @@
   },
   "MCU.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -31,6 +46,11 @@
   },
   "OnboardIO.sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -41,7 +61,13 @@
   },
   "Power.sch.json": {
     "by_category": {
-      "switching_emc": 1
+      "emission_estimate": 1,
+      "switching_emc": 3
+    },
+    "by_severity": {
+      "error": 0,
+      "info": 3,
+      "warning": 1
     },
     "critical": 0,
     "emc_risk_score": 98.5,
@@ -53,18 +79,28 @@
   },
   "tinyfc_core.sch.json": {
     "by_category": {
-      "clock_routing": 1,
-      "diff_pair": 3,
-      "ground_plane": 3,
+      "clock_routing": 2,
+      "decoupling": 13,
+      "diff_pair": 2,
+      "emi_filter": 1,
+      "emission_estimate": 2,
+      "esd_path": 4,
+      "ground_plane": 12,
       "inductor_leakage": 1,
       "io_filtering": 3,
-      "switching_emc": 1
+      "return_path": 22,
+      "switching_emc": 3
     },
-    "critical": 0,
-    "emc_risk_score": 68.5,
-    "high": 1,
-    "low": 2,
-    "medium": 9,
+    "by_severity": {
+      "error": 6,
+      "info": 5,
+      "warning": 54
+    },
+    "critical": 1,
+    "emc_risk_score": 23.0,
+    "high": 5,
+    "low": 3,
+    "medium": 51,
     "target_standard": "fcc-class-b",
     "total_findings": 0
   }

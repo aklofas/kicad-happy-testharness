@@ -1,6 +1,11 @@
 {
   "channel.kicad_sch.json": {
     "by_category": {},
+    "by_severity": {
+      "error": 0,
+      "info": 0,
+      "warning": 0
+    },
     "critical": 0,
     "emc_risk_score": 100,
     "high": 0,
@@ -11,7 +16,13 @@
   },
   "power.kicad_sch.json": {
     "by_category": {
-      "switching_emc": 2
+      "emission_estimate": 2,
+      "switching_emc": 6
+    },
+    "by_severity": {
+      "error": 0,
+      "info": 6,
+      "warning": 2
     },
     "critical": 0,
     "emc_risk_score": 97.0,
@@ -23,16 +34,24 @@
   },
   "stepper-driver.kicad_sch.json": {
     "by_category": {
-      "clock_routing": 8,
+      "clock_routing": 16,
+      "emission_estimate": 3,
+      "ground_plane": 1,
       "inductor_leakage": 1,
       "io_filtering": 13,
-      "switching_emc": 3
+      "return_path": 22,
+      "switching_emc": 7
+    },
+    "by_severity": {
+      "error": 2,
+      "info": 8,
+      "warning": 53
     },
     "critical": 0,
-    "emc_risk_score": 82.0,
-    "high": 0,
-    "low": 13,
-    "medium": 12,
+    "emc_risk_score": 54.0,
+    "high": 2,
+    "low": 28,
+    "medium": 25,
     "target_standard": "fcc-class-b",
     "total_findings": 0
   }

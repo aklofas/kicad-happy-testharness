@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 ground_plane finding(s)",
+      "description": "14 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 1
+        "value": 14
       }
     },
     {
@@ -28,6 +28,38 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "6 return_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^return_path$",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "1 via_stitching finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^via_stitching$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Rule GP-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Rule GP-004 present",
       "check": {
         "path": "findings",
@@ -37,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000007",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -47,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
@@ -57,7 +89,27 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000009",
+      "description": "Rule RP-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^RP\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Rule VS-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^VS\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
@@ -67,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000012",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
