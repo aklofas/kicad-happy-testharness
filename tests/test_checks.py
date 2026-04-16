@@ -243,6 +243,75 @@ def test_count_matches_not_list():
     assert r["actual"] == 0
 
 
+# === list-field matching (TH-031) ===
+# These operators must iterate list-typed field values and regex-match each
+# string element, without relying on Python's str([...]) list repr. See
+# TH-031 in FIXED.md for rationale.
+
+def test_contains_match_list_field_hit():
+    """contains_match finds a ref inside a list-typed field."""
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["J1", "U3"]},
+        {"rule_id": "DC-001", "components": ["C1"]},
+    ]}
+    r = _eval("contains_match", "findings", data,
+              field="components", pattern=r"^U3$")
+    assert r["passed"], f"Expected match, got {r}"
+
+def test_contains_match_list_field_miss():
+    """contains_match returns False when no list element matches."""
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["J1", "U3"]},
+    ]}
+    r = _eval("contains_match", "findings", data,
+              field="components", pattern=r"^R99$")
+    assert not r["passed"]
+
+def test_contains_match_list_field_no_repr_leak():
+    """Regex must match list elements, not the Python list repr.
+
+    Before TH-031 fix, a pattern like `['U3'` would accidentally match
+    because str(['U3', 'J1']) == "['U3', 'J1']". After the fix it must
+    not match because no element equals that string.
+    """
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["U3", "J1"]},
+    ]}
+    r = _eval("contains_match", "findings", data,
+              field="components", pattern=r"\[")
+    assert not r["passed"], "Should not match list-repr characters"
+
+def test_not_contains_match_list_field():
+    """not_contains_match passes when no list element matches."""
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["J1", "U3"]},
+    ]}
+    r = _eval("not_contains_match", "findings", data,
+              field="components", pattern=r"^R99$")
+    assert r["passed"]
+
+def test_not_contains_match_list_field_hit():
+    """not_contains_match fails when a list element matches."""
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["J1", "U3"]},
+    ]}
+    r = _eval("not_contains_match", "findings", data,
+              field="components", pattern=r"^U3$")
+    assert not r["passed"], f"Expected no match to pass, got {r}"
+
+def test_count_matches_list_field():
+    """count_matches counts items whose list field contains any matching element."""
+    data = {"findings": [
+        {"rule_id": "IO-001", "components": ["J1", "U3"]},
+        {"rule_id": "DC-001", "components": ["U3"]},
+        {"rule_id": "GP-002", "components": ["C1"]},
+    ]}
+    r = _eval("count_matches", "findings", data,
+              field="components", pattern=r"^U3$", value=2)
+    assert r["passed"], f"Expected count=2, got {r}"
+    assert r["actual"] == 2
+
+
 # === dotted path resolution ===
 
 def test_nested_path():
