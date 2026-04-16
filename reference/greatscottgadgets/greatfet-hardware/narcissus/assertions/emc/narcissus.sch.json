@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~110 (tolerance 10%)",
+      "description": "Finding count ~127 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 104,
-        "max": 116
+        "min": 120,
+        "max": 134
       }
     },
     {
@@ -26,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~95",
+      "description": "medium count ~96",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 90,
-        "max": 100
+        "min": 91,
+        "max": 101
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~4",
+      "description": "low count ~20",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 18,
+        "max": 22
       }
     },
     {
@@ -56,12 +56,12 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "by_severity.warning ~99",
+      "description": "by_severity.warning ~116",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 94,
-        "max": 104
+        "min": 110,
+        "max": 122
       }
     },
     {
@@ -76,16 +76,27 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "EMC risk score ~72.0 (+-10)",
+      "description": "EMC risk score ~69.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 62.0,
-        "max": 82.0
+        "min": 59.5,
+        "max": 79.5
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "17 crosstalk finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^crosstalk$",
+        "value": 17
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 emission_estimate finding(s)",
       "check": {
         "path": "findings",
@@ -96,7 +107,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "83 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -107,7 +118,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "4 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -118,7 +129,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "22 return_path finding(s)",
       "check": {
         "path": "findings",
@@ -129,7 +140,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -138,7 +149,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -147,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "~2 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -156,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -165,7 +176,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -174,12 +185,12 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "~90 net(s) with EMC scores",
+      "id": "SEED-00000019",
+      "description": "~97 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 85
+        "value": 92
       }
     }
   ]

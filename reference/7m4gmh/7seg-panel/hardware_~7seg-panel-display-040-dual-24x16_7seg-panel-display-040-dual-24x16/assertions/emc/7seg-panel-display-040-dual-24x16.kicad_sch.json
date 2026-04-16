@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~116 (tolerance 10%)",
+      "description": "Finding count ~119 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 110,
-        "max": 122
+        "min": 113,
+        "max": 125
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~48",
+      "description": "low count ~51",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 43,
-        "max": 53
+        "min": 48,
+        "max": 54
       }
     },
     {
@@ -66,12 +66,12 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "by_severity.warning ~49",
+      "description": "by_severity.warning ~52",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 44,
-        "max": 54
+        "min": 49,
+        "max": 55
       }
     },
     {
@@ -86,12 +86,12 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "EMC risk score ~67.0 (+-10)",
+      "description": "EMC risk score ~65.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 57.0,
-        "max": 77.0
+        "min": 55.5,
+        "max": 75.5
       }
     },
     {
@@ -107,6 +107,17 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "3 crosstalk finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^crosstalk$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "64 decoupling finding(s)",
       "check": {
         "path": "findings",
@@ -117,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 emission_estimate finding(s)",
       "check": {
         "path": "findings",
@@ -128,7 +139,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "2 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -139,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "48 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -150,7 +161,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -159,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -168,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "~24 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -177,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -186,7 +197,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -195,12 +206,12 @@
       }
     },
     {
-      "id": "SEED-00000020",
-      "description": "~1 net(s) with EMC scores",
+      "id": "SEED-00000021",
+      "description": "~6 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 1
+        "value": 5
       }
     }
   ]

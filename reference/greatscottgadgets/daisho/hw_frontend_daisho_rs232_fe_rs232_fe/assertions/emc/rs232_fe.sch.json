@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~200 (tolerance 10%)",
+      "description": "Finding count ~206 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 190,
-        "max": 210
+        "min": 199,
+        "max": 213
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~26",
+      "description": "low count ~32",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 23,
-        "max": 29
+        "min": 28,
+        "max": 36
       }
     },
     {
@@ -66,12 +66,12 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "by_severity.warning ~88",
+      "description": "by_severity.warning ~94",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 83,
-        "max": 93
+        "min": 89,
+        "max": 99
       }
     },
     {
@@ -86,16 +86,27 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "EMC risk score ~50.5 (+-10)",
+      "description": "EMC risk score ~49.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 40.5,
-        "max": 60.5
+        "min": 39.0,
+        "max": 59.0
       }
     },
     {
       "id": "SEED-00000010",
+      "description": "6 crosstalk finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^crosstalk$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "13 decoupling finding(s)",
       "check": {
         "path": "findings",
@@ -106,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "1 emission_estimate finding(s)",
       "check": {
         "path": "findings",
@@ -117,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "138 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -128,7 +139,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "26 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -139,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "22 return_path finding(s)",
       "check": {
         "path": "findings",
@@ -150,7 +161,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -159,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -168,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "~19 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -177,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -186,7 +197,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -195,12 +206,12 @@
       }
     },
     {
-      "id": "SEED-00000020",
-      "description": "~140 net(s) with EMC scores",
+      "id": "SEED-00000021",
+      "description": "~142 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 133
+        "value": 134
       }
     }
   ]
