@@ -21,7 +21,7 @@ from regression.assertion_metrics import compute_margin  # noqa: E402
 # range operator
 # ---------------------------------------------------------------------------
 
-def test_margin_range_at_center_is_one():
+def test_margin_range_at_center_is_half():
     assertion = {"check": {"op": "range", "min": 0, "max": 100}}
     result = {"passed": True, "actual": 50}
     # min(50-0, 100-50) / (100-0) = 50/100 = 0.5
