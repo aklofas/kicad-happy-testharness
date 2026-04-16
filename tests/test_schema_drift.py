@@ -73,7 +73,7 @@ _KNOWN_UNDOCUMENTED = {
         "power_sequencing_validation", "power_symbols", "property_issues",
         "protocol_compliance", "pwr_flag_warnings", "sheet_files", "sheets_parsed",
         "simulation_readiness", "sourcing_audit", "text_annotations",
-        "wire_geometry",
+        "voltage_derating", "wire_geometry",
     },
     "pcb": {
         "audience_summary", "board_metadata", "board_thickness_mm",
