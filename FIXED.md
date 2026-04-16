@@ -11,6 +11,93 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-16 — KH-314, KH-315, KH-316, KH-317 (Session 11 harness-filed bugs)
+
+### KH-317 (MEDIUM): XT-001 suppression read wrong `differential_pairs` path
+
+- **Where fixed:** kicad-happy repo, `skills/emc/scripts/emc_rules.py` lines 2458–2478
+- **Symptom:** XT-001 (crosstalk 3H rule) fired on 63 diff-pair nets across
+  730 corpus boards that were clearly listed in the schematic's
+  `design_analysis.differential_pairs`.
+- **Root cause:** `check_crosstalk_3h_rule` read from
+  `schematic.design_analysis.buses.differential_pairs` — a path that never
+  existed. Schematic analyzer emits diff pairs flat at
+  `design_analysis.differential_pairs`. Neither code path nor docs had this
+  right (the `output-schema.md` and `_get_schema()` both documented the
+  non-existent `buses` key). Result: the suppression set was empty on every
+  board, so every diff pair slipped through to fire XT-001.
+- **Fix:** Read all three candidate paths (current flat + legacy nested +
+  legacy top-level). Also corrected the stale docs in both
+  `_get_schema()` on `analyze_schematic.py` and
+  `skills/kicad/references/output-schema.md` — real structure under
+  `design_analysis` is `net_classification`, `power_domains`,
+  `cross_domain_signals`, `bus_analysis`, `differential_pairs`,
+  `erc_warnings`, `passive_warnings`.
+- **Verification:** Synthetic test — USB_DP/DM and CAN_H/L suppressed,
+  CLK/MISO still fires.
+- **Commit:** a07bd4b
+
+### KH-314 (LOW): `analyze_thermal.py` had no `--schema` command
+
+- **Where fixed:** kicad-happy repo, `skills/kicad/scripts/analyze_thermal.py` lines 846–910
+- **Symptom:** All other analyzers expose `--schema`; thermal errored with
+  "expected --schematic argument".
+- **Root cause:** Phase 6 `--schema` sync (session 9) covered schematic,
+  PCB, gerber, EMC, and cross_analysis — missed thermal.
+- **Fix:** Added a `--schema` branch at the top of `main()` that prints
+  the output envelope (analyzer_type, schema_version, summary, findings,
+  trust_summary, elapsed_s, optional missing_info) and short-circuits
+  before the required `--schematic`/`--pcb` check.
+- **Verification:** `analyze_thermal.py --schema` prints schema JSON and
+  exits cleanly.
+- **Commit:** a07bd4b
+
+### KH-315 (LOW): schematic `--schema` advertised `hierarchy_context` not present in most outputs
+
+- **Where fixed:** kicad-happy repo, `skills/kicad/scripts/analyze_schematic.py` lines 9060–9071
+- **Symptom:** Harness schema-drift test flagged that `--schema` documented
+  `hierarchy_context` which wasn't in most real outputs.
+- **Root cause:** `hierarchy_context` is emitted conditionally (only when
+  the analyzer has sub-sheet hierarchy context to report — rare in the
+  corpus). The schema documented it as if always present.
+- **Fix:** Marked `hierarchy_context`, `hierarchy_warning`,
+  `_redirected_from`, and `_stale_file_warning` explicitly as OPTIONAL
+  with a prefix string. Harness drift test already tolerates keys marked
+  OPTIONAL.
+- **Verification:** Drift test passes cleanly post-fix.
+- **Commit:** 0882866 (actually shipped earlier but only filed/closed now)
+
+### KH-316 (LOW): schematic/PCB findings[] nondeterministic order
+
+- **Where fixed:** kicad-happy repo, `skills/kicad/scripts/finding_schema.py`
+  (new `sort_findings()` helper), `skills/kicad/scripts/detection_schema.py`
+  (sort list-valued identity fields in `compute_detection_id()`),
+  analyze_schematic.py + analyze_pcb.py (call sort before serialization).
+- **Symptom:** Two runs on the same input produced same set of findings
+  in different array order. Same content, same count, different ordering.
+- **Root cause:** Upstream set/dict iteration ordering leaked into
+  findings list construction and into the `components` list inside
+  individual findings. `compute_detection_id()` hashed the stringified
+  list, so detection_id also shifted.
+- **Fix:** Added `sort_findings()` in `finding_schema.py` that
+  canonicalizes scalar `components`/`nets`/`pins` lists inside each
+  finding and sorts the top-level list by
+  (rule_id, detector, first_component, first_net, summary). Called at
+  the end of main() / analyze_ functions. Also fixed
+  `compute_detection_id()` to sort list-valued identity fields before
+  hashing.
+- **Verification:** `findings[]` array is now position-stable across
+  runs. `components`/`nets`/`pins` within each finding are sorted.
+  `detection_id` is invariant.
+- **Known remaining:** Lists of *dicts* nested inside findings
+  (`load_caps` under DO-DET, etc.) and `design_analysis` sub-sections
+  still have non-canonical ordering. Out of scope for this fix —
+  requires canonicalizing upstream detector builders that iterate over
+  sets. Deferred to v1.4.
+- **Commit:** 1725cb9
+
+---
+
 ## 2026-04-15 — TH-031 (list-field matching in checks ops)
 
 ### TH-031 (LOW): SPICE/EMC structural seeders relied on Python list repr for regex matching
