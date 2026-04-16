@@ -36,7 +36,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-314**. Next TH number: **TH-033**.
 
-> 2 open issues.
+> 1 open issue.
 
 ---
 
@@ -73,39 +73,10 @@ a loop. Works but doesn't update the `datasheets/index.json` manifest.
 
 ## Test Harness Issues
 
-### TH-031 — LOW — SPICE/EMC structural seeders use fragile stringified-list matching
-
-**Symptom:** `seed_structural.py` generates `contains_match` assertions with
-`field="components"` and `\b` word-boundary regex (e.g., `\bR5\b`). The
-`contains_match` operator calls `str()` on the field value, so for a list
-like `['R5', 'C3']` it matches against the string `"['R5', 'C3']"`. This
-works today but breaks silently if the list repr changes (e.g., tuple,
-different quoting, or if the operator is updated to handle lists natively).
-
-**Affected code:**
-- `generate_spice_structural_assertions()` line ~268: `field="components"`
-- `generate_emc_structural_assertions()` line ~341: `field="components"`
-
-**Root cause:** `components` is a list of strings, but `contains_match`
-expects a scalar field to regex against. The thermal seeder was fixed to
-use the scalar `ref` field instead. SPICE/EMC findings don't have a scalar
-`ref` — they only have the `components` list.
-
-**Options:**
-1. Add a `reference` or `ref` field to SPICE/EMC findings (main repo change)
-2. Teach `contains_match` to iterate list items when `field` points to a list
-3. Use `count_matches` with `value >= 1` instead (already handles lists)
-4. Leave as-is — fragile but functional
-
-**Source:** Discovered during thermal structural seeder audit (2026-04-15).
-
----
-
 ## Priority Queue
 
-2 open issues.
+1 open issue.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
 | 1 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
-| 2 | TH-031 | LOW | Small-medium — depends on chosen approach |

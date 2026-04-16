@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-14 (P12 refactor complete, 10-batch full regression passed)
+Last updated: 2026-04-15 (P13 Tier A, Batches 14-19, datasheet v2 extraction)
 
 ---
 
@@ -25,14 +25,14 @@ Last updated: 2026-04-14 (P12 refactor complete, 10-batch full regression passed
 | FND assertions | 4,626 |
 | BUGFIX assertions | 77 |
 | Aspirational assertions | 1,921 |
-| Assertion pass rate | 99.98% (293 stale FND from format change, 0 SEED/STRUCT/BUGFIX) |
-| Bugfix registry entries | 67 |
-| Unit tests (smoke gate) | 481 |
-| Unit tests (full suite) | 802 |
-| Layer 3 reviewed repos | 992 |
+| Assertion pass rate | 100.0% |
+| Bugfix registry entries | 76 |
+| Unit tests (smoke gate) | 541 |
+| Unit tests (full suite) | 879 |
+| Layer 3 reviewed repos | 1,045 |
 | Total findings | 2,575 |
-| Open KH-* issues | 0 |
-| Closed KH-* issues | 210 |
+| Open KH-* issues | 2 (KH-311, KH-312) |
+| Closed KH-* issues | 216 (KH-282..312) |
 | Open TH-* issues | 0 |
 | Constants | 298 (295 verified, 3 unverified) |
 | Schematic detectors | 56 (40 signal/domain + 16 validation) |
