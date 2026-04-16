@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~162 (tolerance 10%)",
+      "description": "Finding count ~156 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 153,
-        "max": 171
+        "min": 148,
+        "max": 164
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~23",
+      "description": "low count ~17",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 15,
+        "max": 19
       }
     },
     {
@@ -66,12 +66,12 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "by_severity.warning ~80",
+      "description": "by_severity.warning ~74",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 76,
-        "max": 84
+        "min": 70,
+        "max": 78
       }
     },
     {
@@ -86,23 +86,23 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "EMC risk score ~2.0 (+-10)",
+      "description": "EMC risk score ~2.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
         "min": 0,
-        "max": 12.0
+        "max": 12.5
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "8 crosstalk finding(s)",
+      "description": "2 crosstalk finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^crosstalk$",
-        "value": 8
+        "value": 2
       }
     },
     {

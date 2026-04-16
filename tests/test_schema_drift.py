@@ -86,6 +86,9 @@ _KNOWN_UNDOCUMENTED = {
         "audience_summary", "drill_tools",
     },
     "emc": set(),  # clean — EMC is zero-drift
+    "thermal": {
+        "audience_summary",
+    },
     "cross_analysis": {
         "audience_summary",
     },
@@ -294,6 +297,16 @@ def test_emc_schema_drift():
     if emitted is None:
         return
     _assert_no_drift(schema, emitted, "emc")
+
+
+def test_thermal_schema_drift():
+    schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_thermal.py")
+    if schema is None:
+        return
+    emitted = _fresh_output("thermal")
+    if emitted is None:
+        return
+    _assert_no_drift(schema, emitted, "thermal")
 
 
 def test_cross_analysis_schema_drift():

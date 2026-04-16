@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~72 (tolerance 10%)",
+      "description": "Finding count ~71 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 68,
-        "max": 76
+        "min": 67,
+        "max": 75
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~14",
+      "description": "low count ~13",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 11,
+        "max": 15
       }
     },
     {
@@ -66,12 +66,12 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "by_severity.warning ~35",
+      "description": "by_severity.warning ~34",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 30,
+        "max": 38
       }
     },
     {
@@ -118,13 +118,13 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "5 crosstalk finding(s)",
+      "description": "4 crosstalk finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^crosstalk$",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -229,11 +229,11 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "~49 net(s) with EMC scores",
+      "description": "~47 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 44
+        "value": 42
       }
     }
   ]

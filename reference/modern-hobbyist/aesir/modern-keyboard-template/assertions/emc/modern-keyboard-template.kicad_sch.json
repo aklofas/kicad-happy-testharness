@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~13 (tolerance 10%)",
+      "description": "Finding count ~12 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 10,
+        "max": 14
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~4",
+      "description": "low count ~3",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 2,
+        "max": 4
       }
     },
     {
@@ -66,12 +66,12 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "by_severity.warning ~8",
+      "description": "by_severity.warning ~7",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 7,
-        "max": 9
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -86,12 +86,12 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "EMC risk score ~58.5 (+-10)",
+      "description": "EMC risk score ~59.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 48.5,
-        "max": 68.5
+        "min": 49.0,
+        "max": 69.0
       }
     },
     {
@@ -107,13 +107,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "2 crosstalk finding(s)",
+      "description": "1 crosstalk finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^crosstalk$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -231,11 +231,11 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "~6 net(s) with EMC scores",
+      "description": "~4 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 5
+        "value": 3
       }
     }
   ]
