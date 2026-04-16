@@ -67,7 +67,8 @@ _KNOWN_UNDOCUMENTED = {
     "schematic": {
         "annotation_issues", "audience_summary", "bus_topology", "design_intent",
         "footprint_filter_warnings", "generic_symbol_warnings", "ground_domains",
-        "hierarchical_labels", "label_shape_warnings", "labels",
+        "hierarchical_labels", "instance_consistency_warnings",
+        "label_shape_warnings", "labels",
         "legacy_analysis_quality", "no_connects", "placement_analysis",
         "power_sequencing_validation", "power_symbols", "property_issues",
         "protocol_compliance", "pwr_flag_warnings", "sheet_files", "sheets_parsed",
