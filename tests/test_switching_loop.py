@@ -208,7 +208,7 @@ def test_sw003_precomputed_large_loop():
     assert len(findings) == 1, f"Expected 1 finding, got {len(findings)}"
     f = findings[0]
     assert f["rule_id"] == "SW-003"
-    assert f["severity"] == "HIGH"  # > 100 mm^2
+    assert f["severity"] == "error"  # > 100 mm^2 (normalized from "HIGH" per 4ab788e)
     assert "U1" in f["components"]
     assert "150" in f["description"]
     print("  PASS  test_sw003_precomputed_large_loop")
@@ -252,7 +252,7 @@ def test_sw003_fallback_no_precomputed():
     findings = check_input_cap_loop_area(pcb, schematic)
     assert len(findings) == 1, f"Expected 1 finding, got {len(findings)}"
     assert findings[0]["rule_id"] == "SW-003"
-    assert findings[0]["severity"] == "HIGH"  # > 100 mm^2
+    assert findings[0]["severity"] == "error"  # > 100 mm^2 (normalized per 4ab788e)
     print("  PASS  test_sw003_fallback_no_precomputed")
 
 

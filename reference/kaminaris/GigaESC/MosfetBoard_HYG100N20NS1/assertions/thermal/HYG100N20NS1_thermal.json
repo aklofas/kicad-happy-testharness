@@ -6,46 +6,16 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~27 (tolerance 10%)",
+      "description": "Finding count ~30 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 24,
-        "max": 30
+        "min": 27,
+        "max": 33
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "critical count ~3",
-      "check": {
-        "path": "summary.critical",
-        "op": "range",
-        "min": 2,
-        "max": 4
-      }
-    },
-    {
-      "id": "SEED-00000003",
-      "description": "medium count ~3",
-      "check": {
-        "path": "summary.medium",
-        "op": "range",
-        "min": 2,
-        "max": 4
-      }
-    },
-    {
-      "id": "SEED-00000004",
-      "description": "low count ~21",
-      "check": {
-        "path": "summary.low",
-        "op": "range",
-        "min": 18,
-        "max": 24
-      }
-    },
-    {
-      "id": "SEED-00000005",
       "description": "by_severity.error ~3",
       "check": {
         "path": "summary.by_severity.error",
@@ -55,17 +25,27 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "by_severity.warning ~24",
+      "id": "SEED-00000003",
+      "description": "by_severity.warning ~3",
       "check": {
         "path": "summary.by_severity.warning",
+        "op": "range",
+        "min": 2,
+        "max": 4
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "by_severity.info ~24",
+      "check": {
+        "path": "summary.by_severity.info",
         "op": "range",
         "min": 21,
         "max": 27
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000005",
       "description": "Components analyzed ~3 (tolerance 10%)",
       "check": {
         "path": "summary.components_analyzed",
@@ -75,13 +55,13 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "Thermal score ~41 (+-10)",
+      "id": "SEED-00000006",
+      "description": "Thermal score ~46 (+-10)",
       "check": {
         "path": "summary.thermal_score",
         "op": "range",
-        "min": 31,
-        "max": 51
+        "min": 36,
+        "max": 56
       }
     }
   ]

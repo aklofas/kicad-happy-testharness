@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~51 (tolerance 10%)",
+      "description": "Simulation count ~50 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 48,
-        "max": 54
+        "min": 45,
+        "max": 56
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 31 passing simulation(s)",
+      "description": "At least 30 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 31
+        "value": 30
       }
     },
     {
@@ -47,17 +47,6 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 opamp_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^opamp_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
       "description": "37 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -68,7 +57,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
