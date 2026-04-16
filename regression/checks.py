@@ -336,6 +336,19 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                 except (ImportError, OSError):
                     pass
 
+            # Stray-directory guard: a project dir with assertions/ but no
+            # baselines/metadata.json AND no resolvable project_path in the
+            # checked-out corpus is almost certainly a leftover from a prior
+            # layout restructure (TH-035). Skip with a warning rather than
+            # silently mis-resolving output file paths via project_prefix("").
+            if project_path is None and not (proj_dir / "baselines").is_dir():
+                print(
+                    f"WARNING: skipping stray project dir without baselines/ "
+                    f"and unresolvable project_path: {proj_dir}",
+                    file=sys.stderr,
+                )
+                continue
+
             type_dirs = []
             if analyzer_type:
                 td = assertions_dir / analyzer_type

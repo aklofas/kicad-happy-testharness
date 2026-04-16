@@ -34,7 +34,7 @@ Last updated: 2026-04-16
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-323**. Next TH number: **TH-035**.
+maximum. Next KH number: **KH-323**. Next TH number: **TH-036**.
 
 > 3 open issues.
 

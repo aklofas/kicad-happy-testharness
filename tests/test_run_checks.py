@@ -22,9 +22,21 @@ _PROJECT = "fake_project"
 
 def _write_assertion_file(tmpdir, assertions, file_pattern="test_file",
                           analyzer_type="schematic"):
-    """Write an assertion JSON file into the fake reference tree."""
-    adir = (Path(tmpdir) / "reference" / _REPO / _PROJECT
-            / "assertions" / analyzer_type)
+    """Write an assertion JSON file into the fake reference tree.
+
+    Also creates an empty baselines/metadata.json so the stray-dir guard
+    in checks.py:load_assertions() treats this as a real project dir.
+    """
+    proj_dir = Path(tmpdir) / "reference" / _REPO / _PROJECT
+    # Create baselines/metadata.json to opt out of the stray-dir guard (TH-035).
+    # project_path is None → project_prefix yields "" → output file looked up
+    # at "{file_pattern}.json" (matches _write_output_file below).
+    bdir = proj_dir / "baselines"
+    bdir.mkdir(parents=True, exist_ok=True)
+    (bdir / "metadata.json").write_text(json.dumps({
+        "repo": _REPO, "project": _PROJECT,
+    }), encoding="utf-8")
+    adir = proj_dir / "assertions" / analyzer_type
     adir.mkdir(parents=True, exist_ok=True)
     afile = adir / "test_assertions.json"
     afile.write_text(json.dumps({
@@ -155,6 +167,82 @@ def test_exit_1_when_failures_even_with_allow_errors():
         assert out is not None, "Expected JSON output from run_checks.py"
         assert out["failed"] == 1, f"Expected 1 failed, got {out}"
         assert rc == 1, f"Expected exit 1 even with --allow-errors when failures present, got {rc}"
+
+
+def test_stray_project_dir_is_skipped_with_warning():
+    """TH-035 guard: a project dir with assertions/ but no baselines/ and
+    no resolvable project_path should be skipped with a stderr WARNING,
+    not silently mis-resolve output file paths via project_prefix("").
+    """
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # Scenario: we create BOTH a real project dir AND a stray sibling.
+        # Real dir has baselines/ + assertions/; stray has only assertions/.
+        # Without the guard, run_checks would try to resolve the stray's
+        # assertions against a non-existent output file path.
+
+        # Real project: has baselines/metadata.json with project_path
+        real_proj = Path(tmpdir) / "reference" / _REPO / "real_proj"
+        (real_proj / "baselines").mkdir(parents=True, exist_ok=True)
+        (real_proj / "baselines" / "metadata.json").write_text(json.dumps({
+            "repo": _REPO, "project": "real_proj",
+            "project_path": "real_path",
+        }), encoding="utf-8")
+        (real_proj / "assertions" / "schematic").mkdir(parents=True, exist_ok=True)
+        (real_proj / "assertions" / "schematic" / "a.json").write_text(json.dumps({
+            "file_pattern": "real_file",
+            "analyzer_type": "schematic",
+            "assertions": [{
+                "id": "REAL-001",
+                "description": "real assertion",
+                "check": {"path": "count", "op": "range", "min": 1, "max": 99},
+            }],
+        }), encoding="utf-8")
+
+        # Stray project: assertions/ but NO baselines/ — no project_path resolvable
+        stray_proj = Path(tmpdir) / "reference" / _REPO / "stray_proj"
+        (stray_proj / "assertions" / "schematic").mkdir(parents=True, exist_ok=True)
+        (stray_proj / "assertions" / "schematic" / "b.json").write_text(json.dumps({
+            "file_pattern": "stray_file",
+            "analyzer_type": "schematic",
+            "assertions": [{
+                "id": "STRAY-001",
+                "description": "stray assertion (should be skipped)",
+                "check": {"path": "count", "op": "range", "min": 1, "max": 99},
+            }],
+        }), encoding="utf-8")
+
+        # Write output for the real project only
+        odir = (Path(tmpdir) / "results" / "outputs" / "schematic"
+                / _REPO)
+        odir.mkdir(parents=True, exist_ok=True)
+        # project_prefix("real_path") = "real_path_" → filename "real_path_real_file.json"
+        (odir / "real_path_real_file.json").write_text(json.dumps({"count": 42}),
+                                                        encoding="utf-8")
+
+        env = os.environ.copy()
+        env["KICAD_HAPPY_TESTHARNESS_DATA_DIR"] = str(tmpdir)
+        result = subprocess.run(
+            [sys.executable, str(RUN_CHECKS), "--json", "--repo", _REPO],
+            capture_output=True, text=True, env=env, timeout=30,
+        )
+        # Parse JSON
+        try:
+            out = json.loads(result.stdout.strip())
+        except json.JSONDecodeError:
+            out = None
+
+        assert out is not None, f"Expected JSON output; stdout={result.stdout[:500]}"
+        # Real assertion should have run
+        assert out["passed"] == 1, (
+            f"Expected real assertion to pass (1); got {out}")
+        # Stray assertion should NOT have produced errors or failures
+        assert out["errors"] == 0, (
+            f"Stray dir should be skipped, not errored; got errors={out['errors']}")
+        assert out["failed"] == 0, (
+            f"Stray dir should be skipped, not failed; got failed={out['failed']}")
+        # Stderr must mention the stray skip warning
+        assert "stray project dir" in result.stderr.lower(), (
+            f"Expected 'stray project dir' warning on stderr; got {result.stderr[:500]}")
 
 
 def test_exit_0_when_errors_with_allow_flag():
