@@ -36,7 +36,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-320**. Next TH number: **TH-035**.
 
-> 4 open issues.
+> 2 open issues.
 
 ---
 
@@ -50,139 +50,6 @@ maximum. Next KH number: **KH-320**. Next TH number: **TH-035**.
 ---
 
 ## kicad-happy Analyzer Issues
-
-### KH-318 — HIGH — PCB via type detection always returns None (wrong s-expression shape)
-
-**Symptom:** `via["type"]` field in `analyze_pcb.py` output JSON is `None`
-for every via in every board we've ever analyzed. Microvias, blind vias,
-and buried vias are indistinguishable from through vias in the analyzer
-output.
-
-**Root cause:** `kicad-happy/skills/kicad/scripts/analyze_pcb.py:916`
-`extract_vias()` does:
-
-```python
-via_type = get_value(via, "type")  # blind, micro, etc.
-```
-
-`get_value(node, "type")` looks for a nested `(type X)` child. But KiCad
-has never emitted that shape — the via type is a **bare token** between
-`(via` and `(at ...)`:
-
-- Through: `(via (at ...) (size ...) ...)` (no token, default)
-- Blind: `(via blind (at ...) ...)`
-- Buried: `(via buried (at ...) ...)` (new in 10.0, file version 20250926)
-- Microvia: `(via micro (at ...) ...)`
-
-Verified against KiCad source 10.0.0 writer at
-`pcbnew/pcb_io/kicad_sexpr/pcb_io_kicad_sexpr.cpp:2609` and the parser at
-`pcbnew/pcb_io/kicad_sexpr/pcb_io_kicad_sexpr_parser.cpp:7344` (expects
-bare tokens `T_blind`, `T_buried`, `T_micro`). Verified against real corpus
-files — every via in every corpus `.kicad_pcb` uses bare-token form.
-
-**Impact:**
-- Any detector that relies on `via.get("type") == "micro"` or similar is
-  operating on always-None. Need to audit callers.
-- In 10.0.0+ files, `BLIND_BURIED` is split into distinct `blind` and
-  `buried` tokens — layer-stack sanity and blind-via-depth rules cannot
-  distinguish the two.
-- Silent false negatives: we never flag problematic microvia sizes because
-  we never detect they're microvias.
-
-**Fix:** In `extract_vias()` replace the `get_value(via, "type")` line with
-bare-token scan:
-
-```python
-via_type = "through"
-for child in via[1:]:
-    if child in ("blind", "buried", "micro"):
-        via_type = child
-        break
-```
-
-Then emit `via_type` into the output dict unconditionally (not just when
-non-None). Audit downstream consumers: search
-`kicad-happy/skills/**/*.py` for `via.*["type"]` / `via.*\.get\("type"\)`
-and verify the new string values are handled.
-
-**Workaround:** None — there's no way for callers to distinguish via types
-today.
-
-**Source:** KiCad 10.0.1 format compatibility review, 2026-04-16. See
-[TODO-kicad-10-format-compat.md](TODO-kicad-10-format-compat.md) §1.
-
----
-
-### KH-319 — MEDIUM — Schematic `(hide yes)` boolean not detected by `has_flag()`
-
-**Symptom:** Hidden pins (and potentially other objects with `(hide yes)`)
-are reported as visible in analyzer output on any schematic saved by KiCad
-9.0+ or 10.0+.
-
-**Root cause:**
-`kicad-happy/skills/kicad/scripts/analyze_schematic.py:212` uses:
-
-```python
-hidden = has_flag(pin, "hide")
-```
-
-`has_flag()` at `sexp_parser.py:209-211` is `return flag in node` —
-membership test on the top-level list. This works for the legacy bare-token
-form `(pin ... hide ...)` but fails for the post-20241004 form
-`(pin ... (hide yes) ...)` where `hide` is inside a sub-list.
-
-The inline comment at the caller acknowledges the new form
-("KiCad uses `(hide yes)` inside pin node") but the `has_flag()`
-implementation still uses bare-membership. Affects every `.kicad_sch` file
-saved by KiCad ≥9.0 (9.0.8 ships schematic version 20250114; the boolean
-format change landed at 20241004).
-
-Verified against KiCad 10.0.0 parser at
-`eeschema/sch_io/kicad_sexpr/sch_io_kicad_sexpr_parser.cpp` where
-`T_hide → parseMaybeAbsentBool(true)` handles the new boolean form.
-
-**Impact:**
-- Hidden pins are not flagged as hidden. Affects power-pin detection on
-  multi-unit symbols, ERC-style checks, pin-by-pin net attribution.
-- Same `has_flag()` pattern is used for `in_bom`, `on_board`, `dnp`,
-  `exclude_from_sim`, `fields_autoplaced`, `locked`, etc. — all of which
-  have migrated to `(X yes/no)` form in 10.0.0. Each call site needs
-  audit.
-
-**Fix (narrow):** Replace `has_flag(pin, "hide")` with a helper:
-
-```python
-def is_hidden(node: list) -> bool:
-    if "hide" in node:
-        return True
-    hide = find_first(node, "hide")
-    if hide and len(hide) >= 2 and str(hide[1]).lower() in ("yes", "true"):
-        return True
-    return False
-```
-
-**Fix (broad):** Upgrade `has_flag()` in `sexp_parser.py` to also match
-`(flag yes/true)` sub-lists. Backward compatible with old format; fixes all
-callers at once:
-
-```python
-def has_flag(node: list, flag: str) -> bool:
-    if flag in node:
-        return True
-    sub = find_first(node, flag)
-    return bool(sub and len(sub) >= 2 and str(sub[1]).lower() in ("yes", "true"))
-```
-
-Broad fix is safer (single choke point, no missed call sites). Narrow fix
-is more explicit. Recommend **broad** — the change is semantically
-equivalent for old files and correctly handles new ones.
-
-**Workaround:** None — hidden-pin signals are lost.
-
-**Source:** KiCad 10.0.1 format compatibility review, 2026-04-16. See
-[TODO-kicad-10-format-compat.md](TODO-kicad-10-format-compat.md) §2.
-
----
 
 ### KH-312 — LOW — `sync_datasheets_digikey.py` needs `--mpn-list` batch mode
 
@@ -252,11 +119,9 @@ the user supplies.
 
 ## Priority Queue
 
-4 open issues.
+2 open issues.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
-| 1 | KH-318 | HIGH | Small — replace `get_value(via, "type")` with bare-token scan in `analyze_pcb.py:916`. Audit downstream consumers of `via["type"]`. |
-| 2 | KH-319 | MEDIUM | Small — upgrade `has_flag()` in `sexp_parser.py:209` to also match `(flag yes/true)` sub-lists. Covers all callers at once. |
-| 3 | TH-033 | MEDIUM | Medium — curate 3–5 KiCad 10.0.0 fixtures, re-save through KiCad 10, commit + seed assertions. |
-| 4 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
+| 1 | TH-033 | MEDIUM | Medium — curate 3–5 KiCad 10.0.0 fixtures, re-save through KiCad 10, commit + seed assertions. |
+| 2 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |

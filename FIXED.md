@@ -11,6 +11,56 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-16 — KH-318, KH-319 (KiCad 10.0.1 format-compat fixes)
+
+### KH-318 (HIGH): PCB via type detection always returned None
+
+- **Where fixed:** kicad-happy commits `a17b453` (fix) + `782a5aa` (cleanup),
+  `skills/kicad/scripts/analyze_pcb.py` `extract_vias()` and `_get_schema()`.
+- **Symptom:** `via["type"]` in `analyze_pcb.py` output JSON was `None` for
+  every via in every board. Microvias, blind vias, and buried vias were
+  indistinguishable from through vias in the analyzer output.
+- **Root cause:** `extract_vias()` used `get_value(via, "type")` which looks
+  for a nested `(type X)` child. KiCad has never emitted that shape — the via
+  type is a bare token between `(via` and `(at ...)` (e.g., `(via blind ...)`,
+  `(via micro ...)`). Schema at `_get_schema()` also didn't list the `type`
+  field in `vias._with_full_flag`.
+- **Fix:** Replaced `get_value(via, "type")` with a bare-token scan (`blind` /
+  `buried` / `micro`), default `"through"`. Every via now carries `type`
+  unconditionally. Schema updated to list the field. Cleanup commit dropped
+  dead fallback code and synced `output-schema.md`.
+- **Verification:** Re-ran PCB analyzer on `quick_200` (4940/4949 pass, 9
+  pre-existing timeouts on complex boards). Sampled outputs: all vias now
+  carry `type: "through"`. Baselines re-snapshotted, SEED + STRUCT re-seeded
+  (smoke 4,985 assertions + quick_200 115,803, 0 content failures). Schema
+  drift test `test_pcb_schema_drift` passes.
+
+### KH-319 (MEDIUM): `has_flag()` didn't match `(hide yes)` boolean sub-lists
+
+- **Where fixed:** kicad-happy commit `ef5b672`, `skills/kicad/scripts/sexp_parser.py:209`.
+- **Symptom:** Hidden pins reported as visible on any schematic saved by
+  KiCad ≥9.0 (schematic version 20250114; the boolean format change landed
+  at version 20241004).
+- **Root cause:** `has_flag()` was `return flag in node`, membership test on
+  the top-level list. Worked for legacy bare-token form `(pin ... hide ...)`
+  but failed for post-20241004 form `(pin ... (hide yes) ...)` where `hide`
+  is inside a sub-list.
+- **Fix:** Broadened `has_flag()` to also match `(flag yes|true)` sub-lists.
+  Backward compatible with old format; fixes all callers (today only
+  `analyze_schematic.py:213` for pin-hidden detection, but safer against
+  future `in_bom`/`on_board`/`dnp`/`locked`/etc. migrations).
+- **Verification:** Re-ran schematic analyzer on `quick_200`. 15 KiCad 9+
+  corpus boards showed assertion flips (theremin, PingDevKit, synthtest,
+  cnlohr TMS9918ADisplay/F68, .sch legacy finds) — all consistent with
+  "hidden pins now correctly treated as hidden" cascade (fewer
+  connections → lower net counts, `analyze_connectivity` /
+  `validate_power_sequencing` / `audit_rail_sources` counts drop).
+  Re-seeded, smoke schematic 11,449 passing + quick_200 295,395 assertions
+  with 1 pre-existing empty-`.sch` FND failure unrelated to this fix.
+- **Handoff source:** main-repo agent `2026-04-16-kicad10-format-compat-fixes.md`.
+
+---
+
 ## 2026-04-16 — TH-034 (run_datasheets missing datasheets/scripts sys.path)
 
 ### TH-034 (LOW): `run_datasheets.py --validate-only` crashed with ModuleNotFoundError

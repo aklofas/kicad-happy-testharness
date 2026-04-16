@@ -96,6 +96,17 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "L3 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "L2 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -106,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "L1 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -114,17 +125,6 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "L3 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L3$"
       }
     },
     {
@@ -139,13 +139,13 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U3 in detect_power_regulators",
+      "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U3$"
+        "pattern": "^U1$"
       }
     },
     {
@@ -161,13 +161,13 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "U1 in detect_power_regulators",
+      "description": "U3 in detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U1$"
+        "pattern": "^U3$"
       }
     },
     {
@@ -182,17 +182,6 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "R1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
       "description": "R2 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -200,6 +189,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R1 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
       }
     },
     {

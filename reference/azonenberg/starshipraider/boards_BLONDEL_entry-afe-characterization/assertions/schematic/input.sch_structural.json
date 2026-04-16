@@ -46,6 +46,17 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "L2 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "L1 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -56,7 +67,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "L3 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -64,17 +75,6 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "L2 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L2$"
       }
     },
     {
