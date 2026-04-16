@@ -273,7 +273,7 @@ structured claim files. Any failure is either a real analyzer regression against
 human-verified truth, or a case that needs re-review. Investigate carefully — never
 auto-regenerate gold data.
 
-**Limitation:** ~10 cases do not generalize to the full 5,822-repo corpus. Gold-tier
+**Limitation:** ~10 cases do not generalize to the full 5,856-repo corpus. Gold-tier
 pass rate is a narrow signal, not overall correctness. See philosophy.md § "v1.3
 correctness layers" for scope.
 
@@ -767,7 +767,7 @@ Must be 304+ passed, 0 failed. If not, fix before ending.
 - **status.md** — Add batch entry with what was tested, pass rates, findings
 - **ISSUES.md** — File any new issues found, remove any fixed
 - **FIXED.md** — Add details for any issues fixed this session
-- **TODO-test-improvements.md** — Mark completed items, add new ideas (local file, not git-tracked)
+- **TODO-v1.4-roadmap.md** — Mark completed items, add new ideas (local file, not git-tracked)
 
 ### 10c. Update RUNBOOK.md
 
@@ -882,7 +882,7 @@ python3 validate/audit_constants.py corpus
 
 This scans all analyzer outputs to determine which constant entries are actually
 exercised by the test corpus. Flags:
-- **Unused entries** — entries that never fire across 5,829 repos. May be dead weight
+- **Unused entries** — entries that never fire across 5,856 repos. May be dead weight
   or may indicate the constant was added for a specific project not in the corpus.
 - **Low-hit entries** — entries exercised by <3 repos. Harder to validate empirically.
 - **High-hit entries** — entries exercised by 100+ repos. High confidence if verified.
@@ -2435,7 +2435,7 @@ just make its downstream representation less fragile and searchable.
 | `ISSUES.md` | Open bugs (git-tracked) |
 | `FIXED.md` | Closed bugs with details (git-tracked) |
 | `status.md` | Batch history, corpus stats (git-tracked) |
-| `TODO-test-improvements.md` | Improvement ideas and status (local, not tracked) |
+| `TODO-v1.4-roadmap.md` | Improvement ideas and status (local, not tracked) |
 | `reference/` | Known-good baselines + assertions (git-tracked) |
 | `results/outputs/` | Current analyzer outputs (git-ignored) |
 | `results/outputs/{type}/_timing.json` | Per-type timing data |
