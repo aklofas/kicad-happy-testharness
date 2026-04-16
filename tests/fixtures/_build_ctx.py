@@ -54,6 +54,7 @@ def ic(ref: str, value: str, pins: list[tuple[str, str]],
 
 
 def resistor(ref: str, value: str) -> dict:
+    """Create a 2-pin resistor component dict."""
     return {
         "reference": ref, "value": value, "type": "resistor",
         "lib_id": "Device:R", "footprint": "",
@@ -64,6 +65,7 @@ def resistor(ref: str, value: str) -> dict:
 
 
 def capacitor(ref: str, value: str) -> dict:
+    """Create a 2-pin capacitor component dict."""
     return {
         "reference": ref, "value": value, "type": "capacitor",
         "lib_id": "Device:C", "footprint": "",
@@ -74,6 +76,7 @@ def capacitor(ref: str, value: str) -> dict:
 
 
 def led(ref: str, value: str = "LED") -> dict:
+    """Create a 2-pin LED (diode) component dict. pin 1 = cathode, pin 2 = anode."""
     return {
         "reference": ref, "value": value, "type": "diode",
         "lib_id": "Device:LED", "footprint": "",
@@ -84,6 +87,7 @@ def led(ref: str, value: str = "LED") -> dict:
 
 
 def connector(ref: str, value: str, pins: list[tuple[str, str]]) -> dict:
+    """Create a connector component dict with configurable pin list."""
     return {
         "reference": ref, "value": value, "type": "connector",
         "lib_id": "Connector:Generic", "footprint": "",
@@ -103,8 +107,10 @@ def build_ctx(components: list[dict],
     components: list of component dicts (use ic(), resistor(), etc.)
     nets: {net_name: [(ref, pin_number), ...]} — pin_name is looked up from
           the component's pins list.
-    known_power_rails: set of power net names. Defaults to any net with
-          name starting with '+', or matching VCC/VDD/GND/VSS patterns.
+    known_power_rails: explicit set of power net names. Defaults to empty
+          set; `AnalysisContext.__post_init__` then auto-detects power nets
+          from any pin whose component ref starts with '#PWR' or '#FLG'.
+          Pass a set explicitly when your fixtures don't use power symbols.
 
     __post_init__ builds comp_lookup, parsed_values, ref_pins from inputs.
     """
