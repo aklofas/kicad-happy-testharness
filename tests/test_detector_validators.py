@@ -150,6 +150,110 @@ def test_validate_voltage_levels_signature_returns_list():
     assert isinstance(findings, list)
 
 
+# ---------------------------------------------------------------------------
+# validate_i2c_bus — I2C-001..
+# ---------------------------------------------------------------------------
+
+def test_validate_i2c_bus_returns_list_shape():
+    """Empty ctx returns list without crashing."""
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_i2c_bus
+    ctx = build_ctx(components=[], nets={}, known_power_rails=set())
+    assert isinstance(validate_i2c_bus(ctx), list)
+
+
+def test_validate_i2c_bus_two_devices_same_address():
+    """Two I2C devices with identical MPN → smoke test (no crash, returns list).
+
+    Builds two copies of the same I2C sensor sharing SDA/SCL. Deep validator
+    logic depends on an upstream MPN→address database which may or may not
+    have an entry for BMP280; this test only confirms signature stability.
+    """
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_i2c_bus
+
+    ctx = build_ctx(
+        components=[
+            ic("U1", "BMP280", [("1", "VDD"), ("2", "GND"),
+                                 ("3", "SDA"), ("4", "SCL")],
+               lib_id="Sensor:BMP280", mpn="BMP280"),
+            ic("U2", "BMP280", [("1", "VDD"), ("2", "GND"),
+                                 ("3", "SDA"), ("4", "SCL")],
+               lib_id="Sensor:BMP280", mpn="BMP280"),
+        ],
+        nets={
+            "+3V3": [("U1", "1"), ("U2", "1")],
+            "GND":  [("U1", "2"), ("U2", "2")],
+            "SDA":  [("U1", "3"), ("U2", "3")],
+            "SCL":  [("U1", "4"), ("U2", "4")],
+        },
+        known_power_rails={"+3V3", "GND"},
+    )
+    findings = validate_i2c_bus(ctx)
+    assert isinstance(findings, list)
+
+
+# ---------------------------------------------------------------------------
+# validate_spi_bus, validate_can_bus, validate_usb_bus — smoke tests
+# ---------------------------------------------------------------------------
+
+def test_validate_spi_bus_empty_ctx():
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_spi_bus
+    assert isinstance(validate_spi_bus(
+        build_ctx([], {}, set())), list)
+
+
+def test_validate_can_bus_empty_ctx():
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_can_bus
+    assert isinstance(validate_can_bus(
+        build_ctx([], {}, set())), list)
+
+
+def test_validate_usb_bus_empty_ctx():
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_usb_bus
+    assert isinstance(validate_usb_bus(
+        build_ctx([], {}, set())), list)
+
+
+def test_validate_can_bus_missing_termination():
+    """CAN transceiver with no 120R termination between CANH and CANL.
+
+    Smoke test — validator looks for MCP2551/TJA1050/SN65HVD-class transceivers
+    by lib_id or MPN and expects terminators at bus ends. This test only
+    confirms no crash on a minimal CAN setup; actual termination detection
+    is corpus-validated.
+    """
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_can_bus
+
+    ctx = build_ctx(
+        components=[
+            ic("U1", "MCP2551", [("1", "TXD"), ("2", "VSS"), ("3", "VDD"),
+                                  ("6", "CANL"), ("7", "CANH")],
+               lib_id="Interface_CAN:MCP2551", mpn="MCP2551"),
+        ],
+        nets={
+            "+5V":  [("U1", "3")],
+            "GND":  [("U1", "2")],
+            "TXD":  [("U1", "1")],
+            "CANH": [("U1", "7")],
+            "CANL": [("U1", "6")],
+        },
+        known_power_rails={"+5V", "GND"},
+    )
+    findings = validate_can_bus(ctx)
+    assert isinstance(findings, list)
+
+
 # === Runner ===
 
 if __name__ == "__main__":
