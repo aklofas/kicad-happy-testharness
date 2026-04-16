@@ -76,9 +76,17 @@ def capacitor(ref: str, value: str) -> dict:
 
 
 def led(ref: str, value: str = "LED") -> dict:
-    """Create a 2-pin LED (diode) component dict. pin 1 = cathode, pin 2 = anode."""
+    """Create a 2-pin LED component dict. pin 1 = cathode, pin 2 = anode.
+
+    type is "led" (not "diode") to match the actual analyzer output: components
+    with a "LED" reference prefix get type "led" via classify_component in
+    kicad_utils.py.  validate_led_resistors checks c['type'] == 'led', so
+    callers should pass an LED-prefixed ref such as "LED1" or a plain "LED"
+    suffix ref like "D_LED1" if they want this fixture to be detected.
+    Simplest choice: use "LED1" as the ref so the type matches.
+    """
     return {
-        "reference": ref, "value": value, "type": "diode",
+        "reference": ref, "value": value, "type": "led",
         "lib_id": "Device:LED", "footprint": "",
         "properties": {}, "pins": [
             {"number": "1", "name": "K"}, {"number": "2", "name": "A"},

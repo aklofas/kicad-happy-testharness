@@ -254,6 +254,77 @@ def test_validate_can_bus_missing_termination():
     assert isinstance(findings, list)
 
 
+# ---------------------------------------------------------------------------
+# validate_led_resistors — LR-001
+# ---------------------------------------------------------------------------
+
+def test_validate_led_resistors_missing_current_limit():
+    """LED connected directly between +5V and GND with no series resistor."""
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_led_resistors
+    from fixtures._build_ctx import led
+
+    # NOTE: led() fixture now sets type="led" (was "diode" — mismatch with
+    # validator's check c['type'] == 'led'). Fixed in _build_ctx.py alongside
+    # this task.
+    ctx = build_ctx(
+        components=[led("LED1", "LED_RED")],
+        nets={
+            "+5V": [("LED1", "2")],  # anode (pin 2 = A)
+            "GND": [("LED1", "1")],  # cathode (pin 1 = K)
+        },
+        known_power_rails={"+5V", "GND"},
+    )
+    findings = validate_led_resistors(ctx)
+    lr = [f for f in findings if f.get("rule_id") == "LR-001"]
+    assert lr, f"Expected LR-001 for LED with no current limit, got {findings}"
+
+
+def test_validate_led_resistors_with_resistor_no_finding():
+    """LED + series resistor → no LR-001."""
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_led_resistors
+    from fixtures._build_ctx import led
+
+    ctx = build_ctx(
+        components=[led("LED1", "LED_RED"), resistor("R1", "330")],
+        nets={
+            "+5V":   [("R1", "1")],
+            "LED_A": [("R1", "2"), ("LED1", "2")],
+            "GND":   [("LED1", "1")],
+        },
+        known_power_rails={"+5V", "GND"},
+    )
+    findings = validate_led_resistors(ctx)
+    lr = [f for f in findings if f.get("rule_id") == "LR-001"
+          and "LED1" in f.get("components", [])]
+    assert not lr, f"Unexpected LR-001 with series resistor: {lr}"
+
+
+# ---------------------------------------------------------------------------
+# validate_power_sequencing, validate_feedback_stability — smoke tests
+# NOTE: Both validators take (ctx, power_regulators: list[dict]) — the plan
+# spec assumed a ctx-only signature. Pass [] as the second argument.
+# ---------------------------------------------------------------------------
+
+def test_validate_power_sequencing_empty_ctx():
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_power_sequencing
+    findings = validate_power_sequencing(build_ctx([], {}, set()), [])
+    assert isinstance(findings, list)
+
+
+def test_validate_feedback_stability_empty_ctx():
+    if _skip_if_no_kh():
+        return
+    from validation_detectors import validate_feedback_stability
+    findings = validate_feedback_stability(build_ctx([], {}, set()), [])
+    assert isinstance(findings, list)
+
+
 # === Runner ===
 
 if __name__ == "__main__":
