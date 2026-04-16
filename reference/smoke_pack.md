@@ -34,6 +34,16 @@ skot/bitaxe
 sparkfun/SparkFun_IoT_RedBoard-RP2350
 sparkfun/SparkFun_GNSS_mosaic-T
 
+# kicad_10 — KiCad 10.0 format (hide yes boolean form, bare-token via types)
+# Mixed selection: small pure-v10, mixed v10/v9, hierarchical, diverse domains.
+7m4gmh/7seg-panel
+Just4Stan/OpenRX
+ADBeta/IR_UART
+Coder1203/Macropad
+cyfinfaza/Half-Bridge-Module
+JuliCai/SmarterWatch
+corybuecker/reflow-oven
+
 # mixed_complexity — varied signal coverage
 Neumi/ethersweep
 eez-open/modular-psu

@@ -11,6 +11,47 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-16 — TH-033 (KiCad 10 fixture discoverability + coverage)
+
+### TH-033 (MEDIUM): No KiCad 10.0.0 test fixtures in the corpus
+
+- **Where fixed:** `tools/generate_cross_sections.py`, `reference/smoke_pack.md`,
+  `tests/test_kicad10_format.py` (new).
+- **Symptom as filed:** "No corpus file is in 10.0.0 format (version 20260206)."
+  Claim was based on sampling one file; survey was incorrect.
+- **Actual state discovered:** Corpus already contains 42 repos with 198
+  schematic files in KiCad 10 format (versions 20260306, 20260101, 20251028)
+  and 37 repos with 59 PCB files (versions 20260206, 20250926, 20251101).
+  34 repos have both. The gap was **test infrastructure**, not fixtures:
+  no named cross-section for KiCad 10, no smoke-pack coverage, no targeted
+  regression test.
+- **Fix:**
+  1. Added `section_kicad10()` to `generate_cross_sections.py` — returns all
+     40 catalog repos with `10.0` in their `kicad_versions` list, ranked by
+     assertion count. Available as `--cross-section kicad10`.
+  2. Fixed `kicad_versions` section description (was `5/6/7/8/9`, now
+     `5/6/7/8/9/10`) — it already included 20 KiCad 10 repos silently.
+  3. Added 7 KiCad 10 repos to `reference/smoke_pack.md` (was 0):
+     `7m4gmh/7seg-panel`, `Just4Stan/OpenRX`, `ADBeta/IR_UART`,
+     `Coder1203/Macropad`, `cyfinfaza/Half-Bridge-Module`,
+     `JuliCai/SmarterWatch`, `corybuecker/reflow-oven`. Mix of pure-v10 /
+     mixed-v10-v9, varied sizes (1–23 schematic files), diverse categories
+     (USB, keyboards, motors, wearables, thermal).
+  4. New `tests/test_kicad10_format.py` (TIER=unit, 7 tests):
+     - Confirms pinned fixtures actually report v10 file version
+     - Runs schematic + PCB analyzers end-to-end on fixtures
+     - Asserts `analyzer_type`, `schema_version`, `findings[]` present
+     - Asserts every via carries a `type` field with a valid value (KH-318 regression guard)
+  5. Re-snapshotted + re-seeded smoke with new entries (327 files, 13,031
+     schematic + 5,619 PCB assertions, 0 failures).
+- **Verification:** `test_kicad10_format.py` 7/7 pass. Smoke grew 20 → 27 repos.
+  `kicad10` cross-section has 40 repos. Unit suite 965 → 972 tests, 0 failures.
+- **Followup:** If KiCad 10.1+ ships with new format breaks, the `kicad10`
+  section and smoke entries will naturally catch them (version strings
+  starting `10.` are all included).
+
+---
+
 ## 2026-04-16 — KH-318, KH-319 (KiCad 10.0.1 format-compat fixes)
 
 ### KH-318 (HIGH): PCB via type detection always returned None

@@ -193,6 +193,20 @@ def section_hierarchical(catalog):
     return [e["repo"] for e in multi]
 
 
+def section_kicad10(catalog):
+    """All repos containing any KiCad 10.x file, ranked by assertion count.
+
+    KiCad 10 introduced format-compat breaks (boolean (hide yes) form,
+    bare-token via types including new 'buried'). A focused cross-section
+    lets us run targeted regression on files with the new format without
+    pulling in the full corpus.
+    """
+    k10 = [e for e in catalog
+           if any(str(v).startswith("10") for v in e.get("kicad_versions", []))]
+    k10.sort(key=_repo_assertions, reverse=True)
+    return [e["repo"] for e in k10]
+
+
 def section_quick_200(catalog, other_sections, target=200):
     """~200 repos: union of smaller sections, fill from category_sample."""
     combined = set()
@@ -232,8 +246,12 @@ def generate_all(catalog):
         ("complexity_tiers",
          "20 repos per complexity tier (trivial/small/medium/large/massive)",
          lambda: section_complexity_tiers(catalog)),
-        ("kicad_versions", "20 repos per KiCad generation (5/6/7/8/9)",
+        ("kicad_versions",
+         "20 repos per KiCad generation (5/6/7/8/9/10)",
          lambda: section_kicad_versions(catalog)),
+        ("kicad10",
+         "All repos with any KiCad 10.x file (format-compat regression target)",
+         lambda: section_kicad10(catalog)),
         ("category_sample", "5 best repos per category (24 categories)",
          lambda: section_category_sample(catalog)),
         ("emc_rich", "Top 100 repos by EMC finding diversity",

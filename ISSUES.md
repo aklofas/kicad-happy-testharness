@@ -36,7 +36,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-320**. Next TH number: **TH-035**.
 
-> 2 open issues.
+> 1 open issue.
 
 ---
 
@@ -73,55 +73,14 @@ a loop. Works but doesn't update the `datasheets/index.json` manifest.
 
 ## Test Harness Issues
 
-### TH-033 — MEDIUM — No KiCad 10.0.0 test fixtures in the corpus
-
-**Symptom:** Surveyed `repos/**/*.kicad_pcb` — first sampled file has
-`(kicad_pcb (version 20211014) ...)` (KiCad 6). No corpus file is in
-10.0.0 format (version 20260206). Jump from 9.x to 10.0.0 introduced 22
-PCB version increments + 14 schematic increments — a major format
-frontier that is completely uncovered by regression tests.
-
-**Root cause:** Corpus was seeded before KiCad 10.0 was released. No
-workflow has added 10.0-era fixtures since.
-
-**Impact:**
-- Bugs like KH-318 (via type always None — bare-token vs nested list) would
-  have been caught immediately by any 10.0.0 regression assertion.
-- New 10.0-only features (variants, jumper pads, backdrill, PCB barcodes,
-  complex padstacks) have zero harness coverage.
-- When 10.1 or 11 ships, we'll have the same problem again — the corpus
-  should grow forward with KiCad.
-
-**Fix:**
-1. Curate 3–5 representative corpus boards, re-save them through KiCad
-   10.0.0 (File → Save), commit alongside originals in a new subdirectory
-   like `repos/10.0.0-samples/{owner}/{repo}-v10/*.kicad_*`.
-2. Add smoke-level fixtures exercising 10.0-only features:
-   - A board with blind + buried + micro vias (covers KH-318 fix)
-   - A schematic with hidden pins (covers KH-319 fix)
-   - A board using variants (forward-looking)
-   - A footprint using a complex padstack (forward-looking)
-3. Add `tests/test_kicad10_format.py` smoke asserting both parsers can
-   open each fixture and produce a non-empty `findings[]`.
-4. Backfill regression assertions on the new fixtures as part of the
-   normal seed flow.
-
-**Priority:** MEDIUM. Not urgent (10.0 parses today without crashing) but
-high value (turns an invisible class of bugs into visible ones).
-
-**Workaround:** Manual verification of parser output on any 10.0 file
-the user supplies.
-
-**Source:** KiCad 10.0.1 format compatibility review, 2026-04-16. See
-[TODO-kicad-10-format-compat.md](TODO-kicad-10-format-compat.md) §3.
+_No open test-harness issues._
 
 ---
 
 ## Priority Queue
 
-2 open issues.
+1 open issue.
 
 | Priority | Issue | Severity | Effort |
 |----------|-------|----------|--------|
-| 1 | TH-033 | MEDIUM | Medium — curate 3–5 KiCad 10.0.0 fixtures, re-save through KiCad 10, commit + seed assertions. |
-| 2 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
+| 1 | KH-312 | LOW | Small — add --mpn-list flag to sync scripts |
