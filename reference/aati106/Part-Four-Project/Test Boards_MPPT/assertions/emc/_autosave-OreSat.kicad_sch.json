@@ -16,9 +16,9 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~1",
+      "description": "by_severity.error ~1",
       "check": {
-        "path": "summary.high",
+        "path": "summary.by_severity.error",
         "op": "range",
         "min": 0,
         "max": 2
@@ -26,9 +26,9 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~3",
+      "description": "by_severity.warning ~3",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.by_severity.warning",
         "op": "range",
         "min": 2,
         "max": 4
@@ -36,27 +36,48 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~93.0 (+-10)",
+      "description": "by_severity.info ~4",
       "check": {
-        "path": "summary.emc_risk_score",
+        "path": "summary.by_severity.info",
         "op": "range",
-        "min": 83.0,
-        "max": 100
+        "min": 3,
+        "max": 5
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "4 switching_emc finding(s)",
+      "description": "EMC risk score ~91.0 (+-10)",
+      "check": {
+        "path": "summary.emc_risk_score",
+        "op": "range",
+        "min": 81.0,
+        "max": 100
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 emission_estimate finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^emission_estimate$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "6 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 4
+        "value": 6
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000008",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -65,7 +86,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -74,7 +95,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -83,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",

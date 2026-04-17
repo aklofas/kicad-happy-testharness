@@ -6,78 +6,133 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~29 (tolerance 10%)",
+      "description": "Finding count ~97 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 26,
-        "max": 32
+        "min": 92,
+        "max": 102
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~1",
+      "description": "by_severity.error ~12",
       "check": {
-        "path": "summary.high",
+        "path": "summary.by_severity.error",
         "op": "range",
-        "min": 0,
-        "max": 2
+        "min": 10,
+        "max": 14
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~5",
+      "description": "by_severity.warning ~62",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 58,
+        "max": 66
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~18",
+      "description": "by_severity.info ~23",
       "check": {
-        "path": "summary.low",
+        "path": "summary.by_severity.info",
         "op": "range",
-        "min": 16,
-        "max": 20
+        "min": 20,
+        "max": 26
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~84.0 (+-10)",
+      "description": "EMC risk score ~0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 74.0,
-        "max": 94.0
+        "min": 0,
+        "max": 10
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 decoupling finding(s)",
+      "description": "6 board_edge finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^board_edge$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "10 clock_routing finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^clock_routing$",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 crosstalk finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^crosstalk$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "16 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
+        "value": 16
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "1 emi_filter finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^emi_filter$",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "1 ground_plane finding(s)",
+      "id": "SEED-00000011",
+      "description": "2 emission_estimate finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^emission_estimate$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "19 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 1
+        "value": 19
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000013",
       "description": "1 inductor_leakage finding(s)",
       "check": {
         "path": "findings",
@@ -88,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000014",
       "description": "19 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -99,18 +154,29 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "2 switching_emc finding(s)",
+      "id": "SEED-00000015",
+      "description": "19 return_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^return_path$",
+        "value": 19
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 2
+        "value": 3
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000017",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -119,7 +185,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000018",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -128,7 +194,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000019",
       "description": "~29 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -137,7 +203,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000020",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -146,7 +212,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000021",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -155,12 +221,12 @@
       }
     },
     {
-      "id": "SEED-00000016",
-      "description": "~2 net(s) with EMC scores",
+      "id": "SEED-00000022",
+      "description": "~32 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 1
+        "value": 28
       }
     }
   ]

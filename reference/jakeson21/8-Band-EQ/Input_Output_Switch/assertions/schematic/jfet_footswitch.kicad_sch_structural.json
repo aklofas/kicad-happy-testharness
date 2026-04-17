@@ -118,6 +118,17 @@
     },
     {
       "id": "STRUCT-00000012",
+      "description": "R11 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "R13 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -125,17 +136,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R13$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "R12 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R12$"
       }
     },
     {
@@ -151,13 +151,13 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R17 in detect_rc_filters",
+      "description": "R20 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R17$"
+        "pattern": "^R20$"
       }
     },
     {
@@ -173,6 +173,28 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "R12 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R17 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R17$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "R9 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -180,28 +202,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
-      "description": "R20 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R20$"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "R11 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R11$"
       }
     },
     {
@@ -227,28 +227,6 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "Q3 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
-      "description": "Q4 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -259,13 +237,25 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000023",
+      "description": "Q3 in detect_transistor_circuits",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "Q4 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
       }
     }
   ]

@@ -455,11 +455,11 @@
     },
     {
       "id": "STRUCT-00000042",
-      "description": "Exactly 5 decoupling_placement",
+      "description": "Exactly 6 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -504,6 +504,16 @@
     },
     {
       "id": "STRUCT-00000047",
+      "description": "U1 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000048",
       "description": "U2 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

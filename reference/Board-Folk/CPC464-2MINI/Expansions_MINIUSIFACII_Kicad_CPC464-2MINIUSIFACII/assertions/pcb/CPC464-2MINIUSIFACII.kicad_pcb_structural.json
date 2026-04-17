@@ -6,11 +6,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling_placement",
+      "description": "Exactly 3 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -21,6 +21,26 @@
         "op": "contains_match",
         "field": "ic",
         "pattern": "^IC1060$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "IC1061 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC1061$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "IC1050 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC1050$"
       }
     }
   ]

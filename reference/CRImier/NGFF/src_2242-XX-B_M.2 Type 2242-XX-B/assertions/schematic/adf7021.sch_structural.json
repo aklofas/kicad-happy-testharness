@@ -46,17 +46,28 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "L405 in detect_lc_filters",
+      "description": "L403 in detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L405$"
+        "pattern": "^L403$"
       }
     },
     {
       "id": "STRUCT-00000006",
+      "description": "L409 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L409$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "L402 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -64,17 +75,6 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L402$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "L408 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L408$"
       }
     },
     {
@@ -90,24 +90,24 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "L403 in detect_lc_filters",
+      "description": "L405 in detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L403$"
+        "pattern": "^L405$"
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "L409 in detect_lc_filters",
+      "description": "L408 in detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L409$"
+        "pattern": "^L408$"
       }
     },
     {
@@ -122,17 +122,6 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R405 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R405$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
       "description": "R404 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -143,13 +132,14 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000013",
+      "description": "R405 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R405$"
       }
     }
   ]

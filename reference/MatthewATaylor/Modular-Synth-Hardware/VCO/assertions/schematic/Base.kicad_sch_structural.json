@@ -76,17 +76,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U201 in detect_opamp_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_opamp_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U201$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "U101 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -97,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "U102 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -105,6 +94,17 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U102$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "U201 in detect_opamp_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U201$"
       }
     },
     {
@@ -119,28 +119,17 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R218 in detect_rc_filters",
+      "description": "R216 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R218$"
+        "pattern": "^R216$"
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R221 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R221$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "R217 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -151,14 +140,25 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "R216 in detect_rc_filters",
+      "id": "STRUCT-00000014",
+      "description": "R218 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R216$"
+        "pattern": "^R218$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R221 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R221$"
       }
     },
     {
@@ -173,13 +173,13 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Q203 in detect_transistor_circuits",
+      "description": "Q201 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q203$"
+        "pattern": "^Q201$"
       }
     },
     {
@@ -195,13 +195,13 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "Q201 in detect_transistor_circuits",
+      "description": "Q203 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q201$"
+        "pattern": "^Q203$"
       }
     },
     {
@@ -238,28 +238,6 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "R205 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R205$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
-      "description": "RV206 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^RV206$"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
       "description": "R203 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -270,7 +248,18 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000024",
+      "description": "R205 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R205$"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
       "description": "R210 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -281,13 +270,14 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000026",
+      "description": "RV206 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^RV206$"
       }
     }
   ]

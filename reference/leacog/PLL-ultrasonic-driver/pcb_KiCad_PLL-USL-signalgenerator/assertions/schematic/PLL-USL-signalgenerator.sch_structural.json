@@ -108,17 +108,6 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R1-VCOinLPF1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R1\\-VCOinLPF1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "R1-PWM-LPF1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -126,6 +115,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R1\\-PWM\\-LPF1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R1-VCOinLPF1 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1\\-VCOinLPF1$"
       }
     },
     {
@@ -140,16 +140,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",
@@ -159,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",

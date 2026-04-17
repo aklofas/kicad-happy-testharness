@@ -6,15 +6,69 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 12 decoupling_placement",
+      "description": "Exactly 5 analyze_thermal_pad_vias",
       "check": {
-        "path": "decoupling_placement",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
-        "value": 12
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U34 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U34$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U35 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U35$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U36 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U36$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U37 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U37$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 13 decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "equals",
+        "value": 13
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "U33 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -24,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000008",
       "description": "U39 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -34,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000009",
       "description": "U40 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -44,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000010",
       "description": "U41 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -54,7 +108,17 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000011",
+      "description": "U43 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U43$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "U8 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -64,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000013",
       "description": "U42 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -74,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000014",
       "description": "U9 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -84,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000015",
       "description": "U38 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -94,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000016",
       "description": "U36 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -104,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000017",
       "description": "U37 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -114,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000018",
       "description": "U34 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -124,67 +188,13 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000019",
       "description": "U35 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "contains_match",
         "field": "ic",
         "pattern": "^U35$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "Exactly 5 thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "equals",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "U35 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U35$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "U37 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U37$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "U34 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U34$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
-      "description": "U36 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U36$"
       }
     }
   ]

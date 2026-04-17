@@ -97,28 +97,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R7 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "R8 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "R9 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -129,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000011",
       "description": "R6 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -137,6 +115,28 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R7 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R8 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R8$"
       }
     },
     {
@@ -151,17 +151,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R85 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R85$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "R84 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -172,13 +161,14 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000016",
+      "description": "R85 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R85$"
       }
     }
   ]

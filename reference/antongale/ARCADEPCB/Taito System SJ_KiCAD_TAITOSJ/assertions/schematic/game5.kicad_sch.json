@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~125 (tolerance 10%)",
+      "description": "Net count ~102 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 118,
-        "max": 132
+        "min": 96,
+        "max": 108
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "67 analyze_connectivity detected",
+      "description": "41 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -83,16 +83,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "2 suggest_certifications detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "Has 16 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

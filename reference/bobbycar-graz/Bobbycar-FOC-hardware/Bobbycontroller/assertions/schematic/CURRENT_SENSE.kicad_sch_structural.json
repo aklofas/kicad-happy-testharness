@@ -76,17 +76,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U5 in detect_opamp_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_opamp_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "U4 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -94,6 +83,17 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "U5 in detect_opamp_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U5$"
       }
     },
     {
@@ -119,28 +119,6 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R40 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R40$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "R39 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R39$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "R38 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -151,13 +129,25 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000013",
+      "description": "R40 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R40$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R39 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R39$"
       }
     }
   ]

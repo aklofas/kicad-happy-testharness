@@ -96,17 +96,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R13 in detect_current_sense",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R13$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "R12 in detect_current_sense",
       "check": {
         "path": "findings",
@@ -114,6 +103,17 @@
         "op": "contains_match",
         "field": "shunt.ref",
         "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R13 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R13$"
       }
     },
     {
@@ -158,17 +158,6 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "U2 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -176,6 +165,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "U2 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
       }
     },
     {
@@ -201,17 +201,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "D6 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D6$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "D3 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -219,6 +208,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "D6 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D6$"
       }
     },
     {
@@ -274,17 +274,6 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "R25 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R25$"
-      }
-    },
-    {
-      "id": "STRUCT-00000028",
       "description": "R18 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -295,17 +284,18 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000028",
+      "description": "R25 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R25$"
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000029",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -315,7 +305,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",

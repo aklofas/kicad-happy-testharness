@@ -148,17 +148,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "L2 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "L1 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -166,6 +155,17 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "L2 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
       }
     },
     {
@@ -190,17 +190,6 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "Q2 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -208,6 +197,17 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "Q2 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
       }
     },
     {
@@ -222,12 +222,12 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "Exactly 2 suggest_certifications",
+      "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
         "detector_filter": "suggest_certifications",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     }
   ]

@@ -27,16 +27,27 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 analyze_tombstoning_risk",
+      "description": "Exactly 4 analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "R21 in analyze_tombstoning_risk",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^R21$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "R28 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
@@ -47,7 +58,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "R29 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
@@ -58,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "R3 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
@@ -69,7 +80,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -78,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U1 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

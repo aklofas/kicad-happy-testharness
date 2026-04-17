@@ -201,17 +201,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "U8 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "U7 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -219,6 +208,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "U8 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U8$"
       }
     },
     {
@@ -286,17 +286,6 @@
     },
     {
       "id": "STRUCT-00000028",
-      "description": "R31 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R31$"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
       "description": "R29 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -307,17 +296,18 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000029",
+      "description": "R31 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R31$"
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "Exactly 2 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -327,7 +317,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000031",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -337,7 +327,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000032",
       "description": "Exactly 20 validate_voltage_levels",
       "check": {
         "path": "findings",

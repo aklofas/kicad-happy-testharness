@@ -56,6 +56,17 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "R3 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "R19 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -63,17 +74,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R19$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R4 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R4$"
       }
     },
     {
@@ -89,23 +89,13 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "R3 in detect_voltage_dividers",
+      "description": "R4 in detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
-        "pattern": "^R3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "pattern": "^R4$"
       }
     }
   ]

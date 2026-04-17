@@ -76,6 +76,17 @@
     },
     {
       "id": "STRUCT-00000008",
+      "description": "Y1 in detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "Y2 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -86,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Y3 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -94,17 +105,6 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Y3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Y1 in detect_crystal_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y1$"
       }
     },
     {
@@ -139,28 +139,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U3 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "U4 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -171,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -182,17 +160,29 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000016",
+      "description": "U3 in detect_power_regulators",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
+      "description": "U4 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "Exactly 2 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -202,7 +192,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Exactly 6 validate_pullups",
       "check": {
         "path": "findings",

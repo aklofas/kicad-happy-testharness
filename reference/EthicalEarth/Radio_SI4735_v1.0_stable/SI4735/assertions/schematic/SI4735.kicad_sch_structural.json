@@ -179,17 +179,6 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "R7 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
       "description": "R8 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -200,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "R5 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -208,6 +197,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "R7 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R7$"
       }
     },
     {
@@ -253,17 +253,6 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "R25 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R25$"
-      }
-    },
-    {
-      "id": "STRUCT-00000026",
       "description": "R23 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -274,17 +263,18 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000026",
+      "description": "R25 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R25$"
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000027",
       "description": "Exactly 3 validate_i2c_bus",
       "check": {
         "path": "findings",

@@ -6,11 +6,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 decoupling_placement",
+      "description": "Exactly 7 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -65,6 +65,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "U11 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "U13 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

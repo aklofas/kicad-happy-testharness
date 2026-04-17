@@ -86,6 +86,17 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "R4 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "R14 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -96,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R12 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -104,17 +115,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R12$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "R4 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R4$"
       }
     },
     {
@@ -167,16 +167,6 @@
         "detector_filter": "detect_wireless_modules",
         "op": "equals",
         "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
       }
     }
   ]

@@ -17,6 +17,28 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "1 emission_estimate finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^emission_estimate$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "10 ground_plane finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^ground_plane$",
+        "value": 10
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "1 stackup finding(s)",
       "check": {
         "path": "findings",
@@ -27,7 +49,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
@@ -37,7 +59,27 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
+      "description": "Rule EE-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^EE\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Rule GP-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -47,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000009",
       "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
@@ -57,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000010",
       "description": "U3 in EMC findings",
       "check": {
         "path": "findings",

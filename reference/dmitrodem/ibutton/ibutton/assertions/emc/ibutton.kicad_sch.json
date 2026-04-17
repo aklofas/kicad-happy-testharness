@@ -6,29 +6,29 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~5 (tolerance 10%)",
+      "description": "Finding count ~6 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 5,
+        "max": 7
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "critical count ~1",
+      "description": "by_severity.error ~3",
       "check": {
-        "path": "summary.critical",
+        "path": "summary.by_severity.error",
         "op": "range",
-        "min": 0,
-        "max": 2
+        "min": 2,
+        "max": 4
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~2",
+      "description": "by_severity.warning ~2",
       "check": {
-        "path": "summary.high",
+        "path": "summary.by_severity.warning",
         "op": "range",
         "min": 1,
         "max": 3
@@ -36,9 +36,9 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~1",
+      "description": "by_severity.info ~1",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.by_severity.info",
         "op": "range",
         "min": 0,
         "max": 2
@@ -46,34 +46,34 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~67.5 (+-10)",
+      "description": "EMC risk score ~59.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 57.5,
-        "max": 77.5
+        "min": 49.5,
+        "max": 69.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "1 ground_plane finding(s)",
+      "description": "2 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 1
+        "value": 2
       }
     },
     {

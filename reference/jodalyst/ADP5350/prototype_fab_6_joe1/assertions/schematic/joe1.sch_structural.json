@@ -118,13 +118,13 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R5 in detect_rc_filters",
+      "description": "R10 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R5$"
+        "pattern": "^R10$"
       }
     },
     {
@@ -140,17 +140,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R10 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R10$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R12 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -161,17 +150,18 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000015",
+      "description": "R5 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R5$"
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "Exactly 3 validate_led_resistors",
       "check": {
         "path": "findings",
@@ -181,7 +171,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "Exactly 4 validate_pullups",
       "check": {
         "path": "findings",

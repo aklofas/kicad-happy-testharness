@@ -138,17 +138,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U205 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U205$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "U204 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -156,6 +145,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U204$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "U205 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U205$"
       }
     },
     {
@@ -201,17 +201,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "R216 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R216$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "R218 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -222,17 +211,18 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000021",
+      "description": "R216 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R216$"
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -242,7 +232,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "Exactly 1 validate_voltage_levels",
       "check": {
         "path": "findings",

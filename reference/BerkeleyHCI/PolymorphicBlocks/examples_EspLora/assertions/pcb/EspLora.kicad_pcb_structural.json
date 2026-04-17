@@ -6,7 +6,7 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 thermal_pad_vias",
+      "description": "Exactly 3 analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
@@ -16,7 +16,18 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "LU4 in thermal_pad_vias",
+      "description": "LU2 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^LU2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "LU4 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
@@ -26,25 +37,14 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "LU8 in thermal_pad_vias",
+      "id": "STRUCT-00000004",
+      "description": "LU8 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^LU8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "LU2 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^LU2$"
       }
     }
   ]

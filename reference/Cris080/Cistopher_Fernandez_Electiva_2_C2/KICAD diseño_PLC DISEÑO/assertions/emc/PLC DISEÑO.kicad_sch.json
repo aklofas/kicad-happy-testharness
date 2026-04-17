@@ -16,56 +16,46 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "critical count ~1",
+      "description": "by_severity.error ~15",
       "check": {
-        "path": "summary.critical",
+        "path": "summary.by_severity.error",
         "op": "range",
-        "min": 0,
-        "max": 2
+        "min": 13,
+        "max": 17
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~14",
+      "description": "by_severity.warning ~4",
       "check": {
-        "path": "summary.high",
+        "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 3,
+        "max": 5
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~4",
+      "description": "by_severity.info ~8",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.by_severity.info",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~4",
+      "description": "EMC risk score ~50.5 (+-10)",
       "check": {
-        "path": "summary.low",
+        "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 40.5,
+        "max": 60.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~56.0 (+-10)",
-      "check": {
-        "path": "summary.emc_risk_score",
-        "op": "range",
-        "min": 46.0,
-        "max": 66.0
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
@@ -73,6 +63,17 @@
         "field": "category",
         "pattern": "^decoupling$",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 emission_estimate finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^emission_estimate$",
+        "value": 1
       }
     },
     {
@@ -88,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "2 ground_plane finding(s)",
+      "description": "3 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -110,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 1
+        "value": 3
       }
     },
     {

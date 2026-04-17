@@ -137,17 +137,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U6 in detect_memory_interfaces",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_memory_interfaces",
-        "op": "contains_match",
-        "field": "memory_reference",
-        "pattern": "^U6$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "U4 in detect_memory_interfaces",
       "check": {
         "path": "findings",
@@ -155,6 +144,17 @@
         "op": "contains_match",
         "field": "memory_reference",
         "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "U6 in detect_memory_interfaces",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_memory_interfaces",
+        "op": "contains_match",
+        "field": "memory_reference",
+        "pattern": "^U6$"
       }
     },
     {
@@ -242,17 +242,6 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "Q4 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -263,17 +252,18 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000025",
+      "description": "Q4 in detect_transistor_circuits",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "Exactly 3 validate_voltage_levels",
       "check": {
         "path": "findings",

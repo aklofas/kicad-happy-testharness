@@ -6,6 +6,71 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 5 analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "IC1 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^IC1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "IC2 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^IC2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "IC3 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^IC3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "IC5 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^IC5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "IC7 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^IC7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 7 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -14,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000008",
       "description": "IC4 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -24,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000009",
       "description": "IC1 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -34,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000010",
       "description": "IC6 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -44,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000011",
       "description": "IC7 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -54,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000012",
       "description": "IC3 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -64,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000013",
       "description": "IC2 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -74,78 +139,13 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000014",
       "description": "IC5 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "contains_match",
         "field": "ic",
         "pattern": "^IC5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 5 thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "equals",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "IC1 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "IC2 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "IC3 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "IC5 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "IC7 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^IC7$"
       }
     }
   ]

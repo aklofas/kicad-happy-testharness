@@ -106,17 +106,6 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "U3 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -124,6 +113,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "U3 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
       }
     },
     {
@@ -138,17 +138,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R_DAC_R1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R_DAC_R1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R_DAC_L1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -159,13 +148,14 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000015",
+      "description": "R_DAC_R1 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R_DAC_R1$"
       }
     }
   ]

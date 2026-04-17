@@ -210,17 +210,6 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "U204 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U204$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "U202 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -228,6 +217,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U202$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "U204 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U204$"
       }
     },
     {
@@ -306,13 +306,13 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "R417 in detect_voltage_dividers",
+      "description": "R301 in detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
-        "pattern": "^R417$"
+        "pattern": "^R301$"
       }
     },
     {
@@ -328,17 +328,6 @@
     },
     {
       "id": "STRUCT-00000032",
-      "description": "R301 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R301$"
-      }
-    },
-    {
-      "id": "STRUCT-00000033",
       "description": "R305 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -349,13 +338,24 @@
       }
     },
     {
+      "id": "STRUCT-00000033",
+      "description": "R417 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R417$"
+      }
+    },
+    {
       "id": "STRUCT-00000034",
-      "description": "Exactly 2 suggest_certifications",
+      "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
         "detector_filter": "suggest_certifications",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {

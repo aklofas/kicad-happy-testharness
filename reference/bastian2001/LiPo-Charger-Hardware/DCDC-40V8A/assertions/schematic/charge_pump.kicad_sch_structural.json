@@ -66,17 +66,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "R23 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R23$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "R21 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -84,6 +73,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R21$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R23 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R23$"
       }
     },
     {
@@ -109,17 +109,6 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Q25 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q25$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "Q24 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -130,13 +119,14 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000012",
+      "description": "Q25 in detect_transistor_circuits",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q25$"
       }
     }
   ]

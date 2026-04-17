@@ -36,6 +36,17 @@
     },
     {
       "id": "STRUCT-00000004",
+      "description": "R401 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R401$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "R402 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -43,17 +54,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R402$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "R409 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R409$"
       }
     },
     {
@@ -69,17 +69,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "R401 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R401$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "R406 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -87,6 +76,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R406$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R409 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R409$"
       }
     },
     {
@@ -174,16 +174,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R420$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
       }
     }
   ]

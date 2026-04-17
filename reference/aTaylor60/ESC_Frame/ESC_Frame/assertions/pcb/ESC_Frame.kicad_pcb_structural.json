@@ -6,88 +6,39 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 decoupling_placement",
+      "description": "Exactly 4 analyze_thermal_pad_vias",
       "check": {
-        "path": "decoupling_placement",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "U401 in decoupling_placement",
+      "description": "U201 in analyze_thermal_pad_vias",
       "check": {
-        "path": "decoupling_placement",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U401$"
+        "field": "component",
+        "pattern": "^U201$"
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "U501 in decoupling_placement",
+      "description": "U301 in analyze_thermal_pad_vias",
       "check": {
-        "path": "decoupling_placement",
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U501$"
+        "field": "component",
+        "pattern": "^U301$"
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "U301 in decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U301$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "U201 in decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U201$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 4 thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "equals",
-        "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "U201 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U201$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "U301 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U301$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "U401 in thermal_pad_vias",
+      "description": "U401 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
@@ -97,8 +48,8 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "U501 in thermal_pad_vias",
+      "id": "STRUCT-00000005",
+      "description": "U501 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
@@ -108,8 +59,8 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 28 tombstoning_risk",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 28 analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -118,8 +69,8 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "C202 in tombstoning_risk",
+      "id": "STRUCT-00000007",
+      "description": "C202 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -129,8 +80,8 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "C302 in tombstoning_risk",
+      "id": "STRUCT-00000008",
+      "description": "C302 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -140,8 +91,8 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "C402 in tombstoning_risk",
+      "id": "STRUCT-00000009",
+      "description": "C402 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -151,8 +102,8 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "C502 in tombstoning_risk",
+      "id": "STRUCT-00000010",
+      "description": "C502 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -162,8 +113,8 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
-      "description": "R201 in tombstoning_risk",
+      "id": "STRUCT-00000011",
+      "description": "R201 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -173,8 +124,8 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "R202 in tombstoning_risk",
+      "id": "STRUCT-00000012",
+      "description": "R202 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -184,8 +135,8 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "R203 in tombstoning_risk",
+      "id": "STRUCT-00000013",
+      "description": "R203 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -195,8 +146,8 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "R204 in tombstoning_risk",
+      "id": "STRUCT-00000014",
+      "description": "R204 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -206,8 +157,8 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
-      "description": "R205 in tombstoning_risk",
+      "id": "STRUCT-00000015",
+      "description": "R205 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -217,8 +168,8 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
-      "description": "R206 in tombstoning_risk",
+      "id": "STRUCT-00000016",
+      "description": "R206 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -228,8 +179,8 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "R207 in tombstoning_risk",
+      "id": "STRUCT-00000017",
+      "description": "R207 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -239,8 +190,8 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
-      "description": "R301 in tombstoning_risk",
+      "id": "STRUCT-00000018",
+      "description": "R301 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -250,8 +201,8 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
-      "description": "R304 in tombstoning_risk",
+      "id": "STRUCT-00000019",
+      "description": "R304 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -261,8 +212,8 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
-      "description": "R305 in tombstoning_risk",
+      "id": "STRUCT-00000020",
+      "description": "R305 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -272,8 +223,8 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
-      "description": "R306 in tombstoning_risk",
+      "id": "STRUCT-00000021",
+      "description": "R306 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -283,8 +234,8 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
-      "description": "R307 in tombstoning_risk",
+      "id": "STRUCT-00000022",
+      "description": "R307 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -294,8 +245,8 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
-      "description": "R401 in tombstoning_risk",
+      "id": "STRUCT-00000023",
+      "description": "R401 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -305,8 +256,8 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
-      "description": "R404 in tombstoning_risk",
+      "id": "STRUCT-00000024",
+      "description": "R404 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -316,8 +267,8 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
-      "description": "R405 in tombstoning_risk",
+      "id": "STRUCT-00000025",
+      "description": "R405 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -327,8 +278,8 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
-      "description": "R406 in tombstoning_risk",
+      "id": "STRUCT-00000026",
+      "description": "R406 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -338,8 +289,8 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
-      "description": "R407 in tombstoning_risk",
+      "id": "STRUCT-00000027",
+      "description": "R407 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -349,8 +300,8 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
-      "description": "R501 in tombstoning_risk",
+      "id": "STRUCT-00000028",
+      "description": "R501 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -360,8 +311,8 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
-      "description": "R502 in tombstoning_risk",
+      "id": "STRUCT-00000029",
+      "description": "R502 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -371,8 +322,8 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
-      "description": "R503 in tombstoning_risk",
+      "id": "STRUCT-00000030",
+      "description": "R503 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -382,8 +333,8 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
-      "description": "R504 in tombstoning_risk",
+      "id": "STRUCT-00000031",
+      "description": "R504 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -393,8 +344,8 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
-      "description": "R505 in tombstoning_risk",
+      "id": "STRUCT-00000032",
+      "description": "R505 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -404,8 +355,8 @@
       }
     },
     {
-      "id": "STRUCT-00000038",
-      "description": "R506 in tombstoning_risk",
+      "id": "STRUCT-00000033",
+      "description": "R506 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
@@ -415,14 +366,63 @@
       }
     },
     {
-      "id": "STRUCT-00000039",
-      "description": "R507 in tombstoning_risk",
+      "id": "STRUCT-00000034",
+      "description": "R507 in analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
         "op": "contains_match",
         "field": "component",
         "pattern": "^R507$"
+      }
+    },
+    {
+      "id": "STRUCT-00000035",
+      "description": "Exactly 4 decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000036",
+      "description": "U401 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U401$"
+      }
+    },
+    {
+      "id": "STRUCT-00000037",
+      "description": "U501 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U501$"
+      }
+    },
+    {
+      "id": "STRUCT-00000038",
+      "description": "U301 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U301$"
+      }
+    },
+    {
+      "id": "STRUCT-00000039",
+      "description": "U201 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U201$"
       }
     }
   ]

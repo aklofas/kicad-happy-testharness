@@ -76,13 +76,13 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "U3 in detect_opamp_circuits",
+      "description": "U1 in detect_opamp_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^U3$"
+        "pattern": "^U1$"
       }
     },
     {
@@ -98,13 +98,13 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "U1 in detect_opamp_circuits",
+      "description": "U3 in detect_opamp_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^U1$"
+        "pattern": "^U3$"
       }
     },
     {
@@ -119,28 +119,17 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Q4 in detect_transistor_circuits",
+      "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q4$"
+        "pattern": "^Q1$"
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Q3 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -151,14 +140,25 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "Q1 in detect_transistor_circuits",
+      "id": "STRUCT-00000014",
+      "description": "Q3 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q1$"
+        "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Q4 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
       }
     },
     {
@@ -173,6 +173,17 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "R17 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R17$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "R30 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -183,7 +194,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "R42 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -191,17 +202,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R42$"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "R17 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R17$"
       }
     },
     {
@@ -213,16 +213,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
       }
     }
   ]

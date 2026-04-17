@@ -6,36 +6,7 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "U1 in decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "U2 in decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 3 thermal_pad_vias",
+      "description": "Exactly 3 analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
@@ -44,19 +15,8 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "REG_2 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^REG_2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "FLASH1 in thermal_pad_vias",
+      "id": "STRUCT-00000002",
+      "description": "FLASH1 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
@@ -66,14 +26,54 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "REG_1 in thermal_pad_vias",
+      "id": "STRUCT-00000003",
+      "description": "REG_1 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_thermal_pad_vias",
         "op": "contains_match",
         "field": "component",
         "pattern": "^REG_1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "REG_2 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^REG_2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U1 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U2 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U2$"
       }
     }
   ]

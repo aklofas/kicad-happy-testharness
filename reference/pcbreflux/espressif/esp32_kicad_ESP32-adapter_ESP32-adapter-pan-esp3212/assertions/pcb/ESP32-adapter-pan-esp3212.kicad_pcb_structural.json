@@ -6,6 +6,27 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 6 analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U4 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 6 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -14,33 +35,12 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000004",
       "description": "U4 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "contains_match",
         "field": "ic",
-        "pattern": "^U4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 6 thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "equals",
-        "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "U4 in thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
         "pattern": "^U4$"
       }
     }

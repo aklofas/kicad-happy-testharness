@@ -17,17 +17,38 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "5 switching_emc finding(s)",
+      "description": "5 emission_estimate finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^switching_emc$",
+        "pattern": "^emission_estimate$",
         "value": 5
       }
     },
     {
       "id": "STRUCT-00000003",
+      "description": "15 switching_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^switching_emc$",
+        "value": 15
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Rule EE-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^EE\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Rule EF-001 present",
       "check": {
         "path": "findings",
@@ -37,7 +58,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "Rule SW-001 present",
       "check": {
         "path": "findings",
@@ -47,33 +68,13 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "U7 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU7\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "U3 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "U5 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU5\\b"
       }
     },
     {
@@ -88,12 +89,32 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "U5 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "U6 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "U7 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU7\\b"
       }
     }
   ]

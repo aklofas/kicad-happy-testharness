@@ -87,13 +87,13 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "R812 in detect_rc_filters",
+      "description": "R804 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R812$"
+        "pattern": "^R804$"
       }
     },
     {
@@ -109,13 +109,13 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R804 in detect_rc_filters",
+      "description": "R812 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R804$"
+        "pattern": "^R812$"
       }
     },
     {
@@ -130,28 +130,6 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R809 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R809$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "R810 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R810$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R801 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -162,7 +140,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000014",
       "description": "R802 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -173,13 +151,25 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000015",
+      "description": "R809 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R809$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R810 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R810$"
       }
     }
   ]

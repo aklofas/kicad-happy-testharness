@@ -87,13 +87,13 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "R1_D100MSPB1 in detect_rc_filters",
+      "description": "R1_D100MSP1 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R1_D100MSPB1$"
+        "pattern": "^R1_D100MSP1$"
       }
     },
     {
@@ -109,13 +109,13 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R1_D100MSP1 in detect_rc_filters",
+      "description": "R1_D100MSPB1 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R1_D100MSP1$"
+        "pattern": "^R1_D100MSPB1$"
       }
     },
     {
@@ -141,17 +141,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R4_D100MSP1 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R4_D100MSP1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R3_D100MSP1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -162,7 +151,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "R3_D100MSPB1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -173,13 +162,14 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000016",
+      "description": "R4_D100MSP1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R4_D100MSP1$"
       }
     }
   ]

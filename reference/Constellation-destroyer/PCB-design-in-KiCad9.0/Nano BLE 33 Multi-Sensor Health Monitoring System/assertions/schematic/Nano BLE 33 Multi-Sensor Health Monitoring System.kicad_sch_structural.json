@@ -117,13 +117,13 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R5 in detect_rc_filters",
+      "description": "R9 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R5$"
+        "pattern": "^R9$"
       }
     },
     {
@@ -139,13 +139,13 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R9 in detect_rc_filters",
+      "description": "R8 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R9$"
+        "pattern": "^R8$"
       }
     },
     {
@@ -172,13 +172,13 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "R8 in detect_rc_filters",
+      "description": "R5 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R8$"
+        "pattern": "^R5$"
       }
     },
     {
@@ -193,17 +193,6 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "R2 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
       "description": "R1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -214,7 +203,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -225,17 +214,18 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000021",
+      "description": "R2 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R2$"
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Exactly 2 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -245,7 +235,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",

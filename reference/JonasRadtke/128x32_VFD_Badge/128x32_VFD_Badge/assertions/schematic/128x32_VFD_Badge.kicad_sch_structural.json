@@ -137,6 +137,17 @@
     },
     {
       "id": "STRUCT-00000014",
+      "description": "U2 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "U4 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -147,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "U5 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -155,17 +166,6 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "U2 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U2$"
       }
     },
     {
@@ -297,17 +297,6 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "R4 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000030",
       "description": "R3 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -318,17 +307,18 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000030",
+      "description": "R4 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R4$"
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000031",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -338,7 +328,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000032",
       "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",
@@ -348,7 +338,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000033",
       "description": "Exactly 12 validate_voltage_levels",
       "check": {
         "path": "findings",

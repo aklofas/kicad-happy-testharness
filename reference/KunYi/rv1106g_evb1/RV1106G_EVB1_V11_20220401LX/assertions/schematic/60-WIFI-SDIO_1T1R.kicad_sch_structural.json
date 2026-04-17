@@ -97,17 +97,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R6009 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R6009$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "R6018 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -115,6 +104,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R6018$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R6009 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R6009$"
       }
     },
     {
@@ -160,17 +160,6 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "R6020 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R6020$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "R6015 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -181,17 +170,18 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000017",
+      "description": "R6020 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R6020$"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",

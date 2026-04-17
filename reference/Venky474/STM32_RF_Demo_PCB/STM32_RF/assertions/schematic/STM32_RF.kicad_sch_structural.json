@@ -36,12 +36,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 audit_rail_sources",
+      "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -66,17 +66,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "X2 in detect_crystal_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^X2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "X1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -84,6 +73,17 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^X1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "X2 in detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^X2$"
       }
     },
     {
@@ -234,16 +234,6 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
       "description": "Exactly 2 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -253,7 +243,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -263,7 +253,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "Exactly 2 validate_voltage_levels",
       "check": {
         "path": "findings",

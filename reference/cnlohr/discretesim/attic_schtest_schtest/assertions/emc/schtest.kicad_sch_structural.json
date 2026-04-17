@@ -6,6 +6,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "6 ground_plane finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^ground_plane$",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -16,7 +27,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "3 stackup finding(s)",
       "check": {
         "path": "findings",
@@ -27,7 +38,17 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
+      "description": "Rule GP-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -37,7 +58,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -47,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "P1 in EMC findings",
       "check": {
         "path": "findings",
@@ -57,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "P2 in EMC findings",
       "check": {
         "path": "findings",
@@ -67,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "P3 in EMC findings",
       "check": {
         "path": "findings",

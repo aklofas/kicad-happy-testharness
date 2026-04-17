@@ -93,12 +93,12 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Rule DC-002 present",
+      "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-002$"
+        "pattern": "^DC\\-001$"
       }
     },
     {
@@ -163,6 +163,16 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "C101 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "J101 in EMC findings",
       "check": {
         "path": "findings",

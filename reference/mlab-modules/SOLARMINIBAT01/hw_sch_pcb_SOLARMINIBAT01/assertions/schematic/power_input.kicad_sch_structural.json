@@ -129,6 +129,17 @@
     },
     {
       "id": "STRUCT-00000013",
+      "description": "R19 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R19$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
       "description": "R20 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -139,7 +150,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "R17 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -147,17 +158,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R17$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "R19 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R19$"
       }
     },
     {
@@ -179,16 +179,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R22$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
       }
     }
   ]

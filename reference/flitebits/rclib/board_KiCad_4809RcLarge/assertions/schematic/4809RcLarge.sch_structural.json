@@ -56,17 +56,6 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "R12 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R12$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "R9 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -74,6 +63,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R9$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R12 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
       }
     },
     {
@@ -99,28 +99,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Q4 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Q5 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -131,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000011",
       "description": "Q3 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -139,6 +117,28 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Q4 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Q5 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q5$"
       }
     },
     {
@@ -164,17 +164,6 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "R5 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -185,17 +174,18 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000017",
+      "description": "R5 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R5$"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "Exactly 1 validate_led_resistors",
       "check": {
         "path": "findings",

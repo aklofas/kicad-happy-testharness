@@ -106,13 +106,13 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Q1303 in detect_transistor_circuits",
+      "description": "Q1301 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q1303$"
+        "pattern": "^Q1301$"
       }
     },
     {
@@ -128,13 +128,13 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Q1301 in detect_transistor_circuits",
+      "description": "Q1303 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q1301$"
+        "pattern": "^Q1303$"
       }
     },
     {
@@ -149,17 +149,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R1318 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R1318$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "R1314 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -170,17 +159,18 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000016",
+      "description": "R1318 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R1318$"
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

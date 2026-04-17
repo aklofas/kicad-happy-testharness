@@ -6,17 +6,38 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "5 switching_emc finding(s)",
+      "description": "5 emission_estimate finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^switching_emc$",
+        "pattern": "^emission_estimate$",
         "value": 5
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "15 switching_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^switching_emc$",
+        "value": 15
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Rule EE-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^EE\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Rule SW-001 present",
       "check": {
         "path": "findings",
@@ -26,7 +47,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "U20 in EMC findings",
       "check": {
         "path": "findings",
@@ -36,7 +57,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "U21 in EMC findings",
       "check": {
         "path": "findings",
@@ -46,17 +67,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "U25 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU25\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "U22 in EMC findings",
       "check": {
         "path": "findings",
@@ -66,7 +77,17 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
+      "description": "U25 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU25\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "U26 in EMC findings",
       "check": {
         "path": "findings",

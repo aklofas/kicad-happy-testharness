@@ -6,17 +6,38 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "4 switching_emc finding(s)",
+      "description": "4 emission_estimate finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^switching_emc$",
+        "pattern": "^emission_estimate$",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "12 switching_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^switching_emc$",
+        "value": 12
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Rule EE-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^EE\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Rule SW-001 present",
       "check": {
         "path": "findings",
@@ -26,33 +47,13 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "U6 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU6\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "U10 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU10\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "U8 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU8\\b"
       }
     },
     {
@@ -63,6 +64,26 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U6 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "U8 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU8\\b"
       }
     }
   ]

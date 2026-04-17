@@ -66,28 +66,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "F6 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^F6$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "F4 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^F4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "F1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -98,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000008",
       "description": "F2 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -109,7 +87,18 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
+      "description": "F4 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "F5 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -117,6 +106,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "F6 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F6$"
       }
     },
     {
@@ -163,17 +163,6 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "R4 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -184,17 +173,18 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000017",
+      "description": "R4 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R4$"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "Exactly 2 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -204,7 +194,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",

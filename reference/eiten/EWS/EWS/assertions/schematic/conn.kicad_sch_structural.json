@@ -86,13 +86,13 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "D405 in detect_protection_devices",
+      "description": "D403 in detect_protection_devices",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^D405$"
+        "pattern": "^D403$"
       }
     },
     {
@@ -108,13 +108,13 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "D403 in detect_protection_devices",
+      "description": "D405 in detect_protection_devices",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^D403$"
+        "pattern": "^D405$"
       }
     },
     {
@@ -172,17 +172,6 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Q402 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q402$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
       "description": "Q401 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -193,18 +182,18 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "Q404 in detect_transistor_circuits",
+      "id": "STRUCT-00000018",
+      "description": "Q402 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q404$"
+        "pattern": "^Q402$"
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Q403 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -215,17 +204,18 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000020",
+      "description": "Q404 in detect_transistor_circuits",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q404$"
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -235,7 +225,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Exactly 6 validate_voltage_levels",
       "check": {
         "path": "findings",

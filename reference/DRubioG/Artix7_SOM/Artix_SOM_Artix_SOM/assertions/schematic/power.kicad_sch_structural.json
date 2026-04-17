@@ -76,13 +76,13 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "L5 in detect_lc_filters",
+      "description": "L3 in detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L5$"
+        "pattern": "^L3$"
       }
     },
     {
@@ -98,28 +98,17 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "L2 in detect_lc_filters",
+      "description": "L5 in detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L2$"
+        "pattern": "^L5$"
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "L3 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "L1 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -127,6 +116,17 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "L2 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
       }
     },
     {
@@ -141,17 +141,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U7 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "U3 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -159,6 +148,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "U4 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U4$"
       }
     },
     {
@@ -174,17 +174,6 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "U4 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
       "description": "U6 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -192,6 +181,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "U7 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U7$"
       }
     },
     {
@@ -206,28 +206,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "R21 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R21$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
-      "description": "R18 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R18$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "R12 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -238,7 +216,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000021",
       "description": "R15 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -249,17 +227,29 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000022",
+      "description": "R18 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R18$"
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000023",
+      "description": "R21 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R21$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
       "description": "Exactly 2 validate_power_sequencing",
       "check": {
         "path": "findings",

@@ -16,9 +16,9 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "critical count ~1",
+      "description": "by_severity.error ~1",
       "check": {
-        "path": "summary.critical",
+        "path": "summary.by_severity.error",
         "op": "range",
         "min": 0,
         "max": 2
@@ -26,9 +26,9 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~1",
+      "description": "by_severity.warning ~1",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.by_severity.warning",
         "op": "range",
         "min": 0,
         "max": 2
@@ -36,33 +36,33 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~6",
+      "description": "by_severity.info ~7",
       "check": {
-        "path": "summary.low",
+        "path": "summary.by_severity.info",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 6,
+        "max": 8
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~82.0 (+-10)",
+      "description": "EMC risk score ~86.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 72.0,
-        "max": 92.0
+        "min": 76.5,
+        "max": 96.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 ground_plane finding(s)",
+      "description": "2 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 1
+        "value": 2
       }
     },
     {

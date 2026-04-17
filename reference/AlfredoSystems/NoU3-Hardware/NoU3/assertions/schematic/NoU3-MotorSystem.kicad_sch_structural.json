@@ -106,17 +106,6 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "L2 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "L1 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -124,6 +113,17 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "L2 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
       }
     },
     {
@@ -148,17 +148,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "U16 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U16$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "U15 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -166,6 +155,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U15$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "U16 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U16$"
       }
     },
     {
@@ -201,17 +201,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "R13 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R13$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "R11 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -222,17 +211,18 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000021",
+      "description": "R13 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R13$"
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Exactly 2 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -242,7 +232,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "Exactly 10 validate_pullups",
       "check": {
         "path": "findings",

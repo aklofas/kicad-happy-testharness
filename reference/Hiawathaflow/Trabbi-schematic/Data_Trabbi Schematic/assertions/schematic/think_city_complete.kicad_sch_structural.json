@@ -148,17 +148,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "F_HV in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^F_HV$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "F1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -169,13 +158,24 @@
       }
     },
     {
+      "id": "STRUCT-00000016",
+      "description": "F_HV in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F_HV$"
+      }
+    },
+    {
       "id": "STRUCT-00000017",
-      "description": "Exactly 3 suggest_certifications",
+      "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
         "detector_filter": "suggest_certifications",
         "op": "equals",
-        "value": 3
+        "value": 1
       }
     },
     {

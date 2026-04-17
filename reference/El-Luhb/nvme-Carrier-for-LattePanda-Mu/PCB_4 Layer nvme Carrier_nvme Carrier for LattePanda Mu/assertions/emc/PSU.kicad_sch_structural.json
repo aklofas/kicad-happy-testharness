@@ -17,17 +17,38 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "11 switching_emc finding(s)",
+      "description": "11 emission_estimate finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^switching_emc$",
+        "pattern": "^emission_estimate$",
         "value": 11
       }
     },
     {
       "id": "STRUCT-00000003",
+      "description": "33 switching_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^switching_emc$",
+        "value": 33
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Rule EE-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^EE\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Rule EF-001 present",
       "check": {
         "path": "findings",
@@ -37,7 +58,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "Rule SW-001 present",
       "check": {
         "path": "findings",
@@ -47,7 +68,17 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
+      "description": "U15 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU15\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "U16 in EMC findings",
       "check": {
         "path": "findings",
@@ -57,27 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "U420 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU420\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "U430 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU430\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U400 in EMC findings",
       "check": {
         "path": "findings",
@@ -87,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "U410 in EMC findings",
       "check": {
         "path": "findings",
@@ -97,43 +108,33 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "U480 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU480\\b"
-      }
-    },
-    {
       "id": "STRUCT-00000011",
-      "description": "U460 in EMC findings",
+      "description": "U420 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU460\\b"
+        "pattern": "\\bU420\\b"
       }
     },
     {
       "id": "STRUCT-00000012",
+      "description": "U430 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU430\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "U440 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU440\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "U15 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU15\\b"
       }
     },
     {
@@ -148,12 +149,32 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "U460 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU460\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "U470 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU470\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "U480 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU480\\b"
       }
     }
   ]

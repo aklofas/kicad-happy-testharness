@@ -6,11 +6,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 9 decoupling_placement",
+      "description": "Exactly 12 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 9
+        "value": 12
       }
     },
     {
@@ -45,6 +45,26 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "IC404 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC404$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "IC451 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC451$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "IC409 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -54,7 +74,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "IC405 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -64,7 +84,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "IC403 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -74,7 +94,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "IC411 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -84,7 +104,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "IC406 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -94,13 +114,23 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "IC407 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "contains_match",
         "field": "ic",
         "pattern": "^IC407$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "IC401 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC401$"
       }
     }
   ]

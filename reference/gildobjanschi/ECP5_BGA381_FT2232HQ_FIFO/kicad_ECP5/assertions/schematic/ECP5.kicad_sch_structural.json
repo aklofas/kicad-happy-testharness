@@ -148,6 +148,17 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "U7 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "U8 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -158,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "U9 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -166,17 +177,6 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "U7 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U7$"
       }
     },
     {
@@ -212,28 +212,6 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "R41 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R41$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
-      "description": "R43 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R43$"
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
       "description": "R39 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -244,17 +222,29 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000022",
+      "description": "R41 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R41$"
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000023",
+      "description": "R43 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R43$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
       "description": "Exactly 3 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -264,7 +254,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "Exactly 20 validate_voltage_levels",
       "check": {
         "path": "findings",

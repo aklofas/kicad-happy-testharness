@@ -76,17 +76,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "L1 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "L2 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -94,6 +83,17 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "L1 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
       }
     },
     {
@@ -150,13 +150,13 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R4 in detect_voltage_dividers",
+      "description": "R1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
-        "pattern": "^R4$"
+        "pattern": "^R1$"
       }
     },
     {
@@ -172,27 +172,17 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "R1 in detect_voltage_dividers",
+      "description": "R4 in detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
-        "pattern": "^R1$"
+        "pattern": "^R4$"
       }
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

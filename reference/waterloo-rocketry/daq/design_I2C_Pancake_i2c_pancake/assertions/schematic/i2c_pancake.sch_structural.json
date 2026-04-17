@@ -77,6 +77,17 @@
     },
     {
       "id": "STRUCT-00000008",
+      "description": "R19 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R19$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "R8 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -87,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R9 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -95,17 +106,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "R19 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R19$"
       }
     },
     {
@@ -131,16 +131,6 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 2 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",

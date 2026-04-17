@@ -96,17 +96,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "U3 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "U11 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -114,6 +103,17 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "U3 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
       }
     },
     {
@@ -149,28 +149,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R37 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R37$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "R8 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -181,17 +159,29 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000016",
+      "description": "R37 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R37$"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
+      "description": "R8 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "Exactly 4 validate_pullups",
       "check": {
         "path": "findings",
@@ -201,7 +191,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",

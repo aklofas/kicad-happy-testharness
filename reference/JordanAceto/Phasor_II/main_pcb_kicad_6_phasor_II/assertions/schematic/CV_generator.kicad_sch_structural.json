@@ -67,17 +67,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U8 in detect_opamp_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_opamp_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "U7 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -85,6 +74,17 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^U7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "U8 in detect_opamp_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U8$"
       }
     },
     {
@@ -142,17 +142,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R519 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R519$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R507 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -163,18 +152,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
-      "description": "R515 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R515$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "R513 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -185,7 +163,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
       "description": "R514 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -196,13 +174,25 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000017",
+      "description": "R515 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R515$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R519 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R519$"
       }
     }
   ]

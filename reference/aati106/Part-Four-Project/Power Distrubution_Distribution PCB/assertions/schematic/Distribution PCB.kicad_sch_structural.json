@@ -76,17 +76,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "R50 in detect_current_sense",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R50$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "R49 in detect_current_sense",
       "check": {
         "path": "findings",
@@ -94,6 +83,17 @@
         "op": "contains_match",
         "field": "shunt.ref",
         "pattern": "^R49$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R50 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R50$"
       }
     },
     {
@@ -139,17 +139,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "L1 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "L3 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -157,6 +146,17 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "L1 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
       }
     },
     {
@@ -181,13 +181,13 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "U8 in detect_power_regulators",
+      "description": "U5 in detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U8$"
+        "pattern": "^U5$"
       }
     },
     {
@@ -214,13 +214,13 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "U5 in detect_power_regulators",
+      "description": "U8 in detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U5$"
+        "pattern": "^U8$"
       }
     },
     {
@@ -235,17 +235,6 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "R4 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
       "description": "R11 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -253,6 +242,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "R14 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R14$"
       }
     },
     {
@@ -268,13 +268,13 @@
     },
     {
       "id": "STRUCT-00000026",
-      "description": "R14 in detect_rc_filters",
+      "description": "R4 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R14$"
+        "pattern": "^R4$"
       }
     },
     {
@@ -321,28 +321,6 @@
     },
     {
       "id": "STRUCT-00000031",
-      "description": "R25 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R25$"
-      }
-    },
-    {
-      "id": "STRUCT-00000032",
-      "description": "R6 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R6$"
-      }
-    },
-    {
-      "id": "STRUCT-00000033",
       "description": "R16 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -353,17 +331,29 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
-      "description": "Exactly 2 suggest_certifications",
+      "id": "STRUCT-00000032",
+      "description": "R25 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R25$"
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000033",
+      "description": "R6 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000034",
       "description": "Exactly 2 validate_feedback_stability",
       "check": {
         "path": "findings",
@@ -373,7 +363,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000035",
       "description": "Exactly 3 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -383,7 +373,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000036",
       "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",

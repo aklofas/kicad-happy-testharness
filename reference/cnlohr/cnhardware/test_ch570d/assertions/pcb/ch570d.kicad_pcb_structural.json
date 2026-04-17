@@ -27,12 +27,12 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 5 analyze_tombstoning_risk",
+      "description": "Exactly 6 analyze_tombstoning_risk",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_tombstoning_risk",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -92,6 +92,17 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "R5 in analyze_tombstoning_risk",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_tombstoning_risk",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 1 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -100,7 +111,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "U1 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
