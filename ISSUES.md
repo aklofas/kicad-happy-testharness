@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-04-16
+Last updated: 2026-04-18
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-04-16
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-323**. Next TH number: **TH-036**.
+maximum. Next KH number: **KH-324**. Next TH number: **TH-036**.
 
 > 0 open issues.
 
@@ -51,30 +51,7 @@ maximum. Next KH number: **KH-323**. Next TH number: **TH-036**.
 
 ## kicad-happy Analyzer Issues
 
-### KH-323: `pin_coverage_warnings` emitted by schematic analyzer but missing from `--schema`
-
-**Severity:** LOW (documentation gap, not a functional bug)
-
-**Repro:**
-- `analyze_schematic.py` emits top-level key `pin_coverage_warnings` at line 8921 when
-  `verify_pin_coverage()` (line 5679) returns a truthy list.
-- `python3 analyze_schematic.py --schema` does NOT list `pin_coverage_warnings` in the
-  documented top-level envelope.
-- Harness `tests/test_schema_drift.py::test_schematic_schema_drift` correctly flagged this
-  as drift. Temporarily allow-listed in `_KNOWN_UNDOCUMENTED['schematic']` (2026-04-17) so
-  harness commits can push; this issue tracks the real main-repo fix.
-
-**Fix:** Add `pin_coverage_warnings` to the schematic `--schema` output with a description,
-marked `OPTIONAL` (only emitted conditionally). Mirrors `instance_consistency_warnings`
-and `generic_symbol_warnings` treatment.
-
-**File:** `skills/kicad/scripts/analyze_schematic.py` — `--schema` handler (the function that
-prints the documented envelope structure)
-
-**Resolution:** Close by documenting the key in `--schema` AND removing the entry from
-harness `_KNOWN_UNDOCUMENTED['schematic']` in the same pair of changes. The harness v1.4
-Track 1 typed-envelope-SOT work will collapse the whole allow-list; this issue can be
-subsumed by that work or fixed standalone.
+_No open analyzer issues._
 
 ---
 
@@ -86,4 +63,4 @@ _No open test-harness issues._
 
 ## Priority Queue
 
-_1 open issue: KH-323 (LOW)._
+_0 open issues._

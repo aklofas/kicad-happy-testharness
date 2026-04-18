@@ -87,7 +87,11 @@ def check_invariants(data, filepath=""):
             _add(f"crystal_circuits[{i}].effective_load_pF={load} <= 0")
 
     # --- Confidence taxonomy: must be in declared set when present ---
+    # Per-finding `confidence` VALUE: hyphenated 'datasheet-backed' (unchanged at v1.4).
+    # Aggregate `trust_summary.by_confidence` KEY: underscore 'datasheet_backed' (new at v1.4).
+    # Two intentionally different strings for two different layers.
     VALID_CONFIDENCES = {"deterministic", "heuristic", "datasheet-backed"}
+    VALID_AGGREGATE_CONFIDENCE_KEYS = {"deterministic", "heuristic", "datasheet_backed"}
     for i, finding in enumerate(data.get("findings", [])):
         conf = finding.get("confidence")
         if conf is not None and conf not in VALID_CONFIDENCES:
@@ -214,9 +218,9 @@ def check_invariants(data, filepath=""):
 
             by_conf = ts.get("by_confidence")
             if isinstance(by_conf, dict):
-                if set(by_conf.keys()) != VALID_CONFIDENCES:
+                if set(by_conf.keys()) != VALID_AGGREGATE_CONFIDENCE_KEYS:
                     _add(f"trust_summary.by_confidence keys "
-                         f"{set(by_conf.keys())} != {VALID_CONFIDENCES}")
+                         f"{set(by_conf.keys())} != {VALID_AGGREGATE_CONFIDENCE_KEYS}")
                 conf_sum = sum(by_conf.values()) + ts.get("unknown_confidence", 0)
                 if ts_total is not None and conf_sum != ts_total:
                     _add(f"trust_summary by_confidence sum ({conf_sum}) "

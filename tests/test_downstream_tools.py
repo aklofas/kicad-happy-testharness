@@ -48,7 +48,7 @@ def _make_schematic():
         "trust_summary": {
             "total_findings": 10,
             "trust_level": "mixed",
-            "by_confidence": {"deterministic": 7, "heuristic": 3, "datasheet-backed": 0},
+            "by_confidence": {"deterministic": 7, "heuristic": 3, "datasheet_backed": 0},
             "by_evidence_source": {"datasheet": 0, "topology": 10, "heuristic_rule": 0,
                                    "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
             "provenance_coverage_pct": 70.0,
@@ -77,7 +77,7 @@ def _make_pcb():
         "trust_summary": {
             "total_findings": 5,
             "trust_level": "high",
-            "by_confidence": {"deterministic": 5, "heuristic": 0, "datasheet-backed": 0},
+            "by_confidence": {"deterministic": 5, "heuristic": 0, "datasheet_backed": 0},
             "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 0,
                                    "symbol_footprint": 0, "bom": 0, "geometry": 5, "api_lookup": 0},
             "provenance_coverage_pct": 0.0,

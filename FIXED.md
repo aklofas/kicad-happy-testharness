@@ -11,6 +11,42 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-18 — KH-323 (pin_coverage_warnings undocumented in --schema)
+
+### KH-323 (LOW): `pin_coverage_warnings` emitted by schematic analyzer but missing from `--schema`
+
+- **Where fixed:** kicad-happy commits `c3e37b7..e6863f2` on `v1.4-dev` (Track 1.1
+  typed envelope SOT). `pin_coverage_warnings` is now declared as an OPTIONAL field
+  in `SchematicEnvelope` (`skills/kicad/scripts/envelopes/schematic.py`) and appears
+  in `analyze_schematic.py --schema` under `properties` but NOT in `required` (so
+  conditional emission is honored).
+- **Symptom:** Harness `tests/test_schema_drift.py::test_schematic_schema_drift`
+  flagged `pin_coverage_warnings` as drift on 2026-04-17 — emitted by the schematic
+  analyzer but absent from the `--schema` declared envelope.
+- **Root cause:** `pin_coverage_warnings` was added to runtime emission without a
+  corresponding `--schema` declaration. Predates the typed envelope SOT.
+- **Fix:** Track 1.1's typed envelope refactor declares `pin_coverage_warnings`
+  on the dataclass, so it's automatically present in the JSON Schema 2020-12
+  `properties` array. Harness side: removed from `_KNOWN_UNDOCUMENTED['schematic']`
+  in `tests/test_schema_drift.py`.
+- **Shape note:** Runtime emits `list[PinCoverageWarning]` with fields
+  `component, lib_id, expected_pins, placed_pins, missing_count, message` —
+  NOT `list[str]` as the prior allow-listed form may have implied. No harness
+  Python code reads the list contents, so the shape change is harness-side no-op.
+- **Verification (harness):**
+  - `python3 tests/test_schema_drift.py` → 12 passed (helper tests + per-analyzer
+    drift detectors after fixture regeneration on smoke section).
+  - `analyze_schematic.py --schema` lists `pin_coverage_warnings` in `properties`
+    (verified directly).
+- **Harness impact:**
+  - `tests/test_schema_drift.py::_KNOWN_UNDOCUMENTED['schematic']` —
+    `pin_coverage_warnings` entry removed.
+  - The whole drift test was rewritten to consume JSON Schema 2020-12 (Track 1.1
+    breaking change) rather than the old descriptive-string dict format. See
+    LOG-v1.4-progress.md entry 11 (2026-04-18) for full context.
+
+---
+
 ## 2026-04-16 — KH-312 (sync scripts --mpn-list batch mode)
 
 ### KH-312 (LOW): Sync scripts needed `--mpn-list` batch mode

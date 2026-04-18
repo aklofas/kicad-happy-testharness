@@ -10,15 +10,22 @@ The class of bug we block (direction 1, STRICT):
   Example: KH-315 documented hierarchy_context in every schematic output,
   but the analyzer only emits it on sub-sheets. False advertising.
 
-Tolerance rules for schema keys (do not require in output):
-- Description starts with literal "OPTIONAL" (case-insensitive).
-- Key is listed in the _optional_sections comma-separated string.
-- Key starts with "_" (internal debug/metadata — e.g., _optional_sections).
+Schema format (v1.4+): JSON Schema Draft 2020-12 emitted by the typed
+analyzer_envelope SOT. Top-level shape is:
+    {"$schema": ..., "type": "object", "title": ...,
+     "properties": {field: {...}, ...},
+     "required": [field, ...]}
+Field names live under "properties"; required vs optional comes from the
+"required" array. Properties not in "required" are optional (analyzer may
+emit only conditionally).
 
 The other direction (emitted keys not documented in --schema, direction 2)
 is checked with an allow-list of currently-undocumented envelope growth.
 New undocumented keys will fail the test; known gaps are annotated so the
 main repo can close them incrementally without breaking the test suite.
+With v1.4 typed envelope SOT, the allow-list is largely obsolete (all
+documented keys live in `properties`); kept for tolerance during the
+incremental Track 1 rollout (1.2-1.5) and any analyzer-specific drift.
 
 Fixture strategy: use the NEWEST fresh analyzer output under results/outputs/
 (by mtime) as the "emitted" sample — the analyzer isn't re-run inside the
@@ -29,8 +36,6 @@ fresh fixture is available.
 Known limitation: if the newest fixture is stale (corpus not regen'd after
 an analyzer change), the test proves consistency with the fixture rather
 than with today's runtime behavior. Warn-on-stderr for fixtures > 30 days.
-Fully addressed by the v1.4 typed-schema-source-of-truth work, after which
-drift becomes a by-construction property and _KNOWN_UNDOCUMENTED evaporates.
 Interim workaround: `python3 run/run_<type>.py --cross-section smoke` before
 trusting a PASS result on touched analyzers.
 """
@@ -69,7 +74,7 @@ _KNOWN_UNDOCUMENTED = {
         "footprint_filter_warnings", "generic_symbol_warnings", "ground_domains",
         "hierarchical_labels", "instance_consistency_warnings",
         "label_shape_warnings", "labels",
-        "legacy_analysis_quality", "no_connects", "pin_coverage_warnings",
+        "legacy_analysis_quality", "no_connects",
         "placement_analysis",
         "power_sequencing_validation", "power_symbols", "property_issues",
         "protocol_compliance", "pwr_flag_warnings", "sheet_files", "sheets_parsed",
@@ -117,29 +122,31 @@ def _schema(analyzer_script):
         return None
 
 
-def _optional_keys(schema):
-    """Return the set of schema keys considered optional.
+def _schema_field_keys(schema):
+    """Return the set of envelope field names declared in the JSON Schema."""
+    return set(schema.get("properties", {}).keys())
 
-    A key is optional if:
-    - Its name starts with underscore (internal debug/metadata).
-    - Its description (string value) starts with the literal token OPTIONAL.
-    - It is listed (comma-separated) in the _optional_sections meta key.
+
+def _required_field_keys(schema):
+    """Return the set of envelope field names declared required."""
+    return set(schema.get("required", []))
+
+
+def _optional_keys(schema):
+    """Return the set of envelope field names that are optional.
+
+    Under JSON Schema 2020-12, optional = declared in `properties` but absent
+    from `required`. Underscore-prefixed properties (e.g. `_redirected_from`,
+    `_stale_file_warning`) are always treated as optional internal metadata.
     """
-    opt = set()
-    for k, v in schema.items():
-        if k.startswith("_"):
-            opt.add(k)
-            continue
-        if isinstance(v, str) and v.strip().upper().startswith("OPTIONAL"):
-            opt.add(k)
-    sections = schema.get("_optional_sections", "")
-    if isinstance(sections, str):
-        for entry in sections.split(","):
-            # Strip parenthetical annotations like "sheets (multi-sheet only)"
-            name = entry.split("(")[0].strip()
-            if name:
-                opt.add(name)
+    fields = _schema_field_keys(schema)
+    required = _required_field_keys(schema)
+    opt = fields - required
+    opt |= {k for k in fields if k.startswith("_")}
     return opt
+
+
+CURRENT_SCHEMA_VERSION = "1.4.0"
 
 
 def _emitted_keys(analyzer_type, sample_limit=50, max_age_days=30):
@@ -147,11 +154,11 @@ def _emitted_keys(analyzer_type, sample_limit=50, max_age_days=30):
 
     Different boards trigger different optional detector sections — a single
     fixture undercounts the analyzer's true key footprint. Sampling up to
-    `sample_limit` fresh (schema_version == 1.3.0) outputs and unioning
-    their top-level keys gives a complete picture of what the analyzer
-    can emit, avoiding both false-positive drift (required key missing
-    from a trivial input) and false-negative drift (undocumented key
-    appearing only on complex boards).
+    `sample_limit` fresh (schema_version == CURRENT_SCHEMA_VERSION) outputs
+    and unioning their top-level keys gives a complete picture of what the
+    analyzer can emit, avoiding both false-positive drift (required key
+    missing from a trivial input) and false-negative drift (undocumented
+    key appearing only on complex boards).
 
     Returns (emitted_keys: set | None, newest_mtime: float | None).
     Returns (None, None) if no fresh outputs exist.
@@ -184,7 +191,7 @@ def _emitted_keys(analyzer_type, sample_limit=50, max_age_days=30):
             d = json.load(open(f))
         except (json.JSONDecodeError, OSError):
             continue
-        if d.get("schema_version") != "1.3.0":
+        if d.get("schema_version") != CURRENT_SCHEMA_VERSION:
             continue
         emitted_keys |= set(d.keys())
         if newest_mtime is None:
@@ -217,35 +224,36 @@ def _fresh_output(analyzer_type):
 
 
 def _assert_no_drift(schema, emitted, analyzer_type):
-    """Direction 1 (strict): every required schema key must appear in output.
+    """Direction 1 (strict): every required schema field must appear in output.
     Direction 2 (allow-listed): emitted keys not in --schema must either be
-    in _optional_sections, prefixed with _, or in _KNOWN_UNDOCUMENTED.
+    optional in schema, prefixed with _, or in _KNOWN_UNDOCUMENTED.
     """
-    schema_keys = set(schema.keys())
+    schema_keys = _schema_field_keys(schema)
     emitted_keys = set(emitted.keys())
     optional = _optional_keys(schema)
-    required = schema_keys - optional
+    required = _required_field_keys(schema)
 
     # Direction 1: schema documents a required key the output doesn't emit.
     # This is the KH-315 class.
     missing = required - emitted_keys
     assert not missing, (
         f"{analyzer_type}: --schema documents required keys not in emitted "
-        f"output: {sorted(missing)}. Either remove from --schema, or emit "
-        f"them (and tag OPTIONAL if only emitted conditionally)."
+        f"output: {sorted(missing)}. Either remove from --schema `required`, "
+        f"or emit them unconditionally."
     )
 
     # Direction 2: analyzer emits a key --schema doesn't document.
-    # Tolerated if explicitly in the known-gap allow-list, optional in schema,
-    # or underscore-prefixed (internal).
+    # Tolerated if explicitly in the known-gap allow-list, declared in
+    # `properties` (which makes it optional automatically when not in
+    # `required`), or underscore-prefixed (internal).
     allowed = _KNOWN_UNDOCUMENTED.get(analyzer_type, set())
     undocumented = emitted_keys - schema_keys - optional - allowed
     undocumented = {k for k in undocumented if not k.startswith("_")}
     assert not undocumented, (
         f"{analyzer_type}: NEW emitted keys not documented in --schema: "
-        f"{sorted(undocumented)}. Either (a) add to --schema (with OPTIONAL "
-        f"prefix if conditional), (b) list in _optional_sections, or "
-        f"(c) add to _KNOWN_UNDOCUMENTED[{analyzer_type!r}] in this test "
+        f"{sorted(undocumented)}. Either (a) add the key to the typed "
+        f"envelope dataclass (so it appears in --schema `properties`), or "
+        f"(b) add to _KNOWN_UNDOCUMENTED[{analyzer_type!r}] in this test "
         f"if the gap is accepted as tech debt."
     )
 
@@ -328,7 +336,7 @@ def test_cross_analysis_schema_drift():
             d = json.load(open(sch_path))
         except (json.JSONDecodeError, OSError):
             continue
-        if d.get("schema_version") != "1.3.0":
+        if d.get("schema_version") != CURRENT_SCHEMA_VERSION:
             continue
         candidate = _derive_pcb_path(sch_path)
         if os.path.exists(candidate):
@@ -356,38 +364,39 @@ def test_cross_analysis_schema_drift():
 # Helper / classifier tests (don't depend on analyzers)
 # ---------------------------------------------------------------------------
 
-def test_optional_keys_handles_optional_prefix():
-    schema = {
-        "a": "string — required",
-        "b": "OPTIONAL — conditional",
-        "c": "optional (lowercase should still match via .upper())",
+def _mk_schema(properties, required):
+    """Build a minimal JSON Schema 2020-12 envelope for testing."""
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {p: {"type": "string"} for p in properties},
+        "required": list(required),
     }
+
+
+def test_optional_keys_uses_required_array():
+    schema = _mk_schema(["a", "b", "c"], ["a"])
     opt = _optional_keys(schema)
-    assert "b" in opt
-    assert "c" in opt
-    assert "a" not in opt
+    assert opt == {"b", "c"}
 
 
-def test_optional_keys_parses_sections_string():
-    schema = {
-        "_optional_sections": "foo, bar, baz (annotated), qux",
-    }
-    opt = _optional_keys(schema)
-    assert {"foo", "bar", "baz", "qux"}.issubset(opt)
-
-
-def test_optional_keys_treats_underscore_keys_as_optional():
-    schema = {"_debug": "internal", "_optional_sections": "", "public": "required"}
+def test_optional_keys_treats_underscore_properties_as_optional():
+    schema = _mk_schema(["_debug", "public"], ["public"])
     opt = _optional_keys(schema)
     assert "_debug" in opt
-    assert "_optional_sections" in opt
     assert "public" not in opt
+
+
+def test_optional_keys_handles_no_required_array():
+    schema = {"properties": {"a": {}, "b": {}}}
+    opt = _optional_keys(schema)
+    assert opt == {"a", "b"}
 
 
 def test_assert_no_drift_catches_kh315_class():
     """Regression-test the core invariant: a missing required key fails."""
-    schema = {"a": "required", "b": "required"}
-    emitted = {"a": 1}  # missing b — should fail
+    schema = _mk_schema(["a", "b"], ["a", "b"])
+    emitted = {"a": 1}  # missing required b — should fail
     try:
         _assert_no_drift(schema, emitted, "emc")  # use 'emc' (empty allow-list)
         raised = False
@@ -397,14 +406,14 @@ def test_assert_no_drift_catches_kh315_class():
 
 
 def test_assert_no_drift_tolerates_optional_absence():
-    schema = {"a": "required", "b": "OPTIONAL — sometimes emitted"}
-    emitted = {"a": 1}  # b absent, OK because OPTIONAL
+    schema = _mk_schema(["a", "b"], ["a"])  # b is optional
+    emitted = {"a": 1}  # b absent, OK
     _assert_no_drift(schema, emitted, "emc")  # should not raise
 
 
 def test_assert_no_drift_catches_new_undocumented_key():
-    """An emitted key not in schema, not in _optional_sections, not in allow-list → fail."""
-    schema = {"a": "required"}
+    """An emitted key not in schema, not in allow-list → fail."""
+    schema = _mk_schema(["a"], ["a"])
     emitted = {"a": 1, "totally_new": "surprise"}
     try:
         _assert_no_drift(schema, emitted, "emc")  # emc allow-list is empty

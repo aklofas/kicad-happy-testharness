@@ -109,13 +109,13 @@ def test_pcb_fixture_is_kicad10():
 # ---------------------------------------------------------------------------
 
 def test_analyze_schematic_opens_kicad10_file():
-    """analyze_schematic exits 0, emits schema_version 1.3.0, findings present."""
+    """analyze_schematic exits 0, emits schema_version 1.4.0, findings present."""
     if _skip_if_no_kh() or _skip_if_no_fixture(_SCH_FIXTURES[0]):
         return
     path = REPOS_DIR / _SCH_FIXTURES[0]
     data = _run_analyzer("analyze_schematic.py", path)
     assert data.get("analyzer_type") == "schematic"
-    assert data.get("schema_version") == "1.3.0"
+    assert data.get("schema_version") == "1.4.0"
     assert "findings" in data
     assert data.get("statistics", {}).get("total_components", 0) > 0, (
         "expected > 0 components on a real board")
@@ -141,13 +141,13 @@ def test_analyze_schematic_detects_hidden_pins_on_kicad10():
 # ---------------------------------------------------------------------------
 
 def test_analyze_pcb_opens_kicad10_file():
-    """analyze_pcb exits 0, emits schema_version 1.3.0."""
+    """analyze_pcb exits 0, emits schema_version 1.4.0."""
     if _skip_if_no_kh() or _skip_if_no_fixture(_PCB_FIXTURES[0]):
         return
     path = REPOS_DIR / _PCB_FIXTURES[0]
     data = _run_analyzer("analyze_pcb.py", path, "--full")
     assert data.get("analyzer_type") == "pcb"
-    assert data.get("schema_version") == "1.3.0"
+    assert data.get("schema_version") == "1.4.0"
     assert "findings" in data
 
 
@@ -173,7 +173,7 @@ def test_analyze_pcb_second_fixture_opens():
     path = REPOS_DIR / _PCB_FIXTURES[1]
     data = _run_analyzer("analyze_pcb.py", path, "--full")
     assert data.get("analyzer_type") == "pcb"
-    assert data.get("schema_version") == "1.3.0"
+    assert data.get("schema_version") == "1.4.0"
 
 
 # ---------------------------------------------------------------------------

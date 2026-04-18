@@ -333,7 +333,7 @@ def test_trust_summary_valid():
     data["trust_summary"] = {
         "total_findings": 4,
         "trust_level": "mixed",
-        "by_confidence": {"deterministic": 2, "heuristic": 2, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 2, "heuristic": 2, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 1, "topology": 1, "heuristic_rule": 2,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -348,7 +348,7 @@ def test_trust_summary_total_mismatch():
     data["trust_summary"] = {
         "total_findings": 99,
         "trust_level": "high",
-        "by_confidence": {"deterministic": 99, "heuristic": 0, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 99, "heuristic": 0, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 99,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -363,7 +363,7 @@ def test_trust_summary_invalid_trust_level():
     data["trust_summary"] = {
         "total_findings": 4,
         "trust_level": "medium",
-        "by_confidence": {"deterministic": 4, "heuristic": 0, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 4, "heuristic": 0, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -378,7 +378,7 @@ def test_trust_summary_confidence_sum_mismatch():
     data["trust_summary"] = {
         "total_findings": 4,
         "trust_level": "high",
-        "by_confidence": {"deterministic": 1, "heuristic": 0, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 1, "heuristic": 0, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -400,7 +400,7 @@ def test_trust_summary_bom_coverage_invalid_pct():
     data["trust_summary"] = {
         "total_findings": 4,
         "trust_level": "low",
-        "by_confidence": {"deterministic": 0, "heuristic": 4, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 0, "heuristic": 4, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -419,7 +419,7 @@ def test_trust_level_threshold_high():
     data["trust_summary"] = {
         "total_findings": 10,
         "trust_level": "high",
-        "by_confidence": {"deterministic": 8, "heuristic": 2, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 8, "heuristic": 2, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 10,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -436,7 +436,7 @@ def test_trust_level_threshold_wrong():
     data["trust_summary"] = {
         "total_findings": 10,
         "trust_level": "high",  # wrong: 30% heuristic should be mixed
-        "by_confidence": {"deterministic": 7, "heuristic": 3, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 7, "heuristic": 3, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 10,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -455,7 +455,7 @@ def test_provenance_pct_cross_check():
     data["trust_summary"] = {
         "total_findings": 2,
         "trust_level": "high",
-        "by_confidence": {"deterministic": 2, "heuristic": 0, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 2, "heuristic": 0, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 2,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,  # wrong: should be 50.0
@@ -475,7 +475,7 @@ def test_bom_coverage_total_mismatch():
     data["trust_summary"] = {
         "total_findings": 4,
         "trust_level": "high",
-        "by_confidence": {"deterministic": 4, "heuristic": 0, "datasheet-backed": 0},
+        "by_confidence": {"deterministic": 4, "heuristic": 0, "datasheet_backed": 0},
         "by_evidence_source": {"datasheet": 0, "topology": 0, "heuristic_rule": 4,
                                "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
         "provenance_coverage_pct": 0.0,
@@ -532,7 +532,7 @@ def test_corpus_spot_check():
 def test_trust_summary_cross_analysis():
     data = {
         "analyzer_type": "cross_analysis",
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "findings": [
             {"detector": "sch_pcb_ref_count", "confidence": "deterministic",
              "evidence_source": "topology"},
@@ -540,7 +540,7 @@ def test_trust_summary_cross_analysis():
         "trust_summary": {
             "total_findings": 1,
             "trust_level": "high",
-            "by_confidence": {"deterministic": 1, "heuristic": 0, "datasheet-backed": 0},
+            "by_confidence": {"deterministic": 1, "heuristic": 0, "datasheet_backed": 0},
             "by_evidence_source": {"datasheet": 0, "topology": 1, "heuristic_rule": 0,
                                    "symbol_footprint": 0, "bom": 0, "geometry": 0, "api_lookup": 0},
             "provenance_coverage_pct": 0.0,
@@ -555,7 +555,7 @@ def test_trust_summary_cross_analysis():
 # 40. schema_version — valid semver passes
 def test_schema_version_valid():
     data = _clean_output()
-    data["schema_version"] = "1.3.0"
+    data["schema_version"] = "1.4.0"
     violations = check_invariants(data, "test.json")
     assert not any("schema_version" in v[1] for v in violations)
 
