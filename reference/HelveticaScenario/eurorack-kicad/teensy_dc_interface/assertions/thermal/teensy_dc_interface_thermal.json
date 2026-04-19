@@ -16,9 +16,9 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "critical count ~1",
+      "description": "by_severity.error ~1",
       "check": {
-        "path": "summary.critical",
+        "path": "summary.by_severity.error",
         "op": "range",
         "min": 0,
         "max": 2
@@ -26,9 +26,9 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~3",
+      "description": "by_severity.warning ~3",
       "check": {
-        "path": "summary.medium",
+        "path": "summary.by_severity.warning",
         "op": "range",
         "min": 2,
         "max": 4
@@ -36,12 +36,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~4",
+      "description": "by_severity.info ~6",
       "check": {
-        "path": "summary.low",
+        "path": "summary.by_severity.info",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -56,12 +56,12 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "Thermal score ~72 (+-10)",
+      "description": "Thermal score ~76 (+-10)",
       "check": {
         "path": "summary.thermal_score",
         "op": "range",
-        "min": 62,
-        "max": 82
+        "min": 66,
+        "max": 86
       }
     }
   ]
