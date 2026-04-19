@@ -17,7 +17,13 @@ from validate_outputs import (
 def _minimal_modern():
     """Build minimal valid modern schematic output."""
     return {
-        "file": "test.kicad_sch",
+        "inputs": {
+            "source_files": ["test.kicad_sch"],
+            "source_hashes": {"test.kicad_sch": "0" * 64},
+            "run_id": "20260418T000000Z-aaaaaa",
+            "upstream_artifacts": {},
+            "config_hash": None,
+        },
         "components": [{"reference": "R1", "type": "resistor"}],
         "nets": {"net1": {"name": "VCC", "pins": []}},
         "labels": [],

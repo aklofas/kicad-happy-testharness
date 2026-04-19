@@ -63,7 +63,13 @@ def _make_schematic_output(n_components=5, n_nets=3, signal_counts=None):
         for _ in range(v):
             findings.append({"detector": f"detect_{k}", "ref": "R1"})
     return {
-        "file": "test.kicad_sch",
+        "inputs": {
+            "source_files": ["test.kicad_sch"],
+            "source_hashes": {"test.kicad_sch": "0" * 64},
+            "run_id": "20260418T000000Z-aaaaaa",
+            "upstream_artifacts": {},
+            "config_hash": None,
+        },
         "components": components,
         "nets": {f"net{i}": {} for i in range(n_nets)},
         "labels": [],
