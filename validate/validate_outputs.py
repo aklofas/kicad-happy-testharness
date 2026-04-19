@@ -38,11 +38,16 @@ def validate_structural(ctx, name, data, is_modern):
     """Check structural invariants that should always hold."""
     ctx.stats["total"] += 1
 
-    # Modern (.kicad_sch / v1.4 envelopes): provenance lives in `inputs`,
-    # the legacy top-level `file` field was removed at Track 1.3.
-    # Legacy (.sch KiCad 5): pre-envelope shape, still emits `file`.
-    provenance_key = "inputs" if is_modern else "file"
-    required = [provenance_key, "components", "nets", "labels", "power_symbols", "no_connects", "bom"]
+    # Modern (.kicad_sch / v1.4 envelopes): provenance lives in `inputs` and
+    # compatibility metadata in `compat` (Track 1.3 + 1.4); the legacy top-level
+    # `file` field was removed at Track 1.3.
+    # Legacy (.sch KiCad 5): pre-envelope shape, still emits `file`; no compat.
+    if is_modern:
+        required = ["inputs", "compat", "components", "nets", "labels",
+                    "power_symbols", "no_connects", "bom"]
+    else:
+        required = ["file", "components", "nets", "labels",
+                    "power_symbols", "no_connects", "bom"]
     for key in required:
         if key not in data:
             ctx.anomalies["missing_key"].append((name, f"missing '{key}'"))

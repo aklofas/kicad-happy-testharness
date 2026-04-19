@@ -70,6 +70,11 @@ def _make_schematic_output(n_components=5, n_nets=3, signal_counts=None):
             "upstream_artifacts": {},
             "config_hash": None,
         },
+        "compat": {
+            "minimum_consumer_version": "1.4.0",
+            "deprecated_fields": [],
+            "experimental_fields": [],
+        },
         "components": components,
         "nets": {f"net{i}": {} for i in range(n_nets)},
         "labels": [],

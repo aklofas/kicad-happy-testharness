@@ -24,6 +24,11 @@ def _minimal_modern():
             "upstream_artifacts": {},
             "config_hash": None,
         },
+        "compat": {
+            "minimum_consumer_version": "1.4.0",
+            "deprecated_fields": [],
+            "experimental_fields": [],
+        },
         "components": [{"reference": "R1", "type": "resistor"}],
         "nets": {"net1": {"name": "VCC", "pins": []}},
         "labels": [],
