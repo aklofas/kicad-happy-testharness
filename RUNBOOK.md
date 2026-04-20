@@ -61,17 +61,19 @@ regressions caused by the code change.
 
 ### 1c2. Run parser verification (v1.3+)
 
-If the schematic or PCB analyzer changed, run the independent parser verification:
+If the schematic analyzer changed, run the independent parser verification:
 
 ```bash
-python3 validate/verify_parser.py --type schematic     # if schematic affected
-python3 validate/verify_parser.py --type pcb           # if pcb affected
+python3 validate/verify_parser.py --cross-section smoke --summary    # quick
+python3 validate/verify_parser.py --jobs 16                          # full corpus
 ```
 
-An independent S-expression reader walks the raw KiCad source and compares extracted
-component refs, nets, and labels against the analyzer output. Any mismatches are
-extraction bugs — they corrupt every downstream detector, so always investigate before
-continuing. File as KH-* with an `analyzer_section=parsing` label.
+An independent S-expression reader walks the raw `.kicad_sch` source and compares
+extracted component refs, nets, and labels against the analyzer output. Any mismatches
+are extraction bugs — they corrupt every downstream detector, so always investigate
+before continuing. File as KH-* with an `analyzer_section=parsing` label.
+
+**Scope:** schematic files only. No PCB parser verifier exists yet.
 
 **Limitation:** parser verification catches extraction bugs, not interpretation bugs.
 A detector that reads R15 correctly but misclassifies its role will still pass this
@@ -262,20 +264,12 @@ python3 run_tests.py --unit
 
 Must be 100% pass. If not, fix before doing anything else.
 
-### 3h. Run gold-standard benchmark (v1.3+)
+### 3h. (Reserved) Gold-standard benchmark
 
-```bash
-python3 validate/run_gold_checks.py
-```
-
-Expected: 100% pass. The gold tier has ~10 hand-reviewed real-design cases with
-structured claim files. Any failure is either a real analyzer regression against
-human-verified truth, or a case that needs re-review. Investigate carefully — never
-auto-regenerate gold data.
-
-**Limitation:** ~10 cases do not generalize to the full 5,856-repo corpus. Gold-tier
-pass rate is a narrow signal, not overall correctness. See philosophy.md § "v1.3
-correctness layers" for scope.
+_Planned but not yet implemented._ Harness Checklist 23 documents the intended design
+(`reference_gold/` tree + `validate/run_gold_checks.py` runner). Neither the runner
+nor the curated entries exist. Track A6 in v1.4 roadmap depends on Phase 3 producing
+real extractions before gold curation is meaningful.
 
 ### 3i. Run metamorphic test suite (v1.3+)
 
@@ -295,7 +289,7 @@ candidate.
 ### 3j. Run full-corpus parser verification (v1.3+)
 
 ```bash
-python3 validate/verify_parser.py --all --jobs 16
+python3 validate/verify_parser.py --jobs 16
 ```
 
 Expected: 100% exact match on component references, 99.9%+ on values. Any mismatches
@@ -2214,7 +2208,13 @@ synthetic fixture and still fail on real corpus files in an unfamiliar domain.
 
 ---
 
-## Checklist 23: Gold-standard benchmark (v1.3+)
+## Checklist 23: Gold-standard benchmark (PLANNED — NOT YET IMPLEMENTED)
+
+> **Status (2026-04-19):** `reference_gold/` tree and `validate/run_gold_checks.py`
+> runner do not exist. Track A6 in v1.4 roadmap is waiting on Phase 3 to produce real
+> datasheet extractions before gold curation is meaningful — curating gold against
+> imagined outputs is premature. The sub-sections below document the intended design
+> so whoever builds it has a spec to work from.
 
 Use when adding, validating, or running the curated gold-standard tier under
 `reference_gold/`. Gold entries are hand-reviewed real designs with structured claim
