@@ -844,10 +844,10 @@
       "function": "extract_footprints",
       "sources": [],
       "content_hash": "sha256:e23dc1ee605c6e5a",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Standard 2D rotation matrix x' = x\u00b7cos\u03b8 \u2212 y\u00b7sin\u03b8, y' = x\u00b7sin\u03b8 + y\u00b7cos\u03b8; textbook formula, no external spec needed; hash refresh after type hints/docstring drift",
       "notes": null
     },
     {
@@ -1507,10 +1507,10 @@
         "Jackson, \"Classical Electrodynamics\" 3rd ed. \u00a75.6 (magnetic"
       ],
       "content_hash": "sha256:72a5d115f81ece4e",
-      "status": "unverified",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": null,
+      "verification_source": "Jackson Classical Electrodynamics 3rd ed. \u00a75.6; Ott EMC Engineering Ch. 11; Paul Introduction to EMC \u2014 standard magnetic dipole near-field H = m sin(\u03b8) / (4\u03c0 r\u00b3); implementation matches textbook",
       "notes": null
     },
     {
@@ -1523,10 +1523,10 @@
         "Threshold from Ott, \"EMC Engineering\" Ch. 11"
       ],
       "content_hash": "sha256:ea6561edea17f0ed",
-      "status": "unverified",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": null,
+      "verification_source": "Derived gate from EQ-105 + Euclidean distance formula; threshold from Ott EMC Engineering Ch. 11 rule-of-thumb for unshielded switching inductor coupling to high-impedance analog nodes (15mm proximity, 8mm high-severity tier)",
       "notes": null
     },
     {
@@ -1539,10 +1539,10 @@
         "Self-evident \u2014 standard E-series (IEC 60063) value selection."
       ],
       "content_hash": "sha256:337705ae9e82db2e",
-      "status": "unverified",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": null,
+      "verification_source": "IEC 60063 (standard defining E6/E12/E24/E48/E96/E192 preferred-number series); implementation is self-evident log-decade nearest-neighbour snap",
       "notes": null
     }
   ]

@@ -2,20 +2,20 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-04-16T19:46:56.419088+00:00
+**Last scan:** 2026-04-17T20:14:15.347769+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 96 |
-| Verified | 96 |
-| Unverified | 0 |
+| Total equations | 106 |
+| Verified | 99 |
+| Unverified | 7 |
 | Stale | 0 |
 | Critical impact | 10 |
 | High impact | 35 |
-| Medium impact | 36 |
-| Low impact | 15 |
+| Medium impact | 39 |
+| Low impact | 22 |
 
 ## analyze_pcb.py
 
@@ -40,6 +40,13 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-058 | `analyze_vias` | area = π(d/2)² (via annular ring) | geometry | low | **verified** |
 | EQ-059 | `compute_statistics` | d = √(w²+h²) (board diagonal) | geometry | low | **verified** |
 | EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **verified** |
+| EQ-098 | `_dist_point_to_segment` | d = min(\|\|P - (A + t(B-A))\|\|) with t clamped to [0,1] | geometry | low | **unverified** |
+| EQ-099 | `None` | Perimeter sample at (x + r·cos(iπ/4), y + r·sin(iπ/4)) for i=0..7 | geometry | low | **unverified** |
+| EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **unverified** |
+| EQ-101 | `_min_power_pad_distance` | d = √((x1-x2)² + (y1-y2)²) over all pad pairs; return minimum. | geometry | low | **unverified** |
+| EQ-102 | `analyze_copper_presence` | d = √((px-zx)² + (py-zy)²) for point-to-zone-pour proximity. | geometry | low | **unverified** |
+| EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from via center to any Edge.Cuts line segment. | geometry | low | **unverified** |
+| EQ-104 | `_pt_seg_dist` | Helper — same 2D point-to-segment distance as EQ-098. | geometry | low | **unverified** |
 
 ## analyze_schematic.py
 
@@ -82,6 +89,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-090 | `round_to_e12` | E12 decade normalization via log10 (standard component value selection) | parasitic | high | **verified** |
 | EQ-091 | `trace_inductance_h` | L = Z₀/v_phase × length (Wheeler microstrip inductance) | parasitic | high | **verified** |
 | EQ-092 | `distributed_pdn_impedance_sweep` | Z_IC = Z_local \|\| (Z_reg + Z_trace) (distributed PDN impedance) | impedance | high | **verified** |
+| EQ-105 | `estimate_inductor_h_field` | H = (m · sin θ) / (4π · r³), with m = N · I · A (magnetic moment) | unknown | medium | **verified** |
 
 ## emc_rules.py
 
@@ -105,6 +113,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-094 | `estimate_switching_emissions` | V_n = V_peak × 2/(nπ) × sin(nπD) (trapezoidal harmonic envelope) | emc_radiation | critical | **verified** |
 | EQ-095 | `check_switching_node_area` | A_track = Σ(width_mm × length_mm) (switching node copper area) | emc_radiation | medium | **verified** |
 | EQ-096 | `check_pdn_distributed` | I_reflected = P_downstream / V_upstream (reflected transient current) | impedance | medium | **verified** |
+| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **verified** |
 
 ## extract_parasitics.py
 
@@ -123,6 +132,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-066 | `estimate_cap_esl` | ESL estimate from package size (empirical table) | unknown | medium | **verified** |
 | EQ-067 | `estimate_cap_esr` | ESR estimate from package size + capacitance (empirical) | unknown | medium | **verified** |
 | EQ-068 | `parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **verified** |
+| EQ-107 | `snap_to_e_series` | Log-decade snapping — normalize v into [1, 10) via | unknown | medium | **verified** |
 
 ## signal_detectors.py
 
