@@ -84,7 +84,8 @@ def discover_tests(dirs, tier_filter=None):
         if not test_dir.exists():
             continue
         default_tier = "online" if d == "integration" else "unit"
-        for f in sorted(test_dir.glob("test_*.py")):
+        # rglob so subdirectories like tests/datasheets/ are discovered too.
+        for f in sorted(test_dir.rglob("test_*.py")):
             if tier_filter and tier_filter != "all":
                 # Read TIER from file
                 tier = default_tier
