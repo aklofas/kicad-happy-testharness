@@ -8,6 +8,7 @@ overridden to simulate staleness).
 """
 import hashlib
 import json
+from collections.abc import Callable
 from pathlib import Path
 from typing import Optional
 
@@ -27,6 +28,7 @@ def write_cache_with_pdf(
     pdf_sha_override: Optional[str] = None,
     write_pdf: bool = True,
     fixture_template: str = "lm2596-adj.example.json",
+    mutate: Optional[Callable[[dict], None]] = None,
 ) -> tuple[Path, Path]:
     """Build cache_dir + PDF + cache JSON under tmp_path.
 
@@ -59,6 +61,12 @@ def write_cache_with_pdf(
     fixture["source"]["mpn"] = mpn
     fixture["source"]["sha256"] = f"sha256:{cached_sha}"
     fixture["source"]["local_path"] = f"{mpn}.pdf"
+
+    # Caller hook — runs after source-field defaults, before write. Used by
+    # the A3.3 liar fixtures in fixtures/liars.py to inject wrong values or
+    # confidence labels into regulator.reference_voltage etc.
+    if mutate is not None:
+        mutate(fixture)
 
     # sanitize_mpn convention: [A-Za-z0-9_-] kept, else → _
     from datasheet_lookup import sanitize_mpn
