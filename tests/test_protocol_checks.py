@@ -252,52 +252,61 @@ def test_uart_rs232_charge_pump_caps():
 # ===========================================================================
 
 def test_usb_vbus_capacitance_warning():
-    """USB vbus_capacitance warning fires when total < 1uF."""
+    """USB vbus_capacitance warning fires when total < 1uF.
+
+    Post-KH-229 schema: status is a plain string in checks; numeric detail
+    lives in conn["vbus_capacitance_detail"].
+    """
     def check(data):
         uc = data.get("usb_compliance", {})
         for conn in uc.get("connectors", []):
-            checks = conn.get("checks", {})
-            vc = checks.get("vbus_capacitance")
-            if isinstance(vc, dict) and vc.get("status") == "warning":
+            if conn.get("checks", {}).get("vbus_capacitance") == "warning":
                 return True
         return False
 
     data, path = _find_output_with("schematic", check, max_scan=8000)
     if _skip_if_none(data, "USB vbus_capacitance warning"):
         return
-    uc = data["usb_compliance"]
-    for conn in uc["connectors"]:
-        vc = conn["checks"].get("vbus_capacitance")
-        if isinstance(vc, dict) and vc.get("status") == "warning":
-            assert vc["total_uf"] < 1.0, \
-                f"warning should fire when < 1uF, got {vc['total_uf']}"
-            assert "recommended_min_uf" in vc
-            assert vc["recommended_min_uf"] == 1.0
-            assert "detail" in vc
-            break
+    for conn in data["usb_compliance"]["connectors"]:
+        if conn.get("checks", {}).get("vbus_capacitance") != "warning":
+            continue
+        detail = conn.get("vbus_capacitance_detail")
+        assert isinstance(detail, dict), \
+            f"vbus_capacitance_detail must be a dict on warning, got {type(detail).__name__}"
+        assert detail["total_uf"] < 1.0, \
+            f"warning should fire when < 1uF, got {detail['total_uf']}"
+        assert detail.get("recommended_min_uf") == 1.0, \
+            f"recommended_min_uf should be 1.0, got {detail.get('recommended_min_uf')}"
+        assert isinstance(detail.get("detail"), str), \
+            "detail string explaining the warning must be present"
+        break
 
 
 def test_usb_vbus_capacitance_pass():
-    """USB vbus_capacitance passes when total >= 1uF."""
+    """USB vbus_capacitance passes when total >= 1uF.
+
+    Post-KH-229 schema: status is a plain string in checks; numeric detail
+    lives in conn["vbus_capacitance_detail"].
+    """
     def check(data):
         uc = data.get("usb_compliance", {})
         for conn in uc.get("connectors", []):
-            checks = conn.get("checks", {})
-            vc = checks.get("vbus_capacitance")
-            if isinstance(vc, dict) and vc.get("status") == "pass":
+            if conn.get("checks", {}).get("vbus_capacitance") == "pass":
                 return True
         return False
 
     data, path = _find_output_with("schematic", check, max_scan=8000)
     if _skip_if_none(data, "USB vbus_capacitance pass"):
         return
-    uc = data["usb_compliance"]
-    for conn in uc["connectors"]:
-        vc = conn["checks"].get("vbus_capacitance")
-        if isinstance(vc, dict) and vc.get("status") == "pass":
-            assert vc["total_uf"] >= 1.0, \
-                f"pass should require >= 1uF, got {vc['total_uf']}"
-            break
+    for conn in data["usb_compliance"]["connectors"]:
+        if conn.get("checks", {}).get("vbus_capacitance") != "pass":
+            continue
+        detail = conn.get("vbus_capacitance_detail")
+        assert isinstance(detail, dict), \
+            f"vbus_capacitance_detail must be a dict on pass, got {type(detail).__name__}"
+        assert detail["total_uf"] >= 1.0, \
+            f"pass should require >= 1uF, got {detail['total_uf']}"
+        break
 
 
 # ===========================================================================
