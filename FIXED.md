@@ -11,6 +11,43 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-19 — TH-036 (TH-035 stray dirs recurred after registry cleanup)
+
+### TH-036 (LOW): 15 stray project dirs recreated by re-seed using stale registry entries
+
+- **Where fixed:** `reference/` tree (15 dirs deleted). No code changes — the loader
+  guard from TH-035 (`regression/checks.py:339-350`) was already correctly skipping
+  them with WARNING messages, so this was data cleanup only.
+- **Symptom:** Every `regression/run_checks.py` invocation emitted 15 lines of
+  `WARNING: skipping stray project dir without baselines/...` to stderr. Pattern
+  identical to TH-035 (assertions/ exists but no baselines/, with doubled-suffix
+  project names like `hardware_ubertooth-one_ubertooth-one`).
+- **Root cause:** The TH-035 fix (commit `042245497ea`) only corrected the 2 SparkFun
+  XRP Controller entries in `bugfix_registry.json` — it left 19 other entries with
+  doubled-suffix project paths (KH-015, 045, 051, 085, 092, 094, 095, 102, 127, 147,
+  152, 154, 165, 167, 183, 184). The next re-seed at `59285c3de15` ("Re-seed after
+  KH-320/321/322") ran `generate_bugfix_assertions.py --apply` against those stale
+  entries and recreated 15 stray dirs. Commit `05057265eca` later fixed the registry
+  (0 doubled entries remain) but never deleted the dirs the prior re-seed had spawned.
+- **Fix:** Deleted the 15 stray dirs. Each had at most 2 bugfix assertion files, all
+  fully redundant with the sibling real-project dir's content. Verified file-by-file
+  before deletion (only `pms67/HadesFCS/Hardware_Hades_Hades/.../Gerber_bugfix.json`
+  differed from its sibling — by a single missing `evidence_source` line; sibling is
+  the newer superset).
+- **Why TH-035's loader guard wasn't enough:** the guard prevents the strays from
+  *breaking* anything (run_checks skips them safely), but doesn't prevent them from
+  being re-created or alert anyone to clean them up. Long-term prevention is to
+  ensure `bugfix_registry.json` never carries doubled-suffix project names — already
+  achieved at `05057265eca`. A defense-in-depth step would be `generate_bugfix_
+  assertions.py` validating its target paths against `discover_projects()` before
+  writing, but that's premature given the registry is the single source of truth.
+- **Verification:**
+  - Stray scan after delete: `0 remaining` (was 15)
+  - smoke regression: `33,705/33,705 passed` (unchanged)
+  - run_checks stderr: clean (was 15 WARNING lines per invocation)
+
+---
+
 ## 2026-04-18 — KH-323 (pin_coverage_warnings undocumented in --schema)
 
 ### KH-323 (LOW): `pin_coverage_warnings` emitted by schematic analyzer but missing from `--schema`
