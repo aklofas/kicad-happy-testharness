@@ -1,0 +1,71 @@
+mpn: LP2985-3.3
+manufacturer: Texas Instruments
+pdf_sha256: 16a7d95751dcfb945179bfb9b3a3d0ac2136596d25b38e11444c965a61ff0e07
+pdf_filename: LP2985-16a7d957.pdf
+pdf_revision: SLVS522P (February 2022)
+pdf_selection_notes: "Family datasheet covers LP2985-1.8/2.5/2.8/2.9/3.0/3.1/3.3/5.0/10. Cover page names LP2985 (not variant-specific). Non-A grade (1.5% tolerance) is the standard-grade LP2985-3.3 per cover page. LP2985-16a7d957 and LP2985A-cf4bb03b appear to be the same revision P document."
+authored_at: 2026-04-20
+authored_by: "harness-subagent-blind-read"
+partial_reason: null
+
+fields:
+  - path: base.absolute_max.VIN
+    expected: {max: 16, unit: "V"}
+    page: 4
+    condition: "Continuous input voltage range"
+    notes: "Absolute max VIN"
+    tolerance_pct: 5
+
+  - path: base.absolute_max.TJ
+    expected: {max: 150, unit: "°C"}
+    page: 4
+    condition: "Operating virtual junction temperature"
+    tolerance_pct: 5
+
+  - path: base.esd.HBM
+    expected: {typ: 2000, unit: "V"}
+    page: 4
+    condition: "Human body model (HBM), per ANSI/ESDA/JEDEC JS-001, all pins"
+    tolerance_pct: 5
+
+  - path: base.thermal.theta_ja
+    expected: {typ: 205.4, unit: "°C/W"}
+    page: 4
+    condition: "DBV 5 PINS, junction-to-ambient thermal resistance"
+    tolerance_pct: 10
+
+  - path: base.package.name
+    expected_enum: ["SOT-23-5"]
+    page: 1
+    notes: "DBV (SOT-23) package, 5 pins, 2.90 mm x 1.60 mm body"
+
+  - path: base.package.pin_count
+    expected: {typ: 5}
+    page: 3
+    notes: "DBV (SOT-23) package top view shows 5 pins"
+
+  - path: regulator.vin_range
+    expected: {min: 2.2, max: 16, unit: "V"}
+    page: 4
+    condition: "Recommended operating conditions, supply input voltage"
+    notes: "Min VIN footnote: greater of 2.5 V or VOUT(max) + dropout(max)"
+    tolerance_pct: 5
+
+  - path: regulator.iout_max
+    expected: {max: 0.15, unit: "A"}
+    page: 4
+    condition: "Recommended operating output current, 150 mA"
+    tolerance_pct: 5
+
+  - path: regulator.dropout
+    expected: {typ: 0.28, max: 0.35, unit: "V"}
+    page: 5
+    condition: "IL = 150 mA, TJ = 25°C (VIN - VOUT dropout voltage)"
+    notes: "Dropout values are common across all LP2985 voltage variants"
+    tolerance_pct: 10
+
+  - path: base.recommended_operating.TJ
+    expected: {min: -40, max: 125, unit: "°C"}
+    page: 4
+    condition: "Virtual junction temperature, recommended operating"
+    tolerance_pct: 5
