@@ -301,6 +301,103 @@ def test_divergence_en_v_il_min_detector_degrades_gracefully_when_none():
 
 
 # ===========================================================================
+# Convergence tests — 6 fields × 7 MPNs per §6.3 of joint plan
+# ===========================================================================
+#
+# Asserts byte/value equality between v1.4 cache → compat wrapper → v1.3
+# dict for fields that have direct equivalents on both schemas. Failure
+# means Track 2.5's _derive_regulator_features_v14 has drifted from the
+# v1.3 contract.
+#
+# Note: vout_pin reflects what _derive_regulator_features_v14 returns —
+# the first pin matching OUT → VOUT → VOUT+ in the pinout. For RT7272
+# this is pin 7 (named "OUT", the switch node), not a true power output.
+# For TPS62160 this is also pin 7 (named "OUT"), not pin 8 (named "VOUT"),
+# because OUT is checked first in the fallback chain.
+# That's the wrapper's documented behavior; semantic refinement is out of
+# scope for A4 (would belong in Track 2.5 or v1.5).
+#
+# Plan called for pytest.mark.parametrize over ALL_BUILDERS; harness uses
+# standalone def test_*() with __main__ runner. Each convergence test is
+# therefore one function looping over ALL_BUILDERS with per-MPN assertion
+# messages, preserving the per-MPN diagnostic on failure without spawning
+# 7 separately-named test functions.
+
+# (topology, has_pg, en_pin, pg_pin, vin_pin, vout_pin)
+CONVERGENCE_EXPECTED = {
+    "LM2596-ADJ":      ("buck",       False, "5",  None, "1",  "2"),
+    "AP2112K-3.3":     ("ldo",        False, "3",  None, "1",  "5"),
+    "RT7272":          ("buck",       True,  "3",  "4",  "2",  "7"),
+    "TPS62160":        ("buck",       True,  "4",  "1",  "3",  "7"),
+    "TPS61023":        ("boost",      False, "4",  None, "6",  "5"),
+    # LTC3114 buck_boost: rejected by v1.3 topology gate; falls through to
+    # v1.3 cache (or returns None when no v1.3 fallback). Topology-gate
+    # behavior is tested in test_a3_compat_path.py via T10.
+    "LTC3114":         (None, None, None, None, None, None),
+    # STM32F103C8T6: no regulator → wrapper returns None entirely.
+    "STM32F103C8T6":   (None, None, None, None, None, None),
+}
+
+
+def _run_convergence(field_index: int, field_name: str):
+    """Helper: loop over ALL_BUILDERS asserting CONVERGENCE_EXPECTED[mpn][field_index]."""
+    from datasheet_features import get_regulator_features
+
+    for builder in ALL_BUILDERS:
+        mutate, mpn = builder()
+        expected = CONVERGENCE_EXPECTED[mpn][field_index]
+        with tempfile.TemporaryDirectory() as tmp:
+            cache_dir, _ = write_cache_with_pdf(Path(tmp), mpn=mpn, mutate=mutate)
+            result = get_regulator_features(mpn, extract_dir=cache_dir)
+
+        if CONVERGENCE_EXPECTED[mpn][0] is None:
+            # Non-regulator or topology-gate-filtered → wrapper returns None entirely.
+            assert result is None, (
+                f"{mpn}: non-regulator or topology-gate-filtered MPN should return None, "
+                f"got {result!r}")
+        else:
+            assert result is not None, f"{mpn}: regulator MPN should return a dict"
+            actual = result[field_name]
+            if isinstance(expected, bool):
+                # bool: use `is` for identity (True/False, not just truthiness)
+                assert actual is expected, (
+                    f"{mpn}: {field_name} should be {expected!r}, got {actual!r}")
+            else:
+                assert actual == expected, (
+                    f"{mpn}: {field_name} should be {expected!r}, got {actual!r}")
+
+
+def test_convergence_topology_matches_v13_dict():
+    """v1.4 regulator.topology → v1.3 dict 'topology' byte-equal across 7 MPNs."""
+    _run_convergence(0, "topology")
+
+
+def test_convergence_has_pg_matches_v13_dict():
+    """v1.4 regulator.power_good_pin not None → v1.3 dict 'has_pg' boolean across 7 MPNs."""
+    _run_convergence(1, "has_pg")
+
+
+def test_convergence_en_pin_matches_v13_dict():
+    """v1.4 regulator.enable_pin → v1.3 dict 'en_pin' string-equal across 7 MPNs."""
+    _run_convergence(2, "en_pin")
+
+
+def test_convergence_pg_pin_matches_v13_dict():
+    """v1.4 regulator.power_good_pin → v1.3 dict 'pg_pin' string-equal across 7 MPNs."""
+    _run_convergence(3, "pg_pin")
+
+
+def test_convergence_vin_pin_matches_v13_dict():
+    """v1.4 base.pinout VIN-name lookup → v1.3 dict 'vin_pin' string-equal across 7 MPNs."""
+    _run_convergence(4, "vin_pin")
+
+
+def test_convergence_vout_pin_matches_v13_dict_with_fallback():
+    """v1.4 base.pinout OUT/VOUT/VOUT+ fallback → v1.3 dict 'vout_pin' across 7 MPNs."""
+    _run_convergence(5, "vout_pin")
+
+
+# ===========================================================================
 # __main__ runner — harness convention
 # ===========================================================================
 
