@@ -1,0 +1,152 @@
+{
+  "mpn": "MCP6004",
+  "manufacturer": "Microchip Technology Inc.",
+  "pdf_sha256": "118ef9c38ace141ea567937bb9e060a457d896dfcec32665fc2045ba3156110f",
+  "pdf_filename": "MCP6004T_I_ST_MCP6004T_E_ST-118ef9c3.pdf",
+  "pdf_revision": "DS21733J",
+  "pdf_selection_notes": "Family PDF covers MCP6001/1R/1U/2/4. MCP6004 is the 14-pin quad variant; T-I (industrial, -40/+85C) and T-E (extended, -40/+125C) share electrical characteristics per page 3. Using industrial (I-grade) TA range as safer default.",
+  "authored_at": "2026-04-20",
+  "authored_by": "harness-subagent-blind-read",
+  "partial_reason": null,
+  "fields": [
+    {
+      "path": "base.absolute_max.VDD_max",
+      "expected": {
+        "max": 7.0,
+        "unit": "V"
+      },
+      "page": 3,
+      "notes": "Absolute Maximum Ratings: VDD - VSS = 7.0V",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.storage_temperature_max",
+      "expected": {
+        "max": 150,
+        "unit": "°C"
+      },
+      "page": 3,
+      "notes": "Storage Temperature: -65°C to +150°C",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.junction_temperature_max",
+      "expected": {
+        "max": 150,
+        "unit": "°C"
+      },
+      "page": 3,
+      "notes": "Maximum Junction Temperature (TJ)",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.recommended_operating.VDD",
+      "expected": {
+        "min": 1.8,
+        "max": 6.0,
+        "unit": "V"
+      },
+      "page": 3,
+      "notes": "Supply Voltage VDD from DC Electrical Specifications table",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.recommended_operating.TA",
+      "expected": {
+        "min": -40,
+        "max": 85,
+        "unit": "°C"
+      },
+      "page": 4,
+      "condition": "Industrial (I-grade) Temperature Range; T-I suffix",
+      "notes": "MCP6004T-I/ST uses industrial range. Extended (T-E) variant is -40 to +125°C.",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.recommended_operating.IDD",
+      "expected": {
+        "min": 5e-05,
+        "typ": 0.0001,
+        "max": 0.00017,
+        "unit": "A"
+      },
+      "page": 3,
+      "condition": "IO = 0, VDD = 5.5V, VCM = 5V; per amplifier",
+      "notes": "Quiescent Current per Amplifier IQ: 50/100/170 µA min/typ/max",
+      "tolerance_pct": 20
+    },
+    {
+      "path": "base.recommended_operating.VOS",
+      "expected": {
+        "min": -0.0045,
+        "max": 0.0045,
+        "unit": "V"
+      },
+      "page": 3,
+      "condition": "VCM = VSS; TA = +25°C; date codes Nov 2007 and later",
+      "notes": "Input Offset Voltage VOS: -4.5 to +4.5 mV",
+      "tolerance_pct": 20
+    },
+    {
+      "path": "base.recommended_operating.IB",
+      "expected": {
+        "typ": 1e-12,
+        "unit": "A"
+      },
+      "page": 3,
+      "condition": "TA = +25°C",
+      "notes": "Input Bias Current IB typical ±1.0 pA at room temp; 19 pA @ 85°C, 1100 pA @ 125°C",
+      "tolerance_pct": 20
+    },
+    {
+      "path": "base.recommended_operating.GBW",
+      "expected": {
+        "typ": 1000000,
+        "unit": "Hz"
+      },
+      "page": 4,
+      "condition": "VDD = 1.8 to 5.5V; TA = +25°C",
+      "notes": "Gain Bandwidth Product GBWP = 1.0 MHz typical",
+      "tolerance_pct": 20
+    },
+    {
+      "path": "base.thermal.theta_ja",
+      "expected": {
+        "typ": 100,
+        "unit": "°C/W"
+      },
+      "page": 4,
+      "condition": "14L-TSSOP package (ST suffix = TSSOP)",
+      "notes": "Thermal Resistance theta_JA for 14L-TSSOP; MCP6004T-I/ST and T-E/ST are TSSOP-14.",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.esd.HBM",
+      "expected": {
+        "min": 4000,
+        "unit": "V"
+      },
+      "page": 3,
+      "notes": "ESD Protection On All Pins (HBM; MM): >= 4 kV; 200V",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.package.pin_count",
+      "expected": {
+        "typ": 14
+      },
+      "page": 1,
+      "notes": "MCP6004 is quad opamp: PDIP-14, SOIC-14, TSSOP-14"
+    },
+    {
+      "path": "base.package.name",
+      "expected_enum": [
+        "PDIP-14",
+        "SOIC-14",
+        "TSSOP-14"
+      ],
+      "page": 1,
+      "notes": "MCP6004 available in PDIP, SOIC, TSSOP (all 14-pin). ST suffix = TSSOP per part ordering."
+    }
+  ]
+}

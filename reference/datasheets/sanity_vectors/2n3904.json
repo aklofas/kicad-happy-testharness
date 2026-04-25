@@ -1,0 +1,115 @@
+{
+  "mpn": "2N3904",
+  "manufacturer": "Micro Commercial Components (MCC)",
+  "pdf_sha256": "3b6da354d781d431be4bc62e545f3d895cca72c2a1d6bc84753d0484ec6b5f2a",
+  "pdf_filename": "2N3904-3b6da354.pdf",
+  "pdf_revision": "Revision E, 2013/01/01",
+  "pdf_selection_notes": "2N3904 is a generic industry-standard NPN BJT produced by many vendors (ON Semi, Fairchild/Onsemi, MCC, Semtech). Selected MCC Rev E (2013) over Semtech Rev 02 (2016) because MCC sheet provides the complete parameter set directly (absolute max, full hFE table, VCE(sat), fT, thermal resistance theta_JA, package) on pages 1, whereas Semtech sheet is a 2N3903/2N3904 combined sheet with fewer unique specs. MCC also explicitly publishes theta_JA and the TO-92 package dimensions.",
+  "authored_at": "2026-04-20",
+  "authored_by": "harness-subagent-blind-read",
+  "partial_reason": null,
+  "fields": [
+    {
+      "path": "base.absolute_max.VCEO",
+      "expected": {
+        "max": 40,
+        "unit": "V"
+      },
+      "page": 1,
+      "condition": "IC=1.0mAdc, IB=0",
+      "notes": "V(BR)CEO Collector-Emitter Breakdown Voltage",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.VCBO",
+      "expected": {
+        "max": 60,
+        "unit": "V"
+      },
+      "page": 1,
+      "condition": "IC=10uAdc, IE=0",
+      "notes": "V(BR)CBO Collector-Base Breakdown Voltage",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.VEBO",
+      "expected": {
+        "max": 6.0,
+        "unit": "V"
+      },
+      "page": 1,
+      "condition": "IE=10uAdc, IC=0",
+      "notes": "V(BR)EBO Emitter-Base Breakdown Voltage",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.IC_continuous",
+      "expected": {
+        "max": 0.2,
+        "unit": "A"
+      },
+      "page": 1,
+      "notes": "Features list: 200mA Ic; 200 mA converted to 0.2 A",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.power_dissipation",
+      "expected": {
+        "max": 0.625,
+        "unit": "W"
+      },
+      "page": 1,
+      "notes": "Features list: Capable of 625mW of Power Dissipation; 625 mW converted to 0.625 W",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.electrical.hFE_min",
+      "expected": {
+        "min": 100
+      },
+      "page": 1,
+      "condition": "IC=10mAdc, VCE=1.0Vdc",
+      "notes": "DC Current Gain at IC=10mA; min 100, max 300 per table",
+      "tolerance_pct": 20
+    },
+    {
+      "path": "base.electrical.VCE_sat",
+      "expected": {
+        "max": 0.2,
+        "unit": "V"
+      },
+      "page": 1,
+      "condition": "IC=10mAdc, IB=1.0mAdc",
+      "notes": "Collector-Emitter Saturation Voltage at IC=10mA",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.electrical.fT",
+      "expected": {
+        "min": 250000000,
+        "unit": "Hz"
+      },
+      "page": 1,
+      "condition": "IC=10mAdc, VCE=20Vdc, f=100MHz",
+      "notes": "Current Gain-Bandwidth Product; table lists 250 MHz min (MCC sheet does not differentiate 2N3903/2N3904 here and publishes 250 MHz)",
+      "tolerance_pct": 20
+    },
+    {
+      "path": "base.thermal.theta_ja",
+      "expected": {
+        "max": 200,
+        "unit": "K/W"
+      },
+      "page": 1,
+      "notes": "Thermal Resistance, Junction-to-Ambient, 200 °C/W (equivalent to 200 K/W)",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.package.name",
+      "expected_enum": [
+        "TO-92"
+      ],
+      "page": 1
+    }
+  ]
+}

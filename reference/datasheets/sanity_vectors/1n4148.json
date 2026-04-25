@@ -1,0 +1,125 @@
+{
+  "mpn": "1N4148",
+  "manufacturer": "Vishay Semiconductors",
+  "pdf_sha256": "aefe85400a427ed886a4e1c88205ceabb9f9b38044b29c6acee4bb00146a44b7",
+  "pdf_filename": "1N4148_VISHAY_canonical.pdf",
+  "pdf_revision": "Rev. 1.6, 07-Nov-2024",
+  "pdf_selection_notes": "Vishay canonical 1N4148 datasheet; covers only through-hole DO-35 variant (no SMD variants in this PDF).",
+  "authored_at": "2026-04-20",
+  "authored_by": "harness-subagent-blind-read",
+  "partial_reason": null,
+  "fields": [
+    {
+      "path": "base.package.name",
+      "expected_enum": [
+        "DO-35"
+      ],
+      "page": 1,
+      "notes": "Case: DO-35 (DO-204AH)"
+    },
+    {
+      "path": "base.package.pin_count",
+      "expected": {
+        "typ": 2
+      },
+      "page": 1,
+      "notes": "Single diode, 2 leads"
+    },
+    {
+      "path": "base.absolute_max.VR",
+      "expected": {
+        "max": 100,
+        "unit": "V"
+      },
+      "page": 1,
+      "notes": "Repetitive peak reverse voltage VRRM",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.IF_avg",
+      "expected": {
+        "max": 0.15,
+        "unit": "A"
+      },
+      "page": 1,
+      "condition": "VR = 0",
+      "notes": "Average forward current IF(AV) = 150 mA converted to A",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.IF_peak",
+      "expected": {
+        "max": 2.0,
+        "unit": "A"
+      },
+      "page": 1,
+      "condition": "tp = 1 us",
+      "notes": "Peak forward surge current IFSM = 2 A",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.power_dissipation",
+      "expected": {
+        "max": 0.5,
+        "unit": "W"
+      },
+      "page": 1,
+      "condition": "l = 4 mm, TL <= 25 C",
+      "notes": "Ptot 500 mW converted to W (DO-35)",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.TJ_max",
+      "expected": {
+        "max": 175,
+        "unit": "°C"
+      },
+      "page": 1,
+      "notes": "Junction temperature Tj",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.thermal.theta_ja",
+      "expected": {
+        "typ": 350,
+        "unit": "K/W"
+      },
+      "page": 1,
+      "condition": "l = 4 mm, TL = constant",
+      "notes": "RthJA thermal resistance junction to ambient air",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "base.electrical.VF",
+      "expected": {
+        "max": 1.0,
+        "unit": "V"
+      },
+      "page": 2,
+      "condition": "IF=10mA (0.01A), Tamb=25°C",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "base.electrical.IR",
+      "expected": {
+        "max": 2.5e-08,
+        "unit": "A"
+      },
+      "page": 2,
+      "condition": "VR=20V, Tamb=25°C",
+      "notes": "25 nA converted to A",
+      "tolerance_pct": 15
+    },
+    {
+      "path": "base.electrical.trr",
+      "expected": {
+        "max": 4e-09,
+        "unit": "s"
+      },
+      "page": 2,
+      "condition": "IF=10mA, VR=6V, iR=0.1*IR, RL=100Ω",
+      "notes": "4 ns converted to s",
+      "tolerance_pct": 15
+    }
+  ]
+}

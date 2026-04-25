@@ -1,0 +1,124 @@
+{
+  "mpn": "LM2596-ADJ",
+  "manufacturer": "Texas Instruments",
+  "pdf_sha256": "a3ecb47736422dc1579c85ba229d85ef70be3da706a0524beb9c85753073ce26",
+  "pdf_filename": "LM2596-a3ecb477.pdf",
+  "pdf_revision": "SNVS124G",
+  "pdf_selection_notes": "Multiple TI-direct Rev-G PDFs (all SNVS124G) with same revision but different SHA — same content, different mirror copies. Selected LM2596-a3ecb477.pdf; alternative LM2596-149ee322.pdf is equivalent. Cover page is a family datasheet (LM2596-ADJ / -5.0 / -3.3 / -12); per-field notes mark ADJ-variant-only values where applicable.",
+  "authored_at": "2026-04-20",
+  "authored_by": "harness-subagent-blind-read",
+  "partial_reason": null,
+  "fields": [
+    {
+      "path": "base.absolute_max.VIN_max",
+      "expected": {
+        "max": 45,
+        "unit": "V"
+      },
+      "page": 5,
+      "condition": "Maximum supply voltage (VIN), over operating free-air temperature range",
+      "notes": "From Absolute Maximum Ratings table; family-wide spec",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.absolute_max.TJ_max",
+      "expected": {
+        "max": 150,
+        "unit": "°C"
+      },
+      "page": 5,
+      "condition": "Maximum junction temperature",
+      "notes": "From Absolute Maximum Ratings table; family-wide spec",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.recommended_operating.VIN",
+      "expected": {
+        "min": 4.5,
+        "max": 40,
+        "unit": "V"
+      },
+      "page": 5,
+      "condition": "Supply voltage, Operating Conditions",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.recommended_operating.TA",
+      "expected": {
+        "min": -40,
+        "max": 125,
+        "unit": "°C"
+      },
+      "page": 5,
+      "condition": "Temperature, Operating Conditions",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.esd.HBM",
+      "expected": {
+        "typ": 2000,
+        "unit": "V"
+      },
+      "page": 5,
+      "condition": "Human-body model (HBM), per ANSI/ESDA/JEDEC JS-001; ±2000 V",
+      "notes": "Reported as ±2000 V in ESD Ratings table",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "base.thermal.theta_jc",
+      "expected": {
+        "typ": 2,
+        "unit": "°C/W"
+      },
+      "page": 5,
+      "condition": "RθJC(top), Junction-to-case (top) thermal resistance, both TO-220 and TO-263",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "base.thermal.theta_ja",
+      "expected": {
+        "typ": 50,
+        "unit": "°C/W"
+      },
+      "page": 5,
+      "condition": "RθJA for TO-220 (NDZ) package mounted vertically on 4-layer JEDEC board, 1 in² 1-oz copper",
+      "notes": "Thermal Information table; TO-220 value; TO-263 varies with copper area (20-50 °C/W)",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "base.package.pin_count",
+      "expected": {
+        "typ": 5
+      },
+      "page": 4,
+      "condition": "5-Pin TO-220 NDH Package and 5-Pin TO-263 KTT Package",
+      "notes": "From Pin Configuration and Functions, Figure 6-1 and 6-2"
+    },
+    {
+      "path": "regulator.reference_voltage",
+      "expected": {
+        "min": 1.193,
+        "typ": 1.23,
+        "max": 1.267,
+        "unit": "V"
+      },
+      "page": 6,
+      "condition": "VFB Feedback voltage, 4.5 V ≤ VIN ≤ 40 V, 0.2 A ≤ ILOAD ≤ 3 A, VOUT programmed for 3 V, TJ = 25°C",
+      "notes": "ADJ variant only (Electrical Characteristics – Adjustable Voltage Version)",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "regulator.switching_freq",
+      "expected": {
+        "min": 127000,
+        "typ": 150000,
+        "max": 173000,
+        "unit": "Hz"
+      },
+      "page": 7,
+      "condition": "fO Oscillator frequency, TJ = 25°C (Electrical Characteristics – All Output Voltage Versions)",
+      "notes": "Converted from kHz; family-wide spec",
+      "tolerance_pct": 20
+    }
+  ]
+}
