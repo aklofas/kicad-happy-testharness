@@ -224,6 +224,93 @@ def test_compat_wrapper_matches_direct_derivation_on_v14_cache():
 
 
 # ===========================================================================
+# Topology-gate behavior — §8 of joint plan, A3.2 addition
+# ===========================================================================
+#
+# get_regulator_features() gates the v1.4 derivation on
+# `topology in {"buck", "ldo", "boost"}` (datasheet_features.py:244).
+# Topologies outside that set (notably "buck_boost") are rejected; the
+# wrapper falls through to the v1.3 cache, or returns None if no v1.3
+# fallback exists.
+
+
+def test_topology_gate_boost_passes_through_v14_cache():
+    """TPS61023 (boost) — v1.4 topology in {buck, ldo, boost} passthrough gate."""
+    from datasheet_features import get_regulator_features
+    from tests.datasheets.fixtures.canned import make_tps61023
+
+    mutate, mpn = make_tps61023()
+    with tempfile.TemporaryDirectory() as tmp:
+        cache_dir, _ = write_cache_with_pdf(Path(tmp), mpn=mpn, mutate=mutate)
+        result = get_regulator_features(mpn, extract_dir=cache_dir)
+
+    assert result is not None, "boost is in _REGULATOR_TOPOLOGIES → must passthrough"
+    assert result["topology"] == "boost"
+    assert result["en_pin"] == "4"
+
+
+def test_topology_gate_boost_dual_cache_v14_still_wins():
+    """TPS61023 — even with v1.3 cache present, v1.4 boost wins via gate passthrough."""
+    from datasheet_features import get_regulator_features
+    from tests.datasheets.fixtures.canned import make_tps61023
+
+    mutate, mpn = make_tps61023()
+    with tempfile.TemporaryDirectory() as tmp:
+        cache_dir, _ = write_cache_with_pdf(Path(tmp), mpn=mpn, mutate=mutate)
+        write_v13_cache(cache_dir, mpn=mpn, topology="buck",
+                        features={"has_soft_start": True})
+        result = get_regulator_features(mpn, extract_dir=cache_dir)
+
+    assert result is not None
+    assert result["topology"] == "boost", (
+        "v1.4 boost passthrough → result must come from v1.4 not v1.3 buck")
+    assert result["has_soft_start"] is None, (
+        "v1.4 wins → has_soft_start always-None even though v1.3 cache had True")
+
+
+def test_topology_gate_buck_boost_falls_through_to_v13():
+    """LTC3114 (buck_boost) — not in v1.3 _REGULATOR_TOPOLOGIES → fall through."""
+    from datasheet_features import get_regulator_features
+    from tests.datasheets.fixtures.canned import make_ltc3114
+
+    mutate, mpn = make_ltc3114()
+    with tempfile.TemporaryDirectory() as tmp:
+        # v1.4 cache only — no v1.3 fallback.
+        cache_dir, _ = write_cache_with_pdf(Path(tmp), mpn=mpn, mutate=mutate)
+        result = get_regulator_features(mpn, extract_dir=cache_dir)
+
+    # v1.4 produces buck_boost dict but the gate rejects it; no v1.3 cache
+    # exists; final result is None (the gate-fall-through-with-no-fallback case).
+    assert result is None, (
+        "buck_boost not in v1.3 enum → v1.4 dict rejected; no v1.3 fallback → None")
+
+
+def test_topology_gate_buck_boost_uses_v13_fallback_when_present():
+    """LTC3114 — v1.4 buck_boost rejected; v1.3 buck cache wins."""
+    from datasheet_features import get_regulator_features
+    from tests.datasheets.fixtures.canned import make_ltc3114
+
+    mutate, mpn = make_ltc3114()
+    with tempfile.TemporaryDirectory() as tmp:
+        cache_dir, _ = write_cache_with_pdf(Path(tmp), mpn=mpn, mutate=mutate)
+        # v1.3 cache claims topology=buck (a stand-in for "the legacy reading
+        # before LTC3114 had its own buck_boost category"). Realistic for
+        # mid-migration corpus state.
+        write_v13_cache(cache_dir, mpn=mpn, topology="buck",
+                        features={"has_soft_start": False},
+                        pins=[{"number": "1", "name": "VIN", "function": "VIN"},
+                              {"number": "2", "name": "EN", "function": "EN"},
+                              {"number": "5", "name": "VOUT", "function": "VOUT"}])
+        result = get_regulator_features(mpn, extract_dir=cache_dir)
+
+    assert result is not None, "v1.4 rejected; v1.3 fallback present → must return v1.3 dict"
+    assert result["topology"] == "buck", "topology comes from v1.3, not v1.4 buck_boost"
+    assert result["has_soft_start"] is False, (
+        "has_soft_start comes from v1.3 cache (False, not None) → "
+        "fall-through case loses the v1.4-always-None invariant")
+
+
+# ===========================================================================
 # __main__ runner — harness convention
 # ===========================================================================
 
