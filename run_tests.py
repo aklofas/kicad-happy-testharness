@@ -67,6 +67,9 @@ SMOKE_TESTS = [
     "tests/test_manufacturer_match.py",  # 11 tests — manufacturer prefix matching (DS-2)
     "tests/test_finding_schema.py",  # 26 tests — finding_schema.py contract (P13)
     "tests/test_downstream_tools.py",  # 12 tests — downstream tool smoke tests (P13)
+    "tests/datasheets/test_a3_lookup_path.py",       # 18 tests — A3.1 raw lookup() + best/trusted (v1.4)
+    "tests/datasheets/test_a3_trust_gates_deny.py",  # 16 tests — A3.3 synthetic-liar trust-gate denial
+    "tests/datasheets/test_a4_v13_on_v14_cache.py",  # 18 tests — A4 divergence + convergence
 ]
 
 
