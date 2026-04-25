@@ -71,6 +71,7 @@ SMOKE_TESTS = [
     "tests/datasheets/test_a3_trust_gates_deny.py",  # 16 tests — A3.3 synthetic-liar trust-gate denial
     "tests/datasheets/test_a4_v13_on_v14_cache.py",  # 18 tests — A4 divergence + convergence
     "tests/test_check_acceptance_gate.py",           # 22 tests — 4-check acceptance gate runner (A6)
+    "tests/test_extraction_differ.py",                # 36 tests — extraction differ framework (A5)
 ]
 
 
