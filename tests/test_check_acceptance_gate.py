@@ -311,41 +311,28 @@ def test_check_self_consistency_skipped_when_tool_missing():
     assert result.status is Status.SKIPPED
 
 
-def test_check_self_consistency_skipped_on_unrecognized_flag():
+def test_check_self_consistency_errors_on_missing_cache():
     from validate.check_acceptance_gate import check_self_consistency, Status
-    import validate.check_acceptance_gate as mod
 
-    def fake_run(cmd, **kwargs):
-        class R:
-            returncode = 2
-            stdout = ""
-            stderr = "error: unrecognized arguments: --self-consistency"
-        return R()
-
-    original = mod.subprocess.run
-    mod.subprocess.run = fake_run
-    try:
-        with tempfile.TemporaryDirectory() as tmp:
-            kh = Path(tmp) / "kh"
-            scripts_dir = kh / "skills" / "datasheets" / "scripts"
-            scripts_dir.mkdir(parents=True)
-            (scripts_dir / "datasheet_verify.py").write_text("#")
-            result = check_self_consistency(
-                mpn="LM2596-ADJ", extract_dir=Path(tmp), kicad_happy_dir=kh)
-    finally:
-        mod.subprocess.run = original
-
-    assert result.status is Status.SKIPPED
+    with tempfile.TemporaryDirectory() as tmp:
+        kh = Path(tmp) / "kh"
+        scripts_dir = kh / "skills" / "datasheets" / "scripts"
+        scripts_dir.mkdir(parents=True)
+        (scripts_dir / "datasheet_verify.py").write_text("#")
+        result = check_self_consistency(
+            mpn="LM2596-ADJ", extract_dir=Path(tmp), kicad_happy_dir=kh)
+    assert result.status is Status.ERROR
 
 
-def test_check_self_consistency_passes_zero_violations():
+def test_check_self_consistency_passes_on_exit_zero():
+    """datasheet_verify.py <cache> exits 0 → PASS."""
     from validate.check_acceptance_gate import check_self_consistency, Status
     import validate.check_acceptance_gate as mod
 
     def fake_run(cmd, **kwargs):
         class R:
             returncode = 0
-            stdout = json.dumps({"violations": []})
+            stdout = "OK: 0 issues"
             stderr = ""
         return R()
 
@@ -353,29 +340,29 @@ def test_check_self_consistency_passes_zero_violations():
     mod.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as tmp:
+            extract = Path(tmp)
+            (extract / "LM2596-ADJ.json").write_text("{}")
             kh = Path(tmp) / "kh"
             scripts_dir = kh / "skills" / "datasheets" / "scripts"
             scripts_dir.mkdir(parents=True)
             (scripts_dir / "datasheet_verify.py").write_text("#")
             result = check_self_consistency(
-                mpn="LM2596-ADJ", extract_dir=Path(tmp), kicad_happy_dir=kh)
+                mpn="LM2596-ADJ", extract_dir=extract, kicad_happy_dir=kh)
     finally:
         mod.subprocess.run = original
 
     assert result.status is Status.PASS
 
 
-def test_check_self_consistency_fails_on_violations():
+def test_check_self_consistency_fails_on_exit_nonzero():
+    """datasheet_verify.py <cache> exits nonzero → FAIL with stdout/stderr."""
     from validate.check_acceptance_gate import check_self_consistency, Status
     import validate.check_acceptance_gate as mod
 
     def fake_run(cmd, **kwargs):
         class R:
-            returncode = 0
-            stdout = json.dumps({"violations": [
-                {"path": "base.absolute_max.VIN_max",
-                 "message": "absolute_max < recommended_operating"},
-            ]})
+            returncode = 1
+            stdout = "ISSUE: absolute_max VIN_max (45) < recommended_operating VIN max (40)"
             stderr = ""
         return R()
 
@@ -383,17 +370,19 @@ def test_check_self_consistency_fails_on_violations():
     mod.subprocess.run = fake_run
     try:
         with tempfile.TemporaryDirectory() as tmp:
+            extract = Path(tmp)
+            (extract / "LM2596-ADJ.json").write_text("{}")
             kh = Path(tmp) / "kh"
             scripts_dir = kh / "skills" / "datasheets" / "scripts"
             scripts_dir.mkdir(parents=True)
             (scripts_dir / "datasheet_verify.py").write_text("#")
             result = check_self_consistency(
-                mpn="LM2596-ADJ", extract_dir=Path(tmp), kicad_happy_dir=kh)
+                mpn="LM2596-ADJ", extract_dir=extract, kicad_happy_dir=kh)
     finally:
         mod.subprocess.run = original
 
     assert result.status is Status.FAIL
-    assert len(result.details["violations"]) == 1
+    assert "ISSUE" in result.details["stdout"]
 
 
 def test_run_gate_aggregates_4_checks_into_pass():

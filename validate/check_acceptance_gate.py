@@ -340,12 +340,11 @@ def check_schema_validation(*, mpn: str, extract_dir: Path,
 
 def check_self_consistency(*, mpn: str, extract_dir: Path,
                             kicad_happy_dir: Path) -> CheckResult:
-    """Run main-repo's datasheet_verify.py --self-consistency on the merged cache.
+    """Run main-repo's datasheet_verify.py on the merged cache.
 
-    Phase 3a extends datasheet_verify.py with a v2-schema self-consistency
-    pass (power_domain refs resolve, absolute_max >= recommended, min <= max).
-    If the v1.3 version is what's on disk (--self-consistency unrecognized),
-    we report SKIPPED.
+    CLI shape (per main-repo's #50 handoff):
+        python3 datasheet_verify.py <extraction_path>
+    Exit 0 = no issues. Exit nonzero = issues found (text reported on stdout).
     """
     name = "Check 2 — datasheet_verify.py self-consistency"
     tool = (kicad_happy_dir / "skills" / "datasheets" / "scripts"
@@ -354,51 +353,36 @@ def check_self_consistency(*, mpn: str, extract_dir: Path,
         return CheckResult(
             name=name, status=Status.SKIPPED,
             summary="datasheet_verify.py not found in main-repo",
-            details={"reason": f"tool not found at {tool} — Phase 3a deliverable"},
+            details={"reason": f"tool not found at {tool}"},
+        )
+
+    sanitized = _sanitize_mpn(mpn)
+    cache_path = extract_dir / f"{sanitized}.json"
+    if not cache_path.exists():
+        return CheckResult(
+            name=name, status=Status.ERROR,
+            summary=f"cache file not found: {cache_path}",
+            details={"reason": str(cache_path)},
         )
 
     proc = subprocess.run(
-        ["python3", str(tool), "--mpn", mpn,
-         "--extract-dir", str(extract_dir), "--self-consistency", "--json"],
+        ["python3", str(tool), str(cache_path)],
         capture_output=True, text=True,
     )
 
-    # Detect "Phase 3a extension not yet shipped" via argparse error.
-    if proc.returncode == 2 and "unrecognized" in proc.stderr.lower():
+    if proc.returncode == 0:
         return CheckResult(
-            name=name, status=Status.SKIPPED,
-            summary="datasheet_verify.py lacks --self-consistency flag (Phase 3a deliverable)",
-            details={"reason": proc.stderr.strip(), "tool_path": str(tool)},
-        )
-
-    if proc.returncode != 0 and not proc.stdout.strip():
-        return CheckResult(
-            name=name, status=Status.ERROR,
-            summary=f"datasheet_verify.py exited {proc.returncode} with no output",
-            details={"reason": proc.stderr.strip() or "no stderr",
-                     "tool_path": str(tool)},
-        )
-
-    try:
-        payload = json.loads(proc.stdout)
-    except json.JSONDecodeError as e:
-        return CheckResult(
-            name=name, status=Status.ERROR,
-            summary="datasheet_verify.py produced unparseable JSON",
-            details={"reason": str(e), "stdout": proc.stdout[:500]},
-        )
-
-    violations = payload.get("violations", [])
-    if violations:
-        return CheckResult(
-            name=name, status=Status.FAIL,
-            summary=f"{len(violations)} self-consistency violation(s)",
-            details={"violations": violations, "tool_path": str(tool)},
+            name=name, status=Status.PASS,
+            summary="0 issues",
+            details={"tool_path": str(tool),
+                     "stdout": proc.stdout.strip()[:200]},
         )
     return CheckResult(
-        name=name, status=Status.PASS,
-        summary="0 violations",
-        details={"violations": [], "tool_path": str(tool)},
+        name=name, status=Status.FAIL,
+        summary=f"datasheet_verify.py exit {proc.returncode}",
+        details={"tool_path": str(tool),
+                 "stdout": proc.stdout.strip(),
+                 "stderr": proc.stderr.strip()},
     )
 
 
