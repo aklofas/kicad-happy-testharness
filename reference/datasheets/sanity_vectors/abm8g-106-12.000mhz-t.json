@@ -1,0 +1,124 @@
+{
+  "mpn": "ABM8G-106-12.000MHZ-T",
+  "manufacturer": "Abracon",
+  "pdf_sha256": "03360289d6bd5f5d91a0c2a3e5d6dfe8c74516a2e286937d9e1c058df4c4cee7",
+  "pdf_filename": "ABM8G_106_12-03360289.pdf",
+  "pdf_revision": "REVISED: 03.19.2018",
+  "pdf_selection_notes": "Single-page Abracon datasheet, REVISED 03.19.2018. All fields below sourced from page 1 'KEY ELECTRICAL SPECIFICATIONS' table and the package dimensions in the header (3.2 x 2.5 x 1.0 mm). The MPN is a member of a small family (suffix -T = 1kpcs/reel, -T3 = 3kpcs/reel, blank = bulk); all variants share the same electrical specs — only packaging differs. crystal_type is omitted because the PDF only labels the part as 'CERAMIC GLASS SEALED SMD CRYSTAL' without an explicit AT-cut / SC-cut / tuning-fork enum value; motional_capacitance and motional_inductance are omitted because they are not on this datasheet (only shunt capacitance C0 and ESR R1 are reported).",
+  "authored_at": "2026-04-27",
+  "authored_by": "harness-direct-read",
+  "partial_reason": null,
+  "fields": [
+    {
+      "path": "crystal.frequency",
+      "expected": {
+        "typ": 12000000,
+        "unit": "Hz"
+      },
+      "page": 1,
+      "condition": "Frequency Range, fundamental-mode operation",
+      "notes": "Reported as 12.000 MHz in the Typical column; converted from MHz to Hz",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "crystal.frequency_tolerance",
+      "expected": {
+        "min": -20,
+        "max": 20,
+        "unit": "ppm"
+      },
+      "page": 1,
+      "condition": "Frequency Tolerance @ +25°C",
+      "notes": "Reported as ±20 ppm in the table (-20/+20 columns)",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "crystal.frequency_stability",
+      "expected": {
+        "min": -30,
+        "max": 30,
+        "unit": "ppm"
+      },
+      "page": 1,
+      "condition": "Frequency Stability over the Operating Temperature range (-40°C to +85°C), referenced to +25°C",
+      "notes": "Reported as ±30 ppm in the table (-30/+30 columns)",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "crystal.load_capacitance",
+      "expected": {
+        "typ": 1e-11,
+        "unit": "F"
+      },
+      "page": 1,
+      "condition": "Load capacitance (CL), typical",
+      "notes": "Reported as 10 pF in the Typical column; converted from pF to F (10e-12)",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "crystal.esr_max",
+      "expected": {
+        "max": 120,
+        "unit": "Ω"
+      },
+      "page": 1,
+      "condition": "Equivalent series resistance (R1), maximum",
+      "notes": "Reported as 120 Ω in the Maximum column",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "crystal.drive_level_max",
+      "expected": {
+        "max": 0.0001,
+        "unit": "W"
+      },
+      "page": 1,
+      "condition": "Drive Level, maximum",
+      "notes": "Reported as 100 µW in the Maximum column; converted from µW to W (100e-6 = 1e-4)",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "crystal.operating_temp_range",
+      "expected": {
+        "min": -40,
+        "max": 85,
+        "unit": "°C"
+      },
+      "page": 1,
+      "condition": "Operating Temperature Range",
+      "notes": "Reported as -40 / +85 °C in the Min / Max columns",
+      "tolerance_pct": 5
+    },
+    {
+      "path": "crystal.mode",
+      "expected_enum": [
+        "Fundamental"
+      ],
+      "page": 1,
+      "condition": "Operation Mode, Typical column",
+      "notes": "Reported as 'Fundamental' (single value) in the table"
+    },
+    {
+      "path": "crystal.aging",
+      "expected": {
+        "min": -3,
+        "max": 3,
+        "unit": "ppm"
+      },
+      "page": 1,
+      "condition": "Aging @ 25°C ±3°C, first year",
+      "notes": "Reported as ±3 ppm in the Maximum column with 'First year' in Notes; treated as symmetric ±3 ppm/year envelope",
+      "tolerance_pct": 10
+    },
+    {
+      "path": "crystal.package.length_mm",
+      "expected": {
+        "typ": 3.2
+      },
+      "page": 1,
+      "condition": "Package dimensions header on cover page: 3.2 x 2.5 x 1.0 mm SMD ceramic glass sealed",
+      "notes": "Largest plan-view dimension (length); width = 2.5 mm and height = 1.0 mm are also present on cover page but not included in this 10-field set. crystal.package schema TBD — Phase 3b authoring; path may need adjustment to match main-repo's chosen package shape.",
+      "tolerance_pct": 5
+    }
+  ]
+}
