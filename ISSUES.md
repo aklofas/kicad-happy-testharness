@@ -34,9 +34,9 @@ Last updated: 2026-04-19
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-324**. Next TH number: **TH-037**.
+maximum. Next KH number: **KH-325**. Next TH number: **TH-037**.
 
-> 0 open issues.
+> 1 open issue.
 
 ---
 
@@ -51,7 +51,33 @@ maximum. Next KH number: **KH-324**. Next TH number: **TH-037**.
 
 ## kicad-happy Analyzer Issues
 
-_No open analyzer issues._
+### KH-324 — `detection_schema.SCHEMAS` missing 7 detector keys (LOW)
+
+**Symptom:** harness `tests/test_detection_schema.py::test_schema_completeness_zebra_x`
+fails with 7 detector keys present in analyzer `findings[]` output but absent from
+`SCHEMAS` (in `kicad-happy/skills/kicad/scripts/detection_schema.py`):
+
+```
+audit_rail_sources, validate_pullups, audit_datasheet_coverage,
+integrated_ldos, validate_voltage_levels, decoupling, audit_sourcing_gate
+```
+
+**Repro:**
+```
+KICAD_HAPPY_DIR=/home/aklofas/Projects/kicad-happy \
+  /home/aklofas/Projects/kicad-happy/.venv/bin/python -m pytest \
+  tests/test_detection_schema.py::test_schema_completeness_zebra_x -v
+```
+
+**Triage:** either (a) `SCHEMAS` needs entries for these detectors, or (b) the
+harness exemption list (`tests/test_detection_schema.py:323-328` for informational
+sections like `design_observations`, `power_path`) needs extending. Test author
+(harness) believes (a) is correct for detectors that emit identity/derived fields,
+(b) for purely informational sections — main-repo to determine which apply.
+
+**Severity LOW:** unit-test gap only; analyzer output unaffected, gate runner
+unaffected, corpus assertions unaffected. Surfaced during v1.4-dev gate-runner
+verification 2026-04-27.
 
 ---
 

@@ -19,11 +19,37 @@ from __future__ import annotations
 
 import enum
 import json
+import os
 import re
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional
+
+
+def _resolve_python() -> str:
+    """Python interpreter for subprocess CLIs (Checks 1 + 2).
+
+    Order: KICAD_HAPPY_PYTHON env var → kicad-happy `.venv/bin/python` if
+    present → sys.executable. The kicad-happy venv ships jsonschema +
+    referencing per requirements-dev.txt; falling back to it lets the gate
+    work out-of-the-box when run from a system python that lacks those deps.
+    """
+    env = os.environ.get("KICAD_HAPPY_PYTHON")
+    if env:
+        return env
+    venv_python = (_resolve_kicad_happy_dir() / ".venv" / "bin" / "python")
+    if venv_python.exists():
+        return str(venv_python)
+    return sys.executable
+
+
+def _resolve_kicad_happy_dir() -> Path:
+    env = os.environ.get("KICAD_HAPPY_DIR")
+    if env:
+        return Path(env)
+    return Path(__file__).resolve().parent.parent.parent / "kicad-happy"
 
 
 class Status(enum.Enum):
@@ -278,7 +304,8 @@ _TASK_IDS = ("scout", "base", "pinout", "regulator")
 
 
 def check_schema_validation(*, mpn: str, extract_dir: Path,
-                             kicad_happy_dir: Path) -> CheckResult:
+                             kicad_happy_dir: Path,
+                             python: Optional[str] = None) -> CheckResult:
     """Validate each <mpn>.<task_id>.result.json against its Track 2.1 schema.
 
     Subprocesses main-repo's validate_extraction_result.py (Phase 3a deliverable).
@@ -295,6 +322,7 @@ def check_schema_validation(*, mpn: str, extract_dir: Path,
             details={"reason": f"tool not found at {tool} — Phase 3a deliverable"},
         )
 
+    py = python or _resolve_python()
     sanitized = _sanitize_mpn(mpn)
     task_results = []
     any_fail = False
@@ -308,7 +336,7 @@ def check_schema_validation(*, mpn: str, extract_dir: Path,
             any_fail = True
             continue
         proc = subprocess.run(
-            ["python3", str(tool), "--result-file", str(result_file),
+            [py, str(tool), "--result-file", str(result_file),
              "--task-type", task_id],
             capture_output=True, text=True,
         )
@@ -339,7 +367,8 @@ def check_schema_validation(*, mpn: str, extract_dir: Path,
 # ===========================================================================
 
 def check_self_consistency(*, mpn: str, extract_dir: Path,
-                            kicad_happy_dir: Path) -> CheckResult:
+                            kicad_happy_dir: Path,
+                            python: Optional[str] = None) -> CheckResult:
     """Run main-repo's datasheet_verify.py on the merged cache.
 
     CLI shape (per main-repo's #50 handoff):
@@ -365,8 +394,9 @@ def check_self_consistency(*, mpn: str, extract_dir: Path,
             details={"reason": str(cache_path)},
         )
 
+    py = python or _resolve_python()
     proc = subprocess.run(
-        ["python3", str(tool), str(cache_path)],
+        [py, str(tool), str(cache_path)],
         capture_output=True, text=True,
     )
 
@@ -392,19 +422,21 @@ def check_self_consistency(*, mpn: str, extract_dir: Path,
 
 def run_gate(*, mpn: str, extract_dir: Path, sanity_vector_path: Path,
              kicad_happy_dir: Path,
-             quality_threshold: int = 60) -> list[CheckResult]:
+             quality_threshold: int = 60,
+             python: Optional[str] = None) -> list[CheckResult]:
     """Run all 4 checks and return their results in spec order."""
+    py = python or _resolve_python()
     sanitized = _sanitize_mpn(mpn)
     cache_path = extract_dir / f"{sanitized}.json"
 
     return [
         check_schema_validation(
             mpn=mpn, extract_dir=extract_dir,
-            kicad_happy_dir=kicad_happy_dir,
+            kicad_happy_dir=kicad_happy_dir, python=py,
         ),
         check_self_consistency(
             mpn=mpn, extract_dir=extract_dir,
-            kicad_happy_dir=kicad_happy_dir,
+            kicad_happy_dir=kicad_happy_dir, python=py,
         ),
         check_quality_score(cache_path=cache_path, threshold=quality_threshold),
         check_sanity_vector_diff(
@@ -460,14 +492,6 @@ def compute_exit_code(results: list[CheckResult]) -> int:
     return 0
 
 
-def _resolve_kicad_happy_dir() -> Path:
-    import os
-    env = os.environ.get("KICAD_HAPPY_DIR")
-    if env:
-        return Path(env)
-    return Path(__file__).resolve().parent.parent.parent / "kicad-happy"
-
-
 def main(argv: Optional[list[str]] = None) -> int:
     import argparse
     parser = argparse.ArgumentParser(
@@ -483,6 +507,11 @@ def main(argv: Optional[list[str]] = None) -> int:
                         help="Directory containing harness-owned <mpn>.json files.")
     parser.add_argument("--threshold", type=int, default=60,
                         help="Minimum quality score for Check 3 (default 60).")
+    parser.add_argument("--python", default=None,
+                        help="Python interpreter for Check 1 + Check 2 "
+                             "subprocess calls. Overrides KICAD_HAPPY_PYTHON. "
+                             "Default: env var, then kicad-happy/.venv/bin/"
+                             "python, then sys.executable.")
     parser.add_argument("--json", action="store_true",
                         help="Emit JSON report instead of text.")
     args = parser.parse_args(argv)
@@ -495,6 +524,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         sanity_vector_path=sanity_vector_path,
         kicad_happy_dir=kicad_happy_dir,
         quality_threshold=args.threshold,
+        python=args.python,
     )
 
     if args.json:
