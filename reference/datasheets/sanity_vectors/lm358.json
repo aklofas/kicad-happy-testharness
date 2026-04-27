@@ -41,12 +41,13 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.absolute_max.TJ",
+      "path": "base.absolute_max.TJ_max",
       "expected": {
         "max": 150,
         "unit": "°C"
       },
       "page": 2,
+      "notes": "Opamp schema uses TJ_max (a max-only field), distinct from TOPR (operating range)",
       "tolerance_pct": 5
     },
     {
@@ -93,23 +94,26 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.recommended_operating.TA",
+      "path": "base.absolute_max.TOPR",
       "expected": {
         "min": 0,
         "max": 70,
         "unit": "°C"
       },
       "page": 4,
-      "notes": "Specification temperature range for LM358 per Electrical Characteristics header",
+      "notes": "Specification temperature range for LM358 per Electrical Characteristics header; opamp schema places TOPR in absolute_max (not recommended_operating)",
       "tolerance_pct": 5
     },
     {
-      "path": "base.package.name",
+      "path": "base.package.code",
       "expected_enum": [
+        "SOIC-8",
         "8-DIP",
-        "8-SOP"
+        "8-SOP",
+        "SOP-8"
       ],
-      "page": 1
+      "page": 1,
+      "notes": "PDF cover page lists '8-DIP' and '8-SOP'; extraction may canonicalize 8-SOP → SOIC-8 (industry-standard form). Enum accepts any of the four equivalent forms."
     },
     {
       "path": "base.package.pin_count",

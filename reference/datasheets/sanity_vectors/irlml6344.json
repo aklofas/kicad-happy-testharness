@@ -30,13 +30,14 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.absolute_max.ID_continuous",
+      "path": "base.absolute_max.ID",
       "expected": {
         "max": 5.0,
         "unit": "A"
       },
       "page": 1,
       "condition": "TA=25°C, VGS=10V",
+      "notes": "Continuous drain current; schema field ID",
       "tolerance_pct": 5
     },
     {
@@ -50,7 +51,7 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.electrical.VGS_th",
+      "path": "transistor.vgs_th",
       "expected": {
         "min": 0.5,
         "typ": 0.8,
@@ -59,10 +60,11 @@
       },
       "page": 2,
       "condition": "VDS=VGS, ID=10µA → 1e-5 A",
+      "notes": "Transistor-category field; v1.0 schemas have no base.electrical block",
       "tolerance_pct": 5
     },
     {
-      "path": "base.electrical.RDS_on",
+      "path": "transistor.rds_on",
       "expected": {
         "typ": 0.022,
         "max": 0.029,
@@ -70,17 +72,17 @@
       },
       "page": 2,
       "condition": "VGS=4.5V, ID=5.0A",
-      "notes": "22/29 mΩ converted to Ω",
+      "notes": "Transistor-category field; 22/29 mΩ converted to Ω",
       "tolerance_pct": 20
     },
     {
       "path": "base.thermal.theta_ja",
       "expected": {
         "max": 100,
-        "unit": "K/W"
+        "unit": "°C/W"
       },
       "page": 1,
-      "notes": "Junction-to-Ambient, steady state",
+      "notes": "Junction-to-Ambient, steady state. Datasheet uses K/W; converted to °C/W (numerically identical, schema convention)",
       "tolerance_pct": 5
     },
     {
@@ -102,12 +104,12 @@
       "page": 1
     },
     {
-      "path": "base.package.name",
+      "path": "base.package.code",
       "expected_enum": [
         "SOT-23"
       ],
       "page": 1,
-      "notes": "Micro3 (SOT-23)"
+      "notes": "Micro3 (SOT-23); schema field is package.code"
     }
   ]
 }

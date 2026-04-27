@@ -10,17 +10,18 @@
   "partial_reason": null,
   "fields": [
     {
-      "path": "base.absolute_max.VDD_max",
+      "path": "base.absolute_max.VDD",
       "expected": {
         "max": 4.0,
         "unit": "V"
       },
       "page": 37,
       "condition": "Table 6 Voltage characteristics: external main supply voltage (VDD/VSS), incl. VDDA",
+      "notes": "Schema convention is bare VDD (max in SpecValue), not VDD_max",
       "tolerance_pct": 5
     },
     {
-      "path": "base.absolute_max.T_STG",
+      "path": "base.absolute_max.TSTG",
       "expected": {
         "min": -65,
         "max": 150,
@@ -31,13 +32,14 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.absolute_max.T_J_max",
+      "path": "base.absolute_max.TJ",
       "expected": {
         "max": 150,
         "unit": "°C"
       },
       "page": 37,
       "condition": "Table 8 Thermal characteristics: maximum junction temperature",
+      "notes": "Schema convention is bare TJ (max in SpecValue), not TJ_max",
       "tolerance_pct": 5
     },
     {
@@ -52,18 +54,17 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.recommended_operating.f_HCLK_max",
+      "path": "mcu.core_speed_max",
       "expected": {
-        "max": 72000000,
-        "unit": "Hz"
+        "typ": 72000000
       },
       "page": 38,
       "condition": "Table 9 General operating conditions: internal AHB clock frequency",
-      "notes": "C8 variant: 72 MHz max for STM32F103x8/xB",
+      "notes": "C8 variant: 72 MHz max for STM32F103x8/xB. MCU schema stores core_speed_max as a bare scalar int (no SpecValue wrapper, no unit). Validator's _spec_value_pick returns the scalar when key='typ'.",
       "tolerance_pct": 5
     },
     {
-      "path": "base.recommended_operating.T_A",
+      "path": "base.recommended_operating.TA",
       "expected": {
         "min": -40,
         "max": 85,
@@ -116,13 +117,13 @@
       "notes": "C8 variant: LQFP-48, 48-pin package"
     },
     {
-      "path": "base.package.name",
+      "path": "base.package.code",
       "expected_enum": [
         "LQFP-48"
       ],
       "page": 101,
       "condition": "Section 6.8 LQFP48 package information: 48-pin, 7x7 mm low-profile quad flat package",
-      "notes": "C8T6 package code T (LQFP) + pin count C (48) = LQFP-48"
+      "notes": "C8T6 package code T (LQFP) + pin count C (48) = LQFP-48; schema field is package.code"
     }
   ]
 }

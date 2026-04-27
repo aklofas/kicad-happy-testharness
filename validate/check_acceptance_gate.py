@@ -73,8 +73,13 @@ class CheckResult:
 
 
 def _sanitize_mpn(mpn: str) -> str:
-    """Mirror datasheet_lookup.sanitize_mpn — [A-Za-z0-9_-] kept, else _."""
-    return re.sub(r'[^A-Za-z0-9_\-]', '_', mpn)
+    """Filename-safe MPN. [A-Za-z0-9_-.] kept, else _.
+
+    Dots preserved per Phase 3b convention (cache files keep frequency
+    notation like ABM8G-106-12.000MHZ-T.json) — main-repo's
+    datasheet_verify.py flag-mode sanitizer was updated for this.
+    """
+    return re.sub(r'[^A-Za-z0-9_\-.]', '_', mpn.strip())
 
 
 # ===========================================================================
