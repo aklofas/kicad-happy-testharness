@@ -20,13 +20,14 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.absolute_max.IF_avg",
+      "path": "base.absolute_max.IF_AV",
       "expected": {
         "max": 5,
         "unit": "A"
       },
       "page": 2,
       "condition": "At Rated VR, TC=105°C",
+      "notes": "Datasheet symbol IF(AV); schema field IF_AV",
       "tolerance_pct": 5
     },
     {
@@ -51,24 +52,24 @@
       "tolerance_pct": 5
     },
     {
-      "path": "base.absolute_max.TJ_max",
+      "path": "base.absolute_max.TJ",
       "expected": {
         "max": 150,
         "unit": "°C"
       },
       "page": 2,
-      "notes": "Operating Junction Temperature range -65 to +150 °C",
+      "notes": "Operating Junction Temperature range -65 to +150 °C; schema convention is bare TJ with min/max in SpecValue (vector reports max only)",
       "tolerance_pct": 5
     },
     {
-      "path": "base.thermal.theta_jc",
+      "path": "base.thermal.theta_jl",
       "expected": {
         "typ": 12,
         "unit": "°C/W"
       },
       "page": 2,
       "condition": "Junction-to-Lead, surface mounted on minimum recommended pad",
-      "notes": "Datasheet labels as RthetaJL (Junction-to-Lead); mapped to theta_jc per vocab",
+      "notes": "Datasheet publishes RθJL (Junction-to-Lead) and RθJA only; no RθJC for this part",
       "tolerance_pct": 10
     },
     {
@@ -82,33 +83,34 @@
       "tolerance_pct": 10
     },
     {
-      "path": "base.electrical.VF",
+      "path": "diode.vf",
       "expected": {
         "max": 0.5,
         "unit": "V"
       },
       "page": 2,
       "condition": "iF=5.0 A, TC=25°C; Pulse Test PW<=300us, DC<=2.0%",
+      "notes": "Diode-category field; schema lifts forward-voltage as diode.vf (multi-SpecValue list — this vector indexes the IF=5A/TC=25°C row)",
       "tolerance_pct": 5
     },
     {
-      "path": "base.electrical.IR",
+      "path": "diode.ir",
       "expected": {
-        "max": 0.015,
+        "max": 0.0003,
         "unit": "A"
       },
       "page": 2,
-      "condition": "Rated dc Voltage, TC=100°C",
-      "notes": "15 mA at elevated temperature; wide temp-dependent spread",
-      "tolerance_pct": 50
+      "condition": "Rated dc Voltage (VR=40V), TC=25°C",
+      "notes": "Diode-category field, multi-SpecValue list. Vector matches index-0 row (TC=25°C, IR_max = 0.3 mA). Datasheet also publishes 15 mA at TC=100°C but that's the second row; harness validator's _spec_value_pick returns index-0.",
+      "tolerance_pct": 10
     },
     {
-      "path": "base.package.name",
+      "path": "base.package.code",
       "expected_enum": [
-        "SMC",
-        "CASE 403AC"
+        "SMC"
       ],
-      "page": 1
+      "page": 1,
+      "notes": "Datasheet header lists 'SMC' as the package code and 'CASE 403AC' as the JEDEC case-spec callout — schema field is the code only"
     },
     {
       "path": "base.package.pin_count",

@@ -300,7 +300,18 @@ def check_sanity_vector_diff(*, cache_path: Path,
 # Check 1 — Schema validation per task result (Phase 3a tool subprocess)
 # ===========================================================================
 
-_TASK_IDS = ("scout", "base", "pinout", "regulator")
+_REQUIRED_TASK_IDS = ("scout", "base", "pinout")
+
+
+def _discover_task_ids(extract_dir: Path, sanitized_mpn: str) -> list[str]:
+    """Find all `<mpn>.<task_id>.result.json` files and return task IDs.
+
+    Phase 3b ships 5 new categories (diode, transistor, opamp, mcu, crystal)
+    on top of regulator — the actual category emitted depends on the part.
+    Discover via filename glob so the gate doesn't need a hardcoded list.
+    """
+    pattern = f"{sanitized_mpn}.*.result.json"
+    return sorted(p.name.split(".")[-3] for p in extract_dir.glob(pattern))
 
 
 def check_schema_validation(*, mpn: str, extract_dir: Path,
@@ -324,9 +335,18 @@ def check_schema_validation(*, mpn: str, extract_dir: Path,
 
     py = python or _resolve_python()
     sanitized = _sanitize_mpn(mpn)
+    discovered = _discover_task_ids(extract_dir, sanitized)
+    missing_required = [t for t in _REQUIRED_TASK_IDS if t not in discovered]
+    if missing_required:
+        return CheckResult(
+            name=name, status=Status.FAIL,
+            summary=f"missing required task results: {missing_required}",
+            details={"discovered": discovered, "required": list(_REQUIRED_TASK_IDS)},
+        )
+
     task_results = []
     any_fail = False
-    for task_id in _TASK_IDS:
+    for task_id in discovered:
         result_file = extract_dir / f"{sanitized}.{task_id}.result.json"
         if not result_file.exists():
             task_results.append({
@@ -352,12 +372,12 @@ def check_schema_validation(*, mpn: str, extract_dir: Path,
         n_fail = sum(1 for t in task_results if not t["valid"])
         return CheckResult(
             name=name, status=Status.FAIL,
-            summary=f"{n_fail}/{len(_TASK_IDS)} task results failed validation",
-            details={"task_results": task_results},
+            summary=f"{n_fail}/{len(discovered)} task results failed validation",
+            details={"task_results": task_results, "discovered": discovered},
         )
     return CheckResult(
         name=name, status=Status.PASS,
-        summary=f"{len(_TASK_IDS)}/{len(_TASK_IDS)} task results valid",
+        summary=f"{len(discovered)}/{len(discovered)} task results valid",
         details={"task_results": task_results},
     )
 
