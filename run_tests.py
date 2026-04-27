@@ -72,6 +72,7 @@ SMOKE_TESTS = [
     "tests/datasheets/test_a4_v13_on_v14_cache.py",  # 18 tests — A4 divergence + convergence
     "tests/test_check_acceptance_gate.py",           # 22 tests — 4-check acceptance gate runner (A6)
     "tests/test_extraction_differ.py",                # 36 tests — extraction differ framework (A5)
+    "tests/datasheets/test_a7_meta_schema.py",        # 12 tests — A7 meta schema + mpn_slug helper
 ]
 
 
