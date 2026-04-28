@@ -79,6 +79,7 @@ SMOKE_TESTS = [
     "tests/datasheets/test_a7_known_divergences.py",  # 4 tests — known divergences seed (A7)
     "tests/datasheets/test_a7_run_extraction_checks.py",  # 10 tests — extraction diff checks (A7)
     "tests/test_b1_b2_finding_id_invariants.py",      # 10 tests — capability_mode_ref + finding_id (B1+B2)
+    "tests/test_b4_b7_layer2_schemas.py",             # 12 tests — design_context precedence + novel-findings schema (B4+B7)
 ]
 
 
