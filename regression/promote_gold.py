@@ -130,6 +130,17 @@ def _coerce_specvalue(v: Any) -> Optional[dict]:
     return None
 
 
+def _compare_enum_field(expected_enum: list, actual: Optional[dict]) -> Optional[str]:
+    """Compare an enum-style sanity-vector field. Mirrors _compare_enum in check_acceptance_gate.py."""
+    if actual is None:
+        return "path not found in cache"
+    candidates = [actual.get("name"), actual.get("code")]
+    for cand in candidates:
+        if cand in expected_enum:
+            return None
+    return f"enum_mismatch: expected one of {expected_enum!r}, got {actual!r}"
+
+
 def _compare_sanity_field(expected: dict, actual: Optional[dict],
                            tolerance_pct: float) -> Optional[str]:
     """Compare a single sanity-vector field against the actual cache value.
@@ -312,8 +323,13 @@ def _run_sanity_diff(mpn: str, cache: dict,
     divergences: list[dict] = []
     for fld in vector["fields"]:
         actual = _coerce_specvalue(_walk_path(cache, fld["path"]))
-        reason = _compare_sanity_field(fld["expected"], actual,
-                                        fld.get("tolerance_pct", 0))
+        if "expected_enum" in fld:
+            reason = _compare_enum_field(fld["expected_enum"], actual)
+        elif "expected" in fld:
+            reason = _compare_sanity_field(fld["expected"], actual,
+                                            fld.get("tolerance_pct", 0))
+        else:
+            reason = "field has neither 'expected' nor 'expected_enum'"
         if reason:
             divergences.append({"path": fld["path"], "reason": reason})
     return (len(divergences) == 0, divergences)
