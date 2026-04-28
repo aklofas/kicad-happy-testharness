@@ -319,6 +319,137 @@ def _run_sanity_diff(mpn: str, cache: dict,
     return (len(divergences) == 0, divergences)
 
 
+def _do_recurate_from(*, args, cache: dict, cache_path: Path) -> int:
+    """Execute the --re-curate-from sweep flow.
+
+    Pre-conditions:
+      - existing gold + meta exist at the slug dir
+      - cache's base schema major != prior gold's base schema major
+
+    Steps:
+      1. Validate pre-conditions (prior gold exists, majors differ)
+      2. Run gate (unless --no-gate) + sanity diff + cache schema validation
+      3. Show A5 differ output (cache vs old gold)
+      4. Confirm (or skip with --yes)
+      5. Rename existing gold_v<old>.json → gold_v<old>.json.archived in place
+      6. Write new gold_v<new>.json
+      7. Update meta.json with event='recurate_major_bump' + from_schema_version
+    """
+    gold_root = _resolve_gold_dir()
+    slug_dir = gold_root / mpn_slug(args.mpn)
+    prior_gold_path = slug_dir / f"gold_v{args.re_curate_from}.json"
+    prior_meta_path = slug_dir / "meta.json"
+
+    if not prior_gold_path.exists() or not prior_meta_path.exists():
+        print(f"ERROR: --re-curate-from {args.re_curate_from} but no prior gold "
+              f"at {prior_gold_path}", file=sys.stderr)
+        return 2
+
+    prior_meta = json.loads(prior_meta_path.read_text())
+    prior_base = prior_meta["schema_version_at_curation"]["base"]
+    new_base = cache["schema_version"]["base"]
+
+    try:
+        prior_major = int(prior_base.split(".")[0])
+        new_major = int(new_base.split(".")[0])
+    except (ValueError, IndexError):
+        print(f"ERROR: malformed schema version (prior {prior_base!r}, "
+              f"new {new_base!r})", file=sys.stderr)
+        return 2
+
+    if prior_major == new_major:
+        print(f"ERROR: --re-curate-from precondition fails — prior base {prior_base} "
+              f"and new base {new_base} shares major version {new_major}; "
+              f"normal promote handles this case", file=sys.stderr)
+        return 2
+
+    # Run gate (unless --no-gate) + sanity diff + cache schema validation
+    cache_dir = _resolve_cache_dir(args.cache_dir)
+    if not args.no_gate:
+        gate_pass, gate_summary = _run_a6_gate(args.mpn, cache_dir)
+        if not gate_pass:
+            print("ERROR: A6 gate did not pass 4/4. Promotion blocked.",
+                  file=sys.stderr)
+            print(gate_summary, file=sys.stderr)
+            return 2
+        print("[ok] A6 gate: 4/4 PASS")
+
+    sanity_dir = _resolve_sanity_dir()
+    sanity_pass, divergences = _run_sanity_diff(args.mpn, cache, sanity_dir)
+    if not sanity_pass:
+        print("ERROR: sanity-vector diff has divergences. Promotion blocked.",
+              file=sys.stderr)
+        for d in divergences:
+            print(f"  - {d.get('path', '<no path>')}: {d['reason']}",
+                  file=sys.stderr)
+        return 2
+    print("[ok] sanity-vector diff: all fields within tolerance")
+
+    kicad_happy_dir = _resolve_kicad_happy_dir()
+    schema_ok, schema_summary = _validate_cache_schema(cache, kicad_happy_dir)
+    if not schema_ok:
+        print(f"ERROR: cache fails extraction.schema.json: {schema_summary}",
+              file=sys.stderr)
+        return 2
+    print(f"[ok] cache schema validation: {schema_summary}")
+
+    # Show A5 differ output (best-effort; non-fatal if differ fails)
+    print(f"\n=== Re-curation diff: schema {prior_base} → {new_base} ===")
+    differ_cli = _HARNESS_ROOT / "regression" / "extraction_differ.py"
+    if differ_cli.exists():
+        diff_proc = subprocess.run(
+            [sys.executable, str(differ_cli),
+             "--gold", str(prior_gold_path),
+             "--candidate", str(cache_path)],
+            capture_output=True, text=True,
+        )
+        print(diff_proc.stdout)
+    else:
+        print(f"(A5 differ not found at {differ_cli}; skipping diff display)")
+
+    # Confirm (or skip with --yes)
+    if not args.yes:
+        ans = input(f"Re-curate from {prior_base} to {new_base}? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("Aborted.")
+            return 1
+
+    # Rename existing gold in place to .archived (no separate dir)
+    archived_path = slug_dir / f"gold_v{prior_base}.json.archived"
+    prior_gold_path.rename(archived_path)
+
+    # Write new gold
+    _write_gold(slug_dir, new_base, cache)
+
+    # Compute pdf_sha for meta
+    pdf_dir = _resolve_pdf_dir(args.pdf_dir)
+    local_path = cache["source"].get("local_path") or ""
+    pdf_filename = Path(local_path).name if local_path else ""
+    cache_pdf_sha = cache["source"]["sha256"].removeprefix("sha256:")
+    pdf_path = pdf_dir / pdf_filename if pdf_filename else None
+    if pdf_path is None or not pdf_path.exists():
+        pdf_sha = cache_pdf_sha
+    else:
+        pdf_sha = _compute_pdf_sha(pdf_path)
+
+    sanity_vector_path = sanity_dir / f"{mpn_slug(args.mpn)}.json"
+    sanity_field_count = len(json.loads(sanity_vector_path.read_text())["fields"])
+
+    meta = _build_meta(
+        mpn=args.mpn, cache=cache, pdf_filename=pdf_filename, pdf_sha=pdf_sha,
+        cache_path=cache_path, sanity_vector_path=sanity_vector_path,
+        sanity_pass=True, sanity_field_count=sanity_field_count,
+        gate_run_id=None,
+        gate_quality_score=cache["extraction"]["quality_score"],
+        event="recurate_major_bump", prior_meta=prior_meta,
+        from_schema_version=prior_meta["schema_version_at_curation"],
+    )
+    prior_meta_path.write_text(json.dumps(meta, indent=2, sort_keys=True))
+    print(f"[ok] re-curated to gold_v{new_base}.json "
+          f"(archived gold_v{prior_base}.json.archived)")
+    return 0
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         description="Promote a gate-passed extraction to v1.4 gold.",
@@ -335,12 +466,21 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--no-gate", action="store_true",
                         help="Skip A6 gate re-run (sanity-vector diff still runs)")
     parser.add_argument("--re-curate-from", default=None,
-                        help="Re-curation sweep mode; previous schema base version")
+                        help="Re-curation sweep mode (Q4): previous schema base "
+                             "version (e.g. '1.0' when promoting 2.0). Renames "
+                             "existing gold in-place to .archived, runs A5 differ "
+                             "against archived, prompts user, writes new gold.")
     args = parser.parse_args(argv)
 
     cache_dir = _resolve_cache_dir(args.cache_dir)
     cache_path = cache_dir / f"{args.mpn}.json"
     cache = _load_cache(cache_path)
+
+    # ─── Re-curate-from mode (Q4 main-repo addition; spec §5.1.1)
+    if args.re_curate_from:
+        return _do_recurate_from(
+            args=args, cache=cache, cache_path=cache_path,
+        )
 
     # ─── Gate re-run (belt-and-suspenders; skipped with --no-gate)
     if not args.no_gate:
