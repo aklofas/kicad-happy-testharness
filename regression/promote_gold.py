@@ -15,10 +15,13 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
@@ -166,6 +169,131 @@ def _compare_sanity_field(expected: dict, actual: Optional[dict],
     return None
 
 
+def _resolve_gold_dir() -> Path:
+    """Resolve gold root, with HARNESS_GOLD_DIR_OVERRIDE for tests."""
+    env = os.environ.get("HARNESS_GOLD_DIR_OVERRIDE")
+    if env:
+        return Path(env)
+    return _HARNESS_ROOT / "regression" / "reference_extractions"
+
+
+def _resolve_pdf_dir(arg: Optional[str]) -> Path:
+    """Resolve PDF directory from --pdf-dir or kicad-happy/datasheets/pdfs/."""
+    if arg:
+        return Path(arg)
+    return _resolve_kicad_happy_dir() / "datasheets" / "pdfs"
+
+
+def _validate_cache_schema(cache: dict, kicad_happy_dir: Path) -> tuple[bool, str]:
+    """Validate cache against extraction.schema.json.
+
+    Returns (ok, summary). Tolerates jsonschema absence (returns ok=True with
+    'skipping' message) and tolerates a missing schema file (same).
+    """
+    schema_path = (kicad_happy_dir / "skills" / "datasheets" / "schemas"
+                   / "extraction.schema.json")
+    if not schema_path.exists():
+        return True, "extraction.schema.json not found, skipping validation"
+    try:
+        from jsonschema import Draft202012Validator
+        from referencing import Registry, Resource
+    except ImportError as e:
+        return True, f"jsonschema not available, skipping ({e})"
+    try:
+        schema = json.loads(schema_path.read_text())
+        registry = Registry()
+        for sib in schema_path.parent.glob("*.schema.json"):
+            sib_schema = json.loads(sib.read_text())
+            sib_id = sib_schema.get("$id", sib.name)
+            registry = registry.with_resource(sib_id, Resource.from_contents(sib_schema))
+        validator = Draft202012Validator(schema, registry=registry)
+        errors = list(validator.iter_errors(cache))
+        if errors:
+            return False, "; ".join(str(e.message) for e in errors[:3])
+        return True, "ok"
+    except Exception as e:
+        return False, f"validation error: {e}"
+
+
+def _compute_pdf_sha(pdf_path: Path) -> str:
+    """Compute sha256 of a file in 64KB chunks."""
+    h = hashlib.sha256()
+    with open(pdf_path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _now_iso() -> str:
+    """Return current UTC time in ISO-8601 with Z suffix."""
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _archive_existing(slug_dir: Path, old_pdf_sha: str) -> None:
+    """Move existing gold_v*.json + meta.json into archived_pdf_sha_<old>/."""
+    archive = slug_dir / f"archived_pdf_sha_{old_pdf_sha}"
+    archive.mkdir(parents=True, exist_ok=True)
+    candidates = list(slug_dir.glob("gold_v*.json")) + [slug_dir / "meta.json"]
+    for src in candidates:
+        if src.exists() and src.is_file():
+            shutil.move(str(src), str(archive / src.name))
+
+
+def _write_gold(slug_dir: Path, base_version: str, cache: dict) -> Path:
+    """Write gold_v<base>.json (cache copy with sorted keys, pretty-printed)."""
+    slug_dir.mkdir(parents=True, exist_ok=True)
+    gold_path = slug_dir / f"gold_v{base_version}.json"
+    gold_path.write_text(json.dumps(cache, indent=2, sort_keys=True))
+    return gold_path
+
+
+def _build_meta(*, mpn: str, cache: dict, pdf_filename: str, pdf_sha: str,
+                cache_path: Path, sanity_vector_path: Path,
+                sanity_pass: bool, sanity_field_count: int,
+                gate_run_id: Optional[str], gate_quality_score: int,
+                event: str, prior_meta: Optional[dict] = None,
+                from_schema_version: Optional[dict] = None) -> dict:
+    """Build a meta.json dict from a cache + curation context.
+
+    Appends to prior_meta['history'] if provided; otherwise creates a fresh
+    history list with a single entry. The event field on the new history
+    entry is one of: initial / update / pdf_sha_change / recurate_major_bump.
+    """
+    schema_block = cache["schema_version"]
+    now = _now_iso()
+    history_entry: dict = {
+        "event": event,
+        "at": now,
+        "pdf_sha256": pdf_sha,
+        "schema_version": schema_block,
+        "gate_quality_score": gate_quality_score,
+    }
+    if from_schema_version is not None:
+        history_entry["from_schema_version"] = from_schema_version
+    if prior_meta:
+        history = list(prior_meta.get("history", [])) + [history_entry]
+    else:
+        history = [history_entry]
+    return {
+        "mpn": mpn,
+        "mpn_slug": mpn_slug(mpn),
+        "pdf_sha256": pdf_sha,
+        "pdf_filename": pdf_filename,
+        "schema_version_at_curation": schema_block,
+        "extractor_schema_version_at_curation": cache["extraction"]["extractor_schema_version"],
+        "curated_at": now,
+        "curated_from": {
+            "cache_path": str(cache_path),
+            "gate_run_id": gate_run_id,
+            "gate_quality_score": gate_quality_score,
+            "sanity_vector_path": str(sanity_vector_path),
+            "sanity_vector_pass": sanity_pass,
+            "sanity_vector_field_count": sanity_field_count,
+        },
+        "history": history,
+    }
+
+
 def _run_sanity_diff(mpn: str, cache: dict,
                       sanity_dir: Path) -> tuple[bool, list[dict]]:
     """Run sanity-vector diff for an MPN against its cached extraction.
@@ -236,8 +364,82 @@ def main(argv: Optional[list[str]] = None) -> int:
         return 2
     print("[ok] sanity-vector diff: all fields within tolerance")
 
-    # ─── Schema validation, write gold + meta — Task 2c
-    return 0  # placeholder until Task 2c lands (gate + sanity passed)
+    # ─── Cache schema validation
+    kicad_happy_dir = _resolve_kicad_happy_dir()
+    schema_ok, schema_summary = _validate_cache_schema(cache, kicad_happy_dir)
+    if not schema_ok:
+        print(f"ERROR: cache fails extraction.schema.json: {schema_summary}",
+              file=sys.stderr)
+        return 2
+    print(f"[ok] cache schema validation: {schema_summary}")
+
+    # ─── PDF SHA verification
+    pdf_dir = _resolve_pdf_dir(args.pdf_dir)
+    local_path = cache["source"].get("local_path") or ""
+    pdf_filename = Path(local_path).name if local_path else ""
+    cache_sha256_raw = cache["source"]["sha256"]  # "sha256:<hex64>"
+    cache_pdf_sha = cache_sha256_raw.removeprefix("sha256:")
+    pdf_path = pdf_dir / pdf_filename if pdf_filename else None
+    if pdf_path is None or not pdf_path.exists():
+        if pdf_path is not None:
+            print(f"WARNING: PDF not found at {pdf_path}; using cache sha256")
+        pdf_sha = cache_pdf_sha
+    else:
+        pdf_sha = _compute_pdf_sha(pdf_path)
+        if pdf_sha != cache_pdf_sha:
+            print(f"ERROR: PDF SHA mismatch — cache says "
+                  f"{cache_pdf_sha}, "
+                  f"PDF on disk has {pdf_sha}", file=sys.stderr)
+            return 2
+
+    # ─── Resolve gold dir + classify event
+    gold_root = _resolve_gold_dir()
+    slug_dir = gold_root / mpn_slug(args.mpn)
+    base_version = cache["schema_version"]["base"]
+    gold_path = slug_dir / f"gold_v{base_version}.json"
+
+    sanity_vector_path = sanity_dir / f"{mpn_slug(args.mpn)}.json"
+    sanity_field_count = len(json.loads(sanity_vector_path.read_text())["fields"])
+
+    prior_meta = None
+    event = "initial"
+    if (slug_dir / "meta.json").exists():
+        prior_meta = json.loads((slug_dir / "meta.json").read_text())
+        if prior_meta["pdf_sha256"] != pdf_sha:
+            event = "pdf_sha_change"
+            _archive_existing(slug_dir, prior_meta["pdf_sha256"])
+            prior_meta = None  # archived → next write starts fresh history
+        else:
+            event = "update"
+
+    # ─── Confirmation prompt
+    if not args.yes:
+        print(f"\nReady to write {gold_path} (event: {event})")
+        ans = input("Promote? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("Aborted.")
+            return 1
+
+    # ─── Write gold + meta
+    _write_gold(slug_dir, base_version, cache)
+    meta = _build_meta(
+        mpn=args.mpn, cache=cache, pdf_filename=pdf_filename, pdf_sha=pdf_sha,
+        cache_path=cache_path, sanity_vector_path=sanity_vector_path,
+        sanity_pass=True, sanity_field_count=sanity_field_count,
+        gate_run_id=None,
+        gate_quality_score=cache["extraction"]["quality_score"],
+        event=event, prior_meta=prior_meta,
+    )
+    (slug_dir / "meta.json").write_text(
+        json.dumps(meta, indent=2, sort_keys=True))
+    print(f"[ok] wrote {gold_path}")
+    print(f"[ok] wrote {slug_dir / 'meta.json'}")
+    try:
+        rel = slug_dir.relative_to(_HARNESS_ROOT)
+    except ValueError:
+        rel = slug_dir
+    print(f"\nNext: git add {rel}/")
+    return 0
 
 
 if __name__ == "__main__":
