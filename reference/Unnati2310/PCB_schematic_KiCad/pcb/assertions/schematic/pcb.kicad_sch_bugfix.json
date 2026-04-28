@@ -1,0 +1,36 @@
+{
+  "file_pattern": "pcb.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-208-01",
+      "description": "KH-208: CB1/Device:CircuitBreaker_1P classified as 'switch' (pre-fix: 'capacitor' via CB\u2192C first-char fallback)",
+      "issue": "KH-208",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "CB1",
+        "assert_field": "category",
+        "assert_value": "switch"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-208-02",
+      "description": "KH-208: CB2/Device:CircuitBreaker_1P classified as 'switch' via lib_id override",
+      "issue": "KH-208",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "CB2",
+        "assert_field": "category",
+        "assert_value": "switch"
+      }
+    }
+  ]
+}
