@@ -1573,6 +1573,46 @@
     "assertions": []
   },
   {
+    "issue": "KH-073",
+    "type": "detection_fix",
+    "summary": "Power domain detection fails on KiCad 5 legacy schematics (cascade from KH-016 lib-pin offsets)",
+    "assertions": [
+      {
+        "repo": "OLIMEX/ESP32-C3-DevKit-Lipo",
+        "project": "HARDWARE_ESP32-C3-DevKit-Lipo_Rev_B",
+        "source_file": "ESP32-C3-DevKit-Lipo_Rev_B.sch",
+        "check": {
+          "path": "design_analysis.power_domains.ic_power_rails",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-073: ic_power_rails populated for ≥1 IC on legacy .sch (pre-fix: empty dict)"
+      },
+      {
+        "repo": "OLIMEX/ESP32-DevKit-LiPo",
+        "project": "HARDWARE_ESP32-DevKit-LiPo-Rev.C",
+        "source_file": "ESP32-DevKit-Lipo_Rev_C.sch",
+        "check": {
+          "path": "design_analysis.power_domains.ic_power_rails",
+          "op": "min_count",
+          "value": 2
+        },
+        "description": "KH-073: ic_power_rails populated for ≥2 ICs (U1, U2) on legacy ESP32-DevKit-LiPo Rev C"
+      },
+      {
+        "repo": "OLIMEX/ESP32-DevKit-LiPo",
+        "project": "HARDWARE_ESP32-DevKit-LiPo-Rev.C",
+        "source_file": "ESP32-DevKit-Lipo_Rev_C.sch",
+        "check": {
+          "path": "design_analysis.power_domains.ic_power_rails.U1.power_rails",
+          "op": "min_count",
+          "value": 2
+        },
+        "description": "KH-073: U1 power_rails has ≥2 entries on legacy .sch (pin-net mapping reaches IC pins)"
+      }
+    ]
+  },
+  {
     "issue": "KH-053",
     "type": "parser_fix",
     "summary": "KiCad 9 value parsing — space-separated SI prefix dropped (e.g. '18 pF' → 18 instead of 1.8e-11)",

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "ESP32-DevKit-Lipo_Rev_C.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-073-02",
+      "description": "KH-073: ic_power_rails populated for \u22652 ICs (U1, U2) on legacy ESP32-DevKit-LiPo Rev C",
+      "issue": "KH-073",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "design_analysis.power_domains.ic_power_rails",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "BUGFIX-KH-073-03",
+      "description": "KH-073: U1 power_rails has \u22652 entries on legacy .sch (pin-net mapping reaches IC pins)",
+      "issue": "KH-073",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "design_analysis.power_domains.ic_power_rails.U1.power_rails",
+        "op": "min_count",
+        "value": 2
+      }
+    }
+  ]
+}

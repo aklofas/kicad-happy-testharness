@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ESP32-C3-DevKit-Lipo_Rev_B.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-073-01",
+      "description": "KH-073: ic_power_rails populated for \u22651 IC on legacy .sch (pre-fix: empty dict)",
+      "issue": "KH-073",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "design_analysis.power_domains.ic_power_rails",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}
