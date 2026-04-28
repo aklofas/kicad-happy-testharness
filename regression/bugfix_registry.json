@@ -1573,6 +1573,37 @@
     "assertions": []
   },
   {
+    "issue": "KH-182",
+    "type": "parser_fix",
+    "summary": "Gerber X2 %TD*% does not clear current_component/current_net (only cleared pending_aper_function)",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "Manufacturing Files_gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "component_analysis.pads_per_component.J2",
+          "op": "equals",
+          "value": 2
+        },
+        "description": "KH-182: bitaxe J2 has 2 pads (pre-fix: 203 — %TD*% leaked component attribute)"
+      },
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "Manufacturing Files_gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "component_analysis.pads_per_component.J7",
+          "op": "equals",
+          "value": 2
+        },
+        "description": "KH-182: bitaxe J7 has 2 pads (similar 2-pin connector — corroborates %TD*% fix)"
+      }
+    ]
+  },
+  {
     "issue": "KH-073",
     "type": "detection_fix",
     "summary": "Power domain detection fails on KiCad 5 legacy schematics (cascade from KH-016 lib-pin offsets)",

@@ -35,6 +35,28 @@
         "op": "min_count",
         "value": 200
       }
+    },
+    {
+      "id": "BUGFIX-KH-182-01",
+      "description": "KH-182: bitaxe J2 has 2 pads (pre-fix: 203 \u2014 %TD*% leaked component attribute)",
+      "issue": "KH-182",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "component_analysis.pads_per_component.J2",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "BUGFIX-KH-182-02",
+      "description": "KH-182: bitaxe J7 has 2 pads (similar 2-pin connector \u2014 corroborates %TD*% fix)",
+      "issue": "KH-182",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "component_analysis.pads_per_component.J7",
+        "op": "equals",
+        "value": 2
+      }
     }
   ]
 }
