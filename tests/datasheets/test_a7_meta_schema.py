@@ -13,6 +13,8 @@ sys.path.insert(0, str(REPO_ROOT))
 
 import pytest
 
+TIER = "unit"
+
 META_SCHEMA_PATH = REPO_ROOT / "regression" / "reference_extractions" / "_meta.schema.json"
 
 
