@@ -1571,5 +1571,40 @@
     "type": "documentation_fix",
     "summary": "SKILL.md rule-ID tables and summarize_findings usage",
     "assertions": []
+  },
+  {
+    "issue": "KH-053",
+    "type": "parser_fix",
+    "summary": "KiCad 9 value parsing — space-separated SI prefix dropped (e.g. '18 pF' → 18 instead of 1.8e-11)",
+    "assertions": [
+      {
+        "repo": "greatscottgadgets/hackrf-pro",
+        "project": "praline",
+        "source_file": "praline.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "C157",
+          "assert_field": "parsed_value",
+          "assert_value": 1.8e-11
+        },
+        "description": "KH-053: C157 value '18 pF' parses to 1.8e-11 (pre-fix .split()[0] dropped 'pF' → parsed=18)"
+      },
+      {
+        "repo": "greatscottgadgets/hackrf-pro",
+        "project": "praline",
+        "source_file": "praline.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "C128",
+          "assert_field": "parsed_value",
+          "assert_value": 1e-06
+        },
+        "description": "KH-053: C128 value '1 uF' parses to 1e-06 (KiCad 9 space-separated SI)"
+      }
+    ]
   }
 ]
