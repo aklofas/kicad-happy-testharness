@@ -65,6 +65,100 @@ def test_review_annotations_schema_parses():
         f"unexpected title: {schema.get('title')!r}"
 
 
+def test_reviewer_observations_maxItems_is_5():
+    """maxItems on reviewer_observations is 5 per spec §4.2."""
+    schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    obs = schema["properties"]["reviewer_observations"]
+    assert obs.get("maxItems") == 5, \
+        f"expected maxItems=5, got {obs.get('maxItems')!r}"
+
+
+def test_observation_confidence_enum_is_medium_low():
+    """observation confidence enum is exactly {medium, low} (no high)."""
+    schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    enum = schema["properties"]["reviewer_observations"]["items"]["properties"]["confidence"]["enum"]
+    assert set(enum) == {"medium", "low"}, \
+        f"expected {{medium, low}}, got {set(enum)}"
+
+
+def test_observation_origin_const_is_llm_novel():
+    """observation origin is const 'llm_novel' (locked, no other producers)."""
+    schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    origin = schema["properties"]["reviewer_observations"]["items"]["properties"]["origin"]
+    assert origin.get("const") == "llm_novel", \
+        f"expected const='llm_novel', got {origin!r}"
+
+
+def test_observation_severity_enum_is_warning_info():
+    """observation severity enum is exactly {warning, info} — never error."""
+    schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    enum = schema["properties"]["reviewer_observations"]["items"]["properties"]["severity"]["enum"]
+    assert set(enum) == {"warning", "info"}, \
+        f"expected {{warning, info}}, got {set(enum)}"
+
+
+def test_review_annotations_example_fixture_validates():
+    """The shipped example fixture (empty observations) validates."""
+    schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
+    fixture = _load_json(REVIEW_ANNOTATIONS_FIXTURE_PATH)
+    if schema is None or fixture is None:
+        print("  SKIP: schema or fixture missing")
+        return
+    assert fixture.get("reviewer_observations") == [], \
+        "v1.4 default reviewer_observations must be empty array"
+    Validator = _import_jsonschema()
+    if Validator is None:
+        print("  SKIP: jsonschema unavailable")
+        return
+    Validator(schema).validate(fixture)
+
+
+def test_six_item_observations_array_rejected():
+    """maxItems:5 — a 6-item array must fail validation."""
+    schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    Validator = _import_jsonschema()
+    if Validator is None:
+        print("  SKIP: jsonschema unavailable")
+        return
+    obs = {
+        "origin": "llm_novel",
+        "observation": "x",
+        "severity": "info",
+        "confidence": "low",
+        "reasoning": "twenty characters at least here",
+        "reviewed_at": "2026-04-28T00:00:00Z",
+    }
+    payload = {
+        "schema_version": "1.0",
+        "produced_for_run_id": "20260428T000000Z-aaaaaa",
+        "produced_at": "2026-04-28T00:00:00Z",
+        "annotations": [],
+        "reviewer_observations": [obs] * 6,
+    }
+    try:
+        Validator(schema).validate(payload)
+    except Exception:
+        return  # expected
+    raise AssertionError("expected jsonschema rejection on 6-item observations array")
+
+
+# ─── (B4) design_context precedence ───────────────────────────────────────────
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
