@@ -1573,6 +1573,41 @@
     "assertions": []
   },
   {
+    "issue": "KH-028",
+    "type": "classification_fix",
+    "summary": "Ferrite bead values parsed as henries (L-prefix with 'ferrite'/'bead' in lib_id/value classified as inductor, impedance value treated as inductance)",
+    "assertions": [
+      {
+        "repo": "bluepylons/A-Thinkpad-USB-keyboard",
+        "project": "PCB_Thinkpad-USB-keyboard-PCB",
+        "source_file": "Thinkpad-USB-keyboard-PCB.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "L1",
+          "assert_field": "category",
+          "assert_value": "ferrite_bead"
+        },
+        "description": "KH-028: L1 with Ferrite-Device lib_id classified as ferrite_bead (pre-fix: inductor; impedance '60R@100MHz' treated as henries)"
+      },
+      {
+        "repo": "sabogalc/KiCad-Arduino-Boards",
+        "project": "KiCad Projects_Uno_Arduino UNO R4 Minima",
+        "source_file": "Arduino UNO R4 Minima.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "L1",
+          "assert_field": "category",
+          "assert_value": "ferrite_bead"
+        },
+        "description": "KH-028: Arduino UNO R4 Minima L1 (Device:FerriteBead, BLM18PG471SN1D) classified as ferrite_bead"
+      }
+    ]
+  },
+  {
     "issue": "KH-208",
     "type": "classification_fix",
     "summary": "Component type ignored lib_id when ref prefix matched type_map (T-prefix returned 'transformer' even with Sensor_Temperature lib_id)",

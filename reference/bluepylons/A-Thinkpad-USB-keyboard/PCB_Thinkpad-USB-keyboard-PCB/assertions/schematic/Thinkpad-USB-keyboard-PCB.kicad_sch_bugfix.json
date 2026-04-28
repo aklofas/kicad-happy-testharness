@@ -1,0 +1,22 @@
+{
+  "file_pattern": "Thinkpad-USB-keyboard-PCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-028-01",
+      "description": "KH-028: L1 with Ferrite-Device lib_id classified as ferrite_bead (pre-fix: inductor; impedance '60R@100MHz' treated as henries)",
+      "issue": "KH-028",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "L1",
+        "assert_field": "category",
+        "assert_value": "ferrite_bead"
+      }
+    }
+  ]
+}
