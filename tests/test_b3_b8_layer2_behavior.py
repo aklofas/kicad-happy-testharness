@@ -380,6 +380,89 @@ def test_b8_HI8_suppress_error_blocked_and_logged():
             f"severity should be unchanged, got {merged_finding['severity']!r}"
 
 
+def test_b8_HI8_suppress_datasheet_blocked_and_logged():
+    """Annotation tries to suppress a finding with confidence=
+    'datasheet-backed'; logged with type='suppress_datasheet'; merge
+    exits 0; finding has no llm_review overlay."""
+    if not MERGE_ANNOTATIONS_SCRIPT.exists():
+        print("  SKIP")
+        return
+    ds_finding = {
+        "finding_id": "sch:OV-001:u5",
+        "rule_id": "OV-001",
+        "severity": "warning",
+        "confidence": "datasheet-backed",
+        "components": ["U5"], "nets": [], "pins": [],
+    }
+    review = _make_review([{
+        "finding_id": "sch:OV-001:u5",
+        "status": "suppressed",
+        "reason": "Trying to suppress a datasheet-backed finding (HI-8 violation).",
+        "confidence": "high",
+        "reviewed_at": "2026-04-28T12:00:00Z",
+    }])
+    with tempfile.TemporaryDirectory() as tmp:
+        rc, report, merged_dir = _run_merge(
+            Path(tmp),
+            {"schematic": _make_minimal_envelope([ds_finding])},
+            review,
+        )
+        assert rc == 0, f"merge should exit 0; got rc={rc}"
+        violations = report.get("invariant_violations", [])
+        ds_violations = [v for v in violations
+                          if v.get("type") == "suppress_datasheet"]
+        assert len(ds_violations) == 1, \
+            f"expected 1 suppress_datasheet, got {violations!r}"
+        merged = json.loads((merged_dir / "schematic.json").read_text())
+        assert "llm_review" not in merged["findings"][0], \
+            "suppress_datasheet annotation should be skipped"
+
+
+def test_b8_HI8_30pct_suppression_cap_fires_suppression_rate_exceeded():
+    """5 findings, 2 valid (warning-severity, heuristic) suppressions =
+    40% > 30% cap. Report has invariant_violations entry with
+    type='suppression_rate_exceeded' and ratio/cap fields populated."""
+    if not MERGE_ANNOTATIONS_SCRIPT.exists():
+        print("  SKIP")
+        return
+    findings = [
+        {
+            "finding_id": f"sch:PU-001:r{i}",
+            "rule_id": "PU-001",
+            "severity": "warning",
+            "confidence": "heuristic",
+            "components": [f"R{i}"], "nets": [], "pins": [],
+        }
+        for i in range(1, 6)
+    ]
+    review = _make_review([
+        {
+            "finding_id": f"sch:PU-001:r{i}",
+            "status": "suppressed",
+            "reason": f"Suppressing R{i} (40% suppression triggers HI-8 cap).",
+            "confidence": "medium",
+            "reviewed_at": "2026-04-28T12:00:00Z",
+        }
+        for i in (1, 2)
+    ])
+    with tempfile.TemporaryDirectory() as tmp:
+        rc, report, _ = _run_merge(
+            Path(tmp),
+            {"schematic": _make_minimal_envelope(findings)},
+            review,
+        )
+        assert rc == 0, f"merge should exit 0 even on cap exceeded; got rc={rc}"
+        violations = report.get("invariant_violations", [])
+        cap_violations = [v for v in violations
+                           if v.get("type") == "suppression_rate_exceeded"]
+        assert len(cap_violations) == 1, \
+            f"expected suppression_rate_exceeded, got {violations!r}"
+        v = cap_violations[0]
+        assert v["suppressed"] == 2 and v["total"] == 5
+        assert v["ratio"] == 2 / 5
+        assert v["cap"] == 0.30
+
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
