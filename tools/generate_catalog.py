@@ -371,27 +371,34 @@ def build_repo_entry(repo_name, categories, repo_urls):
     entry["design_domains"] = sorted(d for d, c in detectors_fired.items() if c > 0)
     entry["detectors_fired"] = dict(sorted(detectors_fired.items()))
 
-    # EMC summary
+    # EMC summary — supports both legacy (pre-1.3.0) and current (>=1.3.0) shapes.
+    # Legacy: summary.total_checks + top-level critical/high/medium/low
+    # Current: summary.total_findings + summary.by_severity.{error,warning,info}
+    # Mapping legacy→current: critical+high→error, medium→warning, low→info.
     emc_findings = 0
-    emc_critical = emc_high = emc_medium = emc_low = 0
+    emc_error = emc_warning = emc_info = 0
     emc_risks = []
     for data in emc_outputs:
         s = data.get("summary", {})
-        emc_findings += s.get("total_checks", 0)
-        emc_critical += s.get("critical", 0)
-        emc_high += s.get("high", 0)
-        emc_medium += s.get("medium", 0)
-        emc_low += s.get("low", 0)
+        emc_findings += s.get("total_findings", s.get("total_checks", 0))
+        by_sev = s.get("by_severity")
+        if by_sev:
+            emc_error += by_sev.get("error", 0)
+            emc_warning += by_sev.get("warning", 0)
+            emc_info += by_sev.get("info", 0)
+        else:
+            emc_error += s.get("critical", 0) + s.get("high", 0)
+            emc_warning += s.get("medium", 0)
+            emc_info += s.get("low", 0)
         risk = s.get("emc_risk_score")
         if risk is not None:
             emc_risks.append(risk)
 
     entry["emc_summary"] = {
         "total_findings": emc_findings,
-        "critical": emc_critical,
-        "high": emc_high,
-        "medium": emc_medium,
-        "low": emc_low,
+        "error": emc_error,
+        "warning": emc_warning,
+        "info": emc_info,
         "risk_score_avg": round(sum(emc_risks) / len(emc_risks)) if emc_risks else None,
     }
 
