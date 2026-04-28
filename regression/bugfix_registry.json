@@ -1573,6 +1573,37 @@
     "assertions": []
   },
   {
+    "issue": "KH-169",
+    "type": "detection_fix",
+    "summary": "Layer count not inferred from X2 Ln designation when inner-layer gerbers missing",
+    "assertions": [
+      {
+        "repo": "sparkfun/SparkFun_GNSSDO",
+        "project": "Hardware_GNSSDO",
+        "source_file": "Production",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "layer_count",
+          "op": "equals",
+          "value": 4
+        },
+        "description": "KH-169: SparkFun_GNSSDO layer_count=4 (was 2 pre-fix; X2 Copper,Ln scan finds L4)"
+      },
+      {
+        "repo": "sparkfun/SparkFun_GNSSDO",
+        "project": "Hardware_GNSSDO",
+        "source_file": "Plus_Production",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "layer_count",
+          "op": "equals",
+          "value": 4
+        },
+        "description": "KH-169: SparkFun_GNSSDO Plus variant layer_count=4 (X2 Copper,Ln inference)"
+      }
+    ]
+  },
+  {
     "issue": "KH-182",
     "type": "parser_fix",
     "summary": "Gerber X2 %TD*% does not clear current_component/current_net (only cleared pending_aper_function)",
