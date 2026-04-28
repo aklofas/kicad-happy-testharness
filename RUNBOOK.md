@@ -2386,6 +2386,57 @@ just make its downstream representation less fragile and searchable.
 
 ---
 
+## Checklist 25: Promoting an extraction to gold (v1.4+ A7 workflow)
+
+Use this when a new extraction (or schema bump) needs to land as v1.4+ gold.
+
+1. Confirm the gate passes 4/4:
+   ```bash
+   python3 validate/check_acceptance_gate.py --mpn <MPN> \
+     --extract-dir /home/aklofas/Projects/kicad-happy/datasheets/extracted/
+   ```
+
+2. Run the promote tool (interactive — diff-on-promote shows you what's
+   changing before the write):
+   ```bash
+   python3 regression/promote_gold.py --mpn <MPN> \
+     --pdf-dir /home/aklofas/Projects/kicad-happy/datasheets
+   ```
+
+   The tool re-runs the gate, runs the sanity-vector diff, validates the
+   cache against `extraction.schema.json`, computes PDF SHA, and shows you
+   either the A5 differ output (if prior gold exists with same PDF SHA) or
+   a content summary (first-time MPN). It then prompts "Promote? [y/N]:".
+
+   For batch seeding (e.g., bulk migration on schema bump), use `--yes` to
+   skip the prompt.
+
+3. Stage + commit:
+   ```bash
+   git add regression/reference_extractions/<slug>/
+   git commit -m "A7 gold seed: <MPN>"
+   ```
+
+4. Verify currency-check + batch-diff still clean:
+   ```bash
+   python3 regression/check_gold_currency.py --all
+   python3 regression/run_extraction_checks.py --all \
+     --cache-dir /home/aklofas/Projects/kicad-happy/datasheets/extracted/
+   ```
+
+   Both should exit 0.
+
+**Major schema bump?** Use `--re-curate-from <prev_version>` instead of bare
+promote. Example:
+```bash
+python3 regression/promote_gold.py --mpn LM2596-ADJ --re-curate-from 1.0
+```
+This runs the same validations, then renames the existing
+`gold_v<prev>.json` to `gold_v<prev>.json.archived` in-place and writes the
+new `gold_v<new>.json` with `event: "recurate_major_bump"` history entry.
+
+---
+
 ## Quick reference: Common commands
 
 | Task | Command |
