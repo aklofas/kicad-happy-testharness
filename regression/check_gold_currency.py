@@ -73,10 +73,10 @@ def _resolve_gold_dir(arg: Optional[str]) -> Path:
 
 
 def _resolve_pdf_dir(arg: Optional[str]) -> Path:
-    """Resolve PDF directory from --pdf-dir or kicad-happy/datasheets/pdfs/."""
+    """Resolve PDF directory from --pdf-dir or kicad-happy/datasheets/."""
     if arg:
         return Path(arg)
-    return _resolve_kicad_happy_dir() / "datasheets" / "pdfs"
+    return _resolve_kicad_happy_dir() / "datasheets"
 
 
 def _resolve_schemas_dir(arg: Optional[str]) -> Path:
