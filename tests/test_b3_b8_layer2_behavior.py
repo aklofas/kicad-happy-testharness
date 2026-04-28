@@ -301,6 +301,85 @@ def test_b8_valid_annotation_merges_with_llm_review_overlay():
         assert merged_finding["llm_review"]["confidence"] == "high"
 
 
+def test_b8_orphan_annotation_logged_in_orphan_annotations_key():
+    """Annotation referencing non-existent finding_id is logged in
+    report.orphan_annotations[] (a separate top-level key from
+    invariant_violations[]) and merge exits 0."""
+    if not MERGE_ANNOTATIONS_SCRIPT.exists():
+        print("  SKIP")
+        return
+    real_finding = {
+        "finding_id": "sch:VM-001:u3",
+        "rule_id": "VM-001",
+        "severity": "warning",
+        "confidence": "heuristic",
+        "components": ["U3"], "nets": [], "pins": [],
+    }
+    review = _make_review([{
+        "finding_id": "sch:DOES_NOT_EXIST:zzz",
+        "status": "confirmed",
+        "reason": "References a finding that doesn't exist in raw envelope.",
+        "confidence": "medium",
+        "reviewed_at": "2026-04-28T12:00:00Z",
+    }])
+    with tempfile.TemporaryDirectory() as tmp:
+        rc, report, _ = _run_merge(
+            Path(tmp),
+            {"schematic": _make_minimal_envelope([real_finding])},
+            review,
+        )
+        assert rc == 0, f"merge should exit 0 on orphan; got rc={rc}"
+        orphans = report.get("orphan_annotations", [])
+        assert len(orphans) == 1, \
+            f"expected 1 orphan, got {orphans!r}"
+        assert orphans[0]["finding_id"] == "sch:DOES_NOT_EXIST:zzz"
+        # CRITICAL: orphans live in their own key, NOT in invariant_violations.
+        # LOG #71 ask wording conflates them — flag in closure handoff.
+        assert orphans[0] not in report.get("invariant_violations", []), \
+            "orphans must NOT also appear in invariant_violations[]"
+
+
+def test_b8_HI8_suppress_error_blocked_and_logged():
+    """Annotation tries to suppress an error-severity finding; logged in
+    invariant_violations[] with type='suppress_error'; finding's severity
+    is unchanged in merged output; merge exits 0."""
+    if not MERGE_ANNOTATIONS_SCRIPT.exists():
+        print("  SKIP")
+        return
+    error_finding = {
+        "finding_id": "sch:VM-001:u3",
+        "rule_id": "VM-001",
+        "severity": "error",
+        "confidence": "heuristic",
+        "components": ["U3"], "nets": [], "pins": [],
+    }
+    review = _make_review([{
+        "finding_id": "sch:VM-001:u3",
+        "status": "suppressed",
+        "reason": "Trying to suppress an error-severity finding (HI-8 violation).",
+        "confidence": "high",
+        "reviewed_at": "2026-04-28T12:00:00Z",
+    }])
+    with tempfile.TemporaryDirectory() as tmp:
+        rc, report, merged_dir = _run_merge(
+            Path(tmp),
+            {"schematic": _make_minimal_envelope([error_finding])},
+            review,
+        )
+        assert rc == 0, f"merge should exit 0; got rc={rc}"
+        violations = report.get("invariant_violations", [])
+        suppress_errors = [v for v in violations if v.get("type") == "suppress_error"]
+        assert len(suppress_errors) == 1, \
+            f"expected 1 suppress_error, got {violations!r}"
+        # Finding should NOT have llm_review applied (annotation skipped)
+        merged = json.loads((merged_dir / "schematic.json").read_text())
+        merged_finding = merged["findings"][0]
+        assert "llm_review" not in merged_finding, \
+            f"suppress_error annotation should be skipped, but llm_review was applied"
+        assert merged_finding["severity"] == "error", \
+            f"severity should be unchanged, got {merged_finding['severity']!r}"
+
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
