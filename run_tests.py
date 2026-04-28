@@ -78,6 +78,7 @@ SMOKE_TESTS = [
     "tests/datasheets/test_a7_check_gold_currency.py",  # 13 tests — gold currency check (A7)
     "tests/datasheets/test_a7_known_divergences.py",  # 4 tests — known divergences seed (A7)
     "tests/datasheets/test_a7_run_extraction_checks.py",  # 10 tests — extraction diff checks (A7)
+    "tests/test_b1_b2_finding_id_invariants.py",      # 10 tests — capability_mode_ref + finding_id (B1+B2)
 ]
 
 
