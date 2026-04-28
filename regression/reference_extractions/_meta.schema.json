@@ -74,7 +74,10 @@
             "required": ["base", "categories"],
             "properties": {
               "base": {"type": "string", "pattern": "^\\d+\\.\\d+$"},
-              "categories": {"type": "object"}
+              "categories": {
+                "type": "object",
+                "additionalProperties": {"type": "string", "pattern": "^\\d+\\.\\d+$"}
+              }
             }
           }
         }
