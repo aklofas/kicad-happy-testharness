@@ -463,6 +463,85 @@ def test_b8_HI8_30pct_suppression_cap_fires_suppression_rate_exceeded():
         assert v["cap"] == 0.30
 
 
+def test_b8_HI3_strip_llm_overlays_yields_dict_equal_raw():
+    """Round-trip: after a valid merge, strip_llm_overlays(merged) ==
+    raw envelope. Confirms merge_annotations.py:158 raise does NOT
+    fire on valid input — i.e., HI-3 is honored end-to-end."""
+    if not MERGE_ANNOTATIONS_SCRIPT.exists():
+        print("  SKIP")
+        return
+    strip = _import_strip_llm_overlays()
+    if strip is None:
+        print("  SKIP: strip_llm_overlays not importable")
+        return
+    finding = {
+        "finding_id": "sch:VM-001:u3",
+        "rule_id": "VM-001",
+        "severity": "warning",
+        "confidence": "heuristic",
+        "components": ["U3"], "nets": [], "pins": [],
+    }
+    raw_envelope = _make_minimal_envelope([finding])
+    review = _make_review([{
+        "finding_id": "sch:VM-001:u3",
+        "status": "confirmed",
+        "reason": "Round-trip test: confirmed finding for HI-3 verification.",
+        "confidence": "high",
+        "reviewed_at": "2026-04-28T12:00:00Z",
+    }])
+    with tempfile.TemporaryDirectory() as tmp:
+        rc, _report, merged_dir = _run_merge(
+            Path(tmp), {"schematic": raw_envelope}, review)
+        assert rc == 0, f"merge failed: rc={rc}"
+        merged = json.loads((merged_dir / "schematic.json").read_text())
+        # Confirm overlay was applied (so the round-trip is meaningful)
+        assert "llm_review" in merged["findings"][0]
+        # The HI-3 contract: stripping recovers raw byte-for-byte (modulo
+        # JSON formatting — assert dict equality, not byte equality).
+        stripped = strip(merged)
+        assert stripped == raw_envelope, (
+            "HI-3 violation: strip_llm_overlays(merged) != raw\n"
+            f"diff keys: merged={set(stripped.get('findings', [{}])[0].keys())}, "
+            f"raw={set(raw_envelope['findings'][0].keys())}"
+        )
+
+
+def test_b8_HI3_strip_handles_nested_llm_keys():
+    """strip_llm_overlays recursively removes ALL keys starting with
+    'llm_' at any nesting depth. Synthesize a hand-crafted dict with
+    nested llm_review.suggested_severity + a sibling llm_observations
+    list and assert all llm_* keys are gone after strip."""
+    strip = _import_strip_llm_overlays()
+    if strip is None:
+        print("  SKIP")
+        return
+    payload = {
+        "analyzer_type": "schematic",
+        "findings": [
+            {
+                "finding_id": "sch:VM-001:u3",
+                "severity": "warning",
+                "llm_review": {
+                    "status": "confirmed",
+                    "suggested_severity": "error",
+                    "reviewed_at": "2026-04-28T12:00:00Z",
+                },
+                "llm_observations": [{"text": "noise"}],
+            },
+        ],
+        "llm_top_level_overlay": {"some": "data"},
+    }
+    stripped = strip(payload)
+    # All llm_* keys gone, recursively
+    assert "llm_top_level_overlay" not in stripped
+    assert "llm_review" not in stripped["findings"][0]
+    assert "llm_observations" not in stripped["findings"][0]
+    # Non-llm content preserved
+    assert stripped["findings"][0]["finding_id"] == "sch:VM-001:u3"
+    assert stripped["findings"][0]["severity"] == "warning"
+    assert stripped["analyzer_type"] == "schematic"
+
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
