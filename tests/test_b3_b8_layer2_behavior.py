@@ -206,6 +206,101 @@ def test_HI9_tuning_max_severity_cap_honored():
         f"LR-001 should cap at 'warning', got {result!r}"
 
 
+# ─── (B8) annotation merge lifecycle ──────────────────────────────────────
+
+def _make_minimal_envelope(findings):
+    """Build a minimal v1.4-shape schematic envelope with the given findings.
+
+    Only the fields that merge_annotations.py touches are populated.
+    Other consumers (jsonschema validators) may reject this minimal shape;
+    merge_annotations.py is intentionally lenient because it just walks
+    findings[] and writes overlays.
+    """
+    return {
+        "analyzer_type": "schematic",
+        "schema_version": "1.4.0",
+        "findings": findings,
+        "summary": {"total_findings": len(findings)},
+    }
+
+
+def _make_review(annotations, run_id="20260428T120000Z-aaaaaa",
+                  reviewer_observations=None):
+    """Build a minimal review_annotations.json payload."""
+    return {
+        "schema_version": "1.0",
+        "produced_for_run_id": run_id,
+        "produced_at": "2026-04-28T12:00:00Z",
+        "annotations": annotations,
+        "reviewer_observations": reviewer_observations or [],
+    }
+
+
+def _run_merge(tmp: Path, raw_envelopes, review):
+    """Set up tmp/raw + tmp/review.json, run merge_annotations.py, return
+    (returncode, report_dict_or_None, merged_dir_path)."""
+    raw_dir = tmp / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    for stem, env in raw_envelopes.items():
+        (raw_dir / f"{stem}.json").write_text(
+            json.dumps(env, indent=2, sort_keys=True))
+    review_path = tmp / "review.json"
+    review_path.write_text(json.dumps(review, indent=2, sort_keys=True))
+    merged_dir = tmp / "merged"
+    proc = subprocess.run(
+        [_python(), str(MERGE_ANNOTATIONS_SCRIPT),
+         "--raw-dir", str(raw_dir),
+         "--review", str(review_path),
+         "--merged-dir", str(merged_dir)],
+        capture_output=True, text=True, timeout=20,
+    )
+    report_path = merged_dir / "_merge_report.json"
+    report = json.loads(report_path.read_text()) if report_path.exists() else None
+    return proc.returncode, report, merged_dir
+
+
+def test_b8_valid_annotation_merges_with_llm_review_overlay():
+    """Status=confirmed annotation gains llm_review overlay; applied_count==1."""
+    if not MERGE_ANNOTATIONS_SCRIPT.exists():
+        print("  SKIP: merge_annotations.py not available")
+        return
+    finding = {
+        "finding_id": "sch:VM-001:u3",
+        "detector": "validate_voltage_levels",
+        "rule_id": "VM-001",
+        "category": "voltage",
+        "summary": "VCC exceeds U3 max",
+        "description": "VCC at 5V exceeds U3 recommended max 3.6V",
+        "severity": "error",
+        "confidence": "heuristic",
+        "components": ["U3"],
+        "nets": [],
+        "pins": [],
+        "evidence_source": "heuristic_rule",
+        "recommendation": "",
+    }
+    review = _make_review([{
+        "finding_id": "sch:VM-001:u3",
+        "status": "confirmed",
+        "reason": "Confirmed: VCC at 5V exceeds U3 max — design issue.",
+        "confidence": "high",
+        "reviewed_at": "2026-04-28T12:00:00Z",
+    }])
+    with tempfile.TemporaryDirectory() as tmp:
+        rc, report, merged_dir = _run_merge(
+            Path(tmp), {"schematic": _make_minimal_envelope([finding])}, review)
+        assert rc == 0, f"merge failed: rc={rc}"
+        assert report is not None, "no _merge_report.json produced"
+        assert report["applied_count"] == 1, \
+            f"expected applied_count=1, got {report!r}"
+        merged = json.loads((merged_dir / "schematic.json").read_text())
+        merged_finding = merged["findings"][0]
+        assert "llm_review" in merged_finding, \
+            f"llm_review missing from merged finding: {list(merged_finding.keys())}"
+        assert merged_finding["llm_review"]["status"] == "confirmed"
+        assert merged_finding["llm_review"]["confidence"] == "high"
+
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
