@@ -73,6 +73,11 @@ SMOKE_TESTS = [
     "tests/test_check_acceptance_gate.py",           # 22 tests — 4-check acceptance gate runner (A6)
     "tests/test_extraction_differ.py",                # 36 tests — extraction differ framework (A5)
     "tests/datasheets/test_a7_meta_schema.py",        # 12 tests — A7 meta schema + mpn_slug helper
+    "tests/datasheets/test_a7_promote_gold.py",       # 8 tests — promote_gold.py CLI (A7)
+    "tests/datasheets/test_a7_re_curate_mode.py",     # 6 tests — re-curation mode (A7)
+    "tests/datasheets/test_a7_check_gold_currency.py",  # 13 tests — gold currency check (A7)
+    "tests/datasheets/test_a7_known_divergences.py",  # 4 tests — known divergences seed (A7)
+    "tests/datasheets/test_a7_run_extraction_checks.py",  # 10 tests — extraction diff checks (A7)
 ]
 
 

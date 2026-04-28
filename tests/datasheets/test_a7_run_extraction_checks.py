@@ -13,7 +13,10 @@ import sys
 import tempfile
 from pathlib import Path
 
-import pytest
+try:
+    import pytest
+except ImportError:
+    pytest = None
 
 TIER = "unit"
 
