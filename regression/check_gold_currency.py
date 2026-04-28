@@ -223,6 +223,51 @@ def _audit_one(slug_dir: Path, *, pdf_dir: Path, schemas_dir: Path,
     return findings
 
 
+def _parse_known_divergences(path: Path) -> dict[str, str]:
+    """Parse _KNOWN_DIVERGENCES.md and return {header_text: header_text}.
+
+    Heuristic: take H2 lines (`## <text>`) as keys. Currency-check builds an
+    identifier from category + version delta (e.g., 'regulator 0.3 → 0.4')
+    and looks for an exact match against any header. Returns {} if path
+    missing.
+    """
+    if not path.exists():
+        return {}
+    content = path.read_text()
+    out: dict[str, str] = {}
+    for line in content.splitlines():
+        if line.startswith("## "):
+            header = line[3:].strip()
+            out[header] = header
+    return out
+
+
+def _annotate_finding_with_kd(finding: Finding, kd_map: dict[str, str]) -> Finding:
+    """Annotate a schema_version_category INFO finding with a KD entry ref.
+
+    Looks up the identifier `<category> <gold_ver> → <current_ver>` in the
+    KD map; if found, mutates the finding's message to include a cross-ref
+    line and adds a `known_divergence_ref` detail.
+
+    Returns the (possibly mutated) finding for convenience.
+    """
+    if finding.severity is not Severity.INFO:
+        return finding
+    if finding.category != "schema_version_category":
+        return finding
+    cat = finding.details.get("category")
+    gold = finding.details.get("gold")
+    current = finding.details.get("current")
+    if not (cat and gold and current):
+        return finding
+    identifier = f"{cat} {gold} → {current}"
+    if identifier in kd_map:
+        finding.details["known_divergence_ref"] = kd_map[identifier]
+        finding.message += (f"\n  See _KNOWN_DIVERGENCES.md → "
+                            f'"{kd_map[identifier]}"')
+    return finding
+
+
 def _summary(all_findings: dict[str, list[Finding]]) -> dict[str, int]:
     """Aggregate counts by severity across all MPNs."""
     s = {"ok": 0, "info": 0, "warning": 0, "error": 0}
@@ -236,7 +281,11 @@ def _summary(all_findings: dict[str, list[Finding]]) -> dict[str, int]:
 
 
 def _print_human(all_findings: dict[str, list[Finding]], release: bool) -> None:
-    """Print human-readable per-MPN report + summary."""
+    """Print human-readable per-MPN report + summary.
+
+    With release=True, INFO findings render as `[WARNING]` in the per-row
+    output (human-only escalation; JSON output and exit code unaffected).
+    """
     print(f"Auditing {len(all_findings)} MPN(s) under "
           f"regression/reference_extractions/")
     print("─" * 60)
@@ -246,6 +295,8 @@ def _print_human(all_findings: dict[str, list[Finding]], release: bool) -> None:
             continue
         for f in findings:
             sev = f.severity.value.upper()
+            if release and f.severity is Severity.INFO:
+                sev = "WARNING"
             print(f"[{sev}]  {slug:25s}  {f.message}")
     print("─" * 60)
     s = _summary(all_findings)
@@ -330,6 +381,15 @@ def main(argv: Optional[list[str]] = None) -> int:
         all_findings[slug_dir.name] = findings
         if any(f.category == "malformed" for f in findings):
             has_malformed = True
+
+    # Annotate with _KNOWN_DIVERGENCES.md cross-references (Task 5)
+    kd_path = (Path(args.known_divergences) if args.known_divergences
+               else gold_root / "_KNOWN_DIVERGENCES.md")
+    kd_map = _parse_known_divergences(kd_path)
+    if kd_map:
+        for findings in all_findings.values():
+            for i, f in enumerate(findings):
+                findings[i] = _annotate_finding_with_kd(f, kd_map)
 
     if args.json:
         _print_json(all_findings)

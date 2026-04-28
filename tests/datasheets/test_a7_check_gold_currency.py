@@ -269,6 +269,83 @@ def test_malformed_meta_returns_two(tmp_path=None):
     assert r.returncode == 2
 
 
+def test_release_mode_escalates_info_in_human_output(tmp_path=None):
+    """--release: INFO findings show as WARNING in human report; exit unaffected."""
+    if tmp_path is None:
+        import tempfile
+        tmp_path = Path(tempfile.mkdtemp())
+    gold_root, _, pdf_dir, _ = _seed_gold(tmp_path)
+    schemas_dir = _write_synth_schemas(tmp_path, base="1.1")  # minor bump → INFO
+
+    r_release = _run([
+        "--all", "--release",
+        "--pdf-dir", str(pdf_dir),
+        "--schemas-dir", str(schemas_dir),
+        "--gold-dir", str(gold_root),
+    ], cwd=tmp_path)
+    assert r_release.returncode == 0
+    assert "WARNING" in r_release.stdout
+
+    r_normal = _run([
+        "--all",
+        "--pdf-dir", str(pdf_dir),
+        "--schemas-dir", str(schemas_dir),
+        "--gold-dir", str(gold_root),
+    ], cwd=tmp_path)
+    assert "INFO" in r_normal.stdout
+
+
+def test_release_mode_does_not_escalate_in_json(tmp_path=None):
+    """--release JSON output keeps severity as 'info' (escalation is human-only)."""
+    if tmp_path is None:
+        import tempfile
+        tmp_path = Path(tempfile.mkdtemp())
+    gold_root, _, pdf_dir, _ = _seed_gold(tmp_path)
+    schemas_dir = _write_synth_schemas(tmp_path, base="1.1")
+
+    r = _run([
+        "--all", "--release", "--json",
+        "--pdf-dir", str(pdf_dir),
+        "--schemas-dir", str(schemas_dir),
+        "--gold-dir", str(gold_root),
+    ], cwd=tmp_path)
+    payload = json.loads(r.stdout)
+    severities = [f["severity"] for f in payload["findings"]]
+    assert "info" in severities
+    assert "warning" not in severities  # release escalation is human-only
+
+
+def test_known_divergences_referenced_for_minor_bumps(tmp_path=None):
+    """--known-divergences annotates schema_version_category INFO findings."""
+    if tmp_path is None:
+        import tempfile
+        tmp_path = Path(tempfile.mkdtemp())
+    gold_root, _, pdf_dir, _ = _seed_gold(tmp_path)
+    schemas_dir = _write_synth_schemas(tmp_path, base="1.0",
+                                         categories={"regulator": "0.4"})
+    # Custom KNOWN_DIVERGENCES.md with a matching entry header
+    kd = tmp_path / "KNOWN_DIVERGENCES.md"
+    kd.write_text("""# Known divergences
+
+## regulator 0.3 → 0.4
+
+Mock entry for testing — narrative would go here.
+
+**Source:** test fixture
+""")
+    r = _run([
+        "--all",
+        "--pdf-dir", str(pdf_dir),
+        "--schemas-dir", str(schemas_dir),
+        "--gold-dir", str(gold_root),
+        "--known-divergences", str(kd),
+    ], cwd=tmp_path)
+    assert r.returncode == 0
+    # Cross-reference visible somewhere — the annotated message includes the
+    # matched KD entry header verbatim
+    assert "regulator 0.3 → 0.4" in r.stdout or "_KNOWN_DIVERGENCES" in r.stdout
+
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
