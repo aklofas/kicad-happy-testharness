@@ -29,6 +29,7 @@ from regression._mpn_slug import mpn_slug  # noqa: E402
 
 
 def _resolve_kicad_happy_dir() -> Path:
+    """Resolve kicad-happy directory from KICAD_HAPPY_DIR env or sibling repo."""
     env = os.environ.get("KICAD_HAPPY_DIR")
     if env:
         return Path(env)
@@ -36,12 +37,14 @@ def _resolve_kicad_happy_dir() -> Path:
 
 
 def _resolve_cache_dir(arg: Optional[str]) -> Path:
+    """Resolve cache dir from --cache-dir or kicad-happy/datasheets/extracted/."""
     if arg:
         return Path(arg)
     return _resolve_kicad_happy_dir() / "datasheets" / "extracted"
 
 
 def _load_cache(cache_path: Path) -> dict:
+    """Load and parse JSON cache file. Exits 3 on missing or malformed file."""
     if not cache_path.exists():
         print(f"ERROR: cache file not found: {cache_path}", file=sys.stderr)
         sys.exit(3)
