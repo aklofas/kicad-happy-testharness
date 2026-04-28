@@ -159,6 +159,147 @@ def test_six_item_observations_array_rejected():
 
 # ─── (B4) design_context precedence ───────────────────────────────────────────
 
+def _check_design_context_precedence(data):
+    """Walk design_context dict and return list of precedence violations.
+
+    For each of design_category and environment: if value is the triple
+    form {inferred, declared, effective} and declared is non-null, then
+    effective must equal declared. Returns [] if no violations.
+    """
+    violations = []
+    for field in ("design_category", "environment"):
+        value = data.get(field)
+        if not isinstance(value, dict):
+            continue  # plain enum form — invariant doesn't apply
+        if "declared" not in value or "effective" not in value:
+            continue  # not the triple form
+        declared = value["declared"]
+        effective = value["effective"]
+        if declared is not None and declared != effective:
+            violations.append({
+                "field": field,
+                "declared": declared,
+                "effective": effective,
+            })
+    return violations
+
+
+def test_design_context_schema_permits_triple_shape():
+    """design_category and environment both accept oneOf [enum, triple]."""
+    schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    for field in ("design_category", "environment"):
+        oneOf = schema["properties"][field].get("oneOf")
+        assert isinstance(oneOf, list) and len(oneOf) == 2, \
+            f"{field}: expected 2-branch oneOf, got {oneOf!r}"
+        refs = [b.get("$ref", "") for b in oneOf]
+        assert any("enum" in r for r in refs), \
+            f"{field}: missing enum branch in oneOf"
+        assert any("triple" in r for r in refs), \
+            f"{field}: missing triple branch in oneOf"
+
+
+def test_design_context_example_fixture_validates():
+    """Shipped fixture (plain-enum form) validates."""
+    schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
+    fixture = _load_json(DESIGN_CONTEXT_FIXTURE_PATH)
+    if schema is None or fixture is None:
+        print("  SKIP")
+        return
+    Validator = _import_jsonschema()
+    if Validator is None:
+        print("  SKIP: jsonschema unavailable")
+        return
+    Validator(schema).validate(fixture)
+    # Plain enum form: invariant trivially holds (no triple to check)
+    assert _check_design_context_precedence(fixture) == []
+
+
+def test_synthesized_triple_with_declared_null_passes_invariant():
+    """declared=null => no precedence constraint; invariant holds trivially."""
+    schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    Validator = _import_jsonschema()
+    payload = {
+        "design_category": {
+            "inferred": "power_supply",
+            "declared": None,
+            "effective": "power_supply",
+        },
+        "environment": "industrial",
+        "compliance_targets": [],
+        "user_declared_intent": None,
+        "confidence": "medium",
+        "evidence": "BOM heuristic: buck regulator + 24V rail",
+        "resolution": "inferred_only",
+    }
+    if Validator is not None:
+        Validator(schema).validate(payload)
+    assert _check_design_context_precedence(payload) == []
+
+
+def test_synthesized_triple_with_declared_equal_effective_passes_invariant():
+    """declared==effective: invariant holds; schema accepts."""
+    schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    Validator = _import_jsonschema()
+    payload = {
+        "design_category": "power_supply",
+        "environment": {
+            "inferred": "consumer",
+            "declared": "industrial",
+            "effective": "industrial",
+        },
+        "compliance_targets": ["IEC 62368"],
+        "user_declared_intent": "Industrial 24V buck regulator demo board",
+        "confidence": "high",
+        "evidence": "User declared 'industrial' in .kicad-happy.json",
+        "resolution": "user_override",
+    }
+    if Validator is not None:
+        Validator(schema).validate(payload)
+    assert _check_design_context_precedence(payload) == []
+
+
+def test_synthesized_triple_with_declared_not_equal_effective_fails_invariant():
+    """declared!=effective: schema accepts (no conditional in JSON Schema),
+    but harness invariant flags it. Confirms harness is the enforcer."""
+    schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
+    if schema is None:
+        print("  SKIP")
+        return
+    Validator = _import_jsonschema()
+    payload = {
+        "design_category": "power_supply",
+        "environment": {
+            "inferred": "consumer",
+            "declared": "industrial",
+            "effective": "automotive",  # violates precedence
+        },
+        "compliance_targets": [],
+        "user_declared_intent": "industrial",
+        "confidence": "high",
+        "evidence": "test fixture for precedence violation",
+        "resolution": "agree",
+    }
+    # Schema MUST accept this — the precedence rule isn't encoded in JSON Schema
+    if Validator is not None:
+        Validator(schema).validate(payload)
+    # But harness invariant MUST flag it
+    violations = _check_design_context_precedence(payload)
+    assert len(violations) == 1, \
+        f"expected 1 violation, got {violations!r}"
+    assert violations[0]["field"] == "environment"
+    assert violations[0]["declared"] == "industrial"
+    assert violations[0]["effective"] == "automotive"
+
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
