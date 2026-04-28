@@ -12,9 +12,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import multiprocessing
 import os
 import subprocess
 import sys
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
@@ -209,8 +211,10 @@ def main(argv: Optional[list[str]] = None) -> int:
                         help="Path to gold root (default: regression/reference_extractions)")
     parser.add_argument("--json", action="store_true",
                         help="Machine-readable JSON output")
-    parser.add_argument("--jobs", type=int, default=1,
-                        help="Parallelism (default: 1; Task 7 adds cpu_count)")
+    parser.add_argument("--jobs", type=int,
+                        default=multiprocessing.cpu_count(),
+                        help=f"Parallelism (default: cpu_count = "
+                             f"{multiprocessing.cpu_count()})")
     parser.add_argument("--score-threshold", type=int, default=90,
                         help="Score below this = regression (default: 90)")
     args = parser.parse_args(argv)
@@ -232,8 +236,14 @@ def main(argv: Optional[list[str]] = None) -> int:
             print("No MPN gold dirs found; nothing to diff.")
         return 0
 
-    reports = [_diff_one(mpn=m, gold_path=g, cache_path=c)
-               for (m, g, c) in work]
+    if args.jobs <= 1:
+        reports = [_diff_one(mpn=m, gold_path=g, cache_path=c)
+                   for (m, g, c) in work]
+    else:
+        with ProcessPoolExecutor(max_workers=args.jobs) as ex:
+            futs = [ex.submit(_diff_one, mpn=m, gold_path=g, cache_path=c)
+                    for (m, g, c) in work]
+            reports = [f.result() for f in futs]
 
     if args.json:
         _print_json(reports, args.score_threshold)

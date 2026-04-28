@@ -182,6 +182,41 @@ def test_single_mpn_filter():
         assert r.returncode == 0
 
 
+def test_jobs_parallel_runs():
+    """--jobs 4 produces same per-MPN data as --jobs 1 (just out of order)."""
+    with tempfile.TemporaryDirectory() as td:
+        tmp_path = Path(td)
+        cache_dir, gold_root = _seed_gold_and_cache(tmp_path, identical=True)
+        r1 = _run([
+            "--all", "--jobs", "1",
+            "--cache-dir", str(cache_dir),
+            "--gold-dir", str(gold_root),
+        ], cwd=tmp_path)
+        r4 = _run([
+            "--all", "--jobs", "4",
+            "--cache-dir", str(cache_dir),
+            "--gold-dir", str(gold_root),
+        ], cwd=tmp_path)
+        assert r1.returncode == 0
+        assert r4.returncode == 0
+
+        def filter_mpn_lines(text):
+            return sorted(l for l in text.splitlines() if "lm2596" in l.lower())
+
+        assert filter_mpn_lines(r1.stdout) == filter_mpn_lines(r4.stdout)
+
+
+def test_jobs_default_documented_in_help():
+    """--help text references the cpu_count default."""
+    r = subprocess.run(
+        [sys.executable, str(RUN_CLI), "--help"],
+        capture_output=True, text=True,
+    )
+    assert r.returncode == 0
+    out = r.stdout.lower()
+    assert "default" in out and ("cpu" in out or "core" in out)
+
+
 # Custom-runner __main__ block (harness convention)
 if __name__ == "__main__":
     import traceback
