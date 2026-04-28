@@ -1015,6 +1015,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/eshazen/blinky-avr-smt @ cbdf776d5118673aa21fde2b7248f1ea6fdbc891
 - https://github.com/jmpinit/isp-header-breakout @ 269b6a76411a1d076dc1a63f4861ce98eba5a2b0
 - https://github.com/JonRackler/Scale_Project_AVR @ 29bc1c2a7c0db8f3487bc92f933adcc21559d8fb
+- https://github.com/Hanqaqa/Easyduino @ b492c1aac6bf5279e923ce47782ccd371bdd0fe3
 
 ## Motor controllers / robotics
 

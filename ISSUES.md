@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-04-19
+Last updated: 2026-04-27
 
 ---
 
@@ -34,9 +34,9 @@ Last updated: 2026-04-19
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-325**. Next TH number: **TH-037**.
+maximum. Next KH number: **KH-325**. Next TH number: **TH-039**.
 
-> 0 open issues.
+> 2 open issues.
 
 ---
 
@@ -57,10 +57,58 @@ _No open analyzer issues._
 
 ## Test Harness Issues
 
-_No open test-harness issues._
+### TH-037: `add_repos.py` raises `KeyError: 'stats'` on fresh runs
+
+**Severity:** LOW
+**File:** `tools/add_repos.py:323` (`_update_progress`) and `tools/add_repos.py:512` (dry-run summary)
+**Discovered:** 2026-04-27 while adding Hanqaqa/Easyduino
+
+**Symptom:** When invoked with no pre-existing progress file (i.e. first run for an
+input), both `--dry-run` and the post-pipeline summary path traceback with
+`KeyError: 'stats'`. Pipeline side effects (repos.md edit, clones, analyzer runs,
+seeds, run_checks) all complete successfully *before* the error — only the
+final summary/persistence is broken.
+
+**Repro:**
+```
+python3 tools/add_repos.py --input /tmp/easyduino-validate/validated.json --jobs 4
+# ...
+# [1/1] OK Hanqaqa/Easyduino (153s elapsed)
+# Traceback (most recent call last):
+#   File "tools/add_repos.py", line 435, in _run_parallel
+#     _update_progress(progress, result)
+#   File "tools/add_repos.py", line 323, in _update_progress
+#     progress["stats"]["total_succeeded"] += 1
+# KeyError: 'stats'
+```
+
+**Likely fix:** Initialize `progress["stats"] = {"total_succeeded": 0, ...}` in
+the new-progress-dict path (and the same for `--dry-run`). Defensive `.setdefault`
+in `_update_progress` would also work.
+
+---
+
+### TH-038: `validate_candidates.py` 60s clone timeout too tight for medium repos
+
+**Severity:** LOW
+**File:** `tools/validate_candidates.py:90` (`_shallow_clone(timeout=60)`)
+**Discovered:** 2026-04-27 while adding Hanqaqa/Easyduino
+
+**Symptom:** Repos in the 200MB+ class (Easyduino is 605MB unpacked / 215MB packed)
+exceed the 60s shallow-clone timeout on a typical home connection, causing
+`validate_candidates.py` to mis-classify them as `clone_failed`. Bumping the
+timeout to 180s allowed Easyduino to clone in 78s and pass validation cleanly.
+
+**Repro:** Run `python3 tools/validate_candidates.py` against any repo whose
+`--depth 1` clone exceeds 60s. Output reports `Clone failed: 1` and writes 0
+validated candidates.
+
+**Likely fix:** Bump default to 180s, or scale by repo size if the candidates
+file carries one. The 60s default was probably set for small repos and never
+revisited.
 
 ---
 
 ## Priority Queue
 
-_0 open issues._
+_2 open TH-* issues (both LOW)._
