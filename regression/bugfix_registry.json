@@ -1780,6 +1780,39 @@
     ]
   },
   {
+    "issue": "KH-317",
+    "type": "path_fix",
+    "summary": "XT-001 crosstalk read suppression set from non-existent design_analysis.buses.differential_pairs path; now reads correct flat path",
+    "assertions": [
+      {
+        "repo": "CIRCUITSTATE/Mitayi-Pico-D1",
+        "project": "Mitayi-Pico-D1",
+        "source_file": "Mitayi-Pico-D1.kicad_sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "findings",
+          "detector_filter": "emc_crosstalk",
+          "op": "not_contains_match",
+          "field": "nets",
+          "pattern": "USB_D"
+        },
+        "description": "KH-317: XT-001 (emc_crosstalk) does not fire on declared USB_D+/USB_D- diff pair (suppression reads correct design_analysis.differential_pairs path)"
+      },
+      {
+        "repo": "CIRCUITSTATE/Mitayi-Pico-D1",
+        "project": "Mitayi-Pico-D1",
+        "source_file": "Mitayi-Pico-D1.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "design_analysis.differential_pairs",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-317 precondition: USB diff pair declared at canonical schema path (proves the suppression set is non-empty for this board)"
+      }
+    ]
+  },
+  {
     "issue": "KH-056",
     "type": "detection_fix",
     "summary": "I2S data lines (e.g. I2S0_RX_SDA) substring-matched as I2C; now excluded by 'I2S' check before SDA match",

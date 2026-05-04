@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Mitayi-Pico-D1.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-317-02",
+      "description": "KH-317 precondition: USB diff pair declared at canonical schema path (proves the suppression set is non-empty for this board)",
+      "issue": "KH-317",
+      "fix_type": "path_fix",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

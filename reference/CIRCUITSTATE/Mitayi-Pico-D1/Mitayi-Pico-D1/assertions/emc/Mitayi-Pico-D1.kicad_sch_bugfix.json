@@ -1,0 +1,21 @@
+{
+  "file_pattern": "Mitayi-Pico-D1.kicad_sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-317-01",
+      "description": "KH-317: XT-001 (emc_crosstalk) does not fire on declared USB_D+/USB_D- diff pair (suppression reads correct design_analysis.differential_pairs path)",
+      "issue": "KH-317",
+      "fix_type": "path_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "emc_crosstalk",
+        "op": "not_contains_match",
+        "field": "nets",
+        "pattern": "USB_D"
+      }
+    }
+  ]
+}
