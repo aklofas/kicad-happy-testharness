@@ -1780,6 +1780,46 @@
     ]
   },
   {
+    "issue": "KH-235",
+    "type": "parser_fix",
+    "summary": "extract_pro_net_classes TypeError on list-valued KiCad 8 .kicad_pro assignments crashed PCB analyzer",
+    "assertions": [
+      {
+        "repo": "CIRCUITSTATE/Mitayi-Pico-D1",
+        "project": "Mitayi-Pico-D1",
+        "source_file": "Mitayi-Pico-D1.kicad_pcb",
+        "check": {
+          "path": "analyzer_type",
+          "op": "equals",
+          "value": "pcb"
+        },
+        "description": "KH-235: Mitayi-Pico-D1 PCB analyzer completes (pre-fix: crashed inside extract_pro_net_classes on list-valued assignment)"
+      },
+      {
+        "repo": "CIRCUITSTATE/Mitayi-Pico-D1",
+        "project": "Mitayi-Pico-D1",
+        "source_file": "Mitayi-Pico-D1.kicad_pcb",
+        "check": {
+          "path": "net_classes",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-235: net_classes populated post-fix (pre-fix: crash before output written)"
+      },
+      {
+        "repo": "bluerobotics/ping-dev-kit",
+        "project": "PingDevKit",
+        "source_file": "PingDevKit.kicad_pcb",
+        "check": {
+          "path": "analyzer_type",
+          "op": "equals",
+          "value": "pcb"
+        },
+        "description": "KH-235: PingDevKit PCB analyzer completes (pre-fix crasher #2 from KH-235 audit)"
+      }
+    ]
+  },
+  {
     "issue": "KH-230",
     "type": "parser_fix",
     "summary": "Empty placed Value silently substituted with lib_symbol default (e.g. '' → 'R')",

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Mitayi-Pico-D1.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-235-01",
+      "description": "KH-235: Mitayi-Pico-D1 PCB analyzer completes (pre-fix: crashed inside extract_pro_net_classes on list-valued assignment)",
+      "issue": "KH-235",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "analyzer_type",
+        "op": "equals",
+        "value": "pcb"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-235-02",
+      "description": "KH-235: net_classes populated post-fix (pre-fix: crash before output written)",
+      "issue": "KH-235",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "net_classes",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}
