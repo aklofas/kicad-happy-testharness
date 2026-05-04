@@ -1772,6 +1772,38 @@
     ]
   },
   {
+    "issue": "KH-229",
+    "type": "type_fix",
+    "summary": "USB compliance vbus_capacitance stored dict in checks (other entries store string), summary loop crashed with unhashable type",
+    "assertions": [
+      {
+        "repo": "Dylanfg123/Zebra-X",
+        "project": "ZeBra-X",
+        "source_file": "ZeBra-X.kicad_sch",
+        "check": {
+          "path": "usb_compliance.connectors",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-229: Zebra-X usb_compliance.connectors populated (analyzer didn't crash on vbus_capacitance dict-in-checks)"
+      },
+      {
+        "repo": "Dylanfg123/Zebra-X",
+        "project": "ZeBra-X",
+        "source_file": "ZeBra-X.kicad_sch",
+        "check": {
+          "path": "usb_compliance.connectors",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": null,
+          "assert_field": "vbus_capacitance_detail",
+          "assert_value": {"total_uf": 4.7}
+        },
+        "description": "KH-229: Zebra-X vbus_capacitance_detail dict has total_uf=4.7 (detail moved to separate field; checks now hold strings)"
+      }
+    ]
+  },
+  {
     "issue": "KH-181",
     "type": "classification_fix",
     "summary": "GKO misclassified when X2 FileFunction conflicts with AperFunction=Profile (KiCad 8 wrong FileFunction); fix prefers .gko filename for Edge.Cuts",
