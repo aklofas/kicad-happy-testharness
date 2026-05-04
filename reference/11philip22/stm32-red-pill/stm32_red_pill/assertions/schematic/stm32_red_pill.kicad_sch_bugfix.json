@@ -1,0 +1,36 @@
+{
+  "file_pattern": "stm32_red_pill.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-217-01",
+      "description": "KH-217: stm32-red-pill Y1 (value '16MHZ' uppercase) parsed to 16000000 Hz (was unparsed pre-fix due to lowercase z mismatch)",
+      "issue": "KH-217",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "count_matches",
+        "field": "frequency",
+        "pattern": "^16000000(\\.0)?$",
+        "value": 1
+      }
+    },
+    {
+      "id": "BUGFIX-KH-217-02",
+      "description": "KH-217: Y1 raw value preserved as '16MHZ' (uppercase HZ) \u2014 proves the case-insensitive crystal frequency parsing path",
+      "issue": "KH-217",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "Y1",
+        "assert_field": "value",
+        "assert_value": "16MHZ"
+      }
+    }
+  ]
+}
