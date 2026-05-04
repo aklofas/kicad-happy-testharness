@@ -1,0 +1,33 @@
+{
+  "file_pattern": "Circuits - Series and Parallel.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-230-01",
+      "description": "KH-230: no component has bare value 'R' (Device:R lib_symbol default \u2014 pre-fix fallback marker)",
+      "issue": "KH-230",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "components",
+        "op": "not_contains_match",
+        "field": "value",
+        "pattern": "^R$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-230-02",
+      "description": "KH-230: exactly one component has empty value (the explicitly-empty R1 instance \u2014 preserved, not substituted)",
+      "issue": "KH-230",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "components",
+        "op": "count_matches",
+        "field": "value",
+        "pattern": "^$",
+        "value": 1
+      }
+    }
+  ]
+}
