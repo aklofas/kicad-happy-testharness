@@ -81,7 +81,8 @@ SMOKE_TESTS = [
     "tests/test_b1_b2_finding_id_invariants.py",      # 10 tests — capability_mode_ref + finding_id (B1+B2)
     "tests/test_b4_b7_layer2_schemas.py",             # 12 tests — design_context precedence + novel-findings schema (B4+B7)
     "tests/test_b3_b8_layer2_behavior.py",            # 11 tests — renderer contract + annotation merge lifecycle (B3+B8)
-    "tests/test_b5_4b_4c_detector_invariants.py",     # 10 tests — schema_era + enum + XT-001 emission gate (B5)
+    "tests/test_b5_4b_4c_detector_invariants.py",     # 10 tests — schema_era + enum + XT-001 emission gate (B5 a/b/c)
+    "tests/test_b5d_detector_fire_shapes.py",         # 16 tests — per-rule fire-shape AM/OV/TJ/FT/PM/EX (B5 d)
 ]
 
 
