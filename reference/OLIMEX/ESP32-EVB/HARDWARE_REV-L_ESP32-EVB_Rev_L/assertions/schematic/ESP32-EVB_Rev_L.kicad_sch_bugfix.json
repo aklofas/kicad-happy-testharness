@@ -1,0 +1,30 @@
+{
+  "file_pattern": "ESP32-EVB_Rev_L.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-052-01",
+      "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.i2c populated (\u22652 entries \u2014 SCL + SDA on GPIO13/16)",
+      "issue": "KH-052",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "BUGFIX-KH-052-02",
+      "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.uart populated (\u22652 entries)",
+      "issue": "KH-052",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 2
+      }
+    }
+  ]
+}

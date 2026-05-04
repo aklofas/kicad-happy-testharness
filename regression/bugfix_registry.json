@@ -995,6 +995,35 @@
     ]
   },
   {
+    "issue": "KH-052",
+    "type": "detection_fix",
+    "summary": "Bus protocol aggregation (I2C/SPI/UART/CAN/RS-485/SDIO) verified populated; signal prefix groups roll up into design_analysis.bus_analysis",
+    "assertions": [
+      {
+        "repo": "OLIMEX/ESP32-EVB",
+        "project": "HARDWARE_REV-L_ESP32-EVB_Rev_L",
+        "source_file": "ESP32-EVB_Rev_L.kicad_sch",
+        "check": {
+          "path": "design_analysis.bus_analysis.i2c",
+          "op": "min_count",
+          "value": 2
+        },
+        "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.i2c populated (≥2 entries — SCL + SDA on GPIO13/16)"
+      },
+      {
+        "repo": "OLIMEX/ESP32-EVB",
+        "project": "HARDWARE_REV-L_ESP32-EVB_Rev_L",
+        "source_file": "ESP32-EVB_Rev_L.kicad_sch",
+        "check": {
+          "path": "design_analysis.bus_analysis.uart",
+          "op": "min_count",
+          "value": 2
+        },
+        "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.uart populated (≥2 entries)"
+      }
+    ]
+  },
+  {
     "issue": "KH-067",
     "type": "detection_fix",
     "summary": "HDMI/DVI interface detection not implemented (only verified post-batch via existing detect_hdmi_dvi_interfaces); confirms LT8912B HDMI bridge IC detected on ESP32-P4-PC",
