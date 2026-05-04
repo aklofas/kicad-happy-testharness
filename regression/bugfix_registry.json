@@ -1738,6 +1738,40 @@
     ]
   },
   {
+    "issue": "KH-170",
+    "type": "parser_fix",
+    "summary": "MixedPlating drill files unrecognized (only NonPlated/Plated matched); fix adds MixedPlating → type 'mixed' with both PTH+NPTH flags",
+    "assertions": [
+      {
+        "repo": "GlasgowEmbedded/glasgow",
+        "project": "hardware_boards_glasgow",
+        "source_file": "revC3",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "drills",
+          "op": "field_equals",
+          "match_field": "type",
+          "match_value": "mixed",
+          "assert_field": "type",
+          "assert_value": "mixed"
+        },
+        "description": "KH-170: glasgow revC3 drill type='mixed' (MixedPlating recognized; was 'unknown' pre-fix)"
+      },
+      {
+        "repo": "GlasgowEmbedded/glasgow",
+        "project": "hardware_boards_glasgow",
+        "source_file": "revC3",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "completeness.has_npth_drill",
+          "op": "equals",
+          "value": true
+        },
+        "description": "KH-170: glasgow revC3 has_npth_drill=true (MixedPlating contributes NPTH; was false pre-fix)"
+      }
+    ]
+  },
+  {
     "issue": "KH-181",
     "type": "classification_fix",
     "summary": "GKO misclassified when X2 FileFunction conflicts with AperFunction=Profile (KiCad 8 wrong FileFunction); fix prefers .gko filename for Edge.Cuts",
