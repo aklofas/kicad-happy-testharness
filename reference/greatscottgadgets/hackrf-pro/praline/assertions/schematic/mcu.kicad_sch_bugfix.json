@@ -1,0 +1,31 @@
+{
+  "file_pattern": "mcu.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-056-01",
+      "description": "KH-056: no I2C bus has 'I2S' in net name (pre-fix: I2S0_RX_SDA, I2S0_TX_SDA leaked into I2C bus list via SDA substring match)",
+      "issue": "KH-056",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "not_contains_match",
+        "field": "net",
+        "pattern": "I2S"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-056-02",
+      "description": "KH-056: legit I2C buses still detected post-fix (\u22652 entries \u2014 I2C1_SCL/SDA pair)",
+      "issue": "KH-056",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    }
+  ]
+}

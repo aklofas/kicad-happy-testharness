@@ -1780,6 +1780,36 @@
     ]
   },
   {
+    "issue": "KH-056",
+    "type": "detection_fix",
+    "summary": "I2S data lines (e.g. I2S0_RX_SDA) substring-matched as I2C; now excluded by 'I2S' check before SDA match",
+    "assertions": [
+      {
+        "repo": "greatscottgadgets/hackrf-pro",
+        "project": "praline",
+        "source_file": "mcu.kicad_sch",
+        "check": {
+          "path": "design_analysis.bus_analysis.i2c",
+          "op": "not_contains_match",
+          "field": "net",
+          "pattern": "I2S"
+        },
+        "description": "KH-056: no I2C bus has 'I2S' in net name (pre-fix: I2S0_RX_SDA, I2S0_TX_SDA leaked into I2C bus list via SDA substring match)"
+      },
+      {
+        "repo": "greatscottgadgets/hackrf-pro",
+        "project": "praline",
+        "source_file": "mcu.kicad_sch",
+        "check": {
+          "path": "design_analysis.bus_analysis.i2c",
+          "op": "min_count",
+          "value": 2
+        },
+        "description": "KH-056: legit I2C buses still detected post-fix (≥2 entries — I2C1_SCL/SDA pair)"
+      }
+    ]
+  },
+  {
     "issue": "KH-048",
     "type": "detection_fix",
     "summary": "Key matrix detection on non-standard nets — net-name (with spaces) + topology fallback both work",
