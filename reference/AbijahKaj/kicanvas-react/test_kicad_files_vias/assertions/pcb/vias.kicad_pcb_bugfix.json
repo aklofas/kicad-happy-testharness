@@ -1,0 +1,30 @@
+{
+  "file_pattern": "vias.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-318-01",
+      "description": "KH-318: micro via type detected (vias fixture has 1 microvia \u2014 pre-fix all vias were through-typed)",
+      "issue": "KH-318",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "vias.via_analysis.type_breakdown.micro.count",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "BUGFIX-KH-318-02",
+      "description": "KH-318: blind via type detected (vias fixture has 2 blind vias)",
+      "issue": "KH-318",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "vias.via_analysis.type_breakdown.blind.count",
+        "op": "min_count",
+        "value": 2
+      }
+    }
+  ]
+}

@@ -1780,6 +1780,47 @@
     ]
   },
   {
+    "issue": "KH-318",
+    "type": "parser_fix",
+    "summary": "via.type always returned None — KiCad emits the type as a bare token after (via, not as a child (type X) sub-list",
+    "assertions": [
+      {
+        "repo": "AbijahKaj/kicanvas-react",
+        "project": "test_kicad_files_vias",
+        "source_file": "vias.kicad_pcb",
+        "check": {
+          "path": "vias.via_analysis.type_breakdown.micro.count",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-318: micro via type detected (vias fixture has 1 microvia — pre-fix all vias were through-typed)"
+      },
+      {
+        "repo": "AbijahKaj/kicanvas-react",
+        "project": "test_kicad_files_vias",
+        "source_file": "vias.kicad_pcb",
+        "check": {
+          "path": "vias.via_analysis.type_breakdown.blind.count",
+          "op": "min_count",
+          "value": 2
+        },
+        "description": "KH-318: blind via type detected (vias fixture has 2 blind vias)"
+      },
+      {
+        "repo": "Aahil78/KB75",
+        "project": "src_KB75",
+        "source_file": "KB75.kicad_pcb",
+        "check": {
+          "path": "vias.vias",
+          "op": "not_contains_match",
+          "field": "type",
+          "pattern": "^None$"
+        },
+        "description": "KH-318: no via has type=None on KB75 (620 vias mix of micro+through; pre-fix every via.type was None)"
+      }
+    ]
+  },
+  {
     "issue": "KH-304",
     "type": "classification_fix",
     "summary": "detect_sub_sheet Tier 2 misclassified intermediate hierarchy nodes (with their own (sheet ...) blocks) as root; now checks sibling reference",

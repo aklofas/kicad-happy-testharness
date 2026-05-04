@@ -1,0 +1,20 @@
+{
+  "file_pattern": "KB75.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-318-03",
+      "description": "KH-318: no via has type=None on KB75 (620 vias mix of micro+through; pre-fix every via.type was None)",
+      "issue": "KH-318",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "vias.vias",
+        "op": "not_contains_match",
+        "field": "type",
+        "pattern": "^None$"
+      }
+    }
+  ]
+}
