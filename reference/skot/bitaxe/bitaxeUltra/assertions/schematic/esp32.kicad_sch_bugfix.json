@@ -1,0 +1,32 @@
+{
+  "file_pattern": "esp32.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-292-01",
+      "description": "KH-292: bitaxeUltra esp32 emits \u22651 DS-* finding via audit_datasheet_coverage (was silent pre-fix)",
+      "issue": "KH-292",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_datasheet_coverage",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "BUGFIX-KH-292-02",
+      "description": "KH-292: DS-001/002/003 rule_id present (datasheet coverage severity tiers wired)",
+      "issue": "KH-292",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DS-00[123]$"
+      }
+    }
+  ]
+}

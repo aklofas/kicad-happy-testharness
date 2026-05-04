@@ -1556,6 +1556,37 @@
     ]
   },
   {
+    "issue": "KH-292",
+    "type": "detection_fix",
+    "summary": "Datasheet gap was silent; new audit_datasheet_coverage emits DS-001/DS-002/DS-003 findings based on MPN/datasheet coverage",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "esp32.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "audit_datasheet_coverage",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-292: bitaxeUltra esp32 emits ≥1 DS-* finding via audit_datasheet_coverage (was silent pre-fix)"
+      },
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "esp32.kicad_sch",
+        "check": {
+          "path": "findings",
+          "op": "contains_match",
+          "field": "rule_id",
+          "pattern": "^DS-00[123]$"
+        },
+        "description": "KH-292: DS-001/002/003 rule_id present (datasheet coverage severity tiers wired)"
+      }
+    ]
+  },
+  {
     "issue": "KH-293",
     "type": "detection_fix",
     "summary": "TP-DET removed from findings, superseded by TV-001",
