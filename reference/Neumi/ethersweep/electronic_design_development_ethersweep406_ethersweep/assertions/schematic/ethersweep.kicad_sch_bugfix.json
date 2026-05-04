@@ -1,0 +1,29 @@
+{
+  "file_pattern": "ethersweep.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-131-01",
+      "description": "KH-131: ethersweep power_symbols populated (\u226550) \u2014 standard power:GND/+3V3 not falsely demoted by in_bom guard",
+      "issue": "KH-131",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "power_symbols",
+        "op": "min_count",
+        "value": 50
+      }
+    },
+    {
+      "id": "BUGFIX-KH-131-02",
+      "description": "KH-131: ethersweep rail_voltages populated \u2014 net naming preserved (pre-fix would yield __unnamed_* nets)",
+      "issue": "KH-131",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "rail_voltages",
+        "op": "exists"
+      }
+    }
+  ]
+}

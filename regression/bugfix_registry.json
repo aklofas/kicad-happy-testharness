@@ -995,6 +995,34 @@
     ]
   },
   {
+    "issue": "KH-131",
+    "type": "classification_fix",
+    "summary": "KH-080's in_bom guard mis-applied to standard power symbols (power:GND, power:+3V3 etc all have in_bom yes); fix trusts the lib_symbol (power) flag unconditionally",
+    "assertions": [
+      {
+        "repo": "Neumi/ethersweep",
+        "project": "electronic_design_development_ethersweep406_ethersweep",
+        "source_file": "ethersweep.kicad_sch",
+        "check": {
+          "path": "power_symbols",
+          "op": "min_count",
+          "value": 50
+        },
+        "description": "KH-131: ethersweep power_symbols populated (≥50) — standard power:GND/+3V3 not falsely demoted by in_bom guard"
+      },
+      {
+        "repo": "Neumi/ethersweep",
+        "project": "electronic_design_development_ethersweep406_ethersweep",
+        "source_file": "ethersweep.kicad_sch",
+        "check": {
+          "path": "rail_voltages",
+          "op": "exists"
+        },
+        "description": "KH-131: ethersweep rail_voltages populated — net naming preserved (pre-fix would yield __unnamed_* nets)"
+      }
+    ]
+  },
+  {
     "issue": "KH-148",
     "type": "count_change_fix",
     "summary": "Duplicate design_observations for multi-unit ICs",
