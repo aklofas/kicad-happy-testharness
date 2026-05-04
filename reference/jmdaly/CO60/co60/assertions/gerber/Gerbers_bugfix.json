@@ -1,0 +1,20 @@
+{
+  "file_pattern": "Gerbers",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-168-01",
+      "description": "KH-168: CO60 component_holes.tools contains NPTH entries (NPTH \u22642mm routed to component, not mounting)",
+      "issue": "KH-168",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "drill_classification.component_holes.tools",
+        "op": "contains_match",
+        "field": "type",
+        "pattern": "^NPTH$"
+      }
+    }
+  ]
+}

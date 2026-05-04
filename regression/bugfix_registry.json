@@ -1705,6 +1705,39 @@
     ]
   },
   {
+    "issue": "KH-168",
+    "type": "classification_fix",
+    "summary": "NPTH holes unconditionally classified as mounting; fix routes NPTH ≤2mm to component_holes (per-tool aper_function or diameter heuristic)",
+    "assertions": [
+      {
+        "repo": "jmdaly/CO60",
+        "project": "co60",
+        "source_file": "Gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "drill_classification.component_holes.tools",
+          "op": "contains_match",
+          "field": "type",
+          "pattern": "^NPTH$"
+        },
+        "description": "KH-168: CO60 component_holes.tools contains NPTH entries (NPTH ≤2mm routed to component, not mounting)"
+      },
+      {
+        "repo": "AlexanderMandera/MechKeyboard",
+        "project": "keyboard_pcb",
+        "source_file": "Gerbers_Release-Candidate",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "drill_classification.component_holes.tools",
+          "op": "contains_match",
+          "field": "type",
+          "pattern": "^NPTH$"
+        },
+        "description": "KH-168: MechKeyboard component_holes.tools contains NPTH entries (NPTH ≤2mm routed to component, not mounting)"
+      }
+    ]
+  },
+  {
     "issue": "KH-181",
     "type": "classification_fix",
     "summary": "GKO misclassified when X2 FileFunction conflicts with AperFunction=Profile (KiCad 8 wrong FileFunction); fix prefers .gko filename for Edge.Cuts",
