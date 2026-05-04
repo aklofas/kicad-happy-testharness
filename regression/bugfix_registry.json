@@ -1780,6 +1780,57 @@
     ]
   },
   {
+    "issue": "KH-139",
+    "type": "scope_fix",
+    "summary": "Gate resistor enumeration on power-rail gate nets included all rail components (pre-fix Q13-Q16 each showed 7); now only actual gate-pull resistors",
+    "assertions": [
+      {
+        "repo": "ClemensElflein/OpenMower",
+        "project": "Hardware_OpenMowerMainboard",
+        "source_file": "RobotConnectors.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_transistor_circuits",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "Q13",
+          "assert_field": "gate_resistors",
+          "assert_value": [{"reference": "R3", "value": "1k"}]
+        },
+        "description": "KH-139: Q13 gate_resistors is single-element list (R3 only). Pre-fix: 7 entries from +3V3 rail enumeration."
+      },
+      {
+        "repo": "ClemensElflein/OpenMower",
+        "project": "Hardware_OpenMowerMainboard",
+        "source_file": "RobotConnectors.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_transistor_circuits",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "Q14",
+          "assert_field": "gate_resistors",
+          "assert_value": [{"reference": "R9", "value": "1k"}]
+        },
+        "description": "KH-139: Q14 gate_resistors is single-element list (R9 only) — corroborates KH-139 fix"
+      },
+      {
+        "repo": "ClemensElflein/OpenMower",
+        "project": "Hardware_OpenMowerMainboard",
+        "source_file": "RobotConnectors.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_transistor_circuits",
+          "op": "count_matches",
+          "field": "topology",
+          "pattern": "^level_shifter$",
+          "value": 4
+        },
+        "description": "KH-139 + KH-021: exactly 4 level_shifter transistors detected (Q13-Q16) — confirms BSS138 detection survives gate-resistor scope tightening"
+      }
+    ]
+  },
+  {
     "issue": "KH-172",
     "type": "threshold_fix",
     "summary": "Gerber alignment threshold hardcoded at 2mm caused false positives on large boards (changed to 5%-of-edge, min 2mm)",
