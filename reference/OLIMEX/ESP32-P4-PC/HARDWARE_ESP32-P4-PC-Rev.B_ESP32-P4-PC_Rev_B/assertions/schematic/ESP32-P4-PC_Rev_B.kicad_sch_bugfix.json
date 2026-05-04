@@ -2,19 +2,31 @@
   "file_pattern": "ESP32-P4-PC_Rev_B.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
   "assertions": [
     {
-      "id": "BUGFIX-KH-064-01",
-      "description": "KH-064: At least 3 crystal circuits detected (Q-prefix crystals classified correctly)",
-      "issue": "KH-064",
-      "fix_type": "classification_fix",
+      "id": "BUGFIX-KH-067-01",
+      "description": "KH-067: ESP32-P4-PC LT8912B HDMI bridge detected via detect_hdmi_dvi_interfaces",
+      "issue": "KH-067",
+      "fix_type": "detection_fix",
       "check": {
         "path": "findings",
+        "detector_filter": "detect_hdmi_dvi_interfaces",
         "op": "min_count",
-        "value": 3,
-        "detector_filter": "detect_crystal_circuits"
-      },
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
+        "value": 1
+      }
+    },
+    {
+      "id": "BUGFIX-KH-067-02",
+      "description": "KH-067: ESP32-P4-PC has LT8912B HDMI bridge component (preserves for detect_hdmi_dvi_interfaces)",
+      "issue": "KH-067",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "components",
+        "op": "contains_match",
+        "field": "value",
+        "pattern": "^LT8912B"
+      }
     }
   ]
 }

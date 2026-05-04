@@ -995,6 +995,37 @@
     ]
   },
   {
+    "issue": "KH-067",
+    "type": "detection_fix",
+    "summary": "HDMI/DVI interface detection not implemented (only verified post-batch via existing detect_hdmi_dvi_interfaces); confirms LT8912B HDMI bridge IC detected on ESP32-P4-PC",
+    "assertions": [
+      {
+        "repo": "OLIMEX/ESP32-P4-PC",
+        "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
+        "source_file": "ESP32-P4-PC_Rev_B.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_hdmi_dvi_interfaces",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-067: ESP32-P4-PC LT8912B HDMI bridge detected via detect_hdmi_dvi_interfaces"
+      },
+      {
+        "repo": "OLIMEX/ESP32-P4-PC",
+        "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
+        "source_file": "ESP32-P4-PC_Rev_B.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "contains_match",
+          "field": "value",
+          "pattern": "^LT8912B"
+        },
+        "description": "KH-067: ESP32-P4-PC has LT8912B HDMI bridge component (preserves for detect_hdmi_dvi_interfaces)"
+      }
+    ]
+  },
+  {
     "issue": "KH-131",
     "type": "classification_fix",
     "summary": "KH-080's in_bom guard mis-applied to standard power symbols (power:GND, power:+3V3 etc all have in_bom yes); fix trusts the lib_symbol (power) flag unconditionally",
