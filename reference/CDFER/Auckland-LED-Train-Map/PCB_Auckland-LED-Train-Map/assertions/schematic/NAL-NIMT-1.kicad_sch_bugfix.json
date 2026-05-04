@@ -1,0 +1,29 @@
+{
+  "file_pattern": "NAL-NIMT-1.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-304-01",
+      "description": "KH-304: NAL-NIMT-1 (intermediate hierarchy node with own (sheet) blocks) flagged as sub-sheet (hierarchy_warning emitted). Pre-fix Tier 2 returned is_root=True for files with (sheet ...) blocks regardless of sibling refs.",
+      "issue": "KH-304",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "hierarchy_warning",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-304-02",
+      "description": "KH-304 precondition: NAL-NIMT-1 has its own (sheet) blocks (\u22654 sheet refs) \u2014 the file shape that pre-fix Tier 2 mistook for root",
+      "issue": "KH-304",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "sheets",
+        "op": "min_count",
+        "value": 4
+      }
+    }
+  ]
+}

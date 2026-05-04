@@ -1780,6 +1780,34 @@
     ]
   },
   {
+    "issue": "KH-304",
+    "type": "classification_fix",
+    "summary": "detect_sub_sheet Tier 2 misclassified intermediate hierarchy nodes (with their own (sheet ...) blocks) as root; now checks sibling reference",
+    "assertions": [
+      {
+        "repo": "CDFER/Auckland-LED-Train-Map",
+        "project": "PCB_Auckland-LED-Train-Map",
+        "source_file": "NAL-NIMT-1.kicad_sch",
+        "check": {
+          "path": "hierarchy_warning",
+          "op": "exists"
+        },
+        "description": "KH-304: NAL-NIMT-1 (intermediate hierarchy node with own (sheet) blocks) flagged as sub-sheet (hierarchy_warning emitted). Pre-fix Tier 2 returned is_root=True for files with (sheet ...) blocks regardless of sibling refs."
+      },
+      {
+        "repo": "CDFER/Auckland-LED-Train-Map",
+        "project": "PCB_Auckland-LED-Train-Map",
+        "source_file": "NAL-NIMT-1.kicad_sch",
+        "check": {
+          "path": "sheets",
+          "op": "min_count",
+          "value": 4
+        },
+        "description": "KH-304 precondition: NAL-NIMT-1 has its own (sheet) blocks (≥4 sheet refs) — the file shape that pre-fix Tier 2 mistook for root"
+      }
+    ]
+  },
+  {
     "issue": "KH-317",
     "type": "path_fix",
     "summary": "XT-001 crosstalk read suppression set from non-existent design_analysis.buses.differential_pairs path; now reads correct flat path",
