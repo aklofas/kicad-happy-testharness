@@ -1674,6 +1674,37 @@
     ]
   },
   {
+    "issue": "KH-177",
+    "type": "detection_fix",
+    "summary": "pad_summary.smd_apertures always 0 on KiCad 5 (lacked X2 SMDPad tags); fix added paste-layer flash fallback",
+    "assertions": [
+      {
+        "repo": "pms67/HadesFCS",
+        "project": "Hardware_Hades",
+        "source_file": "Gerber",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "pad_summary.smd_apertures",
+          "op": "min_count",
+          "value": 100
+        },
+        "description": "KH-177: HadesFCS Hades smd_apertures > 100 (716 actual; was 0 pre-fix)"
+      },
+      {
+        "repo": "pms67/HadesFCS",
+        "project": "Hardware_Hades",
+        "source_file": "Gerber",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "pad_summary.smd_source",
+          "op": "equals",
+          "value": "paste_layer_flashes"
+        },
+        "description": "KH-177: HadesFCS Hades smd_source=paste_layer_flashes (paste-layer fallback active)"
+      }
+    ]
+  },
+  {
     "issue": "KH-182",
     "type": "parser_fix",
     "summary": "Gerber X2 %TD*% does not clear current_component/current_net (only cleared pending_aper_function)",

@@ -14,6 +14,28 @@
         "min": 50,
         "max": 200
       }
+    },
+    {
+      "id": "BUGFIX-KH-177-01",
+      "description": "KH-177: HadesFCS Hades smd_apertures > 100 (716 actual; was 0 pre-fix)",
+      "issue": "KH-177",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "pad_summary.smd_apertures",
+        "op": "min_count",
+        "value": 100
+      }
+    },
+    {
+      "id": "BUGFIX-KH-177-02",
+      "description": "KH-177: HadesFCS Hades smd_source=paste_layer_flashes (paste-layer fallback active)",
+      "issue": "KH-177",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "pad_summary.smd_source",
+        "op": "equals",
+        "value": "paste_layer_flashes"
+      }
     }
   ]
 }
