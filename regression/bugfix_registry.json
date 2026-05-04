@@ -1705,6 +1705,40 @@
     ]
   },
   {
+    "issue": "KH-181",
+    "type": "classification_fix",
+    "summary": "GKO misclassified when X2 FileFunction conflicts with AperFunction=Profile (KiCad 8 wrong FileFunction); fix prefers .gko filename for Edge.Cuts",
+    "assertions": [
+      {
+        "repo": "sparkfun/SparkFun_XRP_Controller",
+        "project": "Hardware_SparkFun_XRP_Controller",
+        "source_file": "Production",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "gerbers",
+          "op": "field_equals",
+          "match_field": "filename",
+          "match_value": "SparkFun_XRP_Controller_panelized.GKO",
+          "assert_field": "layer_type",
+          "assert_value": "Edge.Cuts"
+        },
+        "description": "KH-181: SparkFun XRP .GKO classified as Edge.Cuts (filename override beats wrong X2 FileFunction)"
+      },
+      {
+        "repo": "sparkfun/SparkFun_XRP_Controller",
+        "project": "Hardware_SparkFun_XRP_Controller",
+        "source_file": "Production",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "completeness.complete",
+          "op": "equals",
+          "value": true
+        },
+        "description": "KH-181: SparkFun XRP completeness=true (Edge.Cuts found means board outline present)"
+      }
+    ]
+  },
+  {
     "issue": "KH-182",
     "type": "parser_fix",
     "summary": "Gerber X2 %TD*% does not clear current_component/current_net (only cleared pending_aper_function)",

@@ -25,6 +25,31 @@
         "op": "min_count",
         "value": 1
       }
+    },
+    {
+      "id": "BUGFIX-KH-181-01",
+      "description": "KH-181: SparkFun XRP .GKO classified as Edge.Cuts (filename override beats wrong X2 FileFunction)",
+      "issue": "KH-181",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "gerbers",
+        "op": "field_equals",
+        "match_field": "filename",
+        "match_value": "SparkFun_XRP_Controller_panelized.GKO",
+        "assert_field": "layer_type",
+        "assert_value": "Edge.Cuts"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-181-02",
+      "description": "KH-181: SparkFun XRP completeness=true (Edge.Cuts found means board outline present)",
+      "issue": "KH-181",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
     }
   ]
 }
