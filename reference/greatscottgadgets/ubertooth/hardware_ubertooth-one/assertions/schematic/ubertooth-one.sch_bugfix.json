@@ -37,6 +37,33 @@
         "field": "mpn",
         "pattern": "."
       }
+    },
+    {
+      "id": "BUGFIX-KH-046-01",
+      "description": "KH-046: ubertooth P5-P13 (9 CONN_1 test pads) registered (was 0 pre-fix; tilde-prefix lookup mismatch)",
+      "issue": "KH-046",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "components",
+        "op": "count_matches",
+        "field": "lib_id",
+        "pattern": "^CONN_1$",
+        "value": 9
+      }
+    },
+    {
+      "id": "BUGFIX-KH-046-02",
+      "description": "KH-046: ubertooth P5 type=test_point (CONN_1 single-pin test pad correctly classified)",
+      "issue": "KH-046",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "P5",
+        "assert_field": "type",
+        "assert_value": "test_point"
+      }
     }
   ]
 }
