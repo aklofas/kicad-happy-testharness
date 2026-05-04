@@ -267,6 +267,39 @@
     ]
   },
   {
+    "issue": "KH-077",
+    "type": "type_fix",
+    "summary": "Per-component category field always None (output expected category but dict had only type); fix sets comp.category = comp.type before serialization",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "esp32.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "C21",
+          "assert_field": "category",
+          "assert_value": "capacitor"
+        },
+        "description": "KH-077: bitaxeUltra esp32 C21 has category=capacitor (was None pre-fix)"
+      },
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "esp32.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "not_contains_match",
+          "field": "category",
+          "pattern": "^$"
+        },
+        "description": "KH-077: bitaxeUltra esp32 has no components with empty category (all populated post-fix)"
+      }
+    ]
+  },
+  {
     "issue": "KH-080",
     "type": "classification_fix",
     "summary": "DD4012SA buck converter with power: lib_id classified as IC",
