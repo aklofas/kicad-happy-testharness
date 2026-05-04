@@ -1780,6 +1780,49 @@
     ]
   },
   {
+    "issue": "KH-172",
+    "type": "threshold_fix",
+    "summary": "Gerber alignment threshold hardcoded at 2mm caused false positives on large boards (changed to 5%-of-edge, min 2mm)",
+    "assertions": [
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "Manufacturing Files_gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "alignment.aligned",
+          "op": "equals",
+          "value": true
+        },
+        "description": "KH-172: bitaxe alignment.aligned=true (pre-fix: false — 99mm board had layer gaps >2mm but <5mm relative threshold)"
+      },
+      {
+        "repo": "skot/bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "Manufacturing Files_gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "alignment.issues",
+          "op": "equals",
+          "value": 0
+        },
+        "description": "KH-172: bitaxe alignment.issues empty (no false-positive misalignment warnings)"
+      },
+      {
+        "repo": "boert/KC85__M037_segmented_ROM",
+        "project": "Platine_KiCad-Projekt_M037",
+        "source_file": "gerber",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "alignment.aligned",
+          "op": "equals",
+          "value": true
+        },
+        "description": "KH-172: KC85 M037 122.5mm board with ~9.6mm layer-extent gaps stays aligned under relative 5% threshold (pre-fix 2mm hardcode would have flagged)"
+      }
+    ]
+  },
+  {
     "issue": "KH-235",
     "type": "parser_fix",
     "summary": "extract_pro_net_classes TypeError on list-valued KiCad 8 .kicad_pro assignments crashed PCB analyzer",

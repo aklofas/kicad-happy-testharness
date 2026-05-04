@@ -57,6 +57,28 @@
         "op": "equals",
         "value": 2
       }
+    },
+    {
+      "id": "BUGFIX-KH-172-01",
+      "description": "KH-172: bitaxe alignment.aligned=true (pre-fix: false \u2014 99mm board had layer gaps >2mm but <5mm relative threshold)",
+      "issue": "KH-172",
+      "fix_type": "threshold_fix",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "BUGFIX-KH-172-02",
+      "description": "KH-172: bitaxe alignment.issues empty (no false-positive misalignment warnings)",
+      "issue": "KH-172",
+      "fix_type": "threshold_fix",
+      "check": {
+        "path": "alignment.issues",
+        "op": "equals",
+        "value": 0
+      }
     }
   ]
 }
