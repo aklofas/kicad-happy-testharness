@@ -1,0 +1,23 @@
+{
+  "file_pattern": "keyboar!.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-048-03",
+      "description": "KH-048: Hugo keyboard \u2014 topology method detects 14 rows (GPIO-style names A0-A3, D0-D13, MOSI/MISO/SCK; switch-diode pair grouping)",
+      "issue": "KH-048",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_key_matrices",
+        "op": "field_equals",
+        "match_field": "detection_method",
+        "match_value": "topology",
+        "assert_field": "rows",
+        "assert_value": 14
+      }
+    }
+  ]
+}

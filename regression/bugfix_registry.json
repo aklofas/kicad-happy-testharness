@@ -1780,6 +1780,58 @@
     ]
   },
   {
+    "issue": "KH-048",
+    "type": "detection_fix",
+    "summary": "Key matrix detection on non-standard nets — net-name (with spaces) + topology fallback both work",
+    "assertions": [
+      {
+        "repo": "hackclub/OnBoard",
+        "project": "projects_Nat3z_65_Keyboard_src_keypad",
+        "source_file": "keypad.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_key_matrices",
+          "op": "field_equals",
+          "match_field": "detection_method",
+          "match_value": "net_name",
+          "assert_field": "rows",
+          "assert_value": 4
+        },
+        "description": "KH-048: Nat3z 65-key keyboard — net_name method detects 4 rows (handles 'Row 0/1/2/3' net names with spaces)"
+      },
+      {
+        "repo": "hackclub/OnBoard",
+        "project": "projects_Nat3z_65_Keyboard_src_keypad",
+        "source_file": "keypad.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_key_matrices",
+          "op": "field_equals",
+          "match_field": "detection_method",
+          "match_value": "net_name",
+          "assert_field": "estimated_keys",
+          "assert_value": 65
+        },
+        "description": "KH-048: Nat3z 65 estimated keys (4 rows × 16 cols heuristic)"
+      },
+      {
+        "repo": "hackclub/OnBoard",
+        "project": "projects_Hugo's Keyboard_src_keyboar!",
+        "source_file": "keyboar!.kicad_sch",
+        "check": {
+          "path": "findings",
+          "detector_filter": "detect_key_matrices",
+          "op": "field_equals",
+          "match_field": "detection_method",
+          "match_value": "topology",
+          "assert_field": "rows",
+          "assert_value": 14
+        },
+        "description": "KH-048: Hugo keyboard — topology method detects 14 rows (GPIO-style names A0-A3, D0-D13, MOSI/MISO/SCK; switch-diode pair grouping)"
+      }
+    ]
+  },
+  {
     "issue": "KH-139",
     "type": "scope_fix",
     "summary": "Gate resistor enumeration on power-rail gate nets included all rail components (pre-fix Q13-Q16 each showed 7); now only actual gate-pull resistors",
