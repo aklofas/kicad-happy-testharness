@@ -2393,14 +2393,13 @@ Use this when a new extraction (or schema bump) needs to land as v1.4+ gold.
 1. Confirm the gate passes 4/4:
    ```bash
    python3 validate/check_acceptance_gate.py --mpn <MPN> \
-     --extract-dir /home/aklofas/Projects/kicad-happy/datasheets/extracted/
+     --extract-dir tests/fixtures/datasheets-extracted/
    ```
 
 2. Run the promote tool (interactive — diff-on-promote shows you what's
-   changing before the write):
+   changing before the write). PDF dir + cache dir default to harness-internal:
    ```bash
-   python3 regression/promote_gold.py --mpn <MPN> \
-     --pdf-dir /home/aklofas/Projects/kicad-happy/datasheets
+   python3 regression/promote_gold.py --mpn <MPN>
    ```
 
    The tool re-runs the gate, runs the sanity-vector diff, validates the
@@ -2420,11 +2419,10 @@ Use this when a new extraction (or schema bump) needs to land as v1.4+ gold.
 4. Verify currency-check + batch-diff still clean:
    ```bash
    python3 regression/check_gold_currency.py --all
-   python3 regression/run_extraction_checks.py --all \
-     --cache-dir /home/aklofas/Projects/kicad-happy/datasheets/extracted/
+   python3 regression/run_extraction_checks.py --all
    ```
 
-   Both should exit 0.
+   Both should exit 0. Cache dir defaults to `tests/fixtures/datasheets-extracted/`.
 
 **Major schema bump?** Use `--re-curate-from <prev_version>` instead of bare
 promote. Example:

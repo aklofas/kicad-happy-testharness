@@ -27,19 +27,14 @@ sys.path.insert(0, str(_HARNESS_ROOT))
 from regression._mpn_slug import mpn_slug  # noqa: E402
 
 
-def _resolve_kicad_happy_dir() -> Path:
-    """Resolve kicad-happy directory from KICAD_HAPPY_DIR env or sibling repo."""
-    env = os.environ.get("KICAD_HAPPY_DIR")
-    if env:
-        return Path(env)
-    return _HARNESS_ROOT.parent / "kicad-happy"
-
-
 def _resolve_cache_dir(arg: Optional[str]) -> Path:
-    """Resolve cache dir from --cache-dir or kicad-happy/datasheets/extracted/."""
+    """Resolve cache dir from --cache-dir / env / harness default."""
     if arg:
         return Path(arg)
-    return _resolve_kicad_happy_dir() / "datasheets" / "extracted"
+    env = os.environ.get("HARNESS_CACHE_DIR_OVERRIDE")
+    if env:
+        return Path(env)
+    return _HARNESS_ROOT / "tests" / "fixtures" / "datasheets-extracted"
 
 
 def _resolve_gold_dir(arg: Optional[str]) -> Path:
@@ -206,7 +201,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--mpn", default=None, help="Diff a single MPN")
     parser.add_argument("--all", action="store_true", help="Diff every MPN")
     parser.add_argument("--cache-dir", default=None,
-                        help="Path to extraction cache dir (default: kicad-happy/datasheets/extracted)")
+                        help="Path to extraction cache dir "
+                             "(default: tests/fixtures/datasheets-extracted/)")
     parser.add_argument("--gold-dir", default=None,
                         help="Path to gold root (default: regression/reference_extractions)")
     parser.add_argument("--json", action="store_true",

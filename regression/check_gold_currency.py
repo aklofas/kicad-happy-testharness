@@ -73,10 +73,13 @@ def _resolve_gold_dir(arg: Optional[str]) -> Path:
 
 
 def _resolve_pdf_dir(arg: Optional[str]) -> Path:
-    """Resolve PDF directory from --pdf-dir or kicad-happy/datasheets/."""
+    """Resolve PDF directory from --pdf-dir / env / harness default."""
     if arg:
         return Path(arg)
-    return _resolve_kicad_happy_dir() / "datasheets"
+    env = os.environ.get("HARNESS_PDF_DIR_OVERRIDE")
+    if env:
+        return Path(env)
+    return _HARNESS_ROOT / "tests" / "fixtures" / "datasheets-pdfs"
 
 
 def _resolve_schemas_dir(arg: Optional[str]) -> Path:

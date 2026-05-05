@@ -41,10 +41,13 @@ def _resolve_kicad_happy_dir() -> Path:
 
 
 def _resolve_cache_dir(arg: Optional[str]) -> Path:
-    """Resolve cache dir from --cache-dir or kicad-happy/datasheets/extracted/."""
+    """Resolve cache dir from --cache-dir / env / harness default."""
     if arg:
         return Path(arg)
-    return _resolve_kicad_happy_dir() / "datasheets" / "extracted"
+    env = os.environ.get("HARNESS_CACHE_DIR_OVERRIDE")
+    if env:
+        return Path(env)
+    return _HARNESS_ROOT / "tests" / "fixtures" / "datasheets-extracted"
 
 
 def _load_cache(cache_path: Path) -> dict:
@@ -189,10 +192,13 @@ def _resolve_gold_dir() -> Path:
 
 
 def _resolve_pdf_dir(arg: Optional[str]) -> Path:
-    """Resolve PDF directory from --pdf-dir or kicad-happy/datasheets/pdfs/."""
+    """Resolve PDF directory from --pdf-dir / env / harness default."""
     if arg:
         return Path(arg)
-    return _resolve_kicad_happy_dir() / "datasheets" / "pdfs"
+    env = os.environ.get("HARNESS_PDF_DIR_OVERRIDE")
+    if env:
+        return Path(env)
+    return _HARNESS_ROOT / "tests" / "fixtures" / "datasheets-pdfs"
 
 
 def _validate_cache_schema(cache: dict, kicad_happy_dir: Path) -> tuple[bool, str]:
@@ -472,11 +478,11 @@ def main(argv: Optional[list[str]] = None) -> int:
     )
     parser.add_argument("--mpn", required=True, help="MPN to promote (e.g. LM2596-ADJ)")
     parser.add_argument("--cache-dir", default=None,
-                        help="Path to <kicad-happy>/datasheets/extracted/ "
-                             "(default: $KICAD_HAPPY_DIR/datasheets/extracted/)")
+                        help="Path to extraction cache dir "
+                             "(default: tests/fixtures/datasheets-extracted/)")
     parser.add_argument("--pdf-dir", default=None,
                         help="Where PDFs live for SHA computation "
-                             "(default: $KICAD_HAPPY_DIR/datasheets/pdfs/)")
+                             "(default: tests/fixtures/datasheets-pdfs/)")
     parser.add_argument("--yes", action="store_true",
                         help="Non-interactive; promote without prompt")
     parser.add_argument("--no-gate", action="store_true",
