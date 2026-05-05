@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "produced_for_run_id": "20260504T070303Z-12b692",
+  "produced_at": "2026-05-03T00:00:00Z",
+  "annotations": [
+    {
+      "finding_id": "sch:PR-001:u18",
+      "status": "confirmed",
+      "reason": "I2C bus to U18 has no SCL pull-up; UM10204 spec requires it for any I2C segment. Real wiring defect, not a detector artifact.",
+      "confidence": "high",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "sch:PR-001:u18",
+      "status": "confirmed",
+      "reason": "Companion to the SCL miss: SDA on the same U18 I2C segment also lacks a pull-up. Bus is non-functional until both rails are pulled up to VDD.",
+      "confidence": "high",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "sch:VM-001:u2",
+      "status": "confirmed",
+      "reason": "mosaic-T (U2) EVENTA pin is a 1.8V CMOS I/O on net MEventA_1V8 driven by/into U10 on the 3.3V domain. Datasheet absmax for mosaic-T digital inputs is below 3.3V drive, so a level shifter or series-divider is required.",
+      "confidence": "high",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "sch:VM-001:u2",
+      "status": "confirmed",
+      "reason": "Same 3.3V/1.8V crossing pattern as MEventA, this time on EVENTB through U12. Real domain mismatch, confirmed.",
+      "confidence": "high",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "sch:VM-001:u16",
+      "status": "confirmed",
+      "reason": "MPPS_1V8 connects mosaic-T PPS (1.8V) to U16 buffer in 3.3V domain feeding the LMV7219 comparator chain. The 1V8 net name itself signals intent, but the 3.3V buffer side will overdrive U2's 1.8V input. Needs a level shifter or 3.3V-tolerant buffer.",
+      "confidence": "high",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "cross:XV-001:g2",
+      "status": "confirmed",
+      "reason": "G2 is in schematic but missing from PCB. Routine sync drift to fix before fab via Update PCB from Schematic. Real issue, not a detector artifact.",
+      "confidence": "high",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "sch:PS-001:u11",
+      "status": "suppressed",
+      "reason": "AP7361C-3.3V is a fixed 1A LDO that powers the Ethernet PHY chain in this GNSSDO design. The detector flags PG-unknown as a heuristic gap because no datasheet extraction is cached, but the part has no PG output by design (3-pin package family). Sequencing flag is a heuristic-vs-design-intent gap, not a wiring defect.",
+      "confidence": "medium",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "sch:PS-001:u5",
+      "status": "suppressed",
+      "reason": "Same pattern as U11: AP7361C-3.3V powering 3.3V_P rail to U4. Part family has no PG pin, so the 'PG status unknown' is a missing-extraction heuristic and not an actionable defect. Suppressing as a documented heuristic-vs-design-intent gap.",
+      "confidence": "medium",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "sch:PU-001:u18",
+      "status": "suppressed",
+      "reason": "R53 200k on U18 EN is a static enable pull-up, not a signaling line. The detector's 100k cap targets signaling rise-time concerns; for a DC enable pin, 200k is acceptable and intentional to minimize quiescent current. Documented heuristic-vs-design-intent gap.",
+      "confidence": "medium",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    },
+    {
+      "finding_id": "cross:XV-001:ref**",
+      "status": "suppressed",
+      "reason": "The 104 PCB-only entries are dominated by 'kibuzzard-*' silkscreen artwork generators and 'Ref**' placeholder annotations rather than actual electrical components. This is a known false-positive category for boards using kibuzzard/silkscreen plugins. Documented heuristic-vs-design-intent gap.",
+      "confidence": "medium",
+      "reviewed_at": "2026-05-03T00:00:00Z"
+    }
+  ],
+  "reviewer_observations": []
+}
