@@ -94,6 +94,9 @@ def discover_tests(dirs, tier_filter=None):
     If tier_filter is set, only files matching that tier are returned.
     Files without a TIER declaration default to "unit" for tests/ and "online"
     for integration/.
+
+    tests/contract/ is excluded — it is a pytest-driven suite invoked separately
+    with KICAD_HAPPY_DIR set, not the custom-runner subprocess pattern.
     """
     tests = []
     for d in dirs:
@@ -103,6 +106,9 @@ def discover_tests(dirs, tier_filter=None):
         default_tier = "online" if d == "integration" else "unit"
         # rglob so subdirectories like tests/datasheets/ are discovered too.
         for f in sorted(test_dir.rglob("test_*.py")):
+            # Skip pytest-driven sub-suites that don't fit the custom runner.
+            if "contract" in f.relative_to(HARNESS_DIR).parts:
+                continue
             if tier_filter and tier_filter != "all":
                 # Read TIER from file
                 tier = default_tier

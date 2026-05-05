@@ -1,0 +1,49 @@
+{
+  "plan_version": "1.0",
+  "mpn": "LM2596-ADJ",
+  "pdf_path": "datasheets/LM2596-ADJ.pdf",
+  "pdf_sha256": "sha256:a3ecb47736422dc1579c85ba229d85ef70be3da706a0524beb9c85753073ce26",
+  "cache_dir": "datasheets/extracted",
+  "created_at": "2026-04-25T10:00:00Z",
+  "scout_ref": "LM2596-ADJ.scout.json",
+  "tasks": [
+    {
+      "task_id": "base",
+      "subagent_role": "base",
+      "tier": "B",
+      "schema": "skills/datasheets/schemas/base.schema.json",
+      "prompt_template": "skills/datasheets/prompts/base.md",
+      "pages": [1, 2, 4, 5],
+      "depends_on": [],
+      "status": "pending",
+      "result_ref": null
+    },
+    {
+      "task_id": "pinout",
+      "subagent_role": "pinout",
+      "tier": "A",
+      "schema": "skills/datasheets/schemas/pinout.schema.json",
+      "prompt_template": "skills/datasheets/prompts/pinout.md",
+      "pages": [3, 4],
+      "depends_on": [],
+      "status": "pending",
+      "result_ref": null
+    },
+    {
+      "task_id": "regulator",
+      "subagent_role": "regulator",
+      "tier": "B",
+      "schema": "skills/datasheets/schemas/regulator.schema.json",
+      "prompt_template": "skills/datasheets/prompts/regulator.md",
+      "pages": [5, 6, 13, 14, 15],
+      "depends_on": [],
+      "status": "pending",
+      "result_ref": null
+    }
+  ],
+  "execution": {
+    "started_at": null,
+    "completed_at": null,
+    "outcomes": []
+  }
+}

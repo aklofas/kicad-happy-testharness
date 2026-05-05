@@ -1,0 +1,25 @@
+mpn: LM2596-ADJ
+manufacturer: Texas Instruments
+pdf_sha256: a3ecb47736422dc1579c85ba229d85ef70be3da706a0524beb9c85753073ce26
+authored_at: 2026-04-20
+authored_by: "test-fixture-minimal"
+partial_reason: null
+
+fields:
+  - path: base.absolute_max.VIN_max
+    expected: {max: 45, unit: "V"}
+    page: 5
+    tolerance_pct: 5
+
+  - path: base.recommended_operating.VIN
+    expected: {min: 4.5, max: 40, unit: "V"}
+    page: 5
+    tolerance_pct: 5
+
+  - path: regulator.reference_voltage
+    expected: {min: 1.18, typ: 1.23, max: 1.28, unit: "V"}
+    page: 5
+    tolerance_pct: 5
+
+  - path: regulator.topology
+    expected_enum: "buck"
