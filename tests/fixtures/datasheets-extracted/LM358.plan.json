@@ -1,0 +1,78 @@
+{
+  "cache_dir": "datasheets/extracted",
+  "created_at": "2026-04-27T21:42:29Z",
+  "execution": {
+    "completed_at": "2026-04-27T21:46:07Z",
+    "outcomes": [
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "base"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "pinout"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "opamp"
+      }
+    ],
+    "started_at": "2026-04-27T21:46:07Z"
+  },
+  "mpn": "LM358",
+  "pdf_path": "datasheets/LM358.pdf",
+  "pdf_sha256": "sha256:bf013d140abf784524088efe4725877a549365c8959a8d2b47b6f464cdc70c1e",
+  "plan_version": "1.0",
+  "scout_ref": "LM358.scout.json",
+  "tasks": [
+    {
+      "depends_on": [],
+      "pages": [
+        2,
+        3
+      ],
+      "prompt_template": "skills/datasheets/prompts/base.md",
+      "result_ref": "LM358.base.result.json",
+      "schema": "skills/datasheets/schemas/base.schema.json",
+      "status": "complete",
+      "subagent_role": "base",
+      "task_id": "base",
+      "tier": "B"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        2
+      ],
+      "prompt_template": "skills/datasheets/prompts/pinout.md",
+      "result_ref": "LM358.pinout.result.json",
+      "schema": "skills/datasheets/schemas/pinout.schema.json",
+      "status": "complete",
+      "subagent_role": "pinout",
+      "task_id": "pinout",
+      "tier": "A"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "prompt_template": "skills/datasheets/prompts/opamp.md",
+      "result_ref": "LM358.opamp.result.json",
+      "schema": "skills/datasheets/schemas/opamp.schema.json",
+      "status": "complete",
+      "subagent_role": "opamp",
+      "task_id": "opamp",
+      "tier": "B"
+    }
+  ]
+}

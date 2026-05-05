@@ -1,0 +1,75 @@
+{
+  "cache_dir": "datasheets/extracted",
+  "created_at": "2026-04-27T22:08:04Z",
+  "execution": {
+    "completed_at": "2026-04-27T22:10:35Z",
+    "outcomes": [
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "base"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "pinout"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "crystal"
+      }
+    ],
+    "started_at": "2026-04-27T22:10:35Z"
+  },
+  "mpn": "ABM8G-106-12.000MHZ-T",
+  "pdf_path": "datasheets/ABM8G-106-12.000MHZ-T.pdf",
+  "pdf_sha256": "sha256:03360289d6bd5f5d91a0c2a3e5d6dfe8c74516a2e286937d9e1c058df4c4cee7",
+  "plan_version": "1.0",
+  "scout_ref": "ABM8G-106-12.000MHZ-T.scout.json",
+  "tasks": [
+    {
+      "depends_on": [],
+      "pages": [
+        1
+      ],
+      "prompt_template": "skills/datasheets/prompts/base.md",
+      "result_ref": "ABM8G-106-12.000MHZ-T.base.result.json",
+      "schema": "skills/datasheets/schemas/base.schema.json",
+      "status": "complete",
+      "subagent_role": "base",
+      "task_id": "base",
+      "tier": "B"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        2
+      ],
+      "prompt_template": "skills/datasheets/prompts/pinout.md",
+      "result_ref": "ABM8G-106-12.000MHZ-T.pinout.result.json",
+      "schema": "skills/datasheets/schemas/pinout.schema.json",
+      "status": "complete",
+      "subagent_role": "pinout",
+      "task_id": "pinout",
+      "tier": "A"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        1,
+        2
+      ],
+      "prompt_template": "skills/datasheets/prompts/crystal.md",
+      "result_ref": "ABM8G-106-12.000MHZ-T.crystal.result.json",
+      "schema": "skills/datasheets/schemas/crystal.schema.json",
+      "status": "complete",
+      "subagent_role": "crystal",
+      "task_id": "crystal",
+      "tier": "B"
+    }
+  ]
+}

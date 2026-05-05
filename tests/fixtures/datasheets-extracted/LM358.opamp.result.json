@@ -1,0 +1,241 @@
+{
+  "data": {
+    "channels": 2,
+    "cmrr": [
+      {
+        "condition": "VCC=5V, TA=25\u00b0C",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": null,
+        "min": 65,
+        "notes": "LM358 column: min=65dB, typ=80dB.",
+        "typ": 80,
+        "unit": "dB"
+      }
+    ],
+    "gbw": [
+      {
+        "condition": "VCC=30V, TA=25\u00b0C, from open-loop frequency response curve (Figure 3)",
+        "evidence": {
+          "confidence": "medium",
+          "method": "curve",
+          "page": 7,
+          "section": "Typical Performance Characteristics \u2014 Figure 3"
+        },
+        "max": null,
+        "min": null,
+        "notes": "GBW not tabulated. Read from Figure 3 Bode plot at 0dB crossover.",
+        "typ": 1000000.0,
+        "unit": "Hz"
+      }
+    ],
+    "ib": [
+      {
+        "condition": "VCC=5V, TA=25\u00b0C",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": 2.5e-07,
+        "min": null,
+        "notes": "IBIAS: typ=45nA, max=250nA for LM358 grade.",
+        "typ": 4.5e-08,
+        "unit": "A"
+      }
+    ],
+    "iq_per_amp": [
+      {
+        "condition": "VCC=5V, no load, per channel (total ICC typ=0.5mA, max=1.2mA / channels=2)",
+        "evidence": {
+          "confidence": "high",
+          "method": "calculated",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": 0.0006,
+        "min": null,
+        "notes": "Datasheet publishes total ICC. Divided by channels=2.",
+        "typ": 0.00025,
+        "unit": "A"
+      }
+    ],
+    "opamp_topology": "general_purpose",
+    "output_drive_current": [
+      {
+        "condition": "Short circuit to GND (ISC), VCC\u226415V, TA=25\u00b0C",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": 0.06,
+        "min": null,
+        "notes": "ISC: typ=40mA, max=60mA for LM358.",
+        "typ": 0.04,
+        "unit": "A"
+      },
+      {
+        "condition": "Source current ISOURCE: VI(+)=1V, VI(-)=0V, VCC=15V, VO(P)=2V",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": null,
+        "min": 0.02,
+        "notes": "ISOURCE LM358 column: min=20mA, typ=30mA.",
+        "typ": 0.03,
+        "unit": "A"
+      },
+      {
+        "condition": "Sink current ISINK: VI(+)=1V, VI(-)=0V, VCC=15V, VO(P)=2V",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": null,
+        "min": 0.01,
+        "notes": "ISINK LM358 column: min=10mA, typ=15mA.",
+        "typ": 0.015,
+        "unit": "A"
+      }
+    ],
+    "package": {
+      "body_mm": {
+        "height": 1.55,
+        "length": 4.92,
+        "width": 3.95
+      },
+      "code": "SOIC-8",
+      "evidence": {
+        "confidence": "high",
+        "method": "table",
+        "page": 10,
+        "section": "Mechanical Dimensions \u2014 8-SOP"
+      },
+      "pin_count": 8,
+      "pitch_mm": 1.27,
+      "thermal_pad": false
+    },
+    "psrr": [
+      {
+        "condition": "VCC=5V, TA=25\u00b0C",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": null,
+        "min": 65,
+        "notes": "PSRR LM358 column: min=65dB, typ=100dB.",
+        "typ": 100,
+        "unit": "dB"
+      }
+    ],
+    "shutdown_pin": null,
+    "slew_rate": [
+      {
+        "condition": "VCC=15V, unity gain, RL=2k\u03a9 (Figure 11 voltage follower pulse response)",
+        "evidence": {
+          "confidence": "medium",
+          "method": "curve",
+          "page": 8,
+          "section": "Typical Performance Characteristics \u2014 Figure 11"
+        },
+        "max": null,
+        "min": null,
+        "notes": "Slew rate not tabulated. Estimated from Figure 11: ~3V in ~5\u00b5s \u2192 ~0.6V/\u00b5s = 6e5 V/s.",
+        "typ": 600000.0,
+        "unit": "V/s"
+      }
+    ],
+    "thermal_resistance": {
+      "rtheta_ja": null,
+      "rtheta_jc": null,
+      "rtheta_jl": null
+    },
+    "unity_gain_stable": true,
+    "vos": [
+      {
+        "condition": "VCM=0V to VCC-1.5V, VO(P)=1.4V, RS=0\u03a9, VCC=5V, TA=25\u00b0C",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": 0.007,
+        "min": null,
+        "notes": "LM358 grade: typ=2.9mV, max=7.0mV at TA=25\u00b0C.",
+        "typ": 0.0029,
+        "unit": "V"
+      }
+    ],
+    "vout_swing_high": [
+      {
+        "condition": "VCC=15V, RL=2k\u03a9, output high headroom from V+",
+        "evidence": {
+          "confidence": "medium",
+          "method": "prose",
+          "page": 2,
+          "section": "Features"
+        },
+        "max": null,
+        "min": null,
+        "notes": "Datasheet cover states 'Large Output Voltage Swing: 0 DC to Vcc-1.5V DC'.",
+        "typ": 1.5,
+        "unit": "V"
+      }
+    ],
+    "vout_swing_low": [
+      {
+        "condition": "VCC=5V, RL=10k\u03a9, output low headroom from V\u2212",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 3,
+          "section": "Electrical Characteristics"
+        },
+        "max": 0.02,
+        "min": null,
+        "notes": "VO(L) LM358 column: typ=5mV, max=20mV.",
+        "typ": 0.005,
+        "unit": "V"
+      }
+    ],
+    "vsupply_range": [
+      {
+        "condition": "single supply, 3 to 32 V (also \u00b11.5 to \u00b116 V split-supply equivalent)",
+        "evidence": {
+          "confidence": "high",
+          "method": "prose",
+          "page": 2,
+          "section": "Features / Absolute Maximum Ratings"
+        },
+        "max": 32,
+        "min": 3,
+        "notes": "LM358/LM358A: 3V~32V (or \u00b11.5V~16V).",
+        "typ": null,
+        "unit": "V"
+      }
+    ],
+    "vsupply_split_capable": true
+  },
+  "extracted_at": "2026-04-27T22:00:00Z",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "B",
+  "schema_version": "1.0",
+  "status": "complete",
+  "task_id": "opamp"
+}

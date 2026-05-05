@@ -1,0 +1,80 @@
+{
+  "cache_dir": "datasheets/extracted",
+  "created_at": "2026-04-27T20:46:30Z",
+  "execution": {
+    "completed_at": "2026-04-27T20:53:49Z",
+    "outcomes": [
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "base"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "pinout"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "diode"
+      }
+    ],
+    "started_at": "2026-04-27T20:53:49Z"
+  },
+  "mpn": "MBRS540T3G",
+  "pdf_path": "datasheets/MBRS540T3G.pdf",
+  "pdf_sha256": "sha256:1064a599f53ed9cbb6fd5f349b98aa0bcb6eaa1cd434acec5911321a83a08f31",
+  "plan_version": "1.0",
+  "scout_ref": "MBRS540T3G.scout.json",
+  "tasks": [
+    {
+      "depends_on": [],
+      "pages": [
+        1,
+        2,
+        5
+      ],
+      "prompt_template": "skills/datasheets/prompts/base.md",
+      "result_ref": "MBRS540T3G.base.result.json",
+      "schema": "skills/datasheets/schemas/base.schema.json",
+      "status": "complete",
+      "subagent_role": "base",
+      "task_id": "base",
+      "tier": "B"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        1,
+        5
+      ],
+      "prompt_template": "skills/datasheets/prompts/pinout.md",
+      "result_ref": "MBRS540T3G.pinout.result.json",
+      "schema": "skills/datasheets/schemas/pinout.schema.json",
+      "status": "complete",
+      "subagent_role": "pinout",
+      "task_id": "pinout",
+      "tier": "A"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "prompt_template": "skills/datasheets/prompts/diode.md",
+      "result_ref": "MBRS540T3G.diode.result.json",
+      "schema": "skills/datasheets/schemas/diode.schema.json",
+      "status": "complete",
+      "subagent_role": "diode",
+      "task_id": "diode",
+      "tier": "B"
+    }
+  ]
+}

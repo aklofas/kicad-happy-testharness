@@ -1,0 +1,83 @@
+{
+  "cache_dir": "datasheets/extracted",
+  "created_at": "2026-04-27T21:21:48Z",
+  "execution": {
+    "completed_at": "2026-04-27T21:24:55Z",
+    "outcomes": [
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "base"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "pinout"
+      },
+      {
+        "attempts": 1,
+        "final_status": "complete",
+        "last_error": null,
+        "task_id": "transistor"
+      }
+    ],
+    "started_at": "2026-04-27T21:24:55Z"
+  },
+  "mpn": "IRLML6344",
+  "pdf_path": "datasheets/IRLML6344.pdf",
+  "pdf_sha256": "sha256:a617ed2f9bfebfa5e57d9e8e6ba8f165b6f8d88ce57f11b47aae99a8f8905d85",
+  "plan_version": "1.0",
+  "scout_ref": "IRLML6344.scout.json",
+  "tasks": [
+    {
+      "depends_on": [],
+      "pages": [
+        1,
+        2,
+        10
+      ],
+      "prompt_template": "skills/datasheets/prompts/base.md",
+      "result_ref": "IRLML6344.base.result.json",
+      "schema": "skills/datasheets/schemas/base.schema.json",
+      "status": "complete",
+      "subagent_role": "base",
+      "task_id": "base",
+      "tier": "B"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        1,
+        8
+      ],
+      "prompt_template": "skills/datasheets/prompts/pinout.md",
+      "result_ref": "IRLML6344.pinout.result.json",
+      "schema": "skills/datasheets/schemas/pinout.schema.json",
+      "status": "complete",
+      "subagent_role": "pinout",
+      "task_id": "pinout",
+      "tier": "A"
+    },
+    {
+      "depends_on": [],
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "prompt_template": "skills/datasheets/prompts/transistor.md",
+      "result_ref": "IRLML6344.transistor.result.json",
+      "schema": "skills/datasheets/schemas/transistor.schema.json",
+      "status": "complete",
+      "subagent_role": "transistor",
+      "task_id": "transistor",
+      "tier": "B"
+    }
+  ]
+}

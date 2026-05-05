@@ -1,0 +1,162 @@
+{
+  "data": {
+    "cin_min": [
+      {
+        "condition": "Aluminum electrolytic, 50 V, low-ESR (Nichicon PL series); recommended in adjustable typical application",
+        "evidence": {
+          "confidence": "high",
+          "method": "prose",
+          "page": 27,
+          "section": "9.2.2 LM2596 Adjustable Output Series Buck Regulator"
+        },
+        "max": null,
+        "min": null,
+        "notes": null,
+        "typ": 0.00047,
+        "unit": "F"
+      }
+    ],
+    "compensation_pin": null,
+    "cout_min": [
+      {
+        "condition": "Low-ESR electrolytic range; low-ESR solid tantalum alternative is 10 \u00b5F to 470 \u00b5F",
+        "evidence": {
+          "confidence": "high",
+          "method": "prose",
+          "page": 24,
+          "section": "9.2.1.2.3 Output Capacitor Selection (COUT)"
+        },
+        "max": 0.00082,
+        "min": 8.2e-05,
+        "notes": null,
+        "typ": null,
+        "unit": "F"
+      }
+    ],
+    "dropout": null,
+    "enable_pin": "5",
+    "feedback_pin": "4",
+    "inductor_range": [
+      {
+        "condition": "Inductor selection nomograph for LM2596-ADJ (Figure 9-8), 0.6 A to 3 A load, Vin up to 40 V",
+        "evidence": {
+          "confidence": "high",
+          "method": "curve",
+          "page": 20,
+          "section": "9.1.5 Inductor Selection (Figure 9-8 LM2596-ADJ)"
+        },
+        "max": 0.00015,
+        "min": 2.2e-05,
+        "notes": null,
+        "typ": null,
+        "unit": "H"
+      }
+    ],
+    "iout_max": [
+      {
+        "condition": "DC output load current, full operating range",
+        "evidence": {
+          "confidence": "high",
+          "method": "prose",
+          "page": 1,
+          "section": "1 Features / 3 Description"
+        },
+        "max": 3,
+        "min": null,
+        "notes": null,
+        "typ": null,
+        "unit": "A"
+      }
+    ],
+    "line_regulation": null,
+    "load_regulation": null,
+    "power_good_pin": null,
+    "psrr": null,
+    "reference_voltage": [
+      {
+        "condition": "VFB feedback voltage, Vout programmed for 3 V, TJ = 25\u00b0C",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 6,
+          "section": "7.8 Electrical Characteristics \u2013 Adjustable Voltage Version"
+        },
+        "max": 1.267,
+        "min": 1.193,
+        "notes": null,
+        "typ": 1.23,
+        "unit": "V"
+      }
+    ],
+    "sequencing": null,
+    "stability_conditions": {
+      "cap_types_allowed": [
+        "electrolytic",
+        "tantalum"
+      ],
+      "esr_range": null,
+      "evidence": {
+        "confidence": "high",
+        "method": "prose",
+        "page": 24,
+        "section": "9.2.1.2.3 Output Capacitor Selection (COUT)"
+      },
+      "notes": "Output capacitor must be low-ESR electrolytic (82 \u00b5F to 820 \u00b5F) or low-ESR solid tantalum (10 \u00b5F to 470 \u00b5F). TI does not recommend electrolytic capacitors below \u221225\u00b0C; solid tantalum recommended below \u221225\u00b0C. Caution with ceramics on input."
+    },
+    "switching_freq": [
+      {
+        "condition": "Oscillator frequency, TJ = 25\u00b0C",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 7,
+          "section": "7.9 Electrical Characteristics \u2013 All Output Voltage Versions"
+        },
+        "max": 173000,
+        "min": 127000,
+        "notes": null,
+        "typ": 150000,
+        "unit": "Hz"
+      }
+    ],
+    "topology": "buck",
+    "vin_range": [
+      {
+        "condition": "Adjustable version operating range",
+        "evidence": {
+          "confidence": "high",
+          "method": "table",
+          "page": 6,
+          "section": "7.8 Electrical Characteristics \u2013 Adjustable Voltage Version"
+        },
+        "max": 40,
+        "min": 4.5,
+        "notes": null,
+        "typ": null,
+        "unit": "V"
+      }
+    ],
+    "vout_range": [
+      {
+        "condition": "\u00b14% over line and load, adjustable version",
+        "evidence": {
+          "confidence": "high",
+          "method": "prose",
+          "page": 1,
+          "section": "1 Features"
+        },
+        "max": 37,
+        "min": 1.2,
+        "notes": null,
+        "typ": null,
+        "unit": "V"
+      }
+    ]
+  },
+  "extracted_at": "2026-04-25T20:40:16Z",
+  "model_id": "claude-opus-4-7",
+  "model_tier": "B",
+  "schema_version": "0.3",
+  "status": "complete",
+  "task_id": "regulator"
+}
