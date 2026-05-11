@@ -150,18 +150,7 @@ def test_single_sheet_no_top_level_sheets_skips_merge():
         f"(GND/+5V), got {n_ps}")
 
 
-# Tests that depend on PR #19's merge path. Until the PR lands on main
-# and propagates to v1.4-dev, kicad-happy v1.4-dev's analyzer doesn't
-# recognise top_level_sheets at all, so these tests xfail. Remove
-# entries as the feature + fix become available on v1.4-dev.
-KNOWN_FAILURES = {
-    "test_merge_path_fires_and_sheets_count_is_three":
-        "PR-19 (top_level_sheets feature)",
-    "test_components_merged_from_all_pages":
-        "PR-19 (peer-sheet component merge)",
-    "test_power_symbols_refreshed_after_peer_merge":
-        "PR-19 + fix (power_symbols refresh after merge)",
-}
+KNOWN_FAILURES: dict[str, str] = {}
 
 
 # ─── custom-runner __main__ block (harness convention) ──────────────────
