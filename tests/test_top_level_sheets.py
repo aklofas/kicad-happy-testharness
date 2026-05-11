@@ -150,25 +150,45 @@ def test_single_sheet_no_top_level_sheets_skips_merge():
         f"(GND/+5V), got {n_ps}")
 
 
+# Tests that depend on PR #19's merge path. Until the PR lands on main
+# and propagates to v1.4-dev, kicad-happy v1.4-dev's analyzer doesn't
+# recognise top_level_sheets at all, so these tests xfail. Remove
+# entries as the feature + fix become available on v1.4-dev.
+KNOWN_FAILURES = {
+    "test_merge_path_fires_and_sheets_count_is_three":
+        "PR-19 (top_level_sheets feature)",
+    "test_components_merged_from_all_pages":
+        "PR-19 (peer-sheet component merge)",
+    "test_power_symbols_refreshed_after_peer_merge":
+        "PR-19 + fix (power_symbols refresh after merge)",
+}
+
+
 # ─── custom-runner __main__ block (harness convention) ──────────────────
 
 if __name__ == "__main__":
-    import traceback
-    fn_names = sorted(n for n, v in globals().items()
-                      if n.startswith("test_") and callable(v))
-    failed = 0
-    passed = 0
-    for n in fn_names:
+    tests = [(name, obj) for name, obj in globals().items()
+             if name.startswith("test_") and callable(obj)]
+    passed = failed = xfailed = 0
+    for name, fn in sorted(tests):
         try:
-            globals()[n]()
-            print(f"PASS {n}")
-            passed += 1
-        except AssertionError as e:
-            print(f"FAIL {n}: {e}")
-            failed += 1
-        except Exception as e:
-            print(f"FAIL {n}: {type(e).__name__}: {e}")
-            traceback.print_exc()
-            failed += 1
-    print(f"{passed} passed, {failed} failed ({len(fn_names)} total)")
-    sys.exit(0 if failed == 0 else 1)
+            fn()
+            if name in KNOWN_FAILURES:
+                passed += 1
+                print(f"  XPASS (remove from KNOWN_FAILURES, "
+                      f"{KNOWN_FAILURES[name]} may be fixed): {name}")
+            else:
+                passed += 1
+                print(f"  PASS: {name}")
+        except (AssertionError, Exception) as e:
+            if name in KNOWN_FAILURES:
+                xfailed += 1
+                print(f"  XFAIL ({KNOWN_FAILURES[name]}): {name}: "
+                      f"{type(e).__name__}: {e}")
+            else:
+                failed += 1
+                print(f"  FAIL: {name}: {type(e).__name__}: {e}")
+    total = passed + failed + xfailed
+    print(f"\n{passed} passed, {failed} failed, {xfailed} xfailed "
+          f"({total} total)")
+    sys.exit(1 if failed else 0)
