@@ -84,6 +84,7 @@ SMOKE_TESTS = [
     "tests/test_b5_4b_4c_detector_invariants.py",     # 10 tests — schema_era + enum + XT-001 emission gate (B5 a/b/c)
     "tests/test_b5d_detector_fire_shapes.py",         # 16 tests — per-rule fire-shape AM/OV/TJ/FT/PM/EX (B5 d)
     "tests/test_b6_reviewer_output_invariants.py",    # 16 tests — reviewer-output replay + invariants (B6)
+    "tests/test_top_level_sheets.py",                 # 3 tests — top_level_sheets merge + power_symbols refresh (PR #19)
 ]
 
 
