@@ -200,6 +200,23 @@ def test_aggregate_consistency():
                        for p in per_packet))
 
 
+def test_report_md_nonempty():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp) / "metrics"
+        subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(PACKETS_DIR),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True, check=True
+        )
+        run_dir = next(out_dir.iterdir())
+        md = (run_dir / "report.md").read_text()
+        assert "B9 Review Metrics" in md
+        assert "packet_01_suppress_true_fp" in md
+        assert "Aggregate" in md
+        assert "Carry-overs" in md
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -211,6 +228,7 @@ if __name__ == "__main__":
         test_per_packet_json_shape,
         test_aggregate_json_shape,
         test_aggregate_consistency,
+        test_report_md_nonempty,
     ]
     passed = failed = 0
     for t in tests:

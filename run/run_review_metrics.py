@@ -230,15 +230,57 @@ def aggregate(per_packet):
     }
 
 
+def _fmt_metric(v):
+    if v is None:
+        return "null"
+    if isinstance(v, str):
+        return v
+    if isinstance(v, float):
+        return f"{v:.3f}"
+    return str(v)
+
+
 def render_report(per_packet, agg):
-    lines = ["# B9 Review Metrics Report", "",
-             f"Packets: {agg['packet_count']} total, "
-             f"{agg['packets_run']} run, {agg['packets_skipped']} skipped",
-             "", "## Per-packet", ""]
+    lines = [
+        "# B9 Review Metrics Report",
+        "",
+        f"Packets: {agg['packet_count']} total, "
+        f"{agg['packets_run']} run, {agg['packets_skipped']} skipped",
+        f"Escalation overlay violations total: {agg['escalation_overlay_violations_total']}",
+        "",
+        "## Per-packet",
+        "",
+    ]
     for p in per_packet:
-        lines.append(f"- **{p['packet_name']}** — {p['status']}")
+        if p["status"] == "skipped":
+            lines.append(f"- **{p['packet_name']}** — skipped: {p.get('reason', '?')}")
+            continue
+        m = p["metrics"]
+        lines.append(
+            f"- **{p['packet_name']}** — supp_prec={_fmt_metric(m['suppression_precision'])}, "
+            f"miss_rate={_fmt_metric(m['false_suppression_miss_rate'])}, "
+            f"conf_recall={_fmt_metric(m['confirmation_recall'])}, "
+            f"esc_prec={_fmt_metric(m['escalation_precision'])}"
+        )
+    lines += ["", "## Aggregate", ""]
+    am = agg["metrics"]
+    for k in ("suppression_precision", "false_suppression_miss_rate",
+              "confirmation_recall", "escalation_precision",
+              "correlation_coverage", "cost_delta"):
+        lines.append(f"- {k}: {_fmt_metric(am[k])}")
+    lines.append("- confidence_calibration:")
+    for bucket in CONFIDENCE_BUCKETS:
+        lines.append(f"    - {bucket}: {_fmt_metric(am['confidence_calibration'][bucket])}")
+    lines += ["", "## Carry-overs in this run", ""]
+    if am["cost_delta"] is None:
+        lines.append("- `cost_delta` is null — no review-cost ledger present (main-repo carry-over)")
+    if all(am["confidence_calibration"][b] == "insufficient_data"
+           for b in CONFIDENCE_BUCKETS):
+        lines.append("- `confidence_calibration` all `insufficient_data` — pending packet corpus growth")
+    if agg["packets_run"] == 1:
+        lines.append("- Only 1 packet exercised — packets 02-05 await main-repo contribution (spec §15.1)")
     lines.append("")
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines)
 
 
 def main(argv=None):
