@@ -1,0 +1,30 @@
+{
+  "file_pattern": "BandSelector.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-196-01",
+      "description": "KH-196: BandSelector U2 LDO estimated_inrush_A = 0.0 (proves C10 '2.2' parsed as 2.2pF not 2.2F \u2014 pre-fix value was 22,000A from misparsed 2.2 Farads)",
+      "issue": "KH-196",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "inrush_analysis.rails[0].estimated_inrush_A",
+        "op": "equals",
+        "value": 0.0
+      }
+    },
+    {
+      "id": "BUGFIX-KH-196-02",
+      "description": "KH-196: BandSelector U2 total_output_capacitance_uF = 0.0 (2.2pF rounds to 0.0uF; pre-fix was 2,200,000uF from F misparse)",
+      "issue": "KH-196",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "inrush_analysis.rails[0].total_output_capacitance_uF",
+        "op": "equals",
+        "value": 0.0
+      }
+    }
+  ]
+}

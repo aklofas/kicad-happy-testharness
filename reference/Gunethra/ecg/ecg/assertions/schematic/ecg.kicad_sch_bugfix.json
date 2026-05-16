@@ -1,0 +1,36 @@
+{
+  "file_pattern": "ecg.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-031-01",
+      "description": "KH-031: detect_rf_matching emits >=1 finding for Gunethra/ecg (antenna AE1 + L/C matching network \u2014 pre-fix detector didn't exist)",
+      "issue": "KH-031",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "detector",
+        "pattern": "^detect_rf_matching$",
+        "detector_filter": "detect_rf_matching"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-031-02",
+      "description": "KH-031: AE1 antenna matching network classified as pi_match topology (proves BFS classifier reaches correct shape)",
+      "issue": "KH-031",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_rf_matching",
+        "match_field": "antenna",
+        "match_value": "AE1",
+        "assert_field": "topology",
+        "assert_value": "pi_match"
+      }
+    }
+  ]
+}

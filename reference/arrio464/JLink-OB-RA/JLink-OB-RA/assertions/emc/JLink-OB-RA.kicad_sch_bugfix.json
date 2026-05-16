@@ -1,0 +1,30 @@
+{
+  "file_pattern": "JLink-OB-RA.kicad_sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-287-01",
+      "description": "KH-287: ML-001 (inductor_leakage) finding present in JLink-OB-RA EMC output (pre-fix would crash with NameError on switching reg + crystal/ADC/opamp combination)",
+      "issue": "KH-287",
+      "fix_type": "crash_fix",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^ML-001$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-287-02",
+      "description": "KH-287: EMC summary block exists (proves analyzer ran end-to-end without NameError crash that previously aborted any project with switching reg)",
+      "issue": "KH-287",
+      "fix_type": "crash_fix",
+      "check": {
+        "path": "summary",
+        "op": "exists"
+      }
+    }
+  ]
+}

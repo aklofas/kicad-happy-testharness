@@ -1,0 +1,38 @@
+{
+  "file_pattern": "power6v.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-237-01",
+      "description": "KH-237: TPS54302 U_POW1 switching_frequency_hz=400000 (was 570000 pre-fix from TPS54 prefix collision)",
+      "issue": "KH-237",
+      "fix_type": "table_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U_POW1",
+        "assert_field": "switching_frequency_hz",
+        "assert_value": 400000.0
+      }
+    },
+    {
+      "id": "BUGFIX-KH-237-02",
+      "description": "KH-237: freq_source='lookup_table' (not 'topology_default') \u2014 proves TPS54302 hit per-sub-family lookup, not the deprecated prefix-match",
+      "issue": "KH-237",
+      "fix_type": "table_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U_POW1",
+        "assert_field": "freq_source",
+        "assert_value": "lookup_table"
+      }
+    }
+  ]
+}

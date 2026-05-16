@@ -1,0 +1,20 @@
+{
+  "file_pattern": "cynthion.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-026-01",
+      "description": "KH-026: cynthion root schematic has hierarchical_label with /UUID/UUID/CC1 path (proves multi-instance type_c sub-sheet net namespacing \u2014 pre-fix would merge all CC1 across instances)",
+      "issue": "KH-026",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "labels",
+        "op": "contains_match",
+        "field": "name",
+        "pattern": "^/[0-9a-f-]+/[0-9a-f-]+/CC[12]$"
+      }
+    }
+  ]
+}

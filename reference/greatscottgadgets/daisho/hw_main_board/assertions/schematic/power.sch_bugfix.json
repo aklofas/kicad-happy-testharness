@@ -1,0 +1,30 @@
+{
+  "file_pattern": "power.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-016-01",
+      "description": "KH-016: GND net has >=30 pins on daisho main_board/power.sch (was orphaned at 97.5% pre-fix; post-fix matches multi-pin GND fan-out)",
+      "issue": "KH-016",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "nets.GND.pins",
+        "op": "min_count",
+        "value": 30
+      }
+    },
+    {
+      "id": "BUGFIX-KH-016-02",
+      "description": "KH-016: total_components=62 on daisho main_board/power.sch (proves legacy .sch parser sees full component set after coordinate-matching fix)",
+      "issue": "KH-016",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 62
+      }
+    }
+  ]
+}

@@ -1075,7 +1075,7 @@
           "op": "min_count",
           "value": 2
         },
-        "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.i2c populated (≥2 entries — SCL + SDA on GPIO13/16)"
+        "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.i2c populated (\u22652 entries \u2014 SCL + SDA on GPIO13/16)"
       },
       {
         "repo": "OLIMEX/ESP32-EVB",
@@ -1086,7 +1086,7 @@
           "op": "min_count",
           "value": 2
         },
-        "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.uart populated (≥2 entries)"
+        "description": "KH-052: ESP32-EVB Rev-L design_analysis.bus_analysis.uart populated (\u22652 entries)"
       }
     ]
   },
@@ -1135,7 +1135,7 @@
           "op": "min_count",
           "value": 50
         },
-        "description": "KH-131: ethersweep power_symbols populated (≥50) — standard power:GND/+3V3 not falsely demoted by in_bom guard"
+        "description": "KH-131: ethersweep power_symbols populated (\u226550) \u2014 standard power:GND/+3V3 not falsely demoted by in_bom guard"
       },
       {
         "repo": "Neumi/ethersweep",
@@ -1145,7 +1145,7 @@
           "path": "rail_voltages",
           "op": "exists"
         },
-        "description": "KH-131: ethersweep rail_voltages populated — net naming preserved (pre-fix would yield __unnamed_* nets)"
+        "description": "KH-131: ethersweep rail_voltages populated \u2014 net naming preserved (pre-fix would yield __unnamed_* nets)"
       }
     ]
   },
@@ -1603,7 +1603,7 @@
           "op": "min_count",
           "value": 1
         },
-        "description": "KH-292: bitaxeUltra esp32 emits ≥1 DS-* finding via audit_datasheet_coverage (was silent pre-fix)"
+        "description": "KH-292: bitaxeUltra esp32 emits \u22651 DS-* finding via audit_datasheet_coverage (was silent pre-fix)"
       },
       {
         "repo": "skot/bitaxe",
@@ -1810,7 +1810,7 @@
           "assert_field": "category",
           "assert_value": "switch"
         },
-        "description": "KH-208: CB1/Device:CircuitBreaker_1P classified as 'switch' (pre-fix: 'capacitor' via CB→C first-char fallback)"
+        "description": "KH-208: CB1/Device:CircuitBreaker_1P classified as 'switch' (pre-fix: 'capacitor' via CB\u2192C first-char fallback)"
       },
       {
         "repo": "Unnati2310/PCB_schematic_KiCad",
@@ -1893,7 +1893,7 @@
   {
     "issue": "KH-168",
     "type": "classification_fix",
-    "summary": "NPTH holes unconditionally classified as mounting; fix routes NPTH ≤2mm to component_holes (per-tool aper_function or diameter heuristic)",
+    "summary": "NPTH holes unconditionally classified as mounting; fix routes NPTH \u22642mm to component_holes (per-tool aper_function or diameter heuristic)",
     "assertions": [
       {
         "repo": "jmdaly/CO60",
@@ -1906,7 +1906,7 @@
           "field": "type",
           "pattern": "^NPTH$"
         },
-        "description": "KH-168: CO60 component_holes.tools contains NPTH entries (NPTH ≤2mm routed to component, not mounting)"
+        "description": "KH-168: CO60 component_holes.tools contains NPTH entries (NPTH \u22642mm routed to component, not mounting)"
       },
       {
         "repo": "AlexanderMandera/MechKeyboard",
@@ -1919,14 +1919,14 @@
           "field": "type",
           "pattern": "^NPTH$"
         },
-        "description": "KH-168: MechKeyboard component_holes.tools contains NPTH entries (NPTH ≤2mm routed to component, not mounting)"
+        "description": "KH-168: MechKeyboard component_holes.tools contains NPTH entries (NPTH \u22642mm routed to component, not mounting)"
       }
     ]
   },
   {
     "issue": "KH-170",
     "type": "parser_fix",
-    "summary": "MixedPlating drill files unrecognized (only NonPlated/Plated matched); fix adds MixedPlating → type 'mixed' with both PTH+NPTH flags",
+    "summary": "MixedPlating drill files unrecognized (only NonPlated/Plated matched); fix adds MixedPlating \u2192 type 'mixed' with both PTH+NPTH flags",
     "assertions": [
       {
         "repo": "GlasgowEmbedded/glasgow",
@@ -1988,7 +1988,7 @@
           "assert_field": "value",
           "assert_value": "16MHZ"
         },
-        "description": "KH-217: Y1 raw value preserved as '16MHZ' (uppercase HZ) — proves the case-insensitive crystal frequency parsing path"
+        "description": "KH-217: Y1 raw value preserved as '16MHZ' (uppercase HZ) \u2014 proves the case-insensitive crystal frequency parsing path"
       }
     ]
   },
@@ -2018,7 +2018,9 @@
           "match_field": "reference",
           "match_value": null,
           "assert_field": "vbus_capacitance_detail",
-          "assert_value": {"total_uf": 4.7}
+          "assert_value": {
+            "total_uf": 4.7
+          }
         },
         "description": "KH-229: Zebra-X vbus_capacitance_detail dict has total_uf=4.7 (detail moved to separate field; checks now hold strings)"
       }
@@ -2073,7 +2075,7 @@
           "op": "equals",
           "value": 2
         },
-        "description": "KH-182: bitaxe J2 has 2 pads (pre-fix: 203 — %TD*% leaked component attribute)"
+        "description": "KH-182: bitaxe J2 has 2 pads (pre-fix: 203 \u2014 %TD*% leaked component attribute)"
       },
       {
         "repo": "skot/bitaxe",
@@ -2085,7 +2087,7 @@
           "op": "equals",
           "value": 2
         },
-        "description": "KH-182: bitaxe J7 has 2 pads (similar 2-pin connector — corroborates %TD*% fix)"
+        "description": "KH-182: bitaxe J7 has 2 pads (similar 2-pin connector \u2014 corroborates %TD*% fix)"
       }
     ]
   },
@@ -2103,7 +2105,7 @@
           "op": "min_count",
           "value": 1
         },
-        "description": "KH-073: ic_power_rails populated for ≥1 IC on legacy .sch (pre-fix: empty dict)"
+        "description": "KH-073: ic_power_rails populated for \u22651 IC on legacy .sch (pre-fix: empty dict)"
       },
       {
         "repo": "OLIMEX/ESP32-DevKit-LiPo",
@@ -2114,7 +2116,7 @@
           "op": "min_count",
           "value": 2
         },
-        "description": "KH-073: ic_power_rails populated for ≥2 ICs (U1, U2) on legacy ESP32-DevKit-LiPo Rev C"
+        "description": "KH-073: ic_power_rails populated for \u22652 ICs (U1, U2) on legacy ESP32-DevKit-LiPo Rev C"
       },
       {
         "repo": "OLIMEX/ESP32-DevKit-LiPo",
@@ -2125,14 +2127,14 @@
           "op": "min_count",
           "value": 2
         },
-        "description": "KH-073: U1 power_rails has ≥2 entries on legacy .sch (pin-net mapping reaches IC pins)"
+        "description": "KH-073: U1 power_rails has \u22652 entries on legacy .sch (pin-net mapping reaches IC pins)"
       }
     ]
   },
   {
     "issue": "KH-053",
     "type": "parser_fix",
-    "summary": "KiCad 9 value parsing — space-separated SI prefix dropped (e.g. '18 pF' → 18 instead of 1.8e-11)",
+    "summary": "KiCad 9 value parsing \u2014 space-separated SI prefix dropped (e.g. '18 pF' \u2192 18 instead of 1.8e-11)",
     "assertions": [
       {
         "repo": "greatscottgadgets/hackrf-pro",
@@ -2146,7 +2148,7 @@
           "assert_field": "parsed_value",
           "assert_value": 1.8e-11
         },
-        "description": "KH-053: C157 value '18 pF' parses to 1.8e-11 (pre-fix .split()[0] dropped 'pF' → parsed=18)"
+        "description": "KH-053: C157 value '18 pF' parses to 1.8e-11 (pre-fix .split()[0] dropped 'pF' \u2192 parsed=18)"
       },
       {
         "repo": "greatscottgadgets/hackrf-pro",
@@ -2167,7 +2169,7 @@
   {
     "issue": "KH-318",
     "type": "parser_fix",
-    "summary": "via.type always returned None — KiCad emits the type as a bare token after (via, not as a child (type X) sub-list",
+    "summary": "via.type always returned None \u2014 KiCad emits the type as a bare token after (via, not as a child (type X) sub-list",
     "assertions": [
       {
         "repo": "AbijahKaj/kicanvas-react",
@@ -2178,7 +2180,7 @@
           "op": "min_count",
           "value": 1
         },
-        "description": "KH-318: micro via type detected (vias fixture has 1 microvia — pre-fix all vias were through-typed)"
+        "description": "KH-318: micro via type detected (vias fixture has 1 microvia \u2014 pre-fix all vias were through-typed)"
       },
       {
         "repo": "AbijahKaj/kicanvas-react",
@@ -2229,7 +2231,7 @@
           "op": "min_count",
           "value": 4
         },
-        "description": "KH-304 precondition: NAL-NIMT-1 has its own (sheet) blocks (≥4 sheet refs) — the file shape that pre-fix Tier 2 mistook for root"
+        "description": "KH-304 precondition: NAL-NIMT-1 has its own (sheet) blocks (\u22654 sheet refs) \u2014 the file shape that pre-fix Tier 2 mistook for root"
       }
     ]
   },
@@ -2292,14 +2294,14 @@
           "op": "min_count",
           "value": 2
         },
-        "description": "KH-056: legit I2C buses still detected post-fix (≥2 entries — I2C1_SCL/SDA pair)"
+        "description": "KH-056: legit I2C buses still detected post-fix (\u22652 entries \u2014 I2C1_SCL/SDA pair)"
       }
     ]
   },
   {
     "issue": "KH-048",
     "type": "detection_fix",
-    "summary": "Key matrix detection on non-standard nets — net-name (with spaces) + topology fallback both work",
+    "summary": "Key matrix detection on non-standard nets \u2014 net-name (with spaces) + topology fallback both work",
     "assertions": [
       {
         "repo": "hackclub/OnBoard",
@@ -2314,7 +2316,7 @@
           "assert_field": "rows",
           "assert_value": 4
         },
-        "description": "KH-048: Nat3z 65-key keyboard — net_name method detects 4 rows (handles 'Row 0/1/2/3' net names with spaces)"
+        "description": "KH-048: Nat3z 65-key keyboard \u2014 net_name method detects 4 rows (handles 'Row 0/1/2/3' net names with spaces)"
       },
       {
         "repo": "hackclub/OnBoard",
@@ -2329,7 +2331,7 @@
           "assert_field": "estimated_keys",
           "assert_value": 65
         },
-        "description": "KH-048: Nat3z 65 estimated keys (4 rows × 16 cols heuristic)"
+        "description": "KH-048: Nat3z 65 estimated keys (4 rows \u00d7 16 cols heuristic)"
       },
       {
         "repo": "hackclub/OnBoard",
@@ -2344,7 +2346,7 @@
           "assert_field": "rows",
           "assert_value": 14
         },
-        "description": "KH-048: Hugo keyboard — topology method detects 14 rows (GPIO-style names A0-A3, D0-D13, MOSI/MISO/SCK; switch-diode pair grouping)"
+        "description": "KH-048: Hugo keyboard \u2014 topology method detects 14 rows (GPIO-style names A0-A3, D0-D13, MOSI/MISO/SCK; switch-diode pair grouping)"
       }
     ]
   },
@@ -2364,7 +2366,12 @@
           "match_field": "reference",
           "match_value": "Q13",
           "assert_field": "gate_resistors",
-          "assert_value": [{"reference": "R3", "value": "1k"}]
+          "assert_value": [
+            {
+              "reference": "R3",
+              "value": "1k"
+            }
+          ]
         },
         "description": "KH-139: Q13 gate_resistors is single-element list (R3 only). Pre-fix: 7 entries from +3V3 rail enumeration."
       },
@@ -2379,9 +2386,14 @@
           "match_field": "reference",
           "match_value": "Q14",
           "assert_field": "gate_resistors",
-          "assert_value": [{"reference": "R9", "value": "1k"}]
+          "assert_value": [
+            {
+              "reference": "R9",
+              "value": "1k"
+            }
+          ]
         },
-        "description": "KH-139: Q14 gate_resistors is single-element list (R9 only) — corroborates KH-139 fix"
+        "description": "KH-139: Q14 gate_resistors is single-element list (R9 only) \u2014 corroborates KH-139 fix"
       },
       {
         "repo": "ClemensElflein/OpenMower",
@@ -2395,7 +2407,7 @@
           "pattern": "^level_shifter$",
           "value": 4
         },
-        "description": "KH-139 + KH-021: exactly 4 level_shifter transistors detected (Q13-Q16) — confirms BSS138 detection survives gate-resistor scope tightening"
+        "description": "KH-139 + KH-021: exactly 4 level_shifter transistors detected (Q13-Q16) \u2014 confirms BSS138 detection survives gate-resistor scope tightening"
       }
     ]
   },
@@ -2414,7 +2426,7 @@
           "op": "equals",
           "value": true
         },
-        "description": "KH-172: bitaxe alignment.aligned=true (pre-fix: false — 99mm board had layer gaps >2mm but <5mm relative threshold)"
+        "description": "KH-172: bitaxe alignment.aligned=true (pre-fix: false \u2014 99mm board had layer gaps >2mm but <5mm relative threshold)"
       },
       {
         "repo": "skot/bitaxe",
@@ -2485,7 +2497,7 @@
   {
     "issue": "KH-230",
     "type": "parser_fix",
-    "summary": "Empty placed Value silently substituted with lib_symbol default (e.g. '' → 'R')",
+    "summary": "Empty placed Value silently substituted with lib_symbol default (e.g. '' \u2192 'R')",
     "assertions": [
       {
         "repo": "hamster/SAINTCON",
@@ -2497,7 +2509,7 @@
           "field": "value",
           "pattern": "^R$"
         },
-        "description": "KH-230: no component has bare value 'R' (Device:R lib_symbol default — pre-fix fallback marker)"
+        "description": "KH-230: no component has bare value 'R' (Device:R lib_symbol default \u2014 pre-fix fallback marker)"
       },
       {
         "repo": "hamster/SAINTCON",
@@ -2510,7 +2522,7 @@
           "pattern": "^$",
           "value": 1
         },
-        "description": "KH-230: exactly one component has empty value (the explicitly-empty R1 instance — preserved, not substituted)"
+        "description": "KH-230: exactly one component has empty value (the explicitly-empty R1 instance \u2014 preserved, not substituted)"
       }
     ]
   },
@@ -2591,7 +2603,7 @@
           "op": "equals",
           "value": 50
         },
-        "description": "KH-311: summary.total_findings==50 (matches trust_summary and len(findings) — invariant enforced)"
+        "description": "KH-311: summary.total_findings==50 (matches trust_summary and len(findings) \u2014 invariant enforced)"
       },
       {
         "repo": "bluepylons/A-Thinkpad-USB-keyboard",
@@ -2603,7 +2615,7 @@
           "op": "equals",
           "value": 51
         },
-        "description": "KH-311: connector breakout trust_summary.total_findings==51 (second data point — invariant holds across sub-projects)"
+        "description": "KH-311: connector breakout trust_summary.total_findings==51 (second data point \u2014 invariant holds across sub-projects)"
       }
     ]
   },
@@ -2653,7 +2665,7 @@
   {
     "issue": "KH-319",
     "type": "parser_fix",
-    "summary": "has_flag() now matches (hide yes) boolean sub-lists — hidden pins on KiCad 9+ schematics correctly reported as hidden",
+    "summary": "has_flag() now matches (hide yes) boolean sub-lists \u2014 hidden pins on KiCad 9+ schematics correctly reported as hidden",
     "assertions": [
       {
         "repo": "Fihdi/Eurorack",
@@ -2728,6 +2740,354 @@
           "value": 10
         },
         "description": "KH-326: footprint_count == 10 (proves PCB fully parsed including the kbLBrack1 footprint with empty value field that previously caused AttributeError)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-205",
+    "type": "parser_fix",
+    "summary": "D+ net (with + char) lost in KiCad 5 legacy net resolution \u2014 now correctly resolves and links to differential pair",
+    "assertions": [
+      {
+        "repo": "RandomDelta6/USB-Mouse",
+        "project": "Mouse",
+        "source_file": "Mouse.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "nets.D+.pins",
+          "op": "min_count",
+          "value": 4
+        },
+        "description": "KH-205: D+ net has >=4 pins (R17, C13, C9, R8) \u2014 proves '+' character in net name doesn't break legacy .sch resolution"
+      },
+      {
+        "repo": "RandomDelta6/USB-Mouse",
+        "project": "Mouse",
+        "source_file": "Mouse.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "design_analysis.differential_pairs",
+          "op": "contains_match",
+          "field": "positive",
+          "pattern": "^D\\+$"
+        },
+        "description": "KH-205: differential_pairs contains entry with positive='D+' (proves USB diff pair detected post net resolution fix)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-284",
+    "type": "parser_fix",
+    "summary": "extract_pro_net_classes crashes with TypeError when .kicad_pro netclass_patterns key is explicitly null",
+    "assertions": [
+      {
+        "repo": "eugenio/zigbee_plant_sensor_solar_node",
+        "project": "quilter_upload_Candidate_1_default",
+        "source_file": "default.kicad_pcb",
+        "analyzer_type": "pcb",
+        "check": {
+          "path": "summary",
+          "op": "exists"
+        },
+        "description": "KH-284: PCB summary exists for Candidate_1/default.kicad_pcb (proves analyzer didn't crash on netclass_patterns: null in companion default.kicad_pro)"
+      },
+      {
+        "repo": "eugenio/zigbee_plant_sensor_solar_node",
+        "project": "quilter_upload_Candidate_1_default",
+        "source_file": "default.kicad_pcb",
+        "analyzer_type": "pcb",
+        "check": {
+          "path": "statistics.footprint_count",
+          "op": "equals",
+          "value": 55
+        },
+        "description": "KH-284: footprint_count=55 (proves PCB fully parsed after netclass_patterns=None TypeError fix)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-016",
+    "type": "parser_fix",
+    "summary": "Legacy KiCad 5 wire-to-pin coordinate matching rewritten (_STANDARD_LIB_PINS offsets, cache lib suffix map, snap-to-wire fallback)",
+    "assertions": [
+      {
+        "repo": "greatscottgadgets/daisho",
+        "project": "hw_main_board",
+        "source_file": "power.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "nets.GND.pins",
+          "op": "min_count",
+          "value": 30
+        },
+        "description": "KH-016: GND net has >=30 pins on daisho main_board/power.sch (was orphaned at 97.5% pre-fix; post-fix matches multi-pin GND fan-out)"
+      },
+      {
+        "repo": "greatscottgadgets/daisho",
+        "project": "hw_main_board",
+        "source_file": "power.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "statistics.total_components",
+          "op": "equals",
+          "value": 62
+        },
+        "description": "KH-016: total_components=62 on daisho main_board/power.sch (proves legacy .sch parser sees full component set after coordinate-matching fix)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-026",
+    "type": "parser_fix",
+    "summary": "Multi-instance sub-sheet net merging \u2014 hierarchical labels namespaced per-instance with sheet UUID paths",
+    "assertions": [
+      {
+        "repo": "greatscottgadgets/cynthion-hardware",
+        "project": "cynthion",
+        "source_file": "cynthion.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "labels",
+          "op": "contains_match",
+          "field": "name",
+          "pattern": "^/[0-9a-f-]+/[0-9a-f-]+/CC[12]$"
+        },
+        "description": "KH-026: cynthion root schematic has hierarchical_label with /UUID/UUID/CC1 path (proves multi-instance type_c sub-sheet net namespacing \u2014 pre-fix would merge all CC1 across instances)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-031",
+    "type": "detection_fix",
+    "summary": "New detect_rf_matching() detector for antenna matching networks (pi/T/L/matching topologies, BFS through L/C from antenna pin)",
+    "assertions": [
+      {
+        "repo": "Gunethra/ecg",
+        "project": "ecg",
+        "source_file": "ecg.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "contains_match",
+          "field": "detector",
+          "pattern": "^detect_rf_matching$",
+          "detector_filter": "detect_rf_matching"
+        },
+        "description": "KH-031: detect_rf_matching emits >=1 finding for Gunethra/ecg (antenna AE1 + L/C matching network \u2014 pre-fix detector didn't exist)"
+      },
+      {
+        "repo": "Gunethra/ecg",
+        "project": "ecg",
+        "source_file": "ecg.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_rf_matching",
+          "match_field": "antenna",
+          "match_value": "AE1",
+          "assert_field": "topology",
+          "assert_value": "pi_match"
+        },
+        "description": "KH-031: AE1 antenna matching network classified as pi_match topology (proves BFS classifier reaches correct shape)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-047",
+    "type": "enrichment_fix",
+    "summary": "ic_pin_analysis IC function field now populated via _classify_ic_function() (lib prefix + value keyword + description fallback)",
+    "assertions": [
+      {
+        "repo": "Bastardkb/Adafruit-KB2040-PCB",
+        "project": "Adafruit KB2040",
+        "source_file": "Adafruit KB2040.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "ic_pin_analysis",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "IC2",
+          "assert_field": "function",
+          "assert_value": "microcontroller (RP)"
+        },
+        "description": "KH-047: IC2 (RP2040_QFN56) function field = 'microcontroller (RP)' (was empty pre-fix; proves IC function classifier wires through to ic_result dict)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-079",
+    "type": "classification_fix",
+    "summary": "classify_component() single-char ref prefix fallback (T\u2192transformer) now checks lib_id/footprint for overrides (TP footprint \u2192 test_point)",
+    "assertions": [
+      {
+        "repo": "phodina/openwrt-one",
+        "project": "OpenWrt_ONE",
+        "source_file": "OpenWrt_ONE.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "TPD?",
+          "assert_field": "type",
+          "assert_value": "test_point"
+        },
+        "description": "KH-079: first TPD? component classified as type='test_point' (was 'transformer' pre-fix from T-prefix single-char fallback overriding lib_id/footprint)"
+      },
+      {
+        "repo": "phodina/openwrt-one",
+        "project": "OpenWrt_ONE",
+        "source_file": "OpenWrt_ONE.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "count_matches",
+          "field": "type",
+          "pattern": "^transformer$",
+          "value": 2
+        },
+        "description": "KH-079: exactly 2 components classified as transformer (the 2 real TR? entries; pre-fix would also misclassify 34 TPD? entries as transformer)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-196",
+    "type": "parser_fix",
+    "summary": "analyze_inrush_current()/analyze_pdn_impedance() now use AnalysisContext.parsed_values (component_type-aware parse) instead of bare parse_value() \u2014 KH-153 pF heuristic now applies",
+    "assertions": [
+      {
+        "repo": "n1kdo/BandSelector",
+        "project": "kicad_BandSelector",
+        "source_file": "BandSelector.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "inrush_analysis.rails[0].estimated_inrush_A",
+          "op": "equals",
+          "value": 0.0
+        },
+        "description": "KH-196: BandSelector U2 LDO estimated_inrush_A = 0.0 (proves C10 '2.2' parsed as 2.2pF not 2.2F \u2014 pre-fix value was 22,000A from misparsed 2.2 Farads)"
+      },
+      {
+        "repo": "n1kdo/BandSelector",
+        "project": "kicad_BandSelector",
+        "source_file": "BandSelector.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "inrush_analysis.rails[0].total_output_capacitance_uF",
+          "op": "equals",
+          "value": 0.0
+        },
+        "description": "KH-196: BandSelector U2 total_output_capacitance_uF = 0.0 (2.2pF rounds to 0.0uF; pre-fix was 2,200,000uF from F misparse)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-218",
+    "type": "table_fix",
+    "summary": "Added TPS62912 (0.8V), TPS736xx (1.204V), LM22676 (1.285V) to _REGULATOR_VREF lookup \u2014 was falling back to 0.6V heuristic",
+    "assertions": [
+      {
+        "repo": "biomimetics/MRIRobot_PCB",
+        "project": "Main_PCB_V4_MRIRobot_PCB",
+        "source_file": "USBC-Power.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U6",
+          "assert_field": "assumed_vref",
+          "assert_value": 1.285
+        },
+        "description": "KH-218: LM22676MR-ADJ U6 has assumed_vref=1.285V (lookup table hit, was 0.6V heuristic pre-fix)"
+      },
+      {
+        "repo": "biomimetics/MRIRobot_PCB",
+        "project": "Main_PCB_V4_MRIRobot_PCB",
+        "source_file": "USBC-Power.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U6",
+          "assert_field": "vref_source",
+          "assert_value": "lookup"
+        },
+        "description": "KH-218: vref_source='lookup' (not 'heuristic') \u2014 proves LM22676 hit the corrected _REGULATOR_VREF table"
+      }
+    ]
+  },
+  {
+    "issue": "KH-237",
+    "type": "table_fix",
+    "summary": "Switching frequency table rewrite \u2014 extracted _KNOWN_FREQS to kicad_utils.py single source of truth, replaced 8 collision prefixes with 92 DigiKey-verified per-sub-family entries (TPS54302=400kHz was 570kHz, etc.)",
+    "assertions": [
+      {
+        "repo": "hacklabkyiv/E-TKT",
+        "project": "_electronic_KiCad_e-tkt",
+        "source_file": "power6v.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U_POW1",
+          "assert_field": "switching_frequency_hz",
+          "assert_value": 400000.0
+        },
+        "description": "KH-237: TPS54302 U_POW1 switching_frequency_hz=400000 (was 570000 pre-fix from TPS54 prefix collision)"
+      },
+      {
+        "repo": "hacklabkyiv/E-TKT",
+        "project": "_electronic_KiCad_e-tkt",
+        "source_file": "power6v.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U_POW1",
+          "assert_field": "freq_source",
+          "assert_value": "lookup_table"
+        },
+        "description": "KH-237: freq_source='lookup_table' (not 'topology_default') \u2014 proves TPS54302 hit per-sub-family lookup, not the deprecated prefix-match"
+      }
+    ]
+  },
+  {
+    "issue": "KH-287",
+    "type": "crash_fix",
+    "summary": "check_inductor_leakage (ML-001) crashed with NameError on undefined `signal` \u2014 fixed to use get_findings(schematic, Det.*) rich-finding API",
+    "assertions": [
+      {
+        "repo": "arrio464/JLink-OB-RA",
+        "project": "JLink-OB-RA",
+        "source_file": "JLink-OB-RA.kicad_sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "findings",
+          "op": "contains_match",
+          "field": "rule_id",
+          "pattern": "^ML-001$"
+        },
+        "description": "KH-287: ML-001 (inductor_leakage) finding present in JLink-OB-RA EMC output (pre-fix would crash with NameError on switching reg + crystal/ADC/opamp combination)"
+      },
+      {
+        "repo": "arrio464/JLink-OB-RA",
+        "project": "JLink-OB-RA",
+        "source_file": "JLink-OB-RA.kicad_sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "summary",
+          "op": "exists"
+        },
+        "description": "KH-287: EMC summary block exists (proves analyzer ran end-to-end without NameError crash that previously aborted any project with switching reg)"
       }
     ]
   }

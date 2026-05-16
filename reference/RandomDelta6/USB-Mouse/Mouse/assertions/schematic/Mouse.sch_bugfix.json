@@ -1,0 +1,31 @@
+{
+  "file_pattern": "Mouse.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-205-01",
+      "description": "KH-205: D+ net has >=4 pins (R17, C13, C9, R8) \u2014 proves '+' character in net name doesn't break legacy .sch resolution",
+      "issue": "KH-205",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "nets.D+.pins",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "BUGFIX-KH-205-02",
+      "description": "KH-205: differential_pairs contains entry with positive='D+' (proves USB diff pair detected post net resolution fix)",
+      "issue": "KH-205",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "contains_match",
+        "field": "positive",
+        "pattern": "^D\\+$"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "file_pattern": "Adafruit KB2040.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-047-01",
+      "description": "KH-047: IC2 (RP2040_QFN56) function field = 'microcontroller (RP)' (was empty pre-fix; proves IC function classifier wires through to ic_result dict)",
+      "issue": "KH-047",
+      "fix_type": "enrichment_fix",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "IC2",
+        "assert_field": "function",
+        "assert_value": "microcontroller (RP)"
+      }
+    }
+  ]
+}

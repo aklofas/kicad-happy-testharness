@@ -1,0 +1,38 @@
+{
+  "file_pattern": "USBC-Power.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-218-01",
+      "description": "KH-218: LM22676MR-ADJ U6 has assumed_vref=1.285V (lookup table hit, was 0.6V heuristic pre-fix)",
+      "issue": "KH-218",
+      "fix_type": "table_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U6",
+        "assert_field": "assumed_vref",
+        "assert_value": 1.285
+      }
+    },
+    {
+      "id": "BUGFIX-KH-218-02",
+      "description": "KH-218: vref_source='lookup' (not 'heuristic') \u2014 proves LM22676 hit the corrected _REGULATOR_VREF table",
+      "issue": "KH-218",
+      "fix_type": "table_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U6",
+        "assert_field": "vref_source",
+        "assert_value": "lookup"
+      }
+    }
+  ]
+}

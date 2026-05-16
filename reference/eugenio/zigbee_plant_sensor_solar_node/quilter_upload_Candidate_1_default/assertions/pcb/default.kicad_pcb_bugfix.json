@@ -1,0 +1,29 @@
+{
+  "file_pattern": "default.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-284-01",
+      "description": "KH-284: PCB summary exists for Candidate_1/default.kicad_pcb (proves analyzer didn't crash on netclass_patterns: null in companion default.kicad_pro)",
+      "issue": "KH-284",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "summary",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-284-02",
+      "description": "KH-284: footprint_count=55 (proves PCB fully parsed after netclass_patterns=None TypeError fix)",
+      "issue": "KH-284",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 55
+      }
+    }
+  ]
+}
