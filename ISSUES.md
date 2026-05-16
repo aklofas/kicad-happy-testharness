@@ -34,9 +34,9 @@ Last updated: 2026-05-16
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-328**. Next TH number: **TH-044**.
+maximum. Next KH number: **KH-328**. Next TH number: **TH-045**.
 
-> 7 open issues.
+> 8 open issues.
 
 ---
 
@@ -357,6 +357,54 @@ each per-analyzer fix to confirm the failure rate drops.
 
 ---
 
+### TH-044: `hierarchical` cross-section reads 0 repos — catalog's `max_hierarchy_sheets` field is stale (always 0)
+
+**Severity:** LOW
+**File:** `tools/generate_cross_sections.py:187-193` (`section_hierarchical`) +
+`reference/repo_catalog.json` (`complexity.max_hierarchy_sheets` field)
+**Discovered:** 2026-05-16 (LOG 9 hierarchy regression gate — scoped to a
+hand-picked curated set because the `hierarchical` cross-section was empty)
+
+**Symptom:**
+```
+$ python3 tools/generate_cross_sections.py --list
+...
+hierarchical                   0  Repos with multi-sheet hierarchical schematics
+```
+
+despite the corpus actually containing thousands of multi-sheet projects
+(scan over `results/v14_gate/v14/schematic/*/snap.json` found 4,040 projects
+with non-empty `hierarchical_labels`).
+
+**Root cause:** The `section_hierarchical` filter reads
+`complexity.max_hierarchy_sheets`, but that field is **always 0** in the
+catalog — 5857/5857 entries have `max_hierarchy_sheets=0`. Catalog
+generation populates the sibling `complexity.sheets` field correctly
+(3407/5857 entries have `sheets > 1`), so the bug is specifically in the
+catalog-generator code that derives `max_hierarchy_sheets`.
+
+**Likely fix paths:**
+1. **Generator-side fix** — `tools/generate_catalog.py` should populate
+   `max_hierarchy_sheets` from the same source as `sheets` (or by walking
+   v14 schematic snapshots and counting `hierarchical_labels`), then
+   regenerate `reference/repo_catalog.json`.
+2. **Filter-side fallback** — `section_hierarchical` could fall back to
+   `complexity.sheets > 1` if `max_hierarchy_sheets` is 0 across the
+   catalog. Lower-quality (treats single-file multi-page sheets the same
+   as proper hierarchical projects with sub-sheets) but unblocks
+   `--cross-section hierarchical` immediately.
+
+LOG 9's hierarchy regression gate works around this by hand-picking 3
+sub-sheets with confirmed differentials (see `CURATED_SET` in
+`regression/run_hierarchy_regression_gate.py`). The gate is not blocked,
+but the broader corpus-wide hierarchy regression testing this section is
+meant to enable IS blocked until the field is repopulated.
+
+**Not tag-blocking** — cosmetic gap in cross-section coverage; no
+release-quality impact.
+
+---
+
 ## Priority Queue
 
-_7 open TH-* issues (all LOW)._
+_8 open TH-* issues (all LOW)._
