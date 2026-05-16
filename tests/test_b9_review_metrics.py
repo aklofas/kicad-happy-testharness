@@ -189,11 +189,18 @@ def test_aggregate_consistency():
         run_dir = next(out_dir.iterdir())
         per_packet = json.loads((run_dir / "per_packet.json").read_text())
         agg = json.loads((run_dir / "aggregate.json").read_text())
-        # With one ok packet, suppression_precision aggregate == per-packet
+        # Aggregate suppression_precision = weighted mean across ok packets,
+        # weighted by per-packet suppressed counts.
         ok = [p for p in per_packet if p["status"] == "ok"]
-        if len(ok) == 1:
-            assert (agg["metrics"]["suppression_precision"]
-                    == ok[0]["metrics"]["suppression_precision"])
+        assert len(ok) >= 1
+        num = sum(p["metrics"]["suppression_precision"] * p["counts"]["suppressed"]
+                  for p in ok
+                  if p["metrics"]["suppression_precision"] is not None
+                  and p["counts"]["suppressed"] > 0)
+        denom = sum(p["counts"]["suppressed"] for p in ok
+                    if p["metrics"]["suppression_precision"] is not None)
+        expected = num / denom if denom > 0 else None
+        assert agg["metrics"]["suppression_precision"] == expected
         # Overlay violations total = sum of per-packet
         assert (agg["escalation_overlay_violations_total"]
                 == sum(p.get("escalation_overlay_violations", 0)

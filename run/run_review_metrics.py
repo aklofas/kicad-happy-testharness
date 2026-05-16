@@ -125,18 +125,12 @@ def _compute_calibration(annotations, exp_supp_ids):
 def _compute_overlay_violations(loaded):
     """Escalated annotations must not mutate the raw severity field.
 
-    Returns count of (finding_id with suggested_severity) whose raw severity
-    in findings.json differs from the recorded severity at review time.
     At v1.4 the reviewer schema has additionalProperties=false and provides
-    no mutation channel, so this is always 0; surfaced for v1.5 when
-    overlay vs mutation becomes distinguishable.
+    no mutation channel, so this always returns 0. The counter is surfaced
+    in per-packet output so v1.5 can replace this body when the schema
+    grows a distinguishable mutation channel.
     """
-    violations = 0
-    for a in loaded["review_annotations"].get("annotations", []):
-        if a.get("suggested_severity") is not None:
-            # No mutation channel exists in v1.4 schema.
-            pass
-    return violations
+    return 0
 
 
 def _compute_cost_delta(loaded):
