@@ -11,17 +11,26 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
-## 2026-05-16 — TH-043 (schema-vs-emitter drift across 4 analyzers)
+## 2026-05-16 — TH-043 (schema-vs-emitter drift across 4 analyzers) — PARTIAL
+
+> **PARTIAL FIX NOTICE:** Main-repo `e27f0f9` fixed `board_metadata`,
+> `board_thickness_mm`, `design_rule_compliance` on pcb plus the
+> schematic/gerber/thermal keys. The 3 remaining pcb keys —
+> `ground_domains`, `placement_density`, `power_net_routing` — follow the
+> same pattern but were omitted. Re-opened as **[TH-043-residual](ISSUES.md)**.
 
 ### TH-043 (LOW): `--schema` declared keys not always emitted across schematic / pcb / gerber / thermal
 
-- **Where fixed:** kicad-happy `e27f0f9` (per-analyzer surgical emit-defaults
+- **Where fixed (partial):** kicad-happy `e27f0f9` (per-analyzer surgical emit-defaults
   on the keys the `--schema` `required` list documents). Per-key categorization:
   top-level dict keys → `{}` default, nested required list keys → `[]` default,
   scalar required keys genuinely missing in source files → `Optional[T] = None`
   (e.g., `board_thickness_mm` for `.kicad_pcb` files with no `(general
   (thickness ...))` node). Defaulted `Optional` fields moved to end of
-  dataclasses per Python's "defaulted-fields-last" rule.
+  dataclasses per Python's "defaulted-fields-last" rule. **PCB partial**: 2 of 5
+  filed keys fixed (`board_metadata`, `board_thickness_mm`) plus the unrelated
+  `design_rule_compliance`. The other 3 (`ground_domains`, `placement_density`,
+  `power_net_routing`) remain drifting — see TH-043-residual.
 - **Symptom (corpus-wide gate evidence from `run_v14_default_contract_gate.py`
   @ `87274cb701d` over 149,566 v14 snapshots):**
 
