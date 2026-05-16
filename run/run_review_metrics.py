@@ -170,13 +170,63 @@ def process_packet(pkt_dir):
             "escalation_overlay_violations": overlay_violations}
 
 
+def _weighted_mean(per_packet, metric_key, weight_count_key):
+    num = denom = 0.0
+    for p in per_packet:
+        if p["status"] != "ok":
+            continue
+        val = p["metrics"].get(metric_key)
+        w = p["counts"].get(weight_count_key, 0)
+        if val is None or w == 0:
+            continue
+        num += val * w
+        denom += w
+    return num / denom if denom > 0 else None
+
+
+def _aggregate_calibration(per_packet):
+    """Per-bucket pooled precision across all ok packets.
+
+    Each packet's calibration entry is either a float (precision) or
+    "insufficient_data". Aggregate: only float entries contribute; if no
+    numeric entries for a bucket, emit insufficient_data.
+    """
+    out = {}
+    for bucket in CONFIDENCE_BUCKETS:
+        numeric = [p["metrics"]["confidence_calibration"][bucket]
+                   for p in per_packet if p["status"] == "ok"
+                   and isinstance(p["metrics"]["confidence_calibration"][bucket], float)]
+        if not numeric:
+            out[bucket] = "insufficient_data"
+        else:
+            out[bucket] = sum(numeric) / len(numeric)
+    return out
+
+
 def aggregate(per_packet):
+    ok = [p for p in per_packet if p["status"] == "ok"]
+    skipped = [p for p in per_packet if p["status"] == "skipped"]
+
+    cost_deltas = [p["metrics"]["cost_delta"] for p in ok
+                   if p["metrics"]["cost_delta"] is not None]
+
     return {
         "packet_count": len(per_packet),
-        "packets_run": sum(1 for p in per_packet if p["status"] == "ok"),
-        "packets_skipped": sum(1 for p in per_packet if p["status"] == "skipped"),
-        "metrics": {},
-        "escalation_overlay_violations_total": 0,
+        "packets_run": len(ok),
+        "packets_skipped": len(skipped),
+        "metrics": {
+            "suppression_precision": _weighted_mean(per_packet, "suppression_precision", "suppressed"),
+            "false_suppression_miss_rate": _weighted_mean(per_packet, "false_suppression_miss_rate", "expected_confirmations"),
+            "confirmation_recall": _weighted_mean(per_packet, "confirmation_recall", "expected_confirmations"),
+            "escalation_precision": _weighted_mean(per_packet, "escalation_precision", "escalated"),
+            "correlation_coverage": _weighted_mean(per_packet, "correlation_coverage", "expected_correlations"),
+            "confidence_calibration": _aggregate_calibration(per_packet),
+            "cost_delta": (sum(cost_deltas) / len(cost_deltas)
+                           if cost_deltas else None),
+        },
+        "escalation_overlay_violations_total": sum(
+            p.get("escalation_overlay_violations", 0) for p in per_packet
+        ),
     }
 
 

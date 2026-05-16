@@ -155,6 +155,51 @@ def test_per_packet_json_shape():
         assert entry["escalation_overlay_violations"] == 0
 
 
+def test_aggregate_json_shape():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp) / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(PACKETS_DIR),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True
+        )
+        assert result.returncode == 0
+        run_dir = next(out_dir.iterdir())
+        agg = json.loads((run_dir / "aggregate.json").read_text())
+        assert agg["packet_count"] == agg["packets_run"] + agg["packets_skipped"]
+        m = agg["metrics"]
+        for key in ("suppression_precision", "false_suppression_miss_rate",
+                    "confirmation_recall", "escalation_precision",
+                    "correlation_coverage", "confidence_calibration",
+                    "cost_delta"):
+            assert key in m
+        assert "escalation_overlay_violations_total" in agg
+
+
+def test_aggregate_consistency():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp) / "metrics"
+        subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(PACKETS_DIR),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True, check=True
+        )
+        run_dir = next(out_dir.iterdir())
+        per_packet = json.loads((run_dir / "per_packet.json").read_text())
+        agg = json.loads((run_dir / "aggregate.json").read_text())
+        # With one ok packet, suppression_precision aggregate == per-packet
+        ok = [p for p in per_packet if p["status"] == "ok"]
+        if len(ok) == 1:
+            assert (agg["metrics"]["suppression_precision"]
+                    == ok[0]["metrics"]["suppression_precision"])
+        # Overlay violations total = sum of per-packet
+        assert (agg["escalation_overlay_violations_total"]
+                == sum(p.get("escalation_overlay_violations", 0)
+                       for p in per_packet))
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -164,6 +209,8 @@ if __name__ == "__main__":
         test_missing_review_annotations_skips_clean,
         test_demo_packet_suppression_precision,
         test_per_packet_json_shape,
+        test_aggregate_json_shape,
+        test_aggregate_consistency,
     ]
     passed = failed = 0
     for t in tests:
