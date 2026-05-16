@@ -1,0 +1,40 @@
+{
+  "file_pattern": "Hat.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-319-01",
+      "description": "KH-319: total_no_connects==3 (designer-placed markers only, not inflated by hidden power pins treated as unconnected)",
+      "issue": "KH-319",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "statistics.total_no_connects",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "BUGFIX-KH-319-02",
+      "description": "KH-319: unconnected_pins list is empty (hidden power pins no longer false-reported as unconnected)",
+      "issue": "KH-319",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "connectivity_issues.unconnected_pins",
+        "op": "max_count",
+        "value": 0
+      }
+    },
+    {
+      "id": "BUGFIX-KH-319-03",
+      "description": "KH-319: +12V rail recognized (hidden power pin power_in correctly connected, rail appears in rail_voltages)",
+      "issue": "KH-319",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "rail_voltages.+12V",
+        "op": "exists"
+      }
+    }
+  ]
+}

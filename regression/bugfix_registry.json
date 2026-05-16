@@ -2515,6 +2515,45 @@
     ]
   },
   {
+    "issue": "KH-319",
+    "type": "parser_fix",
+    "summary": "has_flag() now matches (hide yes) boolean sub-lists — hidden pins on KiCad 9+ schematics correctly reported as hidden",
+    "assertions": [
+      {
+        "repo": "Fihdi/Eurorack",
+        "project": "Hat",
+        "source_file": "Hat.kicad_sch",
+        "check": {
+          "path": "statistics.total_no_connects",
+          "op": "equals",
+          "value": 3
+        },
+        "description": "KH-319: total_no_connects==3 (designer-placed markers only, not inflated by hidden power pins treated as unconnected)"
+      },
+      {
+        "repo": "Fihdi/Eurorack",
+        "project": "Hat",
+        "source_file": "Hat.kicad_sch",
+        "check": {
+          "path": "connectivity_issues.unconnected_pins",
+          "op": "max_count",
+          "value": 0
+        },
+        "description": "KH-319: unconnected_pins list is empty (hidden power pins no longer false-reported as unconnected)"
+      },
+      {
+        "repo": "Fihdi/Eurorack",
+        "project": "Hat",
+        "source_file": "Hat.kicad_sch",
+        "check": {
+          "path": "rail_voltages.+12V",
+          "op": "exists"
+        },
+        "description": "KH-319: +12V rail recognized (hidden power pin power_in correctly connected, rail appears in rail_voltages)"
+      }
+    ]
+  },
+  {
     "issue": "KH-326",
     "type": "parser_fix",
     "summary": "analyze_pcb.py mis-parses fp_text value as S-expr token list, crashing emc + cross_analysis with AttributeError",
