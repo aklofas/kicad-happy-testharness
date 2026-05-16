@@ -11,6 +11,40 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-05-15 — KH-327 (bom SKILL.md description exceeds Codex 1024-char limit)
+
+### KH-327 (MEDIUM): `bom/SKILL.md` description exceeds Codex 1024-char limit (1026/1024, 2 over)
+
+- **Where fixed:** kicad-happy `488de7a` (`fix: trim bom SKILL.md description
+  under Codex 1024-char cap (KH-327)`). Dropped redundant "cost estimate"
+  trigger phrase (covered by "how much will this cost" earlier in the same
+  list). Description now 1009 chars (15-char buffer under the 1024 cap).
+- **Symptom:** `tests/test_skill_metadata.py::test_description_under_codex_limit`
+  failed: `bom: 1026 chars (limit 1024)`. Codex users of v1.4.0-rc.1 hit a
+  rejected/truncated skill load for `bom`; Claude Code users unaffected
+  (different limit).
+- **Root cause:** rc.1 doc-pass commit `c904bb3` ("docs: v1.4.0-rc.1 doc-pass")
+  appended trigger phrases to the bom description, pushing it 2 chars over the
+  Codex cap. Pre-doc-pass length was ~1018 chars (already close to the cap);
+  the orchestration-softening edits added ~10 chars and went over. No
+  length guard in the doc-pass workflow caught it; harness pre-push hook
+  (`tests/test_skill_metadata.py`) caught it post-tag during the wrap-up
+  bundle push attempt.
+- **Verification:** `python3 tests/test_skill_metadata.py` post-fix: 4 passed,
+  0 failed (was 3 passed, 1 failed). bom description length recomputed at
+  1009 chars.
+- **Not retroactive:** rc.1 was already published on GitHub at `c904bb3` —
+  retroactive retag would create more confusion than it solves. Trim ships
+  in the next tag in the release line (rc.2 or v1.4.0 final). Codex users of
+  existing rc.1 stay broken until they upgrade.
+- **v1.5 process candidates (noted by main-repo):** (a) one-time audit of all
+  12 SKILL.md descriptions for any others sitting close to the cap before they
+  regress under future edits; (b) mirror `test_skill_metadata.py` char-limit
+  check as a pre-commit hook on the main-repo side so this catches at
+  edit-time rather than at the harness layer.
+
+---
+
 ## 2026-05-15 — KH-326 (analyze_pcb mis-parses fp_text value as a list)
 
 ### KH-326 (LOW): `analyze_pcb.py` mis-parses footprint `value` as S-expr token list, crashes emc + cross_analysis with AttributeError
