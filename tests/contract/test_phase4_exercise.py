@@ -35,7 +35,7 @@ def test_hi3_strip_llm_byte_identical_on_real_fixture():
     _skip_if_merge_missing()
     from merge_annotations import strip_llm_overlays  # type: ignore[import-not-found]
     asserted = 0
-    for fname in ["schematic.json", "pcb.json", "emc.json", "thermal.json", "cross.json"]:
+    for fname in ["schematic.json", "pcb.json", "emc.json", "thermal.json", "cross_analysis.json"]:
         merged_path = MERGED / fname
         raw_path = ANALYSIS / fname
         if not merged_path.exists() or not raw_path.exists():
@@ -51,7 +51,7 @@ def test_hi3_strip_llm_byte_identical_on_real_fixture():
 
 def test_hi2_finding_counts_preserved_across_merge():
     _skip_if_merge_missing()
-    for fname in ["schematic.json", "pcb.json", "emc.json", "thermal.json", "cross.json"]:
+    for fname in ["schematic.json", "pcb.json", "emc.json", "thermal.json", "cross_analysis.json"]:
         merged_path = MERGED / fname
         raw_path = ANALYSIS / fname
         if not merged_path.exists() or not raw_path.exists():
@@ -84,7 +84,7 @@ def test_hi7_capability_mode_ref_consistent_across_envelopes():
     cm = json.loads(cm_path.read_text())
     canonical_run_id = cm["run_id"]
     asserted = 0
-    for fname in ["schematic.json", "pcb.json", "emc.json", "thermal.json", "cross.json"]:
+    for fname in ["schematic.json", "pcb.json", "emc.json", "thermal.json", "cross_analysis.json"]:
         path = ANALYSIS / fname
         if not path.exists():
             continue
