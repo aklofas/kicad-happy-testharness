@@ -258,6 +258,125 @@ def test_json_flag_stdout_only():
         assert not out_dir.exists(), "expected no output dir with --json"
 
 
+def test_aggregate_calibration_pooled():
+    """Aggregate calibration pools per-bucket counts, not average of per-packet floats.
+
+    Packet A: 10 high-confidence suppressions, 4 correct → per-packet precision 0.4.
+    Packet B:  6 high-confidence suppressions, 6 correct → per-packet precision 1.0.
+    Pooled = 10/16 = 0.625; arithmetic mean = (0.4 + 1.0)/2 = 0.7.
+    Test asserts pooled value, not mean.
+    """
+    import shutil
+
+    def _make_annotations(finding_ids_high, correct_ids):
+        """All findings suppressed at high confidence; correct_ids are in expected."""
+        return {
+            "schema_version": "1.0",
+            "produced_for_run_id": "test-run",
+            "produced_at": "2026-05-16T00:00:00Z",
+            "annotations": [
+                {
+                    "finding_id": fid,
+                    "status": "suppressed",
+                    "reason": "test suppression",
+                    "confidence": "high",
+                    "reviewed_at": "2026-05-16T00:00:00Z",
+                }
+                for fid in finding_ids_high
+            ],
+            "reviewer_observations": [],
+        }
+
+    def _make_expected(correct_ids):
+        return {
+            "expected_suppressions": [{"finding_id": fid} for fid in correct_ids],
+            "expected_confirmations": [],
+            "expected_escalations": [],
+            "expected_correlations": [],
+            "expected_novel_observations_count": 0,
+        }
+
+    def _make_findings(finding_ids):
+        return {
+            "schema_version": "1.4.0",
+            "analyzer_type": "schematic",
+            "findings": [
+                {
+                    "finding_id": fid,
+                    "detector": "detect_test",
+                    "rule_id": "TST-001",
+                    "severity": "warning",
+                    "summary": f"test finding {fid}",
+                }
+                for fid in finding_ids
+            ],
+        }
+
+    minimal_context = {"design_category": "test", "confidence": "low"}
+    minimal_facts = {}
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        packets_dir = tmp / "packets"
+        packets_dir.mkdir()
+
+        # Packet A: 10 high suppressions, 4 correct (f_a0..f_a3 correct, f_a4..f_a9 wrong)
+        a_ids = [f"sch:TST-001:A{i}" for i in range(10)]
+        a_correct = a_ids[:4]
+        pkt_a = packets_dir / "packet_01_a"
+        pkt_a.mkdir()
+        (pkt_a / "review_annotations.json").write_text(
+            json.dumps(_make_annotations(a_ids, a_correct)))
+        (pkt_a / "expected_annotations.json").write_text(
+            json.dumps(_make_expected(a_correct)))
+        (pkt_a / "findings.json").write_text(json.dumps(_make_findings(a_ids)))
+        (pkt_a / "design_context.json").write_text(json.dumps(minimal_context))
+        (pkt_a / "extraction_facts.json").write_text(json.dumps(minimal_facts))
+
+        # Packet B: 6 high suppressions, 6 correct (all correct)
+        b_ids = [f"sch:TST-001:B{i}" for i in range(6)]
+        b_correct = b_ids[:]
+        pkt_b = packets_dir / "packet_02_b"
+        pkt_b.mkdir()
+        (pkt_b / "review_annotations.json").write_text(
+            json.dumps(_make_annotations(b_ids, b_correct)))
+        (pkt_b / "expected_annotations.json").write_text(
+            json.dumps(_make_expected(b_correct)))
+        (pkt_b / "findings.json").write_text(json.dumps(_make_findings(b_ids)))
+        (pkt_b / "design_context.json").write_text(json.dumps(minimal_context))
+        (pkt_b / "extraction_facts.json").write_text(json.dumps(minimal_facts))
+
+        out_dir = tmp / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(packets_dir),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0, f"runner failed: {result.stderr}"
+        run_dir = next(out_dir.iterdir())
+        per_packet = json.loads((run_dir / "per_packet.json").read_text())
+        agg = json.loads((run_dir / "aggregate.json").read_text())
+
+        # Both packets should be ok and carry n>=CALIBRATION_MIN_N (10, 6)
+        assert all(p["status"] == "ok" for p in per_packet), per_packet
+
+        # Per-packet precision values (order may vary by name sort)
+        a_entry = next(p for p in per_packet if p["packet_name"] == "packet_01_a")
+        b_entry = next(p for p in per_packet if p["packet_name"] == "packet_02_b")
+        assert a_entry["metrics"]["confidence_calibration"]["high"] == 4 / 10
+        assert b_entry["metrics"]["confidence_calibration"]["high"] == 6 / 6
+
+        # Pooled = (4+6)/(10+6) = 10/16 = 0.625
+        # Arithmetic mean = (0.4 + 1.0)/2 = 0.7  (the wrong formula)
+        pooled = 10 / 16
+        agg_high = agg["metrics"]["confidence_calibration"]["high"]
+        assert agg_high == pooled, (
+            f"Expected pooled calibration {pooled}, got {agg_high}; "
+            f"arithmetic mean would be 0.7"
+        )
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -272,6 +391,7 @@ if __name__ == "__main__":
         test_report_md_nonempty,
         test_single_packet_filter,
         test_json_flag_stdout_only,
+        test_aggregate_calibration_pooled,
     ]
     passed = failed = 0
     for t in tests:

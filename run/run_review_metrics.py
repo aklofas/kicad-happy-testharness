@@ -73,16 +73,20 @@ def _ids_with_correlation(annotations):
 
 
 def _compute_calibration(annotations, exp_supp_ids):
-    out = {}
+    cal = {}
+    counts = {}
     for bucket in CONFIDENCE_BUCKETS:
         bucket_ids = {a["finding_id"] for a in annotations
                       if a.get("status") == "suppressed"
                       and a.get("confidence") == bucket}
-        if len(bucket_ids) < CALIBRATION_MIN_N:
-            out[bucket] = "insufficient_data"
+        matched = len(bucket_ids & exp_supp_ids)
+        total = len(bucket_ids)
+        counts[bucket] = {"suppressed_in_bucket": total, "matched_expected": matched}
+        if total < CALIBRATION_MIN_N:
+            cal[bucket] = "insufficient_data"
         else:
-            out[bucket] = len(bucket_ids & exp_supp_ids) / len(bucket_ids)
-    return out
+            cal[bucket] = matched / total
+    return cal, counts
 
 
 def _compute_overlay_violations(loaded):
@@ -131,6 +135,7 @@ def compute_metrics(loaded):
 
     findings_list = loaded["findings"].get("findings", [])
 
+    cal, cal_counts = _compute_calibration(annotations, exp_supp)
     metrics = {
         "suppression_precision": (len(suppressed & exp_supp) / len(suppressed)
                                   if suppressed else None),
@@ -142,7 +147,7 @@ def compute_metrics(loaded):
                                  if escalated else None),
         "correlation_coverage": (len(correlated & exp_corr) / len(exp_corr)
                                  if exp_corr else None),
-        "confidence_calibration": _compute_calibration(annotations, exp_supp),
+        "confidence_calibration": cal,
         "cost_delta": _compute_cost_delta(loaded),
     }
     counts = {
@@ -154,6 +159,7 @@ def compute_metrics(loaded):
         "expected_confirmations": len(exp_conf),
         "expected_escalations": len(exp_esc),
         "expected_correlations": len(exp_corr),
+        "calibration_counts": cal_counts,
     }
     overlay_violations = _compute_overlay_violations(loaded)
     return metrics, counts, overlay_violations
@@ -187,19 +193,25 @@ def _weighted_mean(per_packet, metric_key, weight_count_key):
 def _aggregate_calibration(per_packet):
     """Per-bucket pooled precision across all ok packets.
 
-    Each packet's calibration entry is either a float (precision) or
-    "insufficient_data". Aggregate: only float entries contribute; if no
-    numeric entries for a bucket, emit insufficient_data.
+    Sums raw per-bucket counts (suppressed_in_bucket, matched_expected) from
+    each ok packet's calibration_counts, then divides once per bucket.
+    Returns "insufficient_data" when pooled suppressed_in_bucket < CALIBRATION_MIN_N.
     """
     out = {}
     for bucket in CONFIDENCE_BUCKETS:
-        numeric = [p["metrics"]["confidence_calibration"][bucket]
-                   for p in per_packet if p["status"] == "ok"
-                   and isinstance(p["metrics"]["confidence_calibration"][bucket], float)]
-        if not numeric:
+        total_suppressed = 0
+        total_matched = 0
+        for p in per_packet:
+            if p["status"] != "ok":
+                continue
+            cal_counts = p["counts"].get("calibration_counts", {})
+            b = cal_counts.get(bucket, {})
+            total_suppressed += b.get("suppressed_in_bucket", 0)
+            total_matched += b.get("matched_expected", 0)
+        if total_suppressed < CALIBRATION_MIN_N:
             out[bucket] = "insufficient_data"
         else:
-            out[bucket] = sum(numeric) / len(numeric)
+            out[bucket] = total_matched / total_suppressed
     return out
 
 
