@@ -2515,6 +2515,49 @@
     ]
   },
   {
+    "issue": "KH-311",
+    "type": "invariant_fix",
+    "summary": "EMC trust_summary.total_findings now computed after --compact filter, matching actual len(findings)",
+    "assertions": [
+      {
+        "repo": "bluepylons/A-Thinkpad-USB-keyboard",
+        "project": "PCB_Thinkpad-USB-keyboard-PCB",
+        "source_file": "Thinkpad-USB-keyboard-PCB.kicad_sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "trust_summary.total_findings",
+          "op": "equals",
+          "value": 50
+        },
+        "description": "KH-311: trust_summary.total_findings==50 (post-filter count, not pre-filter inflated value)"
+      },
+      {
+        "repo": "bluepylons/A-Thinkpad-USB-keyboard",
+        "project": "PCB_Thinkpad-USB-keyboard-PCB",
+        "source_file": "Thinkpad-USB-keyboard-PCB.kicad_sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "summary.total_findings",
+          "op": "equals",
+          "value": 50
+        },
+        "description": "KH-311: summary.total_findings==50 (matches trust_summary and len(findings) — invariant enforced)"
+      },
+      {
+        "repo": "bluepylons/A-Thinkpad-USB-keyboard",
+        "project": "Thinkpad keyboard connector breakout_Keyboard-connector-breakout",
+        "source_file": "Keyboard-connector-breakout.kicad_sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "trust_summary.total_findings",
+          "op": "equals",
+          "value": 51
+        },
+        "description": "KH-311: connector breakout trust_summary.total_findings==51 (second data point — invariant holds across sub-projects)"
+      }
+    ]
+  },
+  {
     "issue": "KH-313",
     "type": "parser_fix",
     "summary": "check_inductor_leakage crashes when RF chain component is a bare refdes string instead of a dict",
