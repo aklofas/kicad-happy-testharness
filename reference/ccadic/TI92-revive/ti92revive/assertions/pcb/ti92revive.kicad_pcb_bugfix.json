@@ -1,0 +1,40 @@
+{
+  "file_pattern": "ti92revive.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-326-01",
+      "description": "KH-326: PCB summary block exists (proves analyzer ran without AttributeError crash)",
+      "issue": "KH-326",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "summary",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-326-02",
+      "description": "KH-326: findings list exists and is a list (proves output parsed completely)",
+      "issue": "KH-326",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "findings",
+        "op": "min_count",
+        "value": 0
+      }
+    },
+    {
+      "id": "BUGFIX-KH-326-03",
+      "description": "KH-326: footprint_count == 10 (proves PCB fully parsed including the kbLBrack1 footprint with empty value field that previously caused AttributeError)",
+      "issue": "KH-326",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 10
+      }
+    }
+  ]
+}

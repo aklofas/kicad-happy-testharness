@@ -2513,5 +2513,47 @@
         "description": "KH-230: exactly one component has empty value (the explicitly-empty R1 instance — preserved, not substituted)"
       }
     ]
+  },
+  {
+    "issue": "KH-326",
+    "type": "parser_fix",
+    "summary": "analyze_pcb.py mis-parses fp_text value as S-expr token list, crashing emc + cross_analysis with AttributeError",
+    "assertions": [
+      {
+        "repo": "ccadic/TI92-revive",
+        "project": "ti92revive",
+        "source_file": "ti92revive.kicad_pcb",
+        "analyzer_type": "pcb",
+        "check": {
+          "path": "summary",
+          "op": "exists"
+        },
+        "description": "KH-326: PCB summary block exists (proves analyzer ran without AttributeError crash)"
+      },
+      {
+        "repo": "ccadic/TI92-revive",
+        "project": "ti92revive",
+        "source_file": "ti92revive.kicad_pcb",
+        "analyzer_type": "pcb",
+        "check": {
+          "path": "findings",
+          "op": "min_count",
+          "value": 0
+        },
+        "description": "KH-326: findings list exists and is a list (proves output parsed completely)"
+      },
+      {
+        "repo": "ccadic/TI92-revive",
+        "project": "ti92revive",
+        "source_file": "ti92revive.kicad_pcb",
+        "analyzer_type": "pcb",
+        "check": {
+          "path": "statistics.footprint_count",
+          "op": "equals",
+          "value": 10
+        },
+        "description": "KH-326: footprint_count == 10 (proves PCB fully parsed including the kbLBrack1 footprint with empty value field that previously caused AttributeError)"
+      }
+    ]
   }
 ]
