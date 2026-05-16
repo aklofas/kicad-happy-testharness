@@ -5,7 +5,12 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-15 (P13 Tier A, Batches 14-19, datasheet v2 extraction)
+Last updated: 2026-05-14 (v1.4 Layer 1 regression gate — CLEAN corpus-wide)
+
+> Note: the Corpus summary table below was last fully refreshed 2026-04-15.
+> The 2026-05-14 gate updated the repo/file-count and issue-count rows;
+> assertion, SPICE, EMC, and cross-validation metrics still need a full
+> health-check refresh (RUNBOOK Checklist 3).
 
 ---
 
@@ -13,28 +18,29 @@ Last updated: 2026-04-15 (P13 Tier A, Batches 14-19, datasheet v2 extraction)
 
 | Metric | Count |
 |--------|------:|
-| Total repos in repos.md | 5,822 |
-| Repos with baselines (reference/) | 5,822 |
+| Total repos in repos.md | 5,821 |
+| Repos checked out (repos/) | 5,857 |
 | Project baselines | 18,798 |
-| Schematic output files | 36,546 |
-| PCB output files | 18,727 |
-| Gerber output files | 5,448 |
-| **Total assertions** | **1,757,518** |
-| SEED assertions | ~960,000 |
-| STRUCT assertions | ~350,000 |
-| FND assertions | 4,626 |
-| BUGFIX assertions | 77 |
-| Aspirational assertions | 1,921 |
-| Assertion pass rate | 100.0% |
-| Bugfix registry entries | 76 |
-| Unit tests (smoke gate) | 541 |
-| Unit tests (full suite) | 879 |
-| Layer 3 reviewed repos | 1,045 |
-| Total findings | 2,575 |
-| Open KH-* issues | 2 (KH-311, KH-312) |
-| Closed KH-* issues | 216 (KH-282..312) |
-| Open TH-* issues | 0 |
-| Constants | 298 (295 verified, 3 unverified) |
+| Schematic files (gate, 2026-05-14) | 36,465 |
+| PCB files (gate, 2026-05-14) | 18,661 |
+| Gerber dirs (gate, 2026-05-14) | 5,502 |
+| EMC inputs (gate, 2026-05-14) | 36,462 |
+| **Total assertions** | **1,757,518** _(2026-04-15)_ |
+| SEED assertions | ~960,000 _(2026-04-15)_ |
+| STRUCT assertions | ~350,000 _(2026-04-15)_ |
+| FND assertions | 4,626 _(2026-04-15)_ |
+| BUGFIX assertions | 77 _(2026-04-15)_ |
+| Aspirational assertions | 1,921 _(2026-04-15)_ |
+| Assertion pass rate | 100.0% _(2026-04-15)_ |
+| Bugfix registry entries | 76 _(2026-04-15)_ |
+| Unit tests (smoke gate) | 541 _(2026-04-15)_ |
+| Unit tests (full suite) | 1,196 (1,193 pass / 1 fail / 2 skip, 2026-05-14) |
+| Layer 3 reviewed repos | 1,045 _(2026-04-15)_ |
+| Total findings | 2,575 _(2026-04-15)_ |
+| Open KH-* issues | 1 (KH-326) |
+| Closed KH-* issues | 324 (KH-001..325; KH-324 burned) |
+| Open TH-* issues | 2 (TH-037, TH-038) |
+| Constants | 298 (295 verified, 3 unverified) _(2026-04-15)_ |
 | Schematic detectors | 56 (40 signal/domain + 16 validation) |
 | Cross-analyzer agreement | 91.9% (97,012 checks) |
 | Unique MPNs extracted | 16,332 (from 1,105 projects) |
@@ -85,6 +91,41 @@ Last updated: 2026-04-15 (P13 Tier A, Batches 14-19, datasheet v2 extraction)
 ---
 
 ## Completed batches
+
+### v1.4 Layer 1 regression gate — CLEAN corpus-wide (2026-05-14)
+
+Verified that v1.4's `--only-deterministic` flag reproduces v1.3.1-equivalent
+Layer 1 output across the corpus, gating the v1.4 release. New driver
+`regression/run_v14_gate.py` runs each analyzer twice per unit (v1.3.1 `968f5c8`
+plain vs v1.4 `--only-deterministic`) and diffs via `regression/regression_diff.py`.
+Staged: smoke → quick_200 → full corpus. RUNBOOK Checklist 26 documents it.
+
+**Full corpus run (v1.4-dev `d2c3eb6`):** 5,857 repos × 6 analyzers =
+**170,014 analyzer-pair units**.
+- **149,624 PASS / 0 WARN / 0 FAIL / 20,390 SKIP**
+- `disappeared = 0`, `severity_downgrades = 0`, `new_unknown = 0` — all hard
+  pass criteria met. **CLEAN.**
+- SKIP: 20,379 thermal (no PCB pair — legitimate) + 11 "both-versions-fail-
+  identically" pre-existing corpus/input issues (not regressions).
+- NewKnown = 3,442, all in `NEW_V14_RULES`: VD-004 (2,897), VD-001 (510),
+  VD-003 (35) — the voltage_derating → rich-findings migration.
+- NewUpgraded = 147, all XT-001 — confirmed by main-repo as intended additive
+  heuristic output; XT-001 subsequently moved into `NEW_V14_RULES`.
+
+**Targeted recheck (v1.4-dev `ea9b61b`, after the capability_mode race fix):**
+smoke cross-section, **CLEAN** — 0 FAIL across all 6 analyzers, 0 new_upgraded.
+rc.1 clear to tag on `aba7083` (ea9b61b + docs-only + manifest-only commits).
+
+**Bugs found / filed:**
+- **KH-325** (FIXED, `ea9b61b`): `capability_mode.json` TOCTOU race —
+  non-atomic exists()+write_text() crashed concurrent analyzers.
+- **KH-326** (OPEN, LOW): `analyze_pcb.py` mis-parses footprint `kbLBrack1`
+  in `ccadic/TI92-revive` — `value` emitted as a list, crashes emc +
+  cross_analysis. Pre-existing (in v1.3.1 too — not a v1.4 regression).
+- v1.5 carry-over: `--only-deterministic` does not pin `PYTHONHASHSEED`
+  (RC-DET/DO-DET iterate hash-seeded sets); the gate pins it to 0 on both sides.
+
+---
 
 ### P12 refactor + 10-batch full regression (2026-04-14)
 

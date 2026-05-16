@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-04-27
+Last updated: 2026-05-15
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-04-27
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-325**. Next TH number: **TH-039**.
+maximum. Next KH number: **KH-327**. Next TH number: **TH-039**.
 
 > 2 open issues.
 
@@ -51,7 +51,7 @@ maximum. Next KH number: **KH-325**. Next TH number: **TH-039**.
 
 ## kicad-happy Analyzer Issues
 
-_No open analyzer issues._
+_None currently open._ See [FIXED.md](FIXED.md) for closed issues.
 
 ---
 

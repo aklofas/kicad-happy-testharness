@@ -11,6 +11,73 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-05-15 — KH-326 (analyze_pcb mis-parses fp_text value as a list)
+
+### KH-326 (LOW): `analyze_pcb.py` mis-parses footprint `value` as S-expr token list, crashes emc + cross_analysis with AttributeError
+
+- **Where fixed:** kicad-happy `8c36212` (rc.1 polish-pass from manual review +
+  static audit). Two layers:
+  - `skills/kicad/scripts/analyze_pcb.py` footprint parser now coerces
+    `fp_text "value"/"reference"` to empty string when the field has no text
+    body (was emitting a list of S-expression tokens for `(fp_text value (at
+    ...) (layer ...) hide (effects ...))` shapes with no quoted body).
+  - `skills/emc/scripts/emc_rules.py` `check_thermal_emc` and
+    `skills/kicad/scripts/cross_analysis.py` `check_cross_validation` gained
+    defensive `isinstance(str)` guards.
+- **Symptom:** Running `analyze_emc.py` or `cross_analysis.py` with `--pcb` on
+  `ccadic/TI92-revive` tracebacked with
+  `AttributeError: 'list' object has no attribute 'lower'` (in
+  `emc_rules.py:2962`) and `'list' object has no attribute 'replace'` (in
+  `cross_analysis.py:416`). Schematic-only path didn't crash — the malformed
+  field is on the PCB side.
+- **Root cause:** `analyze_pcb.py` captured `(fp_text value ...)` element's
+  property list rather than the quoted value string when the value text was
+  missing. Footprint `kbLBrack1` (`18650:Kbpad`) was the exemplar — `value`
+  came out as `[['at','0.508','-4.064'], ['layer','F.SilkS'], 'hide', ...]`.
+  Both consumers assumed `footprint['value']` was always a string.
+- **Verification:** Recheck #3 reran
+  `regression/run_v14_gate.py --repo ccadic/TI92-revive --v14-dir
+  /home/aklofas/Projects/kicad-happy --jobs 8` pointing at the polish-pass
+  working tree. emc: 3 PASS / 3 WARN / 0 FAIL / 0 SKIP. cross_analysis: 4
+  PASS / 2 WARN / 0 FAIL / 0 SKIP. Previously both showed SKIPs from the
+  AttributeError. Gate verdict: CLEAN.
+- **Filed by:** v1.4 Layer 1 regression gate 2026-05-14 (as a both-versions-
+  fail-identically SKIP — present in v1.3.1 `968f5c8` too, NOT a v1.4
+  regression).
+
+---
+
+## 2026-05-14 — KH-325 (capability_mode.json TOCTOU race)
+
+### KH-325 (MEDIUM): `get_or_create_capability_mode()` non-atomic create races concurrent analyzers
+
+- **Where fixed:** `skills/kicad/scripts/capability_mode.py` —
+  `get_or_create_capability_mode()`. Fixed in kicad-happy commit `ea9b61b`
+  ("fix: make capability_mode.json creation atomic + concurrency-safe").
+- **Symptom:** Two or more analyzer processes starting concurrently against the
+  same fresh `analysis/` directory could crash with
+  `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`,
+  or end up with divergent `run_id`s across the run's envelopes (HI-7).
+- **Root cause:** `get_or_create_capability_mode()` did a non-atomic
+  `path.exists()` check followed by `path.write_text()`. Between one process's
+  check and the completion of its write, a sibling process could observe the
+  file as existing but read it mid-write (empty / partial), then
+  `json.loads()` it and crash. `capability_mode.py` is on every analyzer's
+  startup path, so any concurrent multi-analyzer launch was exposed.
+- **Fix:** Atomic create — write to a temp file in the same directory, then
+  `os.link()` it into place; exactly one linker wins, losers fall back to
+  reading the winner's file. `os.replace()` self-heals a partial file.
+- **Verification:** Main-repo ran a 640-way concurrent stress test — 0 crashes,
+  0 `run_id` divergence; harness contract suite still 454+8. Harness-side: the
+  v1.4 Layer 1 regression gate, which originally surfaced this crash, re-ran
+  CLEAN on the smoke cross-section against `ea9b61b` (0 FAIL across all 6
+  analyzers).
+- **Found by:** the v1.4 Layer 1 regression gate (`regression/run_v14_gate.py`)
+  — a transient emc analyzer crash on `sparkfun/SparkFun_GNSS_mosaic-T` during
+  the parallel corpus run, traced to the shared `capability_mode.json` sidecar.
+
+---
+
 ## 2026-04-19 — TH-036 (TH-035 stray dirs recurred after registry cleanup)
 
 ### TH-036 (LOW): 15 stray project dirs recreated by re-seed using stale registry entries
