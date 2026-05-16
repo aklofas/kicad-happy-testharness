@@ -1,6 +1,6 @@
 # Test Harness Runbook
 
-24 operational checklists for the kicad-happy test harness (20 original + 4 added for the v1.3 correctness direction). Designed for Claude Code
+26 operational checklists for the kicad-happy test harness. Designed for Claude Code
 agents working autonomously or with minimal supervision.
 
 **This is the primary operational reference.** Agents MUST follow the relevant
@@ -2432,6 +2432,90 @@ python3 regression/promote_gold.py --mpn LM2596-ADJ --re-curate-from 1.0
 This runs the same validations, then renames the existing
 `gold_v<prev>.json` to `gold_v<prev>.json.archived` in-place and writes the
 new `gold_v<new>.json` with `event: "recurate_major_bump"` history entry.
+
+---
+
+## Checklist 26: v1.4 Layer 1 regression gate
+
+Use before tagging a v1.4 release candidate. Proves that v1.4's
+`--only-deterministic` flag strips all v1.4 layering (Layer 2 review +
+schema-driven detectors) and reproduces v1.3.1-equivalent Layer 1 output
+across the corpus. Clean → tag `v1.4.0-rc.1`; any FAIL repo → drives rc.2.
+
+### 26a. Create the two worktrees
+
+Baseline is `v1.3.1` (`968f5c8`) — NOT v1.3.0. The v1.4-dev branch already
+merged v1.3.1 forward, so diffing against v1.3.0 would flag the connectivity
+rewrite / PR #16 / PR #19 / pad-rotation / KH-147 as false regressions.
+
+```bash
+git -C ~/Projects/kicad-happy worktree add /tmp/kh-v131 v1.3.1
+git -C ~/Projects/kicad-happy worktree add /tmp/kh-v14  <v1.4-dev-SHA>
+```
+
+The v1.4-dev SHA is usually a LOCAL commit not yet on origin — worktree it
+from the user's `~/Projects/kicad-happy` checkout, not a fresh clone.
+
+### 26b. Confirm `regression_diff.py` rule sets are current
+
+`NEW_V14_RULES` must list every rule_id that is a *new finding surface* in
+the candidate SHA (Phase 4c detectors + any migrated audits, e.g. VD-001..
+VD-004 from the voltage_derating → rich-findings migration). A new finding
+surface that is missing from the set shows up as `new_unknown` (WARN).
+`UPGRADED_V14_RULES` should stay ≈0 corpus-wide.
+
+### 26c. Run the gate, staged
+
+```bash
+python3 regression/run_v14_gate.py --cross-section smoke      --jobs 16
+python3 regression/run_v14_gate.py --cross-section quick_200  --jobs 16
+python3 regression/run_v14_gate.py                           --jobs 16   # full
+```
+
+Validate on smoke first (catches driver bugs cheaply), then quick_200, then
+the full corpus. The driver runs each analyzer twice per unit (v1.3.1 plain,
+v1.4 `--only-deterministic`), diffs via `regression/regression_diff.py`, and
+writes a per-section rollup JSON+CSV to `results/v14_gate/`. It pins
+`PYTHONHASHSEED=0` for every analyzer subprocess — several detectors
+(RC-DET, DO-DET) iterate hash-seeded sets and `--only-deterministic` does
+not suppress that; pinning the seed identically on both sides keeps the
+comparison fair. Each unit gets a private output directory so the
+`capability_mode.json` sidecar (non-atomic TOCTOU writer) cannot be raced
+by sibling jobs.
+
+### 26d. Read the rollup
+
+```
+Analyzer  PASS  WARN  FAIL  SKIP  Disappeared  Downgrades  NewKnown  NewUnknown
+```
+
+- **FAIL** = a v1.3.1 finding's canonical key absent in v1.4 (`disappeared`),
+  OR a severity downgrade on a shared key, OR the v1.4 analyzer crashed.
+- **SKIP** = both versions failed (logged, excluded) or thermal had no PCB pair.
+- **NewKnown** should concentrate in `NEW_V14_RULES`.
+- **NewUnknown** = surprise rule_ids — audit, WARN not blocking.
+- **NewUpgraded** (`UPGRADED_V14_RULES`) should be ≈0 — non-zero means a
+  heuristic path drifted; investigate and report, not auto-fail.
+
+### 26e. Pass criteria
+
+Across all 6 analyzers × full corpus:
+1. `disappeared_count == 0` — hard
+2. `severity_downgrades == 0` — hard
+3. `fail_verdicts == 0` — hard
+4. `new_unknown_count == 0` OR each rule_id explained — soft, audit
+5. `new_upgraded_count` low (ideally 0) — sanity check
+
+(1)+(2)+(3) clean → eligible to tag `v1.4.0-rc.1`. Any FAIL → file the FAIL
+repos (rollup JSON `fail_repos[]` has the flagging analyzer + top-5
+disappeared/downgraded findings) for rc.2.
+
+### 26f. Tear down worktrees
+
+```bash
+git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v131
+git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v14
+```
 
 ---
 

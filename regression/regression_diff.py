@@ -26,21 +26,39 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
-# Phase 4c new detectors. These rule_ids only fire under v1.4 datasheet
-# schema availability. Counted as additions, never regressions.
+# New v1.4 finding surfaces. None of these existed as findings in v1.3.1,
+# so they are clean additions with no `disappeared` risk — counted as
+# additions, never regressions:
+#   AM/OV/TJ/FT/PM/EX  Phase 4c detectors, fire under datasheet schema
+#                      availability.
+#   VD-001..VD-004     voltage/power-derating audit, migrated out of the
+#                      v1.3.1 nested ``result["voltage_derating"]`` section
+#                      into rich findings[].
+#   XT-001             Phase 4b gave the crystal load-cap check a genuine
+#                      heuristic path (target_load_source=
+#                      "parsed_from_value"): the crystal value string
+#                      carries an explicit pF spec and the board's C1/C2
+#                      caps compute a CL_eff >10% off it. The datasheet
+#                      branch is structurally unreachable in v1.4
+#                      (DatasheetFacts.crystal / CrystalBlock is v1.5), so
+#                      every XT-001 finding here is heuristic — additive,
+#                      like VD-*. (Confirmed by main-repo; the original
+#                      handoff mis-classified it as a datasheet upgrade.)
 NEW_V14_RULES = {
     'AM-001', 'OV-001', 'TJ-001', 'FT-001', 'PM-001', 'EX-001',
+    'VD-001', 'VD-002', 'VD-003', 'VD-004', 'XT-001',
 }
 
-# Phase 4b upgraded detectors. Heuristic-mode logic preserves v1.3
-# behaviour bit-for-bit; datasheet-backed branch is gated off until
-# AnalysisContext.cache_dir is wired (Phase 4d-active onwards). Any new
-# additions in this set should appear only when the datasheet path
-# activates — flag for manual review rather than auto-pass.
-UPGRADED_V14_RULES = {'PU-001', 'LR-001', 'XT-001'}
+# Phase 4b upgraded detectors whose datasheet-backed branch is gated off
+# until AnalysisContext.cache_dir is wired. Heuristic-mode logic preserves
+# v1.3 behaviour bit-for-bit. Any new additions in this set should appear
+# only when the datasheet path activates — flag for manual review rather
+# than auto-pass. Should be ~0 corpus-wide.
+UPGRADED_V14_RULES = {'PU-001', 'LR-001'}
 
 SEVERITY_ORDER = {'info': 0, 'warning': 1, 'error': 2}
 
@@ -56,6 +74,25 @@ def _first(seq):
     return str(item)
 
 
+# A run of two-or-more comma-separated identifier-like tokens (net names,
+# component refs, pin names). v1.4's deterministic path can emit these in a
+# different order than v1.3 because the underlying collection is a set —
+# cosmetic churn, not a finding regression. Normalizing sorts each such run
+# so the canonical key is stable across the reordering.
+_COMMA_RUN = re.compile(r'[\w/.+\-]+(?:,\s*[\w/.+\-]+)+')
+
+
+def _norm_summary(summary):
+    """Sort comma-separated token runs inside a summary string so that
+    set-iteration-order reordering does not change the canonical key."""
+    text = str(summary or '')
+
+    def _sort_run(m):
+        return ', '.join(sorted(p.strip() for p in m.group(0).split(',')))
+
+    return _COMMA_RUN.sub(_sort_run, text)[:120]
+
+
 def _canon_key(f):
     """Canonical identity for cross-version finding comparison.
 
@@ -67,7 +104,7 @@ def _canon_key(f):
         _first(f.get('components') or []),
         _first(f.get('nets') or []),
         _first(f.get('pins') or []),
-        str(f.get('summary') or '')[:120],
+        _norm_summary(f.get('summary')),
     )
 
 
