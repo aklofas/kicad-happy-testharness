@@ -1,0 +1,547 @@
+{
+  "analyzer_type": "emc",
+  "schema_version": "1.4.0",
+  "inputs": {
+    "source_files": [
+      "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/schematic/0ASLAN-dev0/AslanPad/macropad_macropad.kicad_sch.json",
+      "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/pcb/0ASLAN-dev0/AslanPad/macropad_macropad.kicad_pcb.json"
+    ],
+    "source_hashes": {
+      "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/schematic/0ASLAN-dev0/AslanPad/macropad_macropad.kicad_sch.json": "cdcbae6e00d47fd07f2d6cb25583e9c0d521d01f009d31dd6db211b7300f0731",
+      "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/pcb/0ASLAN-dev0/AslanPad/macropad_macropad.kicad_pcb.json": "f417fbacf0ea949b6dd351ce7aa917b3ac2ba043bbebd7bb7991f44964080e40"
+    },
+    "run_id": "20260516T001609Z-91dd06",
+    "config_hash": null,
+    "upstream_artifacts": {
+      "schematic": {
+        "path": "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/schematic/0ASLAN-dev0/AslanPad/macropad_macropad.kicad_sch.json",
+        "sha256": "cdcbae6e00d47fd07f2d6cb25583e9c0d521d01f009d31dd6db211b7300f0731",
+        "schema_version": "1.3.0",
+        "run_id": ""
+      },
+      "pcb": {
+        "path": "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/pcb/0ASLAN-dev0/AslanPad/macropad_macropad.kicad_pcb.json",
+        "sha256": "f417fbacf0ea949b6dd351ce7aa917b3ac2ba043bbebd7bb7991f44964080e40",
+        "schema_version": "1.3.0",
+        "run_id": ""
+      }
+    }
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "summary": {
+    "total_findings": 6,
+    "categories_checked": 3,
+    "active": 6,
+    "suppressed": 0,
+    "by_severity": {
+      "error": 2,
+      "warning": 1,
+      "info": 3
+    },
+    "emc_risk_score": 79.0
+  },
+  "target_standard": "fcc-class-b",
+  "findings": [
+    {
+      "category": "ground_plane",
+      "severity": "info",
+      "rule_id": "GP-001",
+      "confidence": "deterministic",
+      "title": "Return path analysis data not available",
+      "description": "PCB analysis did not include return path continuity data. Run the PCB analyzer with --full flag to enable GP-001 reference plane coverage checking.",
+      "components": [],
+      "nets": [],
+      "recommendation": "Re-run PCB analysis with: python3 analyze_pcb.py <file> --full",
+      "detector": "emc_ground_plane",
+      "summary": "Return path analysis data not available",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ]
+    },
+    {
+      "category": "ground_plane",
+      "severity": "error",
+      "rule_id": "GP-002",
+      "confidence": "deterministic",
+      "title": "No ground plane zones detected",
+      "description": "Board has 2 copper layers but no ground plane zones were found. A solid ground plane is the single most important EMC design feature.",
+      "components": [],
+      "nets": [],
+      "recommendation": "Add a ground pour on B.Cu covering as much area as possible.",
+      "detector": "emc_ground_plane",
+      "summary": "No ground plane zones detected",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ]
+    },
+    {
+      "category": "ground_plane",
+      "severity": "warning",
+      "rule_id": "GP-005",
+      "confidence": "deterministic",
+      "title": "8 ground domains detected",
+      "description": "Board has 8 separate ground domains: ?, ?, ?, ?, ?. Multiple ground domains require careful single-point connection to avoid ground loops and EMI.",
+      "components": [],
+      "nets": [
+        "?",
+        "?",
+        "?",
+        "?",
+        "?"
+      ],
+      "recommendation": "Verify ground domains connect at a single, intentional point (typically near the ADC for analog/digital split). Ensure no signal traces cross the domain boundary.",
+      "detector": "emc_ground_plane",
+      "summary": "8 ground domains detected",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ]
+    },
+    {
+      "category": "decoupling",
+      "severity": "error",
+      "rule_id": "DC-002",
+      "confidence": "heuristic",
+      "title": "No decoupling cap found near U1",
+      "description": "U1 (XIAO-RP2040-DIP) has no capacitor within 10mm. Every IC with power pins needs at least one decoupling capacitor.",
+      "components": [
+        "U1"
+      ],
+      "nets": [],
+      "recommendation": "Add 100nF X7R 0402 + 1\u00b5F X5R 0603 close to U1 power pins. For high-speed ICs, add 10nF C0G for high-frequency decoupling. Place caps on the same side as U1 with short, wide traces to vias.",
+      "detector": "emc_decoupling",
+      "summary": "No decoupling cap found near U1",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Decoupling",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "capacitor",
+            "value": "100n"
+          }
+        ],
+        "basis": "Standard 100nF decoupling per IC"
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ]
+    },
+    {
+      "category": "crosstalk",
+      "severity": "info",
+      "rule_id": "XT-001",
+      "confidence": "heuristic",
+      "title": "Close trace spacing: Net-(U1-GPIO4/MISO) / Net-(U1-GPIO3/MOSI)",
+      "description": "Nets Net-(U1-GPIO4/MISO) and Net-(U1-GPIO3/MOSI) run parallel for ~36mm on F.Cu within 0.5mm spacing (3H rule requires \u22650.6mm for <3% crosstalk, H=0.20mm). ",
+      "components": [],
+      "nets": [
+        "Net-(U1-GPIO4/MISO)",
+        "Net-(U1-GPIO3/MOSI)"
+      ],
+      "recommendation": "Increase spacing to \u22650.6mm (3\u00d7 dielectric height) or insert a ground guard trace between them.",
+      "detector": "emc_crosstalk",
+      "summary": "Close trace spacing: Net-(U1-GPIO4/MISO) / Net-(U1-GPIO3/MOSI)",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Crosstalk",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ]
+    },
+    {
+      "category": "crosstalk",
+      "severity": "info",
+      "rule_id": "XT-001",
+      "confidence": "heuristic",
+      "title": "Close trace spacing: Net-(U1-GPIO4/MISO) / Net-(U1-GPIO29/ADC3/A3)",
+      "description": "Nets Net-(U1-GPIO4/MISO) and Net-(U1-GPIO29/ADC3/A3) run parallel for ~8mm on F.Cu within 0.5mm spacing (3H rule requires \u22650.6mm for <3% crosstalk, H=0.20mm). ",
+      "components": [],
+      "nets": [
+        "Net-(U1-GPIO4/MISO)",
+        "Net-(U1-GPIO29/ADC3/A3)"
+      ],
+      "recommendation": "Increase spacing to \u22650.6mm (3\u00d7 dielectric height) or insert a ground guard trace between them.",
+      "detector": "emc_crosstalk",
+      "summary": "Close trace spacing: Net-(U1-GPIO4/MISO) / Net-(U1-GPIO29/ADC3/A3)",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Crosstalk",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ]
+    }
+  ],
+  "assessments": [],
+  "per_net_scores": [
+    {
+      "net": "?",
+      "score": 85.0,
+      "finding_count": 5,
+      "rules": [
+        "GP-005"
+      ]
+    },
+    {
+      "net": "Net-(U1-GPIO4/MISO)",
+      "score": 100,
+      "finding_count": 2,
+      "rules": [
+        "XT-001"
+      ]
+    },
+    {
+      "net": "Net-(U1-GPIO3/MOSI)",
+      "score": 100,
+      "finding_count": 1,
+      "rules": [
+        "XT-001"
+      ]
+    },
+    {
+      "net": "Net-(U1-GPIO29/ADC3/A3)",
+      "score": 100,
+      "finding_count": 1,
+      "rules": [
+        "XT-001"
+      ]
+    }
+  ],
+  "test_plan": {
+    "frequency_bands": [
+      {
+        "band": "30-88 MHz",
+        "freq_min_hz": 30000000.0,
+        "freq_max_hz": 88000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      },
+      {
+        "band": "88-216 MHz",
+        "freq_min_hz": 88000000.0,
+        "freq_max_hz": 216000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      },
+      {
+        "band": "216-960 MHz",
+        "freq_min_hz": 216000000.0,
+        "freq_max_hz": 960000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      },
+      {
+        "band": "960-40000 MHz",
+        "freq_min_hz": 960000000.0,
+        "freq_max_hz": 40000000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      }
+    ],
+    "interface_risks": [],
+    "probe_points": []
+  },
+  "regulatory_coverage": {
+    "market": "us",
+    "applicable_standards": [
+      "FCC Part 15 Class B",
+      "FCC Part 15 Class B"
+    ],
+    "coverage_matrix": [
+      {
+        "standard": "FCC Part 15 Class B",
+        "test_type": "radiated",
+        "coverage": "minimal",
+        "checked_rules": [
+          "GP-001",
+          "GP-002",
+          "GP-005",
+          "DC-002"
+        ],
+        "total_applicable_rules": 23,
+        "note": "Design rule checks identify common radiation sources. Cannot predict absolute emission levels."
+      },
+      {
+        "standard": "FCC Part 15 Class B",
+        "test_type": "conducted",
+        "coverage": "minimal",
+        "checked_rules": [
+          "DC-002"
+        ],
+        "total_applicable_rules": 4,
+        "note": "Switching harmonic analysis and decoupling checks. EMI filter verification not yet implemented."
+      }
+    ]
+  },
+  "category_summary": {
+    "ground_plane": {
+      "count": 3,
+      "max_severity": "error",
+      "severities": {
+        "error": 1,
+        "warning": 1,
+        "info": 1
+      },
+      "suppressed_count": 0
+    },
+    "decoupling": {
+      "count": 1,
+      "max_severity": "error",
+      "severities": {
+        "error": 1,
+        "warning": 0,
+        "info": 0
+      },
+      "suppressed_count": 0
+    },
+    "crosstalk": {
+      "count": 2,
+      "max_severity": "info",
+      "severities": {
+        "error": 0,
+        "warning": 0,
+        "info": 2
+      },
+      "suppressed_count": 0
+    }
+  },
+  "board_info": {
+    "board_width_mm": null,
+    "board_height_mm": null,
+    "layer_count": 2,
+    "footprint_count": 17,
+    "via_count": 27,
+    "has_stackup": false,
+    "total_components": 17,
+    "total_nets": 22
+  },
+  "elapsed_s": 0.0,
+  "audience_summary": {
+    "designer": {
+      "total_findings": 6,
+      "by_severity": {
+        "error": 2,
+        "warning": 1,
+        "info": 3
+      },
+      "by_category": {
+        "ground_plane": 3,
+        "decoupling": 1,
+        "crosstalk": 2
+      },
+      "top_issues": [
+        {
+          "category": "ground_plane",
+          "severity": "error",
+          "rule_id": "GP-002",
+          "confidence": "deterministic",
+          "title": "No ground plane zones detected",
+          "description": "Board has 2 copper layers but no ground plane zones were found. A solid ground plane is the single most important EMC design feature.",
+          "components": [],
+          "nets": [],
+          "recommendation": "Add a ground pour on B.Cu covering as much area as possible.",
+          "detector": "emc_ground_plane",
+          "summary": "No ground plane zones detected",
+          "pins": [],
+          "evidence_source": "topology",
+          "report_context": {
+            "section": "Ground Plane",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ]
+        },
+        {
+          "category": "decoupling",
+          "severity": "error",
+          "rule_id": "DC-002",
+          "confidence": "heuristic",
+          "title": "No decoupling cap found near U1",
+          "description": "U1 (XIAO-RP2040-DIP) has no capacitor within 10mm. Every IC with power pins needs at least one decoupling capacitor.",
+          "components": [
+            "U1"
+          ],
+          "nets": [],
+          "recommendation": "Add 100nF X7R 0402 + 1\u00b5F X5R 0603 close to U1 power pins. For high-speed ICs, add 10nF C0G for high-frequency decoupling. Place caps on the same side as U1 with short, wide traces to vias.",
+          "detector": "emc_decoupling",
+          "summary": "No decoupling cap found near U1",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Decoupling",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "fix_params": {
+            "type": "add_component",
+            "components": [
+              {
+                "type": "capacitor",
+                "value": "100n"
+              }
+            ],
+            "basis": "Standard 100nF decoupling per IC"
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ]
+        },
+        {
+          "category": "ground_plane",
+          "severity": "warning",
+          "rule_id": "GP-005",
+          "confidence": "deterministic",
+          "title": "8 ground domains detected",
+          "description": "Board has 8 separate ground domains: ?, ?, ?, ?, ?. Multiple ground domains require careful single-point connection to avoid ground loops and EMI.",
+          "components": [],
+          "nets": [
+            "?",
+            "?",
+            "?",
+            "?",
+            "?"
+          ],
+          "recommendation": "Verify ground domains connect at a single, intentional point (typically near the ADC for analog/digital split). Ensure no signal traces cross the domain boundary.",
+          "detector": "emc_ground_plane",
+          "summary": "8 ground domains detected",
+          "pins": [],
+          "evidence_source": "topology",
+          "report_context": {
+            "section": "Ground Plane",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ]
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 3,
+      "by_category": {
+        "ground_plane": 2,
+        "decoupling": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "GP-002",
+          "severity": "error",
+          "summary": "No ground plane zones detected",
+          "recommendation": "Add a ground pour on B.Cu covering as much area as possible.",
+          "category": "ground_plane"
+        },
+        {
+          "rule_id": "DC-002",
+          "severity": "error",
+          "summary": "No decoupling cap found near U1",
+          "recommendation": "Add 100nF X7R 0402 + 1\u00b5F X5R 0603 close to U1 power pins. For high-speed ICs, add 10nF C0G for high-frequency decoupling. Place caps on the same side as U1 with short, wide traces to vias.",
+          "category": "decoupling"
+        },
+        {
+          "rule_id": "GP-005",
+          "severity": "warning",
+          "summary": "8 ground domains detected",
+          "recommendation": "Verify ground domains connect at a single, intentional point (typically near the ADC for analog/digital split). Ensure no signal traces cross the domain boundary.",
+          "category": "ground_plane"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "moderate",
+      "blocker_count": 2,
+      "warning_count": 1,
+      "stage_readiness": {
+        "schematic": "pass",
+        "layout": "needs_work",
+        "pre_fab": "pass",
+        "bring_up": "pass"
+      },
+      "one_liner": "2 errors, 1 warning across 2 categories. Layout stage has blockers."
+    }
+  },
+  "trust_summary": {
+    "total_findings": 6,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 3,
+      "heuristic": 3,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 3,
+      "heuristic_rule": 3,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 0.0
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20260516T001609Z-91dd06"
+  }
+}

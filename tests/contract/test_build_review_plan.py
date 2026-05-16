@@ -48,3 +48,32 @@ def test_build_review_plan_reviewer_task_paths(tmp_path):
     assert "reviewer.md" in rv["prompt_path"]
     assert rv["result_path"].endswith("review_annotations.json")
     assert rv["result_schema"].endswith("review_annotations.schema.json")
+
+
+def test_build_review_plan_reviewer_input_artifacts_include_cross_analysis(tmp_path):
+    """Reviewer must receive cross_analysis.json as input. Locks C8: cross-domain
+    findings were silently absent from reviewer context before the fix because
+    build_review_plan emitted only sch/pcb/emc/thermal/design_context.
+
+    Ordering matters: reviewer prompt enumerates artifacts in a documented
+    sequence and a re-order could mis-calibrate prompts tuned to that layout.
+    Pin position between thermal and design_context.
+    """
+    from build_review_plan import build_plan
+    plan = build_plan(analysis_dir=tmp_path)
+    rv = next(t for t in plan["tasks"] if t["task_id"] == "reviewer")
+    artifacts = rv["input_artifacts"]
+    expected_cross = str(tmp_path / "cross_analysis.json")
+    expected_thermal = str(tmp_path / "thermal.json")
+    expected_dc = str(tmp_path / "design_context.json")
+    assert expected_cross in artifacts, (
+        f"reviewer.input_artifacts missing cross_analysis.json: {artifacts}"
+    )
+    idx_cross = artifacts.index(expected_cross)
+    idx_thermal = artifacts.index(expected_thermal)
+    idx_dc = artifacts.index(expected_dc)
+    assert idx_thermal < idx_cross < idx_dc, (
+        f"cross_analysis.json must sit between thermal and design_context; "
+        f"got indices thermal={idx_thermal}, cross={idx_cross}, "
+        f"design_context={idx_dc}"
+    )

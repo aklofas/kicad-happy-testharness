@@ -43,11 +43,13 @@ def test_sanitize_mpn_clean_passthrough() -> None:
 
 
 def test_sanitize_mpn_replaces_unsafe_chars() -> None:
-    """Slashes, dots, spaces, percent signs → underscore."""
+    """Slashes, spaces, percent signs → underscore. Dots and hyphens are
+    preserved per the audit C1 fix — Phase 3b crystals like
+    ``ABM8G-106-12.000MHZ-T`` have load-bearing dots that previously caused
+    silent cache misses when sanitization stripped them."""
     from datasheet_lookup import sanitize_mpn
 
     assert sanitize_mpn("STM32/F103") == "STM32_F103"
-    assert sanitize_mpn("LM2596.ADJ") == "LM2596_ADJ"
     assert sanitize_mpn("ACME 1234") == "ACME_1234"
     assert sanitize_mpn("PART%V2") == "PART_V2"
 
@@ -60,11 +62,16 @@ def test_sanitize_mpn_strips_whitespace() -> None:
     assert sanitize_mpn("\tLM2596-ADJ\n") == "LM2596-ADJ"
 
 
-def test_sanitize_mpn_preserves_underscore_and_hyphen() -> None:
-    """_ and - are safe filename characters and preserved."""
+def test_sanitize_mpn_preserves_underscore_hyphen_and_dot() -> None:
+    """_ . - are safe filename characters and preserved. Dot preservation is
+    required for Phase 3b crystals and any MPN that encodes a decimal value
+    in the part number (audit C1, LOG entry 63). The planner/merger write
+    literal MPN-named files, so the sanitizer MUST match what they write."""
     from datasheet_lookup import sanitize_mpn
 
     assert sanitize_mpn("LM_2596-ADJ") == "LM_2596-ADJ"
+    assert sanitize_mpn("LM2596.ADJ") == "LM2596.ADJ"
+    assert sanitize_mpn("ABM8G-106-12.000MHZ-T") == "ABM8G-106-12.000MHZ-T"
 
 
 # ---------------------------------------------------------------------------
