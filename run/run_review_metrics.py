@@ -16,6 +16,7 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_PACKETS_DIR = HARNESS_DIR / "regression" / "reference_review_packets"
 DEFAULT_OUTPUT_ROOT = HARNESS_DIR / "results" / "review_metrics"
+PACKET_SCHEMA_PATH = DEFAULT_PACKETS_DIR / "packet_schema.json"
 
 PACKET_FILES = {
     "findings": "findings.json",
@@ -27,6 +28,26 @@ PACKET_FILES = {
 
 CONFIDENCE_BUCKETS = ("high", "medium", "low")
 CALIBRATION_MIN_N = 5
+
+
+def _validate_packet_schema(packet_dict):
+    """Validate combined packet dict against packet_schema.json.
+
+    Soft-imports jsonschema (returns None if absent — matches harness pattern).
+    Returns None on success, or the first error message string on failure.
+    """
+    try:
+        import jsonschema
+    except ImportError:
+        return None
+    if not PACKET_SCHEMA_PATH.exists():
+        return None
+    schema = json.loads(PACKET_SCHEMA_PATH.read_text())
+    try:
+        jsonschema.validate(instance=packet_dict, schema=schema)
+    except jsonschema.ValidationError as exc:
+        return exc.message
+    return None
 
 
 def discover_packets(packets_dir, only=None):
@@ -51,6 +72,18 @@ def load_packet(pkt_dir):
             out[key] = json.loads(path.read_text())
         except json.JSONDecodeError as exc:
             return None, f"invalid JSON in {filename}: {exc}"
+    combined = {
+        "inputs": {
+            "findings": out["findings"],
+            "design_context": out["design_context"],
+            "extraction_facts": out["extraction_facts"],
+        },
+        "recorded_output": out["review_annotations"],
+        "expected": out["expected_annotations"],
+    }
+    err = _validate_packet_schema(combined)
+    if err is not None:
+        return None, f"schema validation failed: {err}"
     return out, None
 
 
