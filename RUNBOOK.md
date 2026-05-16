@@ -1579,7 +1579,34 @@ python3 tools/generate_health_report.py --log
 
 No assertion count drops. Record the metrics for release notes.
 
-### 16k. Update documentation
+### 16k. Layer 1 regression gate on candidate tag commit (HARD REQUIREMENT)
+
+**Non-negotiable: run the v1.4 Layer 1 gate against the exact commit you
+intend to tag.** Contract suite + targeted spot-checks are NOT a substitute.
+
+**Cautionary tale:** v1.4.0-rc.1 was first declared "tag-ready" on `693b664`
+based on 462/462 contract tests + 5 single-fixture spot-checks of the
+polish-pass commits. A fresh quick_200 gate exposed 1,742 disappeared
+findings + 558 FAIL + 530 NewUnknown introduced by a single VD-DET dedup in
+`8c36212`. The dedup's blast radius (via the `detect_rc_filters`
+exclusion-set cascade) was invisible to every test that wasn't a Layer 1
+gate run. Final tag landed on `f561e47` (revert commit) only after a fresh
+full-corpus CLEAN. Worked example in v1.4 shared log entries 98-102.
+**Mirrors the main-repo CLAUDE.md "Pre-tag validation gate (hard
+requirement)" Release Checklist section.**
+
+Procedure: **run Checklist 26** against the candidate tag SHA. Stage
+quick_200 first (~8 min, bails out cheaply on regression); on CLEAN
+proceed to full-corpus (~30-45 min). Pass criteria from 26e are mandatory
+(`disappeared_count == 0` AND `severity_downgrades == 0` AND
+`fail_verdicts == 0`). The full-corpus rollup at
+`results/v14_gate/rollup_<label>_full.json` is the artifact consumed by
+step 16l VALIDATION.md generation.
+
+If non-CLEAN: **do NOT tag.** Bisect against the prior CLEAN gate result
+to identify the regression-introducing commit.
+
+### 16l. Update documentation
 
 - `status.md` — add release entry with all metrics
 - `ISSUES.md` — verify all known bugs are filed (check aspirational FND failures)
@@ -1588,13 +1615,23 @@ No assertion count drops. Record the metrics for release notes.
 ```bash
 # Regenerate VALIDATION.md for the kicad-happy repo
 python3 tools/generate_catalog.py                    # refresh catalog first
-python3 tools/generate_validation_md.py --output $KICAD_HAPPY_DIR/VALIDATION.md
+python3 regression/run_checks.py --json > /tmp/run_checks_release.json  # measured pass rate
+python3 tools/generate_validation_md.py \
+  --check-results /tmp/run_checks_release.json \
+  --gate-rollup results/v14_gate/rollup_rc_{rc-version}_{short-sha}_full.json \
+  --output $KICAD_HAPPY_DIR/VALIDATION.md
 ```
+
+The `--check-results` flag adds a measured-pass-rate caption to the
+regression-assertions section. The `--gate-rollup` flag injects a
+`### v1.4 Layer 1 regression gate` section citing the corpus-wide CLEAN
+verdict from step 16k. Without these flags the script still works but
+falls back to hardcoded "100%" claims with no gate section.
 
 Review the generated file — check assertion counts, issue ranges, and detector
 coverage look correct. Commit in kicad-happy (do NOT push — user manages that).
 
-### 16l. Tag the release
+### 16m. Tag the release
 
 Record alongside the tag:
 - kicad-happy commit hash
