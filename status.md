@@ -34,12 +34,12 @@ Last updated: 2026-05-14 (v1.4 Layer 1 regression gate — CLEAN corpus-wide)
 | Assertion pass rate | 100.0% _(2026-04-15)_ |
 | Bugfix registry entries | 76 _(2026-04-15)_ |
 | Unit tests (smoke gate) | 541 _(2026-04-15)_ |
-| Unit tests (full suite) | 1,196 (1,193 pass / 1 fail / 2 skip, 2026-05-14) |
+| Unit tests (full suite) | 1,194 (1,191 pass / 2 fail / 1 skip, 2026-05-15) — 2 fails = TH-039 + TH-040, both pre-existing harness-side, see ISSUES.md |
 | Layer 3 reviewed repos | 1,045 _(2026-04-15)_ |
 | Total findings | 2,575 _(2026-04-15)_ |
 | Open KH-* issues | 1 (KH-326) |
 | Closed KH-* issues | 324 (KH-001..325; KH-324 burned) |
-| Open TH-* issues | 2 (TH-037, TH-038) |
+| Open TH-* issues | 4 (TH-037, TH-038, TH-039, TH-040) |
 | Constants | 298 (295 verified, 3 unverified) _(2026-04-15)_ |
 | Schematic detectors | 56 (40 signal/domain + 16 validation) |
 | Cross-analyzer agreement | 91.9% (97,012 checks) |
