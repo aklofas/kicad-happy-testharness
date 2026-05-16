@@ -11,26 +11,22 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
-## 2026-05-16 — TH-043 (schema-vs-emitter drift across 4 analyzers) — PARTIAL
-
-> **PARTIAL FIX NOTICE:** Main-repo `e27f0f9` fixed `board_metadata`,
-> `board_thickness_mm`, `design_rule_compliance` on pcb plus the
-> schematic/gerber/thermal keys. The 3 remaining pcb keys —
-> `ground_domains`, `placement_density`, `power_net_routing` — follow the
-> same pattern but were omitted. Re-opened as **[TH-043-residual](ISSUES.md)**.
+## 2026-05-16 — TH-043 + TH-043-residual (schema-vs-emitter drift across 4 analyzers, fully fixed)
 
 ### TH-043 (LOW): `--schema` declared keys not always emitted across schematic / pcb / gerber / thermal
 
-- **Where fixed (partial):** kicad-happy `e27f0f9` (per-analyzer surgical emit-defaults
-  on the keys the `--schema` `required` list documents). Per-key categorization:
-  top-level dict keys → `{}` default, nested required list keys → `[]` default,
-  scalar required keys genuinely missing in source files → `Optional[T] = None`
-  (e.g., `board_thickness_mm` for `.kicad_pcb` files with no `(general
-  (thickness ...))` node). Defaulted `Optional` fields moved to end of
-  dataclasses per Python's "defaulted-fields-last" rule. **PCB partial**: 2 of 5
-  filed keys fixed (`board_metadata`, `board_thickness_mm`) plus the unrelated
-  `design_rule_compliance`. The other 3 (`ground_domains`, `placement_density`,
-  `power_net_routing`) remain drifting — see TH-043-residual.
+- **Where fixed:** Two main-repo commits — `e27f0f9` (initial pass, 2 of 5
+  pcb keys + all schematic / gerber / thermal keys) and `70d25ca`
+  (TH-043-residual: remaining 3 pcb keys `ground_domains`,
+  `placement_density`, `power_net_routing`). Per-key categorization:
+  top-level dict keys → `{}` default, nested required list keys → `[]`
+  default, scalar required keys genuinely missing in source files →
+  `Optional[T] = None` (e.g., `board_thickness_mm` for `.kicad_pcb` files
+  with no `(general (thickness ...))` node). Defaulted `Optional` fields
+  moved to the tail of envelope dataclasses per Python's "defaulted-fields-last"
+  rule. `70d25ca` also moved the 3 residual fields to the defaulted-tail of
+  `envelopes/pcb.py PCBEnvelope`. **All 5 originally-filed PCB keys + all
+  cross-analyzer keys now structurally present in every emitted output.**
 - **Symptom (corpus-wide gate evidence from `run_v14_default_contract_gate.py`
   @ `87274cb701d` over 149,566 v14 snapshots):**
 
@@ -50,20 +46,26 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
   emitted only on the v6+ parser path (legacy `.sch` skipped it), thermal
   `missing_info.default_rtheta_ja` set only on one branch of the
   partial-fallback path. Same bug class corpus-wide.
-- **Verification:** `py_compile` clean across 6 touched modules. Smoke-tested
-  against `Arduino_OpenTherm_shield` + `martinribelotta/h730duino/gerber` —
-  every previously-conditional key now structurally present. Regression-diff
-  impact: zero — finding identity (`rule_id` + `components`) unchanged; only
-  envelope-shape additions. Next `run_v14_default_contract_gate.py` run on
-  v1.4-dev tip should report ~96% drift drop.
-- **No per-analyzer KH-*** — fix landed in one commit; per-analyzer issues
-  would be over-tracking. Filed harness-side as a single TH-043 with
+- **Verification (e27f0f9 + 70d25ca combined):** `py_compile` clean across
+  touched modules in both commits; `--schema` parses as valid JSON on every
+  analyzer. Smoke-tested against `Arduino_OpenTherm_shield` (all 5 PCB keys
+  populate naturally) + `martinribelotta/h730duino/gerber` +
+  `jgrip/commodorelcd` + `chrisjohgorman/clock-design` (empty-default paths
+  for the 70d25ca residual fields). `tests/test_schema_drift.py` clears
+  fully (12/12 pass) on a harness checkout pinned to main-repo `70d25ca`.
+  Regression-diff impact: zero — finding identity (`rule_id` + `components`)
+  unchanged in either commit; only envelope-shape additions. Next
+  `run_v14_default_contract_gate.py` run on v1.4-dev tip should report a
+  clean drop to ~0% drift across all 4 analyzers.
+- **No per-analyzer KH-*** — fix landed in two surgical commits; per-analyzer
+  issues would be over-tracking. Filed harness-side as a single TH-043 with
   corpus-wide scope from the LOG 8 gate evidence (commit `40f5fa825d2`
-  widened the original PCB-only scope).
+  widened the original PCB-only scope; TH-043-residual was the harness-side
+  re-open for the 3 keys e27f0f9 missed, closed the same day with 70d25ca).
 - **Not tag-blocking** — pre-existing in rc.1, schema-vs-output mismatch
   affected only strict consumers, not the default-mode report. Shipped in
-  rc.2 candidate `e27f0f9` along with the other 6 main-repo fixes (per LOG
-  entry 117).
+  rc.2 candidate `70d25ca` along with the other 7 main-repo fixes (per LOG
+  entries 117 + 120).
 
 ---
 

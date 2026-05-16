@@ -297,48 +297,6 @@ correctness.
 
 ---
 
-### TH-043-residual: PCB `--schema` still drifts on 3 keys after main-repo `e27f0f9` partial fix
-
-**Severity:** LOW
-**File:** `tests/test_schema_drift.py:test_pcb_schema_drift` +
-`<kicad-happy>/skills/kicad/scripts/analyze_pcb.py:6273-6274, 6297-6298, 6436-6441`
-**Discovered:** 2026-05-16 (surfaced during 14-commit audit-recs push hook run
-once `test_schema_drift.py` ran fully — was SKIP'd as timeout-after-120s in
-the prior push attempt, hiding the partial completion)
-
-**Symptom:**
-```
-FAIL: test_pcb_schema_drift: pcb: --schema documents required keys not in
-emitted output: ['ground_domains', 'placement_density', 'power_net_routing'].
-Either remove from --schema `required`, or emit them unconditionally.
-```
-
-**Status vs full TH-043:** Originally TH-043 listed 5 PCB keys drifting
-(`board_metadata`, `board_thickness_mm`, `ground_domains`, `placement_density`,
-`power_net_routing`). Main-repo `e27f0f9` fixed 3 of 5 (`board_metadata`,
-`board_thickness_mm`, `design_rule_compliance`) using the per-key
-categorization rule ("top-level dict keys default to `{}`"). The remaining
-3 keys follow the **same pattern** but were omitted from that commit.
-
-**Per-key fix paths (all three: top-level dict → `{}` default, mirroring
-the e27f0f9 pattern):**
-
-| Key | Current code (analyze_pcb.py) | Fix |
-|-----|-------------------------------|-----|
-| `power_net_routing` | `if power_routing: result["power_net_routing"] = power_routing` (L6273-6274) | Emit `{}` default when `power_routing` is falsy |
-| `ground_domains` | `if ground_domains["domain_count"] > 0: result["ground_domains"] = ground_domains` (L6297-6298) | Emit `{"domain_count": 0, ...}` or unconditionally emit the populated dict (it always has a `domain_count` key) |
-| `placement_density` | Nested conditional: `placement = result.pop('placement_analysis', None); if placement: ... if placement.get('density'): result['placement_density'] = placement['density']` (L6436-6441) | Emit `{}` default when `placement` is None or `density` is missing |
-
-**Not tag-blocking** — same disposition as the parent TH-043: schema-vs-output
-mismatch affects only strict consumers, not the default-mode report. Pre-existing
-in rc.1, not introduced by `e27f0f9` (which made the situation better, not
-worse — it took the failure rate down from 5/5 keys drifting to 3/5).
-
-**Cross-reference:** [FIXED.md TH-043 entry](FIXED.md) — updated to note this
-residual exists and points back here.
-
----
-
 ### TH-044: `hierarchical` cross-section reads 0 repos — catalog's `max_hierarchy_sheets` field is stale (always 0)
 
 **Severity:** LOW
@@ -389,4 +347,4 @@ release-quality impact.
 
 ## Priority Queue
 
-_8 open TH-* issues (all LOW)._
+_7 open TH-* issues (all LOW)._
