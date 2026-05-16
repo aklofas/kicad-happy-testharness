@@ -1,0 +1,3966 @@
+{
+  "analyzer_type": "schematic",
+  "schema_version": "1.3.0",
+  "summary": {
+    "total_findings": 9,
+    "by_severity": {
+      "error": 2,
+      "warning": 4,
+      "info": 3
+    }
+  },
+  "trust_summary": {
+    "total_findings": 9,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 5,
+      "heuristic": 4,
+      "datasheet-backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 7,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 2,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 66.7,
+    "bom_coverage": {
+      "total_components": 5,
+      "with_mpn": 0,
+      "with_datasheet": 1,
+      "mpn_pct": 0.0,
+      "datasheet_pct": 20.0
+    }
+  },
+  "file": "/home/aklofas/Projects/kicad-happy-testharness/repos/Coder1203/Macropad/PCB/Macropad.kicad_sch",
+  "kicad_version": "10.0",
+  "file_version": "20260306",
+  "title_block": {},
+  "statistics": {
+    "total_components": 21,
+    "unique_parts": 5,
+    "dnp_parts": 0,
+    "total_nets": 23,
+    "total_wires": 36,
+    "total_no_connects": 0,
+    "component_types": {
+      "switch": 10,
+      "other": 1,
+      "diode": 9,
+      "ic": 1
+    },
+    "power_rails": [
+      {
+        "name": "+3V3",
+        "voltage": 3.3
+      },
+      {
+        "name": "GND",
+        "voltage": null
+      }
+    ],
+    "missing_mpn": [
+      "SW4",
+      "SW3",
+      "OLED1",
+      "SW2",
+      "D18",
+      "D13",
+      "SW9",
+      "D17",
+      "SW10",
+      "SW7",
+      "D14",
+      "SW1",
+      "D2",
+      "D22",
+      "U1",
+      "D1",
+      "SW8",
+      "SW5",
+      "D21",
+      "SW6",
+      "D3"
+    ],
+    "missing_footprint": [
+      "OLED1"
+    ]
+  },
+  "findings": [
+    {
+      "category": "decoupling",
+      "component": "U1",
+      "value": "XIAO-RP2040-DIP",
+      "rails_without_caps": [
+        "+3V3"
+      ],
+      "rails_with_caps": [],
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "IC U1 missing decoupling on +3V3",
+      "description": "IC power pin(s) without decoupling capacitors",
+      "components": [
+        "U1"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_datasheet_coverage",
+      "rule_id": "DS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "verification",
+      "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "datasheets_dir": null,
+      "datasheet_file_count": 0,
+      "bom_size": 21,
+      "mpn_coverage_percent": 0.0,
+      "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+      "report_context": {
+        "section": "Datasheet Coverage",
+        "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "rows": 3,
+      "columns": 3,
+      "row_nets": [
+        "row1",
+        "row3",
+        "row2"
+      ],
+      "col_nets": [
+        "col2",
+        "col3",
+        "col1"
+      ],
+      "estimated_keys": 9,
+      "switches_on_matrix": 9,
+      "diodes_on_matrix": 9,
+      "detection_method": "net_name",
+      "detector": "detect_key_matrices",
+      "rule_id": "KM-DET",
+      "category": "human_interface",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Key matrix 3x3 (9 keys)",
+      "description": "Detected 3x3 key matrix with 9 estimated keys.",
+      "components": [],
+      "nets": [
+        "col1",
+        "col2",
+        "col3",
+        "row1",
+        "row2",
+        "row3"
+      ],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Human Interface",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "keymatrix_diode_grid",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "key_matrices:5a9e101e9a80",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: U1.VBUS only connects to U1.14 (VBUS) (passive)",
+      "description": "Net '__unnamed_10' has exactly one pin: U1.14 (VBUS), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1"
+      ],
+      "nets": [
+        "__unnamed_10"
+      ],
+      "pins": [
+        "U1.14"
+      ],
+      "net_display_name": "U1.VBUS",
+      "pin_type": "passive",
+      "pin_name": "VBUS",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Passive or unclassified pin lonely on its own net.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U1 pin GPIO4/MISO (B) missing pull-up resistor",
+      "description": "Pin GPIO4/MISO on U1 (XIAO-RP2040-DIP) is connected to net B but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+      "components": [
+        "U1"
+      ],
+      "nets": [
+        "B"
+      ],
+      "pins": [
+        {
+          "ref": "U1",
+          "pin": "GPIO4/MISO",
+          "function": "open_drain_or_input"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 4.7k-10k pull-up resistor from B to the appropriate power rail.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "B",
+            "net_to": "<power_rail>"
+          }
+        ],
+        "basis": "Pin GPIO4/MISO is open-drain/input type requiring pull-up"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin may float or bus may not function without pull-up",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "validation_findings:56993c43cb07",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U1 pin GPIO7/SCL (__unnamed_2) missing pull-up resistor",
+      "description": "Pin GPIO7/SCL on U1 (XIAO-RP2040-DIP) is connected to net __unnamed_2 but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+      "components": [
+        "U1"
+      ],
+      "nets": [
+        "__unnamed_2"
+      ],
+      "pins": [
+        {
+          "ref": "U1",
+          "pin": "GPIO7/SCL",
+          "function": "open_drain_or_input"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_2 to the appropriate power rail.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "__unnamed_2",
+            "net_to": "<power_rail>"
+          }
+        ],
+        "basis": "Pin GPIO7/SCL is open-drain/input type requiring pull-up"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin may float or bus may not function without pull-up",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "validation_findings:56993c43cb07",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U1 pin GPIO6/SDA (__unnamed_3) missing pull-up resistor",
+      "description": "Pin GPIO6/SDA on U1 (XIAO-RP2040-DIP) is connected to net __unnamed_3 but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+      "components": [
+        "U1"
+      ],
+      "nets": [
+        "__unnamed_3"
+      ],
+      "pins": [
+        {
+          "ref": "U1",
+          "pin": "GPIO6/SDA",
+          "function": "open_drain_or_input"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_3 to the appropriate power rail.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "__unnamed_3",
+            "net_to": "<power_rail>"
+          }
+        ],
+        "basis": "Pin GPIO6/SDA is open-drain/input type requiring pull-up"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin may float or bus may not function without pull-up",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "validation_findings:56993c43cb07",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "+3V3 has no declared source",
+      "description": "Net +3V3 carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "+3V3"
+      ],
+      "pins": [
+        "#PWR06.1",
+        "#PWR09.1"
+      ],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_sourcing_gate",
+      "rule_id": "SS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "sourcing",
+      "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/5 unique parts). Board is not pre-fab ready.",
+      "description": "Sourcing audit: 0 of 5 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+      "components": [
+        "D1",
+        "D13",
+        "D14",
+        "D17",
+        "D18",
+        "D2",
+        "D21",
+        "D22",
+        "D3",
+        "OLED1",
+        "SW1",
+        "SW10",
+        "SW2",
+        "SW3",
+        "SW4",
+        "SW5",
+        "SW6",
+        "SW7",
+        "SW8",
+        "SW9",
+        "U1"
+      ],
+      "nets": [],
+      "pins": [],
+      "mpn_coverage_percent": 0.0,
+      "missing_mpn_lines": 5,
+      "missing_mpn_refs": 21,
+      "total_bom_lines": 5,
+      "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+      "report_context": {
+        "section": "Sourcing",
+        "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ]
+    }
+  ],
+  "bom": [
+    {
+      "value": "1N4148",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "references": [
+        "D18",
+        "D13",
+        "D17",
+        "D14",
+        "D2",
+        "D22",
+        "D1",
+        "D21",
+        "D3"
+      ],
+      "quantity": 9,
+      "dnp": false,
+      "type": "diode"
+    },
+    {
+      "value": "",
+      "footprint": "",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "",
+      "references": [
+        "OLED1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "other"
+    },
+    {
+      "value": "RotaryEncoder_Switch",
+      "footprint": "Rotary_Encoder:RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Rotary encoder, dual channel, incremental quadrate outputs, with switch",
+      "references": [
+        "SW1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "switch"
+    },
+    {
+      "value": "SW_Push",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "references": [
+        "SW4",
+        "SW3",
+        "SW2",
+        "SW9",
+        "SW10",
+        "SW7",
+        "SW8",
+        "SW5",
+        "SW6"
+      ],
+      "quantity": 9,
+      "dnp": false,
+      "type": "switch"
+    },
+    {
+      "value": "XIAO-RP2040-DIP",
+      "footprint": "OPL LIB:XIAO-SAMD21-DIP",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "",
+      "references": [
+        "U1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "ic"
+    }
+  ],
+  "components": [
+    {
+      "reference": "SW4",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 219.71,
+      "y": 48.26,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "0de07524-e62e-41d4-a248-6e7a98e35807",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "b18c5135-e1e2-4035-8548-db2a23e042f3",
+        "2": "df462db1-8d43-414d-aaea-9a4a9bf315d4"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "1": "__unnamed_0",
+        "2": "row1"
+      }
+    },
+    {
+      "reference": "SW3",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 194.31,
+      "y": 92.71,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "148f40a6-f2bd-4feb-abc0-a42e230380e6",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "532c7f43-68f0-4957-b6ee-4908db3d7b41",
+        "2": "de9eb5ee-5c02-4f10-a4da-9d8c730686a8"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "1": "__unnamed_1",
+        "2": "row3"
+      }
+    },
+    {
+      "reference": "OLED1",
+      "value": "",
+      "lib_id": "screens for HACKpad:oled_1",
+      "lib_name": "",
+      "footprint": "",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 55.88,
+      "y": 120.65,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "2947ba52-a420-4956-895b-eccdbc02a566",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "4": "491ca645-a56e-4b75-a87e-0992c9de5aee",
+        "3": "bef05be1-d657-4bb9-a551-c61d10ede150",
+        "2": "79bf6d3b-1ec4-4dc5-b192-99c3a438ef78",
+        "1": "47770cb1-3ed8-4fa7-a71f-a0e0f03aba9e"
+      },
+      "type": "other",
+      "keywords": "",
+      "_sheet": 0,
+      "category": "other",
+      "pin_nets": {
+        "1": "GND",
+        "2": "+3V3",
+        "3": "__unnamed_2",
+        "4": "__unnamed_3"
+      }
+    },
+    {
+      "reference": "SW2",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 219.71,
+      "y": 67.31,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "2ef99e66-5890-481e-bc2c-73c920d21fdb",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "2ce67ba4-dcef-4058-b48e-3ef50681628c",
+        "2": "99964c91-89f6-47cd-96f0-58d6aec7e56c"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "1": "__unnamed_4",
+        "2": "row2"
+      }
+    },
+    {
+      "reference": "D18",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 210.82,
+      "y": 67.31,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "329e0318-eef8-40e8-a61f-4625118b2a71",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "e9d7138d-1c2e-43a7-be45-d6e4bddad228",
+        "2": "03a689d2-e043-494f-a96d-d4ff632f6e07"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "2": "__unnamed_4",
+        "1": "col2"
+      }
+    },
+    {
+      "reference": "D13",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 185.42,
+      "y": 54.61,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "3bf76bdc-66dc-4438-89ab-1e4eb56087e6",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "159f40e0-9e7a-4c03-a707-49664600dd9e",
+        "2": "0ab4540b-e269-4894-8c2c-a19a5c2f474a"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "1": "col3",
+        "2": "__unnamed_5"
+      }
+    },
+    {
+      "reference": "SW9",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 245.11,
+      "y": 48.26,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "3f13c5d8-53ec-4bf2-a07d-7565c375c972",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "46dc090a-6d0d-45ef-b28d-56e9ef9eb959",
+        "2": "93ea8bd8-6a63-4e2c-9694-f047d125876b"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "2": "row1",
+        "1": "__unnamed_6"
+      }
+    },
+    {
+      "reference": "D17",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 210.82,
+      "y": 48.26,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "674eaf6f-761a-4489-a838-d5700e3ee259",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "9999ed61-b92b-4b85-85b3-f51f31fc3a44",
+        "2": "1d808881-5f67-4c63-b45c-9f6d7e768eba"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "2": "__unnamed_0",
+        "1": "col2"
+      }
+    },
+    {
+      "reference": "SW10",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 245.11,
+      "y": 67.31,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "67e63086-148d-4917-90be-aa4383b01e3d",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "98fe6dae-47a5-4906-8189-380bd7776c39",
+        "2": "6dec2f8c-a69b-4b75-921f-c815b19e1bb5"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "2": "row2",
+        "1": "__unnamed_7"
+      }
+    },
+    {
+      "reference": "SW7",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 219.71,
+      "y": 87.63,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "7bdfb0b6-f504-4b61-9c84-3a52ea05430f",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "2d2977a0-6489-4884-bb68-efea0c2c8a4d",
+        "2": "a0e5e4bf-97aa-4451-ac3f-7bc063c83bd5"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "2": "row3",
+        "1": "__unnamed_8"
+      }
+    },
+    {
+      "reference": "D14",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 185.42,
+      "y": 72.39,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "9eb1393b-122e-4189-91ce-1cebaf6b0326",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "21872d68-91de-4f40-b96e-ddf82ab10d3d",
+        "2": "3292c4a5-ea02-4827-8dfb-1bacec8afc88"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "1": "col3",
+        "2": "__unnamed_9"
+      }
+    },
+    {
+      "reference": "SW1",
+      "value": "RotaryEncoder_Switch",
+      "lib_id": "Device:RotaryEncoder_Switch",
+      "lib_name": "",
+      "footprint": "Rotary_Encoder:RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm",
+      "datasheet": "",
+      "description": "Rotary encoder, dual channel, incremental quadrate outputs, with switch",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 144.78,
+      "y": 87.63,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "b1acc77f-a776-46ec-9749-c9a01f1715b0",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "B": "395caa1a-f606-47af-b5b4-a21caa571c95",
+        "C": "6deae4a9-f0c7-4c2d-907b-8dacea9b677a",
+        "S1": "1c8b6a82-1f97-426a-a8eb-9ca472000fec",
+        "A": "6e4ccf32-f8b7-4e54-86e9-fbdfbcaddce9",
+        "S2": "b4492c9a-b2db-4f19-87ef-561e6a1f8196"
+      },
+      "type": "switch",
+      "keywords": "rotary switch encoder switch push button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "C": "GND",
+        "S2": "GND",
+        "A": "A",
+        "B": "B",
+        "S1": "S1"
+      }
+    },
+    {
+      "reference": "D2",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 210.82,
+      "y": 87.63,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "ba46547c-7317-4e20-b2e0-4a26bc429f63",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "16f44622-22d1-4683-9f7b-4b991f6a94bf",
+        "2": "41779008-8abe-4346-9d13-848a872d60c1"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "1": "col2",
+        "2": "__unnamed_8"
+      }
+    },
+    {
+      "reference": "D22",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 236.22,
+      "y": 67.31,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "c1abb684-d753-4bda-8898-72a46fa62d4a",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "79df5c8b-0789-4acd-857f-e466fc9e773e",
+        "2": "aaca1fc7-34d6-4c43-a9ba-6671a1672a2f"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "2": "__unnamed_7",
+        "1": "col1"
+      }
+    },
+    {
+      "reference": "U1",
+      "value": "XIAO-RP2040-DIP",
+      "lib_id": "OPL:XIAO-RP2040-DIP",
+      "lib_name": "",
+      "footprint": "OPL LIB:XIAO-SAMD21-DIP",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 91.44,
+      "y": 101.6,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "d3b85348-a6aa-48e5-97e8-bbbc9df15182",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "14": "656e0ec7-c422-49b0-966c-5ddb99822732",
+        "3": "b5242cc8-9f78-44d6-9ec5-94efcfef75a1",
+        "1": "99136358-8d8d-4e64-a4df-fac6e81f42db",
+        "5": "dc13d2c1-92e6-46f4-be8b-fb46dc60a82a",
+        "12": "30daa11e-95c8-4268-9d73-a063e98dad8d",
+        "11": "f9e5b5ab-27de-4a85-a006-60805afba95f",
+        "10": "674f24d2-c7bd-4e0d-b929-cf9d425bac39",
+        "4": "8350e250-b2d4-46fb-b2a3-6f6c628f5dcb",
+        "6": "23f7ec67-430b-4f34-a54a-f57f5ed6b65a",
+        "7": "6638481d-8b41-4a5f-b551-29101a4f5643",
+        "8": "59ef6fee-69f7-4279-8f0a-823885146556",
+        "2": "0d14c812-dbd7-4d6c-9aae-0f1f232156ad",
+        "13": "0134093f-53cb-4089-acad-7dfd0059d0a6",
+        "9": "2cdb026b-ce36-44d0-adf9-d2618255bfe5"
+      },
+      "type": "ic",
+      "keywords": "",
+      "functional_class": "mcu",
+      "_sheet": 0,
+      "category": "ic",
+      "pin_nets": {
+        "8": "row1",
+        "7": "row3",
+        "13": "GND",
+        "12": "+3V3",
+        "6": "__unnamed_2",
+        "5": "__unnamed_3",
+        "9": "row2",
+        "2": "col2",
+        "3": "col3",
+        "11": "A",
+        "10": "B",
+        "4": "S1",
+        "1": "col1",
+        "14": "__unnamed_10"
+      }
+    },
+    {
+      "reference": "D1",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 185.42,
+      "y": 92.71,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "daff95ea-175d-4653-91cc-0681f3325f36",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "085af49d-1d0e-4d21-a949-533623f477f6",
+        "2": "26faf196-6582-4147-9fb5-cc932e49f15e"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "2": "__unnamed_1",
+        "1": "col3"
+      }
+    },
+    {
+      "reference": "SW8",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 245.11,
+      "y": 87.63,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "dbfcd460-87aa-4685-995d-df68d41e4e8d",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "88a4e727-d358-43c4-a9f3-3d18194200ee",
+        "2": "4fb190f2-5745-4ca5-9c7a-88f0193f787a"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "2": "row3",
+        "1": "__unnamed_11"
+      }
+    },
+    {
+      "reference": "SW5",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 194.31,
+      "y": 54.61,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "eb46eb94-9e54-4ccc-8ba4-174fd9ba6531",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "abcdeea9-dd85-4382-99f9-7654b2fcc1b6",
+        "2": "5e12d3bf-f4c6-429f-a2c5-8ced11cc4b73"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "2": "row1",
+        "1": "__unnamed_5"
+      }
+    },
+    {
+      "reference": "D21",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 236.22,
+      "y": 48.26,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "ef1a2d52-c528-4921-9cf6-a15dc47aa8d8",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "c663c651-1e4c-4162-a66c-c80691dc8165",
+        "2": "dd300766-6c5a-4b4a-af2b-8e889640eec2"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "2": "__unnamed_6",
+        "1": "col1"
+      }
+    },
+    {
+      "reference": "SW6",
+      "value": "SW_Push",
+      "lib_id": "Switch:SW_Push",
+      "lib_name": "",
+      "footprint": "Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB",
+      "datasheet": "",
+      "description": "Push button switch, generic, two pins",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 194.31,
+      "y": 72.39,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "f29a23a9-7d2d-40c0-8e95-8e35131488d6",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "4d542cc9-0e55-4a41-8540-28cce0e57059",
+        "2": "794cca31-c587-4976-843b-ae3966a6643c"
+      },
+      "type": "switch",
+      "keywords": "switch normally-open pushbutton push-button",
+      "_sheet": 0,
+      "category": "switch",
+      "pin_nets": {
+        "2": "row2",
+        "1": "__unnamed_9"
+      }
+    },
+    {
+      "reference": "D3",
+      "value": "1N4148",
+      "lib_id": "Diode:1N4148",
+      "lib_name": "",
+      "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+      "datasheet": "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf",
+      "description": "100V 0.15A standard switching diode, DO-35",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 236.22,
+      "y": 87.63,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "ff737b5a-3dbc-451e-b4c0-1b4e9ea07051",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "158f9a5a-16b9-46f6-ae12-ed2e0a4ad419",
+        "2": "859528ef-cfd9-4957-a781-6e18eb8d1d88"
+      },
+      "type": "diode",
+      "keywords": "diode",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "1": "col1",
+        "2": "__unnamed_11"
+      }
+    }
+  ],
+  "nets": {
+    "__unnamed_0": {
+      "name": "__unnamed_0",
+      "pins": [
+        {
+          "component": "SW4",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D17",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "row1": {
+      "name": "row1",
+      "pins": [
+        {
+          "component": "SW4",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW9",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "8",
+          "pin_name": "GPIO1/RX",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW5",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 7,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "row1",
+          "type": "global_label"
+        }
+      ]
+    },
+    "__unnamed_1": {
+      "name": "__unnamed_1",
+      "pins": [
+        {
+          "component": "SW3",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D1",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "row3": {
+      "name": "row3",
+      "pins": [
+        {
+          "component": "SW3",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW7",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "7",
+          "pin_name": "GPIO0/TX",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW8",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 7,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "row3",
+          "type": "global_label"
+        }
+      ]
+    },
+    "GND": {
+      "name": "GND",
+      "pins": [
+        {
+          "component": "OLED1",
+          "pin_number": "1",
+          "pin_name": "GND",
+          "pin_type": "input"
+        },
+        {
+          "component": "#PWR07",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR08",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR05",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "SW1",
+          "pin_number": "C",
+          "pin_name": "C",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW1",
+          "pin_number": "S2",
+          "pin_name": "S2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "13",
+          "pin_name": "GND",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR02",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        }
+      ],
+      "point_count": 7,
+      "no_connect": false,
+      "labels": []
+    },
+    "+3V3": {
+      "name": "+3V3",
+      "pins": [
+        {
+          "component": "OLED1",
+          "pin_number": "2",
+          "pin_name": "VCC",
+          "pin_type": "input"
+        },
+        {
+          "component": "#PWR09",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U1",
+          "pin_number": "12",
+          "pin_name": "3V3",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR06",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_2": {
+      "name": "__unnamed_2",
+      "pins": [
+        {
+          "component": "OLED1",
+          "pin_number": "3",
+          "pin_name": "SCL",
+          "pin_type": "input"
+        },
+        {
+          "component": "U1",
+          "pin_number": "6",
+          "pin_name": "GPIO7/SCL",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 6,
+      "no_connect": false,
+      "labels": [],
+      "display_name": "U1.GPIO7/SCL"
+    },
+    "__unnamed_3": {
+      "name": "__unnamed_3",
+      "pins": [
+        {
+          "component": "OLED1",
+          "pin_number": "4",
+          "pin_name": "SDA",
+          "pin_type": "input"
+        },
+        {
+          "component": "U1",
+          "pin_number": "5",
+          "pin_name": "GPIO6/SDA",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [],
+      "display_name": "U1.GPIO6/SDA"
+    },
+    "__unnamed_4": {
+      "name": "__unnamed_4",
+      "pins": [
+        {
+          "component": "SW2",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D18",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "row2": {
+      "name": "row2",
+      "pins": [
+        {
+          "component": "SW2",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW10",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "9",
+          "pin_name": "GPIO2/SCK",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW6",
+          "pin_number": "2",
+          "pin_name": "2",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 7,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "row2",
+          "type": "global_label"
+        }
+      ]
+    },
+    "col2": {
+      "name": "col2",
+      "pins": [
+        {
+          "component": "D18",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D17",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D2",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "2",
+          "pin_name": "GPIO27/ADC1/A1",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "col2",
+          "type": "global_label"
+        }
+      ]
+    },
+    "col3": {
+      "name": "col3",
+      "pins": [
+        {
+          "component": "D13",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D14",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "3",
+          "pin_name": "GPIO28/ADC2/A2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D1",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "col3",
+          "type": "global_label"
+        }
+      ]
+    },
+    "__unnamed_5": {
+      "name": "__unnamed_5",
+      "pins": [
+        {
+          "component": "D13",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW5",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_6": {
+      "name": "__unnamed_6",
+      "pins": [
+        {
+          "component": "SW9",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D21",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_7": {
+      "name": "__unnamed_7",
+      "pins": [
+        {
+          "component": "SW10",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D22",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_8": {
+      "name": "__unnamed_8",
+      "pins": [
+        {
+          "component": "SW7",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D2",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_9": {
+      "name": "__unnamed_9",
+      "pins": [
+        {
+          "component": "D14",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        },
+        {
+          "component": "SW6",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "A": {
+      "name": "A",
+      "pins": [
+        {
+          "component": "SW1",
+          "pin_number": "A",
+          "pin_name": "A",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "11",
+          "pin_name": "GPIO3/MOSI",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "A",
+          "type": "global_label"
+        }
+      ]
+    },
+    "B": {
+      "name": "B",
+      "pins": [
+        {
+          "component": "SW1",
+          "pin_number": "B",
+          "pin_name": "B",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "10",
+          "pin_name": "GPIO4/MISO",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "B",
+          "type": "global_label"
+        }
+      ]
+    },
+    "S1": {
+      "name": "S1",
+      "pins": [
+        {
+          "component": "SW1",
+          "pin_number": "S1",
+          "pin_name": "S1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "4",
+          "pin_name": "GPIO29/ADC3/A3",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "S1",
+          "type": "global_label"
+        }
+      ]
+    },
+    "col1": {
+      "name": "col1",
+      "pins": [
+        {
+          "component": "D22",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "1",
+          "pin_name": "GPIO26/ADC0/A0",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D21",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D3",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "col1",
+          "type": "global_label"
+        }
+      ]
+    },
+    "__unnamed_10": {
+      "name": "__unnamed_10",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "14",
+          "pin_name": "VBUS",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": [],
+      "display_name": "U1.VBUS"
+    },
+    "__unnamed_11": {
+      "name": "__unnamed_11",
+      "pins": [
+        {
+          "component": "SW8",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D3",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    }
+  },
+  "subcircuits": [
+    {
+      "center_ic": "U1",
+      "ic_value": "XIAO-RP2040-DIP",
+      "ic_mpn": "",
+      "ic_lib_id": "OPL:XIAO-RP2040-DIP",
+      "neighbor_components": [
+        {
+          "ref": "D1",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D13",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D14",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D17",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D18",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D2",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D21",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D22",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "D3",
+          "value": "1N4148",
+          "type": "diode"
+        },
+        {
+          "ref": "OLED1",
+          "value": "",
+          "type": "other"
+        },
+        {
+          "ref": "SW1",
+          "value": "RotaryEncoder_Switch",
+          "type": "switch"
+        },
+        {
+          "ref": "SW10",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW2",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW3",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW4",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW5",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW6",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW7",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW8",
+          "value": "SW_Push",
+          "type": "switch"
+        },
+        {
+          "ref": "SW9",
+          "value": "SW_Push",
+          "type": "switch"
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "ic_pin_analysis": [
+    {
+      "reference": "U1",
+      "value": "XIAO-RP2040-DIP",
+      "type": "ic",
+      "lib_id": "OPL:XIAO-RP2040-DIP",
+      "mpn": "",
+      "description": "",
+      "datasheet": "",
+      "function": "",
+      "total_pins": 14,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "GPIO26/ADC0/A0",
+          "pin_type": "passive",
+          "net": "col1",
+          "connected_to": [
+            {
+              "ref": "D22",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D21",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D3",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "GPIO27/ADC1/A1",
+          "pin_type": "passive",
+          "net": "col2",
+          "connected_to": [
+            {
+              "ref": "D18",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D17",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D2",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "GPIO28/ADC2/A2",
+          "pin_type": "passive",
+          "net": "col3",
+          "connected_to": [
+            {
+              "ref": "D13",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D14",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D1",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            }
+          ]
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "GPIO29/ADC3/A3",
+          "pin_type": "passive",
+          "net": "S1",
+          "connected_to": [
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "S1",
+              "pin_name": "S1"
+            }
+          ]
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "GPIO6/SDA",
+          "pin_type": "passive",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "4",
+              "pin_name": "SDA"
+            }
+          ]
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "GPIO7/SCL",
+          "pin_type": "passive",
+          "net": "__unnamed_2",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "3",
+              "pin_name": "SCL"
+            }
+          ]
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "GPIO0/TX",
+          "pin_type": "passive",
+          "net": "row3",
+          "connected_to": [
+            {
+              "ref": "SW3",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW7",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW8",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "GPIO1/RX",
+          "pin_type": "passive",
+          "net": "row1",
+          "connected_to": [
+            {
+              "ref": "SW4",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW9",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW5",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            }
+          ]
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "GPIO2/SCK",
+          "pin_type": "passive",
+          "net": "row2",
+          "connected_to": [
+            {
+              "ref": "SW2",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW10",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW6",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            }
+          ]
+        },
+        {
+          "pin_number": "10",
+          "pin_name": "GPIO4/MISO",
+          "pin_type": "passive",
+          "net": "B",
+          "connected_to": [
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "B",
+              "pin_name": "B"
+            }
+          ]
+        },
+        {
+          "pin_number": "11",
+          "pin_name": "GPIO3/MOSI",
+          "pin_type": "passive",
+          "net": "A",
+          "connected_to": [
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "A",
+              "pin_name": "A"
+            }
+          ]
+        },
+        {
+          "pin_number": "12",
+          "pin_name": "3V3",
+          "pin_type": "passive",
+          "net": "+3V3",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "2",
+              "pin_name": "VCC"
+            }
+          ],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        },
+        {
+          "pin_number": "13",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "1",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "C",
+              "pin_name": "C"
+            },
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "S2",
+              "pin_name": "S2"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "14",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "__unnamed_10",
+          "connected_to": [],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "12",
+          "pin_name": "3V3",
+          "pin_type": "passive",
+          "net": "+3V3",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "2",
+              "pin_name": "VCC"
+            }
+          ],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        },
+        {
+          "pin_number": "13",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "1",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "C",
+              "pin_name": "C"
+            },
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "S2",
+              "pin_name": "S2"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "14",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "__unnamed_10",
+          "connected_to": [],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "GPIO26/ADC0/A0",
+          "pin_type": "passive",
+          "net": "col1",
+          "connected_to": [
+            {
+              "ref": "D22",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D21",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D3",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "GPIO27/ADC1/A1",
+          "pin_type": "passive",
+          "net": "col2",
+          "connected_to": [
+            {
+              "ref": "D18",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D17",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D2",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "GPIO28/ADC2/A2",
+          "pin_type": "passive",
+          "net": "col3",
+          "connected_to": [
+            {
+              "ref": "D13",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D14",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "D1",
+              "value": "1N4148",
+              "type": "diode",
+              "pin": "1",
+              "pin_name": "K"
+            }
+          ]
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "GPIO29/ADC3/A3",
+          "pin_type": "passive",
+          "net": "S1",
+          "connected_to": [
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "S1",
+              "pin_name": "S1"
+            }
+          ]
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "GPIO6/SDA",
+          "pin_type": "passive",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "4",
+              "pin_name": "SDA"
+            }
+          ]
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "GPIO7/SCL",
+          "pin_type": "passive",
+          "net": "__unnamed_2",
+          "connected_to": [
+            {
+              "ref": "OLED1",
+              "value": "",
+              "type": "other",
+              "pin": "3",
+              "pin_name": "SCL"
+            }
+          ]
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "GPIO0/TX",
+          "pin_type": "passive",
+          "net": "row3",
+          "connected_to": [
+            {
+              "ref": "SW3",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW7",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW8",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "GPIO1/RX",
+          "pin_type": "passive",
+          "net": "row1",
+          "connected_to": [
+            {
+              "ref": "SW4",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW9",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW5",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            }
+          ]
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "GPIO2/SCK",
+          "pin_type": "passive",
+          "net": "row2",
+          "connected_to": [
+            {
+              "ref": "SW2",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW10",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            },
+            {
+              "ref": "SW6",
+              "value": "SW_Push",
+              "type": "switch",
+              "pin": "2",
+              "pin_name": "2"
+            }
+          ]
+        },
+        {
+          "pin_number": "10",
+          "pin_name": "GPIO4/MISO",
+          "pin_type": "passive",
+          "net": "B",
+          "connected_to": [
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "B",
+              "pin_name": "B"
+            }
+          ]
+        },
+        {
+          "pin_number": "11",
+          "pin_name": "GPIO3/MOSI",
+          "pin_type": "passive",
+          "net": "A",
+          "connected_to": [
+            {
+              "ref": "SW1",
+              "value": "RotaryEncoder_Switch",
+              "type": "switch",
+              "pin": "A",
+              "pin_name": "A"
+            }
+          ]
+        }
+      ],
+      "decoupling_caps_by_rail": {}
+    }
+  ],
+  "design_analysis": {
+    "net_classification": {
+      "__unnamed_0": "signal",
+      "row1": "signal",
+      "__unnamed_1": "signal",
+      "row3": "signal",
+      "GND": "ground",
+      "+3V3": "power",
+      "__unnamed_2": "signal",
+      "__unnamed_3": "signal",
+      "__unnamed_4": "signal",
+      "row2": "signal",
+      "col2": "signal",
+      "col3": "signal",
+      "__unnamed_5": "signal",
+      "__unnamed_6": "signal",
+      "__unnamed_7": "signal",
+      "__unnamed_8": "signal",
+      "__unnamed_9": "signal",
+      "A": "signal",
+      "B": "signal",
+      "S1": "signal",
+      "col1": "signal",
+      "__unnamed_10": "signal",
+      "__unnamed_11": "signal"
+    },
+    "power_domains": {
+      "ic_power_rails": {
+        "U1": {
+          "value": "XIAO-RP2040-DIP",
+          "power_rails": [
+            "+3V3",
+            "__unnamed_10"
+          ],
+          "io_rails": null
+        }
+      },
+      "domain_groups": {
+        "+3V3": [
+          "U1"
+        ],
+        "__unnamed_10": [
+          "U1"
+        ]
+      }
+    },
+    "cross_domain_signals": [],
+    "bus_analysis": {
+      "i2c": [
+        {
+          "net": "__unnamed_2",
+          "line": "SCL",
+          "devices": [
+            {
+              "ref": "U1",
+              "value": "XIAO-RP2040-DIP",
+              "lib_id": "OPL:XIAO-RP2040-DIP"
+            }
+          ],
+          "load_count": 1,
+          "estimated_bus_capacitance_pF": 5,
+          "pull_ups": [],
+          "has_pull_up": false,
+          "speed_mode": null,
+          "voltage_level_V": null,
+          "pull_up_ohms": null,
+          "controller": "U1"
+        },
+        {
+          "net": "__unnamed_3",
+          "line": "SDA",
+          "devices": [
+            {
+              "ref": "U1",
+              "value": "XIAO-RP2040-DIP",
+              "lib_id": "OPL:XIAO-RP2040-DIP"
+            }
+          ],
+          "load_count": 1,
+          "estimated_bus_capacitance_pF": 5,
+          "pull_ups": [],
+          "has_pull_up": false,
+          "speed_mode": null,
+          "voltage_level_V": null,
+          "pull_up_ohms": null,
+          "controller": "U1"
+        }
+      ],
+      "spi": [],
+      "uart": [],
+      "can": []
+    },
+    "differential_pairs": [],
+    "erc_warnings": [],
+    "passive_warnings": []
+  },
+  "connectivity_issues": {
+    "unconnected_pins": [],
+    "single_pin_nets": [],
+    "single_pin_net_findings": [
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "info",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: U1.VBUS only connects to U1.14 (VBUS) (passive)",
+        "description": "Net '__unnamed_10' has exactly one pin: U1.14 (VBUS), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1"
+        ],
+        "nets": [
+          "__unnamed_10"
+        ],
+        "pins": [
+          "U1.14"
+        ],
+        "net_display_name": "U1.VBUS",
+        "pin_type": "passive",
+        "pin_name": "VBUS",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Passive or unclassified pin lonely on its own net.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      }
+    ],
+    "multi_driver_nets": [],
+    "power_net_summary": {
+      "GND": {
+        "pin_count": 4,
+        "components": [
+          "OLED1",
+          "SW1",
+          "U1"
+        ]
+      },
+      "+3V3": {
+        "pin_count": 2,
+        "components": [
+          "OLED1",
+          "U1"
+        ]
+      }
+    }
+  },
+  "labels": [
+    {
+      "name": "S1",
+      "type": "global_label",
+      "x": 152.4,
+      "y": 85.09,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "row2",
+      "type": "global_label",
+      "x": 123.19,
+      "y": 125.73,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "B",
+      "type": "global_label",
+      "x": 123.19,
+      "y": 121.92,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "col2",
+      "type": "global_label",
+      "x": 207.01,
+      "y": 33.02,
+      "angle": 90.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "col2",
+      "type": "global_label",
+      "x": 87.63,
+      "y": 110.49,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "col3",
+      "type": "global_label",
+      "x": 181.61,
+      "y": 33.02,
+      "angle": 90.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "row1",
+      "type": "global_label",
+      "x": 261.62,
+      "y": 54.61,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "row3",
+      "type": "global_label",
+      "x": 260.35,
+      "y": 92.71,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "A",
+      "type": "global_label",
+      "x": 123.19,
+      "y": 118.11,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "B",
+      "type": "global_label",
+      "x": 137.16,
+      "y": 90.17,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "col3",
+      "type": "global_label",
+      "x": 87.63,
+      "y": 114.3,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "row1",
+      "type": "global_label",
+      "x": 123.19,
+      "y": 129.54,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "S1",
+      "type": "global_label",
+      "x": 87.63,
+      "y": 118.11,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "row3",
+      "type": "global_label",
+      "x": 87.63,
+      "y": 129.54,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "col1",
+      "type": "global_label",
+      "x": 232.41,
+      "y": 34.29,
+      "angle": 90.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "col1",
+      "type": "global_label",
+      "x": 87.63,
+      "y": 106.68,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "row2",
+      "type": "global_label",
+      "x": 260.35,
+      "y": 72.39,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "A",
+      "type": "global_label",
+      "x": 137.16,
+      "y": 85.09,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    }
+  ],
+  "no_connects": [],
+  "power_symbols": [
+    {
+      "net_name": "GND",
+      "x": 127.0,
+      "y": 87.63,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 156.21,
+      "y": 90.17,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 72.39,
+      "y": 115.57,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "+3V3",
+      "x": 123.19,
+      "y": 114.3,
+      "lib_id": "power:+3V3",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "+3V3",
+      "x": 63.5,
+      "y": 119.38,
+      "lib_id": "power:+3V3",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 123.19,
+      "y": 110.49,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    }
+  ],
+  "annotation_issues": {
+    "missing_value": [
+      "OLED1"
+    ]
+  },
+  "label_shape_warnings": [
+    {
+      "type": "undriven_input_label",
+      "net": "S1",
+      "message": "Net 'S1' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "row2",
+      "message": "Net 'row2' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "B",
+      "message": "Net 'B' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "col2",
+      "message": "Net 'col2' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "col3",
+      "message": "Net 'col3' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "row1",
+      "message": "Net 'row1' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "row3",
+      "message": "Net 'row3' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "A",
+      "message": "Net 'A' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "col1",
+      "message": "Net 'col1' has input-shaped label(s) but no driver pins on the net"
+    }
+  ],
+  "pwr_flag_warnings": [
+    {
+      "net": "GND",
+      "message": "Power rail 'GND' has power_in pins but no power_out or PWR_FLAG \u2014 ERC will flag this",
+      "pin_types": [
+        "input",
+        "passive",
+        "power_in"
+      ]
+    },
+    {
+      "net": "+3V3",
+      "message": "Power rail '+3V3' has power_in pins but no power_out or PWR_FLAG \u2014 ERC will flag this",
+      "pin_types": [
+        "input",
+        "passive",
+        "power_in"
+      ]
+    }
+  ],
+  "footprint_filter_warnings": [],
+  "sourcing_audit": {
+    "total_bom_components": 21,
+    "mpn_coverage": "0/21",
+    "missing_mpn": [
+      "D1",
+      "D13",
+      "D14",
+      "D17",
+      "D18",
+      "D2",
+      "D21",
+      "D22",
+      "D3",
+      "OLED1",
+      "SW1",
+      "SW10",
+      "SW2",
+      "SW3",
+      "SW4",
+      "SW5",
+      "SW6",
+      "SW7",
+      "SW8",
+      "SW9",
+      "U1"
+    ],
+    "missing_digikey": [
+      "D1",
+      "D13",
+      "D14",
+      "D17",
+      "D18",
+      "D2",
+      "D21",
+      "D22",
+      "D3",
+      "OLED1",
+      "SW1",
+      "SW10",
+      "SW2",
+      "SW3",
+      "SW4",
+      "SW5",
+      "SW6",
+      "SW7",
+      "SW8",
+      "SW9",
+      "U1"
+    ],
+    "missing_lcsc": [
+      "D1",
+      "D13",
+      "D14",
+      "D17",
+      "D18",
+      "D2",
+      "D21",
+      "D22",
+      "D3",
+      "OLED1",
+      "SW1",
+      "SW10",
+      "SW2",
+      "SW3",
+      "SW4",
+      "SW5",
+      "SW6",
+      "SW7",
+      "SW8",
+      "SW9",
+      "U1"
+    ],
+    "mpn_percent": 0.0
+  },
+  "ground_domains": {
+    "ground_nets": {
+      "GND": {
+        "domain": "signal",
+        "connections": 4,
+        "components": [
+          "OLED1",
+          "SW1",
+          "U1"
+        ]
+      }
+    },
+    "multiple_domains": false
+  },
+  "bus_topology": {
+    "bus_wire_count": 0,
+    "bus_entry_count": 0,
+    "detected_bus_signals": [
+      {
+        "prefix": "col",
+        "width": 6,
+        "range": "col1..col3"
+      },
+      {
+        "prefix": "row",
+        "width": 6,
+        "range": "row1..row3"
+      }
+    ]
+  },
+  "wire_geometry": {
+    "total_wires": 36,
+    "total_length_mm": 496.6,
+    "avg_length_mm": 13.8
+  },
+  "simulation_readiness": {
+    "total_components": 21,
+    "likely_simulatable": 9,
+    "needs_model": 12,
+    "components_without_model": [
+      "OLED1",
+      "SW1",
+      "SW10",
+      "SW2",
+      "SW3",
+      "SW4",
+      "SW5",
+      "SW6",
+      "SW7",
+      "SW8",
+      "SW9",
+      "U1"
+    ],
+    "simulatable_percent": 42.9
+  },
+  "property_issues": {},
+  "placement_analysis": {
+    "bounding_box": {
+      "x_min": 55.9,
+      "y_min": 48.3,
+      "x_max": 245.1,
+      "y_max": 120.7,
+      "width_mm": 189.2,
+      "height_mm": 72.4
+    },
+    "clusters": [
+      {
+        "region": "row0_col2",
+        "component_count": 4,
+        "types": {
+          "diode": 2,
+          "switch": 2
+        },
+        "references": [
+          "D13",
+          "D14",
+          "SW5",
+          "SW6"
+        ]
+      },
+      {
+        "region": "row0_col3",
+        "component_count": 8,
+        "types": {
+          "switch": 4,
+          "diode": 4
+        },
+        "references": [
+          "D17",
+          "D18",
+          "D21",
+          "D22",
+          "SW10",
+          "SW2",
+          "SW4",
+          "SW9"
+        ]
+      },
+      {
+        "region": "row1_col0",
+        "component_count": 2,
+        "types": {
+          "other": 1,
+          "ic": 1
+        },
+        "references": [
+          "OLED1",
+          "U1"
+        ]
+      },
+      {
+        "region": "row1_col1",
+        "component_count": 1,
+        "types": {
+          "switch": 1
+        },
+        "references": [
+          "SW1"
+        ]
+      },
+      {
+        "region": "row1_col2",
+        "component_count": 2,
+        "types": {
+          "switch": 1,
+          "diode": 1
+        },
+        "references": [
+          "D1",
+          "SW3"
+        ]
+      },
+      {
+        "region": "row1_col3",
+        "component_count": 4,
+        "types": {
+          "switch": 2,
+          "diode": 2
+        },
+        "references": [
+          "D2",
+          "D3",
+          "SW7",
+          "SW8"
+        ]
+      }
+    ],
+    "grid_size": "2x4"
+  },
+  "hierarchical_labels": {
+    "hierarchical_label_count": 0,
+    "global_label_count": 18
+  },
+  "rail_voltages": {
+    "GND": 0,
+    "+3V3": 3.3
+  },
+  "power_sequencing_validation": {
+    "power_tree": [],
+    "provenance": {
+      "evidence": "pseq_enable_chain",
+      "confidence": "heuristic",
+      "claimed_components": [],
+      "excluded_by": [],
+      "suppressed_candidates": []
+    }
+  },
+  "bom_optimization": {
+    "unique_value_counts": {
+      "resistor": 0,
+      "capacitor": 0
+    },
+    "total_unique_footprints": 4,
+    "single_use_passive_values": 0
+  },
+  "test_coverage": {
+    "test_points": [],
+    "test_point_count": 0,
+    "covered_nets": [],
+    "uncovered_key_nets": [
+      {
+        "net": "+3V3",
+        "category": "power_rail"
+      }
+    ],
+    "observations": [
+      "No test points found in design",
+      "No debug connectors (SWD/JTAG/UART) identified",
+      "Key nets without test points: 1 power_rail"
+    ]
+  },
+  "assembly_complexity": {
+    "total_components": 21,
+    "smd_count": 11,
+    "tht_count": 10,
+    "complexity_score": 26,
+    "difficulty_breakdown": {
+      "hard": 0,
+      "medium": 11,
+      "easy": 10
+    },
+    "package_breakdown": {
+      "other_SMD": 10,
+      "THT": 10,
+      "unknown": 1
+    },
+    "unique_footprints": 3,
+    "observations": [
+      "Low assembly complexity (score 26/100) \u2014 hand assembly feasible"
+    ]
+  },
+  "protocol_compliance": {
+    "protocols_checked": [
+      "i2c"
+    ],
+    "findings": [
+      {
+        "protocol": "i2c",
+        "sda_net": "__unnamed_3",
+        "scl_net": "__unnamed_2",
+        "devices": [
+          {
+            "ref": "U1",
+            "value": "XIAO-RP2040-DIP",
+            "lib_id": "OPL:XIAO-RP2040-DIP"
+          }
+        ],
+        "checks": {
+          "pull_ups_present": {
+            "sda": false,
+            "scl": false,
+            "status": "fail"
+          }
+        },
+        "issues": [
+          "SDA line missing pull-up resistor",
+          "SCL line missing pull-up resistor"
+        ]
+      }
+    ],
+    "total_issues": 2
+  },
+  "missing_info": {
+    "missing_mpn": [
+      "SW4",
+      "SW3",
+      "OLED1",
+      "SW2",
+      "D18",
+      "D13",
+      "SW9",
+      "D17",
+      "SW10",
+      "SW7",
+      "D14",
+      "SW1",
+      "D2",
+      "D22",
+      "U1",
+      "D1",
+      "SW8",
+      "SW5",
+      "D21",
+      "SW6",
+      "D3"
+    ],
+    "missing_footprint": [
+      "OLED1"
+    ]
+  },
+  "bom_lock": {
+    "total_bom_components": 21,
+    "components_with_mpn": 0,
+    "missing_mpn": [
+      "SW4",
+      "SW3",
+      "OLED1",
+      "SW2",
+      "D18",
+      "D13",
+      "SW9",
+      "D17",
+      "SW10",
+      "SW7",
+      "D14",
+      "SW1",
+      "D2",
+      "D22",
+      "U1",
+      "D1",
+      "SW8",
+      "SW5",
+      "D21",
+      "SW6"
+    ],
+    "missing_mpn_count": 21,
+    "generic_values": [
+      "OLED1"
+    ],
+    "lock_pct": 0,
+    "status": "fail"
+  },
+  "design_intent": {
+    "product_class": "prototype",
+    "ipc_class": 2,
+    "target_market": "hobby",
+    "expected_lifetime_years": 5,
+    "operating_temp_range": [
+      -10,
+      70
+    ],
+    "preferred_passive_size": "0603",
+    "test_coverage_target": 0.85,
+    "approved_manufacturers": [],
+    "confidence": 0.3,
+    "detection_signals": [],
+    "source": {
+      "ipc_class": "auto",
+      "product_class": "auto",
+      "target_market": "auto",
+      "expected_lifetime_years": "auto",
+      "operating_temp_range": "auto",
+      "preferred_passive_size": "auto",
+      "test_coverage_target": "auto",
+      "approved_manufacturers": "auto"
+    }
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 9,
+      "by_severity": {
+        "error": 2,
+        "warning": 4,
+        "info": 3
+      },
+      "by_category": {
+        "decoupling": 1,
+        "verification": 1,
+        "human_interface": 1,
+        "connectivity": 1,
+        "signal_integrity": 3,
+        "power": 1,
+        "sourcing": 1
+      },
+      "top_issues": [
+        {
+          "detector": "audit_datasheet_coverage",
+          "rule_id": "DS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "verification",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "components": [],
+          "nets": [],
+          "pins": [],
+          "datasheets_dir": null,
+          "datasheet_file_count": 0,
+          "bom_size": 21,
+          "mpn_coverage_percent": 0.0,
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "report_context": {
+            "section": "Datasheet Coverage",
+            "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "audit_sourcing_gate",
+          "rule_id": "SS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "sourcing",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/5 unique parts). Board is not pre-fab ready.",
+          "description": "Sourcing audit: 0 of 5 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+          "components": [
+            "D1",
+            "D13",
+            "D14",
+            "D17",
+            "D18",
+            "D2",
+            "D21",
+            "D22",
+            "D3",
+            "OLED1",
+            "SW1",
+            "SW10",
+            "SW2",
+            "SW3",
+            "SW4",
+            "SW5",
+            "SW6",
+            "SW7",
+            "SW8",
+            "SW9",
+            "U1"
+          ],
+          "nets": [],
+          "pins": [],
+          "mpn_coverage_percent": 0.0,
+          "missing_mpn_lines": 5,
+          "missing_mpn_refs": 21,
+          "total_bom_lines": 5,
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "report_context": {
+            "section": "Sourcing",
+            "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "pre_fab"
+          ]
+        },
+        {
+          "detector": "validate_pullups",
+          "rule_id": "PU-001",
+          "category": "signal_integrity",
+          "summary": "U1 pin GPIO4/MISO (B) missing pull-up resistor",
+          "description": "Pin GPIO4/MISO on U1 (XIAO-RP2040-DIP) is connected to net B but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+          "components": [
+            "U1"
+          ],
+          "nets": [
+            "B"
+          ],
+          "pins": [
+            {
+              "ref": "U1",
+              "pin": "GPIO4/MISO",
+              "function": "open_drain_or_input"
+            }
+          ],
+          "severity": "warning",
+          "confidence": "heuristic",
+          "evidence_source": "topology",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from B to the appropriate power rail.",
+          "fix_params": {
+            "type": "add_component",
+            "components": [
+              {
+                "type": "resistor",
+                "value": "10k",
+                "net_from": "B",
+                "net_to": "<power_rail>"
+              }
+            ],
+            "basis": "Pin GPIO4/MISO is open-drain/input type requiring pull-up"
+          },
+          "report_context": {
+            "section": "Signal Integrity",
+            "impact": "Pin may float or bus may not function without pull-up",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "pu_missing_pullup",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "validation_findings:56993c43cb07",
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "validate_pullups",
+          "rule_id": "PU-001",
+          "category": "signal_integrity",
+          "summary": "U1 pin GPIO7/SCL (__unnamed_2) missing pull-up resistor",
+          "description": "Pin GPIO7/SCL on U1 (XIAO-RP2040-DIP) is connected to net __unnamed_2 but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+          "components": [
+            "U1"
+          ],
+          "nets": [
+            "__unnamed_2"
+          ],
+          "pins": [
+            {
+              "ref": "U1",
+              "pin": "GPIO7/SCL",
+              "function": "open_drain_or_input"
+            }
+          ],
+          "severity": "warning",
+          "confidence": "heuristic",
+          "evidence_source": "topology",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_2 to the appropriate power rail.",
+          "fix_params": {
+            "type": "add_component",
+            "components": [
+              {
+                "type": "resistor",
+                "value": "10k",
+                "net_from": "__unnamed_2",
+                "net_to": "<power_rail>"
+              }
+            ],
+            "basis": "Pin GPIO7/SCL is open-drain/input type requiring pull-up"
+          },
+          "report_context": {
+            "section": "Signal Integrity",
+            "impact": "Pin may float or bus may not function without pull-up",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "pu_missing_pullup",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "validation_findings:56993c43cb07",
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "validate_pullups",
+          "rule_id": "PU-001",
+          "category": "signal_integrity",
+          "summary": "U1 pin GPIO6/SDA (__unnamed_3) missing pull-up resistor",
+          "description": "Pin GPIO6/SDA on U1 (XIAO-RP2040-DIP) is connected to net __unnamed_3 but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+          "components": [
+            "U1"
+          ],
+          "nets": [
+            "__unnamed_3"
+          ],
+          "pins": [
+            {
+              "ref": "U1",
+              "pin": "GPIO6/SDA",
+              "function": "open_drain_or_input"
+            }
+          ],
+          "severity": "warning",
+          "confidence": "heuristic",
+          "evidence_source": "topology",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_3 to the appropriate power rail.",
+          "fix_params": {
+            "type": "add_component",
+            "components": [
+              {
+                "type": "resistor",
+                "value": "10k",
+                "net_from": "__unnamed_3",
+                "net_to": "<power_rail>"
+              }
+            ],
+            "basis": "Pin GPIO6/SDA is open-drain/input type requiring pull-up"
+          },
+          "report_context": {
+            "section": "Signal Integrity",
+            "impact": "Pin may float or bus may not function without pull-up",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "pu_missing_pullup",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "validation_findings:56993c43cb07",
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "audit_rail_sources",
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "power",
+          "summary": "+3V3 has no declared source",
+          "description": "Net +3V3 carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+          "components": [],
+          "nets": [
+            "+3V3"
+          ],
+          "pins": [
+            "#PWR06.1",
+            "#PWR09.1"
+          ],
+          "source_path": "none",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "report_context": {
+            "section": "Power \u2014 Rail Sources",
+            "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "rs_rail_audit",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "",
+          "stages": [
+            "schematic"
+          ]
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 6,
+      "by_category": {
+        "verification": 1,
+        "signal_integrity": 3,
+        "power": 1,
+        "sourcing": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "DS-001",
+          "severity": "error",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "category": "verification"
+        },
+        {
+          "rule_id": "SS-001",
+          "severity": "error",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/5 unique parts). Board is not pre-fab ready.",
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "category": "sourcing"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U1 pin GPIO4/MISO (B) missing pull-up resistor",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from B to the appropriate power rail.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U1 pin GPIO7/SCL (__unnamed_2) missing pull-up resistor",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_2 to the appropriate power rail.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U1 pin GPIO6/SDA (__unnamed_3) missing pull-up resistor",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_3 to the appropriate power rail.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "+3V3 has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "moderate",
+      "blocker_count": 2,
+      "warning_count": 4,
+      "stage_readiness": {
+        "schematic": "needs_work",
+        "layout": "pass",
+        "pre_fab": "needs_work",
+        "bring_up": "pass"
+      },
+      "one_liner": "2 errors, 4 warnings across 4 categories. Schematic, pre-fab stages have blockers."
+    }
+  }
+}

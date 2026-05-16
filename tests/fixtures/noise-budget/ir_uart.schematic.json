@@ -1,0 +1,5626 @@
+{
+  "analyzer_type": "schematic",
+  "schema_version": "1.3.0",
+  "summary": {
+    "total_findings": 14,
+    "by_severity": {
+      "error": 2,
+      "warning": 1,
+      "info": 11
+    }
+  },
+  "trust_summary": {
+    "total_findings": 14,
+    "trust_level": "high",
+    "by_confidence": {
+      "deterministic": 12,
+      "heuristic": 2,
+      "datasheet-backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 10,
+      "heuristic_rule": 0,
+      "symbol_footprint": 2,
+      "bom": 2,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 85.7,
+    "bom_coverage": {
+      "total_components": 10,
+      "with_mpn": 0,
+      "with_datasheet": 4,
+      "mpn_pct": 0.0,
+      "datasheet_pct": 40.0
+    }
+  },
+  "file": "/home/aklofas/Projects/kicad-happy-testharness/repos/ADBeta/IR_UART/IR_UART.kicad_sch",
+  "kicad_version": "10.0",
+  "file_version": "20260306",
+  "title_block": {
+    "title": "USB->UART IR Converter",
+    "date": "2026-03-22",
+    "rev": "MkI",
+    "company": "ADBeta"
+  },
+  "statistics": {
+    "total_components": 18,
+    "unique_parts": 10,
+    "dnp_parts": 0,
+    "total_nets": 18,
+    "total_wires": 74,
+    "total_no_connects": 3,
+    "component_types": {
+      "resistor": 7,
+      "transistor": 4,
+      "jumper": 2,
+      "capacitor": 2,
+      "ic": 1,
+      "connector": 1,
+      "led": 1
+    },
+    "power_rails": [
+      {
+        "name": "GND",
+        "voltage": null
+      }
+    ],
+    "missing_mpn": [
+      "R3",
+      "R7",
+      "Q2",
+      "C1",
+      "C2",
+      "R5",
+      "U1",
+      "R2",
+      "J1",
+      "R1",
+      "R4",
+      "D1",
+      "Q1",
+      "R6",
+      "Q4",
+      "Q3"
+    ],
+    "missing_footprint": []
+  },
+  "findings": [
+    {
+      "category": "usb_data",
+      "net": "USB_D+",
+      "has_esd_protection": false,
+      "devices": [
+        "U1",
+        "J1",
+        "J1"
+      ],
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "USB data line USB_D+",
+      "description": "USB data net USB_D+ detected",
+      "components": [
+        "J1",
+        "J1",
+        "U1"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1",
+          "J1",
+          "J1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "category": "usb_data",
+      "net": "USB_D-",
+      "has_esd_protection": false,
+      "devices": [
+        "U1",
+        "J1",
+        "J1"
+      ],
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "USB data line USB_D-",
+      "description": "USB data net USB_D- detected",
+      "components": [
+        "J1",
+        "J1",
+        "U1"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1",
+          "J1",
+          "J1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_datasheet_coverage",
+      "rule_id": "DS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "verification",
+      "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "datasheets_dir": null,
+      "datasheet_file_count": 0,
+      "bom_size": 16,
+      "mpn_coverage_percent": 0.0,
+      "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+      "report_context": {
+        "section": "Datasheet Coverage",
+        "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "connector_ref": "J1",
+      "connector_value": "USB_C",
+      "interface_type": "usb",
+      "risk_level": "high_risk",
+      "signal_nets": [
+        "USB_5V",
+        "USB_D+",
+        "USB_D-",
+        "__unnamed_0",
+        "__unnamed_3",
+        "__unnamed_4",
+        "__unnamed_5"
+      ],
+      "protected_nets": [],
+      "unprotected_nets": [
+        "USB_5V",
+        "USB_D+",
+        "USB_D-",
+        "__unnamed_0",
+        "__unnamed_3",
+        "__unnamed_4",
+        "__unnamed_5"
+      ],
+      "coverage": "none",
+      "esd_devices": [],
+      "esd_device_details": [],
+      "detector": "audit_esd_protection",
+      "rule_id": "EP-AUD",
+      "category": "protection",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "ESD audit J1 (usb): none coverage",
+      "description": "ESD protection audit for usb connector J1: none coverage.",
+      "components": [
+        "J1"
+      ],
+      "nets": [
+        "USB_5V",
+        "USB_D+",
+        "USB_D-",
+        "__unnamed_0",
+        "__unnamed_3",
+        "__unnamed_4",
+        "__unnamed_5"
+      ],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "ESD Protection",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "esd_coverage_audit",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "J1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "ref": "D1",
+      "value": "IR_LED",
+      "type": "indicator_led",
+      "drive_method": "resistor_limited",
+      "detector": "audit_led_circuits",
+      "rule_id": "LA-AUD",
+      "category": "led_control",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "LED D1 (IR_LED) [resistor_limited]",
+      "description": "LED audit: D1 using resistor_limited drive method.",
+      "components": [
+        "D1",
+        "R1",
+        "U1"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "LED Audit",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "series_resistor": {
+        "ref": "R1",
+        "ohms": 120.0
+      },
+      "driver_source": "U1",
+      "provenance": {
+        "evidence": "led_audit",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "D1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "detect_pwm_led_dimming",
+      "rule_id": "PL-001",
+      "category": "led_control",
+      "reference": "Q1",
+      "transistor_type": "mosfet",
+      "leds": [
+        "D1"
+      ],
+      "sense_resistor": null,
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor-driven LED: Q1 driving D1",
+      "description": "Transistor Q1 (AO3400A) drives LED(s) D1 without current sense resistor.",
+      "components": [
+        "D1",
+        "Q1"
+      ],
+      "nets": [
+        "__unnamed_7"
+      ],
+      "pins": [],
+      "recommendation": "Consider adding a current sense resistor for LED current regulation.",
+      "report_context": {
+        "section": "LED Control",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pwm_led_topology",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "pwm_led_dimming:50870a850b50",
+      "stages": [
+        "schematic",
+        "bring_up"
+      ]
+    },
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "USB_5V has no declared source",
+      "description": "Net USB_5V carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "USB_5V"
+      ],
+      "pins": [
+        "U1.5"
+      ],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "detect_solder_jumpers",
+      "rule_id": "SJ-DET",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "symbol_footprint",
+      "category": "topology",
+      "summary": "JP1 (TRANSMIT_SELECT) \u2014 open by default, between SEND \u2194 IR_TX",
+      "reference": "JP1",
+      "value": "TRANSMIT_SELECT",
+      "lib_id": "Jumper:SolderJumper_3_Open",
+      "footprint": "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm",
+      "default_state": "open",
+      "nets": [
+        "!SEND",
+        "IR_TX",
+        "SEND"
+      ],
+      "power_nets": [],
+      "ground_nets": [],
+      "pin_count": 3,
+      "components": [
+        "JP1"
+      ],
+      "pins": [
+        "JP1.1",
+        "JP1.2",
+        "JP1.3"
+      ],
+      "recommendation": "Open solder jumper is non-conducting until the pads are soldered. If either side is a power rail or required signal, the board won't function without the solder step.",
+      "report_context": {
+        "section": "Solder Jumpers",
+        "impact": "Optional / configuration jumper.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "sj_symbol_footprint",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "JP1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "detect_solder_jumpers",
+      "rule_id": "SJ-DET",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "symbol_footprint",
+      "category": "topology",
+      "summary": "JP2 (RECEIVE_SELECT) \u2014 open by default, between RECV \u2194 IR_RX",
+      "reference": "JP2",
+      "value": "RECEIVE_SELECT",
+      "lib_id": "Jumper:SolderJumper_3_Open",
+      "footprint": "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm",
+      "default_state": "open",
+      "nets": [
+        "!RECV",
+        "IR_RX",
+        "RECV"
+      ],
+      "power_nets": [],
+      "ground_nets": [],
+      "pin_count": 3,
+      "components": [
+        "JP2"
+      ],
+      "pins": [
+        "JP2.1",
+        "JP2.2",
+        "JP2.3"
+      ],
+      "recommendation": "Open solder jumper is non-conducting until the pads are soldered. If either side is a power rail or required signal, the board won't function without the solder step.",
+      "report_context": {
+        "section": "Solder Jumpers",
+        "impact": "Optional / configuration jumper.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "sj_symbol_footprint",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "JP2"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_sourcing_gate",
+      "rule_id": "SS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "sourcing",
+      "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/10 unique parts). Board is not pre-fab ready.",
+      "description": "Sourcing audit: 0 of 10 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+      "components": [
+        "C1",
+        "C2",
+        "D1",
+        "J1",
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "U1"
+      ],
+      "nets": [],
+      "pins": [],
+      "mpn_coverage_percent": 0.0,
+      "missing_mpn_lines": 10,
+      "missing_mpn_refs": 16,
+      "total_bom_lines": 10,
+      "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+      "report_context": {
+        "section": "Sourcing",
+        "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ]
+    },
+    {
+      "reference": "Q1",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "type": "mosfet",
+      "is_pchannel": false,
+      "gate_net": "!SEND",
+      "drain_net": "__unnamed_7",
+      "source_net": "GND",
+      "drain_is_power": false,
+      "source_is_ground": true,
+      "source_is_power": true,
+      "load_type": "led",
+      "gate_resistors": [
+        {
+          "reference": "R2",
+          "value": "3K3"
+        }
+      ],
+      "gate_driver_ics": [],
+      "gate_pulldown": null,
+      "has_flyback_diode": false,
+      "flyback_diode": null,
+      "has_snubber": false,
+      "snubber_data": null,
+      "source_sense_resistor": null,
+      "detector": "detect_transistor_circuits",
+      "rule_id": "TR-DET",
+      "category": "discrete_semiconductors",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor Q1 mosfet",
+      "description": "Transistor circuit (mosfet) detected",
+      "components": [
+        "Q1"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Discrete Semiconductors",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "transistor_mosfet",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "transistor_circuits:f75484b66a86",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "reference": "Q2",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "type": "mosfet",
+      "is_pchannel": false,
+      "gate_net": "SEND",
+      "drain_net": "!SEND",
+      "source_net": "GND",
+      "drain_is_power": false,
+      "source_is_ground": true,
+      "source_is_power": true,
+      "load_type": "transistor",
+      "gate_resistors": [
+        {
+          "reference": "R3",
+          "value": "3K3"
+        }
+      ],
+      "gate_driver_ics": [],
+      "gate_pulldown": {
+        "reference": "R3",
+        "value": "3K3"
+      },
+      "has_flyback_diode": false,
+      "flyback_diode": null,
+      "has_snubber": true,
+      "snubber_data": {
+        "resistor_ref": "R2",
+        "resistor_ohms": 3300.0,
+        "capacitor_ref": "C1",
+        "capacitor_farads": 1e-08
+      },
+      "source_sense_resistor": null,
+      "detector": "detect_transistor_circuits",
+      "rule_id": "TR-DET",
+      "category": "discrete_semiconductors",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor Q2 mosfet",
+      "description": "Transistor circuit (mosfet) detected",
+      "components": [
+        "Q2"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Discrete Semiconductors",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "transistor_mosfet",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q2"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "transistor_circuits:bd5f1581a6e4",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "reference": "Q3",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "type": "mosfet",
+      "is_pchannel": false,
+      "gate_net": "RECV",
+      "drain_net": "!RECV",
+      "source_net": "GND",
+      "drain_is_power": false,
+      "source_is_ground": true,
+      "source_is_power": true,
+      "load_type": "other",
+      "gate_resistors": [
+        {
+          "reference": "R5",
+          "value": "3K3"
+        }
+      ],
+      "gate_driver_ics": [],
+      "gate_pulldown": null,
+      "has_flyback_diode": false,
+      "flyback_diode": null,
+      "has_snubber": true,
+      "snubber_data": {
+        "resistor_ref": "R4",
+        "resistor_ohms": 3300.0,
+        "capacitor_ref": "C1",
+        "capacitor_farads": 1e-08
+      },
+      "source_sense_resistor": null,
+      "detector": "detect_transistor_circuits",
+      "rule_id": "TR-DET",
+      "category": "discrete_semiconductors",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor Q3 mosfet",
+      "description": "Transistor circuit (mosfet) detected",
+      "components": [
+        "Q3"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Discrete Semiconductors",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "transistor_mosfet",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q3"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "transistor_circuits:af836b9bfb2d",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "reference": "Q4",
+      "value": "IR_PHOTO",
+      "lib_id": "Sensor_Optical:SFH309",
+      "type": "bjt",
+      "base_net": null,
+      "collector_net": "RECV",
+      "emitter_net": "GND",
+      "collector_is_power": false,
+      "emitter_is_ground": true,
+      "load_type": "transistor",
+      "base_resistors": [],
+      "base_driver_ics": [],
+      "base_pulldown": null,
+      "emitter_resistor": null,
+      "detector": "detect_transistor_circuits",
+      "rule_id": "TR-DET",
+      "category": "discrete_semiconductors",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor Q4 bjt",
+      "description": "BJT transistor circuit detected",
+      "components": [
+        "Q4"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Discrete Semiconductors",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "transistor_bjt",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q4"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "transistor_circuits:065a7cb1a71d",
+      "stages": [
+        "schematic"
+      ]
+    }
+  ],
+  "bom": [
+    {
+      "value": "10nF",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Unpolarized capacitor",
+      "references": [
+        "C1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "100nF",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Unpolarized capacitor",
+      "references": [
+        "C2"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "IR_LED",
+      "footprint": "LED_THT:LED_D3.0mm_Clear",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Light emitting diode",
+      "references": [
+        "D1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "led"
+    },
+    {
+      "value": "USB_C",
+      "footprint": "Connector_USB:USB_C_Receptacle_G-Switch_GT-USB-7010ASV",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.usb.org/sites/default/files/documents/usb_type-c.zip",
+      "description": "USB 2.0-only 16P Type-C Receptacle connector",
+      "references": [
+        "J1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "connector"
+    },
+    {
+      "value": "AO3400A",
+      "footprint": "Package_TO_SOT_SMD:SOT-23",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "references": [
+        "Q2",
+        "Q1",
+        "Q3"
+      ],
+      "quantity": 3,
+      "dnp": false,
+      "type": "transistor"
+    },
+    {
+      "value": "IR_PHOTO",
+      "footprint": "LED_THT:LED_D3.0mm_Clear",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "http://www.osram-os.com/Graphics/XPic2/00101811_0.pdf/SFH%20309,%20SFH%20309%20FA,%20Lead%20(Pb)%20Free%20Product%20-%20RoHS%20Compliant.pdf",
+      "description": "Phototransistor NPN",
+      "references": [
+        "Q4"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "transistor"
+    },
+    {
+      "value": "120R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Resistor",
+      "references": [
+        "R1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "3K3",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Resistor",
+      "references": [
+        "R3",
+        "R5",
+        "R2",
+        "R4"
+      ],
+      "quantity": 4,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "5K1",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "Resistor",
+      "references": [
+        "R7",
+        "R6"
+      ],
+      "quantity": 2,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "CH340N",
+      "footprint": "Package_SO:JEITA_SOIC-8_3.9x4.9mm_P1.27mm",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://aitendo3.sakura.ne.jp/aitendo_data/product_img/ic/inteface/CH340N/ch340n.pdf",
+      "description": "USB serial converter, 2Mbps, UART, JEITA SOIC-8 (SOP-8)",
+      "references": [
+        "U1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "ic"
+    }
+  ],
+  "components": [
+    {
+      "reference": "R3",
+      "value": "3K3",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 210.185,
+      "y": 44.45,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "0d87bc41-5003-4e94-b288-90bfd5ffa987",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "64747081-066a-4ced-81bf-1517a4da4bb8",
+        "1": "804f8df5-9994-419f-97a6-d7dc143dfc9e"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 3300.0,
+      "pin_nets": {
+        "1": "SEND",
+        "2": "GND"
+      }
+    },
+    {
+      "reference": "R7",
+      "value": "5K1",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 48.26,
+      "y": 26.67,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "0f5fb4a6-9315-4626-9617-abc21c965487",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "05346b6e-dba4-4232-a690-9bece6e57a72",
+        "1": "9db96f9d-bcd3-488e-b8d1-912562361cb4"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 5100.0,
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_0"
+      }
+    },
+    {
+      "reference": "Q2",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "lib_name": "",
+      "footprint": "Package_TO_SOT_SMD:SOT-23",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 213.36,
+      "y": 38.735,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "26f24b5f-3c6e-4096-abdf-1dac9a82ff46",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "8c09bcac-fee1-4108-a72e-c414b90a2f95",
+        "1": "e6694fc6-f4fd-4cc3-9ae8-ca6472cec9f6",
+        "3": "7ae50bd1-8c6e-4072-b197-ae9b831d2552"
+      },
+      "type": "transistor",
+      "keywords": "N-Channel MOSFET",
+      "_sheet": 0,
+      "category": "transistor",
+      "pin_nets": {
+        "1": "SEND",
+        "2": "GND",
+        "3": "!SEND"
+      }
+    },
+    {
+      "reference": "JP2",
+      "value": "RECEIVE_SELECT",
+      "lib_id": "Jumper:SolderJumper_3_Open",
+      "lib_name": "",
+      "footprint": "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm",
+      "datasheet": "",
+      "description": "Solder Jumper, 3-pole, open",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 255.905,
+      "y": 57.15,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "2bebec98-16af-42ca-9712-7b8c96b9f752",
+      "in_bom": false,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "3": "2a0f83f6-2c04-4697-bc76-d020917778ef",
+        "2": "b688afc1-3ea7-42e9-bb1e-13d500c165af",
+        "1": "9bde4409-1de1-421b-95f8-c82efef3b8db"
+      },
+      "type": "jumper",
+      "keywords": "Solder Jumper SPDT",
+      "_sheet": 0,
+      "category": "jumper",
+      "pin_nets": {
+        "1": "RECV",
+        "2": "IR_RX",
+        "3": "!RECV"
+      }
+    },
+    {
+      "reference": "C1",
+      "value": "10nF",
+      "lib_id": "Device:C",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "Unpolarized capacitor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 79.375,
+      "y": 47.625,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "4d7bdb57-8293-4bf3-855e-7626083cad8b",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "06669285-2054-423b-8809-502d3340df57",
+        "1": "80e2ecc8-ef3e-477c-9a1a-ef2c2985f37f"
+      },
+      "type": "capacitor",
+      "keywords": "cap capacitor",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1e-08,
+      "pin_nets": {
+        "2": "GND",
+        "1": "USB_5V"
+      }
+    },
+    {
+      "reference": "C2",
+      "value": "100nF",
+      "lib_id": "Device:C",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "Unpolarized capacitor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 85.09,
+      "y": 47.625,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "53f2d479-acb7-47a6-996d-d811f264ec61",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "2ad94750-957a-45ee-8509-2d9fd4c47de3",
+        "1": "2ea34994-622f-4e75-87ce-7337ed942147"
+      },
+      "type": "capacitor",
+      "keywords": "cap capacitor",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1.0000000000000001e-07,
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_1"
+      }
+    },
+    {
+      "reference": "R5",
+      "value": "3K3",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 250.825,
+      "y": 28.575,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "85ca0652-fe64-4cb3-9242-1af822ab7618",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "1435d4ea-2e93-4f8c-850e-d33af0c0391f",
+        "1": "7db305f5-270c-4cdc-809a-0ef187a90d87"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 3300.0,
+      "pin_nets": {
+        "2": "RECV",
+        "1": "USB_5V"
+      }
+    },
+    {
+      "reference": "U1",
+      "value": "CH340N",
+      "lib_id": "Interface_USB:CH340N",
+      "lib_name": "",
+      "footprint": "Package_SO:JEITA_SOIC-8_3.9x4.9mm_P1.27mm",
+      "datasheet": "https://aitendo3.sakura.ne.jp/aitendo_data/product_img/ic/inteface/CH340N/ch340n.pdf",
+      "description": "USB serial converter, 2Mbps, UART, JEITA SOIC-8 (SOP-8)",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 109.22,
+      "y": 28.575,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "9b1fc364-7c7a-4841-bce9-2293e0044b6c",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "5a89dbe3-4681-40c4-b2fa-fa4f4fc4d4e1",
+        "3": "cf3db598-d171-4580-a7dc-e03f78309898",
+        "4": "1ccee4b4-4135-42f4-9403-7c562663b2a0",
+        "5": "8efa79f4-9f44-4c86-ae3c-930687936bfd",
+        "6": "4c401ce6-eab4-48be-8b1e-0ec66df2e294",
+        "7": "3e542e76-4131-45ab-b0e3-70e3a13dd244",
+        "8": "1f322415-6d6d-4cb8-b84c-c26d709e1acd",
+        "2": "0f1bc7b8-fe6b-4f40-8d46-a8ae10f197b6"
+      },
+      "type": "ic",
+      "keywords": "USB UART Serial Converter Interface",
+      "functional_class": "communication",
+      "_sheet": 0,
+      "category": "ic",
+      "pin_nets": {
+        "3": "GND",
+        "7": "IR_RX",
+        "5": "USB_5V",
+        "8": "__unnamed_1",
+        "1": "USB_D+",
+        "2": "USB_D-",
+        "4": "__unnamed_2",
+        "6": "IR_TX"
+      }
+    },
+    {
+      "reference": "R2",
+      "value": "3K3",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 210.185,
+      "y": 28.575,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "9ff2045e-4e8f-4892-95d6-4802fb9a5740",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "ae21eb74-cba2-4cec-86d6-d2d37dc7645a",
+        "1": "0c845538-0c04-4814-b0be-5d543be63e3c"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 3300.0,
+      "pin_nets": {
+        "2": "!SEND",
+        "1": "USB_5V"
+      }
+    },
+    {
+      "reference": "J1",
+      "value": "USB_C",
+      "lib_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+      "lib_name": "",
+      "footprint": "Connector_USB:USB_C_Receptacle_G-Switch_GT-USB-7010ASV",
+      "datasheet": "https://www.usb.org/sites/default/files/documents/usb_type-c.zip",
+      "description": "USB 2.0-only 16P Type-C Receptacle connector",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 26.67,
+      "y": 34.29,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "a209c0e4-0cdd-4f75-80c3-9c076f0d6f85",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "B5": "98b024b9-9b2d-48e5-a7b9-55cb211ca7e3",
+        "B9": "923e42f2-f485-46f4-8e40-3f9889235108",
+        "B7": "a409b106-3ccf-41c7-ae55-a0a7c4c8701f",
+        "A12": "74a52131-7830-41c3-a0ea-e9c9dba77533",
+        "B8": "2ef42210-8d67-4b5b-955d-f79a1f1d81e4",
+        "A9": "8de4f7ce-0418-4459-88dc-a8cddbe44f89",
+        "A6": "83456999-ae78-49e1-bae2-b492ff3437bc",
+        "A7": "02f64e8c-68b3-4045-9a1f-2681c5bb9bf6",
+        "A8": "31875c3a-21e1-4422-af8b-68af20dc7497",
+        "A1": "322f4388-e4d1-4f62-baa7-01046db56b00",
+        "B12": "7019a36e-5cf7-4e1c-aa67-76c8a82d79a5",
+        "A5": "4ff7b264-b21c-46d9-bf25-8979087374ca",
+        "A4": "249b078d-3f74-4813-9173-e454a76787c9",
+        "B4": "67fde96c-6fdc-4956-9f68-a5cc24a1d437",
+        "B6": "92992a59-0566-47ce-b16b-247a9e30115c",
+        "B1": "0c570aa5-ccba-46c3-a0d4-a98dc9c734b5",
+        "SH": "c3063242-c751-4d05-8f99-ae85515afa00"
+      },
+      "type": "connector",
+      "keywords": "usb universal serial bus type-C USB2.0",
+      "is_external_connector": true,
+      "connector_layout": "usb_c",
+      "_sheet": 0,
+      "category": "connector",
+      "pin_nets": {
+        "A1": "GND",
+        "A12": "GND",
+        "B1": "GND",
+        "B12": "GND",
+        "SH": "GND",
+        "B5": "__unnamed_0",
+        "A4": "USB_5V",
+        "A9": "USB_5V",
+        "B4": "USB_5V",
+        "B9": "USB_5V",
+        "A6": "USB_D+",
+        "B6": "USB_D+",
+        "A7": "USB_D-",
+        "B7": "USB_D-",
+        "A5": "__unnamed_3",
+        "A8": "__unnamed_4",
+        "B8": "__unnamed_5"
+      }
+    },
+    {
+      "reference": "R1",
+      "value": "120R",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 210.185,
+      "y": 24.765,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "b5fcf342-438c-4880-bd0b-f89b1ac4a70c",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "a5529fb4-da0c-4bb0-b699-4de80ce556ea",
+        "1": "03e5a4e6-a052-4dd5-86e2-255c99d16bc7"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 120.0,
+      "pin_nets": {
+        "1": "USB_5V",
+        "2": "__unnamed_6"
+      }
+    },
+    {
+      "reference": "JP1",
+      "value": "TRANSMIT_SELECT",
+      "lib_id": "Jumper:SolderJumper_3_Open",
+      "lib_name": "",
+      "footprint": "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm",
+      "datasheet": "",
+      "description": "Solder Jumper, 3-pole, open",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 215.9,
+      "y": 57.15,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "c5461fe2-56d4-4cec-b372-2e040e7e6219",
+      "in_bom": false,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "3": "e26ec9bb-709e-46c3-8bdc-94e277e3b9be",
+        "2": "5d14e87d-1aa2-4764-8ad5-58889aaf2ea9",
+        "1": "85b017a7-ed78-479b-9178-fa66ad6727e5"
+      },
+      "type": "jumper",
+      "keywords": "Solder Jumper SPDT",
+      "_sheet": 0,
+      "category": "jumper",
+      "pin_nets": {
+        "1": "SEND",
+        "3": "!SEND",
+        "2": "IR_TX"
+      }
+    },
+    {
+      "reference": "R4",
+      "value": "3K3",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 250.825,
+      "y": 24.765,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "c6b893f0-6403-4b7a-bfba-976f86919640",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "2b090e12-9894-4b32-b77c-614095149e7b",
+        "1": "89d3e37f-d3ce-4bd4-9971-84f550d11a52"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 3300.0,
+      "pin_nets": {
+        "2": "!RECV",
+        "1": "USB_5V"
+      }
+    },
+    {
+      "reference": "D1",
+      "value": "IR_LED",
+      "lib_id": "Device:LED",
+      "lib_name": "",
+      "footprint": "LED_THT:LED_D3.0mm_Clear",
+      "datasheet": "",
+      "description": "Light emitting diode",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 219.71,
+      "y": 24.765,
+      "angle": 180.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "d18e086e-82be-4225-9f52-4a104cd3bdf0",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "f466a252-c604-4a55-a7b9-76f3c191f741",
+        "2": "925c8f78-fb7f-4535-a7ac-191153beb281"
+      },
+      "type": "led",
+      "keywords": "LED diode",
+      "_sheet": 0,
+      "category": "led",
+      "pin_nets": {
+        "2": "__unnamed_6",
+        "1": "__unnamed_7"
+      }
+    },
+    {
+      "reference": "Q1",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "lib_name": "",
+      "footprint": "Package_TO_SOT_SMD:SOT-23",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 222.885,
+      "y": 31.75,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "d723ad61-c049-408a-afea-e0e1912c8242",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "5d4e849f-960a-49d1-aba3-d178801a837c",
+        "1": "46d61966-d77c-4d67-8bfc-9c7c096729d6",
+        "3": "0ae562dc-a5c6-4112-ba10-7cdae924d05b"
+      },
+      "type": "transistor",
+      "keywords": "N-Channel MOSFET",
+      "_sheet": 0,
+      "category": "transistor",
+      "pin_nets": {
+        "2": "GND",
+        "1": "!SEND",
+        "3": "__unnamed_7"
+      }
+    },
+    {
+      "reference": "R6",
+      "value": "5K1",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 48.26,
+      "y": 24.13,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "d92ec249-7a18-48fd-ac7a-80b11d7c60e5",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "6cad54d4-181c-472d-a053-5c6972175481",
+        "1": "335631fa-c5d6-4db7-b534-c88d49dfc35e"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 5100.0,
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_3"
+      }
+    },
+    {
+      "reference": "Q4",
+      "value": "IR_PHOTO",
+      "lib_id": "Sensor_Optical:SFH309",
+      "lib_name": "",
+      "footprint": "LED_THT:LED_D3.0mm_Clear",
+      "datasheet": "http://www.osram-os.com/Graphics/XPic2/00101811_0.pdf/SFH%20309,%20SFH%20309%20FA,%20Lead%20(Pb)%20Free%20Product%20-%20RoHS%20Compliant.pdf",
+      "description": "Phototransistor NPN",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 259.08,
+      "y": 38.735,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": true,
+      "unit": 1,
+      "uuid": "e3bb8436-d960-4c62-9243-6c9bec9e3548",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "6de2d1d5-2374-4f07-9967-b03bf73455ce",
+        "2": "864eca27-b619-4a7f-b05c-153216d10b8a"
+      },
+      "type": "transistor",
+      "keywords": "npn phototransistor",
+      "_sheet": 0,
+      "category": "transistor",
+      "pin_nets": {
+        "2": "GND",
+        "1": "RECV"
+      }
+    },
+    {
+      "reference": "Q3",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "lib_name": "",
+      "footprint": "Package_TO_SOT_SMD:SOT-23",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 263.525,
+      "y": 31.75,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "f0f4212a-a792-4e39-b9b7-dd5eabeeedaa",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "6040c8c7-094a-4266-b502-4ef4b7095c6f",
+        "1": "f5828c30-169a-48da-8a2c-242f23038b39",
+        "3": "3ba89126-ca4d-4289-bf32-4c9b6a6f202e"
+      },
+      "type": "transistor",
+      "keywords": "N-Channel MOSFET",
+      "_sheet": 0,
+      "category": "transistor",
+      "pin_nets": {
+        "2": "GND",
+        "1": "RECV",
+        "3": "!RECV"
+      }
+    }
+  ],
+  "nets": {
+    "SEND": {
+      "name": "SEND",
+      "pins": [
+        {
+          "component": "R3",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q2",
+          "pin_number": "1",
+          "pin_name": "G",
+          "pin_type": "input"
+        },
+        {
+          "component": "JP1",
+          "pin_number": "1",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 7,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEND",
+          "type": "label"
+        }
+      ]
+    },
+    "GND": {
+      "name": "GND",
+      "pins": [
+        {
+          "component": "R3",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R7",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR08",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "Q2",
+          "pin_number": "2",
+          "pin_name": "S",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR07",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C1",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "C2",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "3",
+          "pin_name": "GND",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR01",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "J1",
+          "pin_number": "A1",
+          "pin_name": "GND",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "A12",
+          "pin_name": "GND",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "B1",
+          "pin_name": "GND",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "B12",
+          "pin_name": "GND",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "SH",
+          "pin_name": "SHIELD",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR03",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "Q1",
+          "pin_number": "2",
+          "pin_name": "S",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR05",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "R6",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q4",
+          "pin_number": "2",
+          "pin_name": "E",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR04",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "Q3",
+          "pin_number": "2",
+          "pin_name": "S",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR0101",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR02",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR06",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "power_in"
+        }
+      ],
+      "point_count": 26,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_0": {
+      "name": "__unnamed_0",
+      "pins": [
+        {
+          "component": "R7",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "B5",
+          "pin_name": "CC2",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "labels": []
+    },
+    "!SEND": {
+      "name": "!SEND",
+      "pins": [
+        {
+          "component": "Q2",
+          "pin_number": "3",
+          "pin_name": "D",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R2",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "JP1",
+          "pin_number": "3",
+          "pin_name": "B",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q1",
+          "pin_number": "1",
+          "pin_name": "G",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 8,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "!SEND",
+          "type": "label"
+        }
+      ]
+    },
+    "RECV": {
+      "name": "RECV",
+      "pins": [
+        {
+          "component": "JP2",
+          "pin_number": "1",
+          "pin_name": "A",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R5",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q4",
+          "pin_number": "1",
+          "pin_name": "C",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q3",
+          "pin_number": "1",
+          "pin_name": "G",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 8,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "RECV",
+          "type": "label"
+        }
+      ]
+    },
+    "IR_RX": {
+      "name": "IR_RX",
+      "pins": [
+        {
+          "component": "JP2",
+          "pin_number": "2",
+          "pin_name": "C",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "7",
+          "pin_name": "RXD",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "IR_RX",
+          "type": "label"
+        }
+      ]
+    },
+    "!RECV": {
+      "name": "!RECV",
+      "pins": [
+        {
+          "component": "JP2",
+          "pin_number": "3",
+          "pin_name": "B",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R4",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q3",
+          "pin_number": "3",
+          "pin_name": "D",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 6,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "!RECV",
+          "type": "label"
+        }
+      ]
+    },
+    "USB_5V": {
+      "name": "USB_5V",
+      "pins": [
+        {
+          "component": "C1",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R5",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "5",
+          "pin_name": "VCC",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "R2",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "A4",
+          "pin_name": "VBUS",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "A9",
+          "pin_name": "VBUS",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "B4",
+          "pin_name": "VBUS",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "B9",
+          "pin_name": "VBUS",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R1",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R4",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 17,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "USB_5V",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_1": {
+      "name": "__unnamed_1",
+      "pins": [
+        {
+          "component": "C2",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "8",
+          "pin_name": "V3",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "labels": [],
+      "display_name": "U1.V3"
+    },
+    "USB_D+": {
+      "name": "USB_D+",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "1",
+          "pin_name": "UD+",
+          "pin_type": "bidirectional"
+        },
+        {
+          "component": "J1",
+          "pin_number": "A6",
+          "pin_name": "D+",
+          "pin_type": "bidirectional"
+        },
+        {
+          "component": "J1",
+          "pin_number": "B6",
+          "pin_name": "D+",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 7,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "USB_D+",
+          "type": "label"
+        }
+      ]
+    },
+    "USB_D-": {
+      "name": "USB_D-",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "2",
+          "pin_name": "UD-",
+          "pin_type": "bidirectional"
+        },
+        {
+          "component": "J1",
+          "pin_number": "A7",
+          "pin_name": "D-",
+          "pin_type": "bidirectional"
+        },
+        {
+          "component": "J1",
+          "pin_number": "B7",
+          "pin_name": "D-",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 7,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "USB_D-",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_2": {
+      "name": "__unnamed_2",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "4",
+          "pin_name": "~{RTS}",
+          "pin_type": "output"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "labels": [],
+      "display_name": "U1.~{RTS}"
+    },
+    "IR_TX": {
+      "name": "IR_TX",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "6",
+          "pin_name": "TXD",
+          "pin_type": "output"
+        },
+        {
+          "component": "JP1",
+          "pin_number": "2",
+          "pin_name": "C",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "IR_TX",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_3": {
+      "name": "__unnamed_3",
+      "pins": [
+        {
+          "component": "J1",
+          "pin_number": "A5",
+          "pin_name": "CC1",
+          "pin_type": "bidirectional"
+        },
+        {
+          "component": "R6",
+          "pin_number": "1",
+          "pin_name": "",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_4": {
+      "name": "__unnamed_4",
+      "pins": [
+        {
+          "component": "J1",
+          "pin_number": "A8",
+          "pin_name": "SBU1",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "labels": []
+    },
+    "__unnamed_5": {
+      "name": "__unnamed_5",
+      "pins": [
+        {
+          "component": "J1",
+          "pin_number": "B8",
+          "pin_name": "SBU2",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "labels": []
+    },
+    "__unnamed_6": {
+      "name": "__unnamed_6",
+      "pins": [
+        {
+          "component": "R1",
+          "pin_number": "2",
+          "pin_name": "",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D1",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_7": {
+      "name": "__unnamed_7",
+      "pins": [
+        {
+          "component": "D1",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q1",
+          "pin_number": "3",
+          "pin_name": "D",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "labels": []
+    }
+  },
+  "subcircuits": [
+    {
+      "center_ic": "U1",
+      "ic_value": "CH340N",
+      "ic_mpn": "",
+      "ic_lib_id": "Interface_USB:CH340N",
+      "neighbor_components": [
+        {
+          "ref": "C1",
+          "value": "10nF",
+          "type": "capacitor"
+        },
+        {
+          "ref": "C2",
+          "value": "100nF",
+          "type": "capacitor"
+        },
+        {
+          "ref": "J1",
+          "value": "USB_C",
+          "type": "connector"
+        },
+        {
+          "ref": "JP1",
+          "value": "TRANSMIT_SELECT",
+          "type": "jumper"
+        },
+        {
+          "ref": "JP2",
+          "value": "RECEIVE_SELECT",
+          "type": "jumper"
+        },
+        {
+          "ref": "R1",
+          "value": "120R",
+          "type": "resistor"
+        },
+        {
+          "ref": "R2",
+          "value": "3K3",
+          "type": "resistor"
+        },
+        {
+          "ref": "R4",
+          "value": "3K3",
+          "type": "resistor"
+        },
+        {
+          "ref": "R5",
+          "value": "3K3",
+          "type": "resistor"
+        }
+      ],
+      "description": "USB serial converter, 2Mbps, UART, JEITA SOIC-8 (SOP-8)"
+    }
+  ],
+  "ic_pin_analysis": [
+    {
+      "reference": "U1",
+      "value": "CH340N",
+      "type": "ic",
+      "lib_id": "Interface_USB:CH340N",
+      "mpn": "",
+      "description": "USB serial converter, 2Mbps, UART, JEITA SOIC-8 (SOP-8)",
+      "datasheet": "https://aitendo3.sakura.ne.jp/aitendo_data/product_img/ic/inteface/CH340N/ch340n.pdf",
+      "function": "USB interface",
+      "total_pins": 8,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "UD+",
+          "pin_type": "bidirectional",
+          "net": "USB_D+",
+          "connected_to": [
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A6",
+              "pin_name": "D+"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B6",
+              "pin_name": "D+"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "UD-",
+          "pin_type": "bidirectional",
+          "net": "USB_D-",
+          "connected_to": [
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A7",
+              "pin_name": "D-"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B7",
+              "pin_name": "D-"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "GND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A1",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A12",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B1",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B12",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "SH",
+              "pin_name": "SHIELD"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "~{RTS}",
+          "pin_type": "output",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "VCC",
+          "pin_type": "power_in",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A4",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A9",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B4",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B9",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "TXD",
+          "pin_type": "output",
+          "net": "IR_TX",
+          "connected_to": [
+            {
+              "ref": "JP1",
+              "value": "TRANSMIT_SELECT",
+              "type": "jumper",
+              "pin": "2",
+              "pin_name": "C"
+            }
+          ]
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "RXD",
+          "pin_type": "input",
+          "net": "IR_RX",
+          "connected_to": [
+            {
+              "ref": "JP2",
+              "value": "RECEIVE_SELECT",
+              "type": "jumper",
+              "pin": "2",
+              "pin_name": "C"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "V3",
+          "pin_type": "passive",
+          "net": "__unnamed_1",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ]
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "3",
+          "pin_name": "GND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A1",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A12",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B1",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B12",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "SH",
+              "pin_name": "SHIELD"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "VCC",
+          "pin_type": "power_in",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A4",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A9",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B4",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B9",
+              "pin_name": "VBUS"
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "UD+",
+          "pin_type": "bidirectional",
+          "net": "USB_D+",
+          "connected_to": [
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A6",
+              "pin_name": "D+"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B6",
+              "pin_name": "D+"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "UD-",
+          "pin_type": "bidirectional",
+          "net": "USB_D-",
+          "connected_to": [
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "A7",
+              "pin_name": "D-"
+            },
+            {
+              "ref": "J1",
+              "value": "USB_C",
+              "type": "connector",
+              "pin": "B7",
+              "pin_name": "D-"
+            }
+          ]
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "~{RTS}",
+          "pin_type": "output",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "TXD",
+          "pin_type": "output",
+          "net": "IR_TX",
+          "connected_to": [
+            {
+              "ref": "JP1",
+              "value": "TRANSMIT_SELECT",
+              "type": "jumper",
+              "pin": "2",
+              "pin_name": "C"
+            }
+          ]
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "RXD",
+          "pin_type": "input",
+          "net": "IR_RX",
+          "connected_to": [
+            {
+              "ref": "JP2",
+              "value": "RECEIVE_SELECT",
+              "type": "jumper",
+              "pin": "2",
+              "pin_name": "C"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "V3",
+          "pin_type": "passive",
+          "net": "__unnamed_1",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ]
+        }
+      ],
+      "decoupling_caps_by_rail": {
+        "USB_5V": [
+          {
+            "ref": "C1",
+            "value": "10nF"
+          }
+        ]
+      }
+    },
+    {
+      "reference": "J1",
+      "value": "USB_C",
+      "type": "connector",
+      "lib_id": "Connector:USB_C_Receptacle_USB2.0_16P",
+      "mpn": "",
+      "description": "USB 2.0-only 16P Type-C Receptacle connector",
+      "datasheet": "https://www.usb.org/sites/default/files/documents/usb_type-c.zip",
+      "function": "",
+      "total_pins": 17,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "A1",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "A12",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "A4",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "A5",
+          "pin_name": "CC1",
+          "pin_type": "bidirectional",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "A6",
+          "pin_name": "D+",
+          "pin_type": "bidirectional",
+          "net": "USB_D+",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "1",
+              "pin_name": "UD+"
+            }
+          ]
+        },
+        {
+          "pin_number": "A7",
+          "pin_name": "D-",
+          "pin_type": "bidirectional",
+          "net": "USB_D-",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "2",
+              "pin_name": "UD-"
+            }
+          ]
+        },
+        {
+          "pin_number": "A8",
+          "pin_name": "SBU1",
+          "pin_type": "bidirectional",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "A9",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "B1",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "B12",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "B4",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "B5",
+          "pin_name": "CC2",
+          "pin_type": "bidirectional",
+          "net": "__unnamed_0",
+          "connected_to": [
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "B6",
+          "pin_name": "D+",
+          "pin_type": "bidirectional",
+          "net": "USB_D+",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "1",
+              "pin_name": "UD+"
+            }
+          ]
+        },
+        {
+          "pin_number": "B7",
+          "pin_name": "D-",
+          "pin_type": "bidirectional",
+          "net": "USB_D-",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "2",
+              "pin_name": "UD-"
+            }
+          ]
+        },
+        {
+          "pin_number": "B8",
+          "pin_name": "SBU2",
+          "pin_type": "bidirectional",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "B9",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "SH",
+          "pin_name": "SHIELD",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "A1",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "A4",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "A9",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "A12",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "B1",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "B4",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "B9",
+          "pin_name": "VBUS",
+          "pin_type": "passive",
+          "net": "USB_5V",
+          "connected_to": [
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R5",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "VCC"
+            },
+            {
+              "ref": "R2",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R1",
+              "value": "120R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            },
+            {
+              "ref": "R4",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1",
+              "value": "10nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "B12",
+          "pin_name": "GND",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "SH",
+          "pin_name": "SHIELD",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R3",
+              "value": "3K3",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "10nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "C2",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "GND"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": ""
+            },
+            {
+              "ref": "Q4",
+              "value": "IR_PHOTO",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "E"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "A5",
+          "pin_name": "CC1",
+          "pin_type": "bidirectional",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R6",
+              "value": "5K1",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "A6",
+          "pin_name": "D+",
+          "pin_type": "bidirectional",
+          "net": "USB_D+",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "1",
+              "pin_name": "UD+"
+            }
+          ]
+        },
+        {
+          "pin_number": "A7",
+          "pin_name": "D-",
+          "pin_type": "bidirectional",
+          "net": "USB_D-",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "2",
+              "pin_name": "UD-"
+            }
+          ]
+        },
+        {
+          "pin_number": "A8",
+          "pin_name": "SBU1",
+          "pin_type": "bidirectional",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "B5",
+          "pin_name": "CC2",
+          "pin_type": "bidirectional",
+          "net": "__unnamed_0",
+          "connected_to": [
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": ""
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R7",
+              "value": "5K1",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "B6",
+          "pin_name": "D+",
+          "pin_type": "bidirectional",
+          "net": "USB_D+",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "1",
+              "pin_name": "UD+"
+            }
+          ]
+        },
+        {
+          "pin_number": "B7",
+          "pin_name": "D-",
+          "pin_type": "bidirectional",
+          "net": "USB_D-",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "type": "ic",
+              "pin": "2",
+              "pin_name": "UD-"
+            }
+          ]
+        },
+        {
+          "pin_number": "B8",
+          "pin_name": "SBU2",
+          "pin_type": "bidirectional",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        }
+      ],
+      "decoupling_caps_by_rail": {
+        "USB_5V": [
+          {
+            "ref": "C1",
+            "value": "10nF"
+          }
+        ]
+      }
+    }
+  ],
+  "design_analysis": {
+    "net_classification": {
+      "SEND": "control",
+      "GND": "ground",
+      "__unnamed_0": "signal",
+      "!SEND": "control",
+      "RECV": "signal",
+      "IR_RX": "data",
+      "!RECV": "signal",
+      "USB_5V": "high_speed",
+      "__unnamed_1": "signal",
+      "USB_D+": "high_speed",
+      "USB_D-": "high_speed",
+      "__unnamed_2": "signal",
+      "IR_TX": "data",
+      "__unnamed_3": "signal",
+      "__unnamed_4": "signal",
+      "__unnamed_5": "signal",
+      "__unnamed_6": "signal",
+      "__unnamed_7": "signal"
+    },
+    "power_domains": {
+      "ic_power_rails": {
+        "U1": {
+          "value": "CH340N",
+          "power_rails": [
+            "USB_5V"
+          ],
+          "io_rails": null
+        }
+      },
+      "domain_groups": {
+        "USB_5V": [
+          "U1"
+        ]
+      }
+    },
+    "cross_domain_signals": [],
+    "bus_analysis": {
+      "i2c": [],
+      "spi": [],
+      "uart": [
+        {
+          "net": "IR_RX",
+          "devices": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "lib_id": "Interface_USB:CH340N"
+            }
+          ],
+          "pin_count": 2
+        },
+        {
+          "net": "IR_TX",
+          "devices": [
+            {
+              "ref": "U1",
+              "value": "CH340N",
+              "lib_id": "Interface_USB:CH340N"
+            }
+          ],
+          "pin_count": 2
+        }
+      ],
+      "can": []
+    },
+    "differential_pairs": [
+      {
+        "type": "USB",
+        "positive": "USB_D+",
+        "negative": "USB_D-",
+        "shared_ics": [
+          "J1",
+          "U1"
+        ],
+        "has_esd": true,
+        "esd_protection": [
+          "U1"
+        ]
+      }
+    ],
+    "erc_warnings": [
+      {
+        "type": "no_driver",
+        "net": "SEND",
+        "message": "Net 'SEND' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "R3",
+            "pin_number": "1",
+            "pin_name": "",
+            "pin_type": "passive"
+          },
+          {
+            "component": "Q2",
+            "pin_number": "1",
+            "pin_name": "G",
+            "pin_type": "input"
+          },
+          {
+            "component": "JP1",
+            "pin_number": "1",
+            "pin_name": "A",
+            "pin_type": "passive"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "!SEND",
+        "message": "Net '!SEND' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "Q2",
+            "pin_number": "3",
+            "pin_name": "D",
+            "pin_type": "passive"
+          },
+          {
+            "component": "R2",
+            "pin_number": "2",
+            "pin_name": "",
+            "pin_type": "passive"
+          },
+          {
+            "component": "JP1",
+            "pin_number": "3",
+            "pin_name": "B",
+            "pin_type": "passive"
+          },
+          {
+            "component": "Q1",
+            "pin_number": "1",
+            "pin_name": "G",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "RECV",
+        "message": "Net 'RECV' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "JP2",
+            "pin_number": "1",
+            "pin_name": "A",
+            "pin_type": "passive"
+          },
+          {
+            "component": "R5",
+            "pin_number": "2",
+            "pin_name": "",
+            "pin_type": "passive"
+          },
+          {
+            "component": "Q4",
+            "pin_number": "1",
+            "pin_name": "C",
+            "pin_type": "passive"
+          },
+          {
+            "component": "Q3",
+            "pin_number": "1",
+            "pin_name": "G",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "IR_RX",
+        "message": "Net 'IR_RX' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "JP2",
+            "pin_number": "2",
+            "pin_name": "C",
+            "pin_type": "passive"
+          },
+          {
+            "component": "U1",
+            "pin_number": "7",
+            "pin_name": "RXD",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "USB_5V",
+        "message": "Net 'USB_5V' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "C1",
+            "pin_number": "1",
+            "pin_name": "",
+            "pin_type": "passive"
+          },
+          {
+            "component": "R5",
+            "pin_number": "1",
+            "pin_name": "",
+            "pin_type": "passive"
+          },
+          {
+            "component": "U1",
+            "pin_number": "5",
+            "pin_name": "VCC",
+            "pin_type": "power_in"
+          },
+          {
+            "component": "R2",
+            "pin_number": "1",
+            "pin_name": "",
+            "pin_type": "passive"
+          },
+          {
+            "component": "J1",
+            "pin_number": "A4",
+            "pin_name": "VBUS",
+            "pin_type": "passive"
+          },
+          {
+            "component": "J1",
+            "pin_number": "A9",
+            "pin_name": "VBUS",
+            "pin_type": "passive"
+          },
+          {
+            "component": "J1",
+            "pin_number": "B4",
+            "pin_name": "VBUS",
+            "pin_type": "passive"
+          },
+          {
+            "component": "J1",
+            "pin_number": "B9",
+            "pin_name": "VBUS",
+            "pin_type": "passive"
+          },
+          {
+            "component": "R1",
+            "pin_number": "1",
+            "pin_name": "",
+            "pin_type": "passive"
+          },
+          {
+            "component": "R4",
+            "pin_number": "1",
+            "pin_name": "",
+            "pin_type": "passive"
+          }
+        ]
+      }
+    ],
+    "passive_warnings": []
+  },
+  "connectivity_issues": {
+    "unconnected_pins": [],
+    "single_pin_nets": [],
+    "single_pin_net_findings": [],
+    "multi_driver_nets": [],
+    "power_net_summary": {
+      "GND": {
+        "pin_count": 15,
+        "components": [
+          "C1",
+          "C2",
+          "J1",
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "R3",
+          "R6",
+          "R7",
+          "U1"
+        ]
+      },
+      "USB_5V": {
+        "pin_count": 10,
+        "components": [
+          "C1",
+          "J1",
+          "R1",
+          "R2",
+          "R4",
+          "R5",
+          "U1"
+        ]
+      }
+    }
+  },
+  "labels": [
+    {
+      "name": "USB_5V",
+      "type": "label",
+      "x": 238.125,
+      "y": 24.765,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "USB_D-",
+      "type": "label",
+      "x": 89.535,
+      "y": 33.655,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "USB_D+",
+      "type": "label",
+      "x": 89.535,
+      "y": 31.115,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "IR_RX",
+      "type": "label",
+      "x": 132.08,
+      "y": 28.575,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "!RECV",
+      "type": "label",
+      "x": 272.415,
+      "y": 24.765,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "IR_RX",
+      "type": "label",
+      "x": 270.51,
+      "y": 62.865,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEND",
+      "type": "label",
+      "x": 201.295,
+      "y": 57.15,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "!SEND",
+      "type": "label",
+      "x": 197.485,
+      "y": 31.75,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "IR_TX",
+      "type": "label",
+      "x": 230.505,
+      "y": 62.865,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "USB_5V",
+      "type": "label",
+      "x": 197.485,
+      "y": 24.765,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "!RECV",
+      "type": "label",
+      "x": 270.51,
+      "y": 57.15,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "RECV",
+      "type": "label",
+      "x": 241.3,
+      "y": 57.15,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "USB_D+",
+      "type": "label",
+      "x": 55.88,
+      "y": 36.83,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "IR_TX",
+      "type": "label",
+      "x": 132.08,
+      "y": 26.035,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "USB_5V",
+      "type": "label",
+      "x": 69.215,
+      "y": 19.05,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "RECV",
+      "type": "label",
+      "x": 262.255,
+      "y": 28.575,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "USB_5V",
+      "type": "label",
+      "x": 57.785,
+      "y": 19.05,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "!SEND",
+      "type": "label",
+      "x": 230.505,
+      "y": 57.15,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEND",
+      "type": "label",
+      "x": 197.485,
+      "y": 38.735,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "USB_D-",
+      "type": "label",
+      "x": 55.88,
+      "y": 31.75,
+      "angle": 180.0,
+      "_sheet": 0
+    }
+  ],
+  "no_connects": [
+    {
+      "x": 119.38,
+      "y": 33.655,
+      "_sheet": 0
+    },
+    {
+      "x": 41.91,
+      "y": 49.53,
+      "_sheet": 0
+    },
+    {
+      "x": 41.91,
+      "y": 46.99,
+      "_sheet": 0
+    }
+  ],
+  "power_symbols": [
+    {
+      "net_name": "GND",
+      "x": 57.785,
+      "y": 59.69,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 266.065,
+      "y": 45.72,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 109.22,
+      "y": 59.69,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 79.375,
+      "y": 59.69,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 215.9,
+      "y": 45.72,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 225.425,
+      "y": 45.72,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 19.05,
+      "y": 59.69,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 85.09,
+      "y": 59.69,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 256.54,
+      "y": 45.72,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    }
+  ],
+  "annotation_issues": {},
+  "label_shape_warnings": [],
+  "pwr_flag_warnings": [
+    {
+      "net": "GND",
+      "message": "Power rail 'GND' has power_in pins but no power_out or PWR_FLAG \u2014 ERC will flag this",
+      "pin_types": [
+        "passive",
+        "power_in"
+      ]
+    }
+  ],
+  "footprint_filter_warnings": [],
+  "sourcing_audit": {
+    "total_bom_components": 16,
+    "mpn_coverage": "0/16",
+    "missing_mpn": [
+      "C1",
+      "C2",
+      "D1",
+      "J1",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "U1"
+    ],
+    "missing_digikey": [
+      "C1",
+      "C2",
+      "D1",
+      "J1",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "U1"
+    ],
+    "missing_lcsc": [
+      "C1",
+      "C2",
+      "D1",
+      "J1",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "U1"
+    ],
+    "mpn_percent": 0.0
+  },
+  "ground_domains": {
+    "ground_nets": {
+      "GND": {
+        "domain": "signal",
+        "connections": 15,
+        "components": [
+          "C1",
+          "C2",
+          "J1",
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "R3",
+          "R6",
+          "R7",
+          "U1"
+        ]
+      }
+    },
+    "multiple_domains": false
+  },
+  "bus_topology": {
+    "bus_wire_count": 0,
+    "bus_entry_count": 0
+  },
+  "wire_geometry": {
+    "total_wires": 74,
+    "total_length_mm": 506.1,
+    "avg_length_mm": 6.8,
+    "short_wires": [
+      {
+        "from": [
+          215.9,
+          43.81
+        ],
+        "to": [
+          215.9,
+          44.45
+        ],
+        "length": 0.635
+      }
+    ],
+    "short_wire_count": 1
+  },
+  "simulation_readiness": {
+    "total_components": 18,
+    "likely_simulatable": 14,
+    "needs_model": 4,
+    "components_without_model": [
+      "J1",
+      "JP1",
+      "JP2",
+      "U1"
+    ],
+    "simulatable_percent": 77.8
+  },
+  "property_issues": {},
+  "placement_analysis": {
+    "bounding_box": {
+      "x_min": 26.7,
+      "y_min": 24.1,
+      "x_max": 263.5,
+      "y_max": 57.1,
+      "width_mm": 236.9,
+      "height_mm": 33.0
+    },
+    "clusters": [
+      {
+        "region": "row0_col0",
+        "component_count": 5,
+        "types": {
+          "resistor": 2,
+          "capacitor": 2,
+          "connector": 1
+        },
+        "references": [
+          "C1",
+          "C2",
+          "J1",
+          "R6",
+          "R7"
+        ]
+      },
+      {
+        "region": "row0_col1",
+        "component_count": 1,
+        "types": {
+          "ic": 1
+        },
+        "references": [
+          "U1"
+        ]
+      },
+      {
+        "region": "row0_col3",
+        "component_count": 12,
+        "types": {
+          "resistor": 5,
+          "transistor": 4,
+          "jumper": 2,
+          "led": 1
+        },
+        "references": [
+          "D1",
+          "JP1",
+          "JP2",
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5"
+        ]
+      }
+    ],
+    "grid_size": "1x4"
+  },
+  "hierarchical_labels": {
+    "hierarchical_label_count": 0,
+    "global_label_count": 0
+  },
+  "rail_voltages": {
+    "GND": 0,
+    "USB_5V": 5.0,
+    "USB_D+": 5.0,
+    "USB_D-": 5.0
+  },
+  "power_sequencing_validation": {
+    "power_tree": [],
+    "provenance": {
+      "evidence": "pseq_enable_chain",
+      "confidence": "heuristic",
+      "claimed_components": [],
+      "excluded_by": [],
+      "suppressed_candidates": []
+    }
+  },
+  "text_annotations": [
+    {
+      "type": "text",
+      "text": "IR TX",
+      "x": 200.66,
+      "y": 17.145,
+      "angle": 0.0
+    },
+    {
+      "type": "text",
+      "text": "NOTE\n----\nIR UART Usually has IDLE (HIGH) being LED OFF, so 1 = OFF    0 = ON\nAnd the Receiver should reflect this:                 1 = OFF    0 = ON\n\nUse RECV and SEND for Normal Operation, and !RECV and !SEND for Inverted",
+      "x": 234.95,
+      "y": 71.755,
+      "angle": 0.0
+    },
+    {
+      "type": "text",
+      "text": "IR RX",
+      "x": 241.3,
+      "y": 17.145,
+      "angle": 0.0
+    }
+  ],
+  "bom_optimization": {
+    "unique_value_counts": {
+      "resistor": 3,
+      "capacitor": 2
+    },
+    "total_unique_footprints": 7,
+    "single_use_passive_values": 3
+  },
+  "test_coverage": {
+    "test_points": [],
+    "test_point_count": 0,
+    "covered_nets": [],
+    "uncovered_key_nets": [
+      {
+        "net": "IR_RX",
+        "category": "uart"
+      },
+      {
+        "net": "IR_TX",
+        "category": "uart"
+      }
+    ],
+    "observations": [
+      "No test points found in design",
+      "No debug connectors (SWD/JTAG/UART) identified",
+      "Key nets without test points: 2 uart"
+    ]
+  },
+  "assembly_complexity": {
+    "total_components": 18,
+    "smd_count": 16,
+    "tht_count": 2,
+    "complexity_score": 30,
+    "difficulty_breakdown": {
+      "hard": 0,
+      "medium": 12,
+      "easy": 6
+    },
+    "package_breakdown": {
+      "0603": 9,
+      "SOT-23": 3,
+      "other_SMD": 3,
+      "THT": 2,
+      "SOIC": 1
+    },
+    "unique_footprints": 5,
+    "observations": [
+      "Low assembly complexity (score 30/100) \u2014 hand assembly feasible"
+    ]
+  },
+  "usb_compliance": {
+    "connectors": [
+      {
+        "connector": "J1",
+        "value": "USB_C",
+        "is_type_c": true,
+        "checks": {
+          "cc1_pulldown_5k1": "pass",
+          "cc2_pulldown_5k1": "pass",
+          "dp_series_resistor": "info",
+          "dm_series_resistor": "info",
+          "vbus_esd_protection": "fail",
+          "vbus_decoupling": "pass",
+          "vbus_capacitance": "warning",
+          "usb_esd_ic": "info"
+        },
+        "usb_c_cc_status": {
+          "cc1_net": "__unnamed_3",
+          "cc2_net": "__unnamed_0",
+          "cc1_resistor": {
+            "ref": "R6",
+            "ohms": 5100.0,
+            "to_ground": true,
+            "to_power": false
+          },
+          "cc2_resistor": {
+            "ref": "R7",
+            "ohms": 5100.0,
+            "to_ground": true,
+            "to_power": false
+          },
+          "role": "sink",
+          "pd_controller": null,
+          "status": "pass",
+          "issues": []
+        },
+        "vbus_capacitance_detail": {
+          "total_uf": 0.01,
+          "recommended_min_uf": 1.0,
+          "detail": "VBUS decoupling may be insufficient: 0.0\u00b5F total (recommended \u22651\u00b5F for USB 2.0, \u226510\u00b5F for USB 3.x)"
+        }
+      }
+    ],
+    "summary": {
+      "pass": 3,
+      "fail": 1,
+      "info": 3,
+      "warning": 1
+    },
+    "observations": [
+      "1 USB compliance check(s) failed",
+      "3 USB compliance check(s) passed",
+      "3 USB check(s) informational (optional)"
+    ]
+  },
+  "missing_info": {
+    "missing_mpn": [
+      "R3",
+      "R7",
+      "Q2",
+      "C1",
+      "C2",
+      "R5",
+      "U1",
+      "R2",
+      "J1",
+      "R1",
+      "R4",
+      "D1",
+      "Q1",
+      "R6",
+      "Q4",
+      "Q3"
+    ]
+  },
+  "bom_lock": {
+    "total_bom_components": 16,
+    "components_with_mpn": 0,
+    "missing_mpn": [
+      "R3",
+      "R7",
+      "Q2",
+      "C1",
+      "C2",
+      "R5",
+      "U1",
+      "R2",
+      "J1",
+      "R1",
+      "R4",
+      "D1",
+      "Q1",
+      "R6",
+      "Q4",
+      "Q3"
+    ],
+    "missing_mpn_count": 16,
+    "generic_values": [],
+    "lock_pct": 0,
+    "status": "fail"
+  },
+  "design_intent": {
+    "product_class": "prototype",
+    "ipc_class": 2,
+    "target_market": "hobby",
+    "expected_lifetime_years": 5,
+    "operating_temp_range": [
+      -10,
+      70
+    ],
+    "preferred_passive_size": "0603",
+    "test_coverage_target": 0.85,
+    "approved_manufacturers": [],
+    "confidence": 0.3,
+    "detection_signals": [],
+    "source": {
+      "ipc_class": "auto",
+      "product_class": "auto",
+      "target_market": "auto",
+      "expected_lifetime_years": "auto",
+      "operating_temp_range": "auto",
+      "preferred_passive_size": "auto",
+      "test_coverage_target": "auto",
+      "approved_manufacturers": "auto"
+    }
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 14,
+      "by_severity": {
+        "error": 2,
+        "warning": 1,
+        "info": 11
+      },
+      "by_category": {
+        "usb_data": 2,
+        "verification": 1,
+        "protection": 1,
+        "led_control": 2,
+        "power": 1,
+        "topology": 2,
+        "sourcing": 1,
+        "discrete_semiconductors": 4
+      },
+      "top_issues": [
+        {
+          "detector": "audit_datasheet_coverage",
+          "rule_id": "DS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "verification",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "components": [],
+          "nets": [],
+          "pins": [],
+          "datasheets_dir": null,
+          "datasheet_file_count": 0,
+          "bom_size": 16,
+          "mpn_coverage_percent": 0.0,
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "report_context": {
+            "section": "Datasheet Coverage",
+            "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "audit_sourcing_gate",
+          "rule_id": "SS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "sourcing",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/10 unique parts). Board is not pre-fab ready.",
+          "description": "Sourcing audit: 0 of 10 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+          "components": [
+            "C1",
+            "C2",
+            "D1",
+            "J1",
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4",
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "U1"
+          ],
+          "nets": [],
+          "pins": [],
+          "mpn_coverage_percent": 0.0,
+          "missing_mpn_lines": 10,
+          "missing_mpn_refs": 16,
+          "total_bom_lines": 10,
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "report_context": {
+            "section": "Sourcing",
+            "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "pre_fab"
+          ]
+        },
+        {
+          "detector": "audit_rail_sources",
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "power",
+          "summary": "USB_5V has no declared source",
+          "description": "Net USB_5V carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+          "components": [],
+          "nets": [
+            "USB_5V"
+          ],
+          "pins": [
+            "U1.5"
+          ],
+          "source_path": "none",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "report_context": {
+            "section": "Power \u2014 Rail Sources",
+            "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "rs_rail_audit",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "",
+          "stages": [
+            "schematic"
+          ]
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 3,
+      "by_category": {
+        "verification": 1,
+        "power": 1,
+        "sourcing": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "DS-001",
+          "severity": "error",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "category": "verification"
+        },
+        {
+          "rule_id": "SS-001",
+          "severity": "error",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/10 unique parts). Board is not pre-fab ready.",
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "category": "sourcing"
+        },
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "USB_5V has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "moderate",
+      "blocker_count": 2,
+      "warning_count": 1,
+      "stage_readiness": {
+        "schematic": "needs_work",
+        "layout": "pass",
+        "pre_fab": "needs_work",
+        "bring_up": "pass"
+      },
+      "one_liner": "2 errors, 1 warning across 3 categories. Schematic, pre-fab stages have blockers."
+    }
+  }
+}

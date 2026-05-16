@@ -1,0 +1,7167 @@
+{
+  "analyzer_type": "schematic",
+  "schema_version": "1.3.0",
+  "summary": {
+    "total_findings": 18,
+    "by_severity": {
+      "error": 2,
+      "warning": 5,
+      "info": 11
+    }
+  },
+  "trust_summary": {
+    "total_findings": 18,
+    "trust_level": "high",
+    "by_confidence": {
+      "deterministic": 17,
+      "heuristic": 1,
+      "datasheet-backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 16,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 2,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 44.4,
+    "bom_coverage": {
+      "total_components": 11,
+      "with_mpn": 0,
+      "with_datasheet": 2,
+      "mpn_pct": 0.0,
+      "datasheet_pct": 18.2
+    }
+  },
+  "file": "/home/aklofas/Projects/kicad-happy-testharness/repos/ADBeta/00314S2D-ASCII_Display_Module/PCB/MkI/MkI.kicad_sch",
+  "kicad_version": "8.0",
+  "file_version": "20231120",
+  "title_block": {
+    "title": "00314S2D-ASCII",
+    "date": "2024-10-13",
+    "rev": "MkI"
+  },
+  "statistics": {
+    "total_components": 16,
+    "unique_parts": 11,
+    "dnp_parts": 0,
+    "total_nets": 46,
+    "total_wires": 99,
+    "total_no_connects": 2,
+    "component_types": {
+      "capacitor": 2,
+      "resistor_network": 4,
+      "connector": 2,
+      "resistor": 2,
+      "transistor": 3,
+      "test_point": 1,
+      "diode": 1,
+      "ic": 1
+    },
+    "power_rails": [
+      {
+        "name": "GND",
+        "voltage": null
+      },
+      {
+        "name": "VCC",
+        "voltage": null
+      }
+    ],
+    "missing_mpn": [
+      "C2",
+      "RN1",
+      "J1",
+      "R2",
+      "RN4",
+      "RN3",
+      "RN2",
+      "Q1",
+      "C1",
+      "DISP1",
+      "R1",
+      "U1",
+      "Q3",
+      "J2",
+      "Q2"
+    ],
+    "missing_footprint": []
+  },
+  "findings": [
+    {
+      "rail": "VCC",
+      "capacitors": [
+        {
+          "ref": "C2",
+          "value": "1uF",
+          "farads": 1e-06,
+          "self_resonant_hz": 5032921.0,
+          "package": "0603",
+          "esr_ohm": 0.15,
+          "dielectric": "X7R"
+        },
+        {
+          "ref": "C1",
+          "value": "100nF",
+          "farads": 1.0000000000000001e-07,
+          "self_resonant_hz": 15915494.0,
+          "package": "0603",
+          "esr_ohm": 0.15,
+          "dielectric": "X7R"
+        }
+      ],
+      "total_capacitance_uF": 1.1,
+      "cap_count": 2,
+      "detector": "detect_decoupling",
+      "rule_id": "DC-DET",
+      "category": "decoupling",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Decoupling on VCC",
+      "description": "Decoupling capacitors on power rail VCC",
+      "components": [
+        "C1",
+        "C2"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Decoupling",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "decoup_cap_near_ic",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "C2",
+          "C1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "decoupling_analysis:9a1adf60f6b2",
+      "stages": [
+        "schematic",
+        "layout"
+      ]
+    },
+    {
+      "category": "decoupling_coverage",
+      "rail": "VCC",
+      "cap_count": 2,
+      "total_uF": 1.1,
+      "has_bulk": true,
+      "has_bypass": true,
+      "has_high_freq": false,
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Decoupling coverage on VCC",
+      "description": "Decoupling frequency coverage for rail VCC",
+      "components": [
+        "C1",
+        "C2"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "C2",
+          "C1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_datasheet_coverage",
+      "rule_id": "DS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "verification",
+      "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "datasheets_dir": null,
+      "datasheet_file_count": 0,
+      "bom_size": 15,
+      "mpn_coverage_percent": 0.0,
+      "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+      "report_context": {
+        "section": "Datasheet Coverage",
+        "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "connector_ref": "J1",
+      "connector_value": "Conn_RX",
+      "interface_type": "header",
+      "risk_level": "medium_risk",
+      "signal_nets": [
+        "U_RX"
+      ],
+      "protected_nets": [],
+      "unprotected_nets": [
+        "U_RX"
+      ],
+      "coverage": "none",
+      "esd_devices": [],
+      "esd_device_details": [],
+      "detector": "audit_esd_protection",
+      "rule_id": "EP-AUD",
+      "category": "protection",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "ESD audit J1 (header): none coverage",
+      "description": "ESD protection audit for header connector J1: none coverage.",
+      "components": [
+        "J1"
+      ],
+      "nets": [
+        "U_RX"
+      ],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "ESD Protection",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "esd_coverage_audit",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "J1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "connector_ref": "J2",
+      "connector_value": "Conn_TX",
+      "interface_type": "header",
+      "risk_level": "medium_risk",
+      "signal_nets": [
+        "U_TX"
+      ],
+      "protected_nets": [],
+      "unprotected_nets": [
+        "U_TX"
+      ],
+      "coverage": "none",
+      "esd_devices": [],
+      "esd_device_details": [],
+      "detector": "audit_esd_protection",
+      "rule_id": "EP-AUD",
+      "category": "protection",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "ESD audit J2 (header): none coverage",
+      "description": "ESD protection audit for header connector J2: none coverage.",
+      "components": [
+        "J2"
+      ],
+      "nets": [
+        "U_TX"
+      ],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "ESD Protection",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "esd_coverage_audit",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "J2"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: SEG_F only connects to DISP1.18 (F) (input)",
+      "description": "Net 'SEG_F' has exactly one pin: DISP1.18 (F), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "DISP1"
+      ],
+      "nets": [
+        "SEG_F"
+      ],
+      "pins": [
+        "DISP1.18"
+      ],
+      "net_display_name": "SEG_F",
+      "pin_type": "input",
+      "pin_name": "F",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: SEG_G1 only connects to DISP1.13 (G1) (input)",
+      "description": "Net 'SEG_G1' has exactly one pin: DISP1.13 (G1), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "DISP1"
+      ],
+      "nets": [
+        "SEG_G1"
+      ],
+      "pins": [
+        "DISP1.13"
+      ],
+      "net_display_name": "SEG_G1",
+      "pin_type": "input",
+      "pin_name": "G1",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: RN3.R1.1 only connects to RN3.1 (R1.1) (passive)",
+      "description": "Net '__unnamed_5' has exactly one pin: RN3.1 (R1.1), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "RN3"
+      ],
+      "nets": [
+        "__unnamed_5"
+      ],
+      "pins": [
+        "RN3.1"
+      ],
+      "net_display_name": "RN3.R1.1",
+      "pin_type": "passive",
+      "pin_name": "R1.1",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Passive or unclassified pin lonely on its own net.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: RN3.R1.2 only connects to RN3.8 (R1.2) (passive)",
+      "description": "Net '__unnamed_6' has exactly one pin: RN3.8 (R1.2), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "RN3"
+      ],
+      "nets": [
+        "__unnamed_6"
+      ],
+      "pins": [
+        "RN3.8"
+      ],
+      "net_display_name": "RN3.R1.2",
+      "pin_type": "passive",
+      "pin_name": "R1.2",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Passive or unclassified pin lonely on its own net.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: RN4.R1.1 only connects to RN4.1 (R1.1) (passive)",
+      "description": "Net '__unnamed_1' has exactly one pin: RN4.1 (R1.1), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "RN4"
+      ],
+      "nets": [
+        "__unnamed_1"
+      ],
+      "pins": [
+        "RN4.1"
+      ],
+      "net_display_name": "RN4.R1.1",
+      "pin_type": "passive",
+      "pin_name": "R1.1",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Passive or unclassified pin lonely on its own net.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: RN4.R1.2 only connects to RN4.8 (R1.2) (passive)",
+      "description": "Net '__unnamed_4' has exactly one pin: RN4.8 (R1.2), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "RN4"
+      ],
+      "nets": [
+        "__unnamed_4"
+      ],
+      "pins": [
+        "RN4.8"
+      ],
+      "net_display_name": "RN4.R1.2",
+      "pin_type": "passive",
+      "pin_name": "R1.2",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Passive or unclassified pin lonely on its own net.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: GPIO_PA1 only connects to U1.5 (PA1) (bidirectional)",
+      "description": "Net 'GPIO_PA1' has exactly one pin: U1.5 (PA1), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1"
+      ],
+      "nets": [
+        "GPIO_PA1"
+      ],
+      "pins": [
+        "U1.5"
+      ],
+      "net_display_name": "GPIO_PA1",
+      "pin_type": "bidirectional",
+      "pin_name": "PA1",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: GPIO_PD4 only connects to U1.1 (PD4) (bidirectional)",
+      "description": "Net 'GPIO_PD4' has exactly one pin: U1.1 (PD4), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1"
+      ],
+      "nets": [
+        "GPIO_PD4"
+      ],
+      "pins": [
+        "U1.1"
+      ],
+      "net_display_name": "GPIO_PD4",
+      "pin_type": "bidirectional",
+      "pin_name": "PD4",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "VCC has no declared source",
+      "description": "Net VCC carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "VCC"
+      ],
+      "pins": [
+        "#PWR014.1",
+        "#PWR03.1",
+        "#PWR05.1",
+        "#PWR07.1",
+        "#PWR09.1",
+        "U1.9"
+      ],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_sourcing_gate",
+      "rule_id": "SS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "sourcing",
+      "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/10 unique parts). Board is not pre-fab ready.",
+      "description": "Sourcing audit: 0 of 10 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+      "components": [
+        "C1",
+        "C2",
+        "DISP1",
+        "J1",
+        "J2",
+        "Q1",
+        "Q2",
+        "Q3",
+        "R1",
+        "R2",
+        "RN1",
+        "RN2",
+        "RN3",
+        "RN4",
+        "U1"
+      ],
+      "nets": [],
+      "pins": [],
+      "mpn_coverage_percent": 0.0,
+      "missing_mpn_lines": 10,
+      "missing_mpn_refs": 15,
+      "total_bom_lines": 10,
+      "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+      "report_context": {
+        "section": "Sourcing",
+        "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ]
+    },
+    {
+      "reference": "Q1",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "type": "mosfet",
+      "is_pchannel": false,
+      "gate_net": "__unnamed_0",
+      "drain_net": "DIGIT_1",
+      "source_net": "GND",
+      "drain_is_power": false,
+      "source_is_ground": true,
+      "source_is_power": true,
+      "load_type": "other",
+      "gate_resistors": [
+        {
+          "reference": "R2",
+          "value": "2K2"
+        }
+      ],
+      "gate_driver_ics": [],
+      "gate_pulldown": null,
+      "has_flyback_diode": false,
+      "flyback_diode": null,
+      "has_snubber": false,
+      "snubber_data": null,
+      "source_sense_resistor": null,
+      "detector": "detect_transistor_circuits",
+      "rule_id": "TR-DET",
+      "category": "discrete_semiconductors",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor Q1 mosfet",
+      "description": "Transistor circuit (mosfet) detected",
+      "components": [
+        "Q1"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Discrete Semiconductors",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "transistor_mosfet",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q1"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "transistor_circuits:f75484b66a86",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "reference": "Q2",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "type": "mosfet",
+      "is_pchannel": false,
+      "gate_net": "__unnamed_8",
+      "drain_net": "DIGIT_2",
+      "source_net": "GND",
+      "drain_is_power": false,
+      "source_is_ground": true,
+      "source_is_power": true,
+      "load_type": "other",
+      "gate_resistors": [
+        {
+          "reference": "R1",
+          "value": "10R"
+        }
+      ],
+      "gate_driver_ics": [],
+      "gate_pulldown": null,
+      "has_flyback_diode": false,
+      "flyback_diode": null,
+      "has_snubber": false,
+      "snubber_data": null,
+      "source_sense_resistor": null,
+      "detector": "detect_transistor_circuits",
+      "rule_id": "TR-DET",
+      "category": "discrete_semiconductors",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor Q2 mosfet",
+      "description": "Transistor circuit (mosfet) detected",
+      "components": [
+        "Q2"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Discrete Semiconductors",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "transistor_mosfet",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q2"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "transistor_circuits:bd5f1581a6e4",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "reference": "Q3",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "type": "mosfet",
+      "is_pchannel": false,
+      "gate_net": "__unnamed_8",
+      "drain_net": "__unnamed_0",
+      "source_net": "GND",
+      "drain_is_power": false,
+      "source_is_ground": true,
+      "source_is_power": true,
+      "load_type": "transistor",
+      "gate_resistors": [
+        {
+          "reference": "R1",
+          "value": "10R"
+        }
+      ],
+      "gate_driver_ics": [],
+      "gate_pulldown": null,
+      "has_flyback_diode": false,
+      "flyback_diode": null,
+      "has_snubber": false,
+      "snubber_data": null,
+      "source_sense_resistor": null,
+      "detector": "detect_transistor_circuits",
+      "rule_id": "TR-DET",
+      "category": "discrete_semiconductors",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Transistor Q3 mosfet",
+      "description": "Transistor circuit (mosfet) detected",
+      "components": [
+        "Q3"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Discrete Semiconductors",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "transistor_mosfet",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "Q3"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "transistor_circuits:af836b9bfb2d",
+      "stages": [
+        "schematic"
+      ]
+    }
+  ],
+  "bom": [
+    {
+      "value": "100nF",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Unpolarized capacitor, small symbol",
+      "references": [
+        "C1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "1uF",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Unpolarized capacitor, small symbol",
+      "references": [
+        "C2"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "RED/GREEN 14 Seg",
+      "footprint": "Project_Footprints:14_Seg_2_Digit_Display",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "",
+      "references": [
+        "DISP1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "diode"
+    },
+    {
+      "value": "Conn_RX",
+      "footprint": "Project_Footprints:Conn_Daisy_Chain",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Generic connector, single row, 01x03, script generated",
+      "references": [
+        "J1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "connector"
+    },
+    {
+      "value": "Conn_TX",
+      "footprint": "Project_Footprints:Conn_Daisy_Chain",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Generic connector, single row, 01x03, script generated",
+      "references": [
+        "J2"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "connector"
+    },
+    {
+      "value": "AO3400A",
+      "footprint": "Project_Footprints:SOT-23_Clean",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "references": [
+        "Q1",
+        "Q3",
+        "Q2"
+      ],
+      "quantity": 3,
+      "dnp": false,
+      "type": "transistor"
+    },
+    {
+      "value": "10R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Resistor",
+      "references": [
+        "R1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "2K2",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Resistor",
+      "references": [
+        "R2"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "330R",
+      "footprint": "Resistor_SMD:R_Array_Convex_4x0603",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "4 resistor network, parallel topology",
+      "references": [
+        "RN1",
+        "RN4",
+        "RN3",
+        "RN2"
+      ],
+      "quantity": 4,
+      "dnp": false,
+      "type": "resistor_network"
+    },
+    {
+      "value": "SWIO",
+      "footprint": "TestPoint:TestPoint_Pad_D1.0mm",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "test point",
+      "references": [
+        "TP1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "test_point"
+    },
+    {
+      "value": "CH32V003FxPx",
+      "footprint": "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.wch-ic.com/products/CH32V003.html",
+      "description": "CH32V003 series are industrial-grade general-purpose microcontrollers designed based on 32-bit RISC-V instruction set and architecture. It adopts QingKe V2A core, RV32EC instruction set, and supports 2 levels of interrupt nesting. The series are mounted with rich peripheral interfaces and function modules. Its internal organizational structure meets the low-cost and low-power embedded application scenarios.",
+      "references": [
+        "U1"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "ic"
+    }
+  ],
+  "components": [
+    {
+      "reference": "C2",
+      "value": "1uF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "~",
+      "description": "Unpolarized capacitor, small symbol",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 33.655,
+      "y": 117.475,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "1e520abc-d2f6-43bc-a5f6-14c52712f677",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "b48f2e53-5172-40bb-bf3f-a2af45b68908",
+        "2": "4a2e666d-eeab-46ab-a31f-634609d33b3c"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1e-06,
+      "pin_nets": {
+        "2": "GND",
+        "1": "VCC"
+      }
+    },
+    {
+      "reference": "RN1",
+      "value": "330R",
+      "lib_id": "Device:R_Pack04",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_Array_Convex_4x0603",
+      "datasheet": "~",
+      "description": "4 resistor network, parallel topology",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 244.475,
+      "y": 25.4,
+      "angle": 270.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "3448deba-329c-438f-b361-9da54da0ce4a",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "4": "0c9ca6e7-604b-423c-840f-c21bca4a1cca",
+        "2": "8fef5719-0322-44a6-ac9f-427fea7c4b23",
+        "8": "b5783e43-2fef-43d0-8fff-1c1206fb6048",
+        "6": "4e3d303b-1ef4-485a-a03f-1d9b410c0adc",
+        "3": "52d7aa71-381c-471b-b6e4-f8b131b15b9b",
+        "1": "208963bb-754f-4799-8a36-293d451e7d48",
+        "5": "e2a5e4e7-f480-4bfb-bdd3-296c6e6370b9",
+        "7": "6f5e3edb-db9a-41f4-9550-7ca6a64bfb6e"
+      },
+      "type": "resistor_network",
+      "keywords": "R network parallel topology isolated",
+      "_sheet": 0,
+      "category": "resistor_network",
+      "pin_nets": {
+        "1": "SEG_E",
+        "2": "SEG_M",
+        "3": "SEG_L",
+        "4": "SEG_K",
+        "5": "GPIO_PC1",
+        "6": "GPIO_PC2",
+        "7": "GPIO_PC3",
+        "8": "GPIO_PC4"
+      }
+    },
+    {
+      "reference": "J1",
+      "value": "Conn_RX",
+      "lib_id": "Connector:Conn_01x03_Socket",
+      "lib_name": "",
+      "footprint": "Project_Footprints:Conn_Daisy_Chain",
+      "datasheet": "~",
+      "description": "Generic connector, single row, 01x03, script generated",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 20.32,
+      "y": 28.575,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": true,
+      "unit": 1,
+      "uuid": "445ff241-9df3-42c1-b2f3-57ae20a716ef",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "edcd4a26-7803-40be-a400-9db7afadd83c",
+        "1": "516d1f1c-ce8e-49e8-96d0-35243e028e92",
+        "3": "9375c4d0-248c-43e9-a185-db4fb17e9991"
+      },
+      "type": "connector",
+      "keywords": "connector",
+      "is_external_connector": false,
+      "connector_layout": "dual",
+      "_sheet": 0,
+      "category": "connector",
+      "pin_nets": {
+        "3": "GND",
+        "1": "VCC",
+        "2": "U_RX"
+      }
+    },
+    {
+      "reference": "R2",
+      "value": "2K2",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "~",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 115.57,
+      "y": 30.48,
+      "angle": 180.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "5b3af46d-8d83-4ef0-a5f1-989c02faa17b",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "2e3cb63b-144a-4dfd-b438-9749f744d1d5",
+        "1": "fa2841c0-3587-4d7d-b902-5e2a689a5239"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 2200.0,
+      "pin_nets": {
+        "2": "VCC",
+        "1": "__unnamed_0"
+      }
+    },
+    {
+      "reference": "RN4",
+      "value": "330R",
+      "lib_id": "Device:R_Pack04",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_Array_Convex_4x0603",
+      "datasheet": "~",
+      "description": "4 resistor network, parallel topology",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 244.475,
+      "y": 60.96,
+      "angle": 90.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "5f42591d-f8cc-4f2c-81ce-39d83f75a671",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "4": "c6cd88f3-2d0b-4370-a4ec-8d5698bff0f9",
+        "2": "0453e319-14ba-4fa7-86bf-8aec84472e4b",
+        "8": "8cfa731c-6664-480c-80e4-7c56f6854196",
+        "6": "9d3fdbe0-ca76-4fda-a718-b43c317d8e5c",
+        "3": "733962d8-5958-49fe-ad89-885651c741c9",
+        "1": "6d06b7ef-e20a-4640-97ba-644d0e5b2c3a",
+        "5": "01e65cca-10f4-4cf3-9c88-869e179e34d7",
+        "7": "8c64cb3b-cc15-47f5-85da-78bec1587f12"
+      },
+      "type": "resistor_network",
+      "keywords": "R network parallel topology isolated",
+      "_sheet": 0,
+      "category": "resistor_network",
+      "pin_nets": {
+        "1": "__unnamed_1",
+        "2": "__unnamed_2",
+        "3": "SEG_B",
+        "4": "SEG_A",
+        "5": "GPIO_PC5",
+        "6": "GPIO_PC6",
+        "7": "__unnamed_3",
+        "8": "__unnamed_4"
+      }
+    },
+    {
+      "reference": "RN3",
+      "value": "330R",
+      "lib_id": "Device:R_Pack04",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_Array_Convex_4x0603",
+      "datasheet": "~",
+      "description": "4 resistor network, parallel topology",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 244.475,
+      "y": 49.53,
+      "angle": 90.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "600810c9-cc23-4b59-aed9-584d378c014e",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "4": "d944e314-b6b2-4540-9090-2544375282c0",
+        "2": "5f981b56-f8eb-4389-8b75-dc37ae981621",
+        "8": "e3f7204a-d4a8-4011-942e-9da218550d5a",
+        "6": "b4a4b0de-d79c-462e-86ea-78ea48ff7cda",
+        "3": "93d36880-6a44-4771-91a8-a585dc580369",
+        "1": "ae94f14d-67e4-4aea-9c9e-f26caaa086f3",
+        "5": "1654400a-3886-4c1f-8c60-11294f9a430b",
+        "7": "700b849f-2a63-407a-8d75-56a91bcbec28"
+      },
+      "type": "resistor_network",
+      "keywords": "R network parallel topology isolated",
+      "_sheet": 0,
+      "category": "resistor_network",
+      "pin_nets": {
+        "1": "__unnamed_5",
+        "2": "SEG_J",
+        "3": "SEG_I",
+        "4": "SEG_H",
+        "5": "GPIO_PA2",
+        "6": "GPIO_PD0",
+        "7": "GPIO_PC0",
+        "8": "__unnamed_6"
+      }
+    },
+    {
+      "reference": "RN2",
+      "value": "330R",
+      "lib_id": "Device:R_Pack04",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_Array_Convex_4x0603",
+      "datasheet": "~",
+      "description": "4 resistor network, parallel topology",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 244.475,
+      "y": 36.83,
+      "angle": 270.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "7c010f0c-9d59-457b-a40e-899df8667c8d",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "4": "b5bd6e10-7014-41b5-9b5d-519c3390005c",
+        "2": "95bab796-0d90-4969-96df-348ea9661e72",
+        "8": "43e415f5-aed3-4be1-8315-62c0827cb8c4",
+        "6": "afdcba64-4824-4cca-8c23-540212e2455f",
+        "3": "e42dbf74-252d-45fe-8f4d-0232f36e9b44",
+        "1": "ea735db2-a1e0-4f31-a031-0528f44b44a0",
+        "5": "79779c31-3eeb-4456-8d0c-b07c1bb7838d",
+        "7": "ea84e0ee-5709-4bb8-9062-29f91d82b09e"
+      },
+      "type": "resistor_network",
+      "keywords": "R network parallel topology isolated",
+      "_sheet": 0,
+      "category": "resistor_network",
+      "pin_nets": {
+        "1": "SEG_G2",
+        "2": "SEG_D",
+        "3": "SEG_DP",
+        "4": "SEG_C",
+        "5": "GPIO_PC7",
+        "6": "SWIO",
+        "7": "GPIO_PD2",
+        "8": "GPIO_PD3"
+      }
+    },
+    {
+      "reference": "Q1",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "lib_name": "",
+      "footprint": "Project_Footprints:SOT-23_Clean",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 122.555,
+      "y": 44.45,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "7c81ebb9-30f2-4ff1-a93f-38a8aee327fe",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "f28a8c35-3bf9-4028-ad11-34b3d71ea9a4",
+        "1": "d6518e79-815e-4f2e-883a-99d9e0b88264",
+        "3": "e4e6a57f-ca0b-487c-a289-195d8920a948"
+      },
+      "type": "transistor",
+      "keywords": "N-Channel MOSFET",
+      "_sheet": 0,
+      "category": "transistor",
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_0",
+        "3": "DIGIT_1"
+      }
+    },
+    {
+      "reference": "C1",
+      "value": "100nF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "~",
+      "description": "Unpolarized capacitor, small symbol",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 29.845,
+      "y": 117.475,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "975b9dec-592f-4602-993e-ceecbc568ca2",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "cf713082-98c0-47a1-a5d4-43063c80ff2c",
+        "2": "8eed47e6-c322-4b4e-8692-f7d752a2e9cc"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1.0000000000000001e-07,
+      "pin_nets": {
+        "2": "GND",
+        "1": "VCC"
+      }
+    },
+    {
+      "reference": "TP1",
+      "value": "SWIO",
+      "lib_id": "Connector:TestPoint",
+      "lib_name": "",
+      "footprint": "TestPoint:TestPoint_Pad_D1.0mm",
+      "datasheet": "~",
+      "description": "test point",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 79.375,
+      "y": 86.995,
+      "angle": 270.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "ae25608d-eab8-402d-9967-c0223b03f490",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "d3eae70e-1500-4f2b-b61c-4f1538d99f1b"
+      },
+      "type": "test_point",
+      "keywords": "test point tp",
+      "_sheet": 0,
+      "category": "test_point",
+      "pin_nets": {
+        "1": "SWIO"
+      }
+    },
+    {
+      "reference": "DISP1",
+      "value": "RED/GREEN 14 Seg",
+      "lib_id": "14_Seg_2_Digit_Display:14_Seg_2_Digit_Display",
+      "lib_name": "",
+      "footprint": "Project_Footprints:14_Seg_2_Digit_Display",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 175.895,
+      "y": 41.91,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "c84fd616-4ccd-4c4c-a0e4-ec1867dde56a",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "13": "6710e2e2-9940-48aa-9817-cd0d085edf8d",
+        "18": "3c2fae89-cf48-45db-834f-db284a974c40",
+        "7": "0f5ab355-274e-4793-8443-6e73e2031076",
+        "1": "ad5a33b4-dbcd-4a49-b7da-2d124c23200a",
+        "12": "5e6f2ef7-4236-48b6-a6aa-659a5592ee20",
+        "11": "5baa4436-0209-4ef6-90b0-9bcb218b75d4",
+        "10": "c8fe1b31-d9b7-4178-bdc3-4445b679c7f6",
+        "16": "490d1f15-76bd-40a1-b1ad-b9b4fd817852",
+        "9": "14b8f6d3-4759-4067-8fb8-6c4f968624ce",
+        "6": "a683d6e9-529e-4eac-9192-08596fb82abb",
+        "17": "078557b7-4388-4d01-95d5-3e1d220e7681",
+        "14": "cff0217a-e9e1-4f48-bb28-82eb264f0d73",
+        "15": "2b236645-303a-45f6-b5da-a8c1dd7c71e4",
+        "3": "401ae1fc-2a7c-4515-a20c-70af40039b27",
+        "8": "c42dbf59-0fec-4fa6-8c6d-ede9b204d29e",
+        "4": "b71b33dd-a7ab-43cd-8af7-7838e2f80549",
+        "5": "9e3d4682-2edf-48b1-b217-cd5887ca4cce",
+        "2": "7dcb24cd-6bdd-426d-a70b-0926f3e3e93a"
+      },
+      "type": "diode",
+      "keywords": "",
+      "_sheet": 0,
+      "category": "diode",
+      "pin_nets": {
+        "1": "SEG_E",
+        "2": "SEG_M",
+        "4": "SEG_L",
+        "5": "SEG_K",
+        "10": "SEG_B",
+        "12": "SEG_A",
+        "14": "SEG_J",
+        "15": "SEG_I",
+        "17": "SEG_H",
+        "6": "SEG_G2",
+        "7": "SEG_D",
+        "8": "SEG_DP",
+        "9": "SEG_C",
+        "16": "DIGIT_1",
+        "11": "DIGIT_2",
+        "13": "SEG_G1",
+        "18": "SEG_F",
+        "3": "__unnamed_7"
+      }
+    },
+    {
+      "reference": "R1",
+      "value": "10R",
+      "lib_id": "Device:R",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "~",
+      "description": "Resistor",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 100.33,
+      "y": 36.195,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "d2255116-f9ce-45d3-96d8-9362576b191f",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "7a5592dd-9934-4189-b2c9-cc1c21de23b9",
+        "1": "fe9a66f3-3405-420a-af5d-d6bbf2a81f3d"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 10.0,
+      "pin_nets": {
+        "1": "NRST",
+        "2": "__unnamed_8"
+      }
+    },
+    {
+      "reference": "U1",
+      "value": "CH32V003FxPx",
+      "lib_id": "MCU_WCH_CH32V0:CH32V003FxPx",
+      "lib_name": "",
+      "footprint": "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm",
+      "datasheet": "https://www.wch-ic.com/products/CH32V003.html",
+      "description": "CH32V003 series are industrial-grade general-purpose microcontrollers designed based on 32-bit RISC-V instruction set and architecture. It adopts QingKe V2A core, RV32EC instruction set, and supports 2 levels of interrupt nesting. The series are mounted with rich peripheral interfaces and function modules. Its internal organizational structure meets the low-cost and low-power embedded application scenarios.",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 46.99,
+      "y": 97.155,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "e3d4062a-8511-4cf8-bf65-11940d310937",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "3": "c874858e-69b5-4751-af63-67cc4c326cb1",
+        "5": "933518e8-dd7a-4262-85bc-ff55bef1d5a9",
+        "10": "b846711b-95b2-412c-bcb1-e47121815531",
+        "8": "130ccff3-980a-4cdf-97d7-55406a3f4fb9",
+        "20": "12f8142a-5d13-4e02-970a-4908dfbb420e",
+        "7": "b8ef74fa-94f3-4276-b6d7-999710c8cd0b",
+        "2": "16a165f9-d7ae-46a4-8325-df5533e2e9a0",
+        "1": "d9d16a77-411e-4c3e-813c-068fbfc6f34b",
+        "4": "8d9d3769-88ac-4736-bedf-0234d623b9ca",
+        "16": "edc6561a-9549-48c2-8b58-da999541e9f0",
+        "9": "1ff6d2dc-c2ec-4721-b7da-8715ca1943da",
+        "6": "bf78d78b-0516-45c5-a462-f9f87c2cd050",
+        "18": "1a58b759-d4ed-4fbb-b098-d5fcfe2ce3ad",
+        "11": "f5dc444c-2203-4f76-b6ed-31cdac159b37",
+        "13": "f1ef30f2-60a1-4cd3-9010-3ef73079e66f",
+        "12": "32c4e7c1-3b22-4804-8bc7-a2624ba818bf",
+        "15": "78edd05b-3ffc-4f06-bf1f-a8cf67522dac",
+        "14": "7546874f-79aa-42fe-b887-55d60f5ca1ab",
+        "19": "2ec7160c-c347-4bb8-b194-0c2a4abb76b8",
+        "17": "12da9d2e-5e12-483d-a16b-bcef4e26ab7f"
+      },
+      "type": "ic",
+      "keywords": "microcontroller wch RISC-V",
+      "functional_class": "mcu",
+      "_sheet": 0,
+      "category": "ic",
+      "pin_nets": {
+        "7": "GND",
+        "9": "VCC",
+        "11": "GPIO_PC1",
+        "12": "GPIO_PC2",
+        "13": "GPIO_PC3",
+        "14": "GPIO_PC4",
+        "3": "U_RX",
+        "15": "GPIO_PC5",
+        "16": "GPIO_PC6",
+        "6": "GPIO_PA2",
+        "8": "GPIO_PD0",
+        "10": "GPIO_PC0",
+        "17": "GPIO_PC7",
+        "18": "SWIO",
+        "19": "GPIO_PD2",
+        "20": "GPIO_PD3",
+        "4": "NRST",
+        "1": "GPIO_PD4",
+        "2": "U_TX",
+        "5": "GPIO_PA1"
+      }
+    },
+    {
+      "reference": "Q3",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "lib_name": "",
+      "footprint": "Project_Footprints:SOT-23_Clean",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 113.03,
+      "y": 51.435,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "f9754ef5-7403-4845-85a4-5622152604a2",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "8ed238b1-f127-49c2-997b-27d0fac5ab00",
+        "1": "3dc17496-11cc-451f-8e9f-ffaa9964c8db",
+        "3": "5b83bea1-e3ac-408c-ba32-3f77dec921c5"
+      },
+      "type": "transistor",
+      "keywords": "N-Channel MOSFET",
+      "_sheet": 0,
+      "category": "transistor",
+      "pin_nets": {
+        "2": "GND",
+        "3": "__unnamed_0",
+        "1": "__unnamed_8"
+      }
+    },
+    {
+      "reference": "J2",
+      "value": "Conn_TX",
+      "lib_id": "Connector:Conn_01x03_Socket",
+      "lib_name": "",
+      "footprint": "Project_Footprints:Conn_Daisy_Chain",
+      "datasheet": "~",
+      "description": "Generic connector, single row, 01x03, script generated",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 58.42,
+      "y": 28.575,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "fe4a8386-12b7-4bcd-8cb6-aa7d0df4910a",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "e6b03392-ffca-4409-baad-f7d0b850b510",
+        "1": "3e9c9d24-4152-4fbc-9989-f5120ef4f404",
+        "3": "ef1e6691-238b-4cc5-9207-af856cc2856d"
+      },
+      "type": "connector",
+      "keywords": "connector",
+      "is_external_connector": false,
+      "connector_layout": "dual",
+      "_sheet": 0,
+      "category": "connector",
+      "pin_nets": {
+        "3": "GND",
+        "1": "VCC",
+        "2": "U_TX"
+      }
+    },
+    {
+      "reference": "Q2",
+      "value": "AO3400A",
+      "lib_id": "Transistor_FET:AO3400A",
+      "lib_name": "",
+      "footprint": "Project_Footprints:SOT-23_Clean",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 132.08,
+      "y": 36.195,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "ffbc02f1-6cb5-4de9-bad8-b825524a8bfc",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "85a96411-1c7b-4011-8ffb-808ff3c5cfe8",
+        "1": "e7ccb93d-6341-4916-9730-9ce4e3a15134",
+        "3": "2c124bc9-e249-4d0a-b19b-9ac9b58d354f"
+      },
+      "type": "transistor",
+      "keywords": "N-Channel MOSFET",
+      "_sheet": 0,
+      "category": "transistor",
+      "pin_nets": {
+        "2": "GND",
+        "3": "DIGIT_2",
+        "1": "__unnamed_8"
+      }
+    }
+  ],
+  "nets": {
+    "GND": {
+      "name": "GND",
+      "pins": [
+        {
+          "component": "#PWR08",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C2",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "J1",
+          "pin_number": "3",
+          "pin_name": "Pin_3",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR013",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "Q1",
+          "pin_number": "2",
+          "pin_name": "S",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR011",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR02",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C1",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR010",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U1",
+          "pin_number": "7",
+          "pin_name": "VSS",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR06",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "Q3",
+          "pin_number": "2",
+          "pin_name": "S",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR012",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "J2",
+          "pin_number": "3",
+          "pin_name": "Pin_3",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q2",
+          "pin_number": "2",
+          "pin_name": "S",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 19,
+      "no_connect": false,
+      "labels": []
+    },
+    "VCC": {
+      "name": "VCC",
+      "pins": [
+        {
+          "component": "C2",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR05",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "J1",
+          "pin_number": "1",
+          "pin_name": "Pin_1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR014",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR03",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "R2",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR09",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR07",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C1",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "9",
+          "pin_name": "VDD",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "J2",
+          "pin_number": "1",
+          "pin_name": "Pin_1",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 15,
+      "no_connect": false,
+      "labels": []
+    },
+    "SEG_E": {
+      "name": "SEG_E",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "1",
+          "pin_name": "R1.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "1",
+          "pin_name": "E",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_E",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_M": {
+      "name": "SEG_M",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "2",
+          "pin_name": "R2.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "2",
+          "pin_name": "M",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_M",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_L": {
+      "name": "SEG_L",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "3",
+          "pin_name": "R3.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "4",
+          "pin_name": "L",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_L",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_K": {
+      "name": "SEG_K",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "4",
+          "pin_name": "R4.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "5",
+          "pin_name": "K",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_K",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC1": {
+      "name": "GPIO_PC1",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "5",
+          "pin_name": "R4.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "11",
+          "pin_name": "PC1",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC1",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC2": {
+      "name": "GPIO_PC2",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "6",
+          "pin_name": "R3.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "12",
+          "pin_name": "PC2",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC2",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC3": {
+      "name": "GPIO_PC3",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "7",
+          "pin_name": "R2.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "13",
+          "pin_name": "PC3",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC3",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC4": {
+      "name": "GPIO_PC4",
+      "pins": [
+        {
+          "component": "RN1",
+          "pin_number": "8",
+          "pin_name": "R1.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "14",
+          "pin_name": "PC4",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC4",
+          "type": "label"
+        }
+      ]
+    },
+    "U_RX": {
+      "name": "U_RX",
+      "pins": [
+        {
+          "component": "J1",
+          "pin_number": "2",
+          "pin_name": "Pin_2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "3",
+          "pin_name": "PD6",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "U_RX",
+          "type": "label"
+        },
+        {
+          "name": "GPIO_PD6",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_0": {
+      "name": "__unnamed_0",
+      "pins": [
+        {
+          "component": "R2",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q1",
+          "pin_number": "1",
+          "pin_name": "G",
+          "pin_type": "input"
+        },
+        {
+          "component": "Q3",
+          "pin_number": "3",
+          "pin_name": "D",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_1": {
+      "name": "__unnamed_1",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "1",
+          "pin_name": "R1.1",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_2": {
+      "name": "__unnamed_2",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "2",
+          "pin_name": "R2.1",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "labels": []
+    },
+    "SEG_B": {
+      "name": "SEG_B",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "3",
+          "pin_name": "R3.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "10",
+          "pin_name": "B",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_B",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_A": {
+      "name": "SEG_A",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "4",
+          "pin_name": "R4.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "12",
+          "pin_name": "A",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_A",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC5": {
+      "name": "GPIO_PC5",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "5",
+          "pin_name": "R4.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "15",
+          "pin_name": "PC5",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC5",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC6": {
+      "name": "GPIO_PC6",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "6",
+          "pin_name": "R3.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "16",
+          "pin_name": "PC6",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC6",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_3": {
+      "name": "__unnamed_3",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "7",
+          "pin_name": "R2.2",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "labels": []
+    },
+    "__unnamed_4": {
+      "name": "__unnamed_4",
+      "pins": [
+        {
+          "component": "RN4",
+          "pin_number": "8",
+          "pin_name": "R1.2",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "__unnamed_5": {
+      "name": "__unnamed_5",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "1",
+          "pin_name": "R1.1",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "SEG_J": {
+      "name": "SEG_J",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "2",
+          "pin_name": "R2.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "14",
+          "pin_name": "J",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_J",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_I": {
+      "name": "SEG_I",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "3",
+          "pin_name": "R3.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "15",
+          "pin_name": "I",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_I",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_H": {
+      "name": "SEG_H",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "4",
+          "pin_name": "R4.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "17",
+          "pin_name": "H",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_H",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PA2": {
+      "name": "GPIO_PA2",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "5",
+          "pin_name": "R4.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "6",
+          "pin_name": "PA2",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PA2",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PD0": {
+      "name": "GPIO_PD0",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "6",
+          "pin_name": "R3.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "8",
+          "pin_name": "PD0",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PD0",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC0": {
+      "name": "GPIO_PC0",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "7",
+          "pin_name": "R2.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "10",
+          "pin_name": "PC0",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC0",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_6": {
+      "name": "__unnamed_6",
+      "pins": [
+        {
+          "component": "RN3",
+          "pin_number": "8",
+          "pin_name": "R1.2",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "labels": []
+    },
+    "SEG_G2": {
+      "name": "SEG_G2",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "1",
+          "pin_name": "R1.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "6",
+          "pin_name": "G2",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_G2",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_D": {
+      "name": "SEG_D",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "2",
+          "pin_name": "R2.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "7",
+          "pin_name": "D",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_D",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_DP": {
+      "name": "SEG_DP",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "3",
+          "pin_name": "R3.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "8",
+          "pin_name": "DP",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_DP",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_C": {
+      "name": "SEG_C",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "4",
+          "pin_name": "R4.1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "9",
+          "pin_name": "C",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_C",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PC7": {
+      "name": "GPIO_PC7",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "5",
+          "pin_name": "R4.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "17",
+          "pin_name": "PC7",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PC7",
+          "type": "label"
+        }
+      ]
+    },
+    "SWIO": {
+      "name": "SWIO",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "6",
+          "pin_name": "R3.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "TP1",
+          "pin_number": "1",
+          "pin_name": "1",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "18",
+          "pin_name": "PD1",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SWIO",
+          "type": "label"
+        },
+        {
+          "name": "GPIO_PD1",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PD2": {
+      "name": "GPIO_PD2",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "7",
+          "pin_name": "R2.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "19",
+          "pin_name": "PD2",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PD2",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PD3": {
+      "name": "GPIO_PD3",
+      "pins": [
+        {
+          "component": "RN2",
+          "pin_number": "8",
+          "pin_name": "R1.2",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "20",
+          "pin_name": "PD3",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PD3",
+          "type": "label"
+        }
+      ]
+    },
+    "DIGIT_1": {
+      "name": "DIGIT_1",
+      "pins": [
+        {
+          "component": "Q1",
+          "pin_number": "3",
+          "pin_name": "D",
+          "pin_type": "passive"
+        },
+        {
+          "component": "DISP1",
+          "pin_number": "16",
+          "pin_name": "DIGIT_1",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "DIGIT_1",
+          "type": "label"
+        }
+      ]
+    },
+    "DIGIT_2": {
+      "name": "DIGIT_2",
+      "pins": [
+        {
+          "component": "DISP1",
+          "pin_number": "11",
+          "pin_name": "DIGIT_2",
+          "pin_type": "input"
+        },
+        {
+          "component": "Q2",
+          "pin_number": "3",
+          "pin_name": "D",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "DIGIT_2",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_G1": {
+      "name": "SEG_G1",
+      "pins": [
+        {
+          "component": "DISP1",
+          "pin_number": "13",
+          "pin_name": "G1",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_G1",
+          "type": "label"
+        }
+      ]
+    },
+    "SEG_F": {
+      "name": "SEG_F",
+      "pins": [
+        {
+          "component": "DISP1",
+          "pin_number": "18",
+          "pin_name": "F",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "SEG_F",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_7": {
+      "name": "__unnamed_7",
+      "pins": [
+        {
+          "component": "DISP1",
+          "pin_number": "3",
+          "pin_name": "NC",
+          "pin_type": "no_connect"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "labels": []
+    },
+    "NRST": {
+      "name": "NRST",
+      "pins": [
+        {
+          "component": "R1",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1",
+          "pin_number": "4",
+          "pin_name": "PD7",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "NRST",
+          "type": "label"
+        },
+        {
+          "name": "GPIO_PD7",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_8": {
+      "name": "__unnamed_8",
+      "pins": [
+        {
+          "component": "R1",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "Q3",
+          "pin_number": "1",
+          "pin_name": "G",
+          "pin_type": "input"
+        },
+        {
+          "component": "Q2",
+          "pin_number": "1",
+          "pin_name": "G",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": []
+    },
+    "GPIO_PD4": {
+      "name": "GPIO_PD4",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "1",
+          "pin_name": "PD4",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PD4",
+          "type": "label"
+        }
+      ]
+    },
+    "U_TX": {
+      "name": "U_TX",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "2",
+          "pin_name": "PD5",
+          "pin_type": "bidirectional"
+        },
+        {
+          "component": "J2",
+          "pin_number": "2",
+          "pin_name": "Pin_2",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "U_TX",
+          "type": "label"
+        },
+        {
+          "name": "GPIO_PD5",
+          "type": "label"
+        }
+      ]
+    },
+    "GPIO_PA1": {
+      "name": "GPIO_PA1",
+      "pins": [
+        {
+          "component": "U1",
+          "pin_number": "5",
+          "pin_name": "PA1",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "labels": [
+        {
+          "name": "GPIO_PA1",
+          "type": "label"
+        }
+      ]
+    }
+  },
+  "subcircuits": [
+    {
+      "center_ic": "U1",
+      "ic_value": "CH32V003FxPx",
+      "ic_mpn": "",
+      "ic_lib_id": "MCU_WCH_CH32V0:CH32V003FxPx",
+      "neighbor_components": [
+        {
+          "ref": "J1",
+          "value": "Conn_RX",
+          "type": "connector"
+        },
+        {
+          "ref": "J2",
+          "value": "Conn_TX",
+          "type": "connector"
+        },
+        {
+          "ref": "R1",
+          "value": "10R",
+          "type": "resistor"
+        },
+        {
+          "ref": "RN1",
+          "value": "330R",
+          "type": "resistor_network"
+        },
+        {
+          "ref": "RN2",
+          "value": "330R",
+          "type": "resistor_network"
+        },
+        {
+          "ref": "RN3",
+          "value": "330R",
+          "type": "resistor_network"
+        },
+        {
+          "ref": "RN4",
+          "value": "330R",
+          "type": "resistor_network"
+        },
+        {
+          "ref": "TP1",
+          "value": "SWIO",
+          "type": "test_point"
+        }
+      ],
+      "description": "CH32V003 series are industrial-grade general-purpose microcontrollers designed based on 32-bit RISC-V instruction set and architecture. It adopts QingKe V2A core, RV32EC instruction set, and supports 2 levels of interrupt nesting. The series are mounted with rich peripheral interfaces and function modules. Its internal organizational structure meets the low-cost and low-power embedded application scenarios."
+    }
+  ],
+  "ic_pin_analysis": [
+    {
+      "reference": "J1",
+      "value": "Conn_RX",
+      "type": "connector",
+      "lib_id": "Connector:Conn_01x03_Socket",
+      "mpn": "",
+      "description": "Generic connector, single row, 01x03, script generated",
+      "datasheet": "~",
+      "function": "",
+      "total_pins": 3,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "Pin_1",
+          "pin_type": "passive",
+          "net": "VCC",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R2",
+              "value": "2K2",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "9",
+              "pin_name": "VDD"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C2",
+              "value": "1uF"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "Pin_2",
+          "pin_type": "passive",
+          "net": "U_RX",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "PD6"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "Pin_3",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "VSS"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "Pin_1",
+          "pin_type": "passive",
+          "net": "VCC",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R2",
+              "value": "2K2",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "9",
+              "pin_name": "VDD"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C2",
+              "value": "1uF"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "Pin_3",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "VSS"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "2",
+          "pin_name": "Pin_2",
+          "pin_type": "passive",
+          "net": "U_RX",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "3",
+              "pin_name": "PD6"
+            }
+          ]
+        }
+      ],
+      "decoupling_caps_by_rail": {
+        "VCC": [
+          {
+            "ref": "C2",
+            "value": "1uF"
+          },
+          {
+            "ref": "C1",
+            "value": "100nF"
+          }
+        ]
+      }
+    },
+    {
+      "reference": "U1",
+      "value": "CH32V003FxPx",
+      "type": "ic",
+      "lib_id": "MCU_WCH_CH32V0:CH32V003FxPx",
+      "mpn": "",
+      "description": "CH32V003 series are industrial-grade general-purpose microcontrollers designed based on 32-bit RISC-V instruction set and architecture. It adopts QingKe V2A core, RV32EC instruction set, and supports 2 levels of interrupt nesting. The series are mounted with rich peripheral interfaces and function modules. Its internal organizational structure meets the low-cost and low-power embedded application scenarios.",
+      "datasheet": "https://www.wch-ic.com/products/CH32V003.html",
+      "function": "microcontroller (CH32)",
+      "total_pins": 20,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "PD4",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD4",
+          "connected_to": []
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "PD5",
+          "pin_type": "bidirectional",
+          "net": "U_TX",
+          "connected_to": [
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "2",
+              "pin_name": "Pin_2"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "PD6",
+          "pin_type": "bidirectional",
+          "net": "U_RX",
+          "connected_to": [
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "2",
+              "pin_name": "Pin_2"
+            }
+          ]
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "PD7",
+          "pin_type": "bidirectional",
+          "net": "NRST",
+          "connected_to": [
+            {
+              "ref": "R1",
+              "value": "10R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1",
+              "value": "10R",
+              "direction": "series",
+              "to_net": "__unnamed_8"
+            }
+          ]
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "PA1",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PA1",
+          "connected_to": []
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "PA2",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PA2",
+          "connected_to": [
+            {
+              "ref": "RN3",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "VSS",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "PD0",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD0",
+          "connected_to": [
+            {
+              "ref": "RN3",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "VDD",
+          "pin_type": "power_in",
+          "net": "VCC",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            },
+            {
+              "ref": "R2",
+              "value": "2K2",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C2",
+              "value": "1uF"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "10",
+          "pin_name": "PC0",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC0",
+          "connected_to": [
+            {
+              "ref": "RN3",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "7",
+              "pin_name": "R2.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "11",
+          "pin_name": "PC1",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC1",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "12",
+          "pin_name": "PC2",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC2",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "13",
+          "pin_name": "PC3",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC3",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "7",
+              "pin_name": "R2.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "14",
+          "pin_name": "PC4",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC4",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "8",
+              "pin_name": "R1.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "15",
+          "pin_name": "PC5",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC5",
+          "connected_to": [
+            {
+              "ref": "RN4",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "16",
+          "pin_name": "PC6",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC6",
+          "connected_to": [
+            {
+              "ref": "RN4",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "17",
+          "pin_name": "PC7",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC7",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "18",
+          "pin_name": "PD1",
+          "pin_type": "bidirectional",
+          "net": "SWIO",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            },
+            {
+              "ref": "TP1",
+              "value": "SWIO",
+              "type": "test_point",
+              "pin": "1",
+              "pin_name": "1"
+            }
+          ]
+        },
+        {
+          "pin_number": "19",
+          "pin_name": "PD2",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD2",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "7",
+              "pin_name": "R2.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "20",
+          "pin_name": "PD3",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD3",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "8",
+              "pin_name": "R1.2"
+            }
+          ]
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "7",
+          "pin_name": "VSS",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "VDD",
+          "pin_type": "power_in",
+          "net": "VCC",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            },
+            {
+              "ref": "R2",
+              "value": "2K2",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C2",
+              "value": "1uF"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF"
+            }
+          ]
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "PD4",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD4",
+          "connected_to": []
+        },
+        {
+          "pin_number": "10",
+          "pin_name": "PC0",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC0",
+          "connected_to": [
+            {
+              "ref": "RN3",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "7",
+              "pin_name": "R2.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "11",
+          "pin_name": "PC1",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC1",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "12",
+          "pin_name": "PC2",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC2",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "13",
+          "pin_name": "PC3",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC3",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "7",
+              "pin_name": "R2.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "14",
+          "pin_name": "PC4",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC4",
+          "connected_to": [
+            {
+              "ref": "RN1",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "8",
+              "pin_name": "R1.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "15",
+          "pin_name": "PC5",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC5",
+          "connected_to": [
+            {
+              "ref": "RN4",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "16",
+          "pin_name": "PC6",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC6",
+          "connected_to": [
+            {
+              "ref": "RN4",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "17",
+          "pin_name": "PC7",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PC7",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "18",
+          "pin_name": "PD1",
+          "pin_type": "bidirectional",
+          "net": "SWIO",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            },
+            {
+              "ref": "TP1",
+              "value": "SWIO",
+              "type": "test_point",
+              "pin": "1",
+              "pin_name": "1"
+            }
+          ]
+        },
+        {
+          "pin_number": "19",
+          "pin_name": "PD2",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD2",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "7",
+              "pin_name": "R2.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "PD5",
+          "pin_type": "bidirectional",
+          "net": "U_TX",
+          "connected_to": [
+            {
+              "ref": "J2",
+              "value": "Conn_TX",
+              "type": "connector",
+              "pin": "2",
+              "pin_name": "Pin_2"
+            }
+          ]
+        },
+        {
+          "pin_number": "20",
+          "pin_name": "PD3",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD3",
+          "connected_to": [
+            {
+              "ref": "RN2",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "8",
+              "pin_name": "R1.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "PD6",
+          "pin_type": "bidirectional",
+          "net": "U_RX",
+          "connected_to": [
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "2",
+              "pin_name": "Pin_2"
+            }
+          ]
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "PD7",
+          "pin_type": "bidirectional",
+          "net": "NRST",
+          "connected_to": [
+            {
+              "ref": "R1",
+              "value": "10R",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1",
+              "value": "10R",
+              "direction": "series",
+              "to_net": "__unnamed_8"
+            }
+          ]
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "PA1",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PA1",
+          "connected_to": []
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "PA2",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PA2",
+          "connected_to": [
+            {
+              "ref": "RN3",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "5",
+              "pin_name": "R4.2"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "PD0",
+          "pin_type": "bidirectional",
+          "net": "GPIO_PD0",
+          "connected_to": [
+            {
+              "ref": "RN3",
+              "value": "330R",
+              "type": "resistor_network",
+              "pin": "6",
+              "pin_name": "R3.2"
+            }
+          ]
+        }
+      ],
+      "decoupling_caps_by_rail": {
+        "VCC": [
+          {
+            "ref": "C2",
+            "value": "1uF"
+          },
+          {
+            "ref": "C1",
+            "value": "100nF"
+          }
+        ]
+      }
+    },
+    {
+      "reference": "J2",
+      "value": "Conn_TX",
+      "type": "connector",
+      "lib_id": "Connector:Conn_01x03_Socket",
+      "mpn": "",
+      "description": "Generic connector, single row, 01x03, script generated",
+      "datasheet": "~",
+      "function": "",
+      "total_pins": 3,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "Pin_1",
+          "pin_type": "passive",
+          "net": "VCC",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            },
+            {
+              "ref": "R2",
+              "value": "2K2",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "9",
+              "pin_name": "VDD"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C2",
+              "value": "1uF"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "Pin_2",
+          "pin_type": "passive",
+          "net": "U_TX",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "2",
+              "pin_name": "PD5"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "Pin_3",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "VSS"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "Pin_1",
+          "pin_type": "passive",
+          "net": "VCC",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "1",
+              "pin_name": "Pin_1"
+            },
+            {
+              "ref": "R2",
+              "value": "2K2",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "9",
+              "pin_name": "VDD"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C2",
+              "value": "1uF"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "Pin_3",
+          "pin_type": "passive",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C2",
+              "value": "1uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "J1",
+              "value": "Conn_RX",
+              "type": "connector",
+              "pin": "3",
+              "pin_name": "Pin_3"
+            },
+            {
+              "ref": "Q1",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "C1",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "VSS"
+            },
+            {
+              "ref": "Q3",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            },
+            {
+              "ref": "Q2",
+              "value": "AO3400A",
+              "type": "transistor",
+              "pin": "2",
+              "pin_name": "S"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "2",
+          "pin_name": "Pin_2",
+          "pin_type": "passive",
+          "net": "U_TX",
+          "connected_to": [
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "type": "ic",
+              "pin": "2",
+              "pin_name": "PD5"
+            }
+          ]
+        }
+      ],
+      "decoupling_caps_by_rail": {
+        "VCC": [
+          {
+            "ref": "C2",
+            "value": "1uF"
+          },
+          {
+            "ref": "C1",
+            "value": "100nF"
+          }
+        ]
+      }
+    }
+  ],
+  "design_analysis": {
+    "net_classification": {
+      "GND": "ground",
+      "VCC": "power",
+      "SEG_E": "signal",
+      "SEG_M": "signal",
+      "SEG_L": "signal",
+      "SEG_K": "signal",
+      "GPIO_PC1": "signal",
+      "GPIO_PC2": "signal",
+      "GPIO_PC3": "signal",
+      "GPIO_PC4": "signal",
+      "U_RX": "data",
+      "__unnamed_0": "signal",
+      "__unnamed_1": "signal",
+      "__unnamed_2": "signal",
+      "SEG_B": "signal",
+      "SEG_A": "signal",
+      "GPIO_PC5": "signal",
+      "GPIO_PC6": "signal",
+      "__unnamed_3": "signal",
+      "__unnamed_4": "signal",
+      "__unnamed_5": "signal",
+      "SEG_J": "signal",
+      "SEG_I": "signal",
+      "SEG_H": "signal",
+      "GPIO_PA2": "signal",
+      "GPIO_PD0": "signal",
+      "GPIO_PC0": "signal",
+      "__unnamed_6": "signal",
+      "SEG_G2": "signal",
+      "SEG_D": "signal",
+      "SEG_DP": "signal",
+      "SEG_C": "signal",
+      "GPIO_PC7": "signal",
+      "SWIO": "signal",
+      "GPIO_PD2": "signal",
+      "GPIO_PD3": "signal",
+      "DIGIT_1": "signal",
+      "DIGIT_2": "signal",
+      "SEG_G1": "signal",
+      "SEG_F": "signal",
+      "__unnamed_7": "signal",
+      "NRST": "control",
+      "__unnamed_8": "signal",
+      "GPIO_PD4": "signal",
+      "U_TX": "data",
+      "GPIO_PA1": "signal"
+    },
+    "power_domains": {
+      "ic_power_rails": {
+        "U1": {
+          "value": "CH32V003FxPx",
+          "power_rails": [
+            "VCC"
+          ],
+          "io_rails": null
+        }
+      },
+      "domain_groups": {
+        "VCC": [
+          "U1"
+        ]
+      }
+    },
+    "cross_domain_signals": [],
+    "bus_analysis": {
+      "i2c": [],
+      "spi": [],
+      "uart": [
+        {
+          "net": "U_RX",
+          "devices": [
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "lib_id": "MCU_WCH_CH32V0:CH32V003FxPx"
+            }
+          ],
+          "pin_count": 2
+        },
+        {
+          "net": "U_TX",
+          "devices": [
+            {
+              "ref": "U1",
+              "value": "CH32V003FxPx",
+              "lib_id": "MCU_WCH_CH32V0:CH32V003FxPx"
+            }
+          ],
+          "pin_count": 2
+        }
+      ],
+      "can": []
+    },
+    "differential_pairs": [],
+    "erc_warnings": [
+      {
+        "type": "no_driver",
+        "net": "SEG_E",
+        "message": "Net 'SEG_E' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN1",
+            "pin_number": "1",
+            "pin_name": "R1.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "1",
+            "pin_name": "E",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_M",
+        "message": "Net 'SEG_M' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN1",
+            "pin_number": "2",
+            "pin_name": "R2.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "2",
+            "pin_name": "M",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_L",
+        "message": "Net 'SEG_L' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN1",
+            "pin_number": "3",
+            "pin_name": "R3.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "4",
+            "pin_name": "L",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_K",
+        "message": "Net 'SEG_K' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN1",
+            "pin_number": "4",
+            "pin_name": "R4.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "5",
+            "pin_name": "K",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_B",
+        "message": "Net 'SEG_B' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN4",
+            "pin_number": "3",
+            "pin_name": "R3.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "10",
+            "pin_name": "B",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_A",
+        "message": "Net 'SEG_A' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN4",
+            "pin_number": "4",
+            "pin_name": "R4.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "12",
+            "pin_name": "A",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_J",
+        "message": "Net 'SEG_J' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN3",
+            "pin_number": "2",
+            "pin_name": "R2.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "14",
+            "pin_name": "J",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_I",
+        "message": "Net 'SEG_I' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN3",
+            "pin_number": "3",
+            "pin_name": "R3.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "15",
+            "pin_name": "I",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_H",
+        "message": "Net 'SEG_H' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN3",
+            "pin_number": "4",
+            "pin_name": "R4.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "17",
+            "pin_name": "H",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_G2",
+        "message": "Net 'SEG_G2' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN2",
+            "pin_number": "1",
+            "pin_name": "R1.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "6",
+            "pin_name": "G2",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_D",
+        "message": "Net 'SEG_D' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN2",
+            "pin_number": "2",
+            "pin_name": "R2.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "7",
+            "pin_name": "D",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_DP",
+        "message": "Net 'SEG_DP' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN2",
+            "pin_number": "3",
+            "pin_name": "R3.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "8",
+            "pin_name": "DP",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "SEG_C",
+        "message": "Net 'SEG_C' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "RN2",
+            "pin_number": "4",
+            "pin_name": "R4.1",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "9",
+            "pin_name": "C",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "DIGIT_1",
+        "message": "Net 'DIGIT_1' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "Q1",
+            "pin_number": "3",
+            "pin_name": "D",
+            "pin_type": "passive"
+          },
+          {
+            "component": "DISP1",
+            "pin_number": "16",
+            "pin_name": "DIGIT_1",
+            "pin_type": "input"
+          }
+        ]
+      },
+      {
+        "type": "no_driver",
+        "net": "DIGIT_2",
+        "message": "Net 'DIGIT_2' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "DISP1",
+            "pin_number": "11",
+            "pin_name": "DIGIT_2",
+            "pin_type": "input"
+          },
+          {
+            "component": "Q2",
+            "pin_number": "3",
+            "pin_name": "D",
+            "pin_type": "passive"
+          }
+        ]
+      }
+    ],
+    "passive_warnings": []
+  },
+  "connectivity_issues": {
+    "unconnected_pins": [],
+    "single_pin_nets": [
+      {
+        "net": "SEG_G1",
+        "pin": {
+          "component": "DISP1",
+          "pin_number": "13",
+          "pin_name": "G1",
+          "pin_type": "input"
+        }
+      },
+      {
+        "net": "SEG_F",
+        "pin": {
+          "component": "DISP1",
+          "pin_number": "18",
+          "pin_name": "F",
+          "pin_type": "input"
+        }
+      },
+      {
+        "net": "GPIO_PD4",
+        "pin": {
+          "component": "U1",
+          "pin_number": "1",
+          "pin_name": "PD4",
+          "pin_type": "bidirectional"
+        }
+      },
+      {
+        "net": "GPIO_PA1",
+        "pin": {
+          "component": "U1",
+          "pin_number": "5",
+          "pin_name": "PA1",
+          "pin_type": "bidirectional"
+        }
+      }
+    ],
+    "single_pin_net_findings": [
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "info",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: RN4.R1.1 only connects to RN4.1 (R1.1) (passive)",
+        "description": "Net '__unnamed_1' has exactly one pin: RN4.1 (R1.1), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "RN4"
+        ],
+        "nets": [
+          "__unnamed_1"
+        ],
+        "pins": [
+          "RN4.1"
+        ],
+        "net_display_name": "RN4.R1.1",
+        "pin_type": "passive",
+        "pin_name": "R1.1",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Passive or unclassified pin lonely on its own net.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "info",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: RN4.R1.2 only connects to RN4.8 (R1.2) (passive)",
+        "description": "Net '__unnamed_4' has exactly one pin: RN4.8 (R1.2), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "RN4"
+        ],
+        "nets": [
+          "__unnamed_4"
+        ],
+        "pins": [
+          "RN4.8"
+        ],
+        "net_display_name": "RN4.R1.2",
+        "pin_type": "passive",
+        "pin_name": "R1.2",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Passive or unclassified pin lonely on its own net.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "info",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: RN3.R1.1 only connects to RN3.1 (R1.1) (passive)",
+        "description": "Net '__unnamed_5' has exactly one pin: RN3.1 (R1.1), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "RN3"
+        ],
+        "nets": [
+          "__unnamed_5"
+        ],
+        "pins": [
+          "RN3.1"
+        ],
+        "net_display_name": "RN3.R1.1",
+        "pin_type": "passive",
+        "pin_name": "R1.1",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Passive or unclassified pin lonely on its own net.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "info",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: RN3.R1.2 only connects to RN3.8 (R1.2) (passive)",
+        "description": "Net '__unnamed_6' has exactly one pin: RN3.8 (R1.2), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "RN3"
+        ],
+        "nets": [
+          "__unnamed_6"
+        ],
+        "pins": [
+          "RN3.8"
+        ],
+        "net_display_name": "RN3.R1.2",
+        "pin_type": "passive",
+        "pin_name": "R1.2",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Passive or unclassified pin lonely on its own net.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: SEG_G1 only connects to DISP1.13 (G1) (input)",
+        "description": "Net 'SEG_G1' has exactly one pin: DISP1.13 (G1), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "DISP1"
+        ],
+        "nets": [
+          "SEG_G1"
+        ],
+        "pins": [
+          "DISP1.13"
+        ],
+        "net_display_name": "SEG_G1",
+        "pin_type": "input",
+        "pin_name": "G1",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: SEG_F only connects to DISP1.18 (F) (input)",
+        "description": "Net 'SEG_F' has exactly one pin: DISP1.18 (F), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "DISP1"
+        ],
+        "nets": [
+          "SEG_F"
+        ],
+        "pins": [
+          "DISP1.18"
+        ],
+        "net_display_name": "SEG_F",
+        "pin_type": "input",
+        "pin_name": "F",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: GPIO_PD4 only connects to U1.1 (PD4) (bidirectional)",
+        "description": "Net 'GPIO_PD4' has exactly one pin: U1.1 (PD4), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1"
+        ],
+        "nets": [
+          "GPIO_PD4"
+        ],
+        "pins": [
+          "U1.1"
+        ],
+        "net_display_name": "GPIO_PD4",
+        "pin_type": "bidirectional",
+        "pin_name": "PD4",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: GPIO_PA1 only connects to U1.5 (PA1) (bidirectional)",
+        "description": "Net 'GPIO_PA1' has exactly one pin: U1.5 (PA1), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1"
+        ],
+        "nets": [
+          "GPIO_PA1"
+        ],
+        "pins": [
+          "U1.5"
+        ],
+        "net_display_name": "GPIO_PA1",
+        "pin_type": "bidirectional",
+        "pin_name": "PA1",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ]
+      }
+    ],
+    "multi_driver_nets": [],
+    "power_net_summary": {
+      "GND": {
+        "pin_count": 8,
+        "components": [
+          "C1",
+          "C2",
+          "J1",
+          "J2",
+          "Q1",
+          "Q2",
+          "Q3",
+          "U1"
+        ]
+      },
+      "VCC": {
+        "pin_count": 6,
+        "components": [
+          "C1",
+          "C2",
+          "J1",
+          "J2",
+          "R2",
+          "U1"
+        ]
+      }
+    }
+  },
+  "labels": [
+    {
+      "name": "SEG_D",
+      "type": "label",
+      "x": 203.835,
+      "y": 31.75,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_H",
+      "type": "label",
+      "x": 203.835,
+      "y": 44.45,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "DIGIT_1",
+      "type": "label",
+      "x": 147.955,
+      "y": 57.15,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD0",
+      "type": "label",
+      "x": 72.39,
+      "y": 84.455,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "U_RX",
+      "type": "label",
+      "x": 36.195,
+      "y": 28.575,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD7",
+      "type": "label",
+      "x": 85.725,
+      "y": 36.195,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD1",
+      "type": "label",
+      "x": 72.39,
+      "y": 86.995,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD2",
+      "type": "label",
+      "x": 276.225,
+      "y": 34.29,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC6",
+      "type": "label",
+      "x": 21.59,
+      "y": 99.695,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC3",
+      "type": "label",
+      "x": 21.59,
+      "y": 92.075,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_B",
+      "type": "label",
+      "x": 203.835,
+      "y": 26.67,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC1",
+      "type": "label",
+      "x": 276.225,
+      "y": 27.94,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_B",
+      "type": "label",
+      "x": 212.725,
+      "y": 60.96,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_D",
+      "type": "label",
+      "x": 212.725,
+      "y": 34.29,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "DIGIT_1",
+      "type": "label",
+      "x": 125.095,
+      "y": 19.685,
+      "angle": 270.0,
+      "_sheet": 0
+    },
+    {
+      "name": "DIGIT_2",
+      "type": "label",
+      "x": 147.955,
+      "y": 59.69,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_J",
+      "type": "label",
+      "x": 212.725,
+      "y": 52.07,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC4",
+      "type": "label",
+      "x": 276.225,
+      "y": 20.32,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_A",
+      "type": "label",
+      "x": 212.725,
+      "y": 58.42,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_L",
+      "type": "label",
+      "x": 203.835,
+      "y": 54.61,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "U_TX",
+      "type": "label",
+      "x": 79.375,
+      "y": 97.155,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC6",
+      "type": "label",
+      "x": 276.225,
+      "y": 60.96,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_A",
+      "type": "label",
+      "x": 203.835,
+      "y": 24.13,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC1",
+      "type": "label",
+      "x": 21.59,
+      "y": 86.995,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_H",
+      "type": "label",
+      "x": 212.725,
+      "y": 46.99,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SWIO",
+      "type": "label",
+      "x": 79.375,
+      "y": 86.995,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PA1",
+      "type": "label",
+      "x": 72.39,
+      "y": 107.315,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD3",
+      "type": "label",
+      "x": 276.225,
+      "y": 31.75,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_I",
+      "type": "label",
+      "x": 203.835,
+      "y": 46.99,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD4",
+      "type": "label",
+      "x": 276.225,
+      "y": 55.88,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "NRST",
+      "type": "label",
+      "x": 79.375,
+      "y": 102.235,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_G2",
+      "type": "label",
+      "x": 212.725,
+      "y": 31.75,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PA2",
+      "type": "label",
+      "x": 72.39,
+      "y": 109.855,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD6",
+      "type": "label",
+      "x": 72.39,
+      "y": 99.695,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_M",
+      "type": "label",
+      "x": 212.725,
+      "y": 22.86,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_F",
+      "type": "label",
+      "x": 212.725,
+      "y": 44.45,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "U_TX",
+      "type": "label",
+      "x": 42.545,
+      "y": 28.575,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC0",
+      "type": "label",
+      "x": 276.225,
+      "y": 52.07,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "DIGIT_2",
+      "type": "label",
+      "x": 134.62,
+      "y": 19.685,
+      "angle": 270.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD4",
+      "type": "label",
+      "x": 72.39,
+      "y": 94.615,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD7",
+      "type": "label",
+      "x": 72.39,
+      "y": 102.235,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC2",
+      "type": "label",
+      "x": 276.225,
+      "y": 25.4,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PA2",
+      "type": "label",
+      "x": 276.225,
+      "y": 46.99,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_G2",
+      "type": "label",
+      "x": 203.835,
+      "y": 41.91,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_I",
+      "type": "label",
+      "x": 212.725,
+      "y": 49.53,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_C",
+      "type": "label",
+      "x": 203.835,
+      "y": 29.21,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_L",
+      "type": "label",
+      "x": 212.725,
+      "y": 25.4,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_E",
+      "type": "label",
+      "x": 203.835,
+      "y": 34.29,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC2",
+      "type": "label",
+      "x": 21.59,
+      "y": 89.535,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_G1",
+      "type": "label",
+      "x": 203.835,
+      "y": 39.37,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_C",
+      "type": "label",
+      "x": 212.725,
+      "y": 39.37,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC0",
+      "type": "label",
+      "x": 21.59,
+      "y": 84.455,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PA1",
+      "type": "label",
+      "x": 276.225,
+      "y": 44.45,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_K",
+      "type": "label",
+      "x": 203.835,
+      "y": 52.07,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC5",
+      "type": "label",
+      "x": 21.59,
+      "y": 97.155,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC5",
+      "type": "label",
+      "x": 276.225,
+      "y": 58.42,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_DP",
+      "type": "label",
+      "x": 203.835,
+      "y": 59.69,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "U_RX",
+      "type": "label",
+      "x": 79.375,
+      "y": 99.695,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC4",
+      "type": "label",
+      "x": 21.59,
+      "y": 94.615,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_K",
+      "type": "label",
+      "x": 212.725,
+      "y": 27.94,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_F",
+      "type": "label",
+      "x": 203.835,
+      "y": 36.83,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD0",
+      "type": "label",
+      "x": 276.225,
+      "y": 49.53,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_G1",
+      "type": "label",
+      "x": 212.725,
+      "y": 55.88,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_E",
+      "type": "label",
+      "x": 212.725,
+      "y": 20.32,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD3",
+      "type": "label",
+      "x": 72.39,
+      "y": 92.075,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC3",
+      "type": "label",
+      "x": 276.225,
+      "y": 22.86,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_J",
+      "type": "label",
+      "x": 203.835,
+      "y": 49.53,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD5",
+      "type": "label",
+      "x": 72.39,
+      "y": 97.155,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD2",
+      "type": "label",
+      "x": 72.39,
+      "y": 89.535,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_M",
+      "type": "label",
+      "x": 203.835,
+      "y": 57.15,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PD1",
+      "type": "label",
+      "x": 276.225,
+      "y": 36.83,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC7",
+      "type": "label",
+      "x": 276.225,
+      "y": 39.37,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "SEG_DP",
+      "type": "label",
+      "x": 212.725,
+      "y": 36.83,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "GPIO_PC7",
+      "type": "label",
+      "x": 21.59,
+      "y": 102.235,
+      "angle": 0.0,
+      "_sheet": 0
+    }
+  ],
+  "no_connects": [
+    {
+      "x": 249.555,
+      "y": 63.5,
+      "_sheet": 0
+    },
+    {
+      "x": 239.395,
+      "y": 63.5,
+      "_sheet": 0
+    }
+  ],
+  "power_symbols": [
+    {
+      "net_name": "GND",
+      "x": 51.435,
+      "y": 33.02,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "VCC",
+      "x": 27.305,
+      "y": 24.13,
+      "lib_id": "power:VCC",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "VCC",
+      "x": 115.57,
+      "y": 24.765,
+      "lib_id": "power:VCC",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "VCC",
+      "x": 46.99,
+      "y": 77.47,
+      "lib_id": "power:VCC",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 115.57,
+      "y": 58.42,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "VCC",
+      "x": 29.845,
+      "y": 111.125,
+      "lib_id": "power:VCC",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "VCC",
+      "x": 51.435,
+      "y": 24.13,
+      "lib_id": "power:VCC",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 125.095,
+      "y": 58.42,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 46.99,
+      "y": 116.84,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 29.845,
+      "y": 123.825,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 27.305,
+      "y": 33.02,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 134.62,
+      "y": 58.42,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    }
+  ],
+  "annotation_issues": {},
+  "label_shape_warnings": [],
+  "pwr_flag_warnings": [
+    {
+      "net": "GND",
+      "message": "Power rail 'GND' has power_in pins but no power_out or PWR_FLAG \u2014 ERC will flag this",
+      "pin_types": [
+        "passive",
+        "power_in"
+      ]
+    },
+    {
+      "net": "VCC",
+      "message": "Power rail 'VCC' has power_in pins but no power_out or PWR_FLAG \u2014 ERC will flag this",
+      "pin_types": [
+        "passive",
+        "power_in"
+      ]
+    }
+  ],
+  "footprint_filter_warnings": [
+    {
+      "component": "J1",
+      "footprint": "Project_Footprints:Conn_Daisy_Chain",
+      "filters": [
+        "Connector*:*_1x??_*"
+      ],
+      "custom_library": true,
+      "message": "J1: footprint 'Conn_Daisy_Chain' doesn't match any filter pattern ['Connector*:*_1x??_*']"
+    },
+    {
+      "component": "J2",
+      "footprint": "Project_Footprints:Conn_Daisy_Chain",
+      "filters": [
+        "Connector*:*_1x??_*"
+      ],
+      "custom_library": true,
+      "message": "J2: footprint 'Conn_Daisy_Chain' doesn't match any filter pattern ['Connector*:*_1x??_*']"
+    }
+  ],
+  "sourcing_audit": {
+    "total_bom_components": 15,
+    "mpn_coverage": "0/15",
+    "missing_mpn": [
+      "C1",
+      "C2",
+      "DISP1",
+      "J1",
+      "J2",
+      "Q1",
+      "Q2",
+      "Q3",
+      "R1",
+      "R2",
+      "RN1",
+      "RN2",
+      "RN3",
+      "RN4",
+      "U1"
+    ],
+    "missing_digikey": [
+      "C1",
+      "C2",
+      "DISP1",
+      "J1",
+      "J2",
+      "Q1",
+      "Q2",
+      "Q3",
+      "R1",
+      "R2",
+      "RN1",
+      "RN2",
+      "RN3",
+      "RN4",
+      "U1"
+    ],
+    "missing_lcsc": [
+      "C1",
+      "C2",
+      "DISP1",
+      "J1",
+      "J2",
+      "Q1",
+      "Q2",
+      "Q3",
+      "R1",
+      "R2",
+      "RN1",
+      "RN2",
+      "RN3",
+      "RN4",
+      "U1"
+    ],
+    "mpn_percent": 0.0
+  },
+  "ground_domains": {
+    "ground_nets": {
+      "GND": {
+        "domain": "signal",
+        "connections": 8,
+        "components": [
+          "C1",
+          "C2",
+          "J1",
+          "J2",
+          "Q1",
+          "Q2",
+          "Q3",
+          "U1"
+        ]
+      }
+    },
+    "multiple_domains": false
+  },
+  "bus_topology": {
+    "bus_wire_count": 0,
+    "bus_entry_count": 0,
+    "detected_bus_signals": [
+      {
+        "prefix": "DIGIT_",
+        "width": 4,
+        "range": "DIGIT_1..DIGIT_2"
+      },
+      {
+        "prefix": "GPIO_PA",
+        "width": 4,
+        "range": "GPIO_PA1..GPIO_PA2"
+      },
+      {
+        "prefix": "GPIO_PC",
+        "width": 16,
+        "range": "GPIO_PC0..GPIO_PC7"
+      },
+      {
+        "prefix": "GPIO_PD",
+        "width": 14,
+        "range": "GPIO_PD0..GPIO_PD7"
+      },
+      {
+        "prefix": "SEG_G",
+        "width": 4,
+        "range": "SEG_G1..SEG_G2"
+      }
+    ]
+  },
+  "wire_geometry": {
+    "total_wires": 99,
+    "total_length_mm": 1546.9,
+    "avg_length_mm": 15.6
+  },
+  "simulation_readiness": {
+    "total_components": 15,
+    "likely_simulatable": 8,
+    "needs_model": 7,
+    "components_without_model": [
+      "J1",
+      "J2",
+      "RN1",
+      "RN2",
+      "RN3",
+      "RN4",
+      "U1"
+    ],
+    "simulatable_percent": 53.3
+  },
+  "property_issues": {},
+  "placement_analysis": {
+    "bounding_box": {
+      "x_min": 20.3,
+      "y_min": 25.4,
+      "x_max": 244.5,
+      "y_max": 117.5,
+      "width_mm": 224.2,
+      "height_mm": 92.1
+    },
+    "clusters": [
+      {
+        "region": "row0_col0",
+        "component_count": 2,
+        "types": {
+          "connector": 2
+        },
+        "references": [
+          "J1",
+          "J2"
+        ]
+      },
+      {
+        "region": "row0_col1",
+        "component_count": 5,
+        "types": {
+          "resistor": 2,
+          "transistor": 3
+        },
+        "references": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "R1",
+          "R2"
+        ]
+      },
+      {
+        "region": "row0_col2",
+        "component_count": 1,
+        "types": {
+          "diode": 1
+        },
+        "references": [
+          "DISP1"
+        ]
+      },
+      {
+        "region": "row0_col3",
+        "component_count": 3,
+        "types": {
+          "resistor_network": 3
+        },
+        "references": [
+          "RN1",
+          "RN2",
+          "RN3"
+        ]
+      },
+      {
+        "region": "row1_col3",
+        "component_count": 1,
+        "types": {
+          "resistor_network": 1
+        },
+        "references": [
+          "RN4"
+        ]
+      },
+      {
+        "region": "row2_col0",
+        "component_count": 3,
+        "types": {
+          "capacitor": 2,
+          "ic": 1
+        },
+        "references": [
+          "C1",
+          "C2",
+          "U1"
+        ]
+      },
+      {
+        "region": "row2_col1",
+        "component_count": 1,
+        "types": {
+          "test_point": 1
+        },
+        "references": [
+          "TP1"
+        ]
+      }
+    ],
+    "grid_size": "3x4"
+  },
+  "hierarchical_labels": {
+    "hierarchical_label_count": 0,
+    "global_label_count": 0
+  },
+  "rail_voltages": {
+    "GND": 0
+  },
+  "power_sequencing_validation": {
+    "power_tree": [],
+    "provenance": {
+      "evidence": "pseq_enable_chain",
+      "confidence": "heuristic",
+      "claimed_components": [],
+      "excluded_by": [],
+      "suppressed_candidates": []
+    }
+  },
+  "text_annotations": [
+    {
+      "type": "text",
+      "text": "Display Digit Inverter",
+      "x": 83.185,
+      "y": 15.24,
+      "angle": 0.0
+    },
+    {
+      "type": "text",
+      "text": "Map Segments to nearest GPIO Pin via Resistor",
+      "x": 208.28,
+      "y": 15.24,
+      "angle": 0.0
+    },
+    {
+      "type": "text",
+      "text": "Daisychain Connectors",
+      "x": 13.97,
+      "y": 15.24,
+      "angle": 0.0
+    }
+  ],
+  "alternate_pin_summary": [
+    {
+      "symbol": "MCU_WCH_CH32V0:CH32V003FxPx",
+      "pins_with_alternates": 18,
+      "total_pins": 20,
+      "details": [
+        {
+          "pin": "1",
+          "primary": "PD4",
+          "alternates": [
+            "A7",
+            "OPO",
+            "T1CH4_3",
+            "T2CH1ETR",
+            "TIETR_2",
+            "UCK"
+          ]
+        },
+        {
+          "pin": "10",
+          "primary": "PC0",
+          "alternates": [
+            "NSS_1",
+            "T1CH3_1",
+            "T2CH3",
+            "T2CH3_2",
+            "UTX_3"
+          ]
+        },
+        {
+          "pin": "11",
+          "primary": "PC1",
+          "alternates": [
+            "NSS",
+            "SDA",
+            "T1BKIN_1",
+            "T1BKIN_3",
+            "T2CH1ETR_2",
+            "T2CH1ETR_3",
+            "T2CH4_1",
+            "URX_3"
+          ]
+        },
+        {
+          "pin": "12",
+          "primary": "PC2",
+          "alternates": [
+            "AETR_1",
+            "SCL",
+            "T1BKIN",
+            "T1BKIN_2",
+            "T1ETR_3",
+            "T2CH2_1",
+            "URTS",
+            "URTS_1"
+          ]
+        },
+        {
+          "pin": "13",
+          "primary": "PC3",
+          "alternates": [
+            "T1CH1N_1",
+            "T1CH1N_3",
+            "T1CH3",
+            "T1CH3_2",
+            "UCTS_1"
+          ]
+        },
+        {
+          "pin": "14",
+          "primary": "PC4",
+          "alternates": [
+            "A2",
+            "MCO",
+            "T1CH1_3",
+            "T1CH2N_1",
+            "T1CH4",
+            "T1CH4_2"
+          ]
+        },
+        {
+          "pin": "15",
+          "primary": "PC5",
+          "alternates": [
+            "SCK",
+            "SCK_1",
+            "SCL_2",
+            "SCL_3",
+            "T1CH3_3",
+            "T1ETR",
+            "T1ETR_1",
+            "T2CH1ETR_1",
+            "UCK_3"
+          ]
+        },
+        {
+          "pin": "16",
+          "primary": "PC6",
+          "alternates": [
+            "MOSI",
+            "MOSI_1",
+            "SDA_2",
+            "SDA_3",
+            "T1CH1_1",
+            "T1CH3N_3",
+            "UCTS_2",
+            "UCTS_3"
+          ]
+        },
+        {
+          "pin": "17",
+          "primary": "PC7",
+          "alternates": [
+            "MISO",
+            "MISO_1",
+            "T1CH2_1",
+            "T1CH2_3",
+            "T2CH2_3",
+            "URTS_2",
+            "URTS_3"
+          ]
+        },
+        {
+          "pin": "18",
+          "primary": "PD1",
+          "alternates": [
+            "AETR2",
+            "SCL_1",
+            "SWIO",
+            "T1CH3N",
+            "T1CH3N_1",
+            "T1CH3N_2",
+            "URX_1"
+          ]
+        },
+        {
+          "pin": "19",
+          "primary": "PD2",
+          "alternates": [
+            "A3",
+            "T1CH1",
+            "T1CH1_2",
+            "T1CH2N_3",
+            "T2CH3_1"
+          ]
+        },
+        {
+          "pin": "2",
+          "primary": "PD5",
+          "alternates": [
+            "A5",
+            "T2CH4_3",
+            "URX_2",
+            "UTX"
+          ]
+        },
+        {
+          "pin": "20",
+          "primary": "PD3",
+          "alternates": [
+            "A4",
+            "AETR",
+            "T1CH4_1",
+            "T2CH2",
+            "T2CH2_2",
+            "UCTS"
+          ]
+        },
+        {
+          "pin": "3",
+          "primary": "PD6",
+          "alternates": [
+            "A6",
+            "T2CH3_3",
+            "URX",
+            "UTX_2"
+          ]
+        },
+        {
+          "pin": "4",
+          "primary": "PD7",
+          "alternates": [
+            "NRST",
+            "OPP1",
+            "T2CH4",
+            "T2CH4_2",
+            "UCK_1",
+            "UCK_2"
+          ]
+        },
+        {
+          "pin": "5",
+          "primary": "PA1",
+          "alternates": [
+            "A1",
+            "OPN0",
+            "OSCI",
+            "T1CH2",
+            "T1CH2_2"
+          ]
+        },
+        {
+          "pin": "6",
+          "primary": "PA2",
+          "alternates": [
+            "A0",
+            "AETR2_1",
+            "OPP0",
+            "OSCO",
+            "TICH2N",
+            "TICH2N_2"
+          ]
+        },
+        {
+          "pin": "8",
+          "primary": "PD0",
+          "alternates": [
+            "OPN1",
+            "SDA_1",
+            "TICH1N",
+            "TICH1N_2",
+            "UTX_1"
+          ]
+        }
+      ]
+    }
+  ],
+  "pdn_impedance": {
+    "rails": {
+      "VCC": {
+        "capacitors": [
+          {
+            "ref": "C2",
+            "value": "1uF",
+            "farads": 1e-06,
+            "package": "0603",
+            "esr_ohm": 0.1,
+            "esl_nH": 0.7,
+            "srf_hz": 6015491,
+            "srf_formatted": "6.02 MHz",
+            "type": "MLCC"
+          },
+          {
+            "ref": "C1",
+            "value": "100nF",
+            "farads": 1.0000000000000001e-07,
+            "package": "0603",
+            "esr_ohm": 0.3162,
+            "esl_nH": 0.7,
+            "srf_hz": 19022654,
+            "srf_formatted": "19.02 MHz",
+            "type": "MLCC"
+          }
+        ],
+        "cap_count": 2,
+        "total_capacitance_uF": 1.1,
+        "impedance_profile": [
+          {
+            "freq_hz": 1000,
+            "freq_formatted": "1.00 kHz",
+            "impedance_ohm": 144.686334
+          },
+          {
+            "freq_hz": 1259,
+            "freq_formatted": "1.26 kHz",
+            "impedance_ohm": 114.928451
+          },
+          {
+            "freq_hz": 1585,
+            "freq_formatted": "1.58 kHz",
+            "impedance_ohm": 91.290927
+          },
+          {
+            "freq_hz": 1995,
+            "freq_formatted": "2.00 kHz",
+            "impedance_ohm": 72.514977
+          },
+          {
+            "freq_hz": 2512,
+            "freq_formatted": "2.51 kHz",
+            "impedance_ohm": 57.600715
+          },
+          {
+            "freq_hz": 3162,
+            "freq_formatted": "3.16 kHz",
+            "impedance_ohm": 45.753901
+          },
+          {
+            "freq_hz": 3981,
+            "freq_formatted": "3.98 kHz",
+            "impedance_ohm": 36.343648
+          },
+          {
+            "freq_hz": 5012,
+            "freq_formatted": "5.01 kHz",
+            "impedance_ohm": 28.868828
+          },
+          {
+            "freq_hz": 6310,
+            "freq_formatted": "6.31 kHz",
+            "impedance_ohm": 22.931377
+          },
+          {
+            "freq_hz": 7943,
+            "freq_formatted": "7.94 kHz",
+            "impedance_ohm": 18.215107
+          },
+          {
+            "freq_hz": 10000,
+            "freq_formatted": "10.00 kHz",
+            "impedance_ohm": 14.468857
+          },
+          {
+            "freq_hz": 12589,
+            "freq_formatted": "12.59 kHz",
+            "impedance_ohm": 11.493126
+          },
+          {
+            "freq_hz": 15849,
+            "freq_formatted": "15.85 kHz",
+            "impedance_ohm": 9.129447
+          },
+          {
+            "freq_hz": 19953,
+            "freq_formatted": "19.95 kHz",
+            "impedance_ohm": 7.251943
+          },
+          {
+            "freq_hz": 25119,
+            "freq_formatted": "25.12 kHz",
+            "impedance_ohm": 5.760632
+          },
+          {
+            "freq_hz": 31623,
+            "freq_formatted": "31.62 kHz",
+            "impedance_ohm": 4.576096
+          },
+          {
+            "freq_hz": 39811,
+            "freq_formatted": "39.81 kHz",
+            "impedance_ohm": 3.635254
+          },
+          {
+            "freq_hz": 50119,
+            "freq_formatted": "50.12 kHz",
+            "impedance_ohm": 2.888001
+          },
+          {
+            "freq_hz": 63096,
+            "freq_formatted": "63.10 kHz",
+            "impedance_ohm": 2.294546
+          },
+          {
+            "freq_hz": 79433,
+            "freq_formatted": "79.43 kHz",
+            "impedance_ohm": 1.823283
+          },
+          {
+            "freq_hz": 100000,
+            "freq_formatted": "100.00 kHz",
+            "impedance_ohm": 1.449116
+          },
+          {
+            "freq_hz": 125893,
+            "freq_formatted": "125.89 kHz",
+            "impedance_ohm": 1.152119
+          },
+          {
+            "freq_hz": 158489,
+            "freq_formatted": "158.49 kHz",
+            "impedance_ohm": 0.916475
+          },
+          {
+            "freq_hz": 199526,
+            "freq_formatted": "199.53 kHz",
+            "impedance_ohm": 0.729632
+          },
+          {
+            "freq_hz": 251189,
+            "freq_formatted": "251.19 kHz",
+            "impedance_ohm": 0.581638
+          },
+          {
+            "freq_hz": 316228,
+            "freq_formatted": "316.23 kHz",
+            "impedance_ohm": 0.464604
+          },
+          {
+            "freq_hz": 398107,
+            "freq_formatted": "398.11 kHz",
+            "impedance_ohm": 0.372283
+          },
+          {
+            "freq_hz": 501187,
+            "freq_formatted": "501.19 kHz",
+            "impedance_ohm": 0.299733
+          },
+          {
+            "freq_hz": 630957,
+            "freq_formatted": "630.96 kHz",
+            "impedance_ohm": 0.243042
+          },
+          {
+            "freq_hz": 794328,
+            "freq_formatted": "794.33 kHz",
+            "impedance_ohm": 0.199101
+          },
+          {
+            "freq_hz": 1000000,
+            "freq_formatted": "1.00 MHz",
+            "impedance_ohm": 0.165421
+          },
+          {
+            "freq_hz": 1258925,
+            "freq_formatted": "1.26 MHz",
+            "impedance_ohm": 0.139965
+          },
+          {
+            "freq_hz": 1584893,
+            "freq_formatted": "1.58 MHz",
+            "impedance_ohm": 0.121033
+          },
+          {
+            "freq_hz": 1995262,
+            "freq_formatted": "2.00 MHz",
+            "impedance_ohm": 0.107172
+          },
+          {
+            "freq_hz": 2511886,
+            "freq_formatted": "2.51 MHz",
+            "impedance_ohm": 0.097154
+          },
+          {
+            "freq_hz": 3162278,
+            "freq_formatted": "3.16 MHz",
+            "impedance_ohm": 0.089989
+          },
+          {
+            "freq_hz": 3981072,
+            "freq_formatted": "3.98 MHz",
+            "impedance_ohm": 0.084944
+          },
+          {
+            "freq_hz": 5011872,
+            "freq_formatted": "5.01 MHz",
+            "impedance_ohm": 0.081541
+          },
+          {
+            "freq_hz": 6309573,
+            "freq_formatted": "6.31 MHz",
+            "impedance_ohm": 0.079519
+          },
+          {
+            "freq_hz": 7943282,
+            "freq_formatted": "7.94 MHz",
+            "impedance_ohm": 0.078783
+          },
+          {
+            "freq_hz": 10000000,
+            "freq_formatted": "10.00 MHz",
+            "impedance_ohm": 0.079368
+          },
+          {
+            "freq_hz": 12589254,
+            "freq_formatted": "12.59 MHz",
+            "impedance_ohm": 0.081424
+          },
+          {
+            "freq_hz": 15848932,
+            "freq_formatted": "15.85 MHz",
+            "impedance_ohm": 0.085213
+          },
+          {
+            "freq_hz": 19952623,
+            "freq_formatted": "19.95 MHz",
+            "impedance_ohm": 0.091086
+          },
+          {
+            "freq_hz": 25118864,
+            "freq_formatted": "25.12 MHz",
+            "impedance_ohm": 0.099461
+          },
+          {
+            "freq_hz": 31622777,
+            "freq_formatted": "31.62 MHz",
+            "impedance_ohm": 0.110813
+          },
+          {
+            "freq_hz": 39810717,
+            "freq_formatted": "39.81 MHz",
+            "impedance_ohm": 0.125721
+          },
+          {
+            "freq_hz": 50118723,
+            "freq_formatted": "50.12 MHz",
+            "impedance_ohm": 0.144991
+          },
+          {
+            "freq_hz": 63095734,
+            "freq_formatted": "63.10 MHz",
+            "impedance_ohm": 0.169788
+          },
+          {
+            "freq_hz": 79432823,
+            "freq_formatted": "79.43 MHz",
+            "impedance_ohm": 0.201742
+          },
+          {
+            "freq_hz": 100000000,
+            "freq_formatted": "100.00 MHz",
+            "impedance_ohm": 0.242977
+          },
+          {
+            "freq_hz": 125892541,
+            "freq_formatted": "125.89 MHz",
+            "impedance_ohm": 0.296129
+          },
+          {
+            "freq_hz": 158489319,
+            "freq_formatted": "158.49 MHz",
+            "impedance_ohm": 0.364397
+          },
+          {
+            "freq_hz": 199526231,
+            "freq_formatted": "199.53 MHz",
+            "impedance_ohm": 0.451681
+          },
+          {
+            "freq_hz": 251188643,
+            "freq_formatted": "251.19 MHz",
+            "impedance_ohm": 0.5628
+          },
+          {
+            "freq_hz": 316227766,
+            "freq_formatted": "316.23 MHz",
+            "impedance_ohm": 0.703772
+          },
+          {
+            "freq_hz": 398107171,
+            "freq_formatted": "398.11 MHz",
+            "impedance_ohm": 0.88216
+          },
+          {
+            "freq_hz": 501187234,
+            "freq_formatted": "501.19 MHz",
+            "impedance_ohm": 1.107493
+          },
+          {
+            "freq_hz": 630957344,
+            "freq_formatted": "630.96 MHz",
+            "impedance_ohm": 1.391789
+          },
+          {
+            "freq_hz": 794328235,
+            "freq_formatted": "794.33 MHz",
+            "impedance_ohm": 1.750193
+          },
+          {
+            "freq_hz": 1000000000,
+            "freq_formatted": "1.00 GHz",
+            "impedance_ohm": 2.201798
+          }
+        ],
+        "min_impedance": {
+          "freq_formatted": "7.94 MHz",
+          "impedance_ohm": 0.078783
+        }
+      }
+    },
+    "observations": [
+      "VCC: highest SRF is 19.02 MHz \u2014 consider adding small (100pF-1nF) MLCC for >100 MHz coverage"
+    ]
+  },
+  "power_budget": {
+    "rails": {
+      "VCC": {
+        "ic_count": 1,
+        "ics": [
+          {
+            "ref": "U1",
+            "value": "CH32V003FxPx",
+            "estimated_mA": 10
+          }
+        ],
+        "estimated_load_mA": 10
+      }
+    }
+  },
+  "bom_optimization": {
+    "unique_value_counts": {
+      "resistor": 2,
+      "capacitor": 2
+    },
+    "total_unique_footprints": 8,
+    "single_use_passive_values": 4
+  },
+  "test_coverage": {
+    "test_points": [
+      {
+        "ref": "TP1",
+        "net": "SWIO",
+        "value": "SWIO"
+      }
+    ],
+    "test_point_count": 1,
+    "covered_nets": [
+      "SWIO"
+    ],
+    "debug_connectors": [
+      {
+        "ref": "J1",
+        "value": "Conn_RX",
+        "interface": "uart",
+        "connected_nets": [
+          "GND",
+          "VCC",
+          "U_RX"
+        ]
+      },
+      {
+        "ref": "J2",
+        "value": "Conn_TX",
+        "interface": "uart",
+        "connected_nets": [
+          "GND",
+          "VCC",
+          "U_TX"
+        ]
+      }
+    ],
+    "uncovered_key_nets": [
+      {
+        "net": "VCC",
+        "category": "power_rail"
+      },
+      {
+        "net": "U_RX",
+        "category": "uart"
+      },
+      {
+        "net": "NRST",
+        "category": "reset"
+      },
+      {
+        "net": "U_TX",
+        "category": "uart"
+      }
+    ],
+    "observations": [
+      "1 test point(s) covering 1 net(s)",
+      "Key nets without test points: 1 power_rail, 1 reset, 2 uart"
+    ]
+  },
+  "assembly_complexity": {
+    "total_components": 16,
+    "smd_count": 16,
+    "tht_count": 0,
+    "complexity_score": 34,
+    "difficulty_breakdown": {
+      "hard": 0,
+      "medium": 13,
+      "easy": 3
+    },
+    "package_breakdown": {
+      "other_SMD": 8,
+      "0603": 4,
+      "SOT-23": 3,
+      "TSSOP": 1
+    },
+    "unique_footprints": 4,
+    "observations": [
+      "Low assembly complexity (score 34/100) \u2014 hand assembly feasible"
+    ]
+  },
+  "project_settings": {
+    "symbol_libs": [
+      {
+        "name": "14_Seg_2_Digit_Display",
+        "type": "KiCad",
+        "uri": "${KIPRJMOD}/Project_Symbols/14_Seg_2_Digit_Display.kicad_sym"
+      }
+    ]
+  },
+  "missing_info": {
+    "missing_mpn": [
+      "C2",
+      "RN1",
+      "J1",
+      "R2",
+      "RN4",
+      "RN3",
+      "RN2",
+      "Q1",
+      "C1",
+      "DISP1",
+      "R1",
+      "U1",
+      "Q3",
+      "J2",
+      "Q2"
+    ]
+  },
+  "bom_lock": {
+    "total_bom_components": 15,
+    "components_with_mpn": 0,
+    "missing_mpn": [
+      "C2",
+      "RN1",
+      "J1",
+      "R2",
+      "RN4",
+      "RN3",
+      "RN2",
+      "Q1",
+      "C1",
+      "DISP1",
+      "R1",
+      "U1",
+      "Q3",
+      "J2",
+      "Q2"
+    ],
+    "missing_mpn_count": 15,
+    "generic_values": [],
+    "lock_pct": 0,
+    "status": "fail"
+  },
+  "design_intent": {
+    "product_class": "prototype",
+    "ipc_class": 2,
+    "target_market": "hobby",
+    "expected_lifetime_years": 5,
+    "operating_temp_range": [
+      -10,
+      70
+    ],
+    "preferred_passive_size": "0603",
+    "test_coverage_target": 0.85,
+    "approved_manufacturers": [],
+    "confidence": 0.3,
+    "detection_signals": [],
+    "source": {
+      "ipc_class": "auto",
+      "product_class": "auto",
+      "target_market": "auto",
+      "expected_lifetime_years": "auto",
+      "operating_temp_range": "auto",
+      "preferred_passive_size": "auto",
+      "test_coverage_target": "auto",
+      "approved_manufacturers": "auto"
+    }
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 18,
+      "by_severity": {
+        "error": 2,
+        "warning": 5,
+        "info": 11
+      },
+      "by_category": {
+        "decoupling": 1,
+        "decoupling_coverage": 1,
+        "verification": 1,
+        "protection": 2,
+        "connectivity": 8,
+        "power": 1,
+        "sourcing": 1,
+        "discrete_semiconductors": 3
+      },
+      "top_issues": [
+        {
+          "detector": "audit_datasheet_coverage",
+          "rule_id": "DS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "verification",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "components": [],
+          "nets": [],
+          "pins": [],
+          "datasheets_dir": null,
+          "datasheet_file_count": 0,
+          "bom_size": 15,
+          "mpn_coverage_percent": 0.0,
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "report_context": {
+            "section": "Datasheet Coverage",
+            "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "audit_sourcing_gate",
+          "rule_id": "SS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "sourcing",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/10 unique parts). Board is not pre-fab ready.",
+          "description": "Sourcing audit: 0 of 10 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+          "components": [
+            "C1",
+            "C2",
+            "DISP1",
+            "J1",
+            "J2",
+            "Q1",
+            "Q2",
+            "Q3",
+            "R1",
+            "R2",
+            "RN1",
+            "RN2",
+            "RN3",
+            "RN4",
+            "U1"
+          ],
+          "nets": [],
+          "pins": [],
+          "mpn_coverage_percent": 0.0,
+          "missing_mpn_lines": 10,
+          "missing_mpn_refs": 15,
+          "total_bom_lines": 10,
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "report_context": {
+            "section": "Sourcing",
+            "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "pre_fab"
+          ]
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: SEG_F only connects to DISP1.18 (F) (input)",
+          "description": "Net 'SEG_F' has exactly one pin: DISP1.18 (F), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "DISP1"
+          ],
+          "nets": [
+            "SEG_F"
+          ],
+          "pins": [
+            "DISP1.18"
+          ],
+          "net_display_name": "SEG_F",
+          "pin_type": "input",
+          "pin_name": "F",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: SEG_G1 only connects to DISP1.13 (G1) (input)",
+          "description": "Net 'SEG_G1' has exactly one pin: DISP1.13 (G1), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "DISP1"
+          ],
+          "nets": [
+            "SEG_G1"
+          ],
+          "pins": [
+            "DISP1.13"
+          ],
+          "net_display_name": "SEG_G1",
+          "pin_type": "input",
+          "pin_name": "G1",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: GPIO_PA1 only connects to U1.5 (PA1) (bidirectional)",
+          "description": "Net 'GPIO_PA1' has exactly one pin: U1.5 (PA1), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1"
+          ],
+          "nets": [
+            "GPIO_PA1"
+          ],
+          "pins": [
+            "U1.5"
+          ],
+          "net_display_name": "GPIO_PA1",
+          "pin_type": "bidirectional",
+          "pin_name": "PA1",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: GPIO_PD4 only connects to U1.1 (PD4) (bidirectional)",
+          "description": "Net 'GPIO_PD4' has exactly one pin: U1.1 (PD4), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1"
+          ],
+          "nets": [
+            "GPIO_PD4"
+          ],
+          "pins": [
+            "U1.1"
+          ],
+          "net_display_name": "GPIO_PD4",
+          "pin_type": "bidirectional",
+          "pin_name": "PD4",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "audit_rail_sources",
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "power",
+          "summary": "VCC has no declared source",
+          "description": "Net VCC carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+          "components": [],
+          "nets": [
+            "VCC"
+          ],
+          "pins": [
+            "#PWR014.1",
+            "#PWR03.1",
+            "#PWR05.1",
+            "#PWR07.1",
+            "#PWR09.1",
+            "U1.9"
+          ],
+          "source_path": "none",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "report_context": {
+            "section": "Power \u2014 Rail Sources",
+            "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "rs_rail_audit",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "",
+          "stages": [
+            "schematic"
+          ]
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 7,
+      "by_category": {
+        "verification": 1,
+        "connectivity": 4,
+        "power": 1,
+        "sourcing": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "DS-001",
+          "severity": "error",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "category": "verification"
+        },
+        {
+          "rule_id": "SS-001",
+          "severity": "error",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/10 unique parts). Board is not pre-fab ready.",
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "category": "sourcing"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: SEG_F only connects to DISP1.18 (F) (input)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: SEG_G1 only connects to DISP1.13 (G1) (input)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: GPIO_PA1 only connects to U1.5 (PA1) (bidirectional)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: GPIO_PD4 only connects to U1.1 (PD4) (bidirectional)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "VCC has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "moderate",
+      "blocker_count": 2,
+      "warning_count": 5,
+      "stage_readiness": {
+        "schematic": "needs_work",
+        "layout": "pass",
+        "pre_fab": "needs_work",
+        "bring_up": "pass"
+      },
+      "one_liner": "2 errors, 5 warnings across 4 categories. Schematic, pre-fab stages have blockers."
+    }
+  }
+}
