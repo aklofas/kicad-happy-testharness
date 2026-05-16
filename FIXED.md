@@ -11,6 +11,53 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-05-16 — TH-043 (schema-vs-emitter drift across 4 analyzers)
+
+### TH-043 (LOW): `--schema` declared keys not always emitted across schematic / pcb / gerber / thermal
+
+- **Where fixed:** kicad-happy `e27f0f9` (per-analyzer surgical emit-defaults
+  on the keys the `--schema` `required` list documents). Per-key categorization:
+  top-level dict keys → `{}` default, nested required list keys → `[]` default,
+  scalar required keys genuinely missing in source files → `Optional[T] = None`
+  (e.g., `board_thickness_mm` for `.kicad_pcb` files with no `(general
+  (thickness ...))` node). Defaulted `Optional` fields moved to end of
+  dataclasses per Python's "defaulted-fields-last" rule.
+- **Symptom (corpus-wide gate evidence from `run_v14_default_contract_gate.py`
+  @ `87274cb701d` over 149,566 v14 snapshots):**
+
+  | Analyzer | FAIL rate | Example drift |
+  |----------|-----------|---------------|
+  | pcb | 96.5% (18004/18658) | `board_metadata`, `board_thickness_mm`, `design_rule_compliance` |
+  | schematic | 87.8% (32030/36462) | `title_block` (legacy `.sch` parser path didn't emit) |
+  | gerber | 66.6% (3621/5439) | `pad_summary.smd_ratio`, `completeness.expected_layers` |
+  | thermal | 8.5% (1364/16083) | `missing_info.default_rtheta_ja`/`default_tj_max` |
+
+  emc + cross_analysis already clean (0% drift) — existence proof that the
+  bug class is fixable per analyzer.
+
+- **Root cause:** Each `--schema` `required` list declared structural
+  invariants the analyzer's emit code didn't honor — e.g., `board_metadata`
+  conditionally emitted only when certain title-block fields exist, `title_block`
+  emitted only on the v6+ parser path (legacy `.sch` skipped it), thermal
+  `missing_info.default_rtheta_ja` set only on one branch of the
+  partial-fallback path. Same bug class corpus-wide.
+- **Verification:** `py_compile` clean across 6 touched modules. Smoke-tested
+  against `Arduino_OpenTherm_shield` + `martinribelotta/h730duino/gerber` —
+  every previously-conditional key now structurally present. Regression-diff
+  impact: zero — finding identity (`rule_id` + `components`) unchanged; only
+  envelope-shape additions. Next `run_v14_default_contract_gate.py` run on
+  v1.4-dev tip should report ~96% drift drop.
+- **No per-analyzer KH-*** — fix landed in one commit; per-analyzer issues
+  would be over-tracking. Filed harness-side as a single TH-043 with
+  corpus-wide scope from the LOG 8 gate evidence (commit `40f5fa825d2`
+  widened the original PCB-only scope).
+- **Not tag-blocking** — pre-existing in rc.1, schema-vs-output mismatch
+  affected only strict consumers, not the default-mode report. Shipped in
+  rc.2 candidate `e27f0f9` along with the other 6 main-repo fixes (per LOG
+  entry 117).
+
+---
+
 ## 2026-05-15 — KH-327 (bom SKILL.md description exceeds Codex 1024-char limit)
 
 ### KH-327 (MEDIUM): `bom/SKILL.md` description exceeds Codex 1024-char limit (1026/1024, 2 over)
