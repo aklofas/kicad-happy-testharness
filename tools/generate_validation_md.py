@@ -38,29 +38,52 @@ def _count_output_files(atype):
                and _.name != "_aggregate.json")
 
 
-def _count_kh_issues():
-    """Count KH-* issues from ISSUES.md and FIXED.md.
+def _count_issues(prefix):
+    """Count <prefix>-* issues from ISSUES.md and FIXED.md.
 
     Returns (open_count, closed_count, max_number).
     """
     open_count = 0
     closed_count = 0
     max_num = 0
+    marker = f"### {prefix}-"
     for path, is_open in [(ISSUES_FILE, True), (FIXED_FILE, False)]:
         if not path.exists():
             continue
         for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip().startswith("### KH-"):
+            if line.strip().startswith(marker):
                 if is_open:
                     open_count += 1
                 else:
                     closed_count += 1
                 try:
-                    num = int(line.strip().split("KH-")[1].split()[0].rstrip(":—"))
+                    num = int(line.strip().split(f"{prefix}-")[1].split()[0].rstrip(":—"))
                     max_num = max(max_num, num)
                 except (ValueError, IndexError):
                     pass
     return open_count, closed_count, max_num
+
+
+def _count_kh_issues():
+    return _count_issues("KH")
+
+
+def _count_th_issues():
+    return _count_issues("TH")
+
+
+def _load_check_results(path):
+    """Load run_checks --json output. Returns dict or None."""
+    if not path or not Path(path).exists():
+        return None
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _load_gate_rollup(path):
+    """Load v1.4 Layer 1 gate rollup JSON. Returns dict or None."""
+    if not path or not Path(path).exists():
+        return None
+    return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def _load_catalog_stats():
@@ -112,14 +135,19 @@ def _load_catalog_stats():
     }
 
 
-def generate_markdown():
-    """Generate VALIDATION.md content."""
+def generate_markdown(check_results=None, gate_rollup=None):
+    """Generate VALIDATION.md content.
+
+    check_results: dict from regression/run_checks.py --json (or None).
+    gate_rollup:   dict from regression/run_v14_gate.py rollup (or None).
+    """
     cat_stats = _load_catalog_stats()
     assertion_stats = {
         "total": cat_stats.get("assertion_total", 0),
         "by_type": dict(cat_stats.get("assertion_by_type", {})),
     }
     open_kh, closed_kh, max_kh = _count_kh_issues()
+    open_th, closed_th, max_th = _count_th_issues()
     bugfix_count = 0
     if BUGFIX_FILE.exists():
         bugfix_count = len(json.loads(BUGFIX_FILE.read_text(encoding="utf-8")))
@@ -206,19 +234,51 @@ A single unhandled exception across any analyzer on any file in the corpus is tr
 
 Hard assertions on known-good output values. If a previously correct result changes, the assertion fails and the change must be investigated.
 
-| Category | Assertion count | Pass rate |
-|----------|----------------|-----------|
 """
+    if check_results:
+        measured_total = check_results.get("total", 0)
+        measured_passed = check_results.get("passed", 0)
+        measured_failed = check_results.get("failed", 0)
+        measured_errors = check_results.get("errors", 0)
+        measured_rate = check_results.get("pass_rate", "N/A")
+        md += f"*Measured via `regression/run_checks.py --json`: " \
+              f"{measured_passed:,} passed / {measured_failed:,} failed / " \
+              f"{measured_errors:,} errors out of {measured_total:,} ({measured_rate}).*\n\n"
+
+    md += "| Category | Assertion count | Pass rate |\n"
+    md += "|----------|----------------|-----------|\n"
+    rate_str = check_results.get("pass_rate", "100%") if check_results else "100%"
     for atype, count in sorted(assertion_stats.get("by_type", {}).items(),
                                 key=lambda x: -x[1]):
         if count > 0:
-            md += f"| {atype} | {count:,} | 100% |\n"
-    md += f"| **Total** | **{assertion_stats.get('total', 0):,}** | **100%** |\n"
+            md += f"| {atype} | {count:,} | {rate_str} |\n"
+    md += f"| **Total** | **{assertion_stats.get('total', 0):,}** | **{rate_str}** |\n"
 
     md += f"""
 Assertions are seeded from validated output and checked on every run. When analyzer logic changes intentionally (new fields, corrected calculations), affected assertions are re-seeded after manual verification.
 
-## Signal detector coverage
+"""
+
+    if gate_rollup:
+        totals = gate_rollup.get("totals", {})
+        criteria = gate_rollup.get("pass_criteria", {})
+        section = gate_rollup.get("section", "?")
+        total_units = gate_rollup.get("total_units", 0)
+        clean = criteria.get("clean", False)
+        verdict = "**CLEAN**" if clean else "**FAIL**"
+        md += "### v1.4 Layer 1 regression gate\n\n"
+        md += f"v1.4 introduces the `--only-deterministic` flag to scope analyzer output to evidence-backed findings. The Layer 1 regression gate runs both v1.3.1 (plain) and v1.4 (`--only-deterministic`) over the harness corpus and diffs the resulting envelopes, asserting v1.4 does not silently drop or downgrade any v1.3.1 finding.\n\n"
+        md += f"Latest run: section `{section}`, {total_units:,} analyzer-runs. Verdict: {verdict}.\n\n"
+        md += "| Outcome | Count |\n|---------|------:|\n"
+        for key in ("PASS", "FAIL", "Disappeared", "Downgrades", "Upgrades",
+                    "NewKnown", "NewUpgraded", "NewUnknown", "WARN", "SKIP"):
+            md += f"| {key} | {totals.get(key, 0):,} |\n"
+        md += "\n*Gate is CLEAN when `Disappeared == 0`, `Downgrades == 0`, " \
+              "and `FAIL == 0`. `NewKnown` and `NewUpgraded` are tolerated " \
+              "(intentional new v1.4 findings); `NewUnknown` is reported but " \
+              "not gating.*\n\n"
+
+    md += f"""## Signal detector coverage
 
 {n_detectors} active schematic detectors verified against the corpus:
 
@@ -257,9 +317,9 @@ The harness requires Python 3.8+ and a checkout of the corpus repos. ngspice is 
 All analyzer bugs found during validation are tracked with sequential IDs:
 
 - `KH-001` through `KH-{max_kh}`: analyzer issues ({closed_kh + open_kh} filed, {closed_kh} closed, {open_kh} open)
-- `TH-001` through `TH-008`: harness infrastructure issues
+- `TH-001` through `TH-{max_th:03d}`: harness infrastructure issues ({closed_th + open_th} filed, {closed_th} closed, {open_th} open)
 
-Each closed issue has a corresponding bugfix regression guard assertion that prevents the bug from returning.
+Each closed analyzer issue has a corresponding bugfix regression guard assertion that prevents the bug from returning.
 
 ## Numbers at a glance
 
@@ -275,8 +335,8 @@ Each closed issue has a corresponding bugfix regression guard assertion that pre
 | Nets traced | {cat_stats.get('total_nets', 0):,} |
 | Regression assertions | {assertion_stats.get('total', 0):,} at 100% |
 | Bugfix guards | {bugfix_count} (100% — no regressions) |
-| Closed issues | {closed_kh} analyzer + 8 harness |
-| Open issues | {open_kh} |
+| Closed issues | {closed_kh} analyzer + {closed_th} harness |
+| Open issues | {open_kh} analyzer + {open_th} harness |
 | Schematic detectors | {n_detectors} |
 """
     return md
@@ -287,9 +347,17 @@ def main():
         description="Auto-generate VALIDATION.md from harness data")
     parser.add_argument("--output", "-o", type=Path,
                         help="Output file (default: stdout)")
+    parser.add_argument("--check-results", type=Path,
+                        help="JSON output from regression/run_checks.py --json; "
+                             "if provided, assertion pass rate is computed from it")
+    parser.add_argument("--gate-rollup", type=Path,
+                        help="JSON rollup from regression/run_v14_gate.py; "
+                             "if provided, adds a v1.4 Layer 1 gate section")
     args = parser.parse_args()
 
-    md = generate_markdown()
+    check_results = _load_check_results(args.check_results)
+    gate_rollup = _load_gate_rollup(args.gate_rollup)
+    md = generate_markdown(check_results=check_results, gate_rollup=gate_rollup)
 
     if args.output:
         args.output.write_text(md, encoding="utf-8")
