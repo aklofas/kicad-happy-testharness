@@ -85,6 +85,7 @@ SMOKE_TESTS = [
     "tests/test_b5d_detector_fire_shapes.py",         # 16 tests — per-rule fire-shape AM/OV/TJ/FT/PM/EX (B5 d)
     "tests/test_b6_reviewer_output_invariants.py",    # 16 tests — reviewer-output replay + invariants (B6)
     "tests/test_top_level_sheets.py",                 # 3 tests — top_level_sheets merge + power_symbols refresh (PR #19)
+    "tests/test_b9_review_metrics.py",               # 10 tests — review metrics runner + demo packet (B9)
 ]
 
 
