@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-05-15
+Last updated: 2026-05-16
 
 ---
 
@@ -34,9 +34,9 @@ Last updated: 2026-05-15
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-327**. Next TH number: **TH-041**.
+maximum. Next KH number: **KH-328**. Next TH number: **TH-044**.
 
-> 4 open issues.
+> 7 open issues.
 
 ---
 
@@ -206,6 +206,141 @@ is open.
 
 ---
 
+### TH-041: `test_run_*_basic` integration tests fail with `KeyError: 'analyzer_type'` — `_first_output()` picks up `capability_mode.json`
+
+**Severity:** LOW
+**File:** `tests/test_run_integration.py:38-46` (`_first_output`) and call sites at
+`:74` (schematic), `:93` (pcb), `:158` (spice via downstream chain)
+**Discovered:** 2026-05-16 during first venv-backed full-suite run after v1.4.0-rc.1
+
+**Symptom:** Three integration tests fail back-to-back:
+```
+tests/test_run_integration.py::test_run_schematic_basic - KeyError: 'analyzer_type'
+tests/test_run_integration.py::test_run_pcb_basic      - KeyError: 'analyzer_type'
+tests/test_run_integration.py::test_run_spice_basic    - AssertionError (downstream)
+```
+
+The schematic test asserts `data["analyzer_type"] == "schematic"` on the file
+returned by `_first_output("schematic")`. That envelope key IS present in the
+actual analyzer output (`commodorelcd.kicad_sch.json` has `analyzer_type` at
+top level), but `_first_output` returns `capability_mode.json` instead because
+it sorts alphabetically and only skips files starting with `_`.
+
+**Root cause:** v1.4 added `capability_mode.json` as a sibling metadata file in
+each analyzer output dir (B1/B2 absorption work, see `project_b1_b2_absorption`
+memory). Pre-v1.4 the directory only contained `*.kicad_sch.json` envelopes, so
+`_first_output`'s "first `*.json` that doesn't start with `_`" heuristic
+worked by accident. Now `capability_mode.json` sorts before
+`commodorelcd.kicad_sch.json` and is returned first — it lacks `analyzer_type`
+because it's a metadata sidecar, not an envelope.
+
+Repro:
+```
+$ ls results/outputs/schematic/jgrip/commodorelcd/
+capability_mode.json          # ← picked up by _first_output
+commodorelcd.kicad_sch.err
+commodorelcd.kicad_sch.json   # ← what the test actually wants
+```
+
+Same pattern applies to PCB (`capability_mode.json` next to `*.kicad_pcb.json`)
+and SPICE (chain-dependency on the schematic check).
+
+**Likely fix:** Tighten `_first_output()` to filter for actual envelope files
+(`*.kicad_sch.json`, `*.kicad_pcb.json`, `*.gbr.json`, etc.) or exclude the
+specific metadata sidecar names (`capability_mode.json`, `capability_mode_ref.json`).
+Skipping only `_`-prefixed files is no longer sufficient.
+
+**Not tag-blocking** — pre-existing in rc.1, doesn't affect analyzer behavior.
+
+---
+
+### TH-042: `test_schema_completeness_zebra_x` fails — 7 new v1.4 detectors lack `SCHEMAS` entries
+
+**Severity:** LOW
+**File:** `tests/test_detection_schema.py:289-333` (`test_schema_completeness_zebra_x`)
+and `SCHEMAS` dict (location TBD — likely under `regression/` or main-repo helper)
+**Discovered:** 2026-05-16 during first venv-backed full-suite run after v1.4.0-rc.1
+
+**Symptom:**
+```
+AssertionError: findings detector keys missing from SCHEMAS: [
+  'audit_datasheet_coverage', 'audit_rail_sources', 'decoupling',
+  'integrated_ldos', 'validate_pullups', 'validate_voltage_levels',
+  'audit_sourcing_gate'
+]
+```
+
+The test walks the `findings[]` array of a known-clean repo (`zebra-x`) and
+asserts every detector short-name maps to an entry in `SCHEMAS`. Seven v1.4-era
+detectors emit findings but have no schema entry, so the test fails the
+"every detector has a schema" invariant.
+
+**Root cause:** v1.4 added these seven detectors (auditors for datasheet
+coverage, rail sources, integrated LDOs, sourcing gates; validators for
+pullups and voltage levels; a `decoupling` analyzer family) but the harness
+`SCHEMAS` dict was never updated alongside them. The `test_detection_schema`
+ignore-list at `:312-316` only covers the older informational sections
+(`design_observations`, `esd_coverage_audit`, etc.).
+
+**Likely fix paths:**
+- **Add schemas** for each of the 7 detectors (preferred long-term; the test
+  exists specifically to force this discipline).
+- **Add to ignore-list** if any of the 7 are intentionally schema-less
+  informational sections (decide per-detector; treat as a stop-gap).
+- **Process gap:** when adding a new detector to the analyzer, the schema-companion
+  step is currently implicit. Worth a `CONTRIBUTING.md` or RUNBOOK Checklist
+  note so v1.5 detector additions don't recreate the gap.
+
+**Not tag-blocking** — pre-existing in rc.1, the seven detectors still produce
+valid findings; the test is enforcing harness-side completeness, not analyzer
+correctness.
+
+---
+
+### TH-043: `test_pcb_schema_drift` fails — PCB `--schema` lists 5 required keys not always emitted
+
+**Severity:** LOW
+**File:** `tests/test_schema_drift.py:239` (`test_pcb_schema_drift`) and
+`<kicad-happy>/skills/kicad/scripts/analyze_pcb.py` `--schema` output
+**Discovered:** 2026-05-16 during first venv-backed full-suite run after v1.4.0-rc.1
+
+**Symptom:**
+```
+AssertionError: pcb: --schema documents required keys not in emitted output:
+  ['board_metadata', 'board_thickness_mm', 'ground_domains',
+   'placement_density', 'power_net_routing'].
+Either remove from --schema `required`, or emit them unconditionally.
+```
+
+PCB `analyze_pcb.py --schema` declares these five top-level keys as required,
+but the analyzer doesn't always emit them — drift between schema declaration
+and actual envelope shape. Both `test_pcb_schema_drift` and
+`test_schema_completeness_zebra_x` flag the same drift (the latter's failure is
+a downstream symptom of this gap).
+
+**Root cause hypothesis:** Some keys are conditionally emitted depending on
+board content (e.g. `ground_domains` only if a ground net exists,
+`power_net_routing` only if power nets are routed), but the `--schema` `required`
+list doesn't reflect that conditionality. Other keys (`board_metadata`,
+`board_thickness_mm`, `placement_density`) sound unconditional and should always
+be emitted — those may be regression-bugs in the analyzer.
+
+**Likely fix paths (decide per key):**
+- **Drop from `required`:** for genuinely-conditional keys (`ground_domains`,
+  `power_net_routing`).
+- **Emit unconditionally:** for keys that should always appear
+  (`board_metadata`, `board_thickness_mm`, `placement_density`) — file as KH-* in
+  the main-repo if confirmed.
+
+This is a **kicad-happy main-repo concern**, not a harness bug, but the harness
+test is the symptom-surfacing layer. Filing here for tracking; the actual fix
+likely lands in main-repo `analyze_pcb.py`.
+
+**Not tag-blocking** — pre-existing in rc.1, schema-vs-output mismatch only
+affects strict consumers, not the default-mode report.
+
+---
+
 ## Priority Queue
 
-_4 open TH-* issues (all LOW)._
+_7 open TH-* issues (all LOW)._
