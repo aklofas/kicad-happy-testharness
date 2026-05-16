@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.4.0",
+  "analyzer_type": "schematic",
+  "findings": [
+    {
+      "finding_id": "sch:PU-001:U3",
+      "detector": "detect_missing_i2c_pullups",
+      "rule_id": "PU-001",
+      "severity": "warning",
+      "summary": "Missing pull-up resistor on I2C net SDA to U3 pin PB7",
+      "category": "signal_integrity",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "schema_era": "v1.4",
+      "components": ["U3"],
+      "nets": ["I2C_SDA"]
+    },
+    {
+      "finding_id": "sch:RC-001:R5",
+      "detector": "detect_rc_filters",
+      "rule_id": "RC-001",
+      "severity": "info",
+      "summary": "RC filter R5+C2 cutoff 1.6kHz on analog input",
+      "category": "filtering",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "schema_era": "v1.4",
+      "components": ["R5", "C2"]
+    },
+    {
+      "finding_id": "sch:VD-001:U1",
+      "detector": "detect_voltage_dividers",
+      "rule_id": "VD-001",
+      "severity": "info",
+      "summary": "Voltage divider R3/R4 ratio 0.33 on U1 VFB pin",
+      "category": "feedback",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "schema_era": "v1.4",
+      "components": ["R3", "R4", "U1"]
+    },
+    {
+      "finding_id": "sch:DC-001:U1",
+      "detector": "detect_decoupling_caps",
+      "rule_id": "DC-001",
+      "severity": "info",
+      "summary": "Decoupling cap C5 100nF present on U1 VCC",
+      "category": "power_integrity",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "schema_era": "v1.4",
+      "components": ["U1", "C5"]
+    },
+    {
+      "finding_id": "sch:VM-001:U2",
+      "detector": "detect_voltage_mismatch",
+      "rule_id": "VM-001",
+      "severity": "warning",
+      "summary": "5V on U2 input pin spec'd for 3.3V max",
+      "category": "voltage_domain",
+      "confidence": "datasheet-backed",
+      "evidence_source": "datasheet",
+      "schema_era": "v1.4",
+      "components": ["U2"]
+    }
+  ]
+}
