@@ -51,13 +51,64 @@ def load_packet(pkt_dir):
     return out, None
 
 
+def _ids_by_status(annotations, status):
+    return {a["finding_id"] for a in annotations if a.get("status") == status}
+
+
+def _ids_with_severity_overlay(annotations):
+    return {a["finding_id"] for a in annotations
+            if a.get("suggested_severity") is not None}
+
+
+def _expected_ids(expected, key):
+    return {e["finding_id"] for e in expected.get(key, [])}
+
+
+def compute_metrics(loaded):
+    annotations = loaded["review_annotations"].get("annotations", [])
+    expected = loaded["expected_annotations"]
+
+    suppressed = _ids_by_status(annotations, "suppressed")
+    confirmed = _ids_by_status(annotations, "confirmed")
+    escalated = _ids_with_severity_overlay(annotations)
+
+    exp_supp = _expected_ids(expected, "expected_suppressions")
+    exp_conf = _expected_ids(expected, "expected_confirmations")
+    exp_esc = _expected_ids(expected, "expected_escalations")
+    exp_corr = _expected_ids(expected, "expected_correlations")
+
+    findings_list = loaded["findings"].get("findings", [])
+
+    metrics = {
+        "suppression_precision": (len(suppressed & exp_supp) / len(suppressed)
+                                  if suppressed else None),
+        "false_suppression_miss_rate": (len(exp_conf & suppressed) / len(exp_conf)
+                                        if exp_conf else None),
+        "confirmation_recall": (len(confirmed & exp_conf) / len(exp_conf)
+                                if exp_conf else None),
+    }
+    counts = {
+        "findings": len(findings_list),
+        "suppressed": len(suppressed),
+        "confirmed": len(confirmed),
+        "escalated": len(escalated),
+        "expected_suppressions": len(exp_supp),
+        "expected_confirmations": len(exp_conf),
+        "expected_escalations": len(exp_esc),
+        "expected_correlations": len(exp_corr),
+    }
+    return metrics, counts
+
+
 def process_packet(pkt_dir):
     loaded, skip_reason = load_packet(pkt_dir)
     if loaded is None:
         return {"packet_name": pkt_dir.name, "status": "skipped",
                 "reason": skip_reason}
-    return {"packet_name": pkt_dir.name, "status": "ok", "metrics": {},
-            "_loaded": loaded}
+    metrics, counts = compute_metrics(loaded)
+    return {"packet_name": pkt_dir.name, "status": "ok",
+            "metrics": metrics, "counts": counts,
+            "escalation_overlay_violations": 0}
 
 
 def aggregate(per_packet):

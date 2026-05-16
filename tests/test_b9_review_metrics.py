@@ -101,6 +101,28 @@ def test_missing_review_annotations_skips_clean():
         assert "review_annotations" in per_packet[0].get("reason", "")
 
 
+def test_demo_packet_suppression_precision():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp) / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(PACKETS_DIR),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True
+        )
+        assert result.returncode == 0, f"runner failed: {result.stderr}"
+        run_dir = next(out_dir.iterdir())
+        per_packet = json.loads((run_dir / "per_packet.json").read_text())
+        entry = next(p for p in per_packet
+                     if p["packet_name"] == "packet_01_suppress_true_fp")
+        assert entry["status"] == "ok"
+        assert entry["metrics"]["suppression_precision"] == 1.0
+        assert entry["metrics"]["false_suppression_miss_rate"] is None
+        assert entry["metrics"]["confirmation_recall"] is None
+        assert entry["counts"]["suppressed"] == 1
+        assert entry["counts"]["expected_suppressions"] == 1
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -108,6 +130,7 @@ if __name__ == "__main__":
         test_packet_schema_validates_demo,
         test_runner_smoke,
         test_missing_review_annotations_skips_clean,
+        test_demo_packet_suppression_precision,
     ]
     passed = failed = 0
     for t in tests:
