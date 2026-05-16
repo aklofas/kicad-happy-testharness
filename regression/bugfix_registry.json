@@ -2515,6 +2515,49 @@
     ]
   },
   {
+    "issue": "KH-313",
+    "type": "parser_fix",
+    "summary": "check_inductor_leakage crashes when RF chain component is a bare refdes string instead of a dict",
+    "assertions": [
+      {
+        "repo": "OLIMEX/DIY-LAPTOP",
+        "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
+        "source_file": "TERES_PCB1-A64-MAIN_Rev.C.sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "summary",
+          "op": "exists"
+        },
+        "description": "KH-313: EMC summary block exists (proves analyzer ran without AttributeError crash in check_inductor_leakage)"
+      },
+      {
+        "repo": "OLIMEX/DIY-LAPTOP",
+        "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
+        "source_file": "TERES_PCB1-A64-MAIN_Rev.C.sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "findings",
+          "op": "min_count",
+          "value": 1,
+          "detector_filter": "emc_inductor_leakage"
+        },
+        "description": "KH-313: emc_inductor_leakage produced >= 1 finding (proves the detector executed past the bare-string crash point)"
+      },
+      {
+        "repo": "OLIMEX/DIY-LAPTOP",
+        "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
+        "source_file": "TERES_PCB1-A64-MAIN_Rev.C.sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "summary.categories_checked",
+          "op": "equals",
+          "value": 10
+        },
+        "description": "KH-313: all 10 EMC categories ran (no early exit from inductor_leakage crash)"
+      }
+    ]
+  },
+  {
     "issue": "KH-319",
     "type": "parser_fix",
     "summary": "has_flag() now matches (hide yes) boolean sub-lists — hidden pins on KiCad 9+ schematics correctly reported as hidden",
