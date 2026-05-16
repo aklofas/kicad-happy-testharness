@@ -457,6 +457,46 @@ def _aggregate(records):
     }
 
 
+def _compute_pass_criteria(totals: dict) -> dict:
+    """Derive the pass_criteria block from rollup totals.
+
+    Two clean verdicts (LOG 5, audit Highest-Risk #14):
+
+      * ``clean`` — rc.1-compatible. ZERO disappeared findings, ZERO
+        severity downgrades, ZERO FAIL verdicts, ZERO NewUnknown findings.
+        NewUnknown is the safety-critical addition (an unrecognized new
+        rule_id at the producer side must be triaged, not silently
+        approved). WARN rows are tolerated.
+
+      * ``strict_clean`` — release-blocking interpretation. All of the
+        above PLUS ZERO WARN rows. A WARN row means the v1.3.1 baseline
+        could not be produced for that repo, so the v1.4 output isn't
+        comparable — that's incomplete coverage, not clean. Use this for
+        the actual tag decision; the rc.1-compatible ``clean`` is kept
+        for historical comparability.
+
+    Extracted from ``_write_rollup`` for direct unit testability — the
+    LOG 5 test suite asserts these verdicts on synthetic totals dicts.
+    """
+    return {
+        "disappeared_count": totals["Disappeared"],
+        "severity_downgrades": totals["Downgrades"],
+        "fail_verdicts": totals["FAIL"],
+        "new_unknown_count": totals["NewUnknown"],
+        "new_upgraded_count": totals["NewUpgraded"],
+        "warn_count": totals["WARN"],
+        "clean": (totals["Disappeared"] == 0
+                  and totals["Downgrades"] == 0
+                  and totals["FAIL"] == 0
+                  and totals["NewUnknown"] == 0),
+        "strict_clean": (totals["Disappeared"] == 0
+                         and totals["Downgrades"] == 0
+                         and totals["FAIL"] == 0
+                         and totals["NewUnknown"] == 0
+                         and totals["WARN"] == 0),
+    }
+
+
 def _write_rollup(records, agg, section, out_json, out_csv):
     rows = []
     for a in ALL_ANALYZERS:
@@ -502,16 +542,7 @@ def _write_rollup(records, agg, section, out_json, out_csv):
         "new_known_rule_distribution": dict(agg["new_known_rules"].most_common()),
         "new_upgraded_rule_distribution": dict(agg["new_upgraded_rules"].most_common()),
         "new_unknown_rule_distribution": dict(agg["new_unknown_rules"].most_common()),
-        "pass_criteria": {
-            "disappeared_count": totals["Disappeared"],
-            "severity_downgrades": totals["Downgrades"],
-            "fail_verdicts": totals["FAIL"],
-            "new_unknown_count": totals["NewUnknown"],
-            "new_upgraded_count": totals["NewUpgraded"],
-            "clean": (totals["Disappeared"] == 0
-                      and totals["Downgrades"] == 0
-                      and totals["FAIL"] == 0),
-        },
+        "pass_criteria": _compute_pass_criteria(totals),
     }
     out_json.write_text(json.dumps(report, indent=2, sort_keys=True),
                         encoding="utf-8")
@@ -555,12 +586,27 @@ def _print_summary(report):
           f"{t['NewKnown']:>10}{t['NewUnknown']:>9}")
     print()
     crit = report["pass_criteria"]
+    warn_count = crit.get('warn_count', 0)
     print(f"Pass criteria: disappeared={crit['disappeared_count']}  "
           f"downgrades={crit['severity_downgrades']}  "
           f"fail_verdicts={crit['fail_verdicts']}  "
           f"new_unknown={crit['new_unknown_count']}  "
-          f"new_upgraded={crit['new_upgraded_count']}")
-    print(f"  => {'CLEAN -- eligible for v1.4.0-rc.1 tag' if crit['clean'] else 'NOT CLEAN -- FAIL repos drive rc.2'}")
+          f"new_upgraded={crit['new_upgraded_count']}  "
+          f"warn={warn_count}")
+    # LOG 5: distinguish CLEAN (rc.1-compatible, NewUnknown-gated) from
+    # STRICT-CLEAN (also gates on WARN). Surface both verdicts so main-repo
+    # picks the right one for the release decision.
+    if crit.get('strict_clean'):
+        print(f"  => STRICT-CLEAN -- 0 WARN baselines, eligible for tag")
+    elif crit['clean']:
+        print(f"  => CLEAN -- but {warn_count} WARN baseline(s) -- "
+              f"comparison incomplete on those repos")
+    else:
+        if crit['new_unknown_count']:
+            print(f"  => NOT CLEAN -- {crit['new_unknown_count']} NewUnknown "
+                  f"finding(s) require triage before tag")
+        else:
+            print(f"  => NOT CLEAN -- FAIL repos drive rc.2")
     if report["fail_repo_count"]:
         print(f"\nFAIL repos ({report['fail_repo_count']}):")
         for fr in report["fail_repos"][:30]:

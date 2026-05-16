@@ -63,15 +63,27 @@ UPGRADED_V14_RULES = {'PU-001', 'LR-001'}
 SEVERITY_ORDER = {'info': 0, 'warning': 1, 'error': 2}
 
 
-def _first(seq):
-    """Return a stable string for the first item of a list-like field."""
+def _canon_refs(seq):
+    """Stable string for a list-like field — includes ALL items, sorted.
+
+    LOG 6 (audit Highest-Risk #15): the original ``_first()`` helper only
+    keyed on the first ref/net/pin, so a regression that dropped secondary
+    refs (e.g. components ``["U1","C4","C5"]`` → ``["U1"]`` from one v1.4
+    detector change) collided into the same canonical key as the v1.3
+    finding. The diff engine then mis-reported the loss as a no-op.
+    Including the full sorted set turns that loss into a key change
+    (disappeared old key + new key with truncated refs) so it surfaces.
+    """
     if not seq:
         return ''
-    item = seq[0]
-    if isinstance(item, dict):
-        return (item.get('ref') or item.get('number')
-                or json.dumps(item, sort_keys=True))
-    return str(item)
+    items = []
+    for item in seq:
+        if isinstance(item, dict):
+            items.append(item.get('ref') or item.get('number')
+                         or json.dumps(item, sort_keys=True))
+        else:
+            items.append(str(item))
+    return ','.join(sorted(items))
 
 
 # A run of two-or-more comma-separated identifier-like tokens (net names,
@@ -80,30 +92,41 @@ def _first(seq):
 # cosmetic churn, not a finding regression. Normalizing sorts each such run
 # so the canonical key is stable across the reordering.
 _COMMA_RUN = re.compile(r'[\w/.+\-]+(?:,\s*[\w/.+\-]+)+')
+_WS_RUN = re.compile(r'\s+')
 
 
 def _norm_summary(summary):
-    """Sort comma-separated token runs inside a summary string so that
-    set-iteration-order reordering does not change the canonical key."""
+    """Sort comma-separated token runs inside a summary string AND collapse
+    whitespace runs to single spaces so that ordering / formatting churn
+    doesn't change the canonical key.
+
+    LOG 6: whitespace-only diffs (e.g. double-space → single-space, trailing
+    whitespace) on otherwise-identical summaries used to produce different
+    canonical keys, causing spurious 'disappeared + new' pairs. The
+    ``_WS_RUN`` collapse fixes that without losing any real content."""
     text = str(summary or '')
 
     def _sort_run(m):
         return ', '.join(sorted(p.strip() for p in m.group(0).split(',')))
 
-    return _COMMA_RUN.sub(_sort_run, text)[:120]
+    text = _COMMA_RUN.sub(_sort_run, text)
+    text = _WS_RUN.sub(' ', text).strip()
+    return text[:120]
 
 
 def _canon_key(f):
     """Canonical identity for cross-version finding comparison.
 
     Excludes severity (so we can detect downgrades on shared findings)
-    and excludes v1.4-only fields (finding_id, schema_era).
+    and excludes v1.4-only fields (finding_id, schema_era). Includes the
+    FULL sorted ref/net/pin sets via :func:`_canon_refs` so dropped
+    secondary refs change the key (audit Highest-Risk #15 / LOG 6).
     """
     return (
         str(f.get('rule_id') or ''),
-        _first(f.get('components') or []),
-        _first(f.get('nets') or []),
-        _first(f.get('pins') or []),
+        _canon_refs(f.get('components') or []),
+        _canon_refs(f.get('nets') or []),
+        _canon_refs(f.get('pins') or []),
         _norm_summary(f.get('summary')),
     )
 
