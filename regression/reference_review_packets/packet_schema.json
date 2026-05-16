@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kicad-happy.testharness/schemas/review_packet.schema.json",
+  "title": "B9 Review Metrics Packet",
+  "description": "Combined input/recorded_output/expected for run_review_metrics.py. v1.4 scaffolding (B9).",
+  "type": "object",
+  "required": ["inputs", "recorded_output", "expected"],
+  "additionalProperties": false,
+  "properties": {
+    "inputs": {
+      "type": "object",
+      "required": ["findings", "design_context", "extraction_facts"],
+      "additionalProperties": false,
+      "properties": {
+        "findings": {"type": "object"},
+        "design_context": {"type": "object"},
+        "extraction_facts": {"type": "object"}
+      }
+    },
+    "recorded_output": {"type": "object"},
+    "expected": {
+      "type": "object",
+      "required": ["expected_suppressions", "expected_confirmations",
+                   "expected_escalations", "expected_correlations",
+                   "expected_novel_observations_count"],
+      "additionalProperties": true,
+      "properties": {
+        "expected_suppressions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["finding_id"],
+            "additionalProperties": true,
+            "properties": {"finding_id": {"type": "string", "minLength": 1}}
+          }
+        },
+        "expected_confirmations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["finding_id"],
+            "additionalProperties": true,
+            "properties": {"finding_id": {"type": "string", "minLength": 1}}
+          }
+        },
+        "expected_escalations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["finding_id"],
+            "additionalProperties": true,
+            "properties": {
+              "finding_id": {"type": "string", "minLength": 1},
+              "suggested_severity": {"enum": ["error", "warning", "info"]}
+            }
+          }
+        },
+        "expected_correlations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["finding_id"],
+            "additionalProperties": true,
+            "properties": {
+              "finding_id": {"type": "string", "minLength": 1},
+              "correlated_with": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "expected_novel_observations_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}
