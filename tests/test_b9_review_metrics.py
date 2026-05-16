@@ -241,6 +241,23 @@ def test_single_packet_filter():
         assert per_packet[0]["packet_name"] == "packet_01_suppress_true_fp"
 
 
+def test_json_flag_stdout_only():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp) / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(PACKETS_DIR),
+             "--output-dir", str(out_dir),
+             "--json"],
+            capture_output=True, text=True
+        )
+        assert result.returncode == 0
+        agg = json.loads(result.stdout)
+        assert agg["packet_count"] >= 1
+        assert "metrics" in agg
+        assert not out_dir.exists(), "expected no output dir with --json"
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -254,6 +271,7 @@ if __name__ == "__main__":
         test_aggregate_consistency,
         test_report_md_nonempty,
         test_single_packet_filter,
+        test_json_flag_stdout_only,
     ]
     passed = failed = 0
     for t in tests:
