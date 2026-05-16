@@ -217,6 +217,30 @@ def test_report_md_nonempty():
         assert "Carry-overs" in md
 
 
+def test_single_packet_filter():
+    import shutil
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        packets_dir = tmp / "packets"
+        packets_dir.mkdir()
+        # Copy demo packet twice with different names
+        shutil.copytree(DEMO_PACKET, packets_dir / "packet_01_suppress_true_fp")
+        shutil.copytree(DEMO_PACKET, packets_dir / "packet_02_decoy")
+        out_dir = tmp / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(packets_dir),
+             "--packet", "packet_01_suppress_true_fp",
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True
+        )
+        assert result.returncode == 0, f"runner failed: {result.stderr}"
+        run_dir = next(out_dir.iterdir())
+        per_packet = json.loads((run_dir / "per_packet.json").read_text())
+        assert len(per_packet) == 1
+        assert per_packet[0]["packet_name"] == "packet_01_suppress_true_fp"
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -229,6 +253,7 @@ if __name__ == "__main__":
         test_aggregate_json_shape,
         test_aggregate_consistency,
         test_report_md_nonempty,
+        test_single_packet_filter,
     ]
     passed = failed = 0
     for t in tests:
