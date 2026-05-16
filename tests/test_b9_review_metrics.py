@@ -123,6 +123,38 @@ def test_demo_packet_suppression_precision():
         assert entry["counts"]["expected_suppressions"] == 1
 
 
+def test_per_packet_json_shape():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp) / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(PACKETS_DIR),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True
+        )
+        assert result.returncode == 0
+        run_dir = next(out_dir.iterdir())
+        per_packet = json.loads((run_dir / "per_packet.json").read_text())
+        entry = per_packet[0]
+        assert entry["status"] == "ok"
+        m = entry["metrics"]
+        for key in ("suppression_precision", "false_suppression_miss_rate",
+                    "confirmation_recall", "escalation_precision",
+                    "correlation_coverage", "confidence_calibration",
+                    "cost_delta"):
+            assert key in m, f"missing metric key: {key}"
+        # Calibration: per-bucket structure, all "insufficient_data" at n=1
+        cal = m["confidence_calibration"]
+        for bucket in ("high", "medium", "low"):
+            assert bucket in cal
+            assert cal[bucket] in ("insufficient_data",) or isinstance(cal[bucket], float)
+        # Cost null at v1.4 (no ledger)
+        assert m["cost_delta"] is None
+        # Overlay violations surfaced
+        assert "escalation_overlay_violations" in entry
+        assert entry["escalation_overlay_violations"] == 0
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -131,6 +163,7 @@ if __name__ == "__main__":
         test_runner_smoke,
         test_missing_review_annotations_skips_clean,
         test_demo_packet_suppression_precision,
+        test_per_packet_json_shape,
     ]
     passed = failed = 0
     for t in tests:

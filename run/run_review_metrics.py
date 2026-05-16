@@ -25,6 +25,9 @@ PACKET_FILES = {
     "expected_annotations": "expected_annotations.json",
 }
 
+CONFIDENCE_BUCKETS = ("high", "medium", "low")
+CALIBRATION_MIN_N = 5
+
 
 def discover_packets(packets_dir, only=None):
     if not packets_dir.is_dir():
@@ -64,6 +67,54 @@ def _expected_ids(expected, key):
     return {e["finding_id"] for e in expected.get(key, [])}
 
 
+def _ids_with_correlation(annotations):
+    return {a["finding_id"] for a in annotations
+            if a.get("correlation") is not None}
+
+
+def _compute_calibration(annotations, exp_supp_ids):
+    out = {}
+    for bucket in CONFIDENCE_BUCKETS:
+        bucket_ids = {a["finding_id"] for a in annotations
+                      if a.get("status") == "suppressed"
+                      and a.get("confidence") == bucket}
+        if len(bucket_ids) < CALIBRATION_MIN_N:
+            out[bucket] = "insufficient_data"
+        else:
+            out[bucket] = len(bucket_ids & exp_supp_ids) / len(bucket_ids)
+    return out
+
+
+def _compute_overlay_violations(loaded):
+    """Escalated annotations must not mutate the raw severity field.
+
+    Returns count of (finding_id with suggested_severity) whose raw severity
+    in findings.json differs from the recorded severity at review time.
+    At v1.4 the reviewer schema has additionalProperties=false and provides
+    no mutation channel, so this is always 0; surfaced for v1.5 when
+    overlay vs mutation becomes distinguishable.
+    """
+    violations = 0
+    for a in loaded["review_annotations"].get("annotations", []):
+        if a.get("suggested_severity") is not None:
+            # No mutation channel exists in v1.4 schema.
+            pass
+    return violations
+
+
+def _compute_cost_delta(loaded):
+    # Cost ledger not present at v1.4 — flagged carry-over for main-repo.
+    rec = loaded["review_annotations"]
+    cost = rec.get("cost")
+    if not isinstance(cost, dict):
+        return None
+    actual = cost.get("actual")
+    estimated = cost.get("estimated")
+    if actual is None or estimated in (None, 0):
+        return None
+    return (actual - estimated) / estimated
+
+
 def compute_metrics(loaded):
     annotations = loaded["review_annotations"].get("annotations", [])
     expected = loaded["expected_annotations"]
@@ -71,6 +122,7 @@ def compute_metrics(loaded):
     suppressed = _ids_by_status(annotations, "suppressed")
     confirmed = _ids_by_status(annotations, "confirmed")
     escalated = _ids_with_severity_overlay(annotations)
+    correlated = _ids_with_correlation(annotations)
 
     exp_supp = _expected_ids(expected, "expected_suppressions")
     exp_conf = _expected_ids(expected, "expected_confirmations")
@@ -86,6 +138,12 @@ def compute_metrics(loaded):
                                         if exp_conf else None),
         "confirmation_recall": (len(confirmed & exp_conf) / len(exp_conf)
                                 if exp_conf else None),
+        "escalation_precision": (len(escalated & exp_esc) / len(escalated)
+                                 if escalated else None),
+        "correlation_coverage": (len(correlated & exp_corr) / len(exp_corr)
+                                 if exp_corr else None),
+        "confidence_calibration": _compute_calibration(annotations, exp_supp),
+        "cost_delta": _compute_cost_delta(loaded),
     }
     counts = {
         "findings": len(findings_list),
@@ -97,7 +155,8 @@ def compute_metrics(loaded):
         "expected_escalations": len(exp_esc),
         "expected_correlations": len(exp_corr),
     }
-    return metrics, counts
+    overlay_violations = _compute_overlay_violations(loaded)
+    return metrics, counts, overlay_violations
 
 
 def process_packet(pkt_dir):
@@ -105,10 +164,10 @@ def process_packet(pkt_dir):
     if loaded is None:
         return {"packet_name": pkt_dir.name, "status": "skipped",
                 "reason": skip_reason}
-    metrics, counts = compute_metrics(loaded)
+    metrics, counts, overlay_violations = compute_metrics(loaded)
     return {"packet_name": pkt_dir.name, "status": "ok",
             "metrics": metrics, "counts": counts,
-            "escalation_overlay_violations": 0}
+            "escalation_overlay_violations": overlay_violations}
 
 
 def aggregate(per_packet):
