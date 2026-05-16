@@ -135,3 +135,112 @@ def test_ex_001_fires_when_inductor_missing(tmp_path):
     ex_l = [f for f in findings if f.get("rule_id") == "EX-001"
               and f.get("missing_kind") == "inductor"]
     assert ex_l, f"Expected EX-001 (missing inductor), got: {findings}"
+
+
+# ===========================================================================
+# Cache-variant locks — stale + low-conf + no-input-rail + null-reg-ext (LOG 13)
+# ===========================================================================
+
+def _reg_ctx_no_caps(input_rail, output_rail, tmp_path):
+    """Empty schematic — no caps, no inductors. EX-001 should fire on any
+    populated regulator.cin_min / cout_min / inductor_range."""
+    ctx = _make_ctx([], {input_rail: {"pins": []}, output_rail: {"pins": []}},
+                    {}, {input_rail, output_rail}, tmp_path)
+    return ctx
+
+
+def test_ex_001_stale_cache_still_fires(tmp_path):
+    """Detector does NOT branch on facts.stale — EX-001 fires identically
+    whether the cache is fresh or stale. Per-detector half of the A3.3
+    staleness ↔ trust-gating orthogonality lock."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev = Evidence(page=2, confidence="high", method="table")
+    sv_cin = SpecValue(unit="F", evidence=ev, min=10e-6)
+
+    reg = {"reference": "U1", "value": "LM2596", "mpn": "LM2596-ADJ",
+            "input_rail": "VIN", "output_rail": "V5V"}
+    facts = _build_facts(cin_min=[sv_cin])
+    facts.stale = True
+
+    ctx = _reg_ctx_no_caps("VIN", "V5V", tmp_path)
+    with patch.object(lookup_detectors, "get_facts", return_value=facts):
+        findings = lookup_detectors.detect_missing_required_components(
+            ctx, power_regulators=[reg])
+
+    ex = [f for f in findings if f.get("rule_id") == "EX-001"]
+    assert ex, "stale cache must NOT suppress EX-001 — orthogonality lock"
+
+
+def test_ex_001_low_confidence_cin_no_finding(tmp_path):
+    """Low-confidence cin_min SpecValue → best(min_confidence='medium')
+    returns None → silent skip even when the input rail has no capacitor.
+    Locks the implicit per-rule gate."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev_low = Evidence(page=2, confidence="low", method="prose")
+    sv_cin = SpecValue(unit="F", evidence=ev_low, min=10e-6)
+
+    reg = {"reference": "U1", "value": "LM2596", "mpn": "LM2596-ADJ",
+            "input_rail": "VIN", "output_rail": "V5V"}
+
+    ctx = _reg_ctx_no_caps("VIN", "V5V", tmp_path)
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts(cin_min=[sv_cin])):
+        findings = lookup_detectors.detect_missing_required_components(
+            ctx, power_regulators=[reg])
+
+    ex_input = [f for f in findings if f.get("rule_id") == "EX-001"
+                  and f.get("missing_kind") == "input cap"]
+    assert ex_input == [], (
+        f"low-conf cin_min must fail medium gate → silent skip, got {ex_input}"
+    )
+
+
+def test_ex_001_no_input_rail_skips_cin_check(tmp_path):
+    """When the regulator dict has `input_rail=None`, the `if has_data(...)
+    and input_rail:` guard short-circuits — no EX-001 for the missing
+    input cap. Locks against a regression that would emit a confusing
+    "missing input cap on None" finding."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev = Evidence(page=2, confidence="high", method="table")
+    sv_cin = SpecValue(unit="F", evidence=ev, min=10e-6)
+
+    reg = {"reference": "U1", "value": "LM2596", "mpn": "LM2596-ADJ",
+            "input_rail": None, "output_rail": "V5V"}  # input_rail unknown
+
+    ctx = _reg_ctx_no_caps("VIN", "V5V", tmp_path)
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts(cin_min=[sv_cin])):
+        findings = lookup_detectors.detect_missing_required_components(
+            ctx, power_regulators=[reg])
+
+    ex_input = [f for f in findings if f.get("rule_id") == "EX-001"
+                  and f.get("missing_kind") == "input cap"]
+    assert ex_input == [], (
+        f"input_rail=None must short-circuit cin check, got {ex_input}"
+    )
+
+
+def test_ex_001_null_regulator_extension_skips(tmp_path):
+    """facts present but regulator extension is None (partial extraction
+    on a non-regulator part wrongly classified as such, or extractor
+    didn't populate the regulator block) → silent skip. Locks the
+    `if regulator is None: continue` guard."""
+    import lookup_detectors
+
+    reg = {"reference": "U1", "value": "X", "mpn": "M",
+            "input_rail": "VIN", "output_rail": "V5V"}
+    fake_facts = MagicMock()
+    fake_facts.regulator = None  # extension absent
+
+    ctx = _reg_ctx_no_caps("VIN", "V5V", tmp_path)
+    with patch.object(lookup_detectors, "get_facts", return_value=fake_facts):
+        # Must not raise; must return [].
+        findings = lookup_detectors.detect_missing_required_components(
+            ctx, power_regulators=[reg])
+    assert findings == []

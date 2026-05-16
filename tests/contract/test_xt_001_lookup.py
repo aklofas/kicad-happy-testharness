@@ -263,3 +263,122 @@ def test_detect_crystal_circuits_probes_datasheet_for_target_load(tmp_path):
     # XL-DET assessment must be unchanged
     assert xc["rule_id"] == "XL-DET", "XL-DET rule_id must be preserved"
     assert xc["severity"] == "info", "XL-DET severity must remain 'info'"
+
+
+# ---------------------------------------------------------------------------
+# Cache-variant locks — stale + low-conf (LOG 13)
+# ---------------------------------------------------------------------------
+
+def _build_crystal_ctx(tmp_path, xtal_value="XTAL-16M"):
+    """Minimal ctx with one crystal (16MHz, value not parseable for CL) and
+    two 22pF load caps. Effective CL ≈ 14pF (with 3pF stray) → out-of-spec
+    vs 18pF target. Mirrors the construction in
+    test_detect_crystal_circuits_probes_datasheet_for_target_load."""
+    from kicad_types import AnalysisContext
+
+    xtal_ref = "Y1"
+    c1_ref = "C1"
+    c2_ref = "C2"
+    xtal = {
+        "reference": xtal_ref, "value": xtal_value, "type": "crystal",
+        "lib_id": "Device:Crystal", "footprint": "", "properties": {},
+        "pins": [
+            {"number": "1", "name": "IN", "x": 0, "y": 0},
+            {"number": "2", "name": "OUT", "x": 0, "y": 0},
+        ],
+    }
+    c1 = {"reference": c1_ref, "value": "22p", "type": "capacitor",
+          "lib_id": "Device:C", "footprint": "", "properties": {}}
+    c2 = {"reference": c2_ref, "value": "22p", "type": "capacitor",
+          "lib_id": "Device:C", "footprint": "", "properties": {}}
+    ctx = AnalysisContext(
+        components=[xtal, c1, c2],
+        nets={
+            "XTAL1": {"pins": [
+                {"component": xtal_ref, "pin_number": "1", "pin_name": "IN", "x": 0, "y": 0},
+                {"component": c1_ref, "pin_number": "1", "pin_name": "1", "x": 0, "y": 0},
+            ]},
+            "XTAL2": {"pins": [
+                {"component": xtal_ref, "pin_number": "2", "pin_name": "OUT", "x": 0, "y": 0},
+                {"component": c2_ref, "pin_number": "1", "pin_name": "1", "x": 0, "y": 0},
+            ]},
+            "GND": {"pins": [
+                {"component": c1_ref, "pin_number": "2", "pin_name": "2", "x": 0, "y": 0},
+                {"component": c2_ref, "pin_number": "2", "pin_name": "2", "x": 0, "y": 0},
+            ]},
+        },
+        lib_symbols={},
+        pin_net={
+            (xtal_ref, "1"): ("XTAL1", None),
+            (xtal_ref, "2"): ("XTAL2", None),
+            (c1_ref, "1"): ("XTAL1", None),
+            (c1_ref, "2"): ("GND", None),
+            (c2_ref, "1"): ("XTAL2", None),
+            (c2_ref, "2"): ("GND", None),
+        },
+        known_power_rails={"GND"},
+        source="test",
+    )
+    setattr(ctx, "cache_dir", tmp_path)
+    setattr(ctx, "design_context", None)
+    return ctx
+
+
+def test_xt_001_stale_cache_still_fires_datasheet_branch(tmp_path):
+    """detect_crystal_circuits does NOT branch on facts.stale — datasheet
+    branch still wins over parse/frequency fallback even when the cache
+    is stale. Per-detector half of the A3.3 staleness/trust-gating
+    orthogonality lock for XT-001's upstream lookup consumer."""
+    from datasheet_types import SpecValue, Evidence
+    import signal_detectors
+
+    ev = Evidence(page=1, confidence="medium", method="table")
+    sv_cl = SpecValue(unit="F", evidence=ev, typ=1.8e-11)  # 18 pF
+
+    fake_crystal_block = MagicMock()
+    fake_crystal_block.load_capacitance = [sv_cl]
+    fake_facts = MagicMock()
+    fake_facts.crystal = fake_crystal_block
+    fake_facts.stale = True  # stale cache
+
+    ctx = _build_crystal_ctx(tmp_path)
+    with patch.object(signal_detectors, "get_facts", return_value=fake_facts):
+        crystal_circuits = signal_detectors.detect_crystal_circuits(ctx)
+
+    assert crystal_circuits, "Expected crystal detection to produce results"
+    xc = crystal_circuits[0]
+    assert xc["target_load_source"] == "datasheet", (
+        f"stale cache must NOT bypass datasheet branch, "
+        f"got target_load_source={xc['target_load_source']!r}"
+    )
+    assert abs(xc["target_load_pF"] - 18.0) < 0.01, (
+        f"Expected datasheet-derived target_load_pF≈18.0, got {xc['target_load_pF']}"
+    )
+
+
+def test_xt_001_low_confidence_target_load_falls_back_to_frequency_default(tmp_path):
+    """Low-confidence crystal.load_capacitance → best(min_confidence='medium')
+    returns None → datasheet branch skips → falls through to value-parse
+    (unparseable here) → frequency_default branch wins. Locks the implicit
+    per-rule low-conf gate inside detect_crystal_circuits."""
+    from datasheet_types import SpecValue, Evidence
+    import signal_detectors
+
+    ev_low = Evidence(page=1, confidence="low", method="prose")
+    sv_cl = SpecValue(unit="F", evidence=ev_low, typ=1.8e-11)
+
+    fake_crystal_block = MagicMock()
+    fake_crystal_block.load_capacitance = [sv_cl]
+    fake_facts = MagicMock()
+    fake_facts.crystal = fake_crystal_block
+
+    ctx = _build_crystal_ctx(tmp_path)
+    with patch.object(signal_detectors, "get_facts", return_value=fake_facts):
+        crystal_circuits = signal_detectors.detect_crystal_circuits(ctx)
+
+    assert crystal_circuits, "Expected crystal detection to produce results"
+    xc = crystal_circuits[0]
+    assert xc["target_load_source"] != "datasheet", (
+        f"low-conf load_capacitance must NOT promote to datasheet branch, "
+        f"got target_load_source={xc['target_load_source']!r}"
+    )

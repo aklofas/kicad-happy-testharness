@@ -135,3 +135,88 @@ def test_pm_001_skips_unrecognized_net_names(tmp_path):
     with patch.object(lookup_detectors, "get_facts", return_value=_build_facts([pin])):
         findings = lookup_detectors.detect_wrong_signal_type(ctx)
     assert findings == []
+
+
+# ===========================================================================
+# Cache-variant locks — stale + match-via-name + case-insensitivity (LOG 13)
+# ===========================================================================
+
+def _uart_ic_and_ctx(net_name, tmp_path):
+    """One IC, one pin, one UART-named net — minimal ctx for PM-001."""
+    ic = {"reference": "U1", "value": "STM32", "mpn": "STM32", "type": "ic",
+          "lib_id": "Device:U", "footprint": "", "properties": {},
+          "pins": [{"number": "10", "name": "PA0"}]}
+    nets = {net_name: {"pins": [{"component": "U1", "pin_number": "10",
+                                   "pin_name": "PA0", "x": 0, "y": 0}]}}
+    ctx = _make_ctx([ic], nets, {("U1", "10"): (net_name, None)},
+                    set(), tmp_path)
+    return ctx
+
+
+def test_pm_001_stale_cache_still_fires(tmp_path):
+    """Detector does NOT branch on facts.stale — PM-001 fires identically
+    whether the cache is fresh or stale. Per-detector half of the A3.3
+    staleness ↔ trust-gating orthogonality lock."""
+    import lookup_detectors
+
+    pin = _build_pin("PA0", "10", alt_functions=[
+        _build_alt_func("SPI1_MOSI", "SPI1"),
+    ])
+    facts = _build_facts([pin])
+    facts.stale = True
+
+    ctx = _uart_ic_and_ctx("USART1_TX", tmp_path)
+    with patch.object(lookup_detectors, "get_facts", return_value=facts):
+        findings = lookup_detectors.detect_wrong_signal_type(ctx)
+
+    pm = [f for f in findings if f.get("rule_id") == "PM-001"]
+    assert pm, "stale cache must NOT suppress PM-001 — orthogonality lock"
+
+
+def test_pm_001_match_via_alt_function_name_when_peripheral_empty(tmp_path):
+    """Code checks BOTH af.peripheral AND af.name for the hint substring
+    (per `hint_upper in af_peripheral or hint_upper in af_name`). A pin
+    with empty peripheral but matching name still counts as supporting
+    the inferred peripheral. Locks the OR-on-both-fields contract — a
+    regression to peripheral-only would silently mis-flag pins whose only
+    peripheral indicator is in the name string."""
+    import lookup_detectors
+
+    ctx = _uart_ic_and_ctx("USART1_TX", tmp_path)
+    # peripheral is empty; only name carries the USART hint.
+    pin = _build_pin("PA9", "10", alt_functions=[
+        _build_alt_func(name="USART1_TX", peripheral=""),
+    ])
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([pin])):
+        findings = lookup_detectors.detect_wrong_signal_type(ctx)
+
+    pm = [f for f in findings if f.get("rule_id") == "PM-001"]
+    assert pm == [], (
+        f"empty peripheral + matching name must count as support, got {pm}"
+    )
+
+
+def test_pm_001_case_insensitive_lowercase_net_matches_uart_hint(tmp_path):
+    """The _PERIPHERAL_HINTS regexes use re.IGNORECASE, so a lowercase net
+    name like 'uart1_tx' must still trigger the USART/UART hint. Locks
+    the case-insensitivity flag — a regression that dropped re.IGNORECASE
+    would silently disable detection on KiCad designs that use lowercase
+    net naming conventions."""
+    import lookup_detectors
+
+    ctx = _uart_ic_and_ctx("uart1_tx", tmp_path)  # lowercase
+    # Pin only supports SPI — should produce a PM-001 finding since net
+    # IS recognized as UART by the case-insensitive regex.
+    pin = _build_pin("PA0", "10", alt_functions=[
+        _build_alt_func("SPI1_MOSI", "SPI1"),
+    ])
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([pin])):
+        findings = lookup_detectors.detect_wrong_signal_type(ctx)
+
+    pm = [f for f in findings if f.get("rule_id") == "PM-001"]
+    assert pm, (
+        "lowercase 'uart1_tx' must still match USART/UART hint via IGNORECASE — "
+        "got no finding, suggesting case-insensitivity broke"
+    )

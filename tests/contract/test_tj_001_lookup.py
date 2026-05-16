@@ -113,3 +113,111 @@ def test_tj_001_resolves_tjmax_synonym(tmp_path):
     assert any(f.get("rule_id") == "TJ-001" for f in findings), (
         "Expected TJ-001 to fire via TJ_max synonym resolution"
     )
+
+
+# ===========================================================================
+# Cache-variant locks — stale + low-conf-theta + low-conf-tjmax + max-fallback (LOG 13)
+# ===========================================================================
+
+def _fires_assessment():
+    """Reusable assessment that would fire TJ-001 with the canonical
+    (theta=75, tjmax=150) fixture: TJ = 50 + 1.5*75 = 162.5 > 150."""
+    return [{
+        "ref": "U1", "value": "FAKE-REG", "ambient_c": 50.0,
+        "pdiss_w": 1.5, "rtheta_ja_effective": 75.0,
+        "tj_estimated_c": 162.5, "tj_max_c": 150.0,
+    }]
+
+
+def test_tj_001_stale_cache_still_fires(tmp_path):
+    """Detector does NOT branch on facts.stale — TJ-001 fires identically
+    whether the cache is fresh or stale. Per-detector half of the A3.3
+    staleness ↔ trust-gating orthogonality lock."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev = Evidence(page=2, confidence="high", method="table")
+    theta_sv = SpecValue(unit="C/W", evidence=ev, typ=75.0)
+    tjmax_sv = SpecValue(unit="C", evidence=ev, max=150.0)
+    facts = _build_facts([theta_sv], [tjmax_sv])
+    facts.stale = True
+
+    with patch.object(lookup_detectors, "get_facts", return_value=facts):
+        findings = lookup_detectors.detect_tj_exceeds_max(
+            _fires_assessment(), source="thermal", cache_dir=tmp_path)
+
+    tj = [f for f in findings if f.get("rule_id") == "TJ-001"]
+    assert tj, "stale cache must NOT suppress TJ-001 — orthogonality lock"
+
+
+def test_tj_001_low_confidence_theta_ja_no_finding(tmp_path):
+    """Low-confidence theta_ja → best(min_confidence='medium') returns
+    None → silent skip even when TJ would otherwise exceed TJmax. Locks
+    the per-rule low-conf gate on the thermal-resistance side."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev_high = Evidence(page=2, confidence="high", method="table")
+    ev_low = Evidence(page=2, confidence="low", method="prose")
+    theta_sv = SpecValue(unit="C/W", evidence=ev_low, typ=75.0)  # low conf
+    tjmax_sv = SpecValue(unit="C", evidence=ev_high, max=150.0)
+
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([theta_sv], [tjmax_sv])):
+        findings = lookup_detectors.detect_tj_exceeds_max(
+            _fires_assessment(), source="thermal", cache_dir=tmp_path)
+
+    assert findings == [], (
+        f"low-conf theta_ja must fail medium gate → silent skip, got {findings}"
+    )
+
+
+def test_tj_001_low_confidence_tj_max_no_finding(tmp_path):
+    """Low-confidence TJmax → best(min_confidence='medium') returns None →
+    silent skip even when TJ would otherwise exceed. Symmetric to the
+    theta_ja low-conf test; both gates must independently work."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev_high = Evidence(page=2, confidence="high", method="table")
+    ev_low = Evidence(page=2, confidence="low", method="prose")
+    theta_sv = SpecValue(unit="C/W", evidence=ev_high, typ=75.0)
+    tjmax_sv = SpecValue(unit="C", evidence=ev_low, max=150.0)  # low conf
+
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([theta_sv], [tjmax_sv])):
+        findings = lookup_detectors.detect_tj_exceeds_max(
+            _fires_assessment(), source="thermal", cache_dir=tmp_path)
+
+    assert findings == [], (
+        f"low-conf TJmax must fail medium gate → silent skip, got {findings}"
+    )
+
+
+def test_tj_001_theta_typ_missing_falls_back_to_max(tmp_path):
+    """When theta_sv.typ is None, detector falls back to theta_sv.max
+    (worst-case). Locks the `theta = theta_sv.typ if theta_sv.typ is not
+    None else theta_sv.max` line — a regression that lost the fallback
+    would silently skip thermal checks on parts where only the max θJA
+    was published."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev = Evidence(page=2, confidence="high", method="table")
+    # typ=None forces max fallback; max=75 produces same TJ as the fires test.
+    theta_sv = SpecValue(unit="C/W", evidence=ev, typ=None, max=75.0)
+    tjmax_sv = SpecValue(unit="C", evidence=ev, max=150.0)
+
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([theta_sv], [tjmax_sv])):
+        findings = lookup_detectors.detect_tj_exceeds_max(
+            _fires_assessment(), source="thermal", cache_dir=tmp_path)
+
+    tj = [f for f in findings if f.get("rule_id") == "TJ-001"]
+    assert tj, (
+        "typ=None must fall back to max for theta_ja — got no finding, "
+        "suggesting the fallback path is broken"
+    )
+    assert tj[0].get("theta_ja") == 75.0, (
+        f"Expected theta_ja=75.0 from max fallback, got {tj[0].get('theta_ja')}"
+    )

@@ -135,3 +135,107 @@ def test_ov_001_no_finding_when_within_range(tmp_path):
 
     ov = [f for f in findings if f.get("rule_id") == "OV-001"]
     assert ov == [], f"Expected no OV-001 (3.3V within [2.7, 3.6]), got: {ov}"
+
+
+# ===========================================================================
+# Cache-variant locks — stale + low-conf + null-bound + boundary (LOG 13)
+# ===========================================================================
+
+def _vdd_ic_and_ctx(net_name, tmp_path):
+    """Single VDD-pin IC on the given net — minimal ctx for OV-001."""
+    ic = {"reference": "U1", "value": "X", "mpn": "M", "type": "ic",
+          "lib_id": "Device:U", "footprint": "", "properties": {},
+          "pins": [{"number": "1", "name": "VDD"}]}
+    nets = {net_name: {"pins": [{"component": "U1", "pin_number": "1",
+                                   "pin_name": "VDD", "x": 0, "y": 0}]}}
+    ctx = _make_ctx([ic], nets, {("U1", "1"): (net_name, None)},
+                    {net_name}, tmp_path)
+    return ctx
+
+
+def test_ov_001_stale_cache_still_fires(tmp_path):
+    """Detector does NOT branch on facts.stale — same warning emitted as for
+    a fresh cache. Per-detector half of the A3.3 staleness/trust-gating
+    orthogonality lock."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev = Evidence(page=2, confidence="high", method="table")
+    sv_rec = SpecValue(unit="V", evidence=ev, min=2.7, typ=3.3, max=3.6)
+    facts = _build_facts([sv_rec])
+    facts.stale = True
+
+    ctx = _vdd_ic_and_ctx("V1V8", tmp_path)
+    with patch.object(lookup_detectors, "get_facts", return_value=facts):
+        findings = lookup_detectors.detect_vcc_outside_recommended(
+            ctx, rail_voltages={"V1V8": 1.8})
+
+    ov = [f for f in findings if f.get("rule_id") == "OV-001"]
+    assert ov, "stale cache must NOT suppress OV-001 — orthogonality lock"
+
+
+def test_ov_001_low_confidence_recommended_no_finding(tmp_path):
+    """Low-confidence recommended_operating SpecValue → best(min_confidence=
+    'medium') returns None → silent skip even when rail is grossly out of
+    range. Locks the implicit per-rule gate."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev_low = Evidence(page=2, confidence="low", method="prose")
+    sv_rec = SpecValue(unit="V", evidence=ev_low, min=2.7, typ=3.3, max=3.6)
+
+    ctx = _vdd_ic_and_ctx("V5V", tmp_path)
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([sv_rec])):
+        findings = lookup_detectors.detect_vcc_outside_recommended(
+            ctx, rail_voltages={"V5V": 5.0})  # would normally fire (above max)
+
+    assert findings == [], (
+        f"low-conf recommended must fail medium gate → silent skip, got {findings}"
+    )
+
+
+def test_ov_001_only_v_max_defined_does_not_fire_when_rail_below(tmp_path):
+    """SpecValue with v_min=None + v_max=3.6: a rail at 1.8V is below the
+    typical min for the part class, but with v_min undeclared we cannot
+    emit a 'below recommended min' finding. Locks the `if v_min is not
+    None` guard against a regression that would short-circuit-fire on
+    null bounds."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev = Evidence(page=2, confidence="high", method="table")
+    # v_min explicitly None — only v_max published.
+    sv_rec = SpecValue(unit="V", evidence=ev, min=None, max=3.6)
+
+    ctx = _vdd_ic_and_ctx("V1V8", tmp_path)
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([sv_rec])):
+        findings = lookup_detectors.detect_vcc_outside_recommended(
+            ctx, rail_voltages={"V1V8": 1.8})
+
+    ov = [f for f in findings if f.get("rule_id") == "OV-001"]
+    assert ov == [], (
+        f"v_min=None must not fire 'below min' (1.8V on null v_min), got {ov}"
+    )
+
+
+def test_ov_001_at_recommended_min_boundary_no_finding(tmp_path):
+    """rail_v == v_min is OK — code uses strict `<` for the below-min branch.
+    Locks the boundary against a regression to `<=` that would silently
+    flip the rule's fire shape on every part operating right at the min."""
+    from datasheet_types import SpecValue, Evidence
+    import lookup_detectors
+
+    ev = Evidence(page=2, confidence="high", method="table")
+    sv_rec = SpecValue(unit="V", evidence=ev, min=2.7, typ=3.3, max=3.6)
+
+    ctx = _vdd_ic_and_ctx("V2V7", tmp_path)
+    with patch.object(lookup_detectors, "get_facts",
+                       return_value=_build_facts([sv_rec])):
+        findings = lookup_detectors.detect_vcc_outside_recommended(
+            ctx, rail_voltages={"V2V7": 2.7})
+
+    assert findings == [], (
+        f"rail at exact v_min must NOT fire (< contract), got {findings}"
+    )
