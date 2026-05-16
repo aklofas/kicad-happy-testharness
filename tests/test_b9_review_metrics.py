@@ -58,11 +58,31 @@ def test_packet_schema_validates_demo():
     js.validate(instance=packet, schema=schema)
 
 
+def test_runner_smoke():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp) / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(PACKETS_DIR),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True
+        )
+        assert result.returncode == 0, f"runner failed: {result.stderr}"
+        # Output dir is <out_dir>/<timestamp>/
+        runs = list(out_dir.iterdir())
+        assert len(runs) == 1, f"expected 1 timestamped run dir, got {runs}"
+        run_dir = runs[0]
+        assert (run_dir / "per_packet.json").exists()
+        assert (run_dir / "aggregate.json").exists()
+        assert (run_dir / "report.md").exists()
+
+
 if __name__ == "__main__":
     import traceback
 
     tests = [
         test_packet_schema_validates_demo,
+        test_runner_smoke,
     ]
     passed = failed = 0
     for t in tests:
