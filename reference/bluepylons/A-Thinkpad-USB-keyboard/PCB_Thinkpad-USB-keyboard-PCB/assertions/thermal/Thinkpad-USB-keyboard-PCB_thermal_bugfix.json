@@ -1,0 +1,48 @@
+{
+  "file_pattern": "Thinkpad-USB-keyboard-PCB_thermal",
+  "analyzer_type": "thermal",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-307-01",
+      "description": "KH-307: no thermal finding has invalid evidence_source 'deterministic' or 'heuristic' (confidence values, not evidence_source enums)",
+      "issue": "KH-307",
+      "fix_type": "invariant_fix",
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "field": "evidence_source",
+        "pattern": "^(deterministic|heuristic)$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-307-02",
+      "description": "KH-307: TS-004 finding uses evidence_source='geometry' (was 'deterministic' before fix)",
+      "issue": "KH-307",
+      "fix_type": "invariant_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "match_field": "rule_id",
+        "match_value": "TS-004",
+        "assert_field": "evidence_source",
+        "assert_value": "geometry"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-307-03",
+      "description": "KH-307: TS-003 finding uses evidence_source='datasheet' (datasheet-backed thermal resistance path)",
+      "issue": "KH-307",
+      "fix_type": "invariant_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "match_field": "rule_id",
+        "match_value": "TS-003",
+        "assert_field": "evidence_source",
+        "assert_value": "datasheet"
+      }
+    }
+  ]
+}
