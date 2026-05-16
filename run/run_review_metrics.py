@@ -38,9 +38,26 @@ def discover_packets(packets_dir, only=None):
     return packets
 
 
+def load_packet(pkt_dir):
+    out = {}
+    for key, filename in PACKET_FILES.items():
+        path = pkt_dir / filename
+        if not path.exists():
+            return None, f"missing {filename}"
+        try:
+            out[key] = json.loads(path.read_text())
+        except json.JSONDecodeError as exc:
+            return None, f"invalid JSON in {filename}: {exc}"
+    return out, None
+
+
 def process_packet(pkt_dir):
-    # Placeholder — fills in subsequent tasks.
-    return {"packet_name": pkt_dir.name, "status": "ok", "metrics": {}}
+    loaded, skip_reason = load_packet(pkt_dir)
+    if loaded is None:
+        return {"packet_name": pkt_dir.name, "status": "skipped",
+                "reason": skip_reason}
+    return {"packet_name": pkt_dir.name, "status": "ok", "metrics": {},
+            "_loaded": loaded}
 
 
 def aggregate(per_packet):

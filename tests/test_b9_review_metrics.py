@@ -77,12 +77,37 @@ def test_runner_smoke():
         assert (run_dir / "report.md").exists()
 
 
+def test_missing_review_annotations_skips_clean():
+    import shutil
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        packets_dir = tmp / "packets"
+        packets_dir.mkdir()
+        dest = packets_dir / DEMO_PACKET.name
+        shutil.copytree(DEMO_PACKET, dest)
+        (dest / "review_annotations.json").unlink()
+        out_dir = tmp / "metrics"
+        result = subprocess.run(
+            [sys.executable, str(RUNNER),
+             "--packets-dir", str(packets_dir),
+             "--output-dir", str(out_dir)],
+            capture_output=True, text=True
+        )
+        assert result.returncode == 0, f"runner failed: {result.stderr}"
+        run_dir = next(out_dir.iterdir())
+        per_packet = json.loads((run_dir / "per_packet.json").read_text())
+        assert len(per_packet) == 1
+        assert per_packet[0]["status"] == "skipped"
+        assert "review_annotations" in per_packet[0].get("reason", "")
+
+
 if __name__ == "__main__":
     import traceback
 
     tests = [
         test_packet_schema_validates_demo,
         test_runner_smoke,
+        test_missing_review_annotations_skips_clean,
     ]
     passed = failed = 0
     for t in tests:
