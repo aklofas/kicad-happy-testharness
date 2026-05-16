@@ -297,14 +297,18 @@ correctness.
 
 ---
 
-### TH-043: `test_pcb_schema_drift` fails — PCB `--schema` lists 5 required keys not always emitted
+### TH-043: `--schema` lists required keys not always emitted — schema-vs-emitter drift across schematic / pcb / gerber / thermal
 
 **Severity:** LOW
-**File:** `tests/test_schema_drift.py:239` (`test_pcb_schema_drift`) and
-`<kicad-happy>/skills/kicad/scripts/analyze_pcb.py` `--schema` output
-**Discovered:** 2026-05-16 during first venv-backed full-suite run after v1.4.0-rc.1
+**File:** `tests/test_schema_drift.py:239` (`test_pcb_schema_drift`) +
+`regression/run_v14_default_contract_gate.py` (corpus-wide gate) +
+`<kicad-happy>/skills/kicad/scripts/analyze_{schematic,pcb,gerbers,thermal}.py`
+`--schema` output
+**Discovered:** 2026-05-16 (PCB during first venv-backed full-suite run;
+schematic/gerber/thermal scope widened from LOG 8 default-contract gate run
+@ 87274cb701d over 149,566 v14 snapshots)
 
-**Symptom:**
+**Symptom (pcb, originally filed):**
 ```
 AssertionError: pcb: --schema documents required keys not in emitted output:
   ['board_metadata', 'board_thickness_mm', 'ground_domains',
@@ -312,32 +316,44 @@ AssertionError: pcb: --schema documents required keys not in emitted output:
 Either remove from --schema `required`, or emit them unconditionally.
 ```
 
-PCB `analyze_pcb.py --schema` declares these five top-level keys as required,
-but the analyzer doesn't always emit them — drift between schema declaration
-and actual envelope shape. Both `test_pcb_schema_drift` and
-`test_schema_completeness_zebra_x` flag the same drift (the latter's failure is
-a downstream symptom of this gap).
+**Corpus-wide scope (LOG 8 gate evidence, 2026-05-16):**
+
+| Analyzer | FAIL / total | Rate | Example drift |
+|----------|--------------|------|---------------|
+| pcb | 18004 / 18658 | 96.5% | `board_metadata`, `board_thickness_mm`, `design_rule_compliance` required but absent |
+| schematic | 32030 / 36462 | 87.8% | `title_block` required but absent (empty dict elsewhere; absent here) |
+| gerber | 3621 / 5439 | 66.6% | `pad_summary.smd_ratio`, `completeness.expected_layers` required but absent |
+| thermal | 1364 / 16083 | 8.5% | `missing_info.default_rtheta_ja` required but absent |
+| emc | 0 / 36462 | 0% | clean — schema in sync |
+| cross_analysis | 0 / 36462 | 0% | clean — schema in sync |
+
+Same bug class corpus-wide: `--schema` declares fields as `required` that
+analyzers emit conditionally (or not at all). All 4 affected analyzers share
+the same fix-path categorization — drop from `required` (genuinely
+conditional) or emit unconditionally (real regression). EMC + cross_analysis
+are the existence proof that the bug class is fixable.
 
 **Root cause hypothesis:** Some keys are conditionally emitted depending on
 board content (e.g. `ground_domains` only if a ground net exists,
-`power_net_routing` only if power nets are routed), but the `--schema` `required`
-list doesn't reflect that conditionality. Other keys (`board_metadata`,
-`board_thickness_mm`, `placement_density`) sound unconditional and should always
-be emitted — those may be regression-bugs in the analyzer.
+`power_net_routing` only if power nets are routed, `title_block` only when
+the source has one), but the `--schema` `required` list doesn't reflect that
+conditionality. Other keys (`board_metadata`, `board_thickness_mm`,
+`placement_density`, thermal's `default_rtheta_ja`) sound unconditional and
+should always be emitted — those may be regression-bugs in the analyzers.
 
-**Likely fix paths (decide per key):**
-- **Drop from `required`:** for genuinely-conditional keys (`ground_domains`,
-  `power_net_routing`).
-- **Emit unconditionally:** for keys that should always appear
-  (`board_metadata`, `board_thickness_mm`, `placement_density`) — file as KH-* in
-  the main-repo if confirmed.
+**Likely fix paths (decide per key per analyzer):**
+- **Drop from `required`:** for genuinely-conditional keys.
+- **Emit unconditionally:** for keys that should always appear — file as KH-*
+  in the main-repo per analyzer if confirmed.
 
-This is a **kicad-happy main-repo concern**, not a harness bug, but the harness
-test is the symptom-surfacing layer. Filing here for tracking; the actual fix
-likely lands in main-repo `analyze_pcb.py`.
+This is a **kicad-happy main-repo concern** across 4 analyzers, not a harness
+bug. The harness gate (`run_v14_default_contract_gate.py`) is the
+symptom-surfacing layer; the actual fix lands in main-repo per-analyzer
+`--schema` definitions and/or unconditional-emit code paths.
 
 **Not tag-blocking** — pre-existing in rc.1, schema-vs-output mismatch only
-affects strict consumers, not the default-mode report.
+affects strict consumers, not the default-mode report. Re-run the gate after
+each per-analyzer fix to confirm the failure rate drops.
 
 ---
 
