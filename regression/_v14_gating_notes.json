@@ -1,0 +1,14 @@
+{
+  "_comment": "Hand-curated gating summaries per v1.4 changed detector. Consumed by tools/discover_versioned_detectors.py to populate gating_summary field in v14_changed_detectors.json. Keys are the literal `detector=` value emitted by each finding (which is what regression assertion `detector_filter` matches); for findings emitted by private helpers (e.g. `_make_ex_001`), the key is the public detector name baked into the helper.",
+  "validate_pullups": "datasheet-gated on ds.quality >= 60 (PU-001)",
+  "validate_voltage_levels": "datasheet-gated on rated voltage vs rail voltage (VM-001)",
+  "validate_led_resistors": "datasheet-gated on LED Vf + If (LR-001)",
+  "validate_crystal_load_caps": "new in v1.4, requires CrystalBlock dataclass (XT-001)",
+  "validate_feedback_stability": "datasheet-gated on regulator load step + bandwidth (FS-001)",
+  "detect_absolute_max_violations": "new in v1.4, requires operating_max field (AM-001)",
+  "detect_vcc_outside_recommended": "new in v1.4, datasheet-gated recommended operating range (OV-001)",
+  "detect_tj_exceeds_max": "upgraded to operating_max + Theta_JA derating (TJ-001)",
+  "detect_5v_on_non_tolerant_pin": "new in v1.4, pin-level 5V tolerance check (FT-001)",
+  "detect_wrong_signal_type": "new in v1.4, multi-function pin conflict detection (PM-001)",
+  "detect_missing_required_components": "new in v1.4, required-component lookup via _make_ex_001 helper (EX-001)"
+}
