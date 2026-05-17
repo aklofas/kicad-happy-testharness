@@ -305,6 +305,23 @@ are parser bugs — file as KH-* and fix before the next corpus re-seed. Report 
 Use when an analyzer change modifies output structure (new fields, changed counts,
 renamed detections) and existing assertions are failing legitimately.
 
+### A8: schema-era stamping (always on by default)
+
+`seed.py` / `seed_structural.py` / `seed_negative.py` auto-stamp `schema_era`
+on emitted assertions whose `detector_filter` is in
+`regression/v14_changed_detectors.json` (the versioned-detector set). Default
+era is `CURRENT_SCHEMA_ERA` from `regression/schema_era.py` (currently
+`"v1.4"`). For documented runs pass it explicitly:
+
+```bash
+python3 regression/seed.py --repo X --schema-era v1.4
+```
+
+Use `--no-schema-era` only for debug runs where era stamping interferes with
+what you're testing. See `regression/schema_era.py` for the module API and
+`docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md` for the
+full design. For bumping the era at v1.5+, see Checklist 27.
+
 ### 4a. Verify the change is correct
 
 Before re-seeding, confirm the new output is correct — not a regression. Read the
@@ -2600,6 +2617,93 @@ disappeared/downgraded findings) for rc.2.
 git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v131
 git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v14
 ```
+
+---
+
+## Checklist 27: Era bump for a new minor version (v1.5 and beyond)
+
+When the analyzer ships a new minor version with material detector behavior
+changes (e.g., v1.5 lands the missing dataclasses that activate v1.4's
+datasheet-gated paths), follow this sequence to roll the harness forward.
+Spec: `docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md` §3.7.
+
+### 27a. Hand-curate gating notes for the new era
+
+Create `regression/_v15_gating_notes.json` (or `_v{N}_gating_notes.json`)
+mirroring the structure of `_v14_gating_notes.json`. One entry per detector
+literal that changes in the new era. Each value is a one-line human-readable
+gating summary.
+
+### 27b. Run discovery against the new analyzer source
+
+```bash
+export KICAD_HAPPY_DIR=/home/aklofas/Projects/kicad-happy
+python3 tools/discover_versioned_detectors.py \
+    --era v1.5 \
+    --gating-notes regression/_v15_gating_notes.json
+```
+
+This writes `regression/v15_changed_detectors.json`. Discovery fails loudly
+if any gating-notes key references a detector that does NOT appear at any
+`schema_era="v1.5"` emit site — catches typos and renames.
+
+### 27c. Bump `CURRENT_SCHEMA_ERA` in `regression/schema_era.py`
+
+```python
+CURRENT_SCHEMA_ERA = "v1.5"
+KNOWN_ERAS = ("pre-v1.4", "v1.4", "v1.5")
+```
+
+KNOWN_ERAS is append-only — never remove old values. Run the module unit
+test (`python3 tests/test_schema_era_module.py`) to confirm.
+
+### 27d. Identify repos where assertions fracture against new analyzer output
+
+```bash
+python3 regression/run_checks.py --cross-section quick_200 2>&1 | grep FAIL
+```
+
+Failures should concentrate in the v1.5-changed-detector set. Anything outside
+that set is a true regression and must be investigated separately before
+proceeding.
+
+### 27e. Tag pre-v1.5 assertions, then re-seed affected repos
+
+```bash
+# Optionally tag any existing v1.4-tagged assertions in the new changed set
+# (rare — only if a detector behavior changed AGAIN in v1.5).
+python3 regression/tag_assertions.py --schema-era v1.4 --apply
+
+# Re-seed each failing repo at the new era.
+python3 regression/seed.py --repo X --schema-era v1.5
+python3 regression/seed_structural.py --repo X --schema-era v1.5
+```
+
+`tag_assertions.py` is idempotent and skips already-tagged assertions
+unless `--force`.
+
+### 27f. Hand-annotate `bugfix_registry.json` entries
+
+For each registry entry whose `assertions[].check.detector_filter` is in
+the v1.5-changed set, add:
+- `first_appeared_era: "v1.4"`
+- `corrected_era: "v1.5"`
+- `migration_note: "<short rationale>"`
+
+### 27g. Verify regression baseline shift
+
+```bash
+PYTHONHASHSEED=0 python3 regression/run_checks.py --cross-section quick_200 --era all
+PYTHONHASHSEED=0 python3 regression/run_checks.py --cross-section quick_200
+```
+
+`--era all` must still show 100% PASS at the full count. Default mode count
+drops by the size of the freshly-tagged `v1.4` population.
+
+### 27h. Commit in the same 5-commit pattern as A8
+
+See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
+(infrastructure → read-side → write-side → backfill+RUNBOOK → docs).
 
 ---
 
