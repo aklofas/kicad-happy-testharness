@@ -1,0 +1,23 @@
+{
+  "file_pattern": "mcu.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-114-01",
+      "description": "KH-114: Y1 SG-8002CA 8MHz (4-pin active osc with VCC pin) classified as type='active_oscillator' not passive crystal (pre-fix it went through the passive loop producing nonsensical load_caps)",
+      "issue": "KH-114",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_crystal_circuits",
+        "match_field": "reference",
+        "match_value": "Y1",
+        "assert_field": "type",
+        "assert_value": "active_oscillator"
+      }
+    }
+  ]
+}

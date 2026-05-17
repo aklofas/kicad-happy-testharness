@@ -1,0 +1,22 @@
+{
+  "file_pattern": "TOP.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-049-01",
+      "description": "KH-049: QB2 BF245A classified as type='transistor' via first-char fallback Q\u2192transistor (pre-fix QB wasn't in type_map and fell to 'other')",
+      "issue": "KH-049",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "QB2",
+        "assert_field": "type",
+        "assert_value": "transistor"
+      }
+    }
+  ]
+}

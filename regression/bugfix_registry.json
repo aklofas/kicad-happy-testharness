@@ -3659,5 +3659,114 @@
         "description": "KH-285: PCB output exists with at least 1 finding (pre-fix this ESP32_C6_Dev_Board PCB crashed with KeyError on abs_x; no output file would exist for assertion run)"
       }
     ]
+  },
+  {
+    "issue": "KH-225",
+    "type": "classification_fix",
+    "summary": "LM2664 / MAX660 / ICL7660 charge-pump regulators classified with topology='charge_pump' instead of falling through to LDO default",
+    "assertions": [
+      {
+        "repo": "esl-epfl/VersaSens",
+        "project": "VersaSens_HW_VersaSens_HeEx",
+        "source_file": "EMG.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "IC7",
+          "assert_field": "topology",
+          "assert_value": "charge_pump"
+        },
+        "description": "KH-225: IC7 LM2664M6_NOPB classified as topology='charge_pump' (pre-fix it defaulted to LDO topology)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-228",
+    "type": "detection_fix",
+    "summary": "detect_sub_sheet() rewritten with 5-tier strategy (symbol_instances → root, sheet blocks → root, .kicad_pro stem match, hierarchical_label fallback, conservative default); detection rate 34% → 99%",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "connectors_power.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "hierarchy_warning",
+          "op": "exists"
+        },
+        "description": "KH-228: connectors_power.kicad_sch has hierarchy_warning set (post-fix detect_sub_sheet identifies it via .kicad_pro stem mismatch / tier-3 strategy). Pre-fix this file lacked hierarchical_label so detect_sub_sheet missed it and hierarchy_warning stayed empty (34% rate)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-114",
+    "type": "classification_fix",
+    "summary": "Active oscillators (4+ pins with VCC/VDD power pin) skip the passive-crystal loop body; reclassified as type='active_oscillator' instead of getting nonsensical load capacitance",
+    "assertions": [
+      {
+        "repo": "anyshake/explorer",
+        "project": "hardware_Explorer",
+        "source_file": "mcu.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_crystal_circuits",
+          "match_field": "reference",
+          "match_value": "Y1",
+          "assert_field": "type",
+          "assert_value": "active_oscillator"
+        },
+        "description": "KH-114: Y1 SG-8002CA 8MHz (4-pin active osc with VCC pin) classified as type='active_oscillator' not passive crystal (pre-fix it went through the passive loop producing nonsensical load_caps)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-049",
+    "type": "classification_fix",
+    "summary": "Non-standard ref prefixes (CB, RB, QB) fall back to first-character lookup in type_map — CB→C→capacitor, RB→R→resistor, QB→Q→transistor",
+    "assertions": [
+      {
+        "repo": "Chrismettal/PedalDev",
+        "project": "pcb_TOP",
+        "source_file": "TOP.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "QB2",
+          "assert_field": "type",
+          "assert_value": "transistor"
+        },
+        "description": "KH-049: QB2 BF245A classified as type='transistor' via first-char fallback Q→transistor (pre-fix QB wasn't in type_map and fell to 'other')"
+      }
+    ]
+  },
+  {
+    "issue": "KH-090",
+    "type": "false_positive_fix",
+    "summary": "Fixed-output LDOs (TLV757xx family) no longer marked inverting — when topology='LDO' and no FB pin exists, the inverting flag is deleted",
+    "assertions": [
+      {
+        "repo": "jking323/Dingus",
+        "project": "DAP",
+        "source_file": "power.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U16",
+          "assert_field": "inverting",
+          "assert_value": null
+        },
+        "description": "KH-090: U16 TLV75750 (fixed-output LDO, no FB pin) has no 'inverting' flag set (pre-fix the keyword check incorrectly marked it inverting=True)"
+      }
+    ]
   }
 ]

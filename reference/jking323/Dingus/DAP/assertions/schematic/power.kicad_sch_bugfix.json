@@ -1,0 +1,23 @@
+{
+  "file_pattern": "power.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-090-01",
+      "description": "KH-090: U16 TLV75750 (fixed-output LDO, no FB pin) has no 'inverting' flag set (pre-fix the keyword check incorrectly marked it inverting=True)",
+      "issue": "KH-090",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U16",
+        "assert_field": "inverting",
+        "assert_value": null
+      }
+    }
+  ]
+}
