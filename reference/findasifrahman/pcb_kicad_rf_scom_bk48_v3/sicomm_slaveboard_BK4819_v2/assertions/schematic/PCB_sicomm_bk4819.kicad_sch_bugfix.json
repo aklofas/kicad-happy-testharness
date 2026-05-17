@@ -1,0 +1,23 @@
+{
+  "file_pattern": "PCB_sicomm_bk4819.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-118-01",
+      "description": "KH-118: U19 TPLP5907MFX-3.3 detected as LDO (pre-fix the TPLP prefix wasn't in reg_lib_keywords, so the regulator was skipped entirely)",
+      "issue": "KH-118",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U19",
+        "assert_field": "topology",
+        "assert_value": "LDO"
+      }
+    }
+  ]
+}

@@ -3768,5 +3768,113 @@
         "description": "KH-090: U16 TLV75750 (fixed-output LDO, no FB pin) has no 'inverting' flag set (pre-fix the keyword check incorrectly marked it inverting=True)"
       }
     ]
+  },
+  {
+    "issue": "KH-118",
+    "type": "detection_fix",
+    "summary": "TPLP (and HX630) added to reg_lib_keywords — TPLP5907MFX-3.3 and similar TI linear regulators now detected as LDO",
+    "assertions": [
+      {
+        "repo": "findasifrahman/pcb_kicad_rf_scom_bk48_v3",
+        "project": "sicomm_slaveboard_BK4819_v2",
+        "source_file": "PCB_sicomm_bk4819.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U19",
+          "assert_field": "topology",
+          "assert_value": "LDO"
+        },
+        "description": "KH-118: U19 TPLP5907MFX-3.3 detected as LDO (pre-fix the TPLP prefix wasn't in reg_lib_keywords, so the regulator was skipped entirely)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-077",
+    "type": "serialization_fix",
+    "summary": "Component output now includes `category` field (set from `type`) — previously the type field existed but the category field was always None",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "smps_legged_robot.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "U802",
+          "assert_field": "category",
+          "assert_value": "ic"
+        },
+        "description": "KH-077: U802 (LMR36506) has category='ic' populated (pre-fix the category field was always None because the assignment from type was missing)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-040",
+    "type": "parser_fix",
+    "summary": "Legacy KiCad 5 .sch parser now reads DESCRIPTION/DESC custom field into comp.description — was previously dropped",
+    "assertions": [
+      {
+        "repo": "greatscottgadgets/hackrf",
+        "project": "hardware_operacake",
+        "source_file": "operacake.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "D9",
+          "assert_field": "description",
+          "assert_value": "TVS DIODE 4VWM 0402"
+        },
+        "description": "KH-040: D9 description='TVS DIODE 4VWM 0402' populated from legacy .sch DESCRIPTION field (pre-fix the description field was empty for KiCad 5 schematics)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-219",
+    "type": "false_positive_fix",
+    "summary": "TPS22918/TPS22916 (and TPS229x/TPS205x families) load switches excluded from regulator detection via description-keyword check",
+    "assertions": [
+      {
+        "repo": "bitfieldaudio/otto-hardware",
+        "project": "KiCad_MainBoard_OTTO-Beta-Main",
+        "source_file": "OTTO-Beta-Main.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "detector_filter": "detect_power_regulators",
+          "field": "value",
+          "pattern": "TPS22918"
+        },
+        "description": "KH-219: U5 TPS22918DBVR (load switch) is NOT in detect_power_regulators (pre-fix it matched LDO topology via VIN/VOUT pin pattern)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-150",
+    "type": "false_positive_fix",
+    "summary": "detect_rf_matching() now requires RF-context keywords on target IC and skips ferrite_bead components during BFS — non-RF LC networks (AVCC decoupling, ferrite filters, precision input guards) no longer flagged as RF matching networks",
+    "assertions": [
+      {
+        "repo": "cansat-ptl/cubesat-boards",
+        "project": "ykts-geigerboard",
+        "source_file": "ykts-geigerboard.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "max_count",
+          "detector_filter": "detect_rf_matching",
+          "value": 0
+        },
+        "description": "KH-150: ykts-geigerboard has 0 detect_rf_matching findings (pre-fix had 1 false positive from non-RF LC network)"
+      }
+    ]
   }
 ]

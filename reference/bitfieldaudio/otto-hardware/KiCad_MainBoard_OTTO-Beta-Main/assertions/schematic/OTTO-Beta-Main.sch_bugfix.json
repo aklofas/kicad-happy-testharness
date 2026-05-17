@@ -17,6 +17,19 @@
         "assert_field": "type",
         "assert_value": "connector"
       }
+    },
+    {
+      "id": "BUGFIX-KH-219-01",
+      "description": "KH-219: U5 TPS22918DBVR (load switch) is NOT in detect_power_regulators (pre-fix it matched LDO topology via VIN/VOUT pin pattern)",
+      "issue": "KH-219",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "detector_filter": "detect_power_regulators",
+        "field": "value",
+        "pattern": "TPS22918"
+      }
     }
   ]
 }

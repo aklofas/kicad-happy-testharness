@@ -16,6 +16,18 @@
         "field": "summary",
         "pattern": "R25/C28 at 2679"
       }
+    },
+    {
+      "id": "BUGFIX-KH-150-01",
+      "description": "KH-150: ykts-geigerboard has 0 detect_rf_matching findings (pre-fix had 1 false positive from non-RF LC network)",
+      "issue": "KH-150",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "max_count",
+        "detector_filter": "detect_rf_matching",
+        "value": 0
+      }
     }
   ]
 }

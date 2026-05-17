@@ -76,6 +76,20 @@
           "topology": "fb_at_top"
         }
       }
+    },
+    {
+      "id": "BUGFIX-KH-077-01",
+      "description": "KH-077: U802 (LMR36506) has category='ic' populated (pre-fix the category field was always None because the assignment from type was missing)",
+      "issue": "KH-077",
+      "fix_type": "serialization_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "U802",
+        "assert_field": "category",
+        "assert_value": "ic"
+      }
     }
   ]
 }

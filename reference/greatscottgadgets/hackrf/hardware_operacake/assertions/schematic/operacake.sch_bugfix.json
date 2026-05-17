@@ -1,0 +1,22 @@
+{
+  "file_pattern": "operacake.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-040-01",
+      "description": "KH-040: D9 description='TVS DIODE 4VWM 0402' populated from legacy .sch DESCRIPTION field (pre-fix the description field was empty for KiCad 5 schematics)",
+      "issue": "KH-040",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "D9",
+        "assert_field": "description",
+        "assert_value": "TVS DIODE 4VWM 0402"
+      }
+    }
+  ]
+}
