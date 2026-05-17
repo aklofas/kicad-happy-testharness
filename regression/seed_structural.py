@@ -22,6 +22,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from regression.schema_era import stamp_schema_era, CURRENT_SCHEMA_ERA
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
@@ -420,7 +421,8 @@ def generate_datasheets_structural_assertions(data, strict=True):
 
 
 def generate_for_repo(repo_name, atype, strict, min_components,
-                      dry_run):
+                      dry_run, schema_era=CURRENT_SCHEMA_ERA,
+                      no_schema_era=False):
     """Generate structural assertions for one repo."""
     type_dir = OUTPUTS_DIR / atype / repo_name
     if not type_dir.exists():
@@ -508,6 +510,11 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                         pass
                 continue
 
+            # Era-stamp each assertion whose detector_filter is in the versioned set
+            if not no_schema_era:
+                for assertion in assertions:
+                    stamp_schema_era(assertion, era=schema_era)
+
             assertion_data = {
                 "file_pattern": file_pattern,
                 "analyzer_type": atype,
@@ -538,9 +545,11 @@ def generate_for_repo(repo_name, atype, strict, min_components,
     return total_files, total_assertions, skipped
 
 
-def _structural_one_repo(repo, atype, strict, min_components, dry_run):
+def _structural_one_repo(repo, atype, strict, min_components, dry_run,
+                         schema_era=CURRENT_SCHEMA_ERA, no_schema_era=False):
     """Worker function for parallel structural seeding. Must be top-level for pickling."""
-    return generate_for_repo(repo, atype, strict, min_components, dry_run)
+    return generate_for_repo(repo, atype, strict, min_components, dry_run,
+                             schema_era=schema_era, no_schema_era=no_schema_era)
 
 
 def main():
@@ -562,6 +571,15 @@ def main():
                         help="Skip files with fewer components (default: 10)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print without writing files")
+    parser.add_argument(
+        "--schema-era", default=CURRENT_SCHEMA_ERA,
+        help="Era to stamp on emitted assertions whose detector_filter is in "
+             "the era's versioned set. Default: %(default)s.",
+    )
+    parser.add_argument(
+        "--no-schema-era", action="store_true",
+        help="Skip era stamping entirely (debug only).",
+    )
     args = parser.parse_args()
 
     strict = not args.tolerant
@@ -576,12 +594,15 @@ def main():
 
     jobs = args.jobs
     grand_files = grand_assertions = grand_skipped = 0
+    schema_era = args.schema_era
+    no_schema_era = args.no_schema_era
 
     if jobs > 1 and len(repos) > 1:
         with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
             futures = {pool.submit(_structural_one_repo, repo, args.type,
                                    strict, args.min_components,
-                                   args.dry_run): repo
+                                   args.dry_run, schema_era,
+                                   no_schema_era): repo
                        for repo in repos}
             for future in as_completed(futures):
                 files, assertions, skipped = future.result()
@@ -591,7 +612,8 @@ def main():
     else:
         for repo in repos:
             files, assertions, skipped = generate_for_repo(
-                repo, args.type, strict, args.min_components, args.dry_run)
+                repo, args.type, strict, args.min_components, args.dry_run,
+                schema_era=schema_era, no_schema_era=no_schema_era)
             grand_files += files
             grand_assertions += assertions
             grand_skipped += skipped

@@ -21,6 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from findings import _iter_findings_files
+from regression.schema_era import stamp_schema_era, CURRENT_SCHEMA_ERA
 from utils import (
     DATA_DIR,
     DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
@@ -164,6 +165,15 @@ def main():
                         help="Show what would be generated (default)")
     parser.add_argument("--apply", action="store_true",
                         help="Write assertion files")
+    parser.add_argument(
+        "--schema-era", default=CURRENT_SCHEMA_ERA,
+        help="Era to stamp on emitted assertions whose detector_filter is in "
+             "the era's versioned set. Default: %(default)s.",
+    )
+    parser.add_argument(
+        "--no-schema-era", action="store_true",
+        help="Skip era stamping entirely (debug only).",
+    )
     args = parser.parse_args()
 
     resolved = resolve_repos(args)
@@ -203,6 +213,12 @@ def main():
         return
 
     assertions_by_key = generate_negative_assertions(candidates)
+
+    # Era-stamp each assertion whose detector_filter is in the versioned set
+    if not args.no_schema_era:
+        for assertions in assertions_by_key.values():
+            for assertion in assertions:
+                stamp_schema_era(assertion, era=args.schema_era)
 
     total_assertions = sum(len(v) for v in assertions_by_key.values())
     print(f"\nGenerated {total_assertions} negative assertions "

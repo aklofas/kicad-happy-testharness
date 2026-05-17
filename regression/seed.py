@@ -27,6 +27,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from regression.schema_era import stamp_schema_era, CURRENT_SCHEMA_ERA
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
@@ -1194,7 +1195,8 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
 
 def generate_for_repo(repo_name, atype, tolerance, min_components,
                       file_filter, dry_run, include_empty=False,
-                      resume=False):
+                      resume=False, schema_era=CURRENT_SCHEMA_ERA,
+                      no_schema_era=False):
     """Generate seed assertions for one repo."""
     type_dir = OUTPUTS_DIR / atype / repo_name
     if not type_dir.exists():
@@ -1266,6 +1268,11 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
             if not assertions:
                 continue
 
+            # Era-stamp each assertion whose detector_filter is in the versioned set
+            if not no_schema_era:
+                for assertion in assertions:
+                    stamp_schema_era(assertion, era=schema_era)
+
             # file_pattern is the filename within the project (prefix stripped)
             if prefix:
                 file_pattern = output_file.stem[len(prefix):]
@@ -1306,11 +1313,13 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
 
 
 def _seed_one_repo(repo, atype, tolerance, min_components, file_filter,
-                   dry_run, include_empty, resume=False):
+                   dry_run, include_empty, resume=False,
+                   schema_era=CURRENT_SCHEMA_ERA, no_schema_era=False):
     """Worker function for parallel seed generation. Must be top-level for pickling."""
     return generate_for_repo(repo, atype, tolerance, min_components,
                              file_filter, dry_run, include_empty=include_empty,
-                             resume=resume)
+                             resume=resume, schema_era=schema_era,
+                             no_schema_era=no_schema_era)
 
 
 def _prune_one_repo(repo, atype, min_components, dry_run):
@@ -1341,6 +1350,15 @@ def main():
                         help="Remove seed assertions whose outputs no longer meet thresholds")
     parser.add_argument("--resume", action="store_true",
                         help="Skip repos that already have assertion files")
+    parser.add_argument(
+        "--schema-era", default=CURRENT_SCHEMA_ERA,
+        help="Era to stamp on emitted assertions whose detector_filter is in "
+             "the era's versioned set. Default: %(default)s.",
+    )
+    parser.add_argument(
+        "--no-schema-era", action="store_true",
+        help="Skip era stamping entirely (debug only).",
+    )
     args = parser.parse_args()
 
     repos = resolve_repos(args)
@@ -1380,12 +1398,15 @@ def main():
     include_empty = getattr(args, "include_empty", False)
 
     resume = getattr(args, "resume", False)
+    schema_era = args.schema_era
+    no_schema_era = args.no_schema_era
     if jobs > 1 and len(repos) > 1:
         with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
             futures = {pool.submit(_seed_one_repo, repo, args.type,
                                    args.tolerance, args.min_components,
                                    args.filter, args.dry_run,
-                                   include_empty, resume): repo
+                                   include_empty, resume,
+                                   schema_era, no_schema_era): repo
                        for repo in repos}
             for future in as_completed(futures):
                 files, assertions, skipped = future.result()
@@ -1397,7 +1418,8 @@ def main():
             files, assertions, skipped = generate_for_repo(
                 repo, args.type, args.tolerance, args.min_components,
                 args.filter, args.dry_run,
-                include_empty=include_empty, resume=resume)
+                include_empty=include_empty, resume=resume,
+                schema_era=schema_era, no_schema_era=no_schema_era)
             grand_files += files
             grand_assertions += assertions
             grand_skipped += skipped
