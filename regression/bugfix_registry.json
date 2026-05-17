@@ -4122,5 +4122,110 @@
         "description": "KH-321: U5 TPS63001 (TPS63000 family) switching_frequency_hz=1.5MHz from corrected lookup_table (pre-fix the entry incorrectly read 2.4MHz)"
       }
     ]
+  },
+  {
+    "issue": "KH-113",
+    "type": "false_positive_fix",
+    "summary": "RS-485/RS-232/UART transceiver families (lt178, max48, sn65hvd, st348, adm281/485/491, sp338/339, isl3, iso15, max23/31/32) added to _SENSE_IC_EXCLUDE — LT1785 etc. no longer falsely matched as current sense ICs",
+    "assertions": [
+      {
+        "repo": "Sarbf1/Gas-sens_Rs-485",
+        "project": "PCB_RS485-Gassensor_Dev_RS485-Gassensor-Dev",
+        "source_file": "output.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "detector_filter": "detect_current_sense",
+          "field": "value",
+          "pattern": "LT1785"
+        },
+        "description": "KH-113: LT1785 RS-485 transceiver is NOT in detect_current_sense (pre-fix the pin names matched current_sense topology)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-034",
+    "type": "detection_fix",
+    "summary": "detect_crystal_circuits() now has a loop after passive crystal detection to match active oscillators (type=='oscillator' or oscillator keywords); identifies output pin by name (OUT/CLK/CLKOUT) and emits type='active_oscillator' with empty load_caps",
+    "assertions": [
+      {
+        "repo": "22060/2025",
+        "project": "kicad_MDhub",
+        "source_file": "MDhub.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_crystal_circuits",
+          "match_field": "reference",
+          "match_value": "X1",
+          "assert_field": "type",
+          "assert_value": "active_oscillator"
+        },
+        "description": "KH-034: X1 IQXO-70 (active oscillator with VDD/GND/OUT pins) classified as type='active_oscillator' (pre-fix only passive crystals with load caps were detected)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-187",
+    "type": "crash_fix",
+    "summary": "EMC check_via_stitching() and extract_board_info() now handle crystal frequency=None — `xtal.get('frequency') or 0` with isinstance guard (eliminated 495 EMC crashes corpus-wide)",
+    "assertions": [
+      {
+        "repo": "1sand0s/Solder_Reflow_Oven_2.0",
+        "project": "Hardware_Solder_Reflow_Oven_2.0",
+        "source_file": "Solder_Reflow_Oven_2.0.sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "summary.total_findings",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-187: EMC ran successfully on Solder_Reflow_Oven (55 findings) despite Y1 crystal having frequency=None (pre-fix check_via_stitching/extract_board_info crashed with TypeError on `freq > highest_freq`)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-138",
+    "type": "false_positive_fix",
+    "summary": "Bootstrap cap exclusion in detect_lc_filters (lines 576-588) — BST/BOOT pin circuits no longer matched as LC filters; OpenMower dcdc went from N false-positive LC filters to 0",
+    "assertions": [
+      {
+        "repo": "ClemensElflein/OpenMower",
+        "project": "Hardware_OpenMowerMainboard",
+        "source_file": "dcdc.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "max_count",
+          "detector_filter": "detect_lc_filters",
+          "value": 0
+        },
+        "description": "KH-138: OpenMower dcdc has 0 detect_lc_filters findings (bootstrap cap exclusion prevents BST/BOOT pin networks from matching LC topology)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-132",
+    "type": "data_fix",
+    "summary": "DigiKey property case mismatch — `Digikey` (lowercase k) added to property fallback chain (analyze_schematic.py line 370); OpenMower dcdc components now have digikey field populated",
+    "assertions": [
+      {
+        "repo": "ClemensElflein/OpenMower",
+        "project": "Hardware_OpenMowerMainboard",
+        "source_file": "dcdc.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "C15",
+          "assert_field": "digikey",
+          "assert_value": "1276-1935-1-ND"
+        },
+        "description": "KH-132: C15 has digikey='1276-1935-1-ND' from Digikey property (case-insensitive fallback); pre-fix the field was None because the case-mismatch dropped the value"
+      }
+    ]
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "file_pattern": "dcdc.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-138-01",
+      "description": "KH-138: OpenMower dcdc has 0 detect_lc_filters findings (bootstrap cap exclusion prevents BST/BOOT pin networks from matching LC topology)",
+      "issue": "KH-138",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "max_count",
+        "detector_filter": "detect_lc_filters",
+        "value": 0
+      }
+    },
+    {
+      "id": "BUGFIX-KH-132-01",
+      "description": "KH-132: C15 has digikey='1276-1935-1-ND' from Digikey property (case-insensitive fallback); pre-fix the field was None because the case-mismatch dropped the value",
+      "issue": "KH-132",
+      "fix_type": "data_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "C15",
+        "assert_field": "digikey",
+        "assert_value": "1276-1935-1-ND"
+      }
+    }
+  ]
+}

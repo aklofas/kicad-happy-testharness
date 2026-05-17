@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Solder_Reflow_Oven_2.0.sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-187-01",
+      "description": "KH-187: EMC ran successfully on Solder_Reflow_Oven (55 findings) despite Y1 crystal having frequency=None (pre-fix check_via_stitching/extract_board_info crashed with TypeError on `freq > highest_freq`)",
+      "issue": "KH-187",
+      "fix_type": "crash_fix",
+      "check": {
+        "path": "summary.total_findings",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}
