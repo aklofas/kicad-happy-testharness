@@ -1,0 +1,19 @@
+{
+  "file_pattern": "BSS138-level-shifter.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-209-01",
+      "description": "KH-209: '3V3-SIG' net classified as power and assigned 3.3V (pre-fix the leading digit pattern 3V3 wasn't matched by is_power_net_name())",
+      "issue": "KH-209",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "rail_voltages.3V3-SIG",
+        "op": "equals",
+        "value": 3.3
+      }
+    }
+  ]
+}

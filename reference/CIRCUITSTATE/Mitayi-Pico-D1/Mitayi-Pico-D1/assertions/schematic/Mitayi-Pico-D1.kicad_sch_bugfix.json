@@ -14,6 +14,21 @@
         "op": "min_count",
         "value": 1
       }
+    },
+    {
+      "id": "BUGFIX-KH-074-01",
+      "description": "KH-074: Y1 (YIC-12M20P2/XT324-10/10) frequency parsed as 12 MHz from MPN-embedded '12M' (pre-fix parse_value() returned None since the value isn't a standalone numeric)",
+      "issue": "KH-074",
+      "fix_type": "value_parsing_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_crystal_circuits",
+        "match_field": "reference",
+        "match_value": "Y1",
+        "assert_field": "frequency",
+        "assert_value": 12000000.0
+      }
     }
   ]
 }

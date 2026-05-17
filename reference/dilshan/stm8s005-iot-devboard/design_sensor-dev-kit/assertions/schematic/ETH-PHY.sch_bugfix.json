@@ -1,0 +1,26 @@
+{
+  "file_pattern": "ETH-PHY.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-066-01",
+      "description": "KH-066: J401 RJ45 connector linked to U401 ENC28J60 PHY in detect_ethernet_interfaces components list (pre-fix the LAN-prefix connector was classified as inductor and not linked to the PHY)",
+      "issue": "KH-066",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_ethernet_interfaces",
+        "match_field": "components",
+        "match_value": [
+          "J401",
+          "U401"
+        ],
+        "assert_field": "rule_id",
+        "assert_value": "ET-DET"
+      }
+    }
+  ]
+}

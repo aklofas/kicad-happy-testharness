@@ -3377,5 +3377,134 @@
         "description": "KH-198: LC-DET components list is exactly [C5, L1] (pre-fix the C5 ref-collision would put C5 in the list multiple times alongside L1)"
       }
     ]
+  },
+  {
+    "issue": "KH-082",
+    "type": "detection_fix",
+    "summary": "TVS/ECMF/CDSOT/RCLAMP IC-packaged protection devices now detected via extended keyword list and `power_protection:` library check",
+    "assertions": [
+      {
+        "repo": "ISSUIUC/ISS-PCB",
+        "project": "boards_MIDAS-MK2_MIDAS-MK2-revA_MIDAS-MK2",
+        "source_file": "MIDAS-MK2.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_protection_devices",
+          "match_field": "ref",
+          "match_value": "U108",
+          "assert_field": "value",
+          "assert_value": "ECMF02-2AMX6"
+        },
+        "description": "KH-082: U108 (ECMF02-2AMX6 ESD/EMI filter) is detected by detect_protection_devices (pre-fix the ECMF keyword wasn't in the ESD IC list)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-308",
+    "type": "data_fix",
+    "summary": "compute_trust_summary now reads `provenance` (not `_provenance` typo); provenance_coverage_pct returns real %, not 0.0%",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "connectors_power.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "trust_summary.provenance_coverage_pct",
+          "op": "equals",
+          "value": 80.0
+        },
+        "description": "KH-308: trust_summary.provenance_coverage_pct = 80.0 on Power_HW connectors_power (pre-fix typo `_provenance` made this 0.0% everywhere)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-074",
+    "type": "value_parsing_fix",
+    "summary": "_parse_crystal_frequency() now extracts frequency from MPN-embedded patterns (YIC-12M20P2, etc.) after parse_value() fails — was always None for such crystals",
+    "assertions": [
+      {
+        "repo": "CIRCUITSTATE/Mitayi-Pico-D1",
+        "project": "Mitayi-Pico-D1",
+        "source_file": "Mitayi-Pico-D1.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_crystal_circuits",
+          "match_field": "reference",
+          "match_value": "Y1",
+          "assert_field": "frequency",
+          "assert_value": 12000000.0
+        },
+        "description": "KH-074: Y1 (YIC-12M20P2/XT324-10/10) frequency parsed as 12 MHz from MPN-embedded '12M' (pre-fix parse_value() returned None since the value isn't a standalone numeric)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-209",
+    "type": "classification_fix",
+    "summary": "is_power_net_name() now matches industry-standard nnVn format (3V3, 5V0, 12V0), NEG-prefixed negative rails, VDDn/VCCn variants, and nV_ underscore suffixes",
+    "assertions": [
+      {
+        "repo": "bluepylons/A-Thinkpad-USB-keyboard",
+        "project": "PCB_Thinkpad-USB-keyboard-PCB",
+        "source_file": "BSS138-level-shifter.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "rail_voltages.3V3-SIG",
+          "op": "equals",
+          "value": 3.3
+        },
+        "description": "KH-209: '3V3-SIG' net classified as power and assigned 3.3V (pre-fix the leading digit pattern 3V3 wasn't matched by is_power_net_name())"
+      }
+    ]
+  },
+  {
+    "issue": "KH-066",
+    "type": "detection_fix",
+    "summary": "Ethernet detection now handles RMII signals (TXD/RXD/TXEN/CRS_DV), seeds BFS from connector net when PHY has no parsed pins, and recognizes RJ45 connectors (RJLBC/LPJ4013/HR911105 family) regardless of ref prefix",
+    "assertions": [
+      {
+        "repo": "dilshan/stm8s005-iot-devboard",
+        "project": "design_sensor-dev-kit",
+        "source_file": "ETH-PHY.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_ethernet_interfaces",
+          "match_field": "components",
+          "match_value": ["J401", "U401"],
+          "assert_field": "rule_id",
+          "assert_value": "ET-DET"
+        },
+        "description": "KH-066: J401 RJ45 connector linked to U401 ENC28J60 PHY in detect_ethernet_interfaces components list (pre-fix the LAN-prefix connector was classified as inductor and not linked to the PHY)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-220",
+    "type": "classification_fix",
+    "summary": "classify_component() now takes a description parameter and checks it for oscillator keywords — custom-lib active oscillators (TCXO/VCXO/MEMS) no longer fall through to connector classification",
+    "assertions": [
+      {
+        "repo": "greatscottgadgets/hackrf",
+        "project": "hardware_neapolitan",
+        "source_file": "mcu.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "X2",
+          "assert_field": "type",
+          "assert_value": "oscillator"
+        },
+        "description": "KH-220: X2 (FOX924B 10MHz TCXO, custom lib `FOX924B:FOX924B`) classified as type='oscillator' via description keyword match (pre-fix the unknown lib_id fell through to 'connector')"
+      }
+    ]
   }
 ]

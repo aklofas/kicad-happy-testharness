@@ -1,0 +1,22 @@
+{
+  "file_pattern": "mcu.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-220-01",
+      "description": "KH-220: X2 (FOX924B 10MHz TCXO, custom lib `FOX924B:FOX924B`) classified as type='oscillator' via description keyword match (pre-fix the unknown lib_id fell through to 'connector')",
+      "issue": "KH-220",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "X2",
+        "assert_field": "type",
+        "assert_value": "oscillator"
+      }
+    }
+  ]
+}

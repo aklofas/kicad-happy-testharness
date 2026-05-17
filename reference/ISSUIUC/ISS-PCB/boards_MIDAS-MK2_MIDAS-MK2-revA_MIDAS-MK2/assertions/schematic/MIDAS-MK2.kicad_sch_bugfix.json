@@ -1,0 +1,23 @@
+{
+  "file_pattern": "MIDAS-MK2.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-082-01",
+      "description": "KH-082: U108 (ECMF02-2AMX6 ESD/EMI filter) is detected by detect_protection_devices (pre-fix the ECMF keyword wasn't in the ESD IC list)",
+      "issue": "KH-082",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_protection_devices",
+        "match_field": "ref",
+        "match_value": "U108",
+        "assert_field": "value",
+        "assert_value": "ECMF02-2AMX6"
+      }
+    }
+  ]
+}
