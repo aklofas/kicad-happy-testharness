@@ -1,0 +1,26 @@
+{
+  "file_pattern": "Caffeinated-AFTONSPARV.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-198-01",
+      "description": "KH-198: LC-DET components list is exactly [C5, L1] (pre-fix the C5 ref-collision would put C5 in the list multiple times alongside L1)",
+      "issue": "KH-198",
+      "fix_type": "logic_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_lc_filters",
+        "match_field": "rule_id",
+        "match_value": "LC-DET",
+        "assert_field": "components",
+        "assert_value": [
+          "C5",
+          "L1"
+        ]
+      }
+    }
+  ]
+}

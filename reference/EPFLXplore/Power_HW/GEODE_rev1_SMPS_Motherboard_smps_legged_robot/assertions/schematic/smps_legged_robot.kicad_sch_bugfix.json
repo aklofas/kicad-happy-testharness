@@ -1,0 +1,81 @@
+{
+  "file_pattern": "smps_legged_robot.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-084-01",
+      "description": "KH-084: U802 LMR36506MSC5RPERQ1 classified as switching regulator (precondition for inductor-tracing fix to apply)",
+      "issue": "KH-084",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U802",
+        "assert_field": "topology",
+        "assert_value": "switching"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-084-02",
+      "description": "KH-084: U802 SW-pin inductor identified as L803 (pre-fix the inductor link was unset on switching regulators)",
+      "issue": "KH-084",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U802",
+        "assert_field": "inductor",
+        "assert_value": "L803"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-084-03",
+      "description": "KH-084: U802 output_rail traced through L803 to __unnamed_90 (pre-fix output_rail was None for switching regulators with unnamed output nets)",
+      "issue": "KH-084",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U802",
+        "assert_field": "output_rail",
+        "assert_value": "__unnamed_90"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-238-01",
+      "description": "KH-238: U802 feedback_divider correctly orders r_top=R805 (37k, FB side) and r_bottom=R804 (10.7k, GND side); pre-fix the pair could swap producing ratio ~4.46 instead of 0.224",
+      "issue": "KH-238",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U802",
+        "assert_field": "feedback_divider",
+        "assert_value": {
+          "r_top": {
+            "ref": "R805",
+            "ohms": 37000.0,
+            "value": "37k"
+          },
+          "r_bottom": {
+            "ref": "R804",
+            "ohms": 10700.0,
+            "value": "10.7k"
+          },
+          "ratio": 0.224319,
+          "topology": "fb_at_top"
+        }
+      }
+    }
+  ]
+}

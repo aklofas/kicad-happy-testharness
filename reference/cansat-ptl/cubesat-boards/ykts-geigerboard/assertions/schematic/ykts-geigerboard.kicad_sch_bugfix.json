@@ -1,0 +1,21 @@
+{
+  "file_pattern": "ykts-geigerboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-153-01",
+      "description": "KH-153: RC-DET fires on R25/C28 at ~2679Hz (proves C28='220' parsed as 220pF=2.2e-10 F; pre-fix 220F would yield ~0 Hz cutoff and no detection)",
+      "issue": "KH-153",
+      "fix_type": "value_parsing_fix",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "detector_filter": "detect_rc_filters",
+        "field": "summary",
+        "pattern": "R25/C28 at 2679"
+      }
+    }
+  ]
+}

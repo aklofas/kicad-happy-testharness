@@ -1,0 +1,38 @@
+{
+  "file_pattern": "digitalphoenix_toolstick_hardware.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-050-01",
+      "description": "KH-050: AMS1117-3.3 U1 has estimated_vout=3.3V from fixed_suffix parsing (pre-fix the -3.3 suffix was ignored and the part was treated as adjustable with the 1.25V vref heuristic)",
+      "issue": "KH-050",
+      "fix_type": "value_parsing_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U1",
+        "assert_field": "estimated_vout",
+        "assert_value": 3.3
+      }
+    },
+    {
+      "id": "BUGFIX-KH-050-02",
+      "description": "KH-050: vref_source='fixed_suffix' provenance tag (pre-fix the source was 'default' / 'heuristic' for fixed-output LDOs)",
+      "issue": "KH-050",
+      "fix_type": "value_parsing_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U1",
+        "assert_field": "vref_source",
+        "assert_value": "fixed_suffix"
+      }
+    }
+  ]
+}

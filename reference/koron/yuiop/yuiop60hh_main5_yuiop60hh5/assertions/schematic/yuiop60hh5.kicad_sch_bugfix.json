@@ -1,0 +1,27 @@
+{
+  "file_pattern": "yuiop60hh5.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-211-01",
+      "description": "KH-211: LED2 (SK6812MINI-E) pin_nets includes all 4 pins (pre-fix __unnamed_* skip filter dropped pins 2 and 4)",
+      "issue": "KH-211",
+      "fix_type": "serialization_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "LED2",
+        "assert_field": "pin_nets",
+        "assert_value": {
+          "1": "VCC",
+          "2": "__unnamed_2",
+          "3": "GND",
+          "4": "__unnamed_1"
+        }
+      }
+    }
+  ]
+}

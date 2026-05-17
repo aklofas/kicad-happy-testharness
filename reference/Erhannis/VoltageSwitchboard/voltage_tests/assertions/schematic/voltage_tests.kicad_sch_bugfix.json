@@ -1,0 +1,28 @@
+{
+  "file_pattern": "voltage_tests.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-204-01",
+      "description": "KH-204: +3V3 rail appears as a clean key in rail_voltages (pre-fix the key was '/uuid.../+3V3' due to hierarchical UUID path prefix)",
+      "issue": "KH-204",
+      "fix_type": "data_fix",
+      "check": {
+        "path": "rail_voltages.+3V3",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-204-02",
+      "description": "KH-204: VOUT rail appears clean \u2014 _clean_hierarchical_name() strips the leading /uuid/ that pre-fix builds left in place",
+      "issue": "KH-204",
+      "fix_type": "data_fix",
+      "check": {
+        "path": "rail_voltages.VOUT",
+        "op": "exists"
+      }
+    }
+  ]
+}

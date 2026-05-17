@@ -1,0 +1,30 @@
+{
+  "file_pattern": "haxophone001.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-206-01",
+      "description": "KH-206: SDA net has \u22653 pins in haxophone001 (pre-fix SDA and SCL were spuriously merged into one net)",
+      "issue": "KH-206",
+      "fix_type": "logic_fix",
+      "check": {
+        "path": "nets.SDA.pins",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "BUGFIX-KH-206-02",
+      "description": "KH-206: SCL net has \u22653 pins separately from SDA (proves the two global labels are no longer merged via geometric wire overlap)",
+      "issue": "KH-206",
+      "fix_type": "logic_fix",
+      "check": {
+        "path": "nets.SCL.pins",
+        "op": "min_count",
+        "value": 3
+      }
+    }
+  ]
+}

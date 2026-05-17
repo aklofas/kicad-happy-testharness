@@ -1,0 +1,38 @@
+{
+  "file_pattern": "base.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-194-01",
+      "description": "KH-194: J2 (footprint sockets_scanhead:motor_13pin) classified as medium_risk header, not high_risk CAN bus (pre-fix substring 'can' inside 'scan'/'cancel' tripped CAN classifier)",
+      "issue": "KH-194",
+      "fix_type": "logic_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "audit_esd_protection",
+        "match_field": "connector_ref",
+        "match_value": "J2",
+        "assert_field": "risk_level",
+        "assert_value": "medium_risk"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-194-02",
+      "description": "KH-194: J2 interface_type stays as generic 'header' (post-fix), not the spurious 'can_bus' that pre-fix substring matching produced",
+      "issue": "KH-194",
+      "fix_type": "logic_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "audit_esd_protection",
+        "match_field": "connector_ref",
+        "match_value": "J2",
+        "assert_field": "interface_type",
+        "assert_value": "header"
+      }
+    }
+  ]
+}

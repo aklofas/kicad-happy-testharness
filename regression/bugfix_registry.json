@@ -3090,5 +3090,292 @@
         "description": "KH-287: EMC summary block exists (proves analyzer ran end-to-end without NameError crash that previously aborted any project with switching reg)"
       }
     ]
+  },
+  {
+    "issue": "KH-084",
+    "type": "detection_fix",
+    "summary": "Switching regulator output_rail now traced through inductor on SW pin; feedback divider linked to parent regulator (FB-at-top topology)",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "smps_legged_robot.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U802",
+          "assert_field": "topology",
+          "assert_value": "switching"
+        },
+        "description": "KH-084: U802 LMR36506MSC5RPERQ1 classified as switching regulator (precondition for inductor-tracing fix to apply)"
+      },
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "smps_legged_robot.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U802",
+          "assert_field": "inductor",
+          "assert_value": "L803"
+        },
+        "description": "KH-084: U802 SW-pin inductor identified as L803 (pre-fix the inductor link was unset on switching regulators)"
+      },
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "smps_legged_robot.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U802",
+          "assert_field": "output_rail",
+          "assert_value": "__unnamed_90"
+        },
+        "description": "KH-084: U802 output_rail traced through L803 to __unnamed_90 (pre-fix output_rail was None for switching regulators with unnamed output nets)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-238",
+    "type": "detection_fix",
+    "summary": "Feedback divider pair-ordering corrected in signal_detectors.py:274-280 — r_top/r_bottom now assigned by net topology (FB side vs GND side), not arbitrary first-seen order",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "smps_legged_robot.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U802",
+          "assert_field": "feedback_divider",
+          "assert_value": {
+            "r_top": {"ref": "R805", "ohms": 37000.0, "value": "37k"},
+            "r_bottom": {"ref": "R804", "ohms": 10700.0, "value": "10.7k"},
+            "ratio": 0.224319,
+            "topology": "fb_at_top"
+          }
+        },
+        "description": "KH-238: U802 feedback_divider correctly orders r_top=R805 (37k, FB side) and r_bottom=R804 (10.7k, GND side); pre-fix the pair could swap producing ratio ~4.46 instead of 0.224"
+      }
+    ]
+  },
+  {
+    "issue": "KH-204",
+    "type": "data_fix",
+    "summary": "rail_voltages no longer contains hierarchical UUID-prefixed net names; _clean_hierarchical_name() strips UUID path prefixes before building the rail list",
+    "assertions": [
+      {
+        "repo": "Erhannis/VoltageSwitchboard",
+        "project": "voltage_tests",
+        "source_file": "voltage_tests.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "rail_voltages.+3V3",
+          "op": "exists"
+        },
+        "description": "KH-204: +3V3 rail appears as a clean key in rail_voltages (pre-fix the key was '/uuid.../+3V3' due to hierarchical UUID path prefix)"
+      },
+      {
+        "repo": "Erhannis/VoltageSwitchboard",
+        "project": "voltage_tests",
+        "source_file": "voltage_tests.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "rail_voltages.VOUT",
+          "op": "exists"
+        },
+        "description": "KH-204: VOUT rail appears clean — _clean_hierarchical_name() strips the leading /uuid/ that pre-fix builds left in place"
+      }
+    ]
+  },
+  {
+    "issue": "KH-206",
+    "type": "logic_fix",
+    "summary": "build_net_map() no longer unions component pins onto wires by geometric overlap alone — mid-wire pin union pass removed; KiCad junction/wire-endpoint semantics now preserved so global labels with distinct names stay on separate nets",
+    "assertions": [
+      {
+        "repo": "cardonabits/haxo-hw",
+        "project": "haxophone001",
+        "source_file": "haxophone001.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "nets.SDA.pins",
+          "op": "min_count",
+          "value": 3
+        },
+        "description": "KH-206: SDA net has ≥3 pins in haxophone001 (pre-fix SDA and SCL were spuriously merged into one net)"
+      },
+      {
+        "repo": "cardonabits/haxo-hw",
+        "project": "haxophone001",
+        "source_file": "haxophone001.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "nets.SCL.pins",
+          "op": "min_count",
+          "value": 3
+        },
+        "description": "KH-206: SCL net has ≥3 pins separately from SDA (proves the two global labels are no longer merged via geometric wire overlap)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-211",
+    "type": "serialization_fix",
+    "summary": "pin_nets serialization no longer filters out __unnamed_* nets in either the legacy or KiCad 6+ path; component pin connectivity through unlabelled wires is preserved in JSON output",
+    "assertions": [
+      {
+        "repo": "koron/yuiop",
+        "project": "yuiop60hh_main5_yuiop60hh5",
+        "source_file": "yuiop60hh5.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "LED2",
+          "assert_field": "pin_nets",
+          "assert_value": {"1": "VCC", "2": "__unnamed_2", "3": "GND", "4": "__unnamed_1"}
+        },
+        "description": "KH-211: LED2 (SK6812MINI-E) pin_nets includes all 4 pins (pre-fix __unnamed_* skip filter dropped pins 2 and 4)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-153",
+    "type": "value_parsing_fix",
+    "summary": "Bare integer capacitor values (e.g. '220', '1000') now parsed as picofarads when component_type='capacitor'; was previously treated as literal Farads",
+    "assertions": [
+      {
+        "repo": "cansat-ptl/cubesat-boards",
+        "project": "ykts-geigerboard",
+        "source_file": "ykts-geigerboard.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "contains_match",
+          "detector_filter": "detect_rc_filters",
+          "field": "summary",
+          "pattern": "R25/C28 at 2679"
+        },
+        "description": "KH-153: RC-DET fires on R25/C28 at ~2679Hz (proves C28='220' parsed as 220pF=2.2e-10 F; pre-fix 220F would yield ~0 Hz cutoff and no detection)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-194",
+    "type": "logic_fix",
+    "summary": "ESD/connector audit keyword matching switched to word-boundary regex for short keywords (≤3 chars) so 'can' no longer matches inside 'scan' / 'cancel' footprint names",
+    "assertions": [
+      {
+        "repo": "hstarmans/firestarter",
+        "project": "lasermodule_base",
+        "source_file": "base.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "audit_esd_protection",
+          "match_field": "connector_ref",
+          "match_value": "J2",
+          "assert_field": "risk_level",
+          "assert_value": "medium_risk"
+        },
+        "description": "KH-194: J2 (footprint sockets_scanhead:motor_13pin) classified as medium_risk header, not high_risk CAN bus (pre-fix substring 'can' inside 'scan'/'cancel' tripped CAN classifier)"
+      },
+      {
+        "repo": "hstarmans/firestarter",
+        "project": "lasermodule_base",
+        "source_file": "base.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "audit_esd_protection",
+          "match_field": "connector_ref",
+          "match_value": "J2",
+          "assert_field": "interface_type",
+          "assert_value": "header"
+        },
+        "description": "KH-194: J2 interface_type stays as generic 'header' (post-fix), not the spurious 'can_bus' that pre-fix substring matching produced"
+      }
+    ]
+  },
+  {
+    "issue": "KH-050",
+    "type": "value_parsing_fix",
+    "summary": "lookup_regulator_vref() now parses fixed-output suffix patterns (-3.3, -33, -3V3, -1V8, -12); regulator detector emits estimated_vout from suffix and skips feedback-divider analysis when a fixed suffix is found",
+    "assertions": [
+      {
+        "repo": "Ineb01/digitalphoenix_toolstick_hardware",
+        "project": "digitalphoenix_toolstick_hardware",
+        "source_file": "digitalphoenix_toolstick_hardware.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U1",
+          "assert_field": "estimated_vout",
+          "assert_value": 3.3
+        },
+        "description": "KH-050: AMS1117-3.3 U1 has estimated_vout=3.3V from fixed_suffix parsing (pre-fix the -3.3 suffix was ignored and the part was treated as adjustable with the 1.25V vref heuristic)"
+      },
+      {
+        "repo": "Ineb01/digitalphoenix_toolstick_hardware",
+        "project": "digitalphoenix_toolstick_hardware",
+        "source_file": "digitalphoenix_toolstick_hardware.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U1",
+          "assert_field": "vref_source",
+          "assert_value": "fixed_suffix"
+        },
+        "description": "KH-050: vref_source='fixed_suffix' provenance tag (pre-fix the source was 'default' / 'heuristic' for fixed-output LDOs)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-198",
+    "type": "logic_fix",
+    "summary": "detect_lc_filters() now deduplicates capacitor refs within an LC group; multi-project schematics with reference collisions no longer count one capacitor's pins as N parallel caps",
+    "assertions": [
+      {
+        "repo": "caffeinated-labs/Caffeinated-AFTONSPARV",
+        "project": "Caffeinated-AFTONSPARV",
+        "source_file": "Caffeinated-AFTONSPARV.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_lc_filters",
+          "match_field": "rule_id",
+          "match_value": "LC-DET",
+          "assert_field": "components",
+          "assert_value": ["C5", "L1"]
+        },
+        "description": "KH-198: LC-DET components list is exactly [C5, L1] (pre-fix the C5 ref-collision would put C5 in the list multiple times alongside L1)"
+      }
+    ]
   }
 ]
