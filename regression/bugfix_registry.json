@@ -4355,5 +4355,25 @@
         "description": "KH-236: U2 LM7805 estimated_vout=5.0V via fixed_suffix parser (pre-fix fell through to LM78 heuristic returning 1.25V)"
       }
     ]
+  },
+  {
+    "issue": "KH-099",
+    "type": "false_positive_fix",
+    "summary": "I2C bus detection now excludes I2S nets — SDAT regex tightened to `\\bSDA\\b(?!T)` with negative lookahead for 'T'; SDAT/LRCK/BCLK/WSEL nets explicitly skipped",
+    "assertions": [
+      {
+        "repo": "Alexandr-Filatov/STM32F722",
+        "project": "STM32F722",
+        "source_file": "STM32F722.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "field": "nets",
+          "pattern": "^SDAT$"
+        },
+        "description": "KH-099: No PR-001 / I2C bus finding includes SDAT net (U3 has SDAT in pin_nets but it's correctly excluded from I2C SDA detection by the (?!T) lookahead)"
+      }
+    ]
   }
 ]

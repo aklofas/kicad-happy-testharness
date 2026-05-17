@@ -1,0 +1,20 @@
+{
+  "file_pattern": "STM32F722.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-099-01",
+      "description": "KH-099: No PR-001 / I2C bus finding includes SDAT net (U3 has SDAT in pin_nets but it's correctly excluded from I2C SDA detection by the (?!T) lookahead)",
+      "issue": "KH-099",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "field": "nets",
+        "pattern": "^SDAT$"
+      }
+    }
+  ]
+}
