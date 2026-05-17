@@ -25,6 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import evaluate_assertion, load_assertions
 from utils import (OUTPUTS_DIR, DATA_DIR, project_prefix, ANALYZER_TYPES,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos)
+from regression.schema_era import era_filter, CURRENT_SCHEMA_ERA
 
 
 def check_assertions(data_dir, repo_name=None, analyzer_type=None):
@@ -196,6 +197,11 @@ def main():
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--allow-errors", action="store_true",
                         help="Exit 0 when errors > 0 but failures == 0 (shallow-clone mode)")
+    parser.add_argument(
+        "--era", default=None,
+        help="Filter assertions to era. Default: §19.4 current-era filter "
+             "(matches CURRENT_SCHEMA_ERA or untagged). Pass 'all' to disable.",
+    )
     args = parser.parse_args()
 
     # Resolve repo filtering
@@ -220,6 +226,20 @@ def main():
         print("No assertions found in data/")
         print("Create assertion files to enable regression testing.")
         sys.exit(0)
+
+    # Apply era filter: pre-filter assertions within each set before evaluation.
+    # Default: CURRENT_SCHEMA_ERA (untagged OR matching current era). "all" disables.
+    target_era = args.era or CURRENT_SCHEMA_ERA
+    if target_era != "all":
+        filtered_sets = []
+        for aset in assertion_sets:
+            kept = [a for a in aset.get("assertions", [])
+                    if era_filter(a, target_era)]
+            if kept:
+                filtered_aset = dict(aset)
+                filtered_aset["assertions"] = kept
+                filtered_sets.append(filtered_aset)
+        assertion_sets = filtered_sets
 
     total = passed = failed = errors = 0
     aspirational_total = aspirational_passed = aspirational_failed = 0

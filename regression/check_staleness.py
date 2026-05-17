@@ -22,9 +22,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import load_assertions
 from run_checks import find_output_file
 from utils import OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES, add_repo_filter_args, resolve_repos
+from regression.schema_era import era_filter, CURRENT_SCHEMA_ERA
 
 
-def check_staleness(data_dir, repo_name=None, analyzer_type=None):
+def check_staleness(data_dir, repo_name=None, analyzer_type=None, target_era=None):
     """Compare assertion and output timestamps.
 
     Returns:
@@ -39,13 +40,20 @@ def check_staleness(data_dir, repo_name=None, analyzer_type=None):
     total_sets = 0
 
     for aset in assertion_sets:
+        assertions = aset.get("assertions", [])
+        # Apply era filter: count only era-matching assertions; skip set if none remain.
+        if target_era and target_era != "all":
+            assertions = [a for a in assertions if era_filter(a, target_era)]
+            if not assertions:
+                continue
+
         total_sets += 1
         atype = aset.get("analyzer_type", "schematic")
         file_pattern = aset.get("file_pattern", "")
         repo = aset.get("_repo", "")
         project_path = aset.get("_project_path")
         assertion_file = Path(aset.get("_source_file", ""))
-        n_assertions = len(aset.get("assertions", []))
+        n_assertions = len(assertions)
 
         output_file = find_output_file(file_pattern, repo, project_path, atype)
 
@@ -136,9 +144,16 @@ def main():
                         help="Only check one analyzer type")
     parser.add_argument("--json", action="store_true",
                         help="Output as JSON")
+    parser.add_argument(
+        "--era-filter", default=None,
+        help="Filter assertions to era for staleness check. Default: §19.4 "
+             "current-era filter (matches CURRENT_SCHEMA_ERA or untagged). "
+             "Pass 'all' to disable.",
+    )
     args = parser.parse_args()
 
     repos = resolve_repos(args)
+    target_era = args.era_filter or CURRENT_SCHEMA_ERA
 
     stale_all = []
     missing_all = []
@@ -147,7 +162,7 @@ def main():
 
     if repos is None:
         stale_all, missing_all, total_sets = check_staleness(
-            DATA_DIR, repo_name=None, analyzer_type=args.type,
+            DATA_DIR, repo_name=None, analyzer_type=args.type, target_era=target_era,
         )
         uncovered_all = find_uncovered_outputs(
             DATA_DIR, repo_name=None, analyzer_type=args.type,
@@ -156,6 +171,7 @@ def main():
         for repo_name in repos:
             s, m, t = check_staleness(
                 DATA_DIR, repo_name=repo_name, analyzer_type=args.type,
+                target_era=target_era,
             )
             stale_all.extend(s)
             missing_all.extend(m)

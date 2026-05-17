@@ -32,6 +32,7 @@ def _compile(pattern):
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import resolve_path, load_project_metadata
+from regression.schema_era import normalize_schema_era
 
 # All supported assertion operators — validated at load time
 KNOWN_OPS = frozenset({
@@ -112,6 +113,8 @@ def _countable(val):
 
 def evaluate_assertion(assertion, data):
     """Evaluate a single assertion against analyzer output."""
+    if "schema_era" in assertion:
+        assertion["schema_era"] = normalize_schema_era(assertion["schema_era"])
     check = assertion.get("check", {})
     path = check.get("path", "")
     op = check.get("op", "")
