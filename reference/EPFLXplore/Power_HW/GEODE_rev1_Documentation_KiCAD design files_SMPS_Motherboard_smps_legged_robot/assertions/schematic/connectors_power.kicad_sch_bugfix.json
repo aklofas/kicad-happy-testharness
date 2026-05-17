@@ -24,6 +24,17 @@
         "op": "equals",
         "value": 80.0
       }
+    },
+    {
+      "id": "BUGFIX-KH-309-01",
+      "description": "KH-309: Power_HW connectors_power trust_level='high' (pre-fix every schematic was pinned to 'low' because raw certification dicts lacked confidence/evidence_source fields)",
+      "issue": "KH-309",
+      "fix_type": "data_fix",
+      "check": {
+        "path": "trust_summary.trust_level",
+        "op": "equals",
+        "value": "high"
+      }
     }
   ]
 }

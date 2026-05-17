@@ -4038,5 +4038,89 @@
         "description": "KH-121: DIY-LAPTOP Power Supply sheet has exactly 3 RC-DET findings (no duplicates from bidirectional traversal; pre-fix produced more entries via swapped input/output)"
       }
     ]
+  },
+  {
+    "issue": "KH-098",
+    "type": "detection_fix",
+    "summary": "MOSFET flyback detector now also checks drain→power-rail topology (was drain→source only) — low-side switches with diode to supply rail now correctly marked has_flyback_diode=true",
+    "assertions": [
+      {
+        "repo": "74th/74th-oshw-projects",
+        "project": "TEST-test-lipo_battery_test-lipo_battery",
+        "source_file": "test-lipo_battery.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_transistor_circuits",
+          "match_field": "reference",
+          "match_value": "Q3",
+          "assert_field": "has_flyback_diode",
+          "assert_value": true
+        },
+        "description": "KH-098: Q3 (drain=VBAT, flyback=D5 to power rail) has has_flyback_diode=true (pre-fix only drain→source flyback topology was detected)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-160",
+    "type": "false_positive_fix",
+    "summary": "PWR_FLAG warnings no longer skipped on power-named nets that lack a power_out symbol — the name-based skip (lines 3704-3707) was removed; warning now fires when the net genuinely lacks a power_out driver even if its name matches a known rail",
+    "assertions": [
+      {
+        "repo": "0rax/esphome-xiao-base",
+        "project": "pcb",
+        "source_file": "pcb.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "pwr_flag_warnings",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-160: esphome-xiao-base (connector-powered design) now fires pwr_flag_warnings on power-named rails without power_out (pre-fix the over-aggressive name-based skip suppressed all warnings)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-309",
+    "type": "data_fix",
+    "summary": "detect_suggested_certifications now uses make_finding() so every certification entry has confidence + evidence_source — trust_level no longer pinned to 'low' by 74,076 raw-dict findings missing those fields",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "connectors_power.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "trust_summary.trust_level",
+          "op": "equals",
+          "value": "high"
+        },
+        "description": "KH-309: Power_HW connectors_power trust_level='high' (pre-fix every schematic was pinned to 'low' because raw certification dicts lacked confidence/evidence_source fields)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-321",
+    "type": "table_fix",
+    "summary": "Corrected TPS62160 (2.5→2.25 MHz) and TPS63000 (2.4→1.5 MHz) entries in _KNOWN_FREQS — values now match TI SLVS590M/SLVSAK8 datasheets",
+    "assertions": [
+      {
+        "repo": "rmingon/drone-uwb",
+        "project": "drone",
+        "source_file": "drone.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U5",
+          "assert_field": "switching_frequency_hz",
+          "assert_value": 1500000.0
+        },
+        "description": "KH-321: U5 TPS63001 (TPS63000 family) switching_frequency_hz=1.5MHz from corrected lookup_table (pre-fix the entry incorrectly read 2.4MHz)"
+      }
+    ]
   }
 ]

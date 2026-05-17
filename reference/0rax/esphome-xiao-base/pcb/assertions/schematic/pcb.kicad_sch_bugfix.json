@@ -1,0 +1,19 @@
+{
+  "file_pattern": "pcb.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-160-01",
+      "description": "KH-160: esphome-xiao-base (connector-powered design) now fires pwr_flag_warnings on power-named rails without power_out (pre-fix the over-aggressive name-based skip suppressed all warnings)",
+      "issue": "KH-160",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

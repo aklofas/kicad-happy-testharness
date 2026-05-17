@@ -1,0 +1,23 @@
+{
+  "file_pattern": "drone.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-321-01",
+      "description": "KH-321: U5 TPS63001 (TPS63000 family) switching_frequency_hz=1.5MHz from corrected lookup_table (pre-fix the entry incorrectly read 2.4MHz)",
+      "issue": "KH-321",
+      "fix_type": "table_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U5",
+        "assert_field": "switching_frequency_hz",
+        "assert_value": 1500000.0
+      }
+    }
+  ]
+}
