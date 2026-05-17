@@ -1475,6 +1475,53 @@ python3 regression/run_checks.py --type emc
 Record pass/fail counts. Compare against status.md baselines. Any NEW failures
 must be investigated before release.
 
+#### A8 era-baseline check (post-v1.4 backfill)
+
+After the A8 schema-era backfill (or any future era bump), default-mode
+regression assertion count is lower than `--era all` count by the size of the
+historical-era population. To distinguish era-suppression from a real regression:
+
+```bash
+# Full population — must match the pre-backfill baseline (2,364,868 at the
+# 2026-05-17 A8 backfill).
+python3 regression/run_checks.py --era all
+
+# Default mode — count is lower by the size of the pre-v1.4 era population
+# (30,280 at the 2026-05-17 backfill: 20,656 validate_pullups + 5,398
+# validate_led_resistors + 3,614 validate_voltage_levels + 612
+# validate_feedback_stability). PASS rate on the remainder must still be 100%.
+python3 regression/run_checks.py
+```
+
+The `Tagged: N` line printed by `regression/tag_assertions.py` at the most
+recent backfill is the authoritative delta. Reproduce that number with:
+
+```bash
+python3 - <<'EOF'
+import json, os
+from pathlib import Path
+total = 0
+for dirpath, _, files in os.walk('reference'):
+    if '/assertions/' not in dirpath:
+        continue
+    for f in files:
+        if not f.endswith('.json'):
+            continue
+        try:
+            d = json.load(open(os.path.join(dirpath, f)))
+        except Exception:
+            continue
+        for a in d.get('assertions', []):
+            if 'schema_era' in a:
+                total += 1
+print(f"Tagged assertions: {total:,}")
+EOF
+```
+
+A drop in default-mode PASS rate is a real regression unrelated to era
+filtering and must be investigated. A drop in default-mode TOTAL count that
+matches the "Tagged" number is expected era-suppression.
+
 ### 16d. Cross-validation
 
 ```bash
