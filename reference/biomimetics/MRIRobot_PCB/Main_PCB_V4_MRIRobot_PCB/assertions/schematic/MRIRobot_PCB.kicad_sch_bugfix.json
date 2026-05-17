@@ -1,0 +1,21 @@
+{
+  "file_pattern": "MRIRobot_PCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-226-01",
+      "description": "KH-226: U1 NUCLEO-F446RE (STM32 dev board) NOT in detect_power_regulators (pre-fix the VIN/3V3/5V pin pattern was matched as switching regulator)",
+      "issue": "KH-226",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "detector_filter": "detect_power_regulators",
+        "field": "value",
+        "pattern": "NUCLEO"
+      }
+    }
+  ]
+}

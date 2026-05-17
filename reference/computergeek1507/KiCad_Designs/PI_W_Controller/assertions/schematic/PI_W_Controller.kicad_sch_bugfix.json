@@ -1,0 +1,23 @@
+{
+  "file_pattern": "PI_W_Controller.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-236-01",
+      "description": "KH-236: U2 LM7805 estimated_vout=5.0V via fixed_suffix parser (pre-fix fell through to LM78 heuristic returning 1.25V)",
+      "issue": "KH-236",
+      "fix_type": "value_parsing_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U2",
+        "assert_field": "estimated_vout",
+        "assert_value": 5.0
+      }
+    }
+  ]
+}

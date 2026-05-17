@@ -90,6 +90,19 @@
         "assert_field": "category",
         "assert_value": "ic"
       }
+    },
+    {
+      "id": "BUGFIX-KH-247-01",
+      "description": "KH-247: U802 LMR36506 output_capacitors include C817 with package='0805' carried from footprint (pre-fix package wasn't extracted; EMC silently defaulted to 0603 for derating)",
+      "issue": "KH-247",
+      "fix_type": "data_fix",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "detector_filter": "detect_power_regulators",
+        "field": "output_capacitors",
+        "pattern": "'package': '0805'"
+      }
     }
   ]
 }

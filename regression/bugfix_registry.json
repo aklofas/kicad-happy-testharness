@@ -4290,5 +4290,70 @@
         "description": "KH-278: GP-001 INFO finding fires recommending --full when PCB return_path data is missing (pre-fix silently returned empty)"
       }
     ]
+  },
+  {
+    "issue": "KH-226",
+    "type": "false_positive_fix",
+    "summary": "Dev board modules (NUCLEO/Arduino/Raspberry) excluded from regulator detection — STM32 NUCLEO modules with VIN/3V3/5V pins no longer matched as switching regulators",
+    "assertions": [
+      {
+        "repo": "biomimetics/MRIRobot_PCB",
+        "project": "Main_PCB_V4_MRIRobot_PCB",
+        "source_file": "MRIRobot_PCB.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "detector_filter": "detect_power_regulators",
+          "field": "value",
+          "pattern": "NUCLEO"
+        },
+        "description": "KH-226: U1 NUCLEO-F446RE (STM32 dev board) NOT in detect_power_regulators (pre-fix the VIN/3V3/5V pin pattern was matched as switching regulator)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-247",
+    "type": "data_fix",
+    "summary": "output_capacitors[*] now carries `package` field from footprint — pre-fix EMC PDN derating fabricated a default 0603 package, producing wrong package-sensitive analysis",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "smps_legged_robot.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "contains_match",
+          "detector_filter": "detect_power_regulators",
+          "field": "output_capacitors",
+          "pattern": "'package': '0805'"
+        },
+        "description": "KH-247: U802 LMR36506 output_capacitors include C817 with package='0805' carried from footprint (pre-fix package wasn't extracted; EMC silently defaulted to 0603 for derating)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-236",
+    "type": "value_parsing_fix",
+    "summary": "LM78xx/LM79xx fixed-output regulators now caught by new suffix-parser regex `LM7[89][A-Z]?(\\d{2})` — pre-fix they fell through to broad-prefix `LM78`→1.25V heuristic. Also replaced 6 broad-prefix table entries (TPS7A, TPS56, MP2, AP73, AP736) with ~40 per-sub-family entries.",
+    "assertions": [
+      {
+        "repo": "computergeek1507/KiCad_Designs",
+        "project": "PI_W_Controller",
+        "source_file": "PI_W_Controller.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U2",
+          "assert_field": "estimated_vout",
+          "assert_value": 5.0
+        },
+        "description": "KH-236: U2 LM7805 estimated_vout=5.0V via fixed_suffix parser (pre-fix fell through to LM78 heuristic returning 1.25V)"
+      }
+    ]
   }
 ]
