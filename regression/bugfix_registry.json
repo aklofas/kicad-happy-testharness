@@ -3876,5 +3876,80 @@
         "description": "KH-150: ykts-geigerboard has 0 detect_rf_matching findings (pre-fix had 1 false positive from non-RF LC network)"
       }
     ]
+  },
+  {
+    "issue": "KH-171",
+    "type": "false_positive_fix",
+    "summary": "completeness.complete check now accepts 'unknown' drill type (in addition to PTH and mixed) — KiCad 5 combined .drl files without X2 attributes no longer cause complete=False",
+    "assertions": [
+      {
+        "repo": "pho/esp32-lifepo4-board",
+        "project": "esp32-lifepo4",
+        "source_file": "gerber",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "completeness.complete",
+          "op": "equals",
+          "value": true
+        },
+        "description": "KH-171: completeness.complete=True for KiCad 5 combined .drl file with unknown-type drill (pre-fix was False because the check required type=='PTH')"
+      }
+    ]
+  },
+  {
+    "issue": "KH-246",
+    "type": "schema_fix",
+    "summary": "EMC/thermal summary.total_checks renamed to total_findings, plus new categories_checked (EMC) and components_assessed (thermal) — clean board no longer reports 'total_checks: 0' misleadingly",
+    "assertions": [
+      {
+        "repo": "EPFLXplore/Power_HW",
+        "project": "GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "connectors_power.kicad_sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "summary.categories_checked",
+          "op": "exists"
+        },
+        "description": "KH-246: EMC summary has categories_checked field (pre-fix only total_checks existed which confusingly reported len(findings))"
+      }
+    ]
+  },
+  {
+    "issue": "KH-283",
+    "type": "crash_fix",
+    "summary": "check_crystal_guard_ring() now handles crystal frequency=None — `xtal.get('frequency') or 0` instead of `xtal.get('frequency', 0)` (eliminated 97 EMC failures corpus-wide)",
+    "assertions": [
+      {
+        "repo": "0Prashant/Kicad",
+        "project": "ELAASLAD_ELAASLAD_Buttons",
+        "source_file": "ELAASLAD.sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "summary.total_findings",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-283: EMC ran successfully on ELAASLAD.sch (45 findings) despite Y1 crystal having frequency=None (pre-fix EMC crashed with TypeError on `freq > 1e6`)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-286",
+    "type": "crash_fix",
+    "summary": "analyze_fiducials() now coerces footprint value to string before concatenation — list-typed value no longer crashes with TypeError on `+`",
+    "assertions": [
+      {
+        "repo": "ccadic/TI92-revive",
+        "project": "ti92revive",
+        "source_file": "ti92revive.kicad_pcb",
+        "analyzer_type": "pcb",
+        "check": {
+          "path": "summary.total_findings",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-286: PCB analysis completes on TI92-revive ti92revive.kicad_pcb (pre-fix analyze_fiducials crashed on list-typed footprint value)"
+      }
+    ]
   }
 ]

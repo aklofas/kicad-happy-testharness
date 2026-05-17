@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ELAASLAD.sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-283-01",
+      "description": "KH-283: EMC ran successfully on ELAASLAD.sch (45 findings) despite Y1 crystal having frequency=None (pre-fix EMC crashed with TypeError on `freq > 1e6`)",
+      "issue": "KH-283",
+      "fix_type": "crash_fix",
+      "check": {
+        "path": "summary.total_findings",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

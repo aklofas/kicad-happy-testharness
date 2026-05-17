@@ -1,0 +1,18 @@
+{
+  "file_pattern": "connectors_power.kicad_sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-246-01",
+      "description": "KH-246: EMC summary has categories_checked field (pre-fix only total_checks existed which confusingly reported len(findings))",
+      "issue": "KH-246",
+      "fix_type": "schema_fix",
+      "check": {
+        "path": "summary.categories_checked",
+        "op": "exists"
+      }
+    }
+  ]
+}
