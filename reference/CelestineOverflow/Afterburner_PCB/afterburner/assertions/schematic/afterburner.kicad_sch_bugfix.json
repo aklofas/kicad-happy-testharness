@@ -1,0 +1,21 @@
+{
+  "file_pattern": "afterburner.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-214-01",
+      "description": "KH-214: IC2 (INA226AIDGSR power monitor) is NOT in detect_opamp_circuits (pre-fix the `ina2` keyword matched INA226/INA233)",
+      "issue": "KH-214",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "detector_filter": "detect_opamp_circuits",
+        "field": "components",
+        "pattern": "^IC2$"
+      }
+    }
+  ]
+}

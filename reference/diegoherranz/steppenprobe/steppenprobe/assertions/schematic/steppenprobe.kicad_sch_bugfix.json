@@ -1,0 +1,23 @@
+{
+  "file_pattern": "steppenprobe.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-035-01",
+      "description": "KH-035: FT2232HL U1 detected as integrated_ldo via VREGOUT pin (pre-fix detect_integrated_ldos() didn't exist; FT2232's internal LDO wasn't surfaced)",
+      "issue": "KH-035",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_integrated_ldos",
+        "match_field": "ref",
+        "match_value": "U1",
+        "assert_field": "topology",
+        "assert_value": "integrated_ldo"
+      }
+    }
+  ]
+}

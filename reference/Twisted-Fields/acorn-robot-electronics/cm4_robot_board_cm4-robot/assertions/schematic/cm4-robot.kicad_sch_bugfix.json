@@ -1,0 +1,23 @@
+{
+  "file_pattern": "cm4-robot.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-215-01",
+      "description": "KH-215: U3 LM2576HVS-5.0/TR classified as topology='switching' via _match_known_switching() (pre-fix the OUT pin pattern caused LDO default)",
+      "issue": "KH-215",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U3",
+        "assert_field": "topology",
+        "assert_value": "switching"
+      }
+    }
+  ]
+}

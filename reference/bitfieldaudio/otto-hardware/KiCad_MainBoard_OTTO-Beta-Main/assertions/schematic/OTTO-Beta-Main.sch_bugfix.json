@@ -1,0 +1,22 @@
+{
+  "file_pattern": "OTTO-Beta-Main.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-110-01",
+      "description": "KH-110: TRS205 (PJ-3930-8A audio jack) classified as type='connector' via PJ-3 value prefix (pre-fix the TRS-prefix ref + unknown lib_id led to ic/other classification)",
+      "issue": "KH-110",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "TRS205",
+        "assert_field": "type",
+        "assert_value": "connector"
+      }
+    }
+  ]
+}

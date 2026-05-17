@@ -1,0 +1,27 @@
+{
+  "file_pattern": "micro.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-216-01",
+      "description": "KH-216: Q1 unit=1 (dual MOSFET) pin_nets contains only its own pins {1,2,7,8} \u2014 pre-fix all 8 pins (both units) appeared on each Q1 entry",
+      "issue": "KH-216",
+      "fix_type": "serialization_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "uuid",
+        "match_value": "a4120deb-3651-44c8-8214-05319b19de6d",
+        "assert_field": "pin_nets",
+        "assert_value": {
+          "1": "GND",
+          "2": "__unnamed_2",
+          "7": "BLD",
+          "8": "BLD"
+        }
+      }
+    }
+  ]
+}

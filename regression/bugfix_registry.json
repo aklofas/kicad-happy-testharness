@@ -3506,5 +3506,158 @@
         "description": "KH-220: X2 (FOX924B 10MHz TCXO, custom lib `FOX924B:FOX924B`) classified as type='oscillator' via description keyword match (pre-fix the unknown lib_id fell through to 'connector')"
       }
     ]
+  },
+  {
+    "issue": "KH-021",
+    "type": "detection_fix",
+    "summary": "BSS138 bidirectional level shifter pattern detected — N-MOSFET with gate→power rail and pull-ups on both source/drain to different power rails sets topology=level_shifter",
+    "assertions": [
+      {
+        "repo": "bluepylons/A-Thinkpad-USB-keyboard",
+        "project": "PCB_Thinkpad-USB-keyboard-PCB",
+        "source_file": "BSS138-level-shifter.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_transistor_circuits",
+          "match_field": "reference",
+          "match_value": "Q1",
+          "assert_field": "topology",
+          "assert_value": "level_shifter"
+        },
+        "description": "KH-021: Q1 (BSS138 on BSS138-level-shifter sub-sheet) classified as topology='level_shifter' (pre-fix it was a generic MOSFET switch)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-214",
+    "type": "false_positive_fix",
+    "summary": "INA226/INA233 power monitors excluded from opamp detection — `ina2` removed from opamp_value_keywords and post-gate exclusion added for INA2xx/INA8xx/INA90x",
+    "assertions": [
+      {
+        "repo": "CelestineOverflow/Afterburner_PCB",
+        "project": "afterburner",
+        "source_file": "afterburner.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "detector_filter": "detect_opamp_circuits",
+          "field": "components",
+          "pattern": "^IC2$"
+        },
+        "description": "KH-214: IC2 (INA226AIDGSR power monitor) is NOT in detect_opamp_circuits (pre-fix the `ina2` keyword matched INA226/INA233)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-215",
+    "type": "classification_fix",
+    "summary": "LM2576/LM2596 (and other custom-lib switching bucks) now match _KNOWN_FREQS keyword fallback — pin name 'OUT' (not 'SW') no longer defaults to LDO when lib_id is non-standard",
+    "assertions": [
+      {
+        "repo": "Twisted-Fields/acorn-robot-electronics",
+        "project": "cm4_robot_board_cm4-robot",
+        "source_file": "cm4-robot.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U3",
+          "assert_field": "topology",
+          "assert_value": "switching"
+        },
+        "description": "KH-215: U3 LM2576HVS-5.0/TR classified as topology='switching' via _match_known_switching() (pre-fix the OUT pin pattern caused LDO default)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-110",
+    "type": "classification_fix",
+    "summary": "Audio jack components (PJ-3xxx, SJ-3xxx, MJ-3xxx value prefix and Connector_Audio library) now classified as connector instead of falling through to IC/other",
+    "assertions": [
+      {
+        "repo": "bitfieldaudio/otto-hardware",
+        "project": "KiCad_MainBoard_OTTO-Beta-Main",
+        "source_file": "OTTO-Beta-Main.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "TRS205",
+          "assert_field": "type",
+          "assert_value": "connector"
+        },
+        "description": "KH-110: TRS205 (PJ-3930-8A audio jack) classified as type='connector' via PJ-3 value prefix (pre-fix the TRS-prefix ref + unknown lib_id led to ic/other classification)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-216",
+    "type": "serialization_fix",
+    "summary": "pin_nets for multi-unit ICs no longer merge all units' pins under the shared reference — _unit_pins filter restricts to each unit's own pins plus shared (unit 0) power pins",
+    "assertions": [
+      {
+        "repo": "0xCB-dev/0xCB-micro",
+        "project": "rev1.0_micro",
+        "source_file": "micro.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "uuid",
+          "match_value": "a4120deb-3651-44c8-8214-05319b19de6d",
+          "assert_field": "pin_nets",
+          "assert_value": {"1": "GND", "2": "__unnamed_2", "7": "BLD", "8": "BLD"}
+        },
+        "description": "KH-216: Q1 unit=1 (dual MOSFET) pin_nets contains only its own pins {1,2,7,8} — pre-fix all 8 pins (both units) appeared on each Q1 entry"
+      }
+    ]
+  },
+  {
+    "issue": "KH-035",
+    "type": "detection_fix",
+    "summary": "detect_integrated_ldos() scans ICs not already in power_regulators for VREGOUT/VREG/LDO_OUT/REGOUT pins driving power nets; appends entries with topology='integrated_ldo'",
+    "assertions": [
+      {
+        "repo": "diegoherranz/steppenprobe",
+        "project": "steppenprobe",
+        "source_file": "steppenprobe.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_integrated_ldos",
+          "match_field": "ref",
+          "match_value": "U1",
+          "assert_field": "topology",
+          "assert_value": "integrated_ldo"
+        },
+        "description": "KH-035: FT2232HL U1 detected as integrated_ldo via VREGOUT pin (pre-fix detect_integrated_ldos() didn't exist; FT2232's internal LDO wasn't surfaced)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-285",
+    "type": "crash_fix",
+    "summary": "_min_power_pad_distance() now uses .get() with None check on abs_x/abs_y — pads without absolute position no longer crash PCB analysis with KeyError",
+    "assertions": [
+      {
+        "repo": "circuit-synth/circuit-synth",
+        "project": "tests_kicad_to_python_04_esp32_c6_hierarchical_ESP32_C6_Dev_Board_reference_ESP32_C6_Dev_Board",
+        "source_file": "ESP32_C6_Dev_Board.kicad_pcb",
+        "analyzer_type": "pcb",
+        "check": {
+          "path": "summary.total_findings",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-285: PCB output exists with at least 1 finding (pre-fix this ESP32_C6_Dev_Board PCB crashed with KeyError on abs_x; no output file would exist for assertion run)"
+      }
+    ]
   }
 ]
