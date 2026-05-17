@@ -1,0 +1,21 @@
+{
+  "file_pattern": "OTTOtact.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-227-01",
+      "description": "KH-227: IC1 SN74HC125DR (quad bus buffer) is NOT in detect_level_shifters (pre-fix 74-series logic gates were classified as level shifters)",
+      "issue": "KH-227",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "detector_filter": "detect_level_shifters",
+        "field": "components",
+        "pattern": "^IC1$"
+      }
+    }
+  ]
+}

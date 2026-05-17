@@ -15,6 +15,20 @@
         "detector_filter": "detect_power_regulators"
       },
       "migration_note": "Path migrated from: signal_analysis.power_regulators"
+    },
+    {
+      "id": "BUGFIX-KH-121-01",
+      "description": "KH-121: DIY-LAPTOP Power Supply sheet has exactly 3 RC-DET findings (no duplicates from bidirectional traversal; pre-fix produced more entries via swapped input/output)",
+      "issue": "KH-121",
+      "fix_type": "logic_fix",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "detector_filter": "detect_rc_filters",
+        "field": "rule_id",
+        "pattern": "^RC-DET$",
+        "value": 3
+      }
     }
   ]
 }

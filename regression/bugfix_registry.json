@@ -3951,5 +3951,92 @@
         "description": "KH-286: PCB analysis completes on TI92-revive ti92revive.kicad_pcb (pre-fix analyze_fiducials crashed on list-typed footprint value)"
       }
     ]
+  },
+  {
+    "issue": "KH-227",
+    "type": "false_positive_fix",
+    "summary": "74-series logic gates (74HC/74LVC) excluded from level_shifter_ic detection",
+    "assertions": [
+      {
+        "repo": "cester-ino/OTTO-hardware",
+        "project": "OTTO-old_OTTOtact",
+        "source_file": "OTTOtact.sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "detector_filter": "detect_level_shifters",
+          "field": "components",
+          "pattern": "^IC1$"
+        },
+        "description": "KH-227: IC1 SN74HC125DR (quad bus buffer) is NOT in detect_level_shifters (pre-fix 74-series logic gates were classified as level shifters)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-103",
+    "type": "table_fix",
+    "summary": "Added LMR380=1.0V, XL70=1.25V, TPS6310=0.5V, AP736=0.8V to _REGULATOR_VREF lookup",
+    "assertions": [
+      {
+        "repo": "LibreSolar/bms-c1",
+        "project": "kicad_bms-c1",
+        "source_file": "power_supply.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "U3",
+          "assert_field": "assumed_vref",
+          "assert_value": 1.0
+        },
+        "description": "KH-103: U3 LMR38010 assumed_vref=1.0V from lookup table (pre-fix fell back to heuristic value)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-068",
+    "type": "false_positive_fix",
+    "summary": "Power multiplexer/load switch ICs (tps211, tps212, ltc441, ideal_diode, power_mux, load_switch) excluded from detect_power_regulators after RF exclusion block",
+    "assertions": [
+      {
+        "repo": "icl-rocketry/Ricardo-RicardoClassic",
+        "project": "Mainboard",
+        "source_file": "Mainboardedited.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "not_contains_match",
+          "detector_filter": "detect_power_regulators",
+          "field": "value",
+          "pattern": "LTC4411"
+        },
+        "description": "KH-068: U11 LTC4411 (ideal diode controller) is NOT in detect_power_regulators (pre-fix the VIN/VOUT pin pattern caused LDO classification)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-121",
+    "type": "logic_fix",
+    "summary": "detect_rc_filters() now tracks seen R-C pairs (frozenset) and skips duplicates — same R-C pair traversed from both net endpoints no longer creates two findings",
+    "assertions": [
+      {
+        "repo": "OLIMEX/DIY-LAPTOP",
+        "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
+        "source_file": "Power Supply, Extensions and MiPi-DSI .sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "count_matches",
+          "detector_filter": "detect_rc_filters",
+          "field": "rule_id",
+          "pattern": "^RC-DET$",
+          "value": 3
+        },
+        "description": "KH-121: DIY-LAPTOP Power Supply sheet has exactly 3 RC-DET findings (no duplicates from bidirectional traversal; pre-fix produced more entries via swapped input/output)"
+      }
+    ]
   }
 ]
