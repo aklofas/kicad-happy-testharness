@@ -30,6 +30,18 @@
         "detector_filter": "detect_rf_matching"
       },
       "migration_note": "Path migrated from: signal_analysis.rf_matching"
+    },
+    {
+      "id": "BUGFIX-KH-071-01",
+      "description": "KH-071: 3458A board has 0 detect_rf_matching findings post-value-range filter (pre-fix had 10 false positives from power-supply LC networks)",
+      "issue": "KH-071",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "findings",
+        "op": "max_count",
+        "detector_filter": "detect_rf_matching",
+        "value": 0
+      }
     }
   ]
 }

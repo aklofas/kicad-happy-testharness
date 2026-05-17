@@ -29,6 +29,21 @@
         "assert_field": "digikey",
         "assert_value": "1276-1935-1-ND"
       }
+    },
+    {
+      "id": "BUGFIX-KH-140-01",
+      "description": "KH-140: IC3 MAX20405AFOF_VY+T classified as switching (FB_1 pin recognized as FB after underscore strip); pre-fix it would have defaulted to LDO topology because FB_1 stripped to FB_ didn't match the FB pattern",
+      "issue": "KH-140",
+      "fix_type": "value_parsing_fix",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "IC3",
+        "assert_field": "topology",
+        "assert_value": "switching"
+      }
     }
   ]
 }

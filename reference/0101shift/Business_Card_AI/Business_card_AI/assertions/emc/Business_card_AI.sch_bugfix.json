@@ -1,0 +1,20 @@
+{
+  "file_pattern": "Business_card_AI.sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-278-01",
+      "description": "KH-278: GP-001 INFO finding fires recommending --full when PCB return_path data is missing (pre-fix silently returned empty)",
+      "issue": "KH-278",
+      "fix_type": "data_fix",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP-001$"
+      }
+    }
+  ]
+}

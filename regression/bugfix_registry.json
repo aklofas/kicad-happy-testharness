@@ -4227,5 +4227,68 @@
         "description": "KH-132: C15 has digikey='1276-1935-1-ND' from Digikey property (case-insensitive fallback); pre-fix the field was None because the case-mismatch dropped the value"
       }
     ]
+  },
+  {
+    "issue": "KH-071",
+    "type": "false_positive_fix",
+    "summary": "detect_rf_matching() now skips component pairs with inductor>1uH or cap>1nF — power-supply LC filters no longer match RF matching topology",
+    "assertions": [
+      {
+        "repo": "EleDes/3458A-A3-66533-2021-KS-RoHS-SMD-KiCad",
+        "project": "3458A A3 66533 2021 KS SMD",
+        "source_file": "3458A A3 66533 2021 KS SMD.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "max_count",
+          "detector_filter": "detect_rf_matching",
+          "value": 0
+        },
+        "description": "KH-071: 3458A board has 0 detect_rf_matching findings post-value-range filter (pre-fix had 10 false positives from power-supply LC networks)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-140",
+    "type": "value_parsing_fix",
+    "summary": "Pin name suffix stripping now also rstrips '_' at 4 sites — `FB_1` → `FB` (not `FB_`); SW/LX/FB/BOOT pins with _N suffixes now recognized in regulator topology classification",
+    "assertions": [
+      {
+        "repo": "ClemensElflein/OpenMower",
+        "project": "Hardware_OpenMowerMainboard",
+        "source_file": "dcdc.kicad_sch",
+        "analyzer_type": "schematic",
+        "check": {
+          "path": "findings",
+          "op": "field_equals",
+          "detector_filter": "detect_power_regulators",
+          "match_field": "ref",
+          "match_value": "IC3",
+          "assert_field": "topology",
+          "assert_value": "switching"
+        },
+        "description": "KH-140: IC3 MAX20405AFOF_VY+T classified as switching (FB_1 pin recognized as FB after underscore strip); pre-fix it would have defaulted to LDO topology because FB_1 stripped to FB_ didn't match the FB pattern"
+      }
+    ]
+  },
+  {
+    "issue": "KH-278",
+    "type": "data_fix",
+    "summary": "check_return_path_coverage() now emits INFO finding recommending --full flag when return_path_continuity data is missing (was silent empty findings)",
+    "assertions": [
+      {
+        "repo": "0101shift/Business_Card_AI",
+        "project": "Business_card_AI",
+        "source_file": "Business_card_AI.sch",
+        "analyzer_type": "emc",
+        "check": {
+          "path": "findings",
+          "op": "contains_match",
+          "field": "rule_id",
+          "pattern": "^GP-001$"
+        },
+        "description": "KH-278: GP-001 INFO finding fires recommending --full when PCB return_path data is missing (pre-fix silently returned empty)"
+      }
+    ]
   }
 ]
