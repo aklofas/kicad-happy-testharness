@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-05-16
+Last updated: 2026-05-19
 
 ---
 
@@ -34,9 +34,9 @@ Last updated: 2026-05-16
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-328**. Next TH number: **TH-045**.
+maximum. Next KH number: **KH-335**. Next TH number: **TH-045**.
 
-> 8 open issues.
+> 14 open issues.
 
 ---
 
@@ -51,7 +51,157 @@ maximum. Next KH number: **KH-328**. Next TH number: **TH-045**.
 
 ## kicad-happy Analyzer Issues
 
-_None currently open._ See [FIXED.md](FIXED.md) for closed issues.
+### KH-328: `wrap_result.py` helper missing from datasheets skill
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/` (helper absent)
+**Discovered:** 2026-05-19 (SacMap rev2 review of v1.4 datasheet extraction layer)
+
+**Symptom:** Consumers of the datasheets extraction pipeline hand-roll
+the `{task_id, schema_version, status, extracted_at, model_tier,
+model_id, data}` result envelope. SacMap's seed implementation at
+`~/Projects/sacmap/wrap_result.seed.py` demonstrates a single-file
+wrapper but ships nowhere central in kicad-happy.
+
+**Spec (from SacMap reviewer):**
+- read `<mpn>.plan.json` for tier/schema/task_id auto-population
+- read `x-schema-version` from schema file
+- read agent output from file/stdin
+- strip prose preamble + markdown fences via regex first-balanced-JSON-block extraction
+- validate against schema before writing
+- write failed status (`data: null`, `error: msg`) if validation fails
+
+**Likely fix:** Ship `skills/datasheets/scripts/wrap_result.py` with the
+above contract. Ask the user whether to copy the SacMap seed as a
+reference starting point.
+
+**Not tag-blocking** — convenience helper; pipeline functional without it.
+
+---
+
+### KH-329: `plan_extraction.py` "not implemented" error lacks next-command pointer
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/plan_extraction.py` (live-scout-dispatch path)
+**Discovered:** 2026-05-19
+
+**Symptom:** First invocation prints "live scout dispatch not implemented"
+and points at a ~180-line markdown doc. The error message does not
+include the exact next command to run, so users hit the wall and have
+to read upstream docs to recover.
+
+**Likely fix:** Either (a) include the exact next command in the error
+message, or (b) ship the actual live-scout dispatch.
+
+**Not tag-blocking** — error-message UX.
+
+---
+
+### KH-330: `base.schema.json` and `pinout.schema.json` missing `x-schema-version`
+
+**Severity:** LOW
+**File:** `skills/datasheets/schemas/base.schema.json`, `skills/datasheets/schemas/pinout.schema.json`
+**Discovered:** 2026-05-19
+
+**Symptom:** Other schemas in `skills/datasheets/schemas/` (regulator,
+diode, mcu, opamp, transistor, crystal) carry a top-level
+`x-schema-version` field; `base.schema.json` and `pinout.schema.json`
+do not. Consumers (KH-328 `wrap_result.py` spec, validators) have to
+guess or fall back to a hardcoded default.
+
+**Likely fix:** Add `"x-schema-version": "<current>"` to both files;
+sync the value with whatever Phase 4 declared as the base/pinout
+baseline.
+
+**Not tag-blocking** — consumer-visible inconsistency, no behavior
+divergence today.
+
+---
+
+### KH-331: `jsonschema` + `referencing` deps undeclared in datasheets skill
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/merge_results.py`, `skills/datasheets/scripts/validate_extraction_result.py`
+**Discovered:** 2026-05-19
+
+**Symptom:** Both scripts `import jsonschema` and use `referencing` but
+the skill ships no `requirements.txt`, no SKILL.md mention, no install
+instructions. On Debian this requires `pip install
+--break-system-packages` for a global install. The codebase already
+ships a stdlib equivalent at
+`skills/datasheets/scripts/_mini_jsonschema.py` per harness memory
+`feedback_stdlib_first`.
+
+**Likely fix:** Three options:
+1. Declare the dep in `requirements.txt` + SKILL.md (allows pip-install workflow).
+2. Vendor / switch to the existing `_mini_jsonschema.py`.
+3. Remove the dep where stdlib coverage suffices.
+
+Preference per `feedback_stdlib_first`: option 2.
+
+**Not tag-blocking** — works on systems where `jsonschema` is installed.
+
+---
+
+### KH-332: Tier B `diode` and `mcu` extractor agents emit prose preamble on long page lists
+
+**Severity:** LOW
+**File:** `skills/datasheets/agents/diode.md`, `skills/datasheets/agents/mcu.md` (vs `regulator.md`)
+**Discovered:** 2026-05-19 (SacMap rev2 — 2 of 9 extractor agents tripped)
+
+**Symptom:** 2 of 9 Tier B extractor invocations emitted prose preamble
+despite the prompt's "no prose, no fences" instruction. Tier B
+regulator at similar page count was clean.
+
+**Likely fix:** Diff `regulator.md` vs `diode.md` vs `mcu.md` and apply
+whatever suppression pattern `regulator.md` uses to the other two.
+Downstream consumers handle preamble defensively (see KH-328 spec item
+"strip prose preamble"), but upstream cleanliness reduces wrap_result
+fragility.
+
+**Not tag-blocking** — extraction outputs still validate after
+preamble stripping.
+
+---
+
+### KH-333: `capability_mode` not surfaced in datasheet `<mpn>.json` extraction output
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/merge_results.py` (output envelope)
+**Discovered:** 2026-05-19
+
+**Symptom:** EMC analyzer surfaces `capability_mode` via a separate
+`capability_mode.json` artifact + `capability_mode_ref` field on the
+analyzer envelope. The datasheets extraction layer surfaces it nowhere
+— neither in `<mpn>.json` nor in a sidecar. Consumers cannot tell
+which capability mode produced an extraction.
+
+**Likely fix:** Either (a) add `capability_mode` (or
+`capability_mode_ref`) to the extraction envelope, mirroring the EMC
+pattern, or (b) document the omission in SKILL.md as intentional.
+
+**Not tag-blocking** — provenance gap, not a correctness issue.
+
+---
+
+### KH-334: v1.5 — empirical determinism check for datasheet extraction pipeline
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/` (pipeline as a whole)
+**Discovered:** 2026-05-19 (SacMap rev2 flagged but did not exercise)
+
+**Symptom:** No automated check that re-running the same extraction
+pipeline on the same PDF twice produces identical outputs. Temperature
+defaults and tier selection could introduce silent drift. SacMap
+reviewer flagged this as a concern but did not run the comparison.
+
+**Likely fix (v1.5 carryover):** Add a smoke step that:
+1. Runs full extraction on a sanity-vector MPN (e.g. LM2596-ADJ).
+2. Re-runs the same pipeline.
+3. Diffs the two `<mpn>.json` outputs and reports the magnitude of any
+   drift (zero is target; non-zero is the calibration data point).
+
+**Not tag-blocking** — v1.5 carryover, future work.
 
 ---
 
@@ -347,4 +497,4 @@ release-quality impact.
 
 ## Priority Queue
 
-_7 open TH-* issues (all LOW)._
+_7 open KH-* + 7 open TH-* issues (all LOW)._
