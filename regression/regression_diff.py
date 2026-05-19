@@ -51,6 +51,10 @@ from pathlib import Path
 NEW_V14_RULES = {
     'AM-001', 'OV-001', 'TJ-001', 'FT-001', 'PM-001', 'EX-001',
     'VD-001', 'VD-002', 'VD-003', 'VD-004', 'XT-001',
+    # rc.2 additions (Track 4 polish, c904bb3..6b6e622): per-color LED Vf
+    # floor (LA-004), source-via-bridged-jumper info (RS-003), lifecycle
+    # audit "not attached" info reminder (LC-007).
+    'LA-004', 'RS-003', 'LC-007',
 }
 
 # Phase 4b upgraded detectors whose datasheet-backed branch is gated off

@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 """v1.4 Layer 1 regression gate driver.
 
+Default mode (asymmetric, v1.3.1-vs-v1.4):
 Proves v1.4's ``--only-deterministic`` flag produces v1.3.1-equivalent
 output across the harness corpus. For each repo x analyzer:
 
   1. run the v1.3.1 analyzer (plain)             -> v131 snapshot
   2. run the v1.4 analyzer (--only-deterministic) -> v14 snapshot
   3. diff the two envelopes via regression/regression_diff.py
+
+Symmetric mode (--symmetric, e.g., v1.4 rc.1-vs-rc.2):
+Both worktrees run with ``--only-deterministic``. Use this when both
+sides are v1.4-era (rc.1 vs rc.2, rc.N vs final, v1.4 vs v1.5-dev). The
+"v131" output slot becomes the baseline (e.g., rc.1) and "v14" becomes
+the candidate (e.g., rc.2). Pair with ``--gate-dir`` to keep these
+runs from clobbering historical v131-vs-v14 results.
 
 Aggregates a per-analyzer + corpus-wide rollup. Clean (disappeared==0,
 downgrades==0) -> tag v1.4.0-rc.1. Any FAIL repo -> drives rc.2.
@@ -15,11 +23,13 @@ Worktree setup (see RUNBOOK Checklist 25):
     git -C ~/Projects/kicad-happy worktree add /tmp/kh-v131 v1.3.1
     git -C ~/Projects/kicad-happy worktree add /tmp/kh-v14  v1.4-dev   # 0df3b7f
 
-Analyzer invocation is identical on both sides except the v1.4 run adds
-``--only-deterministic``. Schematic gets ``--no-hierarchy`` on BOTH sides
-(matches the harness batch convention and avoids parallel-worker OOM; the
-flag treats input identically for both versions so the comparison stays
-fair). No other extra flags are passed -- a plain run, per the handoff.
+Analyzer invocation is identical on both sides except the deterministic flag
+(``--only-deterministic``). In default mode the baseline runs plain and the
+candidate runs deterministic; in ``--symmetric`` both sides run deterministic.
+Schematic gets ``--no-hierarchy`` on BOTH sides (matches the harness batch
+convention and avoids parallel-worker OOM; the flag treats input identically
+for both versions so the comparison stays fair). No other extra flags are
+passed -- a plain run, per the handoff.
 
 Phases:
   A  schematic / pcb / gerber   -- independent, fully parallel
@@ -32,9 +42,17 @@ Usage:
     python3 regression/run_v14_gate.py --repo owner/repo
     python3 regression/run_v14_gate.py --cross-section smoke --resume
 
+    # symmetric (rc.1 vs rc.2; isolate output via --gate-dir)
+    python3 regression/run_v14_gate.py --symmetric \\
+        --v131-dir /tmp/kh-rc1 --v14-dir /tmp/kh-rc2 \\
+        --gate-dir results/rc1_vs_rc2_gate \\
+        --label rc1_vs_rc2 --cross-section quick_200 --jobs 32
+
 Environment / args:
-    --v131-dir   v1.3.1 worktree (default /tmp/kh-v131)
-    --v14-dir    v1.4-dev worktree (default /tmp/kh-v14)
+    --v131-dir   v1.3.1 (or baseline in --symmetric mode) worktree (default /tmp/kh-v131)
+    --v14-dir    v1.4-dev (or candidate in --symmetric mode) worktree (default /tmp/kh-v14)
+    --symmetric  run both worktrees with --only-deterministic (v1.4-vs-v1.4 mode)
+    --gate-dir   override default GATE_DIR (results/v14_gate); recommended in --symmetric
 """
 
 from __future__ import annotations
@@ -226,7 +244,8 @@ def _result_record(analyzer, repo, identity, diff_res, v131_detail, v14_detail):
 # ---------------------------------------------------------------------------
 
 def _phase_a_job(args):
-    analyzer, input_path, repo, v131_dir, v14_dir, timeout, resume = args
+    (analyzer, input_path, repo, v131_dir, v14_dir, timeout, resume,
+     baseline_deterministic) = args
     key = safe_name(input_path)
     identity = f"{repo}/{key}"
     v131_out, v14_out, diff_out = _snap_paths(analyzer, repo, key)
@@ -238,7 +257,8 @@ def _phase_a_job(args):
             pass
 
     v131_ok, v131_detail = _run(
-        _file_cmd(analyzer, v131_dir, input_path, v131_out, False), timeout)
+        _file_cmd(analyzer, v131_dir, input_path, v131_out,
+                  baseline_deterministic), timeout)
     v14_ok, v14_detail = _run(
         _file_cmd(analyzer, v14_dir, input_path, v14_out, True), timeout)
 
@@ -276,7 +296,7 @@ def _phase_b_job(args):
 
     v131_ok, v131_detail = _run(
         _chained_cmd(analyzer, _phase_b_job.v131_dir, v131_sch, v131_pcb,
-                     v131_out, False), timeout)
+                     v131_out, _phase_b_job.baseline_deterministic), timeout)
     v14_ok, v14_detail = _run(
         _chained_cmd(analyzer, _phase_b_job.v14_dir, v14_sch, v14_pcb,
                      v14_out, True), timeout)
@@ -329,7 +349,8 @@ def _load_manifest(analyzer, repos):
     return out
 
 
-def _build_phase_a_jobs(repos, v131_dir, v14_dir, timeout, resume):
+def _build_phase_a_jobs(repos, v131_dir, v14_dir, timeout, resume,
+                        baseline_deterministic):
     jobs = []
     for analyzer in PHASE_A:
         for input_path in _load_manifest(analyzer, repos):
@@ -337,7 +358,7 @@ def _build_phase_a_jobs(repos, v131_dir, v14_dir, timeout, resume):
             if repo is None:
                 continue
             jobs.append((analyzer, input_path, repo, v131_dir, v14_dir,
-                         timeout, resume))
+                         timeout, resume, baseline_deterministic))
     return jobs
 
 
@@ -383,9 +404,10 @@ def _build_phase_b_jobs(repos, timeout, resume):
 # Phase B worker needs the worktree dirs; pass them via function attributes
 # (simpler than threading them through every job tuple, and picklable since
 # they are plain strings set before the pool forks).
-def _init_phase_b(v131_dir, v14_dir):
+def _init_phase_b(v131_dir, v14_dir, baseline_deterministic):
     _phase_b_job.v131_dir = v131_dir
     _phase_b_job.v14_dir = v14_dir
+    _phase_b_job.baseline_deterministic = baseline_deterministic
 
 
 # ---------------------------------------------------------------------------
@@ -642,6 +664,14 @@ def main(argv=None):
                     help="skip units that already have a diff record")
     ap.add_argument("--label", default=None,
                     help="rollup filename label (default: section name)")
+    ap.add_argument("--symmetric", action="store_true",
+                    help="run both worktrees with --only-deterministic "
+                         "(v1.4-vs-v1.4 mode, e.g., rc.1 vs rc.2). Use a "
+                         "distinct --gate-dir to avoid clobbering v131-vs-v14 "
+                         "history.")
+    ap.add_argument("--gate-dir", default=None,
+                    help="override GATE_DIR (default results/v14_gate). "
+                         "Recommended in --symmetric mode.")
     args = ap.parse_args(argv)
 
     for d in (args.v131_dir, args.v14_dir):
@@ -651,14 +681,27 @@ def main(argv=None):
                   file=sys.stderr)
             sys.exit(2)
 
+    if args.gate_dir:
+        global GATE_DIR
+        gd = Path(args.gate_dir)
+        if not gd.is_absolute():
+            gd = HARNESS_DIR / gd
+        GATE_DIR = gd
+
+    baseline_deterministic = args.symmetric  # baseline gets --only-deterministic too
+
     repos = resolve_repos(args)
     section = (args.label or getattr(args, "cross_section", None)
                or getattr(args, "repo", None) or "full")
     section = section.replace("/", "_")
     n_repos = len(repos) if repos is not None else len(list_repos())
+    mode = "symmetric (both --only-deterministic)" if args.symmetric \
+        else "asymmetric (v131 plain / v14 --only-deterministic)"
     print(f"=== v1.4 Layer 1 regression gate ===")
-    print(f"  v1.3.1 worktree: {args.v131_dir}")
-    print(f"  v1.4   worktree: {args.v14_dir}")
+    print(f"  mode:            {mode}")
+    print(f"  baseline (v131): {args.v131_dir}")
+    print(f"  candidate (v14): {args.v14_dir}")
+    print(f"  gate dir:        {GATE_DIR}")
     print(f"  repos: {n_repos}   jobs: {args.jobs}   section: {section}")
     GATE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -667,7 +710,8 @@ def main(argv=None):
     # Phase A -- file-input analyzers
     print("\n[Phase A] schematic / pcb / gerber")
     a_jobs = _build_phase_a_jobs(repos, args.v131_dir, args.v14_dir,
-                                 args.timeout, args.resume)
+                                 args.timeout, args.resume,
+                                 baseline_deterministic)
     a_results = _run_jobs(a_jobs, _phase_a_job, args.jobs, "Phase A")
 
     # Phase B -- chained analyzers (consume Phase A snapshots)
@@ -675,7 +719,8 @@ def main(argv=None):
     b_jobs = _build_phase_b_jobs(repos, args.timeout, args.resume)
     b_results = _run_jobs(b_jobs, _phase_b_job, args.jobs, "Phase B",
                           initializer=_init_phase_b,
-                          initargs=(args.v131_dir, args.v14_dir))
+                          initargs=(args.v131_dir, args.v14_dir,
+                                    baseline_deterministic))
 
     records = a_results + b_results
     agg = _aggregate(records)
