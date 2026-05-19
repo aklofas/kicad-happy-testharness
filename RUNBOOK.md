@@ -2618,6 +2618,63 @@ git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v131
 git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v14
 ```
 
+### 26g. Symmetric mode (v1.4-vs-v1.4 / v1.5-vs-v1.4 comparisons)
+
+The default mode above (`--v131-dir` plain, `--v14-dir` `--only-deterministic`)
+is hardwired for the **v1.3.1 → v1.4** transition. For any same-era
+comparison — rc.N vs rc.M, rc.M vs final, v1.4 vs v1.5-dev — use
+`--symmetric`: both worktrees run `--only-deterministic`, which is the
+only fair flag setting when both sides have v1.4 layering.
+
+```bash
+git -C ~/Projects/kicad-happy worktree add /tmp/kh-baseline <baseline-SHA>
+git -C ~/Projects/kicad-happy worktree add /tmp/kh-candidate <candidate-SHA>
+
+python3 regression/run_v14_gate.py --symmetric \
+  --v131-dir /tmp/kh-baseline --v14-dir /tmp/kh-candidate \
+  --gate-dir results/<label>_gate \
+  --label <label> --cross-section <smoke|quick_200|full> --jobs 32
+```
+
+**Slot-naming holdover:** `--v131-dir` is the baseline, `--v14-dir` is the
+candidate. Bit-for-bit identical to default mode otherwise.
+
+**Always pair with `--gate-dir`** to keep symmetric runs from clobbering
+the historical `results/v14_gate/` v1.3.1-vs-v1.4 records. The override
+also re-uses the same per-unit caching layout, so `--resume` works.
+
+**Per-rule budget adjudication is manual.** The auto-PASS criterion in §26e
+is **too strict** for v1.4-vs-v1.4 because:
+
+1. Legitimate new rule_ids show as `NewUnknown` until added to
+   `NEW_V14_RULES` in `regression/regression_diff.py:51`. Patch the
+   allowlist when main-repo adds a rule_id, ideally in the same commit
+   window as the gate (rc.2 added `LA-004`, `RS-003`, `LC-007`).
+2. **Demote-with-summary-rewrite** (e.g. rc.2 PM-002 / PP-001) shifts the
+   `_canon_key` (which includes `_norm_summary`) on every reclassified
+   finding, so the diff engine reports it as paired
+   `disappeared` + `new_unknown` on the SAME rule_id rather than a
+   `severity_change` row. Net is 0 but auto-PASS can't recognize this.
+
+**Manual adjudication recipe:** re-aggregate per-rule_id net deltas from
+the raw `snap.json` pairs (NOT the rollup's 5-per-unit truncated sample)
+under `<gate-dir>/v131/<analyzer>/<repo>/<key>/snap.json` and the matching
+`<gate-dir>/v14/...`. Count `Counter(f.get('rule_id') for f in
+envelope.get('findings', []))` on both sides; compare net delta against
+the budget direction/magnitude. Same-rule-id paired
+disappeared+new_unknown with equal counts = demote-with-rewrite signature
+(expected, net 0). Critical zero-deltas to verify: gerber / thermal /
+emc / cross_analysis 100% PASS, zero Downgrades anywhere. If any of these
+four moves on a rc-vs-rc, real regression.
+
+**Performance:** 5,857-repo full corpus in 34.5 min at `--jobs 32`
+(2026-05-19 benchmark, kicad-happy `c904bb3..6b6e622`). Use as planning
+estimate for future symmetric gates.
+
+**rc.2 worked example:** see `[[project_rc1_vs_rc2_gate]]` memory and
+shared `LOG-v1.4-progress.md` entry "[harness] 2026-05-19 — v1.4.0-rc.2
+gate CLEAN + SHIPPED".
+
 ---
 
 ## Checklist 27: Era bump for a new minor version (v1.5 and beyond)

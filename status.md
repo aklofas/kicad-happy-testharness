@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-05-14 (v1.4 Layer 1 regression gate — CLEAN corpus-wide)
+Last updated: 2026-05-19 (v1.4.0-rc.2 SHIPPED + symmetric gate primitive proven)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,76 @@ Last updated: 2026-05-14 (v1.4 Layer 1 regression gate — CLEAN corpus-wide)
 ---
 
 ## Completed batches
+
+### v1.4.0-rc.2 SHIPPED (2026-05-19)
+
+Tag at main-repo `560e19a`, published as prerelease at
+https://github.com/aklofas/kicad-happy/releases/tag/v1.4.0-rc.2.
+
+**Harness `origin/v1.4-dev` advanced `a26b5d236b9 → c19ac4a8ff2` (2 commits):**
+
+- `7d2a1df5fc2` — retire kidoc-touching test infrastructure (mirrors main-repo
+  `6b6e622`). `tools/figure_review.py` (872 LOC) moved to `old/kidoc/`
+  (gitignored on-disk preserve). 1 [RETIRE] + 2 [SCRUB] per Phase 1 inventory;
+  `FIXED.md` historical entries preserved.
+- `c19ac4a8ff2` — `regression: --symmetric gate + rc.2 NEW_V14_RULES allowlist`.
+  `run_v14_gate.py` gained `--symmetric` + `--gate-dir` (~47 LOC).
+  `regression_diff.py:51` `NEW_V14_RULES` += `{LA-004, RS-003, LC-007}` (Track 4
+  polish new rule_ids).
+
+**Pre-push gate: 1,257 passed / 0 failed / 3 skipped.**
+
+**Full corpus rc.1-vs-rc.2 Layer 1 gate: CLEAN in 34.5 min.** 5,857 repos /
+149,629 unit-pairs / 32 jobs. Symmetric mode (both worktrees
+`--only-deterministic`) — new primitive proven at scale.
+
+| Analyzer | PASS | WARN | FAIL | SKIP | Disapp | Downgr |
+|----------|-----:|-----:|-----:|-----:|-------:|-------:|
+| schematic | 35,494 | 86 | 882 | 0 | 955 | **0** |
+| pcb | 13,877 | 0 | 4,781 | 0 | 11,166 | **0** |
+| gerber | 5,502 | 0 | 0 | 0 | 0 | **0** |
+| thermal | 16,083 | 0 | 0 | 0 | 0 | **0** |
+| emc | 36,462 | 0 | 0 | 0 | 0 | **0** |
+| cross_analysis | 36,462 | 0 | 0 | 0 | 0 | **0** |
+
+All FAIL units = "1+ findings disappeared", driven by rc.2's intended
+behavior changes (PM-002 / PP-001 demote-with-rewrite — 1:1 paired
+disappeared+new_unknown on same rule_id+components; DS-family path-widen
+rebalance; PU-001 internal-pullup whitelist; etc.). Critical zero-deltas:
+gerber / thermal / emc / cross_analysis 100% PASS, zero Downgrades
+anywhere. Manual per-rule adjudication against main-repo's Q3 budget:
+all 12 named rule_ids within direction + magnitude.
+
+**KO-001 typed-net keepout filter spot-check:** 0 of 1,914 keepout-containing
+PCBs in the corpus have typed-net keepouts. New code is structurally correct
+but dead-in-practice. Acceptable for rc.2 per main-repo case #2 adjudication.
+
+See [[project_rc1_vs_rc2_gate]] memory + RUNBOOK Checklist 26g for the
+symmetric gate primitive + manual adjudication recipe.
+
+### A8 schema-era tagging SHIPPED + PUSHED (2026-05-17)
+
+5 commits `11f13237d4f..a26b5d236b9` on `origin/v1.4-dev`. Pre-push hook:
+1,265 tests / 0 failed / 2 skipped. Backfilled **30,280 assertions across
+25,920 files** with `schema_era="pre-v1.4"` for 4 v1.4-upgraded detectors:
+
+| Detector | Tagged |
+|----------|-------:|
+| validate_pullups | 20,656 |
+| validate_led_resistors | 5,398 |
+| validate_voltage_levels | 3,614 |
+| validate_feedback_stability | 612 |
+
+The 7 new-in-v1.4 detectors (XT-001, FT-001, AM-001, EX-001, TJ-001, OV-001,
+PM-001) had zero pre-existing assertions, no backfill needed.
+
+**Default-mode regression count drops from 2.36M → 2.33M** (intentional,
+era-suppressed per spec §19.4). `--era all` preserves full 2,364,868 baseline
+at 100% PASS. 21 pre-existing FAILs unchanged in both modes (unversioned
+detectors, A8 has zero behavioral impact).
+
+See [[project_a8_schema_era_shipped]] memory + RUNBOOK Checklists 16 (era-baseline
+check) and 27 (v1.5+ era-bump procedure).
 
 ### v1.4 Layer 1 regression gate — CLEAN corpus-wide (2026-05-14)
 
