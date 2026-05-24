@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-05-19 (v1.4.0-rc.2 SHIPPED + symmetric gate primitive proven)
+Last updated: 2026-05-24 (rc.3 symmetric gate reproduced byte-identical; worktrees pruned)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,93 @@ Last updated: 2026-05-19 (v1.4.0-rc.2 SHIPPED + symmetric gate primitive proven)
 ---
 
 ## Completed batches
+
+### rc.3 candidate validated from harness side (2026-05-19 late evening)
+
+Main-repo rc.3 candidate at `93f7032` (7 commits past rc.2 `560e19a`, untagged)
+addresses SacMap rev2 first-project P0: `datasheet_verify._load_extraction`
+read v1.3 `meta.extraction_score` instead of v1.4 `extraction.quality_score`,
+silently rejecting every v1.4 cache and crashing `verify_decoupling` on `None`.
+
+**Harness `origin/v1.4-dev` advanced `c19ac4a8ff2 → fffe5aa9eee` (1 commit):**
+
+- `fffe5aa9eee` — `rc.3 validation: v1.4 cache roundtrip contract test +
+  KH-328..334 polish items`. +311 / -5 across 2 files:
+  - NEW `tests/contract/test_v14_cache_roundtrip_end_to_end.py` (143 LOC) —
+    drives `analyze_schematic.py` CLI end-to-end with a v1.4 extraction
+    planted at `<project>/datasheets/extracted/LM2596-ADJ.json`. Fixture
+    is `simple-project` with two str.replace patches (`R1`→`U1`,
+    `RC0603FR-07330RL`→`LM2596-ADJ`) — `classify_component` picks
+    type=ic from the U-prefix regardless of `lib_id`. Discriminators:
+    `ics_with_extractions >= 1` (catches future trust-gate shape drift)
+    + `"error" not in summary` (catches caught-AttributeError paths).
+    Goes one step deeper than main-repo's
+    `skills/datasheets/scripts/_smoke_v14_roundtrip.py` (which imports
+    `run_datasheet_verification` directly).
+  - `ISSUES.md` — header bumped (next KH-335), 7 KH polish entries filed
+    (KH-328..334, all LOW, all SacMap rev2 carry-overs).
+
+**Pre-push gate: 1,257 passed / 0 failed / 3 skipped** (standard floor).
+
+**Red/green proven for the contract test:**
+
+| kicad-happy SHA | Verdict | Notes |
+|-----------------|---------|-------|
+| `93f7032` (rc.3) | PASS in 0.14s | Cache loads cleanly, ics_with_extractions=1, no summary.error |
+| `560e19a` (rc.2) | FAIL exit 1 | `AttributeError: 'NoneType' object has no attribute 'get'` at `datasheet_verify.py:366` (`verify_decoupling`) — exact bug the rc.3 fix targets |
+
+**Full corpus symmetric Layer 1 gate `rc2_vs_rc3_full`: STRICT-CLEAN.**
+
+```
+regression/run_v14_gate.py --symmetric \
+  --v131-dir /tmp/kh-rc2 --v14-dir /tmp/kh-rc3 \
+  --gate-dir results/rc2_vs_rc3_gate --label rc2_vs_rc3_full --jobs 32
+```
+
+170,014 unit-pairs in **32m25s** with 32 jobs.
+
+| Analyzer | PASS | WARN | FAIL | SKIP | Disapp | Downgr |
+|----------|-----:|-----:|-----:|-----:|-------:|-------:|
+| schematic | 36,462 | 0 | 0 | 3 | 0 | **0** |
+| pcb | 18,658 | 0 | 0 | 3 | 0 | **0** |
+| gerber | 5,502 | 0 | 0 | 0 | 0 | **0** |
+| thermal | 16,083 | 0 | 0 | 20,379 | 0 | **0** |
+| emc | 36,462 | 0 | 0 | 0 | 0 | **0** |
+| cross_analysis | 36,462 | 0 | 0 | 0 | 0 | **0** |
+| **TOTAL** | **149,629** | **0** | **0** | **20,385** | **0** | **0** |
+
+Identical 149,629 PASS count to the rc.1↔rc.2 gate — strong signal that
+the rc.3 fix range (datasheet verifier pre-emit cache handling) does not
+exercise any corpus Layer 1 path. Caches are project-local and not
+checked in. Smoke pre-pass: 1615/0/0 in 48s.
+
+Rollup at `results/rc2_vs_rc3_gate/rollup_rc2_vs_rc3_full.json`
+(CSV alongside).
+
+**Reproduced 2026-05-24:** re-ran the same gate (same SHAs, same flags
+except `--label rc2_vs_rc3`). Rollup is **byte-identical** to the
+2026-05-19 evening run except the `section` string field
+(`rc2_vs_rc3` vs `rc2_vs_rc3_full`). 33m0s wall clock vs original
+32m25s — within CPU-scheduling noise. Confirms `--only-deterministic`
++ pinned `PYTHONHASHSEED=0` (gate runner's `_ANALYZER_ENV`) deliver a
+fully deterministic corpus rollup across a 5-day gap. Worktrees
+`/tmp/kh-rc2` + `/tmp/kh-rc3` pruned via `git worktree remove` after
+the re-verify.
+
+**Polish items filed as KH-328..334** (all LOW, none tag-blocking):
+- KH-328 `wrap_result.py` helper absent from datasheets skill
+- KH-329 `plan_extraction.py` stub error message lacks next-command pointer
+- KH-330 `base.schema.json` + `pinout.schema.json` missing `x-schema-version`
+- KH-331 `jsonschema`/`referencing` deps undeclared (per `feedback_stdlib_first`, prefer `_mini_jsonschema.py`)
+- KH-332 Tier B `diode` + `mcu` extractor agents emit prose preamble on long page lists
+- KH-333 `capability_mode` not surfaced in datasheet `<mpn>.json` output
+- KH-334 v1.5 carryover — empirical determinism check for datasheet extraction
+
+**Two of three rc.3 gates clear; third gate (user real-project soak)
+still pending.** User holds tag authorization. Tag-time sequence (per
+main-repo `TODO-v1.4-rc3-gate.md`): step 2 done, step 3 (main-repo
+`.github/workflows/ci.yml` harness-smoke pin bump to `fffe5aa9eee`) is
+main-repo's call when ready.
 
 ### v1.4.0-rc.2 SHIPPED (2026-05-19)
 
