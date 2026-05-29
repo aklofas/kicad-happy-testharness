@@ -16,7 +16,7 @@ def test_derive_finding_id_uses_detection_id_when_present():
         components=["U3"], nets=None, pins=None,
         summary="Pin 5 of U3 exceeds absolute max voltage",
     )
-    assert fid == "sch:absolute_max:abc123def456"
+    assert fid == "sch:absolute_max-abc123def456"
 
 
 def test_derive_finding_id_falls_back_to_components():
@@ -30,14 +30,16 @@ def test_derive_finding_id_falls_back_to_components():
 
 
 def test_derive_finding_id_falls_back_to_summary_hash_when_no_locators():
+    # Numbered rule code (GN-001) keeps the 3-segment hash-fallback form;
+    # this is the production path when a numbered detector has no locators.
     fid = _derive_finding_id(
-        source="sch", rule_id="GENERIC",
+        source="sch", rule_id="GN-001",
         detection_id=None, components=None, nets=None, pins=None,
         summary="A finding with no locators at all",
     )
     parts = fid.split(":")
     assert parts[0] == "sch"
-    assert parts[1] == "GENERIC"
+    assert parts[1] == "GN-001"
     assert len(parts[2]) == 12  # short hash
 
 
@@ -132,4 +134,4 @@ def test_make_finding_uses_detection_id_from_extra():
         description="Test description",
         detection_id="absolute_max:abc123def456",
     )
-    assert f["finding_id"] == "sch:absolute_max:abc123def456"
+    assert f["finding_id"] == "sch:absolute_max-abc123def456"

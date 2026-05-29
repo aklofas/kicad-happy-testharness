@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-05-24 (rc.3 symmetric gate reproduced byte-identical; worktrees pruned)
+Last updated: 2026-05-28 (SKILL_FEEDBACK-2 Layer-1 STRICT-CLEAN both tiers; --unit gate GREEN 1,286/0/0 after KH-335/336/TH-045 closed; harness pushed)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -34,12 +34,12 @@ Last updated: 2026-05-24 (rc.3 symmetric gate reproduced byte-identical; worktre
 | Assertion pass rate | 100.0% _(2026-04-15)_ |
 | Bugfix registry entries | 76 _(2026-04-15)_ |
 | Unit tests (smoke gate) | 541 _(2026-04-15)_ |
-| Unit tests (full suite) | 1,194 (1,191 pass / 2 fail / 1 skip, 2026-05-15) — 2 fails = TH-039 + TH-040, both pre-existing harness-side, see ISSUES.md |
+| Unit tests (full suite) | 1,286 (1,286 pass / 0 fail / 0 skip, 2026-05-28, `run_tests.py --unit` vs kicad-happy `56e5e2a`) — GREEN after KH-335/336/TH-045 closed; see FIXED.md |
 | Layer 3 reviewed repos | 1,045 _(2026-04-15)_ |
 | Total findings | 2,575 _(2026-04-15)_ |
-| Open KH-* issues | 1 (KH-326) |
-| Closed KH-* issues | 324 (KH-001..325; KH-324 burned) |
-| Open TH-* issues | 4 (TH-037, TH-038, TH-039, TH-040) |
+| Open KH-* issues | 7 (KH-328..334, all LOW) _(2026-05-28)_ |
+| Closed KH-* issues | 329 (KH-001..336; KH-324 burned) |
+| Open TH-* issues | 7 (TH-037..042, 044, all LOW) _(2026-05-28)_ |
 | Constants | 298 (295 verified, 3 unverified) _(2026-04-15)_ |
 | Schematic detectors | 56 (40 signal/domain + 16 validation) |
 | Cross-analyzer agreement | 91.9% (97,012 checks) |
@@ -91,6 +91,49 @@ Last updated: 2026-05-24 (rc.3 symmetric gate reproduced byte-identical; worktre
 ---
 
 ## Completed batches
+
+### SKILL_FEEDBACK-2 (report-depth + Layer 2) validated — Layer-1 STRICT-CLEAN, --unit gate GREEN (2026-05-28)
+
+Main-repo SKILL_FEEDBACK-2 batch (F3 = `assign_finding_ids` full finding_id
+coverage + `board_outline.width_mm/height_mm` + emc stdout quieting; no
+rule_ids, no detector-behavior change), committed by main-repo as 7-commit
+stack `4f1d8be..8584da1` (one per finding).
+
+**Layer 1 symmetric gate (`a0a39aa` vs `a0a39aa`+SKILL_FEEDBACK-2, both
+`--only-deterministic`): STRICT-CLEAN both tiers.**
+
+| Tier | Units | PASS | Disapp | Downgr | NewKnown | NewUnkn | WARN | FAIL |
+|------|------:|-----:|-------:|-------:|---------:|--------:|-----:|-----:|
+| quick_200 | 41,255 | 35,929 | 0 | 0 | 0 | 0 | 0 | 0 |
+| full corpus | 170,014 | 149,629 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Rollups `results/sf2_gate/rollup_sf2_{quick200,full}.{json,csv}`. finding_id is
+invisible to the differ (`_canon_key` excludes it), so F3's coverage expansion
+moves no canonical key. Same 149,629 PASS as rc.2-vs-rc.3 → Layer-1-neutral.
+
+**2 new contract tests** (`tests/contract/test_finding_id_coverage_e2e.py` +
+`test_layer2_merge_e2e.py` + shared `analysis_dir` fixture) committed LOCAL at
+`e818ebd0241` (unpushed). Both verified guards: on pre-F3 baseline only 1 of 22
+findings is addressable — the no-op the merge had.
+
+**The broader invariant suite initially caught 2 fails (1,255/2/1) that Layer 1
+cannot — both now resolved:**
+- `test_b1_b2_finding_id_invariants` — NEW from F3: detectors emitting
+  non-`XX-NNN` rule_ids (`voltage_dividers`, `EP-AUD`, …) got finding_ids the
+  pattern invariant rejected → **KH-335** (rule_id convention) + **TH-045**
+  (pattern `#N`-suffix gap). Fixed: main-repo `56e5e2a` folds non-numbered
+  rule_ids into the 2-segment finding_id form; harness aligned the
+  `test_finding_id.py` assertions + added the `#N` allowance.
+- `test_schema_drift` — pre-existing F4 (`e5567d4`): `transistor_pin_analysis`
+  flagged as schema drift → **KH-336**. Root cause was stale corpus outputs, not
+  the analyzer (it emits the key unconditionally as `[]`); fixed by regenerating
+  the `quick_200` schematic corpus.
+
+**Re-gated GREEN: `run_tests.py --unit` = 1,286 pass / 0 fail / 0 skip** across
+85 files vs kicad-happy `56e5e2a`. All three issues closed to FIXED.md; harness
+pushed (incl. the previously-held contract-test commit `e818ebd0241`).
+Lesson recorded: shape changes need the full `--unit` suite, not just Layer 1.
+See shared `LOG-v1.4-progress.md` [harness] 2026-05-28 entries.
 
 ### rc.3 candidate validated from harness side (2026-05-19 late evening)
 

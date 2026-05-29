@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-05-19
+Last updated: 2026-05-28
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-05-19
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-335**. Next TH number: **TH-045**.
+maximum. Next KH number: **KH-337**. Next TH number: **TH-046**.
 
 > 14 open issues.
 

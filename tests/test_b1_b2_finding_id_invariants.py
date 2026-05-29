@@ -86,12 +86,13 @@ def _run_analyzer_synthetic() -> dict | None:
 _FINDING_ID_PATTERN = re.compile(
     r"^[a-z_][a-z0-9_]*:"     # source
     r"[A-Z]+-\d+"              # rule_id like AM-001
-    r"(?::[A-Za-z0-9_\-./+]+)?$"  # optional locator/hash; OR detection_id form
+    r"(?::[A-Za-z0-9_\-./+]+)?(?:#\d+)?$"  # optional locator/hash + collision #N
     # OR: source:detection_id (free-form detection_id) — looser fallback below
 )
 # Looser pattern for detection_id form (no rule_id segment).
+# Trailing (?:#\d+)? allows assign_finding_ids' collision suffix.
 _FINDING_ID_DETECTION_PATTERN = re.compile(
-    r"^[a-z_][a-z0-9_]*:[A-Za-z0-9_\-./+]+$")
+    r"^[a-z_][a-z0-9_]*:[A-Za-z0-9_\-./+]+(?:#\d+)?$")
 
 
 def _matches_finding_id_pattern(fid: str) -> bool:

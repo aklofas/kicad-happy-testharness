@@ -11,6 +11,73 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-05-28 — KH-335 / KH-336 / TH-045 (finding_id well-formedness + schema drift, SKILL_FEEDBACK-2 follow-up)
+
+All three surfaced by the harness `run_tests.py --unit` gate during
+SKILL_FEEDBACK-2 validation (main-repo F3 = `finding_schema.assign_finding_ids`
+stamping a `finding_id` on every finding). Closed together once main-repo
+`56e5e2a` landed the rule_id convention fix and the harness re-gated green
+(`run_tests.py --unit` = 1,286 pass / 0 fail / 0 skip across 85 files vs
+kicad-happy `56e5e2a`).
+
+### KH-335 (LOW): section-promoted detectors emit non-`XX-NNN` `rule_id`s → malformed finding_id
+
+- **File:** `skills/kicad/scripts/finding_schema.py` `_derive_finding_id`
+- **Root cause:** Once F3 stamped a `finding_id` on every finding,
+  `_derive_finding_id` built `{source}:{rule_id}:{locator}` using `rule_id`
+  verbatim. Detectors emitting non-conventional `rule_id`s — lowercase section
+  names (`voltage_dividers`, `validation_findings`) and audit/detection suffix
+  forms (`EP-AUD`, `LA-AUD`, the `*-DET` family) — produced ids the harness
+  pattern invariant rejected (e.g. `schematic:voltage_dividers:96344a7cd2eb`).
+- **Fix (main-repo `56e5e2a`):** `_derive_finding_id` now folds every
+  non-numbered `rule_id` (and every `detection_id`) into the colon-free
+  2-segment form `{source}:{token}` (e.g. `schematic:EP-AUD-j1`,
+  `schematic:decoupling_analysis-<hash>`); only numbered `XX-NNN` codes keep the
+  3-segment `{source}:{RULE}:{locator}` form (e.g. `schematic:AM-001:r1`,
+  unchanged). Every id now parses as one of the two spec §3.2 shapes regardless
+  of the constructing detector.
+- **Harness alignment:** `tests/contract/test_finding_id.py` — 3 stale
+  assertions updated to the new form (`sch:absolute_max-abc123def456`; the
+  no-locator hash-fallback test switched to a numbered code `GN-001` to keep
+  exercising the 3-segment path).
+- **Verified:** `tests/contract/test_finding_id.py` 9/9;
+  `tests/test_b1_b2_finding_id_invariants.py` 10/10; full `--unit` 1,286/0/0.
+
+### KH-336 (LOW): `transistor_pin_analysis` schema drift — stale corpus outputs predating F4
+
+- **File:** harness `results/outputs/schematic/` (data, not analyzer code)
+- **Root cause:** NOT an analyzer bug. The analyzer (`analyze_schematic.py:9186`)
+  emits `transistor_pin_analysis` **unconditionally** as `[]` even on
+  no-transistor inputs, and `--schema` correctly lists it in both `required` and
+  `properties` (verified by running the analyzer on a no-transistor synthetic
+  schematic: key present, value `[]`, `schema_version` `1.4.0`). The
+  `test_schema_drift::test_schematic_schema_drift` failure was caused by ~12-day
+  stale `results/outputs/schematic/` outputs predating F4 (`e5567d4`) that lacked
+  the key, so the union-of-fresh-outputs sampled by the drift test missed it.
+- **Fix:** regenerated the `quick_200` schematic corpus
+  (`run/run_schematic.py --cross-section quick_200 --jobs 16` against kicad-happy
+  `56e5e2a`) so fresh schema-1.4.0 outputs carry `transistor_pin_analysis`. Kept
+  the key `required` in the contract (it IS always emitted; matches
+  `ic_pin_analysis`).
+- **Verified:** `tests/test_schema_drift.py` 12/12.
+
+### TH-045 (LOW): `finding_id` pattern invariant rejected the `#N` collision suffix
+
+- **File:** `tests/test_b1_b2_finding_id_invariants.py:86-94`
+- **Root cause:** `assign_finding_ids` appends a `#N` suffix on id collisions
+  (and `tests/contract/test_finding_id_coverage_e2e.py` mandates the `#N` form),
+  but `_FINDING_ID_PATTERN` / `_FINDING_ID_DETECTION_PATTERN` had no trailing
+  `#N` allowance — the two tests disagreed. The originally-feared `-AUD`/`-DET`/
+  lowercase breadth turned out moot: main-repo `56e5e2a` folds those into the
+  2-segment form the looser pattern already accepts, so the strict pattern stays
+  strict.
+- **Fix:** appended `(?:#\d+)?` before `$` in both regexes, reconciling the
+  pattern test with the coverage-e2e test.
+- **Verified:** `tests/test_b1_b2_finding_id_invariants.py` 10/10; full `--unit`
+  1,286/0/0.
+
+---
+
 ## 2026-05-16 — TH-043 + TH-043-residual (schema-vs-emitter drift across 4 analyzers, fully fixed)
 
 ### TH-043 (LOW): `--schema` declared keys not always emitted across schematic / pcb / gerber / thermal
