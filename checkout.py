@@ -19,6 +19,7 @@ Usage:
 import argparse
 import fnmatch
 import json
+import os
 import re
 import subprocess
 import sys
@@ -118,8 +119,10 @@ def pin_hash_in_repos_md(url: str, full_hash: str):
 def clone_repo(url: str, dest: Path) -> bool:
     """Shallow-clone a git repo (--depth 1). Returns True on success."""
     cmd = ["git", "clone", "--quiet", "--depth", "1", url, str(dest)]
+    env = os.environ.copy()
+    env["GIT_TERMINAL_PROMPT"] = "0"
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, capture_output=True, text=True, env=env)
         return True
     except subprocess.CalledProcessError as e:
         print(f" FAILED: {e.stderr.strip()}")
