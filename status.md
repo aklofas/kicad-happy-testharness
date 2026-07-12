@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-07-12 (KH-337 fix gate: f57277d→a9504cf STRICT-CLEAN full corpus; KH-337 closed, KH-338..346 filed; tag-candidate tip a9504cf)
+Last updated: 2026-07-12 (KH-347 fix gate: a9504cf→b4cf24c STRICT-CLEAN full corpus; KH-347 closed, KH-348 filed; tag-candidate tip b4cf24c)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,34 @@ Last updated: 2026-07-12 (KH-337 fix gate: f57277d→a9504cf STRICT-CLEAN full c
 ---
 
 ## Completed batches
+
+### KH-347 fix gate `a9504cf`→`b4cf24c` STRICT-CLEAN; KH-347 closed (2026-07-12, later)
+
+Incremental full-corpus symmetric gate for the KH-347 fix batch (deep_review_gate
+3-identity net cite-check + NFKC/hyphenation-tolerant quote match, plus a SKILL.md
+doc batch) — doubles as the fresh pre-tag gate at the new tag-candidate tip `b4cf24c`.
+Scope pre-verified: exactly 3 commits, 2 files (`deep_review_gate.py` + `SKILL.md`);
+grep confirmed no corpus analyzer references the gate script, and `deep_review.json`
+is permanently outside regression-diff scope → zero-delta budget.
+
+| Tier | Units | PASS | Disapp | Downgr | NewKnown | NewUnkn | WARN | FAIL |
+|------|------:|-----:|-------:|-------:|---------:|--------:|-----:|-----:|
+| smoke | 1,844 | 1,615 | 0 | 0 | 0 | 0 | 0 | 0 |
+| full corpus | 170,014 | 149,629 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Zero-delta budget met exactly in 2,029s (rollups `results/v20_kh347_gate/`). Same
+149,629 PASS as every prior benchmark. **Pre-tag full-corpus requirement satisfied
+at `b4cf24c`** (`a9504cf` superseded).
+
+**Adoption:** 4 main-repo-authored KH-347 contract tests landed in
+`tests/contract/test_deep_review_gate.py` (PCB-only net accepted, display_name
+accepted, unknown net still quarantined, Unicode/hyphenation quote tolerance);
+fixture now also runs `analyze_pcb.py` on simple-project. Contract suite **659/8/4**
+— exact handoff match; full tree 2,074 passed with only the 4 known pre-existing
+failures (TH-041 ×3, TH-042). KH-347 moved to FIXED.md (root cause corrected: the
+filed "whitespace-sensitive" wording was partially stale — actual modes were Unicode
+symbols + PDF line-wrap hyphenation). KH-348 (LOW) stays open, post-release scope —
+24 open issues (17 KH + 7 TH). Next KH number: KH-349.
 
 ### KH-337 fix gate `f57277d`→`a9504cf` STRICT-CLEAN; KH-337 closed, KH-338..346 filed (2026-07-12)
 
