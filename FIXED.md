@@ -11,6 +11,41 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-07-12 — KH-347 (MEDIUM): deep_review_gate net cite-check single-identity + quote match breaks on Unicode/hyphenation
+
+- **File:** `skills/kicad/review/scripts/deep_review_gate.py`
+- **Discovered:** 2026-07-12 (SacMap rev2 run-6 — the v2.0 A/B soak leg @ `a9504cf`)
+- **Root cause:** (a) `load_anchor_sets` built the net anchor set from schematic internal
+  net names only. One physical net carries three identities — schematic internal name
+  (`__unnamed_10`), analyzer `display_name` (`U4.VBUS`), and PCB net name
+  (`Net-(J1-VBUS)`) — so citing either human-readable form quarantined the finding; the
+  reviewer had to rewrite 4 legitimate findings to the opaque internal name, now frozen
+  in the durable `deep_review.json`. (b) The PDF quote match: the filed
+  "whitespace-sensitive" wording was **partially stale** — `_norm_text` whitespace
+  collapse existed since `85d719c` and ran in run-6. The actual residual failure modes,
+  proven from the run-6 artifact (quote truncated right before `°C`), were Unicode
+  symbols (°C-class) and PDF line-wrap hyphenation (`over-\nvoltage`).
+- **Fix (main-repo `76185a5` + `20cdf89`):** (a) `load_anchor_sets` accepts all three
+  net identities — schematic name, `nets[name].display_name`, and pcb.json net names
+  (top-level `nets` values ∪ `net_name_to_id` keys, both emitted unconditionally);
+  unknown nets still quarantine. (b) `_norm_text` gained NFKC fold +
+  punctuation→word-break, plus a `_squash` fallback that absorbs "5.5V" vs "5.5 V" and
+  line-wrap hyphenation; new `_quote_in_text(quote, text)` helper, same failure message.
+  Fabricated quotes still quarantine. Behavior note: `finding_id` re-derives when
+  citation content changes (content-hash by design). Schema untouched (`evidence.nets`
+  items are unconstrained strings).
+- **Verification:** 4 new contract tests in `tests/contract/test_deep_review_gate.py`
+  (PCB-only net `Net-(D1-K)` accepted, `display_name` accepted, unknown net still
+  quarantined, quote match tolerates °C/unit-spacing/hyphenation with a fabricated-quote
+  negative); module fixture now also runs `analyze_pcb.py` on the simple-project
+  fixture. Contract suite vs `b4cf24c`: 659 passed / 8 skipped / 4 xfailed (655 + 4).
+  Main-repo spot-check vs run-6 evidence: poster-child finding rewritten to
+  `Net-(J1-VBUS)` → 10 verified / 0 quarantined, exit 0. Incremental full-corpus
+  symmetric gate `a9504cf` → `b4cf24c` STRICT-CLEAN against a zero-delta budget
+  (`results/v20_kh347_gate/`).
+
+---
+
 ## 2026-07-12 — KH-337 (P0, v2.0 tag-blocking): datasheet_verify silent zero findings on v2 extraction caches
 
 - **File:** `skills/datasheets/scripts/datasheet_verify.py`

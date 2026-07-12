@@ -12,7 +12,10 @@ GATE = (MAIN_REPO_ROOT / "skills" / "kicad" / "review" / "scripts"
         / "deep_review_gate.py")
 ANALYZER = (MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"
             / "analyze_schematic.py")
+PCB_ANALYZER = (MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"
+                / "analyze_pcb.py")
 SCH = HARNESS_ROOT / "tests" / "fixtures" / "simple-project" / "simple.kicad_sch"
+PCB = HARNESS_ROOT / "tests" / "fixtures" / "simple-project" / "simple.kicad_pcb"
 PDF_DIR = HARNESS_ROOT / "tests" / "fixtures" / "datasheets-pdfs"
 
 HAS_PDFTOTEXT = shutil.which("pdftotext") is not None
@@ -22,9 +25,13 @@ HAS_PDFTOTEXT = shutil.which("pdftotext") is not None
 def analysis_dir(tmp_path_factory):
     """Real analyzer output for the simple-project fixture."""
     d = tmp_path_factory.mktemp("analysis")
-    out = d / "schematic.json"
     subprocess.run(
-        [sys.executable, str(ANALYZER), str(SCH), "--output", str(out)],
+        [sys.executable, str(ANALYZER), str(SCH),
+         "--output", str(d / "schematic.json")],
+        check=True, capture_output=True)
+    subprocess.run(
+        [sys.executable, str(PCB_ANALYZER), str(PCB),
+         "--output", str(d / "pcb.json")],
         check=True, capture_output=True)
     return d
 
@@ -191,3 +198,68 @@ def test_missing_pdf_marks_partial_not_quarantined(analysis_dir, tmp_path):
     assert r.returncode == 0
     out = json.loads(p.read_text())
     assert out["findings"][0]["evidence_checked"] == "partial"
+
+
+def _pcb_only_net(analysis_dir):
+    """A net name pcb.json knows that schematic.json does not (KH-347)."""
+    sch = json.loads((analysis_dir / "schematic.json").read_text())
+    pcb = json.loads((analysis_dir / "pcb.json").read_text())
+    only = set(pcb["net_name_to_id"]) - set(sch["nets"])
+    assert only, "fixture regression: no PCB-only net name"
+    return sorted(only)[0]
+
+
+def test_pcb_net_name_accepted(analysis_dir, tmp_path):
+    # KH-347: the PCB net name is a valid citation for a net the
+    # schematic only knows as __unnamed_N.
+    ref, _ = _real_anchors(analysis_dir)
+    p = tmp_path / "deep_review.json"
+    p.write_text(json.dumps(_doc([_finding(ref, _pcb_only_net(analysis_dir))])))
+    r = _run_gate(p, analysis_dir)
+    assert r.returncode == 0, r.stderr
+    out = json.loads(p.read_text())
+    assert out["quarantined"] == []
+
+
+def test_display_name_accepted(analysis_dir, tmp_path):
+    # KH-347: the analyzer's display_name annotation is a valid citation.
+    d = tmp_path / "analysis"
+    d.mkdir()
+    data = json.loads((analysis_dir / "schematic.json").read_text())
+    net = next(n for n in data["nets"] if n.startswith("__unnamed_"))
+    data["nets"][net]["display_name"] = "U1.VOUT"
+    (d / "schematic.json").write_text(json.dumps(data))
+    ref = data["components"][0]["reference"]
+    p = tmp_path / "deep_review.json"
+    p.write_text(json.dumps(_doc([_finding(ref, "U1.VOUT")])))
+    r = _run_gate(p, d)
+    assert r.returncode == 0, r.stderr
+
+
+def test_unknown_net_still_quarantined(analysis_dir, tmp_path):
+    ref, _ = _real_anchors(analysis_dir)
+    p = tmp_path / "deep_review.json"
+    p.write_text(json.dumps(_doc([_finding(ref, "NO_SUCH_NET_42")])))
+    r = _run_gate(p, analysis_dir)
+    assert r.returncode == 1
+    out = json.loads(p.read_text())
+    assert "NO_SUCH_NET_42" in out["quarantined"][0]["quarantine_reason"]
+
+
+def test_quote_match_tolerates_unicode_and_hyphenation():
+    # KH-347: verbatim quotes must survive degree signs, unit spacing,
+    # punctuation variants, and PDF line-wrap hyphenation.
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("deep_review_gate", GATE)
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    pdf_text = ("Maximum resistance of device at 20°C.\n"
+                "The over-\nvoltage clamp limit is 5.5 V")
+    assert gate._quote_in_text(
+        "Maximum resistance of device at 20°C", pdf_text)
+    assert gate._quote_in_text(
+        "maximum resistance of device at 20 ° C", pdf_text)
+    assert gate._quote_in_text("the overvoltage clamp limit is 5.5V", pdf_text)
+    assert gate._quote_in_text("over-voltage clamp limit", pdf_text)
+    assert not gate._quote_in_text(
+        "Maximum resistance of device at 25°C", pdf_text)

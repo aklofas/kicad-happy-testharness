@@ -34,9 +34,9 @@ Last updated: 2026-07-12
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-347**. Next TH number: **TH-046**.
+maximum. Next KH number: **KH-349**. Next TH number: **TH-046**.
 
-> 23 open issues.
+> 24 open issues.
 
 ---
 
@@ -325,6 +325,23 @@ correctness-floor tool.
 
 **Fix sketch:** one-line unit filter — first entry with `unit == "V"` instead of
 `[0]`. Must land before extraction prompts start populating per-pin ratings.
+
+---
+
+### KH-348: lifecycle_audit `--only lcsc` returns all-unknown — LCSC/jlcsearch exposes no lifecycle status
+
+**Severity:** LOW (misleading "audit ran, board clean" appearance)
+**File:** `skills/kicad/scripts/lifecycle_audit.py`
+**Discovered:** 2026-07-12 (SacMap rev2 run-6: 20/20 MPNs `unknown`, including parts LCSC definitely stocks — TPS61023DRLR, USBLC6-2SC6, ESP32-S3-WROOM-1-N4)
+
+**Symptom:** the jlcsearch community API has no lifecycle/obsolescence field, so an
+LCSC-only audit can never produce a real status; output is indistinguishable from
+"audited and fine" unless the reader notices every row is `unknown`.
+
+**Fix sketch:** when the effective source set is LCSC-only, say so up front
+(capability note / explicit "LCSC does not expose lifecycle status — use DigiKey or
+element14 credentials for a real audit" in the summary) instead of emitting 20
+LC-004 unknowns. Keep the per-part rows for temp-range data if present.
 
 ---
 
@@ -620,4 +637,4 @@ release-quality impact.
 
 ## Priority Queue
 
-_16 open KH-* + 7 open TH-* issues. KH-338 HIGH; KH-339–KH-343 MEDIUM; remainder LOW._
+_17 open KH-* + 7 open TH-* issues. KH-338 HIGH; KH-339–KH-343 MEDIUM; remainder LOW._
