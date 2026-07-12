@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-05-28
+Last updated: 2026-07-12
 
 ---
 
@@ -34,9 +34,9 @@ Last updated: 2026-05-28
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-337**. Next TH number: **TH-046**.
+maximum. Next KH number: **KH-347**. Next TH number: **TH-046**.
 
-> 14 open issues.
+> 23 open issues.
 
 ---
 
@@ -202,6 +202,129 @@ reviewer flagged this as a concern but did not run the comparison.
    drift (zero is target; non-zero is the calibration data point).
 
 **Not tag-blocking** — v1.5 carryover, future work.
+
+---
+
+### KH-338: usb_compliance check failures never become findings[]; vbus_esd_protection false-fails on unnamed VBUS nets
+
+**Severity:** HIGH
+**File:** `skills/kicad/scripts/analyze_schematic.py` (~8162-8163, stored ~9256)
+**Discovered:** 2026-07-12 (SacMap rev2 run-5)
+
+**Symptom:** (a) `usb_compliance.connectors[].checks` results (e.g. `vbus_decoupling:
+"fail"` — a genuine missing-bulk-cap defect) live only in the aux section; sole
+consumer `domain_detectors.py:5639` ignores individual checks. The most important
+electrical finding on the board never reached findings[]/summarize. (b)
+`vbus_esd_protection: "fail"` while `usb_esd_ic: "pass"`: the VBUS net is unnamed
+(`__unnamed_10`, display_name `U4.VBUS`); check resolves VBUS by net NAME or counts
+only discrete TVS parts, so the ESD array's own VBUS pin (pin_name "VBUS",
+connected_to J1.1) isn't credited.
+
+**Fix sketch:** emit each failed check as a rich finding via make_finding (new rule
+ids); resolve VBUS by connector-pin connectivity + pin_name, not net name.
+
+---
+
+### KH-339: CP-003 touch-pad clearance measured to zone outline bbox, not filled copper
+
+**Severity:** MEDIUM (false positive; SKILL.md itself warns "zone outline != actual copper")
+**File:** `skills/kicad/scripts/analyze_pcb.py:5413`
+**Discovered:** 2026-07-12 (SacMap rev2 run-5: reported 0.0mm, actual filled gap 1.000mm)
+
+**Symptom:** uses `gz.get("outline_bbox")`; `filled_bbox` + zone_fills exist but unused.
+
+**Fix sketch:** measure to filled_bbox / nearest filled-polygon edge when fill data
+available; fall back to outline with confidence downgrade.
+
+---
+
+### KH-340: VP-001 via-in-pad uses bounding-box hit-test, no pad shape/rotation
+
+**Severity:** MEDIUM (false positive)
+**File:** `skills/kicad/scripts/analyze_pcb.py:5830-5844`
+**Discovered:** 2026-07-12 (SacMap rev2 run-5: via 8.16mm radial from 7.5mm-radius circular pad flagged in-pad)
+
+**Fix sketch:** point-in-shape test for circle/oval/roundrect + pad rotation.
+
+---
+
+### KH-341: DC-003 decoupling-cap-far-from-via lacks same-layer-pour / 2-layer suppression
+
+**Severity:** MEDIUM (6 false positives on a 2-layer board)
+**File:** `skills/emc/scripts/emc_rules.py:584-631`
+**Discovered:** 2026-07-12 (SacMap rev2 run-5)
+
+**Symptom:** flags cap >3mm from nearest via even when the pad ties directly into a
+same-layer pour of the same net (no via needed).
+
+**Fix sketch:** suppress/demote when pad abuts same-layer same-net zone, or when
+copper_layers_used == 2.
+
+---
+
+### KH-342: sleep_current_audit scores divider legs independently and RC-filter pull-ups as DC loads
+
+**Severity:** MEDIUM (overstated sleep current)
+**File:** `skills/kicad/scripts/analyze_schematic.py:6280-6324`
+**Discovered:** 2026-07-12 (SacMap rev2 run-5: R7 EN-RC filter scored 330uA, true ~0;
+R10 scored via 680K leg alone, true 3.98uA through 680K+150K)
+
+**Fix sketch:** detect series-R + shunt-C (steady-state DC ~ 0); sum divider legs as
+one V/(R_top+R_bot) path.
+
+---
+
+### KH-343: rail-voltage inference maps any net containing "USB" to 5.0V — including data lines
+
+**Severity:** MEDIUM (poisons derating + datasheet voltage checks downstream)
+**File:** `skills/kicad/scripts/analyze_schematic.py:4719` AND `skills/kicad/scripts/signal_detectors.py:1547` (two copies)
+**Discovered:** 2026-07-12 (SacMap rev2 run-5: rail_voltages contains USB_DM: 5.0, USB_DP: 5.0)
+
+**Fix sketch:** tighten to VBUS/+5V_USB; exclude _DM/_DP/_D+/_D-/DPLUS/DMINUS
+suffixes. Fix BOTH copies (and consider deduplicating the helper).
+
+---
+
+### KH-344: PM-002 emits "move further from board edge" for negative courtyard distances
+
+**Severity:** LOW (nonsense recommendation on intentional overhangs)
+**File:** `skills/kicad/scripts/analyze_pcb.py:3579` (RF/edge-mount demotion at 3549-3557 exists but recommendation text still fires)
+**Discovered:** 2026-07-12 (SacMap rev2 run-5: U1 antenna courtyard at -14.51mm told to move >=1.0mm from edge)
+
+**Fix sketch:** for min_edge < 0 reframe as "courtyard overhangs board edge by X mm";
+suppress the move-it recommendation.
+
+---
+
+### KH-345: CLI/doc drift — simulate_subcircuits has no --text; lifecycle --temp-range space form fails
+
+**Severity:** LOW
+**File:** `skills/spice/scripts/simulate_subcircuits.py`; `skills/kicad/scripts/lifecycle_audit.py:951`; kicad SKILL.md
+**Discovered:** 2026-07-12 (SacMap rev2 run-5)
+
+**Symptom:** SKILL.md implies all analyzers support --text; simulate_subcircuits does
+not. `--temp-range "-40,105"` (space form) is parsed as a flag by argparse; only
+`--temp-range=...` works (already documented in help text).
+
+**Fix sketch:** add --text to simulate_subcircuits (or correct the doc claim); doc-only
+fix acceptable for --temp-range.
+
+---
+
+### KH-346: per-pin absolute_max SpecValue list read is unit-blind (latent false-CRITICAL)
+
+**Severity:** LOW (latent — no extraction populates per-pin absolute_max today; becomes MEDIUM the day one does)
+**File:** `skills/datasheets/scripts/datasheet_verify.py` (`_spec_max` consumer in `_v1_view` per-pin path, ~L152)
+**Discovered:** 2026-07-12 (KH-337 review round 2, residual)
+
+**Symptom:** pinout.schema.json allows per-pin `absolute_max` to mix voltage and
+current SpecValues; `_spec_max` takes `sv_list[0].max` blind. A current rating
+first in the list (e.g. max=0.025, unit="A") would be compared against net VOLTS
+-> false CRITICAL `pin_voltage_abs_max_exceeded` — worst noise class for a
+correctness-floor tool.
+
+**Fix sketch:** one-line unit filter — first entry with `unit == "V"` instead of
+`[0]`. Must land before extraction prompts start populating per-pin ratings.
 
 ---
 
@@ -497,4 +620,4 @@ release-quality impact.
 
 ## Priority Queue
 
-_7 open KH-* + 7 open TH-* issues (all LOW)._
+_16 open KH-* + 7 open TH-* issues. KH-338 HIGH; KH-339–KH-343 MEDIUM; remainder LOW._

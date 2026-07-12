@@ -366,3 +366,290 @@ def test_no_args_exits_two():
     res = _run()
     assert res.returncode == 2
     assert "must supply" in res.stderr.lower()
+
+
+# ---------------------------------------------------------------------------
+# KH-337: v2-format extraction adapter tests
+# ---------------------------------------------------------------------------
+
+# Fixtures from harness tests/fixtures/datasheets-extracted/
+V2_FIXTURE_DIR = HARNESS_ROOT / "tests" / "fixtures" / "datasheets-extracted"
+LM2596_FIXTURE = V2_FIXTURE_DIR / "LM2596-ADJ.json"
+
+verify_pin_voltages = mod.verify_pin_voltages
+verify_decoupling = mod.verify_decoupling
+run_datasheet_verification = mod.run_datasheet_verification
+
+
+def _setup_v2_extract_dir(tmp_path, fixture_path=LM2596_FIXTURE, mpn="LM2596-ADJ"):
+    """Copy a real v2 fixture into a temp extracted dir."""
+    import shutil
+    extract_dir = tmp_path / "extracted"
+    extract_dir.mkdir()
+    shutil.copy(fixture_path, extract_dir / f"{mpn}.json")
+    return str(extract_dir)
+
+
+def _lm2596_components(pin_nets=None):
+    """Minimal IC component dict for LM2596-ADJ."""
+    return [{
+        "reference": "U1",
+        "type": "ic",
+        "mpn": "LM2596-ADJ",
+        "pin_nets": pin_nets or {"1": "VIN", "2": "OUT", "3": "GND", "4": "FB", "5": "ON_OFF"},
+    }]
+
+
+# --- RED test (KH-337): v2 fixture + pin above abs max → must emit finding ---
+
+def test_v2_pin_voltage_abs_max_exceeded(tmp_path):
+    """Pin 1 (VIN, domain VIN, abs_max=45V) connected to a 50V net → CRITICAL finding.
+
+    This was the silent-zero bug: before the adapter, extraction.get('pins')
+    returned None (v2 has base.pinout, not pins) → verifier skipped entirely.
+    """
+    extract_dir = _setup_v2_extract_dir(tmp_path)
+    # Connect pin 1 (VIN) to a 50V net — exceeds LM2596 VIN_max of 45V
+    components = _lm2596_components(pin_nets={"1": "+50V", "2": "OUT", "3": "GND"})
+    rail_voltages = {"+50V": 50.0}
+    nets = {}
+
+    findings = verify_pin_voltages(components, nets, extract_dir, rail_voltages)
+    types = {f["type"] for f in findings}
+    assert "pin_voltage_abs_max_exceeded" in types, (
+        f"Expected pin_voltage_abs_max_exceeded finding but got: {[f['type'] for f in findings]}"
+    )
+    crit = [f for f in findings if f["type"] == "pin_voltage_abs_max_exceeded"]
+    assert crit[0]["severity"] == "CRITICAL"
+    assert crit[0]["mpn"] == "LM2596-ADJ"
+    assert crit[0]["pin_number"] == "1"
+    assert crit[0]["abs_max_V"] == 45
+
+
+def test_v2_pin_voltage_operating_exceeded(tmp_path):
+    """Pin 1 (VIN, op_max=40V) connected to 42V net → operating-exceeded finding."""
+    extract_dir = _setup_v2_extract_dir(tmp_path)
+    components = _lm2596_components(pin_nets={"1": "+42V"})
+    rail_voltages = {"+42V": 42.0}
+    nets = {}
+
+    findings = verify_pin_voltages(components, nets, extract_dir, rail_voltages)
+    types = {f["type"] for f in findings}
+    assert "pin_voltage_operating_exceeded" in types, (
+        f"Expected pin_voltage_operating_exceeded but got: {[f['type'] for f in findings]}"
+    )
+
+
+# --- extraction_not_verifiable emitted for v2 (benign usage) ---
+
+def test_v2_benign_usage_emits_not_verifiable(tmp_path):
+    """Benign schematic usage of LM2596-ADJ (v2 extraction) must emit
+    extraction_not_verifiable INFO finding because required-external and
+    decoupling checks have no v2 equivalent data.
+
+    No violation findings expected (VIN=12V well within 40V op / 45V abs max).
+    """
+    extract_dir = _setup_v2_extract_dir(tmp_path)
+    components = _lm2596_components()
+    rail_voltages = {"VIN": 12.0}
+    nets = {"VIN": {"pins": [{"component": "U1"}, {"component": "C1"}]}}
+    comp_lookup = {"U1": {"type": "ic"}, "C1": {"type": "capacitor"}}
+    parsed_values = {}
+
+    # Collect findings from all three verifiers via run_datasheet_verification
+    analysis = {
+        "file": "/tmp/fake.kicad_sch",
+        "components": components + [
+            {"reference": "C1", "type": "capacitor", "value": "100uF", "parsed_value": 100e-6},
+        ],
+        "nets": nets,
+        "rail_voltages": rail_voltages,
+    }
+
+    import tempfile, shutil
+    with tempfile.TemporaryDirectory() as tmp_proj:
+        import os
+        ds_dir = os.path.join(tmp_proj, "datasheets", "extracted")
+        os.makedirs(ds_dir)
+        shutil.copy(str(LM2596_FIXTURE), os.path.join(ds_dir, "LM2596-ADJ.json"))
+        result = run_datasheet_verification(analysis, project_dir=tmp_proj)
+
+    findings = result["findings"]
+    types = [f["type"] for f in findings]
+
+    # No voltage violations for 12V input
+    assert "pin_voltage_abs_max_exceeded" not in types
+    assert "pin_voltage_operating_exceeded" not in types
+
+    # Exactly one not-verifiable finding (deduped across verifiers)
+    nv_findings = [f for f in findings if f["type"] == "extraction_not_verifiable"]
+    assert len(nv_findings) == 1, (
+        f"Expected exactly 1 extraction_not_verifiable finding, got {len(nv_findings)}: {nv_findings}"
+    )
+    nv = nv_findings[0]
+    assert nv["severity"] == "INFO"
+    assert nv["mpn"] == "LM2596-ADJ"
+    # Detail must mention what couldn't be checked
+    assert "required-external" in nv["detail"] or "decoupling" in nv["detail"] or "application_circuit" in nv["detail"]
+
+
+# --- v1-format regression: adapter must not change v1 behavior ---
+
+def test_v1_format_pin_voltage_behavior_unchanged(tmp_path):
+    """v1-format extraction (has 'pins' key) must produce identical results
+    to pre-adapter behavior — the adapter must be transparent for v1.
+    """
+    # Craft a v1-format extraction with a known abs_max violation
+    v1_extraction = {
+        "extraction": {"quality_score": 90},
+        "pins": [
+            {"number": "1", "name": "VCC", "type": "power",
+             "voltage_abs_max": 5.5, "voltage_operating_max": 5.0},
+        ],
+    }
+    import re, tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = os.path.join(tmpdir, "FAKE-IC.json")
+        with open(path, "w") as f:
+            json.dump(v1_extraction, f)
+
+        components = [{"reference": "U2", "type": "ic", "mpn": "FAKE-IC",
+                       "pin_nets": {"1": "+6V"}}]
+        rail_voltages = {"+6V": 6.0}
+
+        findings = verify_pin_voltages(components, {}, tmpdir, rail_voltages)
+
+    assert any(f["type"] == "pin_voltage_abs_max_exceeded" for f in findings), (
+        "v1-format extraction must still trigger pin_voltage_abs_max_exceeded"
+    )
+    # No not-verifiable finding for v1 format
+    assert not any(f["type"] == "extraction_not_verifiable" for f in findings), (
+        "extraction_not_verifiable must NOT fire for v1-format extractions"
+    )
+
+
+# --- KH-337 fix round 1 regressions ---
+
+def _sv(max_=None, min_=None, typ=None, unit="V"):
+    """Full-shape SpecValue dict matching spec_value.schema.json producers."""
+    return {
+        "condition": None, "max": max_, "min": min_, "notes": None,
+        "typ": typ, "unit": unit,
+        "evidence": {"confidence": "high", "method": "table",
+                     "page": 5, "section": "Abs Max"},
+    }
+
+
+def _run_full_pipeline(tmp_path, mpn, extraction, analysis_overrides=None):
+    """Seed <tmp_path>/datasheets/extracted/<mpn>.json and run the full
+    run_datasheet_verification pipeline (all three verifiers)."""
+    ds_dir = tmp_path / "datasheets" / "extracted"
+    ds_dir.mkdir(parents=True, exist_ok=True)
+    (ds_dir / f"{mpn}.json").write_text(json.dumps(extraction))
+    analysis = {
+        "file": str(tmp_path / "fake.kicad_sch"),
+        "components": [
+            {"reference": "U2", "type": "ic", "mpn": mpn,
+             "pin_nets": {"1": "+3V3", "2": "GND"}},
+        ],
+        "nets": {"+3V3": {"pins": [{"component": "U2"}]},
+                 "GND": {"pins": [{"component": "U2"}]}},
+        "rail_voltages": {"+3V3": 3.3},
+    }
+    if analysis_overrides:
+        analysis.update(analysis_overrides)
+    return run_datasheet_verification(analysis, project_dir=str(tmp_path))
+
+
+def test_v1_without_application_circuit_no_not_verifiable(tmp_path):
+    """CRITICAL regression (fix round 1): a v1-format extraction with pins but
+    WITHOUT the optional application_circuit field must run the FULL pipeline
+    with zero extraction_not_verifiable findings — v1 behavior byte-identical.
+    """
+    v1_extraction = {
+        "extraction": {"quality_score": 90},
+        "pins": [
+            {"number": "1", "name": "VCC", "type": "power",
+             "voltage_abs_max": 5.5, "voltage_operating_max": 5.0},
+            {"number": "2", "name": "GND", "type": "ground"},
+        ],
+        # no application_circuit — optional in v1, must stay a silent skip
+    }
+    result = _run_full_pipeline(tmp_path, "FAKE-IC", v1_extraction)
+    types = [f["type"] for f in result["findings"]]
+    assert "extraction_not_verifiable" not in types, (
+        f"v1 cache without application_circuit must not emit "
+        f"extraction_not_verifiable; findings: {result['findings']}"
+    )
+
+
+def test_v2_per_pin_abs_max_overrides_domain(tmp_path):
+    """Fix round 1: a per-pin absolute_max SpecValue list (pinout schema shape)
+    must override the domain-level abs-max lookup.
+
+    Domain VIN abs max = 45V; per-pin abs max = 6V. Pin on a 7V net must be
+    flagged against 6V (domain lookup alone would pass 7V < 45V silently).
+    """
+    v2_extraction = {
+        "base": {
+            "absolute_max": {"VIN_max": [_sv(max_=45)]},
+            "recommended_operating": {"VIN": [_sv(max_=40, min_=4.5)]},
+            "pinout": [
+                {"numbers": ["1"], "name": "SENSE", "type": "input",
+                 "subtype": None, "description": None, "power_domain": "VIN",
+                 "alt_functions": [], "is_5v_tolerant": None,
+                 "absolute_max": [_sv(max_=6)],  # per-pin rating, tighter than domain
+                 "recommended": None, "drive_strength": None, "notes": None,
+                 "evidence": {"confidence": "high", "method": "table",
+                              "page": 3, "section": "Pinout"}},
+            ],
+        },
+        "categories": [],
+        "extraction": {"quality_score": 95},
+    }
+    result = _run_full_pipeline(
+        tmp_path, "FAKE-V2", v2_extraction,
+        analysis_overrides={
+            "components": [
+                {"reference": "U3", "type": "ic", "mpn": "FAKE-V2",
+                 "pin_nets": {"1": "+7V"}},
+            ],
+            "nets": {"+7V": {"pins": [{"component": "U3"}]}},
+            "rail_voltages": {"+7V": 7.0},
+        },
+    )
+    abs_findings = [f for f in result["findings"]
+                    if f["type"] == "pin_voltage_abs_max_exceeded"]
+    assert abs_findings, (
+        f"7V on a pin with per-pin abs max 6V must be flagged; "
+        f"findings: {result['findings']}"
+    )
+    assert abs_findings[0]["abs_max_V"] == 6, (
+        f"per-pin abs max (6V) must win over domain limit (45V); "
+        f"got abs_max_V={abs_findings[0]['abs_max_V']}"
+    )
+
+
+def test_quality_low_emitted_once_per_mpn(tmp_path):
+    """Fix round 1: extraction_quality_low must appear exactly once per MPN
+    in run_datasheet_verification output (each verifier emits independently;
+    the orchestrator dedups).
+    """
+    v1_extraction = {
+        "extraction": {"quality_score": 30},
+        "pins": [
+            {"number": "1", "name": "VCC", "type": "power",
+             "voltage_abs_max": 5.5, "voltage_operating_max": 5.0},
+        ],
+        # no application_circuit: each verifier still emits its own quality
+        # finding (emitted right after _load_extraction, before data guards),
+        # so pre-dedup this MPN produces 3 identical extraction_quality_low.
+    }
+    result = _run_full_pipeline(tmp_path, "LOWQ-IC", v1_extraction)
+    quality = [f for f in result["findings"]
+               if f["type"] == "extraction_quality_low"]
+    assert len(quality) == 1, (
+        f"expected exactly 1 extraction_quality_low for one MPN, "
+        f"got {len(quality)}: {quality}"
+    )
+    assert quality[0]["mpn"] == "LOWQ-IC"

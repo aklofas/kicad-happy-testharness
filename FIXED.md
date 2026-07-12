@@ -11,6 +11,41 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-07-12 — KH-337 (P0, v2.0 tag-blocking): datasheet_verify silent zero findings on v2 extraction caches
+
+- **File:** `skills/datasheets/scripts/datasheet_verify.py`
+- **Discovered:** 2026-07-12 (SacMap rev2 run-5 external review, verified vs v2.0-dev `f57277d`)
+- **Root cause:** All three verifiers (`verify_pin_voltages`, `verify_required_externals`,
+  `verify_decoupling`) consumed v1-format extraction keys only — `extraction.get("pins")` /
+  `application_circuit` guards and singular `p.get("number")`. v2 caches store
+  `base.pinout[]` (plural `numbers`, category blocks), so every verifier short-circuited
+  to zero findings while the trust gate still counted the part in `ics_with_extractions`
+  — invisible degradation, spec §6 violation. Real-world: 3 high-quality SacMap caches
+  (91/77/87) produced zero datasheet verification.
+- **Fix (main-repo `a9504cf`):** `_v1_view` v2→v1 adapter — flattens `base.pinout[]` to
+  `pins[]` (`numbers[0]` → `number`), resolves per-pin `voltage_abs_max` /
+  `voltage_operating_max` via `power_domain` → `base.absolute_max["{domain}_max"|"{domain}"]`
+  / `recommended_operating[domain]`; a per-pin `absolute_max` SpecValue overrides the
+  domain lookup via `_spec_max`. Gaps with no v2 equivalent (per-pin `required_external`,
+  `application_circuit`) emit a loud `extraction_not_verifiable` INFO finding, deduped to
+  one per MPN. All not-verifiable emissions gate on the `_v2_adapted` marker, so v1 caches
+  of any shape stay byte-identical to pre-adapter output. Folded in:
+  `extraction_quality_low` deduped per MPN in `run_datasheet_verification` (was
+  triple-emitted, once per verifier). Full report:
+  main-repo `.superpowers/sdd/kh337-report.md`.
+- **Verification:** 7 new contract tests in `tests/contract/test_datasheet_verify_v14.py`
+  (v2 abs-max/op-max violations, benign v2 → exactly one not-verifiable INFO, v1 behavior
+  unchanged, v1 without `application_circuit` → no spurious finding, per-pin override,
+  quality-low single emission) — RED against pre-fix, GREEN at `a9504cf`. Full harness
+  suite vs `a9504cf`: 655 passed / 8 skipped / 4 xfailed. Main-repo
+  `_smoke_v14_roundtrip.py` exit 0 (findings=1, `extraction_not_verifiable` INFO).
+  Incremental full-corpus symmetric gate `f57277d` → `a9504cf` STRICT-CLEAN against a
+  zero-delta budget (`results/v20_kh337_gate/`).
+- **Residual:** KH-346 filed (per-pin `absolute_max` SpecValue read is unit-blind — latent
+  until extractions populate per-pin ratings).
+
+---
+
 ## 2026-05-28 — KH-335 / KH-336 / TH-045 (finding_id well-formedness + schema drift, SKILL_FEEDBACK-2 follow-up)
 
 All three surfaced by the harness `run_tests.py --unit` gate during
