@@ -288,7 +288,9 @@ def test_compat_wrapper_dict_has_no_specvalue_derived_numeric_fields():
     time is the point of r3's structural-invariant approach.
 
     The expected key set is exhaustive per
-    `_derive_regulator_features_v14` at datasheet_features.py:132-143.
+    `_derive_regulator_features_v14` at datasheet_features.py:132-143,
+    plus `quality` (wrapper-attached in v2.0, spec §3.A.1 — a status flag,
+    not a SpecValue-derived numeric field).
     """
     from datasheet_features import get_regulator_features
 
@@ -303,6 +305,7 @@ def test_compat_wrapper_dict_has_no_specvalue_derived_numeric_fields():
         "vout_pin",
         "en_pin",
         "pg_pin",
+        "quality",
     }
 
     with tempfile.TemporaryDirectory() as tmp:

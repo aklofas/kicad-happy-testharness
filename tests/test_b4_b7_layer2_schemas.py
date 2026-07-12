@@ -6,10 +6,11 @@ Implements two of the four absorption asks from main-repo LOG entry #71:
        declared whenever declared is non-null. Schema permits both plain
        enum and triple form via oneOf; precedence rule is harness-
        enforced (not in JSON Schema).
-  (B7) novel-findings schema — reviewer_observations[] with maxItems 5,
-       observation confidence enum [medium, low], origin const llm_novel,
-       severity enum [warning, info]. v1.4 default count is 0 (empty
-       array on the example fixture).
+  (B7) novel-findings schema — reviewer_observations[] with origin const
+       llm_novel. v2.0 (spec §5) removed the v1.4 caps: no maxItems,
+       confidence enum gains 'high', severity enum gains 'error'. The
+       cap-removal is locked here so a re-introduction is intentional.
+       v1.4 default count is 0 (empty array on the example fixture).
 
 Tests are pure JSON parsing — only the schema/fixture file paths are
 resolved via KICAD_HAPPY_DIR. jsonschema is required for validation
@@ -65,26 +66,28 @@ def test_review_annotations_schema_parses():
         f"unexpected title: {schema.get('title')!r}"
 
 
-def test_reviewer_observations_maxItems_is_5():
-    """maxItems on reviewer_observations is 5 per spec §4.2."""
+def test_reviewer_observations_has_no_maxitems():
+    """v2.0 (spec §5): the maxItems=5 cap on reviewer_observations is removed.
+    (Flipped from test_reviewer_observations_maxItems_is_5.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
         print("  SKIP")
         return
     obs = schema["properties"]["reviewer_observations"]
-    assert obs.get("maxItems") == 5, \
-        f"expected maxItems=5, got {obs.get('maxItems')!r}"
+    assert "maxItems" not in obs, \
+        f"maxItems cap must stay removed in v2.0, got {obs.get('maxItems')!r}"
 
 
-def test_observation_confidence_enum_is_medium_low():
-    """observation confidence enum is exactly {medium, low} (no high)."""
+def test_observation_confidence_enum_includes_high():
+    """v2.0 (spec §5): observation confidence cap removed — enum is exactly
+    {high, medium, low}. (Flipped from test_observation_confidence_enum_is_medium_low.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
         print("  SKIP")
         return
     enum = schema["properties"]["reviewer_observations"]["items"]["properties"]["confidence"]["enum"]
-    assert set(enum) == {"medium", "low"}, \
-        f"expected {{medium, low}}, got {set(enum)}"
+    assert set(enum) == {"high", "medium", "low"}, \
+        f"expected {{high, medium, low}}, got {set(enum)}"
 
 
 def test_observation_origin_const_is_llm_novel():
@@ -98,15 +101,16 @@ def test_observation_origin_const_is_llm_novel():
         f"expected const='llm_novel', got {origin!r}"
 
 
-def test_observation_severity_enum_is_warning_info():
-    """observation severity enum is exactly {warning, info} — never error."""
+def test_observation_severity_enum_includes_error():
+    """v2.0 (spec §5): observation severity cap removed — enum is exactly
+    {error, warning, info}. (Flipped from test_observation_severity_enum_is_warning_info.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
         print("  SKIP")
         return
     enum = schema["properties"]["reviewer_observations"]["items"]["properties"]["severity"]["enum"]
-    assert set(enum) == {"warning", "info"}, \
-        f"expected {{warning, info}}, got {set(enum)}"
+    assert set(enum) == {"error", "warning", "info"}, \
+        f"expected {{error, warning, info}}, got {set(enum)}"
 
 
 def test_review_annotations_example_fixture_validates():
@@ -125,8 +129,9 @@ def test_review_annotations_example_fixture_validates():
     Validator(schema).validate(fixture)
 
 
-def test_six_item_observations_array_rejected():
-    """maxItems:5 — a 6-item array must fail validation."""
+def test_six_item_observations_array_accepted():
+    """v2.0 (spec §5): no maxItems — a 6-item array must validate.
+    (Flipped from test_six_item_observations_array_rejected.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
         print("  SKIP")
@@ -150,11 +155,7 @@ def test_six_item_observations_array_rejected():
         "annotations": [],
         "reviewer_observations": [obs] * 6,
     }
-    try:
-        Validator(schema).validate(payload)
-    except Exception:
-        return  # expected
-    raise AssertionError("expected jsonschema rejection on 6-item observations array")
+    Validator(schema).validate(payload)  # must not raise (cap removed)
 
 
 # ─── (B4) design_context precedence ───────────────────────────────────────────

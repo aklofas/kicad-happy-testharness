@@ -339,10 +339,13 @@ def test_b8_orphan_annotation_logged_in_orphan_annotations_key():
             "orphans must NOT also appear in invariant_violations[]"
 
 
-def test_b8_HI8_suppress_error_blocked_and_logged():
-    """Annotation tries to suppress an error-severity finding; logged in
-    invariant_violations[] with type='suppress_error'; finding's severity
-    is unchanged in merged output; merge exits 0."""
+# test_b8_HI8_suppress_error_blocked_and_logged — FLIPPED for v2.0 (spec §5):
+#   the suppress_error authority guard is removed; suppressing error-severity
+#   findings now applies. See test_b8_v2_suppress_error_applies.
+def test_b8_v2_suppress_error_applies():
+    """v2.0 (spec §5): suppressing an error-severity finding applies the
+    llm_review overlay; no suppress_error invariant violation; the finding's
+    own severity field stays unchanged (suppression is an overlay)."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
         print("  SKIP")
         return
@@ -356,7 +359,7 @@ def test_b8_HI8_suppress_error_blocked_and_logged():
     review = _make_review([{
         "finding_id": "sch:VM-001:u3",
         "status": "suppressed",
-        "reason": "Trying to suppress an error-severity finding (HI-8 violation).",
+        "reason": "Suppressing an error-severity finding (allowed in v2.0).",
         "confidence": "high",
         "reviewed_at": "2026-04-28T12:00:00Z",
     }])
@@ -368,22 +371,23 @@ def test_b8_HI8_suppress_error_blocked_and_logged():
         )
         assert rc == 0, f"merge should exit 0; got rc={rc}"
         violations = report.get("invariant_violations", [])
-        suppress_errors = [v for v in violations if v.get("type") == "suppress_error"]
-        assert len(suppress_errors) == 1, \
-            f"expected 1 suppress_error, got {violations!r}"
-        # Finding should NOT have llm_review applied (annotation skipped)
+        assert violations == [], \
+            f"no invariant violations expected in v2.0, got {violations!r}"
         merged = json.loads((merged_dir / "schematic.json").read_text())
         merged_finding = merged["findings"][0]
-        assert "llm_review" not in merged_finding, \
-            f"suppress_error annotation should be skipped, but llm_review was applied"
+        assert merged_finding.get("llm_review", {}).get("status") == "suppressed", \
+            "suppress annotation must be applied to error-severity finding in v2.0"
         assert merged_finding["severity"] == "error", \
             f"severity should be unchanged, got {merged_finding['severity']!r}"
+        assert report["applied_count"] == 1
+        assert report["suppressed_count"] == 1
 
 
-def test_b8_HI8_suppress_datasheet_blocked_and_logged():
-    """Annotation tries to suppress a finding with confidence=
-    'datasheet-backed'; logged with type='suppress_datasheet'; merge
-    exits 0; finding has no llm_review overlay."""
+# test_b8_HI8_suppress_datasheet_blocked_and_logged — FLIPPED for v2.0 (spec §5):
+#   the suppress_datasheet authority guard is removed.
+def test_b8_v2_suppress_datasheet_backed_applies():
+    """v2.0 (spec §5): suppressing a confidence=datasheet-backed finding
+    applies the llm_review overlay; no suppress_datasheet violation."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
         print("  SKIP")
         return
@@ -397,7 +401,7 @@ def test_b8_HI8_suppress_datasheet_blocked_and_logged():
     review = _make_review([{
         "finding_id": "sch:OV-001:u5",
         "status": "suppressed",
-        "reason": "Trying to suppress a datasheet-backed finding (HI-8 violation).",
+        "reason": "Suppressing a datasheet-backed finding (allowed in v2.0).",
         "confidence": "high",
         "reviewed_at": "2026-04-28T12:00:00Z",
     }])
@@ -409,19 +413,19 @@ def test_b8_HI8_suppress_datasheet_blocked_and_logged():
         )
         assert rc == 0, f"merge should exit 0; got rc={rc}"
         violations = report.get("invariant_violations", [])
-        ds_violations = [v for v in violations
-                          if v.get("type") == "suppress_datasheet"]
-        assert len(ds_violations) == 1, \
-            f"expected 1 suppress_datasheet, got {violations!r}"
+        assert violations == [], \
+            f"no invariant violations expected in v2.0, got {violations!r}"
         merged = json.loads((merged_dir / "schematic.json").read_text())
-        assert "llm_review" not in merged["findings"][0], \
-            "suppress_datasheet annotation should be skipped"
+        assert merged["findings"][0].get("llm_review", {}).get("status") == "suppressed", \
+            "suppress annotation must be applied to datasheet-backed finding in v2.0"
+        assert report["suppressed_count"] == 1
 
 
-def test_b8_HI8_30pct_suppression_cap_fires_suppression_rate_exceeded():
-    """5 findings, 2 valid (warning-severity, heuristic) suppressions =
-    40% > 30% cap. Report has invariant_violations entry with
-    type='suppression_rate_exceeded' and ratio/cap fields populated."""
+# test_b8_HI8_30pct_suppression_cap_fires_suppression_rate_exceeded — FLIPPED
+#   for v2.0 (spec §5): the 30% suppression rate cap is removed.
+def test_b8_v2_no_suppression_rate_cap():
+    """v2.0 (spec §5): 5 findings, 2 suppressions = 40% — previously over the
+    30% cap — must NOT produce a suppression_rate_exceeded violation."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
         print("  SKIP")
         return
@@ -439,7 +443,7 @@ def test_b8_HI8_30pct_suppression_cap_fires_suppression_rate_exceeded():
         {
             "finding_id": f"sch:PU-001:r{i}",
             "status": "suppressed",
-            "reason": f"Suppressing R{i} (40% suppression triggers HI-8 cap).",
+            "reason": f"Suppressing R{i} (40% — cap removed in v2.0).",
             "confidence": "medium",
             "reviewed_at": "2026-04-28T12:00:00Z",
         }
@@ -451,16 +455,12 @@ def test_b8_HI8_30pct_suppression_cap_fires_suppression_rate_exceeded():
             {"schematic": _make_minimal_envelope(findings)},
             review,
         )
-        assert rc == 0, f"merge should exit 0 even on cap exceeded; got rc={rc}"
+        assert rc == 0, f"merge should exit 0; got rc={rc}"
         violations = report.get("invariant_violations", [])
-        cap_violations = [v for v in violations
-                           if v.get("type") == "suppression_rate_exceeded"]
-        assert len(cap_violations) == 1, \
-            f"expected suppression_rate_exceeded, got {violations!r}"
-        v = cap_violations[0]
-        assert v["suppressed"] == 2 and v["total"] == 5
-        assert v["ratio"] == 2 / 5
-        assert v["cap"] == 0.30
+        assert violations == [], \
+            f"suppression_rate_exceeded must not fire in v2.0, got {violations!r}"
+        assert report["suppressed_count"] == 2
+        assert report["applied_count"] == 2
 
 
 def test_b8_HI3_strip_llm_overlays_yields_dict_equal_raw():

@@ -197,7 +197,8 @@ def test_compat_wrapper_matches_direct_derivation_on_v14_cache():
     """Key bridging assertion between A3.1 and A3.2.
 
     For a v1.4-only cache, `get_regulator_features(mpn)` must return
-    exactly what `_derive_regulator_features_v14(lookup(mpn))` produces.
+    exactly what `_derive_regulator_features_v14(lookup(mpn))` produces,
+    plus the `quality` flag the wrapper attaches in v2.0 (spec §3.A.1).
     Without this test, someone could refactor the wrapper to add fields,
     apply transforms, or short-circuit in ways that drift from the
     derivation helper — which would change behavior for any detector
@@ -216,6 +217,12 @@ def test_compat_wrapper_matches_direct_derivation_on_v14_cache():
         facts = lookup("LM2596-ADJ", cache_dir=cache_dir)
         via_derivation = _derive_regulator_features_v14(facts)
 
+    # v2.0: quality is wrapper-attached, not part of the derivation helper.
+    quality = via_wrapper.pop("quality", None)
+    assert quality is not None and set(quality) == {
+        "score", "scale", "trusted", "reasons"}, (
+        f"wrapper must attach a well-formed quality flag, got {quality!r}"
+    )
     assert via_wrapper == via_derivation, (
         f"wrapper drifted from direct derivation:\n"
         f"  wrapper:    {via_wrapper}\n"
