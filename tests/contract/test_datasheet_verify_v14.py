@@ -18,6 +18,7 @@ mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 
 verify_v14_extraction = mod.verify_v14_extraction
+verify_required_externals = mod.verify_required_externals
 
 
 def _ok_extraction() -> dict:
@@ -192,6 +193,59 @@ def test_diode_no_pin_fields_no_resolution_pass():
     issues = verify_v14_extraction(e)
     pin_issues = [i for i in issues if "_pin" in i["path"]]
     assert pin_issues == []
+
+
+# --- Quality-finding tests ---------------------------------------------------
+
+import os
+
+
+def _make_extraction_with_score(pins, score):
+    """Build an extraction dict with a given quality_score."""
+    return {
+        "extraction": {"quality_score": score},
+        "pins": pins,
+    }
+
+
+def _write_extraction(tmpdir, mpn, extraction):
+    import re
+    sanitized = re.sub(r'[^A-Za-z0-9_.-]', '_', mpn)
+    path = os.path.join(tmpdir, f"{sanitized}.json")
+    with open(path, "w") as f:
+        json.dump(extraction, f)
+
+
+def test_low_quality_extraction_is_verified_and_flagged(tmp_path):
+    # Build a required-external scenario (VIN pin, no cap connected) with
+    # extraction["extraction"]["quality_score"] = 30.
+    tmpdir = str(tmp_path / "extracted")
+    os.makedirs(tmpdir)
+    extraction = _make_extraction_with_score(
+        [{"number": "1", "name": "BYPASS", "type": "power",
+          "required_external": "100nF bypass capacitor"}],
+        score=30,
+    )
+    _write_extraction(tmpdir, "MAX232", extraction)
+
+    components = [
+        {"reference": "U1", "type": "ic", "mpn": "MAX232",
+         "pin_nets": {"1": "NET_BYPASS"}},
+    ]
+    nets = {
+        "NET_BYPASS": {"pins": [
+            {"component": "U1"},
+        ]},
+    }
+    comp_lookup = {"U1": {"type": "ic"}}
+
+    findings = verify_required_externals(components, nets, tmpdir, comp_lookup)
+    types = {f["type"] for f in findings}
+    # 1. quality is visible data:
+    assert "extraction_quality_low" in types
+    # 2. verification still ran on the low-quality extraction —
+    #    the finding the copied test asserted must still be present:
+    assert "missing_required_external" in types
 
 
 # --- CLI tests ----------------------------------------------------------------

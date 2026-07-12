@@ -307,21 +307,20 @@ def test_synthetic_confirmed_with_severity_fails_coupling():
 # ---------------------------------------------------------------------------
 
 def test_reviewer_observations_empty_when_capability_mode_disables():
-    """capability_mode.reviewer_observations_enabled=false → annotations
-    payload MUST carry reviewer_observations=[] (per reviewer.md line 89,
-    also B7 schema-checked). Real GNSSDO trace exemplifies the v1.4
-    default."""
+    """reviewer_observations in the annotations payload MUST be [] for this
+    fixture (per review_annotations.schema.json and the v2.0 invariant that
+    reviewer_observations live in review_annotations.json, never merged into
+    findings[]). The v1.4-era capability_mode.reviewer_observations_enabled
+    field is retired in v2.0 and no longer emitted."""
     annotations, _, cap = _load_trace()
     if annotations is None:
         return
-    assert cap.get("reviewer_observations_enabled") is False, (
-        "fixture capability_mode must encode the v1.4 default "
-        "(reviewer_observations_enabled=false) for this invariant to apply"
-    )
+    # reviewer_observations_enabled removed from capability_mode in v2.0 —
+    # do not assert its presence. The invariant is checked on the annotations
+    # payload directly.
     obs = annotations.get("reviewer_observations")
     assert obs == [], (
-        f"reviewer_observations must be empty list when capability_mode "
-        f"disables them; got {obs!r}"
+        f"reviewer_observations must be empty list in this fixture; got {obs!r}"
     )
 
 

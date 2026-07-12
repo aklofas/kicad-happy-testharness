@@ -27,9 +27,8 @@ def test_review_annotations_schema_is_valid_draft_2020_12():
     Draft202012Validator.check_schema(schema)
 
 
-def test_severity_tuning_schema_is_valid_draft_2020_12():
-    schema = _load_schema("severity_tuning")
-    Draft202012Validator.check_schema(schema)
+# test_severity_tuning_schema_is_valid_draft_2020_12 — DELETED (spec §5):
+# severity_tuning.schema.json removed in v2.0 Layer 2 cage decommission.
 
 
 def test_design_context_fixture_round_trips():
@@ -64,7 +63,9 @@ def test_review_annotations_rejects_short_reason():
         Draft202012Validator(schema).validate(bad)
 
 
-def test_review_annotations_caps_reviewer_observations_at_5():
+def test_review_annotations_has_no_maxitems_on_reviewer_observations():
+    """v2.0 (spec §5): reviewer_observations no longer has maxItems — the cap is
+    removed. Verify the schema allows more than 5 observations."""
     schema = _load_schema("review_annotations")
     obs = {
         "origin": "llm_novel",
@@ -74,21 +75,21 @@ def test_review_annotations_caps_reviewer_observations_at_5():
         "reasoning": "x" * 25,
         "reviewed_at": "2026-04-27T00:00:00Z",
     }
-    bad = {
+    doc = {
         "schema_version": "1.0",
         "produced_for_run_id": "20260427T000000Z-aaaaaa",
         "produced_at": "2026-04-27T00:00:00Z",
         "annotations": [],
-        "reviewer_observations": [obs] * 6,  # 6 > maxItems 5
+        "reviewer_observations": [obs] * 6,  # was rejected pre-v2.0; now allowed
     }
-    with pytest.raises(Exception):
-        Draft202012Validator(schema).validate(bad)
+    Draft202012Validator(schema).validate(doc)  # must not raise
 
 
-def test_review_annotations_caps_observation_confidence():
-    """Per spec §15: reviewer_observations[].confidence capped at 'medium'."""
+def test_review_annotations_observation_allows_high_confidence():
+    """v2.0 (spec §5): reviewer_observations[].confidence cap ('medium') removed.
+    'high' confidence is now valid."""
     schema = _load_schema("review_annotations")
-    bad = {
+    doc = {
         "schema_version": "1.0",
         "produced_for_run_id": "20260427T000000Z-aaaaaa",
         "produced_at": "2026-04-27T00:00:00Z",
@@ -97,10 +98,9 @@ def test_review_annotations_caps_observation_confidence():
             "origin": "llm_novel",
             "observation": "x",
             "severity": "warning",
-            "confidence": "high",  # rejected
+            "confidence": "high",  # was rejected pre-v2.0; now allowed
             "reasoning": "x" * 25,
             "reviewed_at": "2026-04-27T00:00:00Z",
         }],
     }
-    with pytest.raises(Exception):
-        Draft202012Validator(schema).validate(bad)
+    Draft202012Validator(schema).validate(doc)  # must not raise

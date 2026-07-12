@@ -131,23 +131,26 @@ def _stage(tmp_path, envelope_by_stem, review):
 
 
 # ===========================================================================
-# 1. Suppression cap policy (HI-8 30%)
+# 1. Suppression cap policy — REMOVED in v2.0 (spec §5)
 # ===========================================================================
+# test_hi8_suppression_rate_exceeded_is_logged_but_not_unapplied — DELETED (spec §5):
+#   The 30% suppression rate cap is removed; suppression_rate_exceeded violations
+#   are no longer produced. Replaced by test_v2_suppression_cap_removed below.
+# test_hi8_suppression_at_cap_does_not_trip — DELETED (spec §5): cap removed.
+# test_hi8_zero_findings_no_cap_calculation_crash — kept as test_zero_findings_no_crash
+#   (the empty-review / empty-envelope path still matters without the cap).
 
-def test_hi8_suppression_rate_exceeded_is_logged_but_not_unapplied(tmp_path):
-    """HI-8 v1.4 surface-only semantics: exceeding the 30% suppression cap
-    logs an ``invariant_violations`` entry but the suppressions remain
-    APPLIED (suppressed_count is the original count, llm_review present on
-    every suppressed finding). v1.5 may add un-apply logic; locking the
-    current behavior so a v1.5 change is intentional, not silent."""
+def test_v2_suppression_cap_removed(tmp_path):
+    """v2.0 (spec §5): the 30% suppression rate cap is removed. Suppressing
+    more than 30% of findings (e.g. 4/10 = 40%) must NOT produce a
+    suppression_rate_exceeded invariant violation."""
     from merge_annotations import merge
 
     findings = [_make_finding(rule_id=f"X-{i:03d}", refs=(f"R{i}",),
                               finding_id=f"sch:X-{i:03d}:r{i}")
                 for i in range(10)]
     envelope = _make_envelope(findings)
-
-    # Suppress 4/10 (40% > 30% cap)
+    # Suppress 4/10 (40%) — was previously capped at 30%
     annotations = [
         _make_annotation(f"sch:X-{i:03d}:r{i}", status="suppressed")
         for i in range(4)
@@ -161,15 +164,13 @@ def test_hi8_suppression_rate_exceeded_is_logged_but_not_unapplied(tmp_path):
 
     cap_violations = [v for v in report["invariant_violations"]
                       if v["type"] == "suppression_rate_exceeded"]
-    assert len(cap_violations) == 1, report["invariant_violations"]
-    assert cap_violations[0]["cap"] == 0.30
-    assert 0.39 < cap_violations[0]["ratio"] < 0.41
-    assert cap_violations[0]["suppressed"] == 4
-    assert cap_violations[0]["total"] == 10
-
-    # NOT un-applied (v1.4 contract)
+    assert len(cap_violations) == 0, (
+        "suppression_rate_exceeded must not fire in v2.0 (cap removed, spec §5)"
+    )
+    # All 4 suppressions applied cleanly
     assert report["suppressed_count"] == 4
     assert report["applied_count"] == 4
+    assert report["invariant_violations"] == []
     merged = json.loads((merged_dir / "schematic.json").read_text())
     suppressed_findings = [
         f for f in merged["findings"]
@@ -178,33 +179,10 @@ def test_hi8_suppression_rate_exceeded_is_logged_but_not_unapplied(tmp_path):
     assert len(suppressed_findings) == 4
 
 
-def test_hi8_suppression_at_cap_does_not_trip(tmp_path):
-    """At exactly 30% the cap doesn't trip (cap is strict > comparison).
-    Catches an off-by-one in the threshold semantics."""
-    from merge_annotations import merge
-
-    findings = [_make_finding(rule_id=f"X-{i:03d}", refs=(f"R{i}",),
-                              finding_id=f"sch:X-{i:03d}:r{i}")
-                for i in range(10)]
-    envelope = _make_envelope(findings)
-    # 3/10 = 30% exactly → strict-> comparison so this should NOT trip
-    annotations = [_make_annotation(f"sch:X-{i:03d}:r{i}", status="suppressed")
-                   for i in range(3)]
-    review = _make_review(annotations)
-    raw_dir, review_path, merged_dir = _stage(
-        tmp_path, {"schematic": envelope}, review
-    )
-
-    report = merge(raw_dir, review_path, merged_dir)
-    cap_violations = [v for v in report["invariant_violations"]
-                      if v["type"] == "suppression_rate_exceeded"]
-    assert len(cap_violations) == 0, "30% should not trip the cap"
-
-
-def test_hi8_zero_findings_no_cap_calculation_crash(tmp_path):
-    """Edge: total_findings=0 must not div-zero on the cap calculation.
-    Reviews can be empty; envelopes can be empty (analyzer produced no
-    findings); both shouldn't crash merge()."""
+def test_zero_findings_no_crash(tmp_path):
+    """Edge: empty envelopes and empty reviews must not crash merge().
+    (Kept from former test_hi8_zero_findings_no_cap_calculation_crash —
+    the empty-path correctness doesn't depend on cap presence.)"""
     from merge_annotations import merge
 
     envelope = _make_envelope([])
@@ -220,13 +198,18 @@ def test_hi8_zero_findings_no_cap_calculation_crash(tmp_path):
 
 
 # ===========================================================================
-# 2. Invalid annotations — HI-9a/b + orphan + mixed
+# 2. Annotations — orphan + mixed; authority guards REMOVED in v2.0 (spec §5)
 # ===========================================================================
+# test_hi9a_suppress_error_skipped_and_logged — DELETED (spec §5):
+#   suppress_error guard removed; suppressing error-severity findings now applies.
+#   Replaced by test_v2_suppressing_error_severity_applies below.
+# test_hi9b_suppress_datasheet_backed_skipped_and_logged — DELETED (spec §5):
+#   suppress_datasheet guard removed; suppressing datasheet-backed findings applies.
+#   Replaced by test_v2_suppressing_datasheet_backed_applies below.
 
-def test_hi9a_suppress_error_skipped_and_logged(tmp_path):
-    """HI-9a: an annotation that tries to suppress a severity=error finding
-    MUST be skipped (no llm_review applied) AND logged as
-    ``invariant_violations.type=suppress_error``."""
+def test_v2_suppressing_error_severity_applies(tmp_path):
+    """v2.0 (spec §5): suppressing a severity=error finding now applies the
+    overlay (no authority guard). No suppress_error invariant_violation produced."""
     from merge_annotations import merge
 
     err_finding = _make_finding(rule_id="E-001", refs=("U1",), severity="error")
@@ -240,21 +223,21 @@ def test_hi9a_suppress_error_skipped_and_logged(tmp_path):
     report = merge(raw_dir, review_path, merged_dir)
     err_violations = [v for v in report["invariant_violations"]
                       if v["type"] == "suppress_error"]
-    assert len(err_violations) == 1
-    assert err_violations[0]["finding_id"] == err_finding["finding_id"]
-
-    merged = json.loads((merged_dir / "schematic.json").read_text())
-    assert "llm_review" not in merged["findings"][0], (
-        "suppress-error annotation must NOT be applied"
+    assert len(err_violations) == 0, (
+        "suppress_error guard must not fire in v2.0 (cap removed, spec §5)"
     )
-    assert report["applied_count"] == 0
-    assert report["suppressed_count"] == 0
+    merged = json.loads((merged_dir / "schematic.json").read_text())
+    assert merged["findings"][0].get("llm_review", {}).get("status") == "suppressed", (
+        "suppress annotation must be applied to error-severity finding in v2.0"
+    )
+    assert report["applied_count"] == 1
+    assert report["suppressed_count"] == 1
+    assert report["invariant_violations"] == []
 
 
-def test_hi9b_suppress_datasheet_backed_skipped_and_logged(tmp_path):
-    """HI-9b: suppressing a confidence=datasheet-backed finding MUST be
-    skipped + logged. Datasheet-backed findings carry the highest evidence
-    weight; reviewer can't override them."""
+def test_v2_suppressing_datasheet_backed_applies(tmp_path):
+    """v2.0 (spec §5): suppressing a confidence=datasheet-backed finding now
+    applies the overlay. No suppress_datasheet invariant_violation produced."""
     from merge_annotations import merge
 
     ds_finding = _make_finding(rule_id="EX-001", refs=("C1",),
@@ -269,10 +252,13 @@ def test_hi9b_suppress_datasheet_backed_skipped_and_logged(tmp_path):
     report = merge(raw_dir, review_path, merged_dir)
     ds_violations = [v for v in report["invariant_violations"]
                      if v["type"] == "suppress_datasheet"]
-    assert len(ds_violations) == 1
+    assert len(ds_violations) == 0, (
+        "suppress_datasheet guard must not fire in v2.0 (cap removed, spec §5)"
+    )
     merged = json.loads((merged_dir / "schematic.json").read_text())
-    assert "llm_review" not in merged["findings"][0]
-    assert report["suppressed_count"] == 0
+    assert merged["findings"][0].get("llm_review", {}).get("status") == "suppressed"
+    assert report["suppressed_count"] == 1
+    assert report["invariant_violations"] == []
 
 
 def test_orphan_annotation_skipped_and_logged(tmp_path):
@@ -299,11 +285,11 @@ def test_orphan_annotation_skipped_and_logged(tmp_path):
     assert report["applied_count"] == 1, "real annotation must still apply"
 
 
-def test_mixed_violations_routed_correctly(tmp_path):
-    """All four annotation outcomes in one review: valid-applied, orphan,
-    HI-9a suppress-error, HI-9b suppress-datasheet. Each routes to the
-    correct bucket in the report — proves the per-annotation loop's
-    invariant routing isn't position-sensitive or order-sensitive."""
+def test_mixed_annotations_all_apply_except_orphan(tmp_path):
+    """v2.0 (spec §5): confirmed, suppressed-error, suppressed-datasheet all
+    apply. Only an orphan (unknown finding_id) is logged and skipped.
+    Renamed from test_mixed_violations_routed_correctly — the v1.4 suppress_error
+    and suppress_datasheet guard buckets are gone."""
     from merge_annotations import merge
 
     f_normal = _make_finding(rule_id="A-001", refs=("U1",))
@@ -324,11 +310,12 @@ def test_mixed_violations_routed_correctly(tmp_path):
     )
 
     report = merge(raw_dir, review_path, merged_dir)
-    assert report["applied_count"] == 1  # only normal-confirmed succeeded
-    assert report["suppressed_count"] == 0
+    # All 3 real findings applied (confirmed + 2 suppressed); orphan skipped
+    assert report["applied_count"] == 3
+    assert report["suppressed_count"] == 2
     assert len(report["orphan_annotations"]) == 1
-    types = sorted(v["type"] for v in report["invariant_violations"])
-    assert types == ["suppress_datasheet", "suppress_error"]
+    # No authority violations in v2.0
+    assert report["invariant_violations"] == []
 
 
 # ===========================================================================
@@ -523,9 +510,10 @@ def test_schema_validation_rejects_additional_property_at_root(tmp_path):
         merge(raw_dir, review_path, merged_dir)
 
 
-def test_schema_validation_rejects_reviewer_observations_over_cap(tmp_path):
-    """reviewer_observations has maxItems=5. More than 5 → schema fail.
-    Catches a runaway novel-finding emitter."""
+def test_schema_validation_allows_reviewer_observations_over_5(tmp_path):
+    """v2.0 (spec §5): reviewer_observations no longer has maxItems=5.
+    More than 5 observations must be accepted by the schema validator.
+    (Renamed from test_schema_validation_rejects_reviewer_observations_over_cap.)"""
     from merge_annotations import merge
 
     envelope = _make_envelope([])
@@ -537,13 +525,14 @@ def test_schema_validation_rejects_reviewer_observations_over_cap(tmp_path):
         "reasoning": "twenty-character-min reasoning text here.",
         "reviewed_at": "2026-04-27T12:00:00Z",
     }
-    review = _make_review([], observations=[obs] * 6)  # 6 > maxItems=5
+    review = _make_review([], observations=[obs] * 6)  # was rejected pre-v2.0; now ok
     raw_dir, review_path, merged_dir = _stage(
         tmp_path, {"schematic": envelope}, review
     )
 
-    with pytest.raises(Exception):
-        merge(raw_dir, review_path, merged_dir)
+    # Must not raise — 6 observations are valid under the v2.0 schema
+    report = merge(raw_dir, review_path, merged_dir)
+    assert report["reviewer_observations_count"] == 6
 
 
 # ===========================================================================

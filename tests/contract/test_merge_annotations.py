@@ -116,7 +116,10 @@ def test_merge_skips_orphan_annotation(tmp_path):
     assert "llm_review" not in merged_env["findings"][0]
 
 
-def test_merge_blocks_suppress_on_error_severity(tmp_path):
+def test_merge_applies_suppress_on_error_severity(tmp_path):
+    """v2.0 (spec §5): suppressing an error-severity finding applies the overlay.
+    No suppress_error invariant_violation produced.
+    (Renamed from test_merge_blocks_suppress_on_error_severity.)"""
     from merge_annotations import merge
     raw_dir = tmp_path / "analysis"
     raw_dir.mkdir()
@@ -132,7 +135,7 @@ def test_merge_blocks_suppress_on_error_severity(tmp_path):
         "annotations": [{
             "finding_id": "sch:AM-001:u1",
             "status": "suppressed",
-            "reason": "Reviewer attempts to suppress error-severity (HI-8 violation).",
+            "reason": "Reviewer suppresses error-severity finding (now allowed, spec §5).",
             "confidence": "high",
             "reviewed_at": "2026-04-27T12:00:00Z",
         }],
@@ -142,12 +145,17 @@ def test_merge_blocks_suppress_on_error_severity(tmp_path):
     review_path.write_text(json.dumps(review))
 
     report = merge(raw_dir, review_path, merged_dir)
-    assert any(v["type"] == "suppress_error" for v in report["invariant_violations"])
+    assert not any(v["type"] == "suppress_error" for v in report["invariant_violations"])
     merged_env = json.loads((merged_dir / "schematic.json").read_text())
-    assert "llm_review" not in merged_env["findings"][0]
+    assert merged_env["findings"][0].get("llm_review", {}).get("status") == "suppressed"
+    assert report["applied_count"] == 1
+    assert report["suppressed_count"] == 1
 
 
-def test_merge_blocks_suppress_on_datasheet_backed(tmp_path):
+def test_merge_applies_suppress_on_datasheet_backed(tmp_path):
+    """v2.0 (spec §5): suppressing a datasheet-backed finding applies the overlay.
+    No suppress_datasheet invariant_violation produced.
+    (Renamed from test_merge_blocks_suppress_on_datasheet_backed.)"""
     from merge_annotations import merge
     raw_dir = tmp_path / "analysis"
     raw_dir.mkdir()
@@ -163,7 +171,7 @@ def test_merge_blocks_suppress_on_datasheet_backed(tmp_path):
         "annotations": [{
             "finding_id": "sch:VM-001:u1",
             "status": "suppressed",
-            "reason": "Reviewer attempts to suppress datasheet-backed (HI-8 violation).",
+            "reason": "Reviewer suppresses datasheet-backed finding (now allowed, spec §5).",
             "confidence": "high",
             "reviewed_at": "2026-04-27T12:00:00Z",
         }],
@@ -173,10 +181,16 @@ def test_merge_blocks_suppress_on_datasheet_backed(tmp_path):
     review_path.write_text(json.dumps(review))
 
     report = merge(raw_dir, review_path, merged_dir)
-    assert any(v["type"] == "suppress_datasheet" for v in report["invariant_violations"])
+    assert not any(v["type"] == "suppress_datasheet" for v in report["invariant_violations"])
+    merged_env = json.loads((merged_dir / "schematic.json").read_text())
+    assert merged_env["findings"][0].get("llm_review", {}).get("status") == "suppressed"
+    assert report["suppressed_count"] == 1
 
 
-def test_merge_enforces_30pct_suppression_rate_limit(tmp_path):
+def test_merge_no_30pct_suppression_rate_limit(tmp_path):
+    """v2.0 (spec §5): the 30% suppression rate cap is removed. Suppressing
+    4/10 findings (40%) must not produce a suppression_rate_exceeded violation.
+    (Renamed from test_merge_enforces_30pct_suppression_rate_limit.)"""
     from merge_annotations import merge
     raw_dir = tmp_path / "analysis"
     raw_dir.mkdir()
@@ -186,11 +200,11 @@ def test_merge_enforces_30pct_suppression_rate_limit(tmp_path):
     env = _make_envelope(findings)
     (raw_dir / "schematic.json").write_text(json.dumps(env))
 
-    # 4 of 10 = 40% suppression -> exceeds 30% cap
+    # 4 of 10 = 40% suppression — was previously capped at 30%
     annotations = [{
         "finding_id": f"sch:R-1:u{i}",
         "status": "suppressed",
-        "reason": "Test suppression for rate-limit gating (>30%).",
+        "reason": "Test suppression — cap removed in v2.0 (spec §5).",
         "confidence": "medium",
         "reviewed_at": "2026-04-27T12:00:00Z",
     } for i in range(4)]
@@ -202,7 +216,9 @@ def test_merge_enforces_30pct_suppression_rate_limit(tmp_path):
 
     rate_violations = [v for v in report["invariant_violations"]
                         if v["type"] == "suppression_rate_exceeded"]
-    assert len(rate_violations) == 1
+    assert len(rate_violations) == 0
+    assert report["suppressed_count"] == 4
+    assert report["invariant_violations"] == []
 
 
 def test_merge_strip_round_trip_byte_identical(tmp_path):
