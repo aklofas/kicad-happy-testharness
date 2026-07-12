@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-07-11 (v2.0-dev gates: 56e5e2a→0d95d1a STRICT-CLEAN + mirror-fix 0d95d1a→f57277d CLEAN under conditional budget; harness v2.0-dev branch created, 5 commits unpushed)
+Last updated: 2026-07-12 (KH-337 fix gate: f57277d→a9504cf STRICT-CLEAN full corpus; KH-337 closed, KH-338..346 filed; tag-candidate tip a9504cf)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,32 @@ Last updated: 2026-07-11 (v2.0-dev gates: 56e5e2a→0d95d1a STRICT-CLEAN + mirro
 ---
 
 ## Completed batches
+
+### KH-337 fix gate `f57277d`→`a9504cf` STRICT-CLEAN; KH-337 closed, KH-338..346 filed (2026-07-12)
+
+Incremental full-corpus symmetric gate for the KH-337 fix (v2 extraction adapter +
+loud `extraction_not_verifiable` finding in `datasheet_verify.py`) — doubles as the
+fresh pre-tag gate at the new tag-candidate tip `a9504cf`. Scope pre-verified per the
+rc.2 lesson: exactly 1 commit, 2 files (`datasheet_verify.py` + `_smoke_v14_roundtrip.py`),
+neither on a corpus analyzer path (verifiers run only with `datasheets/extracted/`
+caches, which the corpus doesn't carry) → zero-delta budget.
+
+| Tier | Units | PASS | Disapp | Downgr | NewKnown | NewUnkn | WARN | FAIL |
+|------|------:|-----:|-------:|-------:|---------:|--------:|-----:|-----:|
+| smoke | 1,844 | 1,615 | 0 | 0 | 0 | 0 | 0 | 0 |
+| full corpus | 170,014 | 149,629 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Zero-delta budget met exactly in 2,001s (rollups `results/v20_kh337_gate/`). Same
+149,629 PASS as every prior benchmark — `a9504cf` fully Layer-1-neutral. **Pre-tag
+full-corpus requirement satisfied at `a9504cf`** (`f57277d` superseded).
+
+**Adoption:** 7 main-repo-authored KH-337 contract tests landed in
+`tests/contract/test_datasheet_verify_v14.py` (v2 abs-max/op-max violations, benign-v2
+not-verifiable, v1 byte-identity ×2, per-pin override, quality-low dedup). Contract
+suite **655/8/4** — exact handoff match; full tree 2,070 passed with only the 4 known
+pre-existing failures (TH-041 ×3, TH-042). KH-337 moved to FIXED.md; KH-338..346
+(SacMap rev2 run-5 batch + KH-337 review residual) filed open — 23 open issues
+(16 KH + 7 TH). Next KH number: KH-347.
 
 ### v2.0-dev gates + contract adoption — both CLEAN; harness v2.0-dev branch created (2026-07-11)
 
