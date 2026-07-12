@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-05-28 (SKILL_FEEDBACK-2 Layer-1 STRICT-CLEAN both tiers; --unit gate GREEN 1,286/0/0 after KH-335/336/TH-045 closed; harness pushed)
+Last updated: 2026-07-11 (v2.0-dev gates: 56e5e2a→0d95d1a STRICT-CLEAN + mirror-fix 0d95d1a→f57277d CLEAN under conditional budget; harness v2.0-dev branch created, 5 commits unpushed)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,42 @@ Last updated: 2026-05-28 (SKILL_FEEDBACK-2 Layer-1 STRICT-CLEAN both tiers; --un
 ---
 
 ## Completed batches
+
+### v2.0-dev gates + contract adoption — both CLEAN; harness v2.0-dev branch created (2026-07-11)
+
+Two full-corpus symmetric gates against main-repo `v2.0-dev` (both sides
+`--only-deterministic`), plus the v2.0 contract-test adoption, all on the new
+harness `v2.0-dev` branch (from `v1.4-dev` tip `c4ff56ff083`; 5 commits
+`4460acb2a69..66c6f18638b`, unpushed pending review).
+
+**Gate 1 — `56e5e2a` (v1.4-dev tip) vs `0d95d1a` (v2.0-dev, 13 commits): STRICT-CLEAN both tiers.**
+
+| Tier | Units | PASS | Disapp | Downgr | NewKnown | NewUnkn | WARN | FAIL |
+|------|------:|-----:|-------:|-------:|---------:|--------:|-----:|-----:|
+| quick_200 | 41,255 | 35,929 | 0 | 0 | 0 | 0 | 0 | 0 |
+| full corpus | 170,014 | 149,629 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Zero-delta budget met exactly (rollups `results/v20_gate/`). Same 149,629 PASS
+as the rc.2-vs-rc.3 and SF2 benchmarks.
+
+**Gate 2 — `0d95d1a` vs `f57277d` (mirror+rotated pin-transform fix): CLEAN under
+conditional budget.** Raw: 146,469 PASS / 14 WARN / 3,146 FAIL, 53,620 disappeared /
+0 downgrades / 23,290 NewUnknown. Adjudicated: 3,167 delta units across 1,074 repos,
+every one carrying a `(mirror x)`+`(at .. 90|270)` symbol (0 violations); pcb/gerber/
+cross_analysis deltas exactly 0; deltas are net-keyed disappeared+new churn from
+corrected pin_nets. Artifacts incl. `affected_repos.txt` in `results/v20_mirror_gate/`.
+Pre-tag full-corpus requirement satisfied at tag-candidate tip `f57277d`.
+
+**Adoption:** main-repo-authored contract set (30 new tests) reviewed + committed;
+full-tree run exposed 9 more v1.4 cap/shape locks outside `tests/contract/` (B-series
++ tests/datasheets) — flipped (RUNBOOK 17a bullet added). `regression_diff.py` gained
+the permanent deep_review exclusion (spec §7) + `NEW_V14_RULES += BL-001` (set now
+CLOSED per spec §2). Mirror oracle fixture (`tests/fixtures/mirror-oracle/` + 48-assignment
+contract test, PR #27/issue #17): 48/48 at `f57277d`, 16/48 divergent (U5/U6/U11/U12)
+at any pre-fix SHA. Contract suite 648/8/4; `run_tests.py --unit` 1,286/0/0 vs v2 checkout.
+
+_(2026-07-12 follow-up, user-side: SacMap rev2 run-5 external review filed KH-337..KH-345
+— KH-337 is P0 v2.0 tag-blocking; see ISSUES.md. Tag waits on that fix cycle.)_
 
 ### SKILL_FEEDBACK-2 (report-depth + Layer 2) validated — Layer-1 STRICT-CLEAN, --unit gate GREEN (2026-05-28)
 

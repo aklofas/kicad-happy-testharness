@@ -2660,8 +2660,16 @@ is **too strict** for v1.4-vs-v1.4 because:
    `disappeared` + `new_unknown` on the SAME rule_id rather than a
    `severity_change` row. Net is 0 but auto-PASS can't recognize this.
 
-**Manual adjudication recipe:** re-aggregate per-rule_id net deltas from
-the raw `snap.json` pairs (NOT the rollup's 5-per-unit truncated sample)
+**Manual adjudication recipe:** the fastest source is the per-unit diff
+records at `<gate-dir>/diff/<analyzer>/<owner>/<repo>/<unit>.json` — each
+nests the full regression_diff report under a `_record` key (`verdict`,
+`disappeared[]`, `downgrades[]`, `new_{known,upgraded,unknown}_rule_ids[]`,
+per-class counts). For conditional budgets ("deltas allowed only in repos
+with property X"), walk these records, collect delta repos, and verify the
+property per repo (worked example: the 2026-07-11 mirror-fix gate greps
+each delta repo's `.kicad_sch` for `(at .. 90|270)`+`(mirror x)`; 1,074
+repos, 0 violations). For deeper per-rule dives, re-aggregate from the raw
+`snap.json` pairs (NOT the rollup's 5-per-unit truncated sample)
 under `<gate-dir>/v131/<analyzer>/<repo>/<key>/snap.json` and the matching
 `<gate-dir>/v14/...`. Count `Counter(f.get('rule_id') for f in
 envelope.get('findings', []))` on both sides; compare net delta against
