@@ -55,6 +55,11 @@ NEW_V14_RULES = {
     # floor (LA-004), source-via-bridged-jumper info (RS-003), lifecycle
     # audit "not attached" info reminder (LC-007).
     'LA-004', 'RS-003', 'LC-007',
+    # rc.3 addition (Phase A-D F5, 8e63900): high-DNP-rate BOM audit.
+    # Only matters for gates whose baseline predates BL-001.
+    'BL-001',
+    # This set is CLOSED as of v2.0: per-rule budgeting for new heuristic
+    # rule families is retired (v2.0 spec §2). Do not add v2.0+ entries.
 }
 
 # Phase 4b upgraded detectors whose datasheet-backed branch is gated off
@@ -135,15 +140,40 @@ def _canon_key(f):
     )
 
 
+def is_deep_review_doc(doc):
+    """True if ``doc`` is a deep_review.json document (v2.0 spec §3.C).
+
+    deep_review.json is LLM-written and NON-DETERMINISTIC BY DESIGN — it is
+    permanently excluded from regression-diff scope (v2.0 spec §7,
+    load-bearing). Shape: no ``analyzer_type``; carries a ``quarantined``
+    list next to ``findings``.
+    """
+    if not isinstance(doc, dict):
+        return False
+    if doc.get('analyzer_type'):
+        return False
+    return 'quarantined' in doc
+
+
 def _collect_observations(envelope):
     """Return findings ∪ assessments. Handles v1.2 split: assessments
     carry info-level rule_ids (e.g. TH-DET) that lived inside findings[]
     in v1.3. Comparing the union avoids false 'disappeared' reports for
     findings that simply moved key.
+
+    deep_review findings (detector='deep_review' or finding_id prefixed
+    'deep_review:') are dropped: non-deterministic by design, permanently
+    out of diff scope (v2.0 spec §7) even if a future artifact merges
+    them into an envelope.
     """
     obs = list(envelope.get('findings') or [])
     obs.extend(envelope.get('assessments') or [])
-    return obs
+    return [
+        f for f in obs
+        if not (isinstance(f, dict) and (
+            f.get('detector') == 'deep_review'
+            or str(f.get('finding_id') or '').startswith('deep_review:')))
+    ]
 
 
 def _index(observations):
@@ -234,6 +264,11 @@ def main(argv=None):
 
     before = json.loads(Path(args.before).read_text())
     after = json.loads(Path(args.after).read_text())
+
+    if is_deep_review_doc(before) or is_deep_review_doc(after):
+        print("SKIP: deep_review.json is excluded from regression-diff "
+              "scope (non-deterministic by design, v2.0 spec §7)")
+        sys.exit(0)
 
     before_obs = _collect_observations(before)
     after_obs = _collect_observations(after)

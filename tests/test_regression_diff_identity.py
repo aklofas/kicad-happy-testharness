@@ -34,8 +34,10 @@ if str(HARNESS_ROOT) not in sys.path:
 from regression.regression_diff import (  # noqa: E402
     _canon_key,
     _canon_refs,
+    _collect_observations,
     _norm_summary,
     diff,
+    is_deep_review_doc,
 )
 
 
@@ -257,3 +259,44 @@ def test_norm_summary_sorts_comma_runs():
 def test_norm_summary_truncates_to_120_chars():
     long = "x" * 200
     assert len(_norm_summary(long)) == 120
+
+
+# ---------------------------------------------------------------------------
+# deep_review exclusion — PERMANENT, load-bearing (v2.0 spec §7)
+# ---------------------------------------------------------------------------
+
+def test_deep_review_doc_is_detected_and_envelope_is_not():
+    dr_doc = {
+        "schema_version": "1.0",
+        "produced_for_run_id": "test-run",
+        "findings": [],
+        "quarantined": [],
+    }
+    envelope = {
+        "analyzer_type": "schematic",
+        "findings": [],
+        "assessments": [],
+    }
+    assert is_deep_review_doc(dr_doc) is True
+    assert is_deep_review_doc(envelope) is False
+
+
+def test_collect_observations_drops_deep_review_findings():
+    """deep_review findings are non-deterministic by design and must never
+    enter diff scope, even if a future artifact merges them into an
+    envelope's findings[] (v2.0 spec §7)."""
+    envelope = {
+        "analyzer_type": "schematic",
+        "findings": [
+            {"rule_id": "VD-001", "detector": "detect_voltage_dividers",
+             "components": ["R1"], "summary": "divider"},
+            {"detector": "deep_review", "category": "power_input",
+             "finding_id": "deep_review:abc123def456",
+             "components": ["U1"], "summary": "LLM-written finding"},
+            {"finding_id": "deep_review:0123456789ab#1",
+             "components": ["U2"], "summary": "collision-suffixed variant"},
+        ],
+    }
+    obs = _collect_observations(envelope)
+    assert len(obs) == 1
+    assert obs[0]["rule_id"] == "VD-001"
