@@ -1744,6 +1744,10 @@ Before executing, understand:
 - How many phases the plan has
 - What pass criteria each phase defines
 - Whether any phases require specific repos, API credentials, or tools (e.g., ngspice)
+- If the plan reports a suite count (e.g., "646 passed"), reproduce it AND run the
+  full `tests/` tree — behavior locks live outside `tests/contract/` too (root
+  B-series files, `tests/datasheets/` shape-locks). The 2026-07-11 v2.0 adoption
+  found 9 stale v1.4 cap/shape locks this way that the contract-only count missed.
 
 ### 17b. Check prerequisites
 
