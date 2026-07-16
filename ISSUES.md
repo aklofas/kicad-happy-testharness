@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-07-12
+Last updated: 2026-07-16
 
 ---
 
@@ -34,10 +34,10 @@ Last updated: 2026-07-12
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-354** (KH-349/350 filed 2026-07-13; KH-351..353
-fixed-on-arrival 2026-07-15, see FIXED.md). Next TH number: **TH-046**.
+maximum. Next KH number: **KH-357** (KH-354..356 filed 2026-07-16 from v2.1
+gate adjudication). Next TH number: **TH-046**.
 
-> 24 open issues.
+> 17 open issues.
 
 ---
 
@@ -206,189 +206,79 @@ reviewer flagged this as a concern but did not run the comparison.
 
 ---
 
-### KH-338: usb_compliance check failures never become findings[]; vbus_esd_protection false-fails on unnamed VBUS nets
+### KH-354: `audit_pwr_flags` never credits PWR_FLAG — `pwr_flag_warnings` false-positives on every flagged rail
 
-**Severity:** HIGH
-**File:** `skills/kicad/scripts/analyze_schematic.py` (~8162-8163, stored ~9256)
-**Discovered:** 2026-07-12 (SacMap rev2 run-5)
+**Severity:** MEDIUM
+**File:** `skills/kicad/scripts/analyze_schematic.py:4847` (`audit_pwr_flags`)
+**Discovered:** 2026-07-16 (v2.1 gate adjudication, Siegmundshof93/kicadPCBs)
 
-**Symptom:** (a) `usb_compliance.connectors[].checks` results (e.g. `vbus_decoupling:
-"fail"` — a genuine missing-bulk-cap defect) live only in the aux section; sole
-consumer `domain_detectors.py:5639` ignores individual checks. The most important
-electrical finding on the board never reached findings[]/summarize. (b)
-`vbus_esd_protection: "fail"` while `usb_esd_ic: "pass"`: the VBUS net is unnamed
-(`__unnamed_10`, display_name `U4.VBUS`); check resolves VBUS by net NAME or counts
-only discrete TVS parts, so the ESD array's own VBUS pin (pin_name "VBUS",
-connected_to J1.1) isn't credited.
+**Symptom:** `flagged_nets` is built by scanning `net_info["pins"]` for the
+PWR_FLAG component's reference, but PWR_FLAG components are never registered
+in `pins[]` (pre-f50aa6e they were skipped from the net map entirely;
+post-f50aa6e they register as `source: "pwr_flag"` points, still not pins).
+So `flagged_nets` is always empty and every power_in-only rail gets
+"Power rail 'X' has power_in pins but no power_out or PWR_FLAG — ERC will
+flag this" even when a PWR_FLAG is present. Repro:
+`repos/Siegmundshof93/kicadPCBs/realPayload/power_management.kicad_sch` —
+`nets.+3.3V.has_pwr_flag: true` yet pwr_flag_warnings still lists +3.3V.
 
-**Fix sketch:** emit each failed check as a rich finding via make_finding (new rule
-ids); resolve VBUS by connector-pin connectivity + pin_name, not net name.
+**Impact:** False-positive ERC warning on any design that uses PWR_FLAG
+(the exact pattern the warning tells users to adopt). Same root cause the
+f50aa6e RS-001 fix addressed; this consumer was not updated.
 
----
-
-### KH-339: CP-003 touch-pad clearance measured to zone outline bbox, not filled copper
-
-**Severity:** MEDIUM (false positive; SKILL.md itself warns "zone outline != actual copper")
-**File:** `skills/kicad/scripts/analyze_pcb.py:5413`
-**Discovered:** 2026-07-12 (SacMap rev2 run-5: reported 0.0mm, actual filled gap 1.000mm)
-
-**Symptom:** uses `gz.get("outline_bbox")`; `filled_bbox` + zone_fills exist but unused.
-
-**Fix sketch:** measure to filled_bbox / nearest filled-polygon edge when fill data
-available; fall back to outline with confidence downgrade.
+**Fix sketch:** replace the dead `flagged_nets` scan with
+`net_info.get("has_pwr_flag")`.
 
 ---
 
-### KH-340: VP-001 via-in-pad uses bounding-box hit-test, no pad shape/rotation
-
-**Severity:** MEDIUM (false positive)
-**File:** `skills/kicad/scripts/analyze_pcb.py:5830-5844`
-**Discovered:** 2026-07-12 (SacMap rev2 run-5: via 8.16mm radial from 7.5mm-radius circular pad flagged in-pad)
-
-**Fix sketch:** point-in-shape test for circle/oval/roundrect + pad rotation.
-
----
-
-### KH-341: DC-003 decoupling-cap-far-from-via lacks same-layer-pour / 2-layer suppression
-
-**Severity:** MEDIUM (6 false positives on a 2-layer board)
-**File:** `skills/emc/scripts/emc_rules.py:584-631`
-**Discovered:** 2026-07-12 (SacMap rev2 run-5)
-
-**Symptom:** flags cap >3mm from nearest via even when the pad ties directly into a
-same-layer pour of the same net (no via needed).
-
-**Fix sketch:** suppress/demote when pad abuts same-layer same-net zone, or when
-copper_layers_used == 2.
-
----
-
-### KH-342: sleep_current_audit scores divider legs independently and RC-filter pull-ups as DC loads
-
-**Severity:** MEDIUM (overstated sleep current)
-**File:** `skills/kicad/scripts/analyze_schematic.py:6280-6324`
-**Discovered:** 2026-07-12 (SacMap rev2 run-5: R7 EN-RC filter scored 330uA, true ~0;
-R10 scored via 680K leg alone, true 3.98uA through 680K+150K)
-
-**Fix sketch:** detect series-R + shunt-C (steady-state DC ~ 0); sum divider legs as
-one V/(R_top+R_bot) path.
-
----
-
-### KH-343: rail-voltage inference maps any net containing "USB" to 5.0V — including data lines
-
-**Severity:** MEDIUM (poisons derating + datasheet voltage checks downstream)
-**File:** `skills/kicad/scripts/analyze_schematic.py:4719` AND `skills/kicad/scripts/signal_detectors.py:1547` (two copies)
-**Discovered:** 2026-07-12 (SacMap rev2 run-5: rail_voltages contains USB_DM: 5.0, USB_DP: 5.0)
-
-**Fix sketch:** tighten to VBUS/+5V_USB; exclude _DM/_DP/_D+/_D-/DPLUS/DMINUS
-suffixes. Fix BOTH copies (and consider deduplicating the helper).
-
----
-
-### KH-344: PM-002 emits "move further from board edge" for negative courtyard distances
-
-**Severity:** LOW (nonsense recommendation on intentional overhangs)
-**File:** `skills/kicad/scripts/analyze_pcb.py:3579` (RF/edge-mount demotion at 3549-3557 exists but recommendation text still fires)
-**Discovered:** 2026-07-12 (SacMap rev2 run-5: U1 antenna courtyard at -14.51mm told to move >=1.0mm from edge)
-
-**Fix sketch:** for min_edge < 0 reframe as "courtyard overhangs board edge by X mm";
-suppress the move-it recommendation.
-
----
-
-### KH-345: CLI/doc drift — simulate_subcircuits has no --text; lifecycle --temp-range space form fails
+### KH-355: regulator FB-pin selection is first-match over dict order — arbitrary channel on multi-channel regulators
 
 **Severity:** LOW
-**File:** `skills/spice/scripts/simulate_subcircuits.py`; `skills/kicad/scripts/lifecycle_audit.py:951`; kicad SKILL.md
-**Discovered:** 2026-07-12 (SacMap rev2 run-5)
+**File:** `skills/kicad/scripts/signal_detectors.py:1603-1610`
+**Discovered:** 2026-07-16 (v2.1 gate adjudication, Siegmundshof93/kicadPCBs)
 
-**Symptom:** SKILL.md implies all analyzers support --text; simulate_subcircuits does
-not. `--temp-range "-40,105"` (space form) is parsed as a flag by argparse; only
-`--temp-range=...` works (already documented in help text).
+**Symptom:** `for pname ... in ic_pins.items(): if pn_parts & {"FB","VFB","ADJ","VADJ"}: if not fb_pin: fb_pin = ...`
+picks the first FB/ADJ-named pin in dict insertion order. On dual-channel
+regulators (e.g. U4 with ADJ1/ADJ2 on Siegmundshof93 power_management),
+only one channel is analyzed and WHICH one depends on net-map enumeration
+order: f50aa6e's pwr_flag point registration flipped the pick from ADJ1
+(divider on __unnamed_0 → heuristic Vout=1.62V seeding rail_voltages) to
+ADJ2 (+1V2, no divider → no estimate). Neither pick is wrong per se, but
+the output is order-coupled and single-channel.
 
-**Fix sketch:** add --text to simulate_subcircuits (or correct the doc claim); doc-only
-fix acceptable for --temp-range.
+**Impact:** DO-DET regulator Vout estimates (and their rail_voltages
+seeding) appear/disappear across otherwise-unrelated topology changes;
+multi-channel regulators only ever get one channel estimated.
 
----
-
-### KH-346: per-pin absolute_max SpecValue list read is unit-blind (latent false-CRITICAL)
-
-**Severity:** LOW (latent — no extraction populates per-pin absolute_max today; becomes MEDIUM the day one does)
-**File:** `skills/datasheets/scripts/datasheet_verify.py` (`_spec_max` consumer in `_v1_view` per-pin path, ~L152)
-**Discovered:** 2026-07-12 (KH-337 review round 2, residual)
-
-**Symptom:** pinout.schema.json allows per-pin `absolute_max` to mix voltage and
-current SpecValues; `_spec_max` takes `sv_list[0].max` blind. A current rating
-first in the list (e.g. max=0.025, unit="A") would be compared against net VOLTS
--> false CRITICAL `pin_voltage_abs_max_exceeded` — worst noise class for a
-correctness-floor tool.
-
-**Fix sketch:** one-line unit filter — first entry with `unit == "V"` instead of
-`[0]`. Must land before extraction prompts start populating per-pin ratings.
+**Fix sketch:** iterate FB/ADJ pins deterministically (sorted) and/or
+analyze each channel's divider independently.
 
 ---
 
-### KH-348: lifecycle_audit `--only lcsc` returns all-unknown — LCSC/jlcsearch exposes no lifecycle status
+### KH-356: KH-341 `_pad_in_same_net_pour` reads stripped `footprints[].pads` — pour-connected suppression is dead code in the real pipeline
 
-**Severity:** LOW (misleading "audit ran, board clean" appearance)
-**File:** `skills/kicad/scripts/lifecycle_audit.py`
-**Discovered:** 2026-07-12 (SacMap rev2 run-6: 20/20 MPNs `unknown`, including parts LCSC definitely stocks — TPS61023DRLR, USBLC6-2SC6, ESP32-S3-WROOM-1-N4)
+**Severity:** MEDIUM
+**File:** `skills/emc/scripts/emc_rules.py` (`check_decoupling_via_distance`, `_pad_in_same_net_pour`)
+**Discovered:** 2026-07-16 (v2.1 gate adjudication)
 
-**Symptom:** the jlcsearch community API has no lifecycle/obsolescence field, so an
-LCSC-only audit can never produce a real status; output is indistinguishable from
-"audited and fine" unless the reader notices every row is `unknown`.
+**Symptom:** `_pad_in_same_net_pour` iterates `fp.get('pads', [])` expecting
+`net_name`/`abs_x`/`abs_y` keys, but `analyze_pcb.py` strips `pads` from every
+footprint in output JSON (including `--full` mode — verified on
+`results/outputs/pcb/mjbots/moteus/hw_c1_r1.0_moteus_c1.kicad_pcb.json`;
+consumers get only `pad_nets`/`connected_nets`). The EMC analyzer consumes
+that output JSON, so the KH-341 per-cap pour-connected skip never fires in
+any real run — only the 2-layer early-return half of KH-341 is functional.
+`tests/contract/test_kh341_dc003_suppression.py` passes because its fixture
+synthesizes `pads` with `abs_x`/`abs_y` (fields real outputs never carry) —
+the same anti-pattern as the F6 IO-001 P0 (2026-05-26).
 
-**Fix sketch:** when the effective source set is LCSC-only, say so up front
-(capability note / explicit "LCSC does not expose lifecycle status — use DigiKey or
-element14 credentials for a real audit" in the summary) instead of emitting 20
-LC-004 unknowns. Keep the per-part rows for temp-range data if present.
+**Impact:** DC-003 false positives persist on ≥4-layer boards where
+decoupling caps connect through a same-layer pour — half the KH-341 intent.
 
----
-
-### KH-349: VP-001 flags vias in copper-less pads (all technical layers cleared)
-
-**Severity:** MEDIUM (false positive; GitHub #28)
-**File:** `skills/kicad/scripts/analyze_pcb.py:5810-5836` (`analyze_via_in_pad`)
-**Discovered:** 2026-07-13 (GitHub #28, ademuri rfboard: RFM69 module pads
-"disabled" by clearing all technical layers — `(pad "" smd rect (layers
-"Dwgs.User"))`; 4 of 8 VP-001 findings on the board are these pads)
-
-**Symptom:** the SMD-pad collector filters only on `pad.type == "smd"` and
-hit-tests via centers against the width/height bbox; it never inspects the
-pad's layer list, so a pad with no copper layer still catches vias.
-Reproduced on the attached board: `U2:''` ×4 false, while `J3:2/3`, `U2:1`,
-`U3:6` sit on real F.Cu/B.Cu pads (genuine via-in-pad, not part of this bug).
-
-**Fix sketch:** skip pads whose `layers` contain no copper (`*.Cu` / `F.Cu` /
-`B.Cu`). Pad layers are already parsed into `pad_info["layers"]`
-(analyze_pcb.py:734) — filter is one condition in the collector loop.
-Natural batch-mate for KH-340 (same collector, shape/rotation hit-test).
-Corpus impact: disappearing VP-001 findings on boards using the
-cleared-layers pad trick — budgeted gate.
-
----
-
-### KH-350: courtyard overlap uses single AABB per footprint — notched courtyards (QFP cross shape) false-positive
-
-**Severity:** MEDIUM (false positive at error severity; GitHub #29)
-**File:** `skills/kicad/scripts/analyze_pcb.py:775-862` (courtyard extraction) + `:3451` (`analyze_component_placement`)
-**Discovered:** 2026-07-13 (GitHub #29, ademuri rfboard: LQFP-32 U1 vs R2 in
-the corner notch — reported 1.41mm² overlap at error severity)
-
-**Symptom:** extraction collapses all CrtYd primitives to one axis-aligned
-bbox (`fp_entry["courtyard"]` = min/max only), filling in the notched corners
-of cross-shaped QFP courtyards. Verified against the true 20-segment U1
-courtyard polygon: R2's real overlap is 0.000mm² — the reported 1.41mm² is
-entirely the bbox artifact. Same board: U1/C28 0.984mm² (also corner-notch
-artifact, lands just under the 1.0mm² error threshold → warning).
-
-**Fix sketch:** preserve courtyard geometry beyond the AABB — chain CrtYd
-fp_line/fp_rect/fp_poly primitives into polygon(s), do polygon-polygon
-intersection area (sampling like `copper_connected` is an acceptable stdlib
-fallback). Keep AABB as a cheap pre-filter. Corpus impact: disappearing/
-downgraded courtyard-overlap findings on QFP-adjacent placements — budgeted
-gate.
+**Fix sketch:** derive pad positions from data that survives output
+(export pad geometry needed by consumers, or approximate with footprint
+x/y + `pad_nets`), and re-shape the contract test around a real corpus
+fixture per the harness real-fixtures rule.
 
 ---
 
@@ -684,4 +574,4 @@ release-quality impact.
 
 ## Priority Queue
 
-_19 open KH-* + 7 open TH-* issues. KH-338 HIGH; KH-339–KH-343 + KH-349/KH-350 MEDIUM; remainder LOW._
+_7 open KH-* + 7 open TH-* issues, all LOW (datasheets-infra backlog KH-328..334 + harness-side TH items). The v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15 — see FIXED.md._
