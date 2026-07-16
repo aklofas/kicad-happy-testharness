@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-07-12 (KH-347 fix gate: a9504cf→b4cf24c STRICT-CLEAN full corpus; KH-347 closed, KH-348 filed; tag-candidate tip b4cf24c)
+Last updated: 2026-07-15 (anyasabo fork-fix port adopted: 3 contract tests + fixture vs main-repo v2.1-dev 2067260; KH-351..353 fixed-on-arrival; v2.1 gate budget classes added)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,30 @@ Last updated: 2026-07-12 (KH-347 fix gate: a9504cf→b4cf24c STRICT-CLEAN full c
 ---
 
 ## Completed batches
+
+### anyasabo fork-fix port adopted; KH-351..353 fixed-on-arrival; v2.1 budget classes added (2026-07-15)
+
+Adopted 3 regression tests + 1 fixture from the `anyasabo/kicad-happy` fork
+(sources pinned @ `23c5c31` / `0a2b1c7` / `16c6265`), covering the 3 detector
+fixes ported to main-repo `v2.1-dev` (`036c6bf` NC-marker propagation, `d657493`
+XV-002 never-synced skip, `f50aa6e`+`2067260` RS-001 PWR_FLAG + `has_pwr_flag`
+declaration). Path-adapted to the `tests/contract/_paths.py` bridge; fixture →
+`tests/fixtures/nc_marker_on_multipin_net.kicad_sch`.
+
+- **RED→GREEN verified locally**: 5/7 tests FAIL at pre-fix `0c0ba34` (worktree),
+  7/7 PASS at v2.1-dev tip `2067260` (the 2 pre-fix passes are the unchanged-invariant
+  tests: real-mismatch-still-fires + whitespace suppression).
+- **Contract suite vs `2067260`**: 666 passed / 8 skipped / 4 xfailed (659 + 7 new,
+  exact match — no stale locks tripped by v2.1-dev).
+- **Bookkeeping**: KH-351/352/353 recorded directly in FIXED.md (fixed-on-arrival
+  externals, credit anyasabo); next KH number → KH-354.
+- **v2.1 gate budget classes added** (additive to #24 PS-002/GP-001/RP-002 and
+  KH-349/350 budgets, recorded in shared LOG): XV-002 disappearances on never-synced
+  boards (PCB value == footprint name or `lib:`-suffix); RS-001/RS-002 family
+  disappearances on PWR_FLAG rails; `ic_pin_analysis` `pins[].net` churn
+  NO_CONNECT→real-net on multi-pin nets with stray NC markers; `has_pwr_flag`
+  additive key on all schematic nets → expect assertion/schema-inventory drift until
+  corpus regen (do NOT relax schema).
 
 ### KH-347 fix gate `a9504cf`→`b4cf24c` STRICT-CLEAN; KH-347 closed (2026-07-12, later)
 

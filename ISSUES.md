@@ -34,7 +34,8 @@ Last updated: 2026-07-12
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-349**. Next TH number: **TH-046**.
+maximum. Next KH number: **KH-354** (KH-349/350 filed 2026-07-13; KH-351..353
+fixed-on-arrival 2026-07-15, see FIXED.md). Next TH number: **TH-046**.
 
 > 24 open issues.
 
@@ -345,6 +346,52 @@ LC-004 unknowns. Keep the per-part rows for temp-range data if present.
 
 ---
 
+### KH-349: VP-001 flags vias in copper-less pads (all technical layers cleared)
+
+**Severity:** MEDIUM (false positive; GitHub #28)
+**File:** `skills/kicad/scripts/analyze_pcb.py:5810-5836` (`analyze_via_in_pad`)
+**Discovered:** 2026-07-13 (GitHub #28, ademuri rfboard: RFM69 module pads
+"disabled" by clearing all technical layers — `(pad "" smd rect (layers
+"Dwgs.User"))`; 4 of 8 VP-001 findings on the board are these pads)
+
+**Symptom:** the SMD-pad collector filters only on `pad.type == "smd"` and
+hit-tests via centers against the width/height bbox; it never inspects the
+pad's layer list, so a pad with no copper layer still catches vias.
+Reproduced on the attached board: `U2:''` ×4 false, while `J3:2/3`, `U2:1`,
+`U3:6` sit on real F.Cu/B.Cu pads (genuine via-in-pad, not part of this bug).
+
+**Fix sketch:** skip pads whose `layers` contain no copper (`*.Cu` / `F.Cu` /
+`B.Cu`). Pad layers are already parsed into `pad_info["layers"]`
+(analyze_pcb.py:734) — filter is one condition in the collector loop.
+Natural batch-mate for KH-340 (same collector, shape/rotation hit-test).
+Corpus impact: disappearing VP-001 findings on boards using the
+cleared-layers pad trick — budgeted gate.
+
+---
+
+### KH-350: courtyard overlap uses single AABB per footprint — notched courtyards (QFP cross shape) false-positive
+
+**Severity:** MEDIUM (false positive at error severity; GitHub #29)
+**File:** `skills/kicad/scripts/analyze_pcb.py:775-862` (courtyard extraction) + `:3451` (`analyze_component_placement`)
+**Discovered:** 2026-07-13 (GitHub #29, ademuri rfboard: LQFP-32 U1 vs R2 in
+the corner notch — reported 1.41mm² overlap at error severity)
+
+**Symptom:** extraction collapses all CrtYd primitives to one axis-aligned
+bbox (`fp_entry["courtyard"]` = min/max only), filling in the notched corners
+of cross-shaped QFP courtyards. Verified against the true 20-segment U1
+courtyard polygon: R2's real overlap is 0.000mm² — the reported 1.41mm² is
+entirely the bbox artifact. Same board: U1/C28 0.984mm² (also corner-notch
+artifact, lands just under the 1.0mm² error threshold → warning).
+
+**Fix sketch:** preserve courtyard geometry beyond the AABB — chain CrtYd
+fp_line/fp_rect/fp_poly primitives into polygon(s), do polygon-polygon
+intersection area (sampling like `copper_connected` is an acceptable stdlib
+fallback). Keep AABB as a cheap pre-filter. Corpus impact: disappearing/
+downgraded courtyard-overlap findings on QFP-adjacent placements — budgeted
+gate.
+
+---
+
 ## Test Harness Issues
 
 ### TH-037: `add_repos.py` raises `KeyError: 'stats'` on fresh runs
@@ -637,4 +684,4 @@ release-quality impact.
 
 ## Priority Queue
 
-_17 open KH-* + 7 open TH-* issues. KH-338 HIGH; KH-339–KH-343 MEDIUM; remainder LOW._
+_19 open KH-* + 7 open TH-* issues. KH-338 HIGH; KH-339–KH-343 + KH-349/KH-350 MEDIUM; remainder LOW._

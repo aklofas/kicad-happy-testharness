@@ -11,6 +11,64 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-07-15 — KH-351 / KH-352 / KH-353 (anyasabo fork-fix port, fixed on arrival at main-repo v2.1-dev)
+
+Three detector fixes authored by **anyasabo** (GitHub fork `anyasabo/kicad-happy`),
+ported to main-repo `v2.1-dev` as `036c6bf` / `d657493` / `f50aa6e` (+ `2067260`
+schema declaration). Filed directly here — the bugs arrived already fixed. Harness
+adopted 3 fork tests + 1 fixture into `tests/contract/` (7 test functions), all
+verified RED at pre-fix `0c0ba34` → GREEN at `2067260` locally.
+
+### KH-351 (MEDIUM): stray NC marker on a multi-pin net flips all its pins to NO_CONNECT
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py`
+- **Root cause:** the net-level `no_connect` flag is set when *any* point in a net's
+  union-find group is an NC marker, and `ic_pin_analysis` consumed that flag directly —
+  so a single stray NC marker absorbed into a rail (e.g. VBUS/GND) reported every
+  IC/connector pin on that rail as NO_CONNECT.
+- **Fix (main-repo `036c6bf`, author anyasabo):** the net-level flag is only honored
+  for single-pin nets (`has_no_connect`); multi-pin nets report the real net name.
+- **Verification:** `tests/contract/test_no_connect_propagation.py` +
+  `tests/fixtures/nc_marker_on_multipin_net.kicad_sch` (fork @ `23c5c31`) — a 2-pin
+  connector on VBUS with a stray NC marker joined via same-name label; asserts both
+  J1 pins report `VBUS`, not NO_CONNECT. RED at `0c0ba34` → GREEN at `2067260`.
+- **Gate budget:** `ic_pin_analysis` `pins[].net` churn NO_CONNECT → real net name on
+  multi-pin nets carrying a stray NC marker (downstream pin-net consumers may shift).
+
+### KH-352 (LOW): XV-002 value-mismatch false positive on never-synced boards
+
+- **File:** `skills/kicad/scripts/cross_analysis.py`
+- **Root cause:** boards whose PCB `value` field was never synced from the schematic
+  carry the footprint name (or its `lib:`-prefixed form) as the value — XV-002 flagged
+  every such component as a schematic↔PCB value mismatch.
+- **Fix (main-repo `d657493`, author anyasabo):** skip XV-002 when the PCB value equals
+  the footprint name or its `lib:` suffix; genuine mismatches and whitespace
+  normalization unchanged.
+- **Verification:** `tests/contract/test_xv002_value_footprint.py` (fork @ `0a2b1c7`) —
+  4 tests: footprint-name value, `lib:`-suffix value (both RED pre-fix), real mismatch
+  still fires, whitespace suppression intact. RED at `0c0ba34` → GREEN at `2067260`.
+- **Gate budget:** XV-002 disappearances where PCB value == footprint name or its
+  `lib:`-suffix (never-synced boards).
+
+### KH-353 (LOW): RS-001 does not recognize PWR_FLAG as a rail source declaration
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py`
+- **Root cause:** RS-001 (rail without source) ignored PWR_FLAG symbols, firing on
+  rails the designer explicitly declared powered via PWR_FLAG.
+- **Fix (main-repo `f50aa6e` + `2067260`, author anyasabo):** PWR_FLAG pins register
+  internally as `source="pwr_flag"`; new `nets[*].has_pwr_flag: bool` declared on
+  `NetEntry` (default false, present on EVERY net). Invariant unchanged: `#FLG` refs
+  never appear in `nets[].pins`.
+- **Verification:** `tests/contract/test_rs001_pwr_flag.py` (fork @ `16c6265`) —
+  2 tests: PWR_FLAG net gets `has_pwr_flag=True` with `#FLG01` absent from pins;
+  plain net gets `has_pwr_flag=False`. RED at `0c0ba34` → GREEN at `2067260`.
+- **Gate budget:** RS-001 (+ RS-002 per the family-budget rule) disappearances on
+  rails carrying PWR_FLAG. `has_pwr_flag` is an additive key on all schematic nets —
+  expect `test_schema_drift`-style assertion drift until corpus regen (additive;
+  do NOT relax schema).
+
+---
+
 ## 2026-07-12 — KH-347 (MEDIUM): deep_review_gate net cite-check single-identity + quote match breaks on Unicode/hyphenation
 
 - **File:** `skills/kicad/review/scripts/deep_review_gate.py`
