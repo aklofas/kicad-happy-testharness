@@ -60,6 +60,12 @@ NEW_V14_RULES = {
     'BL-001',
     # This set is CLOSED as of v2.0: per-rule budgeting for new heuristic
     # rule families is retired (v2.0 spec §2). Do not add v2.0+ entries.
+    # v2.1 exception (USER-APPROVED 2026-07-15, KH-338): usb_compliance
+    # check failures promoted to rich findings — detector
+    # analyze_usb_compliance, warning/deterministic/topology. UC-001 (no
+    # VBUS decoupling), UC-002 (no VBUS ESD), UC-003 (CC pulldown
+    # missing), UC-004 (VBUS capacitance undersized).
+    'UC-001', 'UC-002', 'UC-003', 'UC-004',
 }
 
 # Phase 4b upgraded detectors whose datasheet-backed branch is gated off
