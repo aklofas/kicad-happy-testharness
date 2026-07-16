@@ -133,6 +133,25 @@ def test_discover_projects_multi_pro_same_dir():
         shutil.rmtree(tmp)
 
 
+# === filter_manifest_by_repo ===
+
+def test_filter_manifest_file_under_repo():
+    lines = ["/x/repos/owner/repo/hw/board.kicad_sch",
+             "/x/repos/other/thing/board.kicad_sch"]
+    assert utils.filter_manifest_by_repo(lines, "owner/repo") == [lines[0]]
+
+def test_filter_manifest_root_level_unit():
+    # TH-046: a gerber manifest line can be exactly the repo root directory
+    # (root-level gerber set). It must still match its own repo.
+    lines = ["/x/repos/owner/repo"]
+    assert utils.filter_manifest_by_repo(lines, "owner/repo") == lines
+
+def test_filter_manifest_root_no_prefix_collision():
+    # owner/repo must not claim owner/repo2's root-level unit
+    lines = ["/x/repos/owner/repo2"]
+    assert utils.filter_manifest_by_repo(lines, "owner/repo") == []
+
+
 # === Runner ===
 
 if __name__ == "__main__":

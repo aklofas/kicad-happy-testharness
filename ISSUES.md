@@ -35,7 +35,8 @@ Last updated: 2026-07-16
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-357** (KH-354..356 filed 2026-07-16 from v2.1
-gate adjudication). Next TH number: **TH-046**.
+gate adjudication). Next TH number: **TH-047** (TH-046 fixed-on-discovery
+2026-07-16, see FIXED.md).
 
 > 17 open issues.
 

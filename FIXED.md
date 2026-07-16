@@ -11,6 +11,32 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-07-16 — TH-046: `filter_manifest_by_repo` drops root-level gerber units on repo-scoped runs
+
+**Severity:** MEDIUM (silent coverage gap in every `--repo`/`--cross-section` run)
+**File:** `utils.py:302` (`filter_manifest_by_repo`)
+**Discovered & fixed same session** (v2.1 budgeted gate adjudication)
+
+- **Root cause:** the filter matched lines containing `repos/{owner}/{repo}/`
+  (trailing slash required). 63 of 5,502 `all_gerbers.txt` entries are exactly
+  the repo ROOT directory (gerber sets at repo top level) — nothing follows the
+  repo name, so the marker never matches and the unit is silently dropped from
+  any repo-scoped invocation (`run_v14_gate.py --cross-section full`,
+  `run_checks.py --repo`, etc.). Unfiltered runs (no `--repo`/`--cross-section`)
+  were unaffected, which is why the v2.0 full gates showed 170,014 units while
+  the v2.1 `--cross-section full` first pass showed 169,951 (−63, all
+  `gerber/<owner>/<repo>/.json` root-level units).
+- **Fix:** also match lines that END on the repo directory at a path-component
+  boundary (`l.endswith("/repos/{owner}/{repo}")`, plus `os.sep` variant).
+- **Verification:** RED→GREEN — new `tests/test_utils.py`
+  `test_filter_manifest_root_level_unit` failed pre-fix, passes post-fix
+  (26/26 file total); prefix-collision guard test (`owner/repo` must not claim
+  `owner/repo2`) passes; v2.1 gate backfill run processed exactly the 63
+  missing gerber pairs → gerber 5,502/5,502 PASS, total 170,014 units (exact
+  match with all prior full-corpus benchmarks).
+
+---
+
 ## 2026-07-15 — v2.1 bug batch: KH-338..346 + KH-348..350 (12 fixes on main-repo `v2.1-dev`)
 
 Fixed in one planned batch (plan: main-repo `docs/superpowers/plans/2026-07-15-v2.1-bug-batch.md`),

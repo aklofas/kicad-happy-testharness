@@ -306,7 +306,13 @@ def filter_manifest_by_repo(lines, repo_name):
     """
     marker = f"repos/{repo_name}/"
     marker_os = f"repos{os.sep}{repo_name.replace('/', os.sep)}{os.sep}"
-    return [l for l in lines if marker in l or marker_os in l]
+    # TH-046: a line may be exactly the repo directory with nothing after it
+    # (root-level gerber sets) — match it too, on a path-component boundary.
+    root = f"/{marker[:-1]}"
+    root_os = f"{os.sep}repos{os.sep}{repo_name.replace('/', os.sep)}"
+    return [l for l in lines
+            if marker in l or marker_os in l
+            or l.endswith(root) or l.endswith(root_os)]
 
 
 # ---------------------------------------------------------------------------
