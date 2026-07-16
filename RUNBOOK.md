@@ -2687,6 +2687,30 @@ estimate for future symmetric gates.
 shared `LOG-v1.4-progress.md` entry "[harness] 2026-05-19 — v1.4.0-rc.2
 gate CLEAN + SHIPPED".
 
+### 26h. Prune adjudicated gate outputs (disk hygiene)
+
+Each gate dir keeps two full per-SHA output trees (`<gate-dir>/v131/` +
+`<gate-dir>/v14/`, ~27G each on full corpus) that dominate its footprint.
+Once the gate is adjudicated AND the verdict is recorded (status.md /
+shared LOG / memory), delete both trees:
+
+```bash
+rm -rf results/<label>_gate/v131 results/<label>_gate/v14
+```
+
+**Keep** `diff/`, the rollup JSON/CSVs, and any adjudication files
+(`adjudication_*.txt`, `affected_repos.txt`) — ~900M total, and the only
+artifacts the §26g adjudication recipe and `--gate-rollup` consume after
+the fact.
+
+**Exception:** leave the most recent pre-tag gate intact until its tag
+ships — it is the standing evidence for the tag-candidate SHA.
+
+The trees are reproducible from the pinned SHAs (~35 min full corpus,
+§26g), but §26g's raw `snap.json` per-rule dives need them — so prune
+only after adjudication is fully closed. Rationale: eight retained gates
+had accumulated ~434G before the 2026-07-15 cleanup recovered 370G.
+
 ---
 
 ## Checklist 27: Era bump for a new minor version (v1.5 and beyond)
