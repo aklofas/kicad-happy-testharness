@@ -92,6 +92,38 @@ Last updated: 2026-07-15 (anyasabo fork-fix port adopted: 3 contract tests + fix
 
 ## Completed batches
 
+### KH-354/356 fix gate `8bc21d3`→`683297a` STRICT-CLEAN; KH-354/356 closed (2026-07-16, later)
+
+Incremental full-corpus symmetric gate for the two same-day fixes of the gate-
+adjudication findings (`bd4372e` KH-354 audit_pwr_flags has_pwr_flag credit +
+`683297a` KH-356 DC-003 pour suppression on real footprint fields). Scope
+pre-verified: 2 commits, 2 files (`analyze_schematic.py` + `emc_rules.py`).
+
+| Tier | Units | PASS | Disapp | Downgr | NewKnown | NewUnkn | WARN | FAIL |
+|------|------:|-----:|-------:|-------:|---------:|--------:|-----:|-----:|
+| smoke | 1,844 | 1,615 | 0 | 0 | 0 | 0 | 0 | 0 |
+| full corpus | 170,014 | 149,629 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+STRICT-CLEAN in 2,039s (rollups `results/v21_kh354_gate/`) — same 149,629 PASS
+as every prior benchmark. **Pre-tag full-corpus requirement satisfied at
+`683297a`** (`8bc21d3` superseded). Expected, since the differ scopes
+findings ∪ assessments and both fixes are outside it: KH-354 is aux-section
+(`pwr_flag_warnings`), KH-356 is `--full`-era only (DC-003 zero baseline
+firings). **KH-354 verified DIRECTLY instead:** Siegmundshof93 canary flipped
+exactly (baseline warned +1V2/+3.3V/+5V/GND; candidate warns only unflagged
++5V/GND); corpus-wide aux walk over the gate snaps: **3,442 units shed 7,946
+pwr_flag_warnings entries, ZERO units gained any** — strictly monotone. That
+count is the budget record for the `pwr_flag_warnings` class at corpus regen.
+
+**Adoption:** `tests/contract/test_kh354_pwr_flag_erc.py` (2 tests) +
+`test_kh341_dc003_suppression.py` rewritten on the REAL producer shape (5
+tests incl. producer-shape guard that runs analyze_pcb on simple-project and
+asserts `pads` stays stripped). RED 2/7 @ `8bc21d3`, GREEN 7/7 @ `683297a`.
+Maintainer-edit: guard fixture path switched from `MAIN_REPO_ROOT.parent`
+to the `_paths.py` `HARNESS_ROOT` export (breaks under /tmp gate worktrees
+otherwise). Contract suite **706/8/4** — exact handoff match. KH-354/356 →
+FIXED.md; open issues 15 (8 KH + 7 TH); KH-355 stays open. Next KH-357/TH-047.
+
 ### v2.1 budgeted gate `fc94a3d`→`8bc21d3` CLEAN under budget; KH-338..350 adoption; UC-001..004 registered (2026-07-16)
 
 Budgeted (NOT zero-delta) full-corpus symmetric gate over the whole v2.1 range
