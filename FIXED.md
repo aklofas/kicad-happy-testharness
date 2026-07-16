@@ -11,6 +11,148 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-07-15 — v2.1 bug batch: KH-338..346 + KH-348..350 (12 fixes on main-repo `v2.1-dev`)
+
+Fixed in one planned batch (plan: main-repo `docs/superpowers/plans/2026-07-15-v2.1-bug-batch.md`),
+one commit per issue on `v2.1-dev` (`40fa9f9..c65604a` + determinism follow-up `8bc21d3`, tip
+after batch = `8bc21d3`). Every fix has a RED→GREEN regression test staged UNCOMMITTED in
+`tests/contract/` (11 files, 36 test functions; KH-340+KH-349 share one file) — all RED at `2067260`, GREEN at `8bc21d3`.
+Full contract suite vs `8bc21d3`: **702 passed / 8 skipped / 4 xfailed** (= 666 baseline + 36).
+
+### KH-338 (HIGH): usb_compliance failures never became findings[]; vbus_esd_protection false-failed on ESD arrays
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py` (`analyze_usb_compliance`)
+- **Root cause:** (a) per-check results lived only in the aux section — no findings[] emission;
+  (b) the VBUS ESD scan only credited `type == "diode"` parts with TVS keywords, so ESD-array
+  ICs (USBLC6) with their own VBUS pin never counted.
+- **Fix (`b07fd3d`):** `ic`-typed parts matching the shared ESD keyword list on the VBUS net now
+  credit `vbus_esd_protection`; failed checks emit rich findings via `make_finding` — **new rule
+  ids UC-001 (no VBUS decoupling), UC-002 (no VBUS ESD), UC-003 (CC pulldown missing), UC-004
+  (VBUS capacitance undersized)**, all warning/deterministic/topology, detector
+  `analyze_usb_compliance`. Findings are popped into top-level findings[] — the emitted
+  `usb_compliance` section shape is unchanged. USER-APPROVED exception to the no-new-rule-ids
+  rule (2026-07-15) — **harness must register UC-001..UC-004 in the known-rules set.**
+- **Verification:** `tests/contract/test_kh338_usb_compliance.py` (2 tests, synthetic ctx).
+- **Gate budget:** NewKnown UC-* corpus-wide; `vbus_esd_protection` fail→pass flips on ESD-array boards.
+
+### KH-339 (MEDIUM): CP-003 touch-pad clearance measured to zone outline bbox, not filled copper
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py`
+- **Fix (`7395b4e`):** new `_nearest_zone_copper_distance()` prefers `filled_bbox` over
+  `outline_bbox`; outline fallback downgrades confidence to heuristic and says so in the
+  description; finding gains `measurement_basis` key.
+- **Verification:** `tests/contract/test_kh339_cp003_filled_bbox.py` (3 tests; SacMap 0.0→1.0mm repro).
+- **Gate budget:** CP-003 value/description churn where fills exist; additive `measurement_basis` key.
+
+### KH-340 (MEDIUM): VP-001 bbox hit-test ignored pad shape/rotation
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_via_in_pad`)
+- **Fix (`846d05c`):** new `_point_in_pad()` — circle/oval exact (stadium test), other shapes as
+  rotated bounding rect using the pad's absolute angle.
+- **Verification:** `tests/contract/test_kh349_kh340_via_in_pad.py` (4 of its 7 tests; includes
+  the 8.16mm-radial circular-pad repro).
+- **Gate budget:** VP-001 disappearances on large circular/oval pads; rare NEW VP-001 on rotated pads.
+
+### KH-341 (MEDIUM): DC-003 lacked same-layer-pour / 2-layer suppression
+
+- **File:** `skills/emc/scripts/emc_rules.py` (`check_decoupling_via_distance`)
+- **Fix (`8ae7501`):** early return when copper layer count == 2; per-cap skip when any pad sits
+  inside a same-layer zone of its own net (`filled_bbox`/`outline_bbox` containment).
+- **Verification:** `tests/contract/test_kh341_dc003_suppression.py` (3 tests).
+- **Gate budget:** DC-003 disappearances on 2-layer boards (large class) + pour-connected caps.
+
+### KH-342 (MEDIUM): sleep_current_audit scored divider legs independently and RC pull-ups as DC loads
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py` (`analyze_sleep_current`)
+- **Fix (`334650f`):** signal-side classification before worst-case V/R — second resistor to
+  ground → `divider` at V/(R1+R2) with `divider_partner`; shunt-C with no other DC sink
+  (switch/led/diode/transistor/other-R) → `rc_filter` at 0.0µA. Plain pull-ups unchanged.
+- **Verification:** `tests/contract/test_kh342_sleep_current.py` (3 tests; 680k+150k → 3.98µA repro).
+- **Gate budget:** sleep_current entry type/current churn corpus-wide; rail totals shift.
+
+### KH-343 (MEDIUM): rail-voltage inference mapped any net containing "USB" to 5.0V — including data lines
+
+- **Files:** `skills/kicad/scripts/analyze_schematic.py` + `skills/kicad/scripts/signal_detectors.py`
+  (both copies) + new shared `kicad_utils.is_usb_data_net_name()`
+- **Fix (`40fa9f9`):** VBUS keeps the 5.0 fallback; bare "USB" only when the name is not a data
+  line (markers USB_D/USBDP/USBDM/USBDN/DPLUS/DMINUS or D+/D- suffix). Both copies fixed via the
+  shared helper (exactly these two consumers).
+- **Verification:** `tests/contract/test_kh343_usb_rail_voltage.py` (2 tests, both copies).
+- **Gate budget:** rail_voltages loses USB-data entries → cascading disappearances possible in
+  AM-001/OV-001/FT-001, passive derating, sleep-current.
+
+### KH-344 (LOW): PM-002 "move further from board edge" on negative courtyard distances
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_placement`)
+- **Fix (`823b458`):** negative clearance (non-RF, non-edge-mount) reframed as "courtyard
+  overhangs board edge by X mm" with a verify-intent recommendation; severity logic unchanged.
+- **Verification:** `tests/contract/test_kh344_pm002_overhang.py` (2 tests).
+- **Gate budget:** PM-002 summary/recommendation text churn on overhang findings.
+
+### KH-345 (LOW): CLI/doc drift — simulate_subcircuits had no --text; SKILL.md showed broken --temp-range space form
+
+- **Files:** `skills/spice/scripts/simulate_subcircuits.py`; `skills/kicad/SKILL.md:633`
+- **Fix (`c65604a`):** `--text` added (reuses `output_filters.format_text` via the existing
+  kicad-scripts path bridge; tolerant of early-exit reports without `total_elapsed_s`);
+  SKILL.md example switched to `--temp-range="-40,105"` (line count unchanged, 848).
+  USER-APPROVED choice: add the flag rather than doc-only (2026-07-15).
+- **Verification:** `tests/contract/test_kh345_spice_text_flag.py` (3 tests).
+- **Gate budget:** none (JSON output unchanged).
+
+### KH-346 (LOW, latent): per-pin absolute_max SpecValue read was unit-blind
+
+- **File:** `skills/datasheets/scripts/datasheet_verify.py`
+- **Fix (`09c62ef`):** new `_spec_max_voltage()` — first entry with unit V or no unit — used only
+  in the `_v1_view` per-pin path; `_spec_max` untouched (its rec-vs-abs callers compare like units).
+- **Verification:** `tests/contract/test_kh346_specmax_units.py` (3 tests).
+- **Gate budget:** none (no extraction populates per-pin absolute_max yet).
+
+### KH-348 (LOW): lifecycle `--only lcsc` returned all-unknown silently
+
+- **File:** `skills/kicad/scripts/lifecycle_audit.py` (`audit_bom`)
+- **Fix (`4916e05`):** LCSC-only source set → top-level `capability_note` + leading observation;
+  LC-004 rule fields skipped for unknown-status rows (rows kept for temp data — same shape as
+  active rows, schema-safe).
+- **Verification:** `tests/contract/test_kh348_lcsc_only_lifecycle.py` (2 tests, mocked audit_component).
+- **Gate budget:** none (network analyzer, not in corpus gate). Additive `capability_note` key.
+
+### KH-349 (MEDIUM, GitHub #28): VP-001 flagged vias in copper-less pads
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_via_in_pad`)
+- **Fix (`9320931`):** collector skips pads whose layer list contains no `*.Cu` entry (missing
+  layer list keeps old behavior). Close GitHub #28 at v2.1 ship.
+- **Verification:** `tests/contract/test_kh349_kh340_via_in_pad.py` (3 of its 7 tests; Dwgs.User repro).
+- **Gate budget:** VP-001 disappearances on cleared-layers pad boards (already in roadmap budget).
+
+### KH-350 (MEDIUM, GitHub #29): courtyard overlap used single AABB per footprint
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` (extraction + `analyze_placement`) +
+  `envelopes/pcb.py` + regenerated `references/output-schema.md`
+- **Fix (`8529c94`):** CrtYd fp_line segments chained into closed polygons (`_chain_segments`,
+  tol 0.01mm; fp_rect/fp_poly direct; arcs/circles → AABB fallback), emitted as new footprint key
+  `courtyard_poly` (declared in envelope description). `analyze_placement` keeps AABB as
+  pre-filter, then grid-samples true polygon overlap (`_refined_overlap_mm2`, 24×24) — zero true
+  overlap → finding skipped; else refined area drives severity. Close GitHub #29 at v2.1 ship.
+- **Verification:** `tests/contract/test_kh350_courtyard_poly.py` (6 tests incl. end-to-end
+  extraction on a synthetic cross-courtyard board and the R2-in-notch no-finding repro).
+- **Gate budget:** courtyard-overlap disappearances/downgrades on QFP-adjacent placements +
+  **additive `courtyard_poly` key corpus-wide** (assertion drift until corpus regen, same class
+  as `has_pwr_flag`).
+
+### Batch follow-up: pwr_flag_warnings ordering was hash-randomized (pre-existing, found by batch verification)
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py` (`audit_pwr_flags`)
+- **Root cause:** `for net_name in known_power_rails:` iterated a set — per-process hash
+  randomization made `pwr_flag_warnings` order flip between runs (byte-stability violation,
+  probabilistic; predates this batch).
+- **Fix (`8bc21d3`):** `sorted(known_power_rails)`.
+- **Verification:** 4-process double-run byte-identical (ex-`inputs`) on the simple-project
+  fixture for schematic + PCB.
+- **Gate budget:** pwr_flag_warnings ordering stabilizes — cached corpus comparisons that
+  captured the other order will churn once.
+
+---
+
 ## 2026-07-15 — KH-351 / KH-352 / KH-353 (anyasabo fork-fix port, fixed on arrival at main-repo v2.1-dev)
 
 Three detector fixes authored by **anyasabo** (GitHub fork `anyasabo/kicad-happy`),
