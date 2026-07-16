@@ -92,6 +92,64 @@ Last updated: 2026-07-15 (anyasabo fork-fix port adopted: 3 contract tests + fix
 
 ## Completed batches
 
+### v2.1 budgeted gate `fc94a3d`→`8bc21d3` CLEAN under budget; KH-338..350 adoption; UC-001..004 registered (2026-07-16)
+
+Budgeted (NOT zero-delta) full-corpus symmetric gate over the whole v2.1 range
+(18 commits: #24 inner-plane via fix + 4 anyasabo ports + 12-issue bug batch +
+pwr_flag_warnings determinism). Baseline `fc94a3d` (v2.0.0 line), candidate
+`8bc21d3` (v2.1-dev tip). UC-001..004 registered in `NEW_V14_RULES` first
+(user-approved exception 2026-07-15) so KH-338's new findings classify NewKnown.
+
+| Tier | Units | PASS | Disapp | Downgr | NewKnown | NewUnkn | WARN | FAIL |
+|------|------:|-----:|-------:|-------:|---------:|--------:|-----:|-----:|
+| smoke | 1,844 | 1,494 | 948 | 0 | 129 | 185 | 0 | 121 |
+| quick_200 | 41,255 | 33,461 | 11,912 | 0 | 2,510 | 4,738 | 1 | 2,467 |
+| full corpus | 170,014 | 138,425 | 48,222 | 0 | 9,680 | 18,924 | 1 | 11,203 |
+
+**Verdict: CLEAN under the declared budget.** Snap-level per-rule net deltas
+(raw `snap.json` pairs, not the truncated diff records) all map to budget
+classes: PM-001 −17,094 (KH-350 courtyard-poly false-overlap removal);
+RS-001 −8,472 / RS-002 +3 / RS-003 −10 (PWR_FLAG rail sources); UC-001..004
++6,668 NewKnown (KH-338); XV-002 −630 (never-synced); VM-001 +32 (new correct
+domain-crossing findings unlocked by PWR_FLAG rail recognition — mechanism
+verified on formulaslug units: `+5V has_pwr_flag → U5 5V domain known`);
+DO-DET −1/VD-003 +1 (dual-regulator FB-pin pick flipped by net-map ordering,
+bisected to `f50aa6e`, filed KH-355); DC-DET +1 (same net-map-order family).
+Everything else nets zero = rewrite churn re-keying the canon key: PM-002
+17,167 pairs (KH-344 overhang reframe), CP-003 946 (KH-339 measurement basis),
+EP-AUD/PP-001/SJ-DET/NT-001/… (unnamed-net renumbering from the NC-marker/
+PWR_FLAG net-map changes; spot-verified `__unnamed_45→__unnamed_39` style).
+Zero Downgrades/Upgrades; gerber 5,502 + thermal 16,083 100% PASS; emc =
+3 EF-001/EF-002 net-0 rewrite pairs; WARN 1 = adjudicated VM-001 unit;
+6 SKIPs = symmetric timeouts. Elapsed 1,457s + 18s backfill @ 32 jobs.
+Rollups + `adjudication_v21.md` in `results/v21_gate/` (v131/v14 trees kept —
+standing pre-tag evidence until v2.1 ships, RUNBOOK 26h exception).
+
+**Gate-invisible budget classes (all `--full`-only surfaces):** #24
+PS-002/GP-001/RP-002 (pcb_connectivity runs only in `--full`), KH-340/349
+VP-001, KH-341 DC-003 (needs `vias.vias` list). Covered by targeted `--full`
+A/B on 6 rotated via-in-pad boards: 12 budgeted VP-001 disappearances +
+BitaxeGT +21 multiplicity on same rotated pads + moteus x1 AUX2.1 new finding
+**verified geometrically correct** — pad-2 dead-center anchor proves the
+transform; pad-1 via inside iff pad `at` angle is absolute → handoff
+VERIFY-WATCH discharged. 1-board emc A/B (moteus x1, 5-copper): zero #24
+movement. These classes re-surface at corpus regen (run_pcb defaults --full).
+
+**New issues from adjudication:** KH-354 (`audit_pwr_flags` never credits
+PWR_FLAG — `flagged_nets` scan is dead code, false-positive warning on every
+flagged rail), KH-355 (FB-pin order sensitivity), KH-356 (KH-341
+`_pad_in_same_net_pour` reads stripped `footprints[].pads` — pour-suppression
+half is dead in the real pipeline; synthetic-fixture test masked it, F6
+IO-001 anti-pattern). TH-046 (`filter_manifest_by_repo` dropped 63 root-level
+gerber units on repo-scoped runs) fixed-on-discovery + backfilled → exactly
+170,014 units. Next KH-357 / TH-047.
+
+**Adoption:** 11 main-repo-authored test files (36 tests) landed in
+`tests/contract/` — RED @ `2067260` (18 F + 2 collect-errors, exact match),
+GREEN 36/36 @ `8bc21d3`. Contract suite **702/8/4** — exact handoff match;
+full tree 2,117 passed / 4 known fails (TH-041 ×3, TH-042). KH-338..350 →
+FIXED.md; open issues 17 (10 KH + 7 TH).
+
 ### anyasabo fork-fix port adopted; KH-351..353 fixed-on-arrival; v2.1 budget classes added (2026-07-15)
 
 Adopted 3 regression tests + 1 fixture from the `anyasabo/kicad-happy` fork
