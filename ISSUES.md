@@ -38,7 +38,7 @@ maximum. Next KH number: **KH-357** (KH-354..356 filed 2026-07-16 from v2.1
 gate adjudication). Next TH number: **TH-047** (TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 17 open issues.
+> 15 open issues.
 
 ---
 
@@ -207,31 +207,6 @@ reviewer flagged this as a concern but did not run the comparison.
 
 ---
 
-### KH-354: `audit_pwr_flags` never credits PWR_FLAG — `pwr_flag_warnings` false-positives on every flagged rail
-
-**Severity:** MEDIUM
-**File:** `skills/kicad/scripts/analyze_schematic.py:4847` (`audit_pwr_flags`)
-**Discovered:** 2026-07-16 (v2.1 gate adjudication, Siegmundshof93/kicadPCBs)
-
-**Symptom:** `flagged_nets` is built by scanning `net_info["pins"]` for the
-PWR_FLAG component's reference, but PWR_FLAG components are never registered
-in `pins[]` (pre-f50aa6e they were skipped from the net map entirely;
-post-f50aa6e they register as `source: "pwr_flag"` points, still not pins).
-So `flagged_nets` is always empty and every power_in-only rail gets
-"Power rail 'X' has power_in pins but no power_out or PWR_FLAG — ERC will
-flag this" even when a PWR_FLAG is present. Repro:
-`repos/Siegmundshof93/kicadPCBs/realPayload/power_management.kicad_sch` —
-`nets.+3.3V.has_pwr_flag: true` yet pwr_flag_warnings still lists +3.3V.
-
-**Impact:** False-positive ERC warning on any design that uses PWR_FLAG
-(the exact pattern the warning tells users to adopt). Same root cause the
-f50aa6e RS-001 fix addressed; this consumer was not updated.
-
-**Fix sketch:** replace the dead `flagged_nets` scan with
-`net_info.get("has_pwr_flag")`.
-
----
-
 ### KH-355: regulator FB-pin selection is first-match over dict order — arbitrary channel on multi-channel regulators
 
 **Severity:** LOW
@@ -253,33 +228,6 @@ multi-channel regulators only ever get one channel estimated.
 
 **Fix sketch:** iterate FB/ADJ pins deterministically (sorted) and/or
 analyze each channel's divider independently.
-
----
-
-### KH-356: KH-341 `_pad_in_same_net_pour` reads stripped `footprints[].pads` — pour-connected suppression is dead code in the real pipeline
-
-**Severity:** MEDIUM
-**File:** `skills/emc/scripts/emc_rules.py` (`check_decoupling_via_distance`, `_pad_in_same_net_pour`)
-**Discovered:** 2026-07-16 (v2.1 gate adjudication)
-
-**Symptom:** `_pad_in_same_net_pour` iterates `fp.get('pads', [])` expecting
-`net_name`/`abs_x`/`abs_y` keys, but `analyze_pcb.py` strips `pads` from every
-footprint in output JSON (including `--full` mode — verified on
-`results/outputs/pcb/mjbots/moteus/hw_c1_r1.0_moteus_c1.kicad_pcb.json`;
-consumers get only `pad_nets`/`connected_nets`). The EMC analyzer consumes
-that output JSON, so the KH-341 per-cap pour-connected skip never fires in
-any real run — only the 2-layer early-return half of KH-341 is functional.
-`tests/contract/test_kh341_dc003_suppression.py` passes because its fixture
-synthesizes `pads` with `abs_x`/`abs_y` (fields real outputs never carry) —
-the same anti-pattern as the F6 IO-001 P0 (2026-05-26).
-
-**Impact:** DC-003 false positives persist on ≥4-layer boards where
-decoupling caps connect through a same-layer pour — half the KH-341 intent.
-
-**Fix sketch:** derive pad positions from data that survives output
-(export pad geometry needed by consumers, or approximate with footprint
-x/y + `pad_nets`), and re-shape the contract test around a real corpus
-fixture per the harness real-fixtures rule.
 
 ---
 
@@ -575,4 +523,4 @@ release-quality impact.
 
 ## Priority Queue
 
-_7 open KH-* + 7 open TH-* issues, all LOW (datasheets-infra backlog KH-328..334 + harness-side TH items). The v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15 — see FIXED.md._
+_8 open KH-* + 7 open TH-* issues: KH-355 LOW (multi-channel FB-pin selection, needs design) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items. The v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15, and gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._

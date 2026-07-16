@@ -37,6 +37,46 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-07-16 — KH-354 / KH-356 (v2.1 gate-adjudication findings, fixed on main-repo `v2.1-dev`)
+
+Both filed 2026-07-16 from the v2.1 gate adjudication, fixed same day on `v2.1-dev`
+(`bd4372e` + `683297a`, tip now `683297a`). KH-355 remains open (needs a multi-channel
+design decision). Contract suite vs `683297a`: **706 passed / 8 skipped / 4 xfailed**
+(= 702 + 2 new KH-354 tests + 2 tests added to the reworked KH-341 file). Determinism
+re-verified (double-run byte-identical ex-inputs).
+
+### KH-354 (MEDIUM): audit_pwr_flags never credited PWR_FLAG — pwr_flag_warnings false-positived on every flagged rail
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py` (`audit_pwr_flags`)
+- **Root cause:** `flagged_nets` scanned `nets[].pins` for the PWR_FLAG reference, but
+  PWR_FLAG pins never register as net pins (build_net_map keeps them as source points) —
+  the scan was structurally dead and every power_in-only rail warned even with a PWR_FLAG.
+- **Fix (`bd4372e`):** dead scan replaced with the net-level `has_pwr_flag` credit
+  (`net_info.get("has_pwr_flag")` → skip), per the fix sketch.
+- **Verification:** `tests/contract/test_kh354_pwr_flag_erc.py` (2 tests via build_net_map,
+  RED→GREEN; unflagged-rail warning invariant preserved).
+- **Gate budget (incremental gate 8bc21d3..683297a):** pwr_flag_warnings disappearances on
+  every rail carrying a PWR_FLAG — corpus-wide aux-section churn (correct behavior: the
+  warning's own remedy now silences it).
+
+### KH-356 (MEDIUM): KH-341 pour-connected suppression read stripped footprints[].pads — dead code in the real pipeline
+
+- **File:** `skills/emc/scripts/emc_rules.py` (`check_decoupling_via_distance`)
+- **Root cause:** `_pad_in_same_net_pour` consumed `pads[].abs_x/net_name`, fields
+  analyze_pcb strips from ALL output footprints — the per-cap skip could never fire on real
+  data; its contract test passed on synthesized fields (F6 IO-001 anti-pattern).
+- **Fix (`683297a`):** helper reworked as `_cap_in_same_net_pour` reading fields that
+  survive output — footprint center x/y + `connected_nets` (`pad_nets` fallback); center
+  containment is a sound proxy for chip-cap pad positions.
+- **Verification:** `tests/contract/test_kh341_dc003_suppression.py` REWRITTEN — fixtures
+  now use the real output shape (no `pads` key), plus a producer-shape guard test that runs
+  analyze_pcb on the simple-project fixture and asserts footprints carry
+  pad_nets/connected_nets and NOT pads (RED→GREEN; 2-layer + foreign-net invariants kept).
+- **Gate budget:** none at snap level (DC-003 had zero firings in the 170k baseline);
+  affects --full-era/corpus-regen behavior only.
+
+---
+
 ## 2026-07-15 — v2.1 bug batch: KH-338..346 + KH-348..350 (12 fixes on main-repo `v2.1-dev`)
 
 Fixed in one planned batch (plan: main-repo `docs/superpowers/plans/2026-07-15-v2.1-bug-batch.md`),
