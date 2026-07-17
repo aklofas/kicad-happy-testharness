@@ -2660,24 +2660,37 @@ is **too strict** for v1.4-vs-v1.4 because:
    `disappeared` + `new_unknown` on the SAME rule_id rather than a
    `severity_change` row. Net is 0 but auto-PASS can't recognize this.
 
-**Manual adjudication recipe:** the fastest source is the per-unit diff
-records at `<gate-dir>/diff/<analyzer>/<owner>/<repo>/<unit>.json` — each
-nests the full regression_diff report under a `_record` key (`verdict`,
-`disappeared[]`, `downgrades[]`, `new_{known,upgraded,unknown}_rule_ids[]`,
-per-class counts). For conditional budgets ("deltas allowed only in repos
+**Manual adjudication recipe:** the per-unit diff records at
+`<gate-dir>/diff/<analyzer>/<owner>/<repo>/<unit>.json` nest the
+regression_diff report under a `_record` key (`verdict`, `disappeared[]`,
+`downgrades[]`, `new_{known,upgraded,unknown}_rule_ids[]`, per-class
+counts) — but the `disappeared[]`/`downgrades[]` LISTS are truncated to 5
+per unit (the `*_count` fields are exact; the v2.1 gate hit this: 948
+counted vs 443 listed). Use the records for class membership and repo
+attribution only. For conditional budgets ("deltas allowed only in repos
 with property X"), walk these records, collect delta repos, and verify the
 property per repo (worked example: the 2026-07-11 mirror-fix gate greps
 each delta repo's `.kicad_sch` for `(at .. 90|270)`+`(mirror x)`; 1,074
-repos, 0 violations). For deeper per-rule dives, re-aggregate from the raw
-`snap.json` pairs (NOT the rollup's 5-per-unit truncated sample)
-under `<gate-dir>/v131/<analyzer>/<repo>/<key>/snap.json` and the matching
-`<gate-dir>/v14/...`. Count `Counter(f.get('rule_id') for f in
-envelope.get('findings', []))` on both sides; compare net delta against
-the budget direction/magnitude. Same-rule-id paired
-disappeared+new_unknown with equal counts = demote-with-rewrite signature
-(expected, net 0). Critical zero-deltas to verify: gerber / thermal /
-emc / cross_analysis 100% PASS, zero Downgrades anywhere. If any of these
-four moves on a rc-vs-rc, real regression.
+repos, 0 violations). For exact per-rule net deltas, aggregate from the raw
+`snap.json` pairs under `<gate-dir>/v131/...` + `<gate-dir>/v14/...` with
+`python3 tools/gate_rule_delta.py <gate-dir> [per_unit_out.json]` (Counter
+on `findings[].rule_id` both sides; global + per-unit nets). Same-rule-id
+paired disappeared+new_unknown with equal counts = demote-with-rewrite
+signature (expected, net 0). Critical zero-deltas to verify: gerber /
+thermal / emc / cross_analysis 100% PASS, zero Downgrades anywhere. If any
+of these four moves on a rc-vs-rc, real regression.
+
+**Gate-blind surfaces (v2.1 lesson — check BEFORE trusting a clean gate):**
+the differ scopes `findings ∪ assessments` only, and Phase A runs
+analyze_pcb WITHOUT `--full`. Two whole classes of change are therefore
+invisible to the gate on both sides: (1) aux-section changes
+(`pwr_flag_warnings`, `sleep_current_audit`, `ic_pin_analysis`, …) — verify
+those DIRECTLY (canary repo A/B + a corpus-wide walk over the gate's own
+snap trees, e.g. the KH-354 record: 3,442 units / 7,946 warnings removed /
+0 gained); (2) `--full`-only producers (`pcb_connectivity` → #24-class emc
+rules, VP-001 via-in-pad, DC-003 via lists) — cover with a targeted
+`--full` A/B on trigger-rich boards and budget the rest at corpus regen.
+A STRICT-CLEAN verdict only certifies the non-full findings surface.
 
 **Performance:** 5,857-repo full corpus in 34.5 min at `--jobs 32`
 (2026-05-19 benchmark, kicad-happy `c904bb3..6b6e622`). Use as planning
