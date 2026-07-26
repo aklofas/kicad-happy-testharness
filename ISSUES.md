@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-07-16
+Last updated: 2026-07-24
 
 ---
 
@@ -34,11 +34,15 @@ Last updated: 2026-07-16
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-357** (KH-354..356 filed 2026-07-16 from v2.1
-gate adjudication). Next TH number: **TH-047** (TH-046 fixed-on-discovery
+maximum. Next KH number: **KH-370** (KH-368/369 filed 2026-07-26 from verified external-review claims — JSONC string corruption + Action file-detect; KH-367 filed 2026-07-25, two more
+hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
+nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
+KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
+`docs/2026-07-24-kicad-parser-and-analysis-audit.md` — each entry cites its
+KHPA finding ID). Next TH number: **TH-047** (TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 15 open issues.
+> 24 open issues.
 
 ---
 
@@ -228,6 +232,335 @@ multi-channel regulators only ever get one channel estimated.
 
 **Fix sketch:** iterate FB/ADJ pins deterministically (sorted) and/or
 analyze each channel's divider independently.
+
+---
+
+### KH-357: BE-001 treats `rect` board outline as its diagonal — false edge-proximity findings (GitHub #31)
+
+**Severity:** MEDIUM
+**File:** `skills/emc/scripts/emc_rules.py:2265-2267` (`_point_to_edges_min_distance`)
+**Discovered:** 2026-07-24 (GitHub #31, reported by enorfelt 2026-07-18; code-verified same day)
+
+**Symptom:** `if etype == 'line' or etype == 'rect':` computes
+`point_to_segment_distance` from `start` to `end` — but for a `rect` edge
+those are the two OPPOSITE CORNERS, so the measured distance is to the
+rectangle's corner-to-corner DIAGONAL, not to any of its 4 sides. Reporter's
+repro (100×100mm board, outline = single `gr_rect`): trace midpoint
+(38.425, 38.755) sits near the y=x diagonal → BE-001 fires "0.23mm from
+board edge" (= |mx−my|/√2) while the real nearest edge is 38.4mm away.
+Verified against pcbnew ground truth by the reporter; defect line confirmed
+in current main (v2.1.0).
+
+**Impact:** Any board whose Edge.Cuts outline is a single KiCad `gr_rect`
+primitive (common workflow) gets spurious BE-001 findings for traces near
+the diagonal — and, conversely, real edge-proximity near the actual sides
+is UNDER-measured only when the diagonal is closer, so the miss direction
+is false-positive-dominant. Also inflates the `near_edge_count > 10`
+summarization path.
+
+**Fix sketch:** expand `rect` into its 4 sides before the point-to-segment
+test — mirror the existing correct expansion in `analyze_pcb.py:6106-6110`
+(`(x1,y1)→(x2,y1)→(x2,y2)→(x1,y2)→(x1,y1)`). Reporter's suggested patch in
+GitHub #31 does exactly this. Check the `arc`/fallback branches of the same
+function while in there. Gate note: BE-001 churn on rect-outline boards is
+the expected budget class (disappearances near diagonals; possible new
+findings near real edges previously shadowed by a closer diagonal).
+
+---
+
+### KH-358: VP-001 tenting check reads `remove_unused_layers` — a field nothing writes (audit KHPA-019)
+
+**Severity:** MEDIUM
+**File:** `skills/kicad/scripts/analyze_pcb.py:6048` (check) vs `:1092-1094` (extractor)
+**Discovered:** 2026-07-24 (audit KHPA-019; code-verified same day)
+
+**Symptom:** The via extractor parses real `(tenting ...)` into `via["tenting"]`
+(:1092-1094), but the via-in-pad check tests `via.get("remove_unused_layers",
+False)` (:6048) — grep confirms that key is never written anywhere. So `tented`
+is ALWAYS False and every tented via in a pad is reported untented. The comment
+at :6046-6047 ("KiCad doesn't export tenting") is false — contradicted by the
+extractor AND by the codebase's own correct check at :5103
+(`via.get("tenting", [])`).
+
+**Impact:** False-positive untented-via-in-pad warnings in `--full`/proximity
+runs; tented vias mislabeled. **Fix:** read `tenting` like :5103 does.
+Gate/corpus note: VP-001 text/severity churn on boards with tented vias in pads.
+
+---
+
+### KH-359: same-name local labels on different sheets MERGE in the output nets dict (audit KHPA-003)
+
+**Severity:** HIGH
+**File:** `skills/kicad/scripts/analyze_schematic.py:1600-1605` (merge branch);
+union keys :1457/:1475; naming :1555-1566
+**Discovered:** 2026-07-24 (audit KHPA-003; code-verified same day)
+
+**Symptom:** `build_net_map()` correctly keeps local labels sheet-scoped in the
+union-find (`(lbl_name, sheet)` keys, :1457; local power symbols :1475), but the
+final `nets` dict is keyed by bare display name. A second disjoint root with an
+already-present name hits `nets[net_name]["pins"].extend(...)` (:1600-1605) —
+a silent MERGE. Two sheets each with local label "MISO" on different components
+→ one output net holding both pin sets. KiCad keeps them separate (sheet path is
+part of local-label identity, `sch_connection.cpp:393-452`). The per-instance
+namespacing pass applies ONLY to `hierarchical_label` (:8636/:8644), so it does
+not defeat the collision. Local-vs-global same-name collapses identically.
+
+**Impact:** Corrupts the core `nets` model consumed by every downstream detector
+on any multi-sheet design that reuses a bare local-label/local-power name on ≥2
+sheets. Silent — no warning, no downgraded confidence.
+
+**Fix sketch:** disambiguate at serialization (sheet-qualified name or list/ID
+keyed nets with a `display_name -> [ids]` index) — schema decision.
+**SCHEDULED: v2.2 (user-confirmed 2026-07-24)** — folded into the #25
+bus-connectivity release: same function, same kicad-cli netlist oracle, same
+golden boards (unfixed, this defect would confound the #25 oracle diffs on
+multi-sheet golden boards). Budget class: net splits on multi-sheet boards with
+reused local names.
+
+---
+
+### KH-360: `union_with_overlapping_wires` stops after the first matching wire (audit KHPA-007)
+
+**Severity:** MEDIUM
+**File:** `skills/kicad/scripts/analyze_schematic.py:1431-1435`
+**Discovered:** 2026-07-24 (audit KHPA-007; code-verified same day)
+
+**Symptom:** `union(k, wk1); return` after the FIRST wire whose segment overlaps
+the label/junction/no-connect point (tol 0.05mm, :1411). Safe when all wires
+TERMINATE at the point (shared endpoint key already unions them). Broken when a
+wire passes THROUGH the point as a mid-segment (junction tap off an un-split
+backbone wire): if the tap wire is iterated first, the union is a no-op and the
+backbone stays disconnected — result depends on wire insertion order.
+
+**Impact:** Order-dependent silent disconnection at mid-segment junction taps;
+narrower than the audit claimed (ordinary all-terminating junctions unaffected).
+**Fix:** drop the early `return`, union every overlapping wire.
+**SCHEDULED: v2.2 (user-confirmed 2026-07-24)** — folded into the #25 release
+(covered by the same netlist oracle).
+
+---
+
+### KH-361: `.kicad_dru` conditional rules applied as GLOBAL minimums — condition never evaluated (audit KHPA-016 part 3)
+
+**Severity:** MEDIUM
+**File:** `skills/kicad/scripts/analyze_pcb.py:4735-4772`; loader
+`kicad_utils.py:1796/:1818`
+**Discovered:** 2026-07-24 (audit KHPA-016; code-verified same day)
+
+**Symptom:** `load_kicad_dru` captures each rule's `condition` string but the
+consumer loop applies every constraint's minimum board-wide and never reads
+`rule.get('condition')`. A rule scoped to one net/layer/item class (e.g. an
+`A.isPlated()` or netclass-gated clearance) produces violations on unrelated
+items. Output lands in the plain `design_rule_compliance` block with definitive
+"requires X>=Ymm, actual Zmm" wording — no confidence/heuristic softening.
+
+**Impact:** False DRC-style violations on any board whose .kicad_dru uses
+conditions (most real .kicad_dru files do). **Fix:** evaluate a supported
+condition subset, else SKIP the rule and note it unsupported — never apply
+globally. (The audit's run-6 SacMap review already hit this class from the
+other side: 7 spurious errors from an unmatched isPlated rule.)
+
+---
+
+### KH-362: project/.kicad_dru discovery returns the FIRST file in the directory, ignoring the board stem (audit KHPA-015)
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/kicad_utils.py:1451-1456` (`load_kicad_pro`),
+`:1769` (`load_kicad_dru`)
+**Discovered:** 2026-07-24 (audit KHPA-015; code-verified same day)
+
+**Symptom:** Both loaders glob the board's directory and return the first
+match; callers pass the full board path but the functions keep only dirname.
+Multi-project or panelized directories can silently apply another project's
+settings/rules. Also: raw `json.load` where KiCad's settings loader permits
+comments.
+
+**Fix:** match by stem first, fall back to single-file case; tolerate commented
+JSON; surface a note when ambiguous.
+
+---
+
+### KH-363: stale module-global net-ID map can leak into pad `net_number` on re-entrant use (audit KHPA-017)
+
+**Severity:** LOW (latent — no shipped path triggers it)
+**File:** `skills/kicad/scripts/analyze_pcb.py:535` (global), `:585` (reset),
+`:6277` vs `:6285` (order), `:6300-6301` (pad ==0 backfill guard)
+**Discovered:** 2026-07-24 (audit KHPA-017; code-verified same day)
+
+**Symptom:** `_net_name_to_id` IS reset in `_build_net_mapping` (:585) — but the
+reset runs at :6285, AFTER `extract_footprints` (:6277) has already stamped pad
+`net_number` via the previous board's mapping. Tracks/vias/zones are then
+rebuilt unconditionally (:6287-6297) while pads are only backfilled when
+`net_number == 0` (:6300-6301) — a second KiCad-10 string-net board analyzed in
+the same process can keep first-board pad IDs. All shipped paths are
+one-board-per-process (CLI, subprocess orchestration), so impact is zero today.
+
+**Fix:** reset before extraction or carry the map in an analysis-context object;
+add an A→B→A same-process determinism test when touched.
+
+---
+
+### KH-364: connectivity graph never joins tracks to zone fill (and ignores arc tracks) (audit KHPA-005 subset)
+
+**Severity:** MEDIUM
+**File:** `skills/kicad/scripts/pcb_connectivity.py:421-423` (zones probe only
+pads/vias), `:198` (segments only — no arcs), `:369-383` (endpoint buckets, no
+mid-segment T-joins)
+**Discovered:** 2026-07-24 (audit KHPA-005; code-verified same day)
+
+**Symptom:** Zone attachment considers only `kind in ('pad','via')`; a
+pad→track→pour→track→pad path whose only bridge is the pour splits into
+separate islands. Arc track objects are extracted by analyze_pcb (:6605) but
+never enter the graph. Mid-segment T-intersections aren't detected (endpoint
+buckets at 0.05mm only). Connectivity exceptions are swallowed at
+analyze_pcb.py:6609-6615 (`except: pass`) with no trust-state transition.
+
+**Impact:** False island/plane-split conclusions (PS-002/GP-001/RP-002 class —
+the same family #24 fixed for via layer-spans) on boards where copper pours
+bridge track endpoints, and on any board using arc tracks. **Scope note:** this
+is the top candidate for correctness-floor "brick two" after #25 —
+kicad-cli/ratsnest oracle applies. The `except: pass` should be fixed cheaply
+and early (surface a degradation note).
+
+---
+
+### KH-365: BOM manager double-counts twice-instantiated sheets and misses `private` properties (audit KHPA-012 subset, direction corrected)
+
+**Severity:** MEDIUM
+**File:** `skills/bom/scripts/bom_manager.py:532-544` (visited-at-dequeue),
+`:167-168` (property regex); `kicad_sexp.py:58-62` (no unescaping)
+**Discovered:** 2026-07-24 (audit KHPA-012; code-verified same day — the audit
+had the count direction BACKWARDS)
+
+**Symptom:** (1) `analyze()` marks files visited at dequeue but appends at
+discovery under a stale check — a child sheet referenced twice by one parent
+enters `files_to_parse` twice and is counted TWICE (the audit claimed
+once/undercount; actual behavior is overcount — either way wrong quantities).
+(2) The property regex requires `(property "` immediately, so
+`(property private "Name" "Value")` is invisible — edits can create a duplicate
+property instead of updating the private one. (The main sexp_parser
+get_property path handles `private` fine; only the BOM regex path is affected.)
+(3) Sheetfile paths are used without KiCad string unescaping.
+
+**Fix direction:** migrate BOM/edit tools onto the shared sexp_parser loader
+(dedupe at discovery, real property parsing); interim: fix the visited-set
+order and widen the regex.
+
+### KH-366: RC-filter detection is run-to-run NONDETERMINISTIC (hash-order candidate selection) — violates the Layer-1 byte-stability invariant
+
+**Severity:** MEDIUM (HIGH for gate trust: affected boards can FLAKE any byte-diff gate)
+**File:** `skills/kicad/scripts/signal_detectors.py` — RC-DET / `passive_filters`
+candidate-cap selection (parallel-cap grouping path); exact lines TBD at fix time
+**Discovered:** 2026-07-24 during v2.2 Task 4 isolation byte-diffing (main-repo
+agent; reproduced independently by controller)
+
+**Symptom:** Repeated runs of `analyze_schematic.py` on the SAME file with the
+SAME code produce different `findings` — an RC-filter finding alternates
+between e.g. `capacitor C25 (1u, farads 1e-06, components [C25,R50])` and
+`capacitor C110 ("2 caps parallel", farads ~2e-05, parallel_caps [C110,C34])`.
+`finding_id`, cutoff, and components all flip with it. Repro: run
+`analyze_schematic.py repos/bec5-group/pid-controller/pid/pid.sch` 3-4 times
+and byte-compare outputs minus `inputs` — divergence typically appears within
+3 runs (output sizes flip e.g. 304594 vs 304598 bytes).
+
+**Verified PRE-EXISTING:** reproduced on pristine `c6b504a` (= v2.1.0 + CI-only
+commit) via `git archive` copy — NOT introduced by the v2.2 branch (KH-359/360
+work). This means shipped v2.1.0 violates the "Layer 1 findings deterministic +
+byte-stable; finding_id stable across runs" invariant on affected boards.
+
+**Likely mechanism:** per-process hash randomization (PYTHONHASHSEED) changing
+iteration order of a `set`/dict of candidate caps or nets in the RC-filter
+detector's parallel-cap grouping — each CLI invocation is a fresh process with
+a fresh seed. Fix direction: sort candidates deterministically (by ref) before
+selection/grouping. Audit siblings: grep detectors for selection out of
+unsorted `set()` iteration.
+
+**Gate/corpus implications (why this matters beyond the one finding):**
+(1) any byte-diff regression gate can flake on affected boards regardless of
+the code under test — adjudicate such diffs against this issue; (2) determinism
+re-verification runs that set a fixed PYTHONHASHSEED (or run in-process) would
+never see it — check how the harness determinism check invokes the analyzer.
+NOT in v2.2 scope (one-theme rule); natural home = v2.2.x maintenance batch.
+
+### KH-367: two more hash-order nondeterminism sources (DO-DET list order; power_sequencing en_net unnamed-net identity) — same class as KH-366, distinct detectors
+
+**Severity:** MEDIUM (gate-flake risk, same class as KH-366)
+**File:** (1) `skills/kicad/scripts/signal_detectors.py:3474` — unsorted `set`
+comprehension feeding DO-DET `rails_without_caps` + summary list order;
+(2) `skills/kicad/scripts/analyze_schematic.py` `build_net_map` — union-find
+root-selection order flips which `__unnamed_N` id lands in
+`power_sequencing_validation.issues[].en_net` (exact unsorted-set source not
+yet pinned; value observed as `__unnamed_46`/`61`/`73` across 3 runs)
+**Discovered:** 2026-07-25 during v2.2 Task 13 determinism sweep on
+`ehbc-project/ehbc-proto1-board/projects/m68k-hbc` (main-repo agent)
+
+**Symptom:** Repeated CLI runs on the same file differ: (1) DO-DET rails list
+order flips; (2) an en_net identity VALUE flips (not just ordering). Both
+reproduce identically on pristine `c6b504a` via git-archive checkout —
+PRE-EXISTING in shipped v2.1.0, NOT introduced by the v2.2 branch (whose
+signal_detectors.py diff vs main is zero).
+
+**Fix direction:** (1) sort the comprehension at :3474 (one-liner); (2) trace
+the en_net path for set-derived ordering (candidate: iteration over a set of
+nets/pins in power_sequencing validation or unnamed-net numbering inputs) and
+sort at the source. Audit siblings per KH-366's grep suggestion — this entry
+is evidence the class is systemic (3 known instances).
+
+**Gate implications:** same as KH-366 — adjudicate m68k-class byte-diff flakes
+against BOTH issues; repro technique documented in v2.2 Task 13 report
+(kicad-happy `.superpowers/sdd/2026-07-24-v2.2-schematic-connectivity/`).
+NOT in v2.2 scope; natural home = v2.2.x maintenance batch alongside KH-366.
+
+### KH-368: JSONC comment-stripping corrupts string values containing `//` or `/* */` — config layer silently dropped
+
+**Severity:** MEDIUM
+**File:** `skills/kicad/scripts/project_config.py:32-49` (`_LINE_COMMENT`/
+`_BLOCK_COMMENT` regex substitution in `_strip_jsonc`, applied before
+`json.loads`); failure swallowed at `_load_and_validate` (~:196-205)
+**Discovered:** 2026-07-26, external review claim VERIFIED empirically by
+main-repo agent (both failure modes reproduced)
+
+**Symptom:** (1) A `.kicad-happy.json` string value containing `//` — e.g.
+`"documentation": "https://example.com/spec"` — is truncated at the `//`
+(`'{"documentation": "https:'`), producing a `json.JSONDecodeError`;
+`_load_and_validate` then returns None with only a stderr warning and the
+ENTIRE config layer (suppressions, design intent, power rails) is silently
+skipped. (2) `/*...*/` inside a string value is silently DELETED and the file
+still parses — silent value corruption (`"do not treat /* this */ as a
+comment"` → `"do not treat  as a comment"`). Any user putting a URL in their
+config (datasheet link, doc pointer) loses their suppressions without a
+visible failure in the report.
+
+**Fix direction:** replace the regexes with a small stateful scanner that
+tracks in-string state (quote + backslash escape) and strips comments/
+trailing commas only outside strings — stdlib-only, ~25 lines. Keep the
+public `load_jsonc` contract. Unit tests: both repro cases above + escaped
+quotes + `//`-after-value-on-same-line (real comment) still stripped.
+Related: KH-362 (KHPA-015) covers `.kicad_pro`/`.kicad_dru` discovery +
+commented-JSON tolerance — same subsystem, different file/path; fix together.
+
+### KH-369: GitHub Action schematic auto-detect is `find | head -1` — comment claims root-preference/largest, code does neither
+
+**Severity:** MEDIUM (silent wrong-project/wrong-sheet analysis in CI)
+**File:** `action/entrypoint.sh:17-27`
+**Discovered:** 2026-07-26, external review claim VERIFIED by main-repo agent
+
+**Symptom:** When `INPUT_SCHEMATIC` is empty, the entrypoint runs
+`find . -name "*.kicad_sch" ... | head -1`. The comment above it says
+"prefer root-level, then pick the largest" but no such logic exists. `find`
+order is filesystem-traversal-dependent, so: (a) multi-project repos get an
+arbitrary project analyzed silently; (b) even a single hierarchical project
+can get a CHILD sheet selected instead of the root (partially mitigated by
+the analyzer's sub-sheet detection redirecting to full-project analysis, but
+the selection is still arbitrary and non-portable). Same pattern for the PCB
+pick at :26.
+
+**Fix direction:** implement what the comment promises, or better: use
+explicit input when given; else group candidates by `.kicad_pro` stem;
+auto-select only when exactly ONE project exists; otherwise FAIL with the
+candidate list (silent selection is inappropriate for a review gate —
+matches the project's own honest-degradation posture). Same class as KH-362
+(first-file-in-dir discovery).
 
 ---
 
@@ -523,4 +856,7 @@ release-quality impact.
 
 ## Priority Queue
 
-_8 open KH-* + 7 open TH-* issues: KH-355 LOW (multi-channel FB-pin selection, needs design) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items. The v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15, and gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._
+_21 open KH-* + 7 open TH-* issues: KH-368/369 MEDIUM (JSONC string corruption dropping config layers; Action find|head-1 arbitrary project pick — external-review finds, code-verified 2026-07-26); KH-366/KH-367 MEDIUM (hash-order
+nondeterminism: RC-DET + DO-DET/en_net, pre-existing in v2.1.0, gate-flake
+risk — filed during v2.2 Tasks 4/13; 3 known instances = systemic class); the
+2026-07-24 audit batch KH-358..365 (KH-359 HIGH net-identity merge — natural home = #25 release; KH-358/360/361/364/365 MEDIUM; KH-362/363 LOW) + KH-357 MEDIUM (BE-001 rect-diagonal false positive, GitHub #31) + KH-355 LOW (multi-channel FB-pin selection, needs design) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items. Audit reference: kicad-happy `docs/2026-07-24-kicad-parser-and-analysis-audit.md` (verified subset only — forward-compat KHPA-001/002 items live in the roadmap, not here). The v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15, and gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._
