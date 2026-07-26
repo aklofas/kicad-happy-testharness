@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-07-15 (anyasabo fork-fix port adopted: 3 contract tests + fixture vs main-repo v2.1-dev 2067260; KH-351..353 fixed-on-arrival; v2.1 gate budget classes added)
+Last updated: 2026-07-26 (v2.2 budgeted gate c6b504a→e67aeb5 CLEAN under budget; #25 bus connectivity + KH-359/360 adoption; kicad-cli netlist oracle adopted)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -92,7 +92,51 @@ Last updated: 2026-07-15 (anyasabo fork-fix port adopted: 3 contract tests + fix
 
 ## Completed batches
 
-### KH-354/356 fix gate `8bc21d3`→`683297a` STRICT-CLEAN; KH-354/356 closed (2026-07-16, later)
+### v2.2 budgeted gate `c6b504a`→`e67aeb5` CLEAN under budget; #25 bus connectivity + KH-359/360 adoption; netlist oracle adopted (2026-07-26)
+
+Budgeted full-corpus symmetric gate over the whole v2.2 range (15 commits:
+hierarchical bus connectivity #25 phases 1-4b + KH-359 sheet-qualified net
+serialization + KH-360 union-every-overlapping-wire). Baseline `c6b504a`
+(shipped v2.1.0 + CI-only bump), candidate `e67aeb5` (v2.2-dev tip). Scope
+pre-verified: analyzer diff = `analyze_schematic.py` + new `bus_resolver.py` +
+`envelopes/schematic.py` + `project_config.py`; `signal_detectors.py` zero
+diff (KH-366/367 pre-existing claim verified). Staged smoke 44s → quick_200
+512s → full 2,057s @ `--jobs 32`; 170,014 units.
+
+**Verdict: CLEAN under the 6-class budget** (record:
+`results/v22_gate/adjudication_v22.md`; snap trees kept INTACT as pre-tag
+evidence per RUNBOOK 26h exception). Downgrades **0** everywhere;
+pcb/gerber/cross_analysis 100% PASS zero-delta. All churn in schematic
+(3,419 FAIL / 540 WARN units) + attributed thermal (25) / emc (130) consumer
+ripples — 0 orphan repos. Snap-level walk (whole-output, covers gate-blind
+aux sections): 36,462 pairs → 29,443 identical (21,649 only class-5
+`bus_topology.unresolved:[]` shape), 7,019 diffing, ALL in budget classes
+(7,004 auto + 15 hand-adjudicated), **isolation invariant HOLDS (0
+violations)**. Class-1 exercised on 750 units / 372 repos (multi-sheet
+same-name splits — path proven live, not merely non-regressing). Per-rule
+finding counts net ≈ −60 corpus-wide (max LC-DET +417, PP-001 −282); the
+headline NewUnknown rules (NT-001 14.7k, EP-AUD 9.5k, DO-DET 4.8k …) are all
+net-zero = canonical-key rename/rewrite churn from qualified net names.
+KH-366/367 flake sources neutralized in-gate (PYTHONHASHSEED=0 both sides);
+zero unexplained diffs, m68k-hbc included. **Pre-tag full-corpus requirement
+satisfied AT `e67aeb5`.**
+
+**Oracle (class-3 correctness proof):** kicad-cli 10.0.4 netlist oracle, 5
+golden boards all PASS `--strict`: alu-carrier 221/221 · incrementer 80/80 ·
+m68k-hbc 1,220 matched (nc_divergence=26, stacked_pins=2 J1.Dc25/J2.Dc25) ·
+older-era KiCad6 486/486 · openmd 70/70; 0 split / 0 merged everywhere.
+
+**Adoption:** `tests/test_kh359_kh360_netmap.py` (19) +
+`tests/test_bus_resolver.py` (24) + `tests/test_kh359_suppression_bare_tail.py`
+(6) — 49/49 GREEN @ `e67aeb5`; RED @ `c6b504a` (16/25 fail + bus_resolver
+collection error; the 9 passing are behavior-preservation tests). Oracle
+primitives `regression/netlist_oracle.py` + runner
+`regression/run_netlist_oracle.py` (5-board GOLDEN table, 3 ratified
+exclusion classes). Contract suite **706/8/4** — exact handoff match. Unit
+tree 1,268/0 (test_switching_loop timed out under gate load; 12/12 idle).
+ISSUES.md batch KH-357..369 adopted (21 KH + 7 TH open; next KH-370/TH-047;
+the file's "> 24 open issues" header line is stale vs its own bottom
+summary — flagged to main-repo).
 
 Incremental full-corpus symmetric gate for the two same-day fixes of the gate-
 adjudication findings (`bd4372e` KH-354 audit_pwr_flags has_pwr_flag credit +
