@@ -2692,6 +2692,24 @@ rules, VP-001 via-in-pad, DC-003 via lists) — cover with a targeted
 `--full` A/B on trigger-rich boards and budget the rest at corpus regen.
 A STRICT-CLEAN verdict only certifies the non-full findings surface.
 
+**Isolation-invariant walk for budgeted gates (v2.2 pattern):** when the
+budget is expressed as "boards triggering none of the expected classes must
+be unchanged," don't argue it from the findings-scoped diff records — walk
+the raw snap.json pairs whole-output. Write a per-unit classifier for the
+budget classes and flag any diffing unit with no class marker as a
+violation; hand-adjudicate the residue instead of over-engineering the
+classifier (v2.2: 36,462 pairs → 15 hand-adjudicated, all in-budget).
+Worked example kept at `results/v22_gate/walker_script_v22.py` +
+`walk_report_v22.json` + `adjudication_v22.md`. Pitfalls found there:
+(1) drop `inputs` AND `capability_mode_ref` before comparing; (2) normalize
+additive schema-shape keys (e.g. `bus_topology.unresolved: []`) in the
+top-level identity check, not just the classifier — otherwise every unit
+carrying the new shape reads as a violation; (3) splits/merges can be
+pin-less (labelled wire segments with no pins) or invisible as key changes
+(pin moves + `__unnamed_N` renumbering with identical key sets) — classify
+on pin-set movement, not key add/remove alone. The walk subsumes the
+aux-section (gate-blind) check for the walked analyzer.
+
 **Performance:** 5,857-repo full corpus in 34.5 min at `--jobs 32`
 (2026-05-19 benchmark, kicad-happy `c904bb3..6b6e622`). Use as planning
 estimate for future symmetric gates.

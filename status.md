@@ -92,6 +92,33 @@ Last updated: 2026-07-26 (v2.2 budgeted gate c6b504a→e67aeb5 CLEAN under budge
 
 ## Completed batches
 
+### v2.2 fold-increment gate `e67aeb5`→`6b5be5e` CLEAN under thermal evidence_source budget (2026-08-17)
+
+Incremental symmetric gate over the origin/main fold (PRs #35 docs / #36
+Antigravity docs+plugin.json / #37 fl4p evidence_source provenance). Scope
+pre-verified: analyzer diff = `analyze_thermal.py` + `lifecycle_audit.py`
+only. Staged smoke 43s → quick_200 483s → full 2,174s @ `--jobs 32`;
+170,014 units, 149,629 PASS (identical to v2.1/v2.2 gates), 0
+Disappeared/Downgrades/New* — **STRICT-CLEAN on the differ surface, which
+is structurally blind to this change** (`evidence_source` not in
+`_canon_key`; trust/audience summaries out of differ scope). Budget
+evidence = whole-output snap walk (RUNBOOK 26g isolation-walk pattern) over
+all 149,629 pairs: schematic/pcb/gerber/emc/cross byte-identical modulo
+noise; thermal 14,662 identical + **1,421 in-budget units (852 repos):
+1,847 TH-DET assessment flips + 1,334 TS-001/002/003/005 finding flips +
+412 audience top_issues flips, trust_summary −1,334/+1,334, per-file
+N-consistency 100%, zero flips on TS-004/TP-***; 0 violations / 0 residue.
+Record: `results/v22_gate_fold/adjudication_v22_fold.md` (+ walker +
+walk report; snap trees kept INTACT until v2.2.0 ships). Contract suite
+**706/8/4** exact; unit tree **1,292/0**. **Pre-tag full-corpus requirement
+now satisfied AT `6b5be5e`.** ISSUES.md adoption: KH-370 (GitHub #33
+oscillator-substring FP) + KH-371/372 (PR #37 left-outs, lifecycle) — 31
+open (24 KH + 7 TH), next KH-373/TH-047. Regen budget addition: thermal
+evidence_source class + **BUGFIX-KH-307-03 must flip its expected TS-003
+value datasheet→heuristic_rule at regen** (PR #37's "no assertion targets
+evidence_source" claim false for the harness — registry + 1 generated file;
+thermal baselines confirmed counts-only, 16,066 files).
+
 ### v2.2 budgeted gate `c6b504a`→`e67aeb5` CLEAN under budget; #25 bus connectivity + KH-359/360 adoption; netlist oracle adopted (2026-07-26)
 
 Budgeted full-corpus symmetric gate over the whole v2.2 range (15 commits:

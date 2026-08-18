@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-07-24
+Last updated: 2026-08-17
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-07-24
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-370** (KH-368/369 filed 2026-07-26 from verified external-review claims — JSONC string corruption + Action file-detect; KH-367 filed 2026-07-25, two more
+maximum. Next KH number: **KH-373** (KH-371/372 filed 2026-08-17 from GitHub PR #37 (fl4p) deliberately-left-out defects, code-verified — LC-ACT missing provenance fields, LC-005 single-source denominator semantics; KH-370 filed 2026-08-01 from GitHub #33, KH-220 description-substring oscillator FP, code+repro verified; KH-368/369 filed 2026-07-26 from verified external-review claims — JSONC string corruption + Action file-detect; KH-367 filed 2026-07-25, two more
 hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
 nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
 KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
@@ -42,7 +42,7 @@ KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 KHPA finding ID). Next TH number: **TH-047** (TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 24 open issues.
+> 31 open issues (24 KH + 7 TH).
 
 ---
 
@@ -562,6 +562,113 @@ candidate list (silent selection is inappropriate for a review gate —
 matches the project's own honest-degradation posture). Same class as KH-362
 (first-file-in-dir discovery).
 
+### KH-370: KH-220 description-substring oscillator classification misfires on "internal oscillator" ICs → false XL-DET + CD-DET findings (GitHub #33)
+
+**Severity:** MEDIUM (2 false info-findings per affected part; ADC/MCU/sensor
+descriptions mentioning an internal oscillator are common datasheet phrasing)
+**File:** `skills/kicad/scripts/kicad_utils.py:528-533` (KH-220 branch in the
+full-prefix-match override section; a second KH-220 site at :612-616 is
+X-prefix-only and NOT implicated); cascade via
+`signal_detectors.py:1041-1042` + `:1074-1079` and
+`domain_detectors.py:3724-3764`
+**Discovered:** 2026-07-29, GitHub issue #33 (VoltixSpark/William Leismer,
+repro'd on a real KiCad 8 design); claim VERIFIED empirically by main-repo
+agent 2026-08-01 (minimal-pair repro, mechanism confirmed with one correction)
+
+**Symptom:** Any U-prefix IC whose symbol `Description` contains the bare
+substring "oscillator" (and not "crystal") — e.g. "Low-Power, I2C-Compatible
+ADC With Internal Reference, Oscillator, and Programmable Comparator" — is
+reclassified from `ic` to `oscillator`. Two false findings cascade: (1)
+**XL-DET** `active_oscillator` — `detect_crystal_circuits` has an
+unconditional always-include branch for `type == "oscillator"`
+(`signal_detectors.py:1041-1042`; the `_osc_keywords`/`_osc_exclude` guards
+only run for `crystal`/`ic` types, so they can't save a misclassified part);
+(2) **CD-DET** `oscillator_output` — with no OUT/OUTPUT/CLK/CLKOUT pin, the
+XL-DET fallback (`signal_detectors.py:1074-1079`) picks the FIRST non-power
+non-ground pin as `output_net` (an I2C SCL/SDA net on a bus peripheral), then
+CD-DET phase 2 (`domain_detectors.py:3724-3764`) traces it and reports the
+bus neighbor as a clock "consumer" ("Detected active oscillator U1 driving
+clock output.").
+
+**Mechanism correction vs the GitHub report:** issue #33 attributes the SCL
+pickup to `_CLOCK_OUTPUT_PINS` — actually `_CLOCK_OUTPUT_PINS` is not involved
+in CD-DET phase 2; the SCL net arrives via the XL-DET first-non-power-pin
+fallback above. Same outcome, different path (matters for where the fix goes).
+
+**Repro (minimal pair, verified 2026-08-01 at v2.2-dev e67aeb5):** 2-IC
+synthetic schematic — U1 5-pin I2C ADC (pins SCL/SDA/GND/VDD/AIN0) with the
+description string above, U2 generic MCU, wired SCL+SDA with local labels,
+VDD/GND labeled. Result: U1 classified `oscillator`, XL-DET
+`active_oscillator` with `output_net: "SCL"`, CD-DET `oscillator_output` with
+`consumers: ["U2"]`. Control (identical file, description minus the word
+"Oscillator"): U1 stays `ic`, zero XL-DET/CD-DET findings.
+
+**Fix direction (issue offers 3 options, all reasonable — pick during fix):**
+(a) require is-a-clock-source phrasing ("crystal oscillator", "oscillator IC",
+"clock generator") instead of bare substring; (b) add internal-oscillator
+exclusions ("internal oscillator", "on-chip oscillator", "internal reference,
+oscillator") alongside the existing `"crystal" not in _desc_low` guard; (c)
+gate description-based classification behind corroborating pin evidence
+(XTAL/OSC/CLK-OUT-named pin, no I2C/SPI bus pins). Option (c) is the most
+robust; (b) is the smallest diff. ALSO consider hardening the XL-DET fallback
+(`:1074-1079`) — picking an arbitrary non-power pin as a "clock output" is a
+second-layer defect that would still misfire for any future misclassification.
+Budget note: XL-DET + CD-DET fire together, and description phrasing is
+common on TI/ADI ADC symbols — corpus movement could be broad; budget both
+rule IDs together per the shared-keyword-list rule. Natural home = v2.2.x
+maintenance batch alongside KH-357/366/367.
+
+### KH-371: LC-ACT findings omit `confidence` and `evidence_source` → forced `trust_level="low"`; "active" summary overstated for LCSC-only unknowns
+
+**Severity:** LOW (info-only rule; but it drags `trust_summary.trust_level`
+down via `unknown_confidence` on every lifecycle run with active parts)
+**File:** `skills/kicad/scripts/lifecycle_audit.py:731-740` (LC-ACT else-branch
+in `audit_bom`)
+**Discovered:** 2026-08-11, reported in GitHub PR #37 (fl4p) as a
+deliberately-left-out semantic defect; code-verified by main-repo agent
+2026-08-17 (the else-branch builds the finding dict with no `confidence` and
+no `evidence_source` keys, unlike every sibling rule at :713-714)
+
+**Symptom:** Every "active" component emits an LC-ACT finding missing both
+provenance fields. `compute_trust_summary` counts these as
+`unknown_confidence`, forcing `trust_level="low"` on otherwise-clean runs.
+Additionally the LC-ACT branch is reached for LCSC-only `unknown` status
+(the `lcsc_only and status == "unknown"` carve-out at :694) yet writes
+summary "active" — status the data doesn't support.
+
+**Fix direction:** add `confidence`/`evidence_source` (api_lookup, matching
+:714) to the LC-ACT dict; for the lcsc_only-unknown path, say "unknown
+(LCSC returns no lifecycle status)" instead of "active". Semantic change —
+budget LC-ACT summary churn (not corpus-gate-visible: lifecycle has no
+corpus runner; verify on the contract fixture + a live-API board).
+
+### KH-372: LC-005 "single source" denominator counts only APIs that responded; `status is None` counts as active; LCSC carries no lifecycle status
+
+**Severity:** LOW (info-only rule, but its claim is unsupported by its own
+data)
+**File:** `skills/kicad/scripts/lifecycle_audit.py:744-770` (LC-005 block in
+`audit_bom`)
+**Discovered:** 2026-08-11, reported in GitHub PR #37 (fl4p) as a
+deliberately-left-out semantic defect; code-verified by main-repo agent
+2026-08-17
+
+**Symptom:** `total_queried = len(finding.get('sources', {}))` (:749) counts
+only sources that RETURNED data, not sources attempted — a part carried by
+one distributor while three APIs errored/timed out reports "only available
+from X out of 1 sources checked" or is skipped entirely, while transient API
+failures can conjure false single-source findings. `active_sources` counts
+`status in ('active', 'Active', None)` (:747) — a None status is treated as
+active. LCSC returns no lifecycle status at all, so its rows are None →
+"active" by default. The description "only available from {X} out of
+{total_queried} sources checked" is therefore not supported by the data.
+
+**Fix direction:** thread the attempted-sources list from `audit_component`
+into the finding (attempted vs responded vs active), require an explicit
+active status (None → unknown, excluded from the numerator), and exclude
+LCSC from the lifecycle denominator (or label it stock-only). Semantic
+change — same validation caveat as KH-371 (no corpus runner; live-API
+verification needed).
+
 ---
 
 ## Test Harness Issues
@@ -856,7 +963,7 @@ release-quality impact.
 
 ## Priority Queue
 
-_21 open KH-* + 7 open TH-* issues: KH-368/369 MEDIUM (JSONC string corruption dropping config layers; Action find|head-1 arbitrary project pick — external-review finds, code-verified 2026-07-26); KH-366/KH-367 MEDIUM (hash-order
+_24 open KH-* + 7 open TH-* issues: KH-371/372 LOW (lifecycle LC-ACT provenance omission forcing trust_level=low; LC-005 responded-only denominator + None-as-active — PR #37 left-outs, code-verified 2026-08-17, no corpus runner so live-API verification needed); KH-370 MEDIUM (KH-220 description-substring oscillator FP → false XL-DET/CD-DET, GitHub #33, repro-verified 2026-08-01, v2.2.x batch); KH-368/369 MEDIUM (JSONC string corruption dropping config layers; Action find|head-1 arbitrary project pick — external-review finds, code-verified 2026-07-26); KH-366/KH-367 MEDIUM (hash-order
 nondeterminism: RC-DET + DO-DET/en_net, pre-existing in v2.1.0, gate-flake
 risk — filed during v2.2 Tasks 4/13; 3 known instances = systemic class); the
 2026-07-24 audit batch KH-358..365 (KH-359 HIGH net-identity merge — natural home = #25 release; KH-358/360/361/364/365 MEDIUM; KH-362/363 LOW) + KH-357 MEDIUM (BE-001 rect-diagonal false positive, GitHub #31) + KH-355 LOW (multi-channel FB-pin selection, needs design) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items. Audit reference: kicad-happy `docs/2026-07-24-kicad-parser-and-analysis-audit.md` (verified subset only — forward-compat KHPA-001/002 items live in the roadmap, not here). The v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15, and gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._
