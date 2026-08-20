@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-08-17
+Last updated: 2026-08-20
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-08-17
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-373** (KH-371/372 filed 2026-08-17 from GitHub PR #37 (fl4p) deliberately-left-out defects, code-verified — LC-ACT missing provenance fields, LC-005 single-source denominator semantics; KH-370 filed 2026-08-01 from GitHub #33, KH-220 description-substring oscillator FP, code+repro verified; KH-368/369 filed 2026-07-26 from verified external-review claims — JSONC string corruption + Action file-detect; KH-367 filed 2026-07-25, two more
+maximum. Next KH number: **KH-392** (KH-373..391 filed 2026-08-20 from the SacMap rev2 fresh-eyes soak review — 15 reviewer claims verified by 4 parallel agents (13 confirmed, 1 partial, 1 regression-theory refuted) + 4 verifier incidentals; evidence: kicad-happy sandbox Old-Reviews/sacmap-rev2/7/ + session-43 chat; KH-371/372 filed 2026-08-17 from GitHub PR #37 (fl4p) deliberately-left-out defects, code-verified — LC-ACT missing provenance fields, LC-005 single-source denominator semantics; KH-370 filed 2026-08-01 from GitHub #33, KH-220 description-substring oscillator FP, code+repro verified; KH-368/369 filed 2026-07-26 from verified external-review claims — JSONC string corruption + Action file-detect; KH-367 filed 2026-07-25, two more
 hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
 nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
 KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
@@ -42,7 +42,7 @@ KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 KHPA finding ID). Next TH number: **TH-047** (TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 31 open issues (24 KH + 7 TH).
+> 50 open issues (43 KH + 7 TH).
 
 ---
 
@@ -669,6 +669,164 @@ LCSC from the lifecycle denominator (or label it stock-only). Semantic
 change — same validation caveat as KH-371 (no corpus runner; live-API
 verification needed).
 
+
+### KH-373: CP-003 touch-pad GND clearance measured origin-to-zone-BBOX — reports "deterministic" 0.0mm for enclosing pours (real clearance 1.00mm)
+
+**Severity:** HIGH (78% corpus FP rate: 666/854 CP-003-emitting boards report 0.0mm, all at confidence "deterministic")
+**File:** `skills/kicad/scripts/analyze_pcb.py:5335-5364` (`_nearest_zone_copper_distance`), caller :5570-5613
+**Discovered:** 2026-08-20, SacMap rev2 fresh-eyes soak (run 7, report at kicad-happy sandbox Old-Reviews/sacmap-rev2/7/) — claim B1, code+fixture+corpus verified
+
+**Symptom:** distance is FOOTPRINT ORIGIN point → zone AXIS-ALIGNED BBOX, with dx/dy clamped to 0 when the point is inside the box (:5358-5360). Any pour surrounding a touch pad yields exactly 0.0. `filled_bbox` basis (KH-339, v2.1) is the bbox over ALL filled vertices, so keyhole cutouts don't help; and :5584 labels precisely that branch "deterministic". Even with polygon math the origin-point choice understates a 15mm pad by 7.5mm. Skill guidance keys the Espressif 1mm-minimum comparison off this number.
+**Fix direction:** pad-outline → filled-polygon-edge distance; `ZoneFills` already stores the polygon lists (:130-136) and `_dist_point_to_segment` exists (:195) — verified to recover the true 1.0mm on the repro fixture. Budget: CP-003 value changes corpus-wide (666 boards), possible finding disappearances where real clearance passes threshold. Supersedes the "touch-pad clearance metric" roadmap feature framing — this is a correctness defect.
+
+### KH-374: sleep_current_audit systematically wrong on battery designs — EN-pin-presence ≠ disableable, rail-disable zeroing ignores always-on, battery rails dropped by name-parse voltage failure
+
+**Severity:** HIGH (headline realistic_total_uA=0.0 on boards whose true floor is 40-60µA; battery designs are the feature's audience)
+**File:** `skills/kicad/scripts/analyze_schematic.py:6809-6880` (`analyze_sleep_current`), `:5001-5017` (`_estimate_rail_voltage`), `kicad_utils.py:223`
+**Discovered:** 2026-08-20, SacMap soak claim B2; reproduced on corpus board bastian2001/LiPo-Charger-Hardware
+
+**Symptom:** (a) :6809-6818 sets disableable from EN/SHDN/CE pin NAME presence only — never consults connectivity; `analyze_power_sequencing` (:7752-7754) correctly derives `en_source: "always_on"` for EN-tied-to-VIN in the SAME output, and the two never talk. (b) `_disableable_rails` (:6832-6845) zeroes every divider/pull-down on such rails (:6867-6880) with no check the rail actually turns off (reproduced: rail zeroed while its own regulator's EN is tied to that rail). (c) rails whose voltage can't be parsed from the NET NAME are dropped wholesale at :6627-6629 — `+BATT`/`VBAT`/`BATTERY` all return None — so the largest resistive path (battery divider) vanishes while VD-DET reports it two sections away. The analyzer's own `rail_voltages` map is not consulted.
+**Fix direction:** consult power_sequencing en_source; walk regulator input/battery rails; fall back to `rail_voltages`/regulator vin data before dropping a rail. Budget: sleep_current_audit values move on most battery boards.
+
+### KH-375: power_budget misses loads — ICs-only, first-pin-on-net break bug drops EN-tied-to-VIN regulators, power-name heuristic gap
+
+**Severity:** HIGH (silently under-reports; consumed by analyze_thermal.py:247-249 as regulator Iout and emc_formulas.py:1078 power tree — see KH-386/KH-377 cascades)
+**File:** `skills/kicad/scripts/analyze_schematic.py:7586-7652` (`analyze_power_budget`)
+**Discovered:** 2026-08-20, SacMap soak claim B3; reproduced on 4/14 sampled corpus boards (74HC595 ~{SRCLR}+VCC, BME280 CSB-before-VDD, RoboMausV2 "3.3V" rail)
+
+**Symptom:** (1) loads = `comp["type"]=="ic"` only (:7586-7588) — LEDs/connectors/fuses/discretes never counted; series-element-fed loads on derived nets invisible. (2) Pin-qualification bug: outer loop iterates ref_pins but the test re-scans `nets[net]["pins"]`, evaluates the FIRST pin of that component on the net, and `break`s unconditionally (:7590-7617) — an IC whose non-power pin sorts first on a shared net is dropped from the rail entirely (exactly EN-hardwired-to-VIN regulators). (3) rails failing `is_power_net_name` with no #PWR symbol get zero loads. Result on the soak board: +5V estimated_load_mA 0 with ~52mA LEDs + 500mA USB; +BATT missing U3.
+**Fix direction:** evaluate the iterated pin (pnum), not the first match; widen load classes deliberately (budget!); consider net-derived load tracing later. Budget: estimated_load_mA + downstream thermal/EMC movement — MUST be gated together with KH-386.
+
+### KH-376: get_regulator_features/get_mcu_features called WITHOUT project_dir — every datasheet-authority gate in validation_detectors.py (+1 EMC site) permanently inert
+
+**Severity:** HIGH (datasheet-backed suppression/verification paths dead code in production; extractions exist but resolve to /tmp fallback)
+**File:** `skills/kicad/scripts/validation_detectors.py:484, :580, :922, :1049`; `skills/emc/scripts/emc_rules.py:2049`; root cause `skills/datasheets/scripts/datasheet_extract_cache.py:74-101` (`resolve_extract_dir` falls through to temp-dir fallback); `kicad_types.py:64-78` (AnalysisContext has no project_dir field)
+**Discovered:** 2026-08-20, SacMap soak claim B4 (visible symptom: PS-001 "PG status unknown ... (no datasheet extraction)" beside ics_with_extractions:4 in the same JSON); isolation-verified both call shapes
+
+**Symptom:** all five sites call the features API with no project_dir/extract_dir → `resolve_extract_dir()` → `/tmp/kicad-happy/datasheets/extracted` → None → "no data" branch always taken. Verified: same MPN with project_dir returns has_pg=False (power_good_pin:null handled correctly at datasheet_features.py:178 — cache format was never the problem, KH-337 hypothesis wrong here). Had lookup worked, PS-001 would emit NOTHING for a no-PG part (:1052 continue) — fix is not wording. Affected gates: PS-001 PG check, VM-001 EN-threshold suppression, PR-004 USB native-PHY suppression, regulator VIN rail estimation, one emc_rules datasheet path.
+**Fix direction:** plumb project_dir through AnalysisContext (new field) + emc_rules call site. Budget: PS-001 disappearances on extraction-bearing projects; VM-001/PR-004 suppression behavior changes — corpus mostly has no extraction caches so gate movement should be small; contract fixtures DO (harness tests/fixtures/datasheets/).
+
+### KH-377: EMC PD-001 counts series/feedforward caps as decouplers (manufactures error findings), unconfigurable 2×0.5A transient default, grid-point sweep ceiling, raw-float formatting, count/list mismatch
+
+**Severity:** HIGH (on the soak board the +5V error finding is ENTIRELY caused by the 220pF feedforward cap — removal eliminates every anti-resonance peak; proven by execution)
+**File:** cap collection `skills/kicad/scripts/signal_detectors.py:2017-2053` (accepts any capacitor touching the output rail, other terminal never checked); `skills/emc/scripts/emc_rules.py:3296-3304` (i_transient = 0.5 doubled when power_dissipation absent — which KH-375 makes common), :3321-3322 (hard 1kHz-1GHz sweep; 316.2MHz = 10^8.5 grid point, no board-relevance gate), :3334 (hard-coded HIGH severity), :3343 (`str(farads*1e6)` no rounding → "0.00021999999999999998µF", also hits 100nF), :3342-3343 (count=len, list=[:4], no "of N")
+**Discovered:** 2026-08-20, SacMap soak claim B5, all five sub-claims reproduced
+
+**Symptom/fix:** filter rail caps to shunt-to-GND topology before PDN modeling; surface + config the transient assumption (no path exists today — run_all_checks receives only standard/severity/spice_backend, analyze_emc.py:467-470); clamp sweep or demote out-of-band peaks; format engineering units; fix count/list. Budget: PD-001 findings change class-wide (any rail with a feedback divider feedforward cap).
+
+### KH-378: EMC GP-001 has no touch/sense-net exemption — deliberate touch copper voids become the board's worst EMC finding
+
+**Severity:** MEDIUM
+**File:** `skills/emc/scripts/emc_rules.py:332-394` (`check_return_path_coverage`; severity ladder :362-370 coverage-only), :107-117 (`_is_high_speed_net` — no touch concept)
+**Discovered:** 2026-08-20, SacMap soak claim B6 (TOUCH_1 79% coverage → error; recommendation text "or fill the void" is actively wrong for the net)
+
+**Fix direction:** consume CP-003 touch-pad identification from pcb.json (present in findings; carries refs only, `nets: []` — needs ref→net join via footprints[].pads[].net_name; consider also emitting nets on CP-003, cheap producer fix) and downgrade/annotate touch nets in GP-001/RP-001. Budget: severity demotions on touch boards.
+
+### KH-379: DC-001 cap association requires NO shared net — spurious warnings AND suppression of the correct DC-002; shared_nets/esd_bypass fields dead; ESD-only boards skip ESD-bypass analysis entirely
+
+**Severity:** HIGH (a topologically irrelevant GND-only cap within 10mm both fires a spurious DC-001 and gates off DC-002's correct "no decoupling cap" — isolated by execution)
+**File:** `skills/kicad/scripts/analyze_pcb.py:1994-2069` (`analyze_decoupling_placement`: :2012-2025 any cap ≤10mm appended unconditionally, `shared` computed and stored but never filtered on; :2027-2033 sort by distance alone; :2006-2007 early-return tests `ics` which EXCLUDES ESD/TVS parts, making the esd_ics block :2037-2067 unreachable on ESD-only boards); consumer `skills/emc/scripts/emc_rules.py:496-560` (DC-001 reads closest_cap_mm only; DC-002 gated by mere presence of a decoupling_placement entry). Repo-wide: `shared_nets` (written :2023/:2055/:6510) and `"category": "esd_bypass"` (:2064) have ZERO readers.
+**Discovered:** 2026-08-20, SacMap soak claim B7 (verified stronger than reported) + verify-agent incidental
+
+**Fix direction:** require a shared non-GND (power) net for association; consume esd_bypass category for ESD-specific messaging; fix the early-return guard. Budget: DC-001 disappearances + DC-002 appearances corpus-wide — budget both rules together.
+
+### KH-380: cross_analysis NR-001 is unreachable dead code — reads board_outline['segments'], producer emits 'edges'
+
+**Severity:** HIGH (an advertised rule that can never fire; zero firings across 36,462 gate units + all fresh --full runs)
+**File:** `skills/kicad/scripts/cross_analysis.py:459-460`; producer `analyze_pcb.py:1485` (`"edges": edges`; BoardOutline envelope declares edges, never segments). emc_rules.py:2291/:2369 read `edges` correctly — cross_analysis-only defect.
+**Discovered:** 2026-08-20, SacMap soak B8 investigation (corpus: segments non-empty in 0/3,001 sampled snapshots; edges in 2,435)
+
+**Fix direction:** one-line key fix + a harness fixture that makes NR-001 fire (critical net near outline). Budget: NR-001 appearances corpus-wide (rule fires for the first time ever — could be broad; treat as NewKnown-style budget).
+
+### KH-381: cross_analysis emits no record of which checks ran — silent [] returns indistinguishable from clean; assessments[] structurally always empty
+
+**Severity:** MEDIUM (trust/observability; the SacMap zero-findings result was CORRECT behavior but unprovable from the artifact)
+**File:** `skills/kicad/scripts/cross_analysis.py` — ~20 ungated early-return guards (:173,:324,:371,:453,:456,:459,:512,:513,:595,:609,:647,:650,:727,:852,:857); `assessments` hardcoded [] at :1037; envelope carries no checks-run field
+**Discovered:** 2026-08-20, SacMap soak claim B8 (observability part CONFIRMED; no except:pass exists — that sub-claim refuted; elapsed_s plausible for genuine execution, scaling verified)
+
+**Fix direction:** emit a `checks_run` manifest (rule id, inputs-present bool, items examined, findings count) — same honesty posture as bus_topology.unresolved / the fail-loudly pool item. Additive schema field; budget additive-key drift only.
+
+### KH-382: XV-002 emission order is PYTHONHASHSEED-dependent (set-intersection iteration)
+
+**Severity:** MEDIUM (KH-366/367 family; violates "deterministic + byte-stable"; gate-invisible under PYTHONHASHSEED=0 pinning)
+**File:** `skills/kicad/scripts/cross_analysis.py:412` (`for ref in sch_refs & pcb_refs:`)
+**Discovered:** 2026-08-20, SacMap soak B8 A/B (discrete-nes board: identical finding SET, order varies across seeds 0/1/12345; verified same at v2.1.0)
+
+**Fix direction:** `sorted(sch_refs & pcb_refs)`. Fold into the KH-366/367 determinism batch + its CI guard. Budget: byte-order-only.
+
+### KH-383: min-drill blind to footprint pad drills — dfm min_drill_mm via-only AND design-rule check never receives footprints
+
+**Severity:** HIGH (fab-facing number wrong; the board's own min_through_hole_diameter is structurally unenforceable against half its holes)
+**File:** `skills/kicad/scripts/analyze_pcb.py:4292-4296` (dfm drill scan reads board via list only), :3100-3113 (same in via facts), :4575-4619 (`analyze_design_rule_compliance(tracks, vias, project_settings)` — no footprints param; min_via_drill vs min_through_hole_diameter). Pad drills ARE parsed (:710-720); only consumer is an unrelated proximity check (:5122).
+**Discovered:** 2026-08-20, SacMap soak claim B9 (12×0.2mm footprint-embedded PTH thermal vias under U1, board rule 0.3mm, reported min 0.3 + "compliant: true"); fixture-reproduced
+
+**Fix direction:** include pad drills in both paths; pass footprints into design-rule compliance. NOTE: LIMITS_STD min_drill=0.2 (:4066) means DFM alone stays silent at 0.2mm — the project-rule path is the one that must see pads. Budget: min_drill_mm value changes + new DR violations on boards with small pad drills.
+
+### KH-384: deep_review_gate resolves computation script paths against shell cwd, not --analysis-dir
+
+**Severity:** MEDIUM (valid findings quarantined depending on invocation directory; --project-dir escape hatch exists but is undocumented)
+**File:** `skills/kicad/review/scripts/deep_review_gate.py:175-180` (`check_computation`: `Path(project_dir)/script`, --project-dir defaults "." at :222; --analysis-dir used only by load_anchor_sets :239); docs `references/deep-review.md:109-111` show only project-root invocation, :83-90 mandate root-relative helper paths
+**Discovered:** 2026-08-20, SacMap soak claim B11, reproduced verbatim incl. error string
+
+**Fix direction:** default --project-dir to parent of --analysis-dir; document the flag; add schema description on computation.script.
+
+### KH-385: gate datasheet-quote check — elided quotes always fail, quarantine reason lacks nearest-match context, schema has no description on quote/script fields
+
+**Severity:** MEDIUM (an accurate elided quote and a fabricated paraphrase produce identical-shaped quarantine reasons)
+**File:** `skills/kicad/review/scripts/deep_review_gate.py:125-144` (`_norm_text` turns .../… into word breaks; `_quote_in_text` single contiguous-substring only), :168-171 (reason = first 80 chars, no context); `skills/kicad/review/schemas/deep_review.schema.json` quote/script fields bare strings, no description. deep-review.md:100-101 DOES state the verbatim rule (doc part of claim overstated) but nothing mentions elision.
+**Discovered:** 2026-08-20, SacMap soak claim B12, 7-case matrix tested against a real datasheet page
+
+**Fix direction:** segment-split on elision markers (each segment substring-matched, in order) OR document the no-elision rule in schema+docs; add nearest-match snippet to the quarantine reason.
+
+### KH-386: thermal silently drops regulators whose rail shows zero load — partial assessment presents as complete (score 97-100)
+
+**Severity:** HIGH (hotter of two identical regulators never evaluated, no note anywhere; compounds with KH-375 which produces the zero loads)
+**File:** `skills/kicad/scripts/analyze_thermal.py:236-272` (`_estimate_all_power_dissipation` — bare `continue` at :253 on `not iout_a`), :1090-1097 (missing_info covers assessed components only), :756-762 (score None only when list fully empty)
+**Discovered:** 2026-08-20, SacMap soak claim B13; end-to-end fixture repro (two identical TPS61023, one dropped, score 97, dropped ref appears NOWHERE)
+
+**Fix direction:** emit a capability note / skipped-components list ("Uassessed n of m power components; U2 skipped: no load estimate") — fail-loudly posture; real fix arrives with KH-375 load accounting. Budget: additive field + note text only, until KH-375 lands (then joint thermal movement).
+Context (structural, not this bug): trust_level "low" + provenance_coverage 0.0 are constants for thermal — confidence distribution drives trust (finding_schema.py:399-409) and analyze_thermal never calls make_provenance. PR #37's evidence_source flip did NOT alter trust_level (verified by execution).
+
+### KH-387: _thermal_confidence still returns "datasheet-backed" for package_table — the parallel overclaim PR #37 fixed in evidence_source but left in confidence (the field that drives trust_level)
+
+**Severity:** MEDIUM (a package-average estimate can yield confidence "datasheet-backed" → trust_level "high"; now visibly contradicts the corrected evidence_source "heuristic_rule" in the same finding)
+**File:** `skills/kicad/scripts/analyze_thermal.py:467-473` (:473 `"datasheet-backed" if rtheta_ja_source == "package_table"`); PR #37 (91ea659) touched :445/:489-491 only
+**Discovered:** 2026-08-20, verify-agent while checking soak claim B13
+
+**Fix direction:** same rationale as PR #37 — package_table is a footprint-regex average; confidence should be heuristic (or a distinct "reference_table" tier if added deliberately). Budget: confidence + trust_level shifts on every package_table board (large class — the #37 fold moved 1,421 corpus units; this moves the same class's confidence). Gate with care; pairs naturally with KH-386.
+
+### KH-388: VD-DET double-emission → duplicate findings sharing one finding_id + duplicate SPICE simulations
+
+**Severity:** MEDIUM (finding_id uniqueness contract violated; inflated counts; wasted sims. DELIBERATE double-append with 8c36212 cascade warning — fix MUST be corpus-gated with the exclusion-set interplay in mind)
+**File:** `skills/kicad/scripts/signal_detectors.py:372+:392` (same dict object appended to feedback_networks AND voltage_dividers; warning comment :324-346), `:3355-3377` (postfilter dedups within-list only); `analyze_schematic.py:9629-9636` (flatten lands both); `finding_schema.py:112-134` (id(f) skip → aliased finding_id, docstring :106-110 admits it); consumer `skills/spice/scripts/simulate_subcircuits.py:120-127, :219` (no dedup). A second duplication path exists producing DISTINCT objects/detection_ids (soak board R8/R9+R10/R11 dup'd via aliasing, third divider via the other path).
+**Discovered:** 2026-08-20, SacMap soak claim B14; artifact-confirmed duplicate finding_ids (schematic:feedback_networks-9318b64d03a6 ×2 etc.)
+
+**Fix direction:** dedup at flatten (by object id + by (detector, components) key) rather than touching the double-append; spice-side dedup as belt. Budget: VD-DET counts drop corpus-wide (the 8c36212 lesson: gate the FULL corpus, watch RC-DET exclusion interplay).
+
+### KH-389: PM-002 negative "distance from board edge" leaks through RF/edge-mount branches; off-board-parked parts read "overhangs board edge" at ERROR
+
+**Severity:** MEDIUM (22,147 negative PM-002 findings on 6,731/18,745 corpus boards; 8,991 below −5mm are parked-off-board WIP, not overhangs)
+**File:** `skills/kicad/scripts/analyze_pcb.py:3648-3662` (signed bbox gap math — correct), :3693 (KH-344 rewrite guarded `if clearance < 0 and not is_rf and not is_edge_mount` — RF/edge-mount branches still emit :3687 literal "X is -Nmm from board edge"), :3508/:3542 (loose substring classifiers), no distinction between overhang and fully-off-board
+**Discovered:** 2026-08-20, SacMap soak claim PM-002 (PARTIAL — math fine, framing wrong); corpus-scanned
+
+**Fix direction:** extend the KH-344 rewrite to all branches (message should never render a negative "distance"); classify fully-outside-outline as "component placed off-board (n mm outside outline)" at INFO/WARNING, reserving ERROR for genuine partial overhang. Budget: PM-002 message/severity churn corpus-wide (large).
+
+### KH-390: BOM-coverage denominators differ between DS-003 (per-reference, lacking-MPN polarity) and SS-002 (unique value+footprint lines, having-MPN polarity)
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/analyze_schematic.py:5242-5255+:5313-5315` (DS-003) vs `:5465-5487+:5505` (SS-002); identical `real` filter duplicated verbatim, then diverging grouping; SS-002's own comment :5474-5476 argues against per-reference counting
+**Discovered:** 2026-08-20, SacMap soak claim B15 ("17/48" beside "21/27" for one fact)
+
+**Fix direction:** adopt SS-002's unique-line basis in DS-003 (the project already picked a side) and label the basis in both summaries. Budget: DS-003 summary text corpus-wide.
+
+### KH-391: summarize_findings mislabels deep-review categories as rule_id, overflows column format, and shows 0/0/0 confidence due to vocabulary mismatch
+
+**Severity:** LOW-MEDIUM (the system's most rigorously evidence-gated findings display as having NO evidence)
+**File:** `skills/kicad/scripts/summarize_findings.py:334` (rule_id = category), :234 ({:<14} vs 17-char "manufacturability"), :183+:201 (bucket keys deterministic/heuristic/datasheet_backed vs deep-review's high/medium/low — never match; --by-confidence mixes both vocabularies and "high" collides with the severity bucket)
+**Discovered:** 2026-08-20, SacMap soak claim B15c (+2 defects beyond the claim). --json output is fine (sources/detectors disambiguate) — text table only.
+
+**Fix direction:** tag deep-review rows (e.g. "dr:usb_power" or a source column), widen format, map or separately-bucket deep-review confidence.
+
 ---
 
 ## Test Harness Issues
@@ -963,7 +1121,7 @@ release-quality impact.
 
 ## Priority Queue
 
-_24 open KH-* + 7 open TH-* issues: KH-371/372 LOW (lifecycle LC-ACT provenance omission forcing trust_level=low; LC-005 responded-only denominator + None-as-active — PR #37 left-outs, code-verified 2026-08-17, no corpus runner so live-API verification needed); KH-370 MEDIUM (KH-220 description-substring oscillator FP → false XL-DET/CD-DET, GitHub #33, repro-verified 2026-08-01, v2.2.x batch); KH-368/369 MEDIUM (JSONC string corruption dropping config layers; Action find|head-1 arbitrary project pick — external-review finds, code-verified 2026-07-26); KH-366/KH-367 MEDIUM (hash-order
+_43 open KH-* + 7 open TH-* issues: NEW 2026-08-20 SacMap-soak batch KH-373..391 — HIGH: KH-373 (CP-003 bbox 0.0mm, 78% corpus FP), KH-374 (sleep audit), KH-375 (power_budget loads; feeds thermal+EMC), KH-376 (datasheet gating dead — no project_dir), KH-377 (PD-001 feedforward-cap manufactured errors), KH-379 (DC-001 no-shared-net + DC-002 suppression), KH-380 (NR-001 unreachable), KH-383 (pad-drill blindness), KH-386 (thermal silent exclusion); MEDIUM: KH-378 (GP-001 touch), KH-381 (cross_analysis checks-run), KH-382 (XV-002 hash order → determinism batch), KH-384/385 (gate cwd + quote elision), KH-387 (PR#37-leftover thermal confidence), KH-388 (VD-DET dup finding_ids), KH-389 (PM-002 leaks); LOW: KH-390/391. KH-371/372 LOW (lifecycle LC-ACT provenance omission forcing trust_level=low; LC-005 responded-only denominator + None-as-active — PR #37 left-outs, code-verified 2026-08-17, no corpus runner so live-API verification needed); KH-370 MEDIUM (KH-220 description-substring oscillator FP → false XL-DET/CD-DET, GitHub #33, repro-verified 2026-08-01, v2.2.x batch); KH-368/369 MEDIUM (JSONC string corruption dropping config layers; Action find|head-1 arbitrary project pick — external-review finds, code-verified 2026-07-26); KH-366/KH-367 MEDIUM (hash-order
 nondeterminism: RC-DET + DO-DET/en_net, pre-existing in v2.1.0, gate-flake
 risk — filed during v2.2 Tasks 4/13; 3 known instances = systemic class); the
 2026-07-24 audit batch KH-358..365 (KH-359 HIGH net-identity merge — natural home = #25 release; KH-358/360/361/364/365 MEDIUM; KH-362/363 LOW) + KH-357 MEDIUM (BE-001 rect-diagonal false positive, GitHub #31) + KH-355 LOW (multi-channel FB-pin selection, needs design) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items. Audit reference: kicad-happy `docs/2026-07-24-kicad-parser-and-analysis-audit.md` (verified subset only — forward-compat KHPA-001/002 items live in the roadmap, not here). The v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15, and gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._
