@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~147 (tolerance 10%)",
+      "description": "Net count ~135 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 139,
-        "max": 155
+        "min": 128,
+        "max": 142
       }
     },
     {
@@ -88,10 +88,10 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "10 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -172,6 +172,27 @@
     },
     {
       "id": "SEED-00000017",
+      "description": "1 detect_rc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "5 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -180,14 +201,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:49Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "2 validate_usb_bus detected",
       "check": {
         "path": "findings",

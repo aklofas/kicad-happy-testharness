@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~102 (tolerance 10%)",
+      "description": "Net count ~99 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 96,
-        "max": 108
+        "min": 94,
+        "max": 104
       }
     },
     {
@@ -63,6 +63,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 13 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

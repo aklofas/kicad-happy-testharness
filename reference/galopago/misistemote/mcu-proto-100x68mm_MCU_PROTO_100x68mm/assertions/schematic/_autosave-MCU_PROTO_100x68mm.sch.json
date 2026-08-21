@@ -25,6 +25,24 @@
     },
     {
       "id": "SEED-00000003",
+      "description": "Findings section exists",
+      "check": {
+        "path": "findings",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000005",
       "description": "Has 12 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -33,7 +51,7 @@
       }
     },
     {
-      "id": "SEED-00000004",
+      "id": "SEED-00000006",
       "description": "Has 5 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",

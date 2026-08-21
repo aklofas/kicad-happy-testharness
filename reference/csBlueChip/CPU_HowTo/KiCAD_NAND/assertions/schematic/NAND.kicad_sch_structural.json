@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 15 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 15
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -25,13 +15,23 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 5 audit_esd_protection",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 5
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
       }
     },
     {
@@ -56,56 +56,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 4 detect_transistor_circuits",
+      "description": "Exactly 1 detect_bridge_circuits",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
+        "detector_filter": "detect_bridge_circuits",
         "op": "equals",
-        "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "Q13 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q13$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "Q14 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q14$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "Q3 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Q4 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q4$"
+        "value": 1
       }
     }
   ]

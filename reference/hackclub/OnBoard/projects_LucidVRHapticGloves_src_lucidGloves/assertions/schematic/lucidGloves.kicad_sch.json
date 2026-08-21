@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~84 (tolerance 10%)",
+      "description": "Net count ~62 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 79,
-        "max": 89
+        "min": 58,
+        "max": 66
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "44 analyze_connectivity detected",
+      "description": "8 analyze_usb_compliance detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "min_count",
         "value": 1
       }
@@ -163,6 +163,16 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -181,14 +191,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "Has 20 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

@@ -27,6 +27,18 @@
         "field": "value",
         "pattern": "^LT8912B"
       }
+    },
+    {
+      "id": "BUGFIX-KH-064-01",
+      "description": "KH-064: At least 3 crystal circuits detected (Q-prefix crystals classified correctly)",
+      "issue": "KH-064",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "findings",
+        "op": "min_count",
+        "value": 3,
+        "detector_filter": "detect_crystal_circuits"
+      }
     }
   ]
 }

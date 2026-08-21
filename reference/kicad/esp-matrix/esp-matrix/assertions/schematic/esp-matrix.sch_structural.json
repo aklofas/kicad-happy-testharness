@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 audit_connector_ground_distribution",
+      "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -26,10 +26,10 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
       }
@@ -87,6 +87,38 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "Exactly 2 detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "D1 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "F1 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -95,9 +127,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

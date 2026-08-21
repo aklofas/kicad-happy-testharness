@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~37 (tolerance 10%)",
+      "description": "Net count ~36 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 33,
-        "max": 41
+        "min": 32,
+        "max": 40
       }
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "5 audit_esd_protection detected",
+      "description": "4 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -93,11 +93,21 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 5
+        "value": 4
       }
     },
     {
       "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -116,7 +126,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 16 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

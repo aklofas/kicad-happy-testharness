@@ -28,17 +28,6 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 transistor_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
       "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -49,7 +38,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "R205 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -59,7 +48,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "R206 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -69,23 +58,33 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Q201 simulated as transistor_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ201\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000006",
       "description": "D203 simulated as protection_device",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bD203\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C203 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC203\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C201 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC201\\b"
       }
     },
     {

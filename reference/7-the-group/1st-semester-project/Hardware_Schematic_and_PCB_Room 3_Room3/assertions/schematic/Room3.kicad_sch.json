@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~47 (tolerance 10%)",
+      "description": "Net count ~38 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 42,
-        "max": 52
+        "min": 34,
+        "max": 42
       }
     },
     {
@@ -43,20 +43,20 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "15 analyze_connectivity detected",
+      "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "audit_datasheet_coverage",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 audit_datasheet_coverage detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_datasheet_coverage",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -83,7 +83,17 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "3 detect_transistor_circuits detected",
+      "description": "1 detect_led_drivers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_drivers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "2 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -103,7 +113,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -112,14 +122,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:41Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

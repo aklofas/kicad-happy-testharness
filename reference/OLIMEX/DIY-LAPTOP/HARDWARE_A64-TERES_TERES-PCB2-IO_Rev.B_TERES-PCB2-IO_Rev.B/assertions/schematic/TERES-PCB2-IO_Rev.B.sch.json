@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~53 (tolerance 10%)",
+      "description": "Net count ~43 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 50,
-        "max": 56
+        "min": 38,
+        "max": 48
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_connector_ground_distribution detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -98,6 +98,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -128,7 +138,17 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
+      "description": "1 detect_rf_matching detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rf_matching",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "2 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -138,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "Has 9 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -147,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

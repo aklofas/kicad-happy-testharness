@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 analyze_connectivity",
+      "description": "Exactly 1 analyze_connectivity",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -56,16 +56,26 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 2 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000007",
+      "description": "Exactly 3 audit_rail_sources",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -75,7 +85,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -85,7 +95,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Y1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -96,7 +106,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Exactly 3 detect_decoupling",
       "check": {
         "path": "findings",
@@ -106,17 +116,17 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 6 detect_design_observations",
+      "id": "STRUCT-00000012",
+      "description": "Exactly 7 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 6
+        "value": 7
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Exactly 2 detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -126,7 +136,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "U1 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -137,7 +147,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -147,7 +157,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "U5 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -158,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -168,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "R1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -179,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "Exactly 2 validate_led_resistors",
       "check": {
         "path": "findings",
@@ -188,9 +198,9 @@
         "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:04Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     }

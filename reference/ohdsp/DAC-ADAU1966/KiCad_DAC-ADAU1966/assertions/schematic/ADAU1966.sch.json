@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~128 (tolerance 10%)",
+      "description": "Net count ~70 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 121,
-        "max": 135
+        "min": 66,
+        "max": 74
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,8 +62,28 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "14 detect_rc_filters detected",
+      "id": "SEED-00000007",
+      "description": "2 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "2 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "15 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -62,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -73,7 +103,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "7 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -83,7 +113,28 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
+      "description": "1 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 61 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -92,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000015",
       "description": "Has 7 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -101,7 +152,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000016",
       "description": "Has 14 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

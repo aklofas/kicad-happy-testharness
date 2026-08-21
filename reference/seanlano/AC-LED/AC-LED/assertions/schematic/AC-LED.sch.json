@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~9 (tolerance 10%)",
+      "description": "Net count ~6 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -128,6 +128,16 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
         "value": 1
       }
     }

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~174 (tolerance 10%)",
+      "description": "Net count ~159 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 165,
-        "max": 183
+        "min": 151,
+        "max": 167
       }
     },
     {
@@ -143,6 +143,16 @@
     },
     {
       "id": "SEED-00000014",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
@@ -152,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "4 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -162,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "2 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -183,7 +193,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -193,7 +203,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -203,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "3 detect_pwm_led_dimming detected",
       "check": {
         "path": "findings",
@@ -213,7 +223,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "3 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -223,7 +233,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -234,24 +244,8 @@
       }
     },
     {
-      "id": "SEED-00000023",
-      "description": "3 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
-      }
-    },
-    {
       "id": "SEED-00000024",
-      "description": "3 validate_pullups detected",
+      "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -259,9 +253,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:44Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

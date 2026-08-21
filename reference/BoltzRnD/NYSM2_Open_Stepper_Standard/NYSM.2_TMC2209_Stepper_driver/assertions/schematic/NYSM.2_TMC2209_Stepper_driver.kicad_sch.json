@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~32 (tolerance 10%)",
+      "description": "Net count ~31 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 28,
-        "max": 36
+        "min": 27,
+        "max": 35
       }
     },
     {
@@ -43,20 +43,20 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 analyze_connectivity detected",
+      "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "audit_datasheet_coverage",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 audit_datasheet_coverage detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_datasheet_coverage",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }

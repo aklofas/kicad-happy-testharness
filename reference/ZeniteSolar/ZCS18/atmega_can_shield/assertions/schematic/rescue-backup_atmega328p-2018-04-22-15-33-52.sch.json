@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~42 (tolerance 10%)",
+      "description": "Net count ~37 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 37,
-        "max": 47
+        "min": 33,
+        "max": 41
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,8 +62,8 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "1 detect_decoupling detected",
+      "id": "SEED-00000007",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -62,8 +72,8 @@
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "1 detect_design_observations detected",
+      "id": "SEED-00000008",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -72,7 +82,28 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
+      "description": "1 detect_rc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -81,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

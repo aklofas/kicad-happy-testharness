@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~118 (tolerance 10%)",
+      "description": "Net count ~103 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 112,
-        "max": 124
+        "min": 97,
+        "max": 109
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "30 analyze_connectivity detected",
+      "description": "6 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -151,14 +151,12 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "All audit_led_circuits drive_method values are valid",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_led_circuits",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 5
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
@@ -221,9 +219,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:47Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

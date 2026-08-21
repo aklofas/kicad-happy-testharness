@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 12 analyze_connectivity",
+      "description": "Exactly 3 analyze_usb_compliance",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "equals",
-        "value": 12
+        "value": 3
       }
     },
     {
@@ -56,22 +56,22 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 8 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
         "value": 8
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 4 audit_rail_sources",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "equals",
-        "value": 4
       }
     },
     {
@@ -213,17 +213,6 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "R33 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R33$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "R26 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -234,7 +223,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "R40 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -242,6 +231,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R40$"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "R33 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R33$"
       }
     },
     {

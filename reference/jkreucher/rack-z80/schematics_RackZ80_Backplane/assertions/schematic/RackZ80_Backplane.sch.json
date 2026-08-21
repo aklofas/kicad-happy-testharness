@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~114 (tolerance 10%)",
+      "description": "Net count ~116 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 108,
-        "max": 120
+        "min": 110,
+        "max": 122
       }
     },
     {
@@ -98,7 +98,17 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "3 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "4 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -107,7 +117,17 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
+      "description": "1 detect_isolation_barriers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 14 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

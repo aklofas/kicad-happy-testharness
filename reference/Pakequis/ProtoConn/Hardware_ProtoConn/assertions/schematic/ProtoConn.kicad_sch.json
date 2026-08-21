@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~246 (tolerance 10%)",
+      "description": "Net count ~224 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 238,
-        "max": 254
+        "min": 217,
+        "max": 231
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "23 analyze_connectivity detected",
+      "description": "8 analyze_usb_compliance detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "min_count",
         "value": 1
       }
@@ -163,6 +163,16 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "1 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -182,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "4 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
@@ -192,7 +202,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "All detect_debug_interfaces have connector_ref",
       "check": {
         "path": "findings",
@@ -203,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "All detect_debug_interfaces interface_type values are valid",
       "check": {
         "path": "findings",
@@ -215,7 +225,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -225,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -235,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -246,7 +256,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "12 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -256,7 +266,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "8 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -265,14 +275,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "4 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -282,7 +292,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 77 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -291,7 +301,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000029",
       "description": "Has 12 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -300,7 +310,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000030",
       "description": "Has 9 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -309,7 +319,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000031",
       "description": "Has 36 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -318,7 +328,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000032",
       "description": "Has 13 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

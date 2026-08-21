@@ -36,10 +36,10 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
       }
@@ -88,16 +88,37 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 4 detect_design_observations",
+      "description": "Exactly 7 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 7
       }
     },
     {
       "id": "STRUCT-00000010",
+      "description": "Exactly 1 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "U1 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "Exactly 1 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -107,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "U3 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -118,23 +139,33 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 3 validate_pullups",
+      "id": "STRUCT-00000014",
+      "description": "Exactly 1 validate_power_sequencing",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_power_sequencing",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 3
+        "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:06Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000016",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",

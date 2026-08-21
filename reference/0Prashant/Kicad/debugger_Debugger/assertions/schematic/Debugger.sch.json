@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~242 (tolerance 10%)",
+      "description": "Net count ~209 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 234,
-        "max": 250
+        "min": 202,
+        "max": 216
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "10 audit_connector_ground_distribution detected",
+      "description": "9 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "12 audit_esd_protection detected",
+      "description": "11 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 12
+        "value": 11
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 12
+        "value": 11
       }
     },
     {
@@ -131,6 +131,26 @@
     },
     {
       "id": "SEED-00000013",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "1 audit_power_pin_dc_paths detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -140,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -150,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -160,7 +180,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -171,8 +191,8 @@
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "22 validate_led_resistors detected",
+      "id": "SEED-00000019",
+      "description": "10 validate_led_resistors detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_led_resistors",
@@ -180,14 +200,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:41Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "6 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -197,7 +217,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "Has 14 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -206,7 +226,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "Has 79 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -215,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "Has 79 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

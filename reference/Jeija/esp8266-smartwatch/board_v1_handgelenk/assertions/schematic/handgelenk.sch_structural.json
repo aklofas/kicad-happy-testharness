@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 audit_connector_ground_distribution",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_connector_ground_distribution",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 4 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
       }
     },
     {
@@ -36,12 +36,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 5 audit_rail_sources",
+      "description": "Exactly 4 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -77,12 +77,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 detect_decoupling",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -118,6 +118,27 @@
     },
     {
       "id": "STRUCT-00000012",
+      "description": "Exactly 1 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R5 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
       "description": "Exactly 1 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -127,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -138,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000016",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -148,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000017",
       "description": "R7 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -159,7 +180,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -169,7 +190,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "Exactly 3 suggest_certifications",
       "check": {
         "path": "findings",
@@ -179,23 +200,23 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 8 validate_pullups",
+      "id": "STRUCT-00000020",
+      "description": "Exactly 6 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 8
+        "value": 6
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:04Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",

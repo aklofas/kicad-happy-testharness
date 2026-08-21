@@ -36,6 +36,16 @@
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 3 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -45,7 +55,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
@@ -55,7 +65,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 12 detect_design_observations",
       "check": {
         "path": "findings",
@@ -65,28 +75,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 1 detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
       "id": "STRUCT-00000008",
-      "description": "L1 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
       "description": "Exactly 4 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -96,7 +85,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -107,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "U7 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -118,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "U8 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -129,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "U9 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -140,38 +129,17 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "R8 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 1 detect_rf_matching",
+      "id": "STRUCT-00000013",
+      "description": "Exactly 2 detect_rf_matching",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rf_matching",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000014",
       "description": "Exactly 1 detect_sensor_interfaces",
       "check": {
         "path": "findings",
@@ -181,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000015",
       "description": "Exactly 2 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -191,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000016",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -202,7 +170,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000017",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -213,7 +181,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000018",
       "description": "Exactly 3 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -223,7 +191,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000019",
       "description": "R14 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -234,7 +202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000020",
       "description": "R16 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -245,7 +213,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000021",
       "description": "R23 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -256,7 +224,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000022",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -266,18 +234,18 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
-      "description": "Exactly 10 validate_pullups",
+      "id": "STRUCT-00000023",
+      "description": "Exactly 9 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 10
+        "value": 9
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

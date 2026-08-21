@@ -26,6 +26,16 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -35,48 +45,27 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 1 detect_decoupling",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 4 detect_design_observations",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "equals",
-        "value": 4
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 detect_lc_filters",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_lc_filters",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 1
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "L1 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -86,7 +75,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -97,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "Exactly 2 detect_rf_matching",
       "check": {
         "path": "findings",
@@ -107,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "Exactly 1 detect_sensor_interfaces",
       "check": {
         "path": "findings",
@@ -117,18 +106,18 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 4 validate_pullups",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 4
+        "value": 3
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

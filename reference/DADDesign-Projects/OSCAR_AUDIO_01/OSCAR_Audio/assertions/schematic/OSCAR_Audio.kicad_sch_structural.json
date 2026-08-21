@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 5 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
@@ -25,7 +15,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -35,13 +25,23 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 9 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 9
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
       }
     },
     {
@@ -182,12 +182,12 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 7 detect_rc_filters",
+      "description": "Exactly 5 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 7
+        "value": 5
       }
     },
     {
@@ -236,28 +236,6 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "RV2 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^RV2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
-      "description": "RV1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^RV1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
       "description": "R49 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -268,7 +246,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000024",
       "description": "Exactly 12 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -278,7 +256,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000025",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -289,7 +267,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000026",
       "description": "R14 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -300,7 +278,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000027",
       "description": "R18 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -311,7 +289,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000028",
       "description": "R2 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -322,7 +300,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000029",
       "description": "R20 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -333,7 +311,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000030",
       "description": "R21 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -344,7 +322,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000031",
       "description": "R27 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -355,7 +333,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000032",
       "description": "R28 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -366,7 +344,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000033",
       "description": "R29 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -377,7 +355,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000034",
       "description": "R45 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -388,7 +366,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000035",
       "description": "R48 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -399,7 +377,7 @@
       }
     },
     {
-      "id": "STRUCT-00000038",
+      "id": "STRUCT-00000036",
       "description": "R7 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -410,7 +388,7 @@
       }
     },
     {
-      "id": "STRUCT-00000039",
+      "id": "STRUCT-00000037",
       "description": "Exactly 4 validate_feedback_stability",
       "check": {
         "path": "findings",
@@ -419,14 +397,14 @@
         "value": 4
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "FS-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:03Z",
         "tagged_reason": "datasheet-gated on regulator load step + bandwidth (FS-001)"
       }
     },
     {
-      "id": "STRUCT-00000040",
+      "id": "STRUCT-00000038",
       "description": "Exactly 1 validate_voltage_levels",
       "check": {
         "path": "findings",
@@ -435,9 +413,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:03Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

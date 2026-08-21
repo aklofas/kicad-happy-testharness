@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~213 (tolerance 10%)",
+      "description": "Net count ~181 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 206,
-        "max": 220
+        "min": 171,
+        "max": 191
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "112 analyze_connectivity detected",
+      "description": "107 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -96,14 +96,12 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "All audit_led_circuits drive_method values are valid",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_led_circuits",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 2
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
@@ -223,22 +221,6 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "6 validate_voltage_levels detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_voltage_levels",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
-      }
-    },
-    {
-      "id": "SEED-00000023",
       "description": "Has 21 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -247,7 +229,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000023",
       "description": "Has 14 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

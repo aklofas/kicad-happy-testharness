@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~22 (tolerance 10%)",
+      "description": "Net count ~16 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 19,
-        "max": 25
+        "min": 14,
+        "max": 18
       }
     },
     {
@@ -43,16 +43,6 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "8 analyze_connectivity detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
       "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
@@ -62,7 +52,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "8 audit_led_circuits detected",
       "check": {
         "path": "findings",
@@ -72,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "All audit_led_circuits have ref",
       "check": {
         "path": "findings",
@@ -83,7 +73,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "All audit_led_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -95,7 +85,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "All audit_led_circuits drive_method values are valid",
       "check": {
         "path": "findings",
@@ -104,6 +94,16 @@
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
         "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
@@ -188,9 +188,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:41Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
@@ -204,9 +204,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:41Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

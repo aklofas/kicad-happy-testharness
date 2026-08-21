@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 13 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 13
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -25,11 +15,21 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
       }
@@ -46,12 +46,12 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 14 audit_rail_sources",
+      "description": "Exactly 12 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 14
+        "value": 12
       }
     },
     {
@@ -118,12 +118,12 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 113 detect_design_observations",
+      "description": "Exactly 112 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 113
+        "value": 112
       }
     },
     {
@@ -289,17 +289,6 @@
     },
     {
       "id": "STRUCT-00000028",
-      "description": "RV1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^RV1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
       "description": "R29 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -307,6 +296,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R29$"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "RV1 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^RV1$"
       }
     },
     {
@@ -322,17 +322,6 @@
     },
     {
       "id": "STRUCT-00000031",
-      "description": "R45 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R45$"
-      }
-    },
-    {
-      "id": "STRUCT-00000032",
       "description": "R32 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -343,7 +332,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000032",
       "description": "R39 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -354,7 +343,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000033",
       "description": "R7 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -365,7 +354,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000034",
       "description": "R43 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -373,6 +362,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R43$"
+      }
+    },
+    {
+      "id": "STRUCT-00000035",
+      "description": "R45 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R45$"
       }
     },
     {
@@ -437,9 +437,9 @@
         "value": 4
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:09Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

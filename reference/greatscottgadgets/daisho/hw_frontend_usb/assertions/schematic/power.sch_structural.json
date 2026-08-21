@@ -16,10 +16,10 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 audit_led_circuits",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_led_circuits",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
       }
@@ -56,6 +56,16 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 detect_led_drivers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_drivers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 3 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -65,7 +75,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "U10 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -76,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U11 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -87,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "U9 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -98,24 +108,13 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 2 detect_transistor_circuits",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 1 detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Q1 in detect_transistor_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q1$"
+        "value": 1
       }
     },
     {
@@ -131,16 +130,27 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 2 detect_voltage_dividers",
+      "description": "Exactly 7 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 2
+        "value": 7
       }
     },
     {
       "id": "STRUCT-00000014",
+      "description": "R22 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R22$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "R25 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -151,7 +161,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "R24 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -162,7 +172,51 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
+      "description": "R27 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R27$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R29 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R29$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R32 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R32$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "R37 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R37$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -171,9 +225,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:07Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

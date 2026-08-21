@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -25,13 +15,23 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 4 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 4 detect_rc_filters",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -74,17 +74,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "RV1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^RV1$"
       }
     }
   ]

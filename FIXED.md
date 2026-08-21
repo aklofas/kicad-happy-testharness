@@ -11,6 +11,28 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-08-20 — TH-048: seed.py enum-field assertions count None-field items in the expected total
+
+**Severity:** LOW (5 false FAILs at the v2.2.0 regen; latent since LA-004 shipped)
+**File:** `regression/seed.py` (`_field_spec_assertions`, enum branch)
+**Discovered & fixed same session** (v2.2.0 combined corpus regen adjudication)
+
+- **Root cause:** the enum-field template guards `all_valid` over items whose
+  field is non-None, but emits `count_matches` with `value = len(detections)` —
+  the FULL detector-findings count. A detector emitting mixed rule shapes
+  (audit_led_circuits: LA-AUD rows carry `drive_method`, LA-004 Vf-floor rows
+  don't) seeds an expectation off by the number of field-less rows.
+  `count_matches` only matches field carriers, so the assertion fails on every
+  board where both rules fire (5 boards at the v2.2.0 regen: jabr-cm5-carrier +
+  Cesium Flight Computer/Test Rocket sheets).
+- **Fix:** emit `value = n_with_field` (count of items carrying the field),
+  matching the guard's own scoping.
+- **Verification:** re-seed schematic post-fix → the 5
+  "All audit_led_circuits drive_method values are valid" FAILs flip to PASS
+  (expected 3-of-4 style counts); full-corpus checks 100.0%.
+
+---
+
 ## 2026-07-16 — TH-046: `filter_manifest_by_repo` drops root-level gerber units on repo-scoped runs
 
 **Severity:** MEDIUM (silent coverage gap in every `--repo`/`--cross-section` run)

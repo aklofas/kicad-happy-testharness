@@ -67,7 +67,8 @@
   "11-RV1106G OSC_RTC_PMUIO_VCCIO.kicad_sch.json": {
     "by_type": {
       "crystal_circuit": 2,
-      "decoupling": 7
+      "decoupling": 6,
+      "rc_filter": 1
     },
     "fail": 0,
     "pass": 7,
@@ -78,13 +79,14 @@
   },
   "12-RV1106G ADC_FLASH_SDMMC0.kicad_sch.json": {
     "by_type": {
-      "decoupling": 4
+      "decoupling": 4,
+      "voltage_divider": 1
     },
     "fail": 0,
-    "pass": 2,
-    "pass_rate": 50.0,
+    "pass": 3,
+    "pass_rate": 60.0,
     "skip": 0,
-    "total_sims": 4,
+    "total_sims": 5,
     "warn": 2
   },
   "13-RV1106G SDMMC1_LCD_VICAP_MIPI.kicad_sch.json": {
@@ -101,31 +103,29 @@
   "20-Power-DC IN.kicad_sch.json": {
     "by_type": {
       "decoupling": 3,
-      "feedback_network": 1,
       "regulator_feedback": 1,
-      "voltage_divider": 1
+      "voltage_divider": 3
     },
     "fail": 0,
     "pass": 6,
-    "pass_rate": 100.0,
-    "skip": 0,
-    "total_sims": 6,
+    "pass_rate": 85.7,
+    "skip": 1,
+    "total_sims": 7,
     "warn": 0
   },
   "21-Power-System.kicad_sch.json": {
     "by_type": {
       "decoupling": 6,
-      "feedback_network": 5,
       "inrush": 1,
       "rc_filter": 3,
       "regulator_feedback": 4,
-      "voltage_divider": 6
+      "voltage_divider": 12
     },
     "fail": 0,
-    "pass": 25,
+    "pass": 26,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 25,
+    "total_sims": 26,
     "warn": 0
   },
   "25-USB Port.kicad_sch.json": {
@@ -157,10 +157,10 @@
       "decoupling": 3,
       "inrush": 1,
       "protection_device": 8,
-      "rc_filter": 3,
+      "rc_filter": 2,
       "regulator_feedback": 1,
       "transistor_circuit": 1,
-      "voltage_divider": 1
+      "voltage_divider": 2
     },
     "fail": 0,
     "pass": 18,
@@ -251,17 +251,17 @@
   },
   "70-Audio Port.kicad_sch.json": {
     "by_type": {
-      "decoupling": 2,
+      "decoupling": 1,
       "protection_device": 3,
       "rc_filter": 3,
       "voltage_divider": 1
     },
     "fail": 0,
-    "pass": 8,
-    "pass_rate": 88.9,
-    "skip": 0,
-    "total_sims": 9,
-    "warn": 1
+    "pass": 7,
+    "pass_rate": 87.5,
+    "skip": 1,
+    "total_sims": 8,
+    "warn": 0
   },
   "92-Key Array.kicad_sch.json": {
     "by_type": {
@@ -309,20 +309,28 @@
   "RV1106G_EVB1_V11_20220401LX.kicad_sch.json": {
     "by_type": {
       "crystal_circuit": 3,
-      "decoupling": 44,
-      "feedback_network": 6,
+      "decoupling": 42,
       "inrush": 3,
       "protection_device": 14,
       "rc_filter": 12,
       "regulator_feedback": 6,
       "transistor_circuit": 4,
-      "voltage_divider": 13
+      "voltage_divider": 23
     },
     "fail": 0,
-    "pass": 97,
-    "pass_rate": 92.4,
+    "pass": 98,
+    "pass_rate": 91.6,
+    "skip": 2,
+    "total_sims": 107,
+    "warn": 7
+  },
+  "capability_mode.json": {
+    "by_type": {},
+    "fail": 0,
+    "pass": 0,
+    "pass_rate": 0,
     "skip": 0,
-    "total_sims": 105,
-    "warn": 8
+    "total_sims": 0,
+    "warn": 0
   }
 }

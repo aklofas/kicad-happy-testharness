@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 analyze_connectivity",
+      "description": "Exactly 3 analyze_voltage_derating",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_voltage_derating",
         "op": "equals",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 3 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -220,27 +220,6 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
-      "description": "Exactly 1 detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
-      "description": "R5 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R5$"
       }
     }
   ]

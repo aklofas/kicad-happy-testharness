@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~445 (tolerance 10%)",
+      "description": "Net count ~436 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 431,
-        "max": 459
+        "min": 422,
+        "max": 450
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "248 analyze_connectivity detected",
+      "description": "230 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -163,6 +163,16 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "6 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -182,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "2 detect_buzzer_speakers detected",
       "check": {
         "path": "findings",
@@ -192,7 +202,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -202,7 +212,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "14 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -211,14 +221,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

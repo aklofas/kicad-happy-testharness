@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~27 (tolerance 10%)",
+      "description": "Net count ~26 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 24,
-        "max": 30
+        "min": 23,
+        "max": 29
       }
     },
     {
@@ -143,6 +143,16 @@
     },
     {
       "id": "SEED-00000014",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -152,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -162,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -172,8 +182,18 @@
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "1 detect_rc_filters detected",
+      "id": "SEED-00000018",
+      "description": "1 detect_pwm_led_dimming detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_pwm_led_dimming",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -182,7 +202,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -193,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "2 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -203,7 +223,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "5 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -213,7 +233,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -224,7 +244,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -234,7 +254,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000025",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -245,7 +265,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000026",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -254,7 +274,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000027",
       "description": "Has 5 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

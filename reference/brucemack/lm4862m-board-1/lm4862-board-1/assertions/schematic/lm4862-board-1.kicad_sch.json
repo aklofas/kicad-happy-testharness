@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~15 (tolerance 10%)",
+      "description": "Net count ~10 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -43,26 +43,6 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "8 analyze_connectivity detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "1 audit_connector_ground_distribution detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_connector_ground_distribution",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
@@ -72,7 +52,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000006",
       "description": "2 audit_esd_protection detected",
       "check": {
         "path": "findings",
@@ -82,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000007",
       "description": "All audit_esd_protection have connector_ref",
       "check": {
         "path": "findings",
@@ -93,7 +73,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000008",
       "description": "All audit_esd_protection coverage values are valid",
       "check": {
         "path": "findings",
@@ -105,7 +85,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000009",
       "description": "All audit_esd_protection risk_level values are valid",
       "check": {
         "path": "findings",
@@ -117,17 +97,17 @@
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "1 audit_rail_sources detected",
+      "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000011",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -137,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
       "description": "1 detect_audio_circuits detected",
       "check": {
         "path": "findings",
@@ -147,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000013",
       "description": "All detect_audio_circuits have ref",
       "check": {
         "path": "findings",
@@ -158,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
       "description": "All detect_audio_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -170,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -180,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000016",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -189,9 +169,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:45Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

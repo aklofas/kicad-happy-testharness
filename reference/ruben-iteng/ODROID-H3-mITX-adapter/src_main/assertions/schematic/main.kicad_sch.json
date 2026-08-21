@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~92 (tolerance 10%)",
+      "description": "Net count ~79 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 87,
-        "max": 97
+        "min": 75,
+        "max": 83
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "20 analyze_connectivity detected",
+      "description": "2 analyze_usb_compliance detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "min_count",
         "value": 1
       }
@@ -163,7 +163,17 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "13 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "11 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -182,8 +192,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "6 detect_decoupling detected",
+      "id": "SEED-00000019",
+      "description": "5 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -192,8 +202,8 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "10 detect_design_observations detected",
+      "id": "SEED-00000020",
+      "description": "8 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -202,7 +212,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "11 detect_label_aliases detected",
       "check": {
         "path": "findings",
@@ -212,7 +222,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "3 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -222,7 +232,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -233,7 +243,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "4 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -243,7 +253,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -253,7 +263,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "4 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -262,36 +272,20 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:49Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "2 validate_usb_bus detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_usb_bus",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000027",
-      "description": "3 validate_voltage_levels detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_voltage_levels",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },
     {

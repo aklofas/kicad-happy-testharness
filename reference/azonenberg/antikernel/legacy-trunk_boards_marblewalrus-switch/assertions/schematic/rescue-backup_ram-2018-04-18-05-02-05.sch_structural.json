@@ -6,6 +6,16 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -15,7 +25,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
@@ -25,7 +35,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 detect_design_observations",
       "check": {
         "path": "findings",
@@ -35,17 +45,17 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 60 detect_rc_filters",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 65 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 60
+        "value": 65
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "R100 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -56,7 +66,62 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
+      "description": "R101 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R101$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R102 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R102$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R103 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R103$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R104 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R104$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R105 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R105$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "R106 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -67,7 +132,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000013",
       "description": "R227 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -78,7 +143,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000014",
       "description": "R228 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -89,7 +154,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000015",
       "description": "R229 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -100,7 +165,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000016",
       "description": "R42 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -111,7 +176,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000017",
       "description": "R45 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -122,7 +187,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000018",
       "description": "R46 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -133,7 +198,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000019",
       "description": "R47 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -144,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000020",
       "description": "R48 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -155,7 +220,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000021",
       "description": "R49 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -166,7 +231,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000022",
       "description": "R50 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -177,7 +242,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000023",
       "description": "R51 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -188,7 +253,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000024",
       "description": "R52 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -199,7 +264,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000025",
       "description": "R53 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -210,7 +275,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000026",
       "description": "R54 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -221,7 +286,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000027",
       "description": "R55 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -232,7 +297,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000028",
       "description": "R56 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -243,7 +308,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000029",
       "description": "R57 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -254,7 +319,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000030",
       "description": "R58 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -265,7 +330,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000031",
       "description": "R59 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -276,7 +341,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000032",
       "description": "R60 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -287,7 +352,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000033",
       "description": "R61 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -298,7 +363,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000034",
       "description": "R62 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -309,7 +374,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000035",
       "description": "R63 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -320,7 +385,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000036",
       "description": "R64 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -331,7 +396,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000037",
       "description": "R65 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -342,7 +407,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000038",
       "description": "R66 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -353,7 +418,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000039",
       "description": "R67 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -364,7 +429,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000040",
       "description": "R68 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -375,7 +440,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000041",
       "description": "R69 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -386,7 +451,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000042",
       "description": "R70 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -397,7 +462,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000043",
       "description": "R71 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -408,7 +473,7 @@
       }
     },
     {
-      "id": "STRUCT-00000038",
+      "id": "STRUCT-00000044",
       "description": "R72 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -419,7 +484,7 @@
       }
     },
     {
-      "id": "STRUCT-00000039",
+      "id": "STRUCT-00000045",
       "description": "R73 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -430,7 +495,7 @@
       }
     },
     {
-      "id": "STRUCT-00000040",
+      "id": "STRUCT-00000046",
       "description": "R74 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -441,7 +506,7 @@
       }
     },
     {
-      "id": "STRUCT-00000041",
+      "id": "STRUCT-00000047",
       "description": "R75 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -452,7 +517,7 @@
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000048",
       "description": "R76 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -463,7 +528,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000049",
       "description": "R77 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -474,7 +539,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000050",
       "description": "R78 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -485,7 +550,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000051",
       "description": "R79 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -496,7 +561,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000052",
       "description": "R80 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -507,7 +572,7 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000053",
       "description": "R81 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -518,7 +583,7 @@
       }
     },
     {
-      "id": "STRUCT-00000048",
+      "id": "STRUCT-00000054",
       "description": "R82 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -529,7 +594,7 @@
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000055",
       "description": "R83 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -540,7 +605,7 @@
       }
     },
     {
-      "id": "STRUCT-00000050",
+      "id": "STRUCT-00000056",
       "description": "R84 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -551,7 +616,7 @@
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000057",
       "description": "R86 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -562,7 +627,7 @@
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000058",
       "description": "R87 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -573,7 +638,7 @@
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000059",
       "description": "R88 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -584,7 +649,7 @@
       }
     },
     {
-      "id": "STRUCT-00000054",
+      "id": "STRUCT-00000060",
       "description": "R89 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -595,7 +660,7 @@
       }
     },
     {
-      "id": "STRUCT-00000055",
+      "id": "STRUCT-00000061",
       "description": "R90 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -606,7 +671,7 @@
       }
     },
     {
-      "id": "STRUCT-00000056",
+      "id": "STRUCT-00000062",
       "description": "R91 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -617,7 +682,7 @@
       }
     },
     {
-      "id": "STRUCT-00000057",
+      "id": "STRUCT-00000063",
       "description": "R92 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -628,7 +693,7 @@
       }
     },
     {
-      "id": "STRUCT-00000058",
+      "id": "STRUCT-00000064",
       "description": "R93 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -639,7 +704,7 @@
       }
     },
     {
-      "id": "STRUCT-00000059",
+      "id": "STRUCT-00000065",
       "description": "R94 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -650,7 +715,7 @@
       }
     },
     {
-      "id": "STRUCT-00000060",
+      "id": "STRUCT-00000066",
       "description": "R95 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -661,7 +726,7 @@
       }
     },
     {
-      "id": "STRUCT-00000061",
+      "id": "STRUCT-00000067",
       "description": "R96 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -672,7 +737,7 @@
       }
     },
     {
-      "id": "STRUCT-00000062",
+      "id": "STRUCT-00000068",
       "description": "R97 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -683,7 +748,7 @@
       }
     },
     {
-      "id": "STRUCT-00000063",
+      "id": "STRUCT-00000069",
       "description": "R98 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -694,7 +759,7 @@
       }
     },
     {
-      "id": "STRUCT-00000064",
+      "id": "STRUCT-00000070",
       "description": "R99 in detect_rc_filters",
       "check": {
         "path": "findings",

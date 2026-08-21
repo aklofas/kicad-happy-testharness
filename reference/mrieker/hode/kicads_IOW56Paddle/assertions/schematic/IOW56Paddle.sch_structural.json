@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 audit_connector_ground_distribution",
+      "description": "Exactly 2 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -22,6 +22,16 @@
         "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

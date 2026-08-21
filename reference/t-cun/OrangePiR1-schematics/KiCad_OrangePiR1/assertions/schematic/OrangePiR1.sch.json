@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~972 (tolerance 10%)",
+      "description": "Net count ~973 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 942,
-        "max": 1002
+        "min": 943,
+        "max": 1003
       }
     },
     {
@@ -98,7 +98,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_led_circuits detected",
+      "description": "3 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -126,11 +126,21 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "SEED-00000013",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "19 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -140,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "20 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -150,21 +160,11 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "1 detect_ethernet_interfaces detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_ethernet_interfaces",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "1 detect_led_drivers detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_led_drivers",
         "op": "min_count",
         "value": 1
       }
@@ -245,7 +245,7 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "3 detect_transistor_circuits detected",
+      "description": "4 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -284,9 +284,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:49Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
@@ -300,9 +300,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:49Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

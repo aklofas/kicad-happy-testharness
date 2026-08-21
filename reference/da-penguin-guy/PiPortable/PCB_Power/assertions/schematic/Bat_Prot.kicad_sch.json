@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~38 (tolerance 10%)",
+      "description": "Net count ~35 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 34,
-        "max": 42
+        "min": 31,
+        "max": 39
       }
     },
     {
@@ -43,20 +43,20 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 analyze_connectivity detected",
+      "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "audit_datasheet_coverage",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 audit_datasheet_coverage detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_datasheet_coverage",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -163,9 +163,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:46Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

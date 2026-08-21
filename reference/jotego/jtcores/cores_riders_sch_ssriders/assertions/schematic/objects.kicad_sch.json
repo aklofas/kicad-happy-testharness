@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~285 (tolerance 10%)",
+      "description": "Net count ~210 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 276,
-        "max": 294
+        "min": 203,
+        "max": 217
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "105 analyze_connectivity detected",
+      "description": "42 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -118,7 +118,17 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -137,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -147,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "Has 6 other(s)",
       "check": {
         "path": "statistics.component_types.other",

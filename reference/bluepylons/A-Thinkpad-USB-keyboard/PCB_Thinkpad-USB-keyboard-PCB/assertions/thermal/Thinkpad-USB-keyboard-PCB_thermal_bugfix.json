@@ -32,7 +32,7 @@
     },
     {
       "id": "BUGFIX-KH-307-03",
-      "description": "KH-307: TS-003 finding uses evidence_source='datasheet' (datasheet-backed thermal resistance path)",
+      "description": "KH-307: TS-003 finding uses a valid evidence_source enum, not a confidence string (was 'deterministic' before fix; expected value 'datasheet'->'heuristic_rule' at v2.2.0 per PR #37 \u2014 package_table rtheta is a generic package average, not per-MPN datasheet data)",
       "issue": "KH-307",
       "fix_type": "invariant_fix",
       "check": {
@@ -41,7 +41,7 @@
         "match_field": "rule_id",
         "match_value": "TS-003",
         "assert_field": "evidence_source",
-        "assert_value": "datasheet"
+        "assert_value": "heuristic_rule"
       }
     }
   ]

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~92 (tolerance 10%)",
+      "description": "Net count ~76 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 87,
-        "max": 97
+        "min": 72,
+        "max": 80
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "56 analyze_connectivity detected",
+      "description": "40 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,6 +63,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "Has 8 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -91,7 +101,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 5 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -100,7 +110,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

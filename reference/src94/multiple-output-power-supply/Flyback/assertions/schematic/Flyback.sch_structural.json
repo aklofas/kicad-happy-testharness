@@ -16,6 +16,16 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 detect_design_observations",
       "check": {
         "path": "findings",
@@ -25,7 +35,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -35,7 +45,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -46,17 +56,17 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 2 detect_rc_filters",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "R1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -67,18 +77,29 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "R5 in detect_rc_filters",
+      "id": "STRUCT-00000008",
+      "description": "R4 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R5$"
+        "pattern": "^R4$"
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
+      "description": "R3 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 1 detect_transformer_feedback",
       "check": {
         "path": "findings",
@@ -88,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -98,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -109,17 +130,17 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 1 detect_voltage_dividers",
+      "id": "STRUCT-00000013",
+      "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -130,7 +151,18 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
+      "description": "R14 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R14$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "Exactly 2 validate_feedback_stability",
       "check": {
         "path": "findings",
@@ -139,9 +171,9 @@
         "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "FS-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:09Z",
         "tagged_reason": "datasheet-gated on regulator load step + bandwidth (FS-001)"
       }
     }

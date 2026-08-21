@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~551 (tolerance 10%)",
+      "description": "Net count ~447 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 534,
-        "max": 568
+        "min": 433,
+        "max": 461
       }
     },
     {
@@ -143,7 +143,27 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "8 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "1 audit_power_pin_dc_paths detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "7 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -152,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "2 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -162,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -170,27 +190,6 @@
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000017",
-      "description": "4 detect_current_sense detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000018",
-      "description": "All detect_current_sense have shunt ref present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "not_contains_match",
-        "field": "shunt.ref",
-        "pattern": "^(None|)$"
       }
     },
     {
@@ -205,7 +204,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "6 detect_design_observations detected",
+      "description": "8 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -225,7 +224,7 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "6 detect_lc_filters detected",
+      "description": "9 detect_lc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
@@ -300,7 +299,7 @@
     },
     {
       "id": "SEED-00000029",
-      "description": "23 detect_rc_filters detected",
+      "description": "20 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -341,7 +340,7 @@
     },
     {
       "id": "SEED-00000033",
-      "description": "7 detect_voltage_dividers detected",
+      "description": "12 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -380,9 +379,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
@@ -396,9 +395,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

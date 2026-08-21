@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~395 (tolerance 10%)",
+      "description": "Net count ~365 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 383,
-        "max": 407
+        "min": 354,
+        "max": 376
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,7 +62,28 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
+      "description": "1 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 30 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -61,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

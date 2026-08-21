@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~58 (tolerance 10%)",
+      "description": "Net count ~50 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 55,
-        "max": 61
+        "min": 45,
+        "max": 56
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "22 analyze_connectivity detected",
+      "description": "8 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -118,10 +118,10 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "1 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }

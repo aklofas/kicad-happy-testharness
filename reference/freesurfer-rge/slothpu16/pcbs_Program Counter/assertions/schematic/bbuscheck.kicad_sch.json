@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~19 (tolerance 10%)",
+      "description": "Net count ~18 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 16,
+        "max": 20
       }
     },
     {
@@ -63,6 +63,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "Has 16 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",

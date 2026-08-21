@@ -6,6 +6,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 bridge_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^bridge_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -16,18 +27,18 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 6 transistor_circuit simulation(s)",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 4 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 6
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "R12 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -37,7 +48,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "C1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -47,7 +58,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Q303 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -57,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Q304 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -67,18 +78,18 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Q307 simulated as transistor_circuit",
+      "id": "STRUCT-00000008",
+      "description": "Q309 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ307\\b"
+        "pattern": "\\bQ309\\b"
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Q308 simulated as transistor_circuit",
+      "id": "STRUCT-00000009",
+      "description": "Q308 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -87,13 +98,13 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Q309 simulated as transistor_circuit",
+      "id": "STRUCT-00000010",
+      "description": "Q307 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ309\\b"
+        "pattern": "\\bQ307\\b"
       }
     }
   ]

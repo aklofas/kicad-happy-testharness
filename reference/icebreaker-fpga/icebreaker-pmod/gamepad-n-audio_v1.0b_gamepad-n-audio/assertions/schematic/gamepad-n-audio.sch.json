@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,7 +62,40 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
+      "description": "3 detect_level_shifters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All detect_level_shifters have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All detect_level_shifters type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 16 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -61,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000011",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -70,7 +113,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000012",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -79,7 +122,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000013",
       "description": "Has 11 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

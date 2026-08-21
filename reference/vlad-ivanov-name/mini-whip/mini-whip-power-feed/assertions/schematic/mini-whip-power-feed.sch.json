@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~7 (tolerance 10%)",
+      "description": "Net count ~6 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -43,7 +43,17 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 detect_lc_filters detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 detect_lc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
@@ -52,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
@@ -63,7 +73,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -73,7 +83,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",

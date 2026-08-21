@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~157 (tolerance 10%)",
+      "description": "Net count ~156 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 149,
-        "max": 165
+        "min": 148,
+        "max": 164
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "52 analyze_connectivity detected",
+      "description": "51 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -118,6 +118,16 @@
     },
     {
       "id": "SEED-00000012",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -138,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -148,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "4 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -158,7 +168,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "2 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -168,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -178,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -189,7 +199,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -198,14 +208,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:45Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -214,7 +224,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 10 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -223,7 +233,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "Has 10 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

@@ -6,6 +6,16 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -15,7 +25,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 8 detect_label_aliases",
       "check": {
         "path": "findings",
@@ -25,24 +35,13 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 18 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 18
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "R1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R1$"
       }
     },
     {
@@ -157,6 +156,17 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "R1 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "R5 in detect_rc_filters",
       "check": {
         "path": "findings",

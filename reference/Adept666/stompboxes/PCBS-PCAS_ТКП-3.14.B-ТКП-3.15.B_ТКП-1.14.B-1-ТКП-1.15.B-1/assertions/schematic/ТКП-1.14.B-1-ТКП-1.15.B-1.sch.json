@@ -35,6 +35,24 @@
     },
     {
       "id": "SEED-00000004",
+      "description": "Findings section exists",
+      "check": {
+        "path": "findings",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -43,7 +61,7 @@
       }
     },
     {
-      "id": "SEED-00000005",
+      "id": "SEED-00000007",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -52,7 +70,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000008",
       "description": "Has 9 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -61,7 +79,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -70,7 +88,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "Has 11 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",

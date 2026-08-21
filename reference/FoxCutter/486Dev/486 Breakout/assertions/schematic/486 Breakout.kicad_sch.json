@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~144 (tolerance 10%)",
+      "description": "Net count ~134 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 136,
-        "max": 152
+        "min": 127,
+        "max": 141
       }
     },
     {
@@ -43,16 +43,6 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "14 analyze_connectivity detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
       "description": "9 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
@@ -62,7 +52,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
@@ -72,8 +62,8 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "15 audit_esd_protection detected",
+      "id": "SEED-00000007",
+      "description": "14 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -82,7 +72,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "All audit_esd_protection have connector_ref",
       "check": {
         "path": "findings",
@@ -93,7 +83,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "All audit_esd_protection coverage values are valid",
       "check": {
         "path": "findings",
@@ -101,11 +91,11 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 15
+        "value": 14
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "All audit_esd_protection risk_level values are valid",
       "check": {
         "path": "findings",
@@ -113,12 +103,22 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 15
+        "value": 14
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -176,9 +176,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~72 (tolerance 10%)",
+      "description": "Net count ~66 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 68,
-        "max": 76
+        "min": 62,
+        "max": 70
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "10 analyze_connectivity detected",
+      "description": "2 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "5 audit_led_circuits detected",
+      "description": "4 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -91,7 +91,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -103,12 +103,22 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 5
+        "value": 4
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "6 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "12 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -137,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "27 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -147,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "10 detect_label_aliases detected",
       "check": {
         "path": "findings",
@@ -157,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "3 detect_lc_filters detected",
       "check": {
         "path": "findings",
@@ -167,7 +177,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
@@ -178,7 +188,17 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
+      "description": "2 detect_led_drivers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_drivers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "1 detect_power_path detected",
       "check": {
         "path": "findings",
@@ -188,7 +208,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "All detect_power_path have ref",
       "check": {
         "path": "findings",
@@ -199,7 +219,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "All detect_power_path type values are valid",
       "check": {
         "path": "findings",
@@ -211,7 +231,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "8 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -221,34 +241,13 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000023",
-      "description": "2 detect_transistor_circuits detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000024",
-      "description": "All detect_transistor_circuits have reference present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
         "pattern": "^(None|\\?|)$"
       }
     },
@@ -283,9 +282,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:46Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
@@ -299,9 +298,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:46Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },

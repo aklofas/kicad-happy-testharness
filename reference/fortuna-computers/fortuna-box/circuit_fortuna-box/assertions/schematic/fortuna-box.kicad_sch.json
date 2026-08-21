@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~268 (tolerance 10%)",
+      "description": "Net count ~532 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 259,
-        "max": 277
+        "min": 516,
+        "max": 548
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "140 analyze_connectivity detected",
+      "description": "370 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -163,7 +163,17 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "8 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -182,40 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "1 detect_clock_distribution detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_clock_distribution",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000019",
-      "description": "All detect_clock_distribution have ref",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_clock_distribution",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "All detect_clock_distribution type values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_clock_distribution",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(clock_generator|pll|oscillator_output)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -225,7 +202,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000020",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -236,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000021",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -246,13 +223,34 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000022",
       "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000023",
+      "description": "2 detect_rc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000024",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
@@ -308,9 +306,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:47Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

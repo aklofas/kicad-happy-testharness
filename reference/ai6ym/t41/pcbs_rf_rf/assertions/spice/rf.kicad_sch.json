@@ -16,11 +16,11 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 28 passing simulation(s)",
+      "description": "At least 24 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 28
+        "value": 24
       }
     },
     {
@@ -36,13 +36,13 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "3 inrush simulation(s)",
+      "description": "2 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -80,6 +80,17 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -90,7 +101,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "10 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

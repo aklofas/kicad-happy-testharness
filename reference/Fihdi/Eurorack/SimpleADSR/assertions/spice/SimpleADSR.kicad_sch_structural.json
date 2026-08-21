@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 3 transistor_circuit simulation(s)",
+      "description": "Exactly 4 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -179,6 +179,16 @@
     },
     {
       "id": "STRUCT-00000018",
+      "description": "Q5 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "Q6 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",

@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 13 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 13
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 3 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
@@ -25,7 +15,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -35,13 +25,23 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 15 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 15
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
       }
     },
     {
@@ -1067,17 +1067,6 @@
     },
     {
       "id": "STRUCT-00000099",
-      "description": "R157 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R157$"
-      }
-    },
-    {
-      "id": "STRUCT-00000100",
       "description": "R158 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -1088,18 +1077,18 @@
       }
     },
     {
-      "id": "STRUCT-00000101",
-      "description": "R164 in detect_rc_filters",
+      "id": "STRUCT-00000100",
+      "description": "R157 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R164$"
+        "pattern": "^R157$"
       }
     },
     {
-      "id": "STRUCT-00000102",
+      "id": "STRUCT-00000101",
       "description": "R163 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -1107,6 +1096,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R163$"
+      }
+    },
+    {
+      "id": "STRUCT-00000102",
+      "description": "R164 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R164$"
       }
     },
     {
@@ -1786,9 +1786,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:04Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

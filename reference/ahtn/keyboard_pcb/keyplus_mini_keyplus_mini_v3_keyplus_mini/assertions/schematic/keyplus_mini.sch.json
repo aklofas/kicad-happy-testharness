@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~45 (tolerance 10%)",
+      "description": "Net count ~43 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 40,
-        "max": 50
+        "min": 38,
+        "max": 48
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,7 +62,27 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
+      "description": "1 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -62,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -73,7 +103,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -82,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~181 (tolerance 10%)",
+      "description": "Net count ~167 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 171,
-        "max": 191
+        "min": 158,
+        "max": 176
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "70 analyze_connectivity detected",
+      "description": "67 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,7 +63,17 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -82,8 +92,8 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "7 detect_label_aliases detected",
+      "id": "SEED-00000010",
+      "description": "9 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 15 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -101,7 +111,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

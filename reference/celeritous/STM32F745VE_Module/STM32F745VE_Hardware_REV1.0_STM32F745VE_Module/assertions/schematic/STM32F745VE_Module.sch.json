@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~340 (tolerance 10%)",
+      "description": "Net count ~337 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 329,
-        "max": 351
+        "min": 326,
+        "max": 348
       }
     },
     {
@@ -98,6 +98,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "1 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
@@ -107,8 +117,8 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "5 audit_rail_sources detected",
+      "id": "SEED-00000012",
+      "description": "6 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 detect_adc_circuits detected",
       "check": {
         "path": "findings",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "All detect_adc_circuits have ref",
       "check": {
         "path": "findings",
@@ -138,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "All detect_adc_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -150,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "2 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -160,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -171,7 +181,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -181,7 +191,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "1 detect_ethernet_interfaces detected",
       "check": {
         "path": "findings",
@@ -191,7 +201,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -201,7 +211,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -212,8 +222,8 @@
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "2 detect_protection_devices detected",
+      "id": "SEED-00000022",
+      "description": "3 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -222,8 +232,8 @@
       }
     },
     {
-      "id": "SEED-00000022",
-      "description": "1 suggest_certifications detected",
+      "id": "SEED-00000023",
+      "description": "2 suggest_certifications detected",
       "check": {
         "path": "findings",
         "detector_filter": "suggest_certifications",
@@ -232,7 +242,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "4 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -241,14 +251,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:45Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "4 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -258,7 +268,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 25 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -267,7 +277,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 9 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -276,7 +286,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 12 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

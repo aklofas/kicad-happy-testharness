@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~218 (tolerance 10%)",
+      "description": "Net count ~204 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 211,
-        "max": 225
+        "min": 197,
+        "max": 211
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 analyze_connectivity detected",
+      "description": "1 analyze_voltage_derating detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_voltage_derating",
         "op": "min_count",
         "value": 1
       }
@@ -163,10 +163,10 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }

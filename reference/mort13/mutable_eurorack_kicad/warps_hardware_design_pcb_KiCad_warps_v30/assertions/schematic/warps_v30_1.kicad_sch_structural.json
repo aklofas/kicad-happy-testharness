@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 37 analyze_connectivity",
+      "description": "Exactly 35 analyze_connectivity",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
         "op": "equals",
-        "value": 37
+        "value": 35
       }
     },
     {
@@ -26,6 +26,16 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 9 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
@@ -35,17 +45,17 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 3 audit_rail_sources",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -55,7 +65,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 detect_audio_circuits",
       "check": {
         "path": "findings",
@@ -65,7 +75,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 2 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -75,7 +85,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Q1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -86,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Q2 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Exactly 2 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -117,18 +127,18 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 4 validate_pullups",
+      "id": "STRUCT-00000013",
+      "description": "Exactly 5 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 4
+        "value": 5
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:09Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

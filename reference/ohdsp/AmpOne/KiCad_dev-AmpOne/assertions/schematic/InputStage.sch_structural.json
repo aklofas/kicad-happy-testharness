@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 audit_connector_ground_distribution",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_connector_ground_distribution",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_esd_protection",
       "check": {
         "path": "findings",
@@ -25,23 +15,33 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 detect_rc_filters",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R213 in detect_rc_filters",
+      "description": "R213 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
+        "field": "r_top.ref",
         "pattern": "^R213$"
       }
     }

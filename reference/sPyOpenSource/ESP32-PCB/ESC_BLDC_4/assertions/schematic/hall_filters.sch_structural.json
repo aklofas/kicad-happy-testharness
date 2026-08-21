@@ -6,6 +6,16 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -15,13 +25,67 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 detect_label_aliases",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
         "op": "equals",
         "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 4 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R7 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R10 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R10$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R9 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R9$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R8 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R8$"
       }
     }
   ]

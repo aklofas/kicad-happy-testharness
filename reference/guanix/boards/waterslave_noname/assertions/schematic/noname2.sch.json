@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~50 (tolerance 10%)",
+      "description": "Net count ~49 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 45,
-        "max": 56
+        "min": 44,
+        "max": 54
       }
     },
     {
@@ -143,17 +143,17 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "3 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000015",
-      "description": "2 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -184,7 +184,17 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "1 detect_design_observations detected",
+      "description": "1 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -193,7 +203,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

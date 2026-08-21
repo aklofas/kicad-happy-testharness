@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 40 analyze_connectivity",
+      "description": "Exactly 3 analyze_usb_compliance",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "equals",
-        "value": 40
+        "value": 3
       }
     },
     {
@@ -56,22 +56,22 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 6 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
         "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 9 audit_rail_sources",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "equals",
-        "value": 9
       }
     },
     {
@@ -160,12 +160,12 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 37 detect_design_observations",
+      "description": "Exactly 36 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 37
+        "value": 36
       }
     },
     {
@@ -1155,25 +1155,25 @@
         "value": 17
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:03Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
       "id": "STRUCT-00000108",
-      "description": "Exactly 20 validate_voltage_levels",
+      "description": "Exactly 136 validate_voltage_levels",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
         "op": "equals",
-        "value": 20
+        "value": 136
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:03Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

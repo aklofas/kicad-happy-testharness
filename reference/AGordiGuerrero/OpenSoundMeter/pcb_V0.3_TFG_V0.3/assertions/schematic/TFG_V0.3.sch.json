@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~86 (tolerance 10%)",
+      "description": "Net count ~62 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 81,
-        "max": 91
+        "min": 58,
+        "max": 66
       }
     },
     {
@@ -98,27 +98,27 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "3 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "4 audit_rail_sources detected",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "2 detect_design_observations detected",
+      "description": "4 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -128,7 +128,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 detect_label_aliases detected",
+      "description": "2 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -159,7 +159,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "6 detect_rc_filters detected",
+      "description": "7 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -180,7 +180,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "3 detect_voltage_dividers detected",
+      "description": "6 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -209,9 +209,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:41Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },

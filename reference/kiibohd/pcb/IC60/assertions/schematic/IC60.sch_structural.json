@@ -36,16 +36,26 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 7 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 7
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 6 audit_rail_sources",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 detect_debug_interfaces",
       "check": {
         "path": "findings",
@@ -55,7 +65,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
@@ -65,7 +75,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 5 detect_design_observations",
       "check": {
         "path": "findings",
@@ -75,7 +85,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 detect_key_matrices",
       "check": {
         "path": "findings",
@@ -85,7 +95,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Exactly 1 detect_led_driver_ics",
       "check": {
         "path": "findings",
@@ -95,7 +105,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -105,7 +115,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R5 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -116,7 +126,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Exactly 2 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -126,23 +136,23 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 63 validate_led_resistors",
+      "id": "STRUCT-00000014",
+      "description": "Exactly 57 validate_led_resistors",
       "check": {
         "path": "findings",
         "detector_filter": "validate_led_resistors",
         "op": "equals",
-        "value": 63
+        "value": 57
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",
@@ -151,9 +161,9 @@
         "value": 3
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

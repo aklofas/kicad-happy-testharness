@@ -6,52 +6,52 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~190 (tolerance 10%)",
+      "description": "Finding count ~185 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 180,
-        "max": 200
+        "min": 175,
+        "max": 195
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~55",
+      "description": "by_severity.error ~54",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 52,
-        "max": 58
+        "min": 51,
+        "max": 57
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~102",
+      "description": "by_severity.warning ~97",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 96,
-        "max": 108
+        "min": 92,
+        "max": 102
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~33",
+      "description": "by_severity.info ~34",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 29,
-        "max": 37
+        "min": 30,
+        "max": 38
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~19.0 (+-10)",
+      "description": "EMC risk score ~40.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 9.0,
-        "max": 29.0
+        "min": 30.0,
+        "max": 50.0
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "10 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 10
+        "value": 5
       }
     },
     {

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~43 (tolerance 10%)",
+      "description": "Net count ~37 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 38,
-        "max": 48
+        "min": 33,
+        "max": 41
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_connector_ground_distribution detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -98,10 +98,10 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -159,6 +159,16 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "2 detect_protection_devices detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -167,14 +177,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -183,7 +193,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "Has 11 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

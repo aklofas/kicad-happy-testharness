@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -25,13 +15,23 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 3 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
         "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
       }
     },
     {
@@ -129,17 +129,6 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R53 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R53$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "R54 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -150,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000014",
       "description": "R52 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -158,6 +147,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R52$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R53 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R53$"
       }
     },
     {
@@ -206,17 +206,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "R9 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "R35 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -224,6 +213,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R35$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "R9 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R9$"
       }
     },
     {

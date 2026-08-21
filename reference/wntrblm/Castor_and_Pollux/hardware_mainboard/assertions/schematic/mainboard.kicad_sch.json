@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~153 (tolerance 10%)",
+      "description": "Net count ~150 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 145,
-        "max": 161
+        "min": 142,
+        "max": 158
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "13 analyze_connectivity detected",
+      "description": "1 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -108,10 +108,10 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "3 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -336,7 +336,7 @@
     },
     {
       "id": "SEED-00000033",
-      "description": "3 validate_voltage_levels detected",
+      "description": "4 validate_voltage_levels detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
@@ -344,9 +344,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:49Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },

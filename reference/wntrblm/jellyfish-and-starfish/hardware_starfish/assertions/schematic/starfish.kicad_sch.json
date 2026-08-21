@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~143 (tolerance 10%)",
+      "description": "Net count ~165 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 135,
-        "max": 151
+        "min": 156,
+        "max": 174
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 analyze_connectivity detected",
+      "description": "1 analyze_usb_compliance detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "min_count",
         "value": 1
       }
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "9 audit_led_circuits detected",
+      "description": "6 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -136,7 +136,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 9
+        "value": 6
       }
     },
     {
@@ -148,15 +148,15 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 9
+        "value": 6
       }
     },
     {
       "id": "SEED-00000015",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -401,9 +401,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:49Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },

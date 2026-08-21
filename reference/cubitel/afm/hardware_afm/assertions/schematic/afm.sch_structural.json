@@ -26,36 +26,77 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 6 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 6
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 detect_decoupling",
+      "description": "Exactly 2 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_decoupling",
+        "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 4
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 6 detect_design_observations",
+      "description": "Exactly 7 audit_rail_sources",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
+        "detector_filter": "audit_rail_sources",
+        "op": "equals",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 6 detect_decoupling",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 6
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 8 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "L1 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 2 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -65,17 +106,17 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 11 detect_rc_filters",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 14 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 11
+        "value": 14
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000012",
       "description": "R3 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -86,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000013",
       "description": "R2 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -97,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000014",
       "description": "R11 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -108,7 +149,18 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000015",
+      "description": "R12 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "R14 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -119,7 +171,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000017",
       "description": "R16 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -130,7 +182,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000018",
       "description": "R18 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -141,7 +193,18 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000019",
+      "description": "R54 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R54$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
       "description": "R60 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -152,7 +215,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000021",
       "description": "R62 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -163,7 +226,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000022",
       "description": "R63 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -174,7 +237,18 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000023",
+      "description": "R61 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R61$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
       "description": "R64 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -185,7 +259,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000025",
       "description": "R65 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -196,17 +270,17 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "Exactly 5 detect_voltage_dividers",
+      "id": "STRUCT-00000026",
+      "description": "Exactly 7 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 5
+        "value": 7
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000027",
       "description": "R9 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -217,7 +291,29 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000028",
+      "description": "R36 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R36$"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "R37 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R37$"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
       "description": "R31 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -228,7 +324,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000031",
       "description": "R34 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -239,7 +335,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000032",
       "description": "R41 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -250,7 +346,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000033",
       "description": "R66 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -261,7 +357,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000034",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",

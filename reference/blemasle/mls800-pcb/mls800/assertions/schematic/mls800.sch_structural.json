@@ -36,20 +36,20 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 audit_rail_sources",
+      "description": "Exactly 2 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
         "value": 2
       }
@@ -77,22 +77,22 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 3 detect_decoupling",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 8 detect_design_observations",
+      "description": "Exactly 10 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 8
+        "value": 10
       }
     },
     {
@@ -128,16 +128,27 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 1 detect_power_regulators",
+      "description": "Exactly 2 detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000014",
+      "description": "U1 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "U8 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -148,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "Exactly 3 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -158,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "F1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -169,7 +180,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "VR1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -180,7 +191,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "VR2 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -191,28 +202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
       "id": "STRUCT-00000020",
-      "description": "R19 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R19$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "Exactly 2 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -222,7 +212,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "Exactly 9 validate_pullups",
       "check": {
         "path": "findings",
@@ -231,14 +221,14 @@
         "value": 9
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:05Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Exactly 1 validate_usb_bus",
       "check": {
         "path": "findings",

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~114 (tolerance 10%)",
+      "description": "Net count ~72 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 108,
-        "max": 120
+        "min": 68,
+        "max": 76
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,8 +62,8 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "2 detect_decoupling detected",
+      "id": "SEED-00000007",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -62,8 +72,8 @@
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "2 detect_design_observations detected",
+      "id": "SEED-00000008",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "7 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -81,14 +91,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "Has 37 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

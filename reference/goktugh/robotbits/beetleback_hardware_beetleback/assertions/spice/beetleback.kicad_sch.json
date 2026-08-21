@@ -16,11 +16,11 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 4 passing simulation(s)",
+      "description": "At least 3 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -36,12 +36,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "2 transistor_circuit simulation(s)",
+      "description": "2 snubber_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
+        "pattern": "^snubber_circuit$",
         "value": 2
       }
     },

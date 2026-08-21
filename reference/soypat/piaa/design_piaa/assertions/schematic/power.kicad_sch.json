@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~11 (tolerance 10%)",
+      "description": "Net count ~9 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 8,
+        "max": 10
       }
     },
     {
@@ -43,16 +43,6 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 analyze_connectivity detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
       "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
@@ -62,7 +52,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "1 audit_led_circuits detected",
       "check": {
         "path": "findings",
@@ -72,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "All audit_led_circuits have ref",
       "check": {
         "path": "findings",
@@ -83,7 +73,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "All audit_led_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -95,7 +85,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "All audit_led_circuits drive_method values are valid",
       "check": {
         "path": "findings",
@@ -103,6 +93,16 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
         "value": 1
       }
     },

@@ -16,10 +16,10 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
       }
@@ -98,17 +98,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R14 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R14$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "R11 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -116,6 +105,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R14 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R14$"
       }
     },
     {

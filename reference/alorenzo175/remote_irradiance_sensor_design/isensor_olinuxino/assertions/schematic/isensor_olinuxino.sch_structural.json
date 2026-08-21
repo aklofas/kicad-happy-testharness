@@ -26,10 +26,10 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
       }
@@ -139,27 +139,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "R4 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -169,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "R1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -180,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
       "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",
@@ -189,14 +168,14 @@
         "value": 3
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:05Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",

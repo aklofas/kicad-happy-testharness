@@ -108,6 +108,61 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "1 audit_led_circuits detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All audit_led_circuits have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All audit_led_circuits type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All audit_led_circuits drive_method values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -117,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000017",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -127,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000018",
       "description": "1 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
@@ -137,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000019",
       "description": "All detect_debug_interfaces have connector_ref",
       "check": {
         "path": "findings",
@@ -148,7 +203,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000020",
       "description": "All detect_debug_interfaces interface_type values are valid",
       "check": {
         "path": "findings",
@@ -160,7 +215,17 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000021",
+      "description": "2 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -169,7 +234,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000023",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

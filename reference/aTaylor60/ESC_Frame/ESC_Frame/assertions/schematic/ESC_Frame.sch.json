@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~55 (tolerance 10%)",
+      "description": "Net count ~51 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 52,
-        "max": 58
+        "min": 48,
+        "max": 54
       }
     },
     {
@@ -43,7 +43,17 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -52,8 +62,8 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "1 detect_decoupling detected",
+      "id": "SEED-00000007",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -62,8 +72,8 @@
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "2 detect_design_observations detected",
+      "id": "SEED-00000008",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "6 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -93,7 +103,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 24 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -102,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -111,7 +121,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 9 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
@@ -120,7 +130,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

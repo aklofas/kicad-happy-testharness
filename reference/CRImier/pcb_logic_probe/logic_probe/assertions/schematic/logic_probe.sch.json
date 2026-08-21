@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_led_circuits detected",
+      "description": "3 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -71,7 +71,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -83,11 +83,21 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -97,21 +107,11 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "1 detect_led_drivers detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_led_drivers",
         "op": "min_count",
         "value": 1
       }
@@ -128,6 +128,27 @@
     },
     {
       "id": "SEED-00000013",
+      "description": "1 detect_transistor_circuits detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All detect_transistor_circuits have reference present",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

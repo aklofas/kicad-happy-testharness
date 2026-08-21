@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 7 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 7
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -25,13 +15,23 @@
       }
     },
     {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 audit_rail_sources",
+      "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -182,6 +182,17 @@
     },
     {
       "id": "STRUCT-00000018",
+      "description": "R57 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R57$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "R58 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -192,7 +203,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "R59 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -200,17 +211,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R59$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
-      "description": "R57 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R57$"
       }
     },
     {

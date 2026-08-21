@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~84 (tolerance 10%)",
+      "description": "Net count ~82 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 79,
-        "max": 89
+        "min": 77,
+        "max": 87
       }
     },
     {
@@ -63,7 +63,17 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -101,7 +111,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 5 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",

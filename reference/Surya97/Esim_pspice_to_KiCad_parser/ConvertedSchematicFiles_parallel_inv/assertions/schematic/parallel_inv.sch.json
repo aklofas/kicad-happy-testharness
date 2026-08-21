@@ -22,6 +22,24 @@
         "op": "min_count",
         "value": 1
       }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Findings section exists",
+      "check": {
+        "path": "findings",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
     }
   ]
 }

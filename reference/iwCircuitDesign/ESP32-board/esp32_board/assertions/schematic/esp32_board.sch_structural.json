@@ -36,6 +36,16 @@
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 4 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -45,37 +55,58 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 3 detect_decoupling",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 3 detect_design_observations",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 4 detect_rc_filters",
+      "description": "Exactly 4 detect_design_observations",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 4
       }
     },
     {
       "id": "STRUCT-00000008",
+      "description": "Exactly 1 detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "D4 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Exactly 5 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R11 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -86,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
       "description": "R10 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -97,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000013",
       "description": "R5 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -108,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000014",
       "description": "R8 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -119,23 +150,23 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 3 validate_pullups",
+      "id": "STRUCT-00000015",
+      "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 3
+        "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000016",
       "description": "Exactly 1 validate_usb_bus",
       "check": {
         "path": "findings",

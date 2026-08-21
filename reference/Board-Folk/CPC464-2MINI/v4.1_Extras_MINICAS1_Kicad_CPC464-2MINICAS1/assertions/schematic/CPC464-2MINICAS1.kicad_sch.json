@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~37 (tolerance 10%)",
+      "description": "Net count ~34 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 33,
-        "max": 41
+        "min": 30,
+        "max": 38
       }
     },
     {
@@ -163,6 +163,16 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -182,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -192,7 +202,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -202,7 +212,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 9 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -211,7 +221,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 8 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

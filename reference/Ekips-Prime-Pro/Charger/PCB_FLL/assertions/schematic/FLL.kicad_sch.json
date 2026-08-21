@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~13 (tolerance 10%)",
+      "description": "Net count ~10 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "4 audit_esd_protection detected",
+      "description": "3 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -91,7 +91,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -103,15 +103,15 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 4
+        "value": 3
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -161,7 +161,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "3 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -210,9 +210,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
@@ -226,9 +226,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

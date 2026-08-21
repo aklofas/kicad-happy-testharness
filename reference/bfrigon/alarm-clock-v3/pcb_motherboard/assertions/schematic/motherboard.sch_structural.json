@@ -26,6 +26,16 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
@@ -35,7 +45,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 7 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -45,7 +55,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 2 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -55,7 +65,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Y1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -66,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Y2 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -77,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Exactly 3 detect_decoupling",
       "check": {
         "path": "findings",
@@ -87,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Exactly 10 detect_design_observations",
       "check": {
         "path": "findings",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "U6 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -118,17 +128,28 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 2 detect_rc_filters",
+      "id": "STRUCT-00000013",
+      "description": "Exactly 4 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
+      "description": "R9 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R9$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "R23 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -139,7 +160,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000016",
       "description": "R1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -150,7 +171,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 detect_rtc_circuits",
       "check": {
         "path": "findings",
@@ -160,7 +181,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "Exactly 1 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -170,7 +191,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -181,7 +202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -191,7 +212,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
       "description": "Exactly 2 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -201,45 +222,29 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
-      "description": "Exactly 13 validate_pullups",
+      "id": "STRUCT-00000022",
+      "description": "Exactly 16 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 13
+        "value": 16
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:05Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000023",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",
         "detector_filter": "validate_usb_bus",
         "op": "equals",
         "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
-      "description": "Exactly 5 validate_voltage_levels",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_voltage_levels",
-        "op": "equals",
-        "value": 5
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }
   ]

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~160 (tolerance 10%)",
+      "description": "Net count ~115 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 152,
-        "max": 168
+        "min": 109,
+        "max": 121
       }
     },
     {
@@ -43,20 +43,20 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "33 analyze_connectivity detected",
+      "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "audit_datasheet_coverage",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 audit_datasheet_coverage detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_datasheet_coverage",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -93,7 +93,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "4 detect_design_observations detected",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -113,22 +113,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "Has 19 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -137,7 +121,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "Has 19 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

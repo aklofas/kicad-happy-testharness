@@ -6,36 +6,47 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~57 (tolerance 10%)",
+      "description": "Simulation count ~62 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 54,
-        "max": 60
+        "min": 58,
+        "max": 66
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 39 passing simulation(s)",
+      "description": "At least 43 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 39
+        "value": 43
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "3 decoupling simulation(s)",
+      "description": "1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 4
       }
     },
     {
-      "id": "SEED-00000004",
+      "id": "SEED-00000005",
       "description": "2 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -46,7 +57,7 @@
       }
     },
     {
-      "id": "SEED-00000005",
+      "id": "SEED-00000006",
       "description": "30 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -57,14 +68,14 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "22 voltage_divider simulation(s)",
+      "id": "SEED-00000007",
+      "description": "25 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 22
+        "value": 25
       }
     }
   ]

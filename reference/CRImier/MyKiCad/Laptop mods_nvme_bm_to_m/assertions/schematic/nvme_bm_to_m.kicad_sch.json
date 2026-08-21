@@ -98,10 +98,10 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -118,6 +118,16 @@
     },
     {
       "id": "SEED-00000012",
+      "description": "2 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

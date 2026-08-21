@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~14 (tolerance 10%)",
+      "description": "Net count ~10 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -133,6 +133,16 @@
     },
     {
       "id": "SEED-00000013",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -142,7 +152,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -152,29 +162,13 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "1 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {

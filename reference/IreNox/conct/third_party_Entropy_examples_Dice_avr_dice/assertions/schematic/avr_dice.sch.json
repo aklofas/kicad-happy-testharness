@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~38 (tolerance 10%)",
+      "description": "Net count ~34 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 34,
-        "max": 42
+        "min": 30,
+        "max": 38
       }
     },
     {
@@ -88,6 +88,16 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -97,28 +107,27 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "1 detect_rc_filters detected",
+      "id": "SEED-00000011",
+      "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "id": "SEED-00000012",
+      "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "14 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -127,14 +136,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "Has 14 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -143,7 +152,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

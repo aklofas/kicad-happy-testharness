@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~105 (tolerance 10%)",
+      "description": "Net count ~88 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 99,
-        "max": 111
+        "min": 83,
+        "max": 93
       }
     },
     {
@@ -98,17 +98,17 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "5 audit_rail_sources detected",
+      "description": "4 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -149,7 +149,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "8 detect_design_observations detected",
+      "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -159,6 +159,27 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "2 detect_lc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All detect_lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -168,7 +189,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000019",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -179,7 +200,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -189,7 +210,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -198,14 +219,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "2 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -215,7 +236,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "Has 20 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -224,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -233,7 +254,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000025",
       "description": "Has 6 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -242,7 +263,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000026",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

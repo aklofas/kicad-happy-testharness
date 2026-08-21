@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~20 (tolerance 10%)",
+      "description": "Net count ~8 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 7,
+        "max": 9
       }
     },
     {
@@ -43,7 +43,27 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 detect_rc_filters detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "3 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "4 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -52,7 +72,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000008",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -63,7 +83,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

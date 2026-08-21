@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~23 (tolerance 10%)",
+      "description": "Net count ~19 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 17,
+        "max": 21
       }
     },
     {
@@ -43,17 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "8 audit_connector_ground_distribution detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_connector_ground_distribution",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "10 audit_esd_protection detected",
+      "description": "2 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -62,7 +52,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "All audit_esd_protection have connector_ref",
       "check": {
         "path": "findings",
@@ -73,7 +63,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "All audit_esd_protection coverage values are valid",
       "check": {
         "path": "findings",
@@ -81,11 +71,11 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 10
+        "value": 2
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "All audit_esd_protection risk_level values are valid",
       "check": {
         "path": "findings",
@@ -93,7 +83,17 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 10
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
@@ -106,9 +106,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:47Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~92 (tolerance 10%)",
+      "description": "Net count ~100 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 87,
-        "max": 97
+        "min": 95,
+        "max": 105
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 analyze_connectivity detected",
+      "description": "2 analyze_usb_compliance detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "min_count",
         "value": 1
       }
@@ -118,10 +118,10 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -305,7 +305,7 @@
     },
     {
       "id": "SEED-00000030",
-      "description": "2 detect_voltage_dividers detected",
+      "description": "5 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -344,9 +344,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:44Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },

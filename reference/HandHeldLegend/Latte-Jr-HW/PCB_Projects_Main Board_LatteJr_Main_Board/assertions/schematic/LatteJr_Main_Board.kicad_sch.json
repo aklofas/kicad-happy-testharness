@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~135 (tolerance 10%)",
+      "description": "Net count ~131 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 128,
-        "max": 142
+        "min": 124,
+        "max": 138
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "27 analyze_connectivity detected",
+      "description": "23 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -108,6 +108,16 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "5 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -138,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "6 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -148,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "22 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -158,7 +168,17 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
+      "description": "2 detect_led_drivers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_drivers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
       "description": "11 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -168,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000019",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -179,7 +199,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "4 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -189,7 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -199,7 +219,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -207,27 +227,6 @@
         "op": "not_contains_match",
         "field": "cutoff_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "2 detect_transistor_circuits detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "All detect_transistor_circuits have reference present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_transistor_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
       }
     },
     {
@@ -240,9 +239,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
@@ -256,9 +255,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },

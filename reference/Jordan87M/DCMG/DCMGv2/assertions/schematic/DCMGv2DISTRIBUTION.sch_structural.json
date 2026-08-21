@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 137 audit_esd_protection",
+      "description": "Exactly 118 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 137
+        "value": 118
       }
     },
     {
@@ -26,6 +26,16 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 3 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -35,17 +45,37 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 2 detect_lc_filters",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 3 detect_decoupling",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 3 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 1 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
       "description": "L1 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -56,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000009",
       "description": "Exactly 10 detect_motor_drivers",
       "check": {
         "path": "findings",
@@ -66,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "Exactly 17 validate_led_resistors",
       "check": {
         "path": "findings",
@@ -75,9 +105,9 @@
         "value": 17
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:04Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     }

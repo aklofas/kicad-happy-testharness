@@ -36,22 +36,22 @@
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 4 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
         "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 5 audit_rail_sources",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "equals",
-        "value": 5
       }
     },
     {
@@ -212,17 +212,6 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "R8 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "R1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -233,7 +222,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "R3 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -241,6 +230,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "R8 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R8$"
       }
     },
     {
@@ -427,9 +427,9 @@
         "value": 7
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:03Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
@@ -443,9 +443,9 @@
         "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:03Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

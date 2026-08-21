@@ -39,10 +39,10 @@ hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
 nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
 KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 `docs/2026-07-24-kicad-parser-and-analysis-audit.md` — each entry cites its
-KHPA finding ID). Next TH number: **TH-047** (TH-046 fixed-on-discovery
+KHPA finding ID). Next TH number: **TH-049** (TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 50 open issues (43 KH + 7 TH).
+> 51 open issues (43 KH + 8 TH).
 
 ---
 
@@ -1116,6 +1116,28 @@ meant to enable IS blocked until the field is repopulated.
 
 **Not tag-blocking** — cosmetic gap in cross-section coverage; no
 release-quality impact.
+
+### TH-047: BUGFIX-KH-198-01 corpus anchor lost — LC-DET no longer fires on Caffeinated-AFTONSPARV; lock needs a new host board
+
+**Severity:** LOW
+**File:** `regression/bugfix_registry.json` (KH-198 entry, `assertions` now
+empty with `corpus_anchor_lost` note)
+**Discovered:** 2026-08-20 (v2.2.0 combined corpus regen adjudication)
+
+**Symptom:** the KH-198 regression lock (LC-DET components exactly
+`[C5, L1]`, guarding the capacitor-ref dedup fix) failed at regen with
+`rule_id=LC-DET not found`. Root cause is NOT a KH-198 regression: the
+board is in the v2.0 mirror-fix affected set
+(`results/v20_mirror_gate/affected_repos.txt`) and the ratified
+connectivity change dissolved the L1/C5 LC group, so `detect_lc_filters`
+legitimately no longer fires there (verified absent at `fc94a3d` and
+`43dad23`; v2.1/v2.2 gate diff records show zero movement — the change
+predates the v2.1 baseline).
+
+**Fix direction:** find another corpus board where LC-DET fires with a
+capacitor whose ref collides across sub-projects (the KH-198 trigger
+shape), re-anchor the registry assertion there, and regenerate. Until
+then KH-198 is covered only by main-repo unit tests.
 
 ---
 

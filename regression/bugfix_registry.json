@@ -2570,9 +2570,9 @@
           "match_field": "rule_id",
           "match_value": "TS-003",
           "assert_field": "evidence_source",
-          "assert_value": "datasheet"
+          "assert_value": "heuristic_rule"
         },
-        "description": "KH-307: TS-003 finding uses evidence_source='datasheet' (datasheet-backed thermal resistance path)"
+        "description": "KH-307: TS-003 finding uses a valid evidence_source enum, not a confidence string (was 'deterministic' before fix; expected value 'datasheet'->'heuristic_rule' at v2.2.0 per PR #37 — package_table rtheta is a generic package average, not per-MPN datasheet data)"
       }
     ]
   },
@@ -3359,24 +3359,8 @@
     "issue": "KH-198",
     "type": "logic_fix",
     "summary": "detect_lc_filters() now deduplicates capacitor refs within an LC group; multi-project schematics with reference collisions no longer count one capacitor's pins as N parallel caps",
-    "assertions": [
-      {
-        "repo": "caffeinated-labs/Caffeinated-AFTONSPARV",
-        "project": "Caffeinated-AFTONSPARV",
-        "source_file": "Caffeinated-AFTONSPARV.kicad_sch",
-        "analyzer_type": "schematic",
-        "check": {
-          "path": "findings",
-          "op": "field_equals",
-          "detector_filter": "detect_lc_filters",
-          "match_field": "rule_id",
-          "match_value": "LC-DET",
-          "assert_field": "components",
-          "assert_value": ["C5", "L1"]
-        },
-        "description": "KH-198: LC-DET components list is exactly [C5, L1] (pre-fix the C5 ref-collision would put C5 in the list multiple times alongside L1)"
-      }
-    ]
+    "corpus_anchor_lost": "2026-08-20 v2.2.0 regen: LC-DET no longer fires on Caffeinated-AFTONSPARV — the board is in the v2.0 mirror-fix affected set (results/v20_mirror_gate/affected_repos.txt) and the ratified connectivity change dissolved the L1/C5 LC group. Retarget tracked as TH-047.",
+    "assertions": []
   },
   {
     "issue": "KH-082",
@@ -3414,9 +3398,9 @@
         "check": {
           "path": "trust_summary.provenance_coverage_pct",
           "op": "equals",
-          "value": 80.0
+          "value": 72.7
         },
-        "description": "KH-308: trust_summary.provenance_coverage_pct = 80.0 on Power_HW connectors_power (pre-fix typo `_provenance` made this 0.0% everywhere)"
+        "description": "KH-308: trust_summary.provenance_coverage_pct = 72.7 on Power_HW connectors_power (pre-fix typo `_provenance` made this 0.0% everywhere; 80.0->72.7 at v2.2.0 regen — finding mix grew 10->11 with 8 provenance-chain findings both eras, computation verified healthy)"
       }
     ]
   },

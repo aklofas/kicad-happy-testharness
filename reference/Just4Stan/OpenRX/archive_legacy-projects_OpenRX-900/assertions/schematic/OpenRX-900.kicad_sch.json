@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~57 (tolerance 10%)",
+      "description": "Net count ~56 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 54,
-        "max": 60
+        "min": 53,
+        "max": 59
       }
     },
     {
@@ -98,10 +98,10 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -159,7 +159,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "4 detect_design_observations detected",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -241,22 +241,6 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "1 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
-      }
-    },
-    {
-      "id": "SEED-00000025",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -266,23 +250,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
-      }
-    },
-    {
-      "id": "SEED-00000027",
+      "id": "SEED-00000025",
       "description": "Has 19 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -291,7 +259,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000026",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -300,7 +268,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000027",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

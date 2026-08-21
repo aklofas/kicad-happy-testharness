@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~41 (tolerance 10%)",
+      "description": "Net count ~39 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 36,
-        "max": 46
+        "min": 35,
+        "max": 43
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "21 analyze_connectivity detected",
+      "description": "17 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,6 +63,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 detect_motor_drivers detected",
       "check": {
         "path": "findings",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "All detect_motor_drivers have driver_reference",
       "check": {
         "path": "findings",
@@ -93,7 +103,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "All detect_motor_drivers driver_type values are valid",
       "check": {
         "path": "findings",
@@ -105,7 +115,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -115,7 +125,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",

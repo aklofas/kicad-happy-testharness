@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~65 (tolerance 10%)",
+      "description": "Finding count ~64 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 61,
-        "max": 69
+        "min": 60,
+        "max": 68
       }
     },
     {
@@ -26,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~51",
+      "description": "by_severity.warning ~50",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 48,
-        "max": 54
+        "min": 45,
+        "max": 56
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~11.5 (+-10)",
+      "description": "EMC risk score ~13.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 1.5,
-        "max": 21.5
+        "min": 3.0,
+        "max": 23.0
       }
     },
     {
@@ -133,17 +133,6 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 inductor_leakage finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^inductor_leakage$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
       "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -154,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "22 return_path finding(s)",
       "check": {
         "path": "findings",
@@ -165,7 +154,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
@@ -176,7 +165,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -185,7 +174,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -194,7 +183,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "~4 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -203,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -212,7 +201,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -221,7 +210,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "~28 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",

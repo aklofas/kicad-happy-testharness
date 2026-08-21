@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~25 (tolerance 10%)",
+      "description": "Net count ~27 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 22,
-        "max": 28
+        "min": 24,
+        "max": 30
       }
     },
     {
@@ -53,7 +53,17 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -62,7 +72,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -82,8 +92,8 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "1 detect_design_observations detected",
+      "id": "SEED-00000010",
+      "description": "22 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 56 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -101,7 +111,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 21 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -110,7 +120,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 31 other(s)",
       "check": {
         "path": "statistics.component_types.other",

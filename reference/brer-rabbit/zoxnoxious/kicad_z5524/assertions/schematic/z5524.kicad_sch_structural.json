@@ -26,12 +26,12 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -269,6 +269,17 @@
     },
     {
       "id": "STRUCT-00000026",
+      "description": "R54 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R54$"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
       "description": "R53 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -279,7 +290,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000028",
       "description": "R49 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -290,7 +301,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000029",
       "description": "R50 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -298,17 +309,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R50$"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
-      "description": "R54 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R54$"
       }
     },
     {
@@ -704,9 +704,9 @@
         "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "FS-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:05Z",
         "tagged_reason": "datasheet-gated on regulator load step + bandwidth (FS-001)"
       }
     },
@@ -730,9 +730,9 @@
         "value": 17
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:05Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

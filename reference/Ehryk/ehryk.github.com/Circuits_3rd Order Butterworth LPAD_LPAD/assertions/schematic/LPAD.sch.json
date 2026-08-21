@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~40 (tolerance 10%)",
+      "description": "Net count ~29 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 36,
-        "max": 44
+        "min": 26,
+        "max": 32
       }
     },
     {
@@ -88,6 +88,58 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "5 detect_lc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All detect_lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "2 detect_rc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -96,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000015",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -105,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000016",
       "description": "Has 6 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

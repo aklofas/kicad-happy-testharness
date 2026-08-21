@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~17 (tolerance 10%)",
+      "description": "Net count ~16 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 15,
-        "max": 19
+        "min": 14,
+        "max": 18
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,8 +62,8 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "1 detect_decoupling detected",
+      "id": "SEED-00000007",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -62,8 +72,8 @@
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "1 detect_design_observations detected",
+      "id": "SEED-00000008",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",

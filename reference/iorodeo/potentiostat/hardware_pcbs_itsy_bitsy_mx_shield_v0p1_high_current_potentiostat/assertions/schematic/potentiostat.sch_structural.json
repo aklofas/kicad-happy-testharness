@@ -6,6 +6,16 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
@@ -15,7 +25,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 3 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -25,7 +35,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
@@ -35,7 +45,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
@@ -45,7 +55,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 12 detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -55,7 +65,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "U11 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -66,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "U12 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -77,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U13 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -88,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "U14 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -99,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "U15 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -110,7 +120,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "U16 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -121,7 +131,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "U17 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -132,7 +142,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "U18 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -143,7 +153,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "U20 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -154,7 +164,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "U9 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -165,24 +175,13 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "Exactly 6 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "R14 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R14$"
       }
     },
     {
@@ -198,17 +197,6 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "R17 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R17$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
       "description": "R16 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -219,7 +207,29 @@
       }
     },
     {
+      "id": "STRUCT-00000020",
+      "description": "R17 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R17$"
+      }
+    },
+    {
       "id": "STRUCT-00000021",
+      "description": "R14 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R14$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
       "description": "R34 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -230,7 +240,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "R37 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -241,7 +251,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -251,7 +261,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000025",
       "description": "R2 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -262,7 +272,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",
@@ -271,14 +281,14 @@
         "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000027",
       "description": "Exactly 1 validate_voltage_levels",
       "check": {
         "path": "findings",
@@ -287,9 +297,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

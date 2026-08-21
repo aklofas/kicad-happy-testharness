@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~89 (tolerance 10%)",
+      "description": "Net count ~83 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 84,
-        "max": 94
+        "min": 78,
+        "max": 88
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "53 analyze_connectivity detected",
+      "description": "47 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -153,6 +153,16 @@
     },
     {
       "id": "SEED-00000015",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -162,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -182,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -193,7 +203,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -203,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -213,7 +223,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -224,7 +234,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -234,7 +244,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "4 detect_rf_matching detected",
       "check": {
         "path": "findings",
@@ -244,7 +254,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
@@ -254,7 +264,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -264,7 +274,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -273,14 +283,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:41Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "2 validate_voltage_levels detected",
       "check": {
         "path": "findings",
@@ -289,14 +299,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:41Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000029",
       "description": "Has 13 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -305,7 +315,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000030",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

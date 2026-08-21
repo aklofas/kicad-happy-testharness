@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~57 (tolerance 10%)",
+      "description": "Net count ~51 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 54,
-        "max": 60
+        "min": 48,
+        "max": 54
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,28 +62,48 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "2 detect_rc_filters detected",
+      "id": "SEED-00000007",
+      "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "id": "SEED-00000008",
+      "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "2 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "not_contains_match",
-        "field": "cutoff_hz",
+        "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "Has 66 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -82,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "Has 33 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

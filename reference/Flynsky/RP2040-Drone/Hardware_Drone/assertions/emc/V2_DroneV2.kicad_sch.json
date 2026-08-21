@@ -6,52 +6,52 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~43 (tolerance 10%)",
+      "description": "Finding count ~39 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 38,
-        "max": 48
+        "min": 35,
+        "max": 43
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~5",
+      "description": "by_severity.error ~4",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 3,
+        "max": 5
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~21",
+      "description": "by_severity.warning ~17",
       "check": {
         "path": "summary.by_severity.warning",
-        "op": "range",
-        "min": 18,
-        "max": 24
-      }
-    },
-    {
-      "id": "SEED-00000004",
-      "description": "by_severity.info ~17",
-      "check": {
-        "path": "summary.by_severity.info",
         "op": "range",
         "min": 15,
         "max": 19
       }
     },
     {
+      "id": "SEED-00000004",
+      "description": "by_severity.info ~18",
+      "check": {
+        "path": "summary.by_severity.info",
+        "op": "range",
+        "min": 16,
+        "max": 20
+      }
+    },
+    {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~19.0 (+-10)",
+      "description": "EMC risk score ~40.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 9.0,
-        "max": 29.0
+        "min": 30.0,
+        "max": 50.0
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "5 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 1
       }
     },
     {

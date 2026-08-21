@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~73 (tolerance 10%)",
+      "description": "Net count ~69 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 69,
-        "max": 77
+        "min": 65,
+        "max": 73
       }
     },
     {
@@ -98,6 +98,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "1 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
@@ -107,8 +117,8 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "1 audit_rail_sources detected",
+      "id": "SEED-00000012",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -137,7 +147,17 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
+      "description": "1 detect_rf_matching detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rf_matching",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "2 detect_sensor_interfaces detected",
       "check": {
         "path": "findings",
@@ -147,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "All detect_sensor_interfaces have ref",
       "check": {
         "path": "findings",
@@ -158,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "All detect_sensor_interfaces type values are valid",
       "check": {
         "path": "findings",
@@ -170,7 +190,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000019",
       "description": "2 validate_i2c_bus detected",
       "check": {
         "path": "findings",
@@ -180,7 +200,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "7 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -189,14 +209,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

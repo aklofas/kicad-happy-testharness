@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~487 (tolerance 10%)",
+      "description": "Net count ~683 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 472,
-        "max": 502
+        "min": 662,
+        "max": 704
       }
     },
     {
@@ -131,10 +131,10 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -248,7 +248,7 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "2 validate_pullups detected",
+      "description": "4 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -256,15 +256,15 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
       "id": "SEED-00000025",
-      "description": "19 validate_voltage_levels detected",
+      "description": "6 validate_voltage_levels detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
@@ -272,9 +272,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },

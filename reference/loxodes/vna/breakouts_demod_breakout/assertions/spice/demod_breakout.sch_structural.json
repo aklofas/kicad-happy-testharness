@@ -6,17 +6,37 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "C15 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC15\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "C14 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC14\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "C12 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -26,7 +46,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "C10 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -36,7 +56,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "C11 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -46,23 +66,13 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "C5 simulated as decoupling",
+      "id": "STRUCT-00000007",
+      "description": "C31 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC5\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "C3 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC3\\b"
+        "pattern": "\\bC31\\b"
       }
     }
   ]

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~217 (tolerance 10%)",
+      "description": "Net count ~205 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 210,
-        "max": 224
+        "min": 198,
+        "max": 212
       }
     },
     {
@@ -118,7 +118,17 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "88 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "76 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -137,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "9 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -147,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "9 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -157,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -166,14 +176,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:51Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "Has 11 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -182,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "Has 6 fuse(s)",
       "check": {
         "path": "statistics.component_types.fuse",
@@ -191,7 +201,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "Has 10 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -200,7 +210,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 5 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
@@ -209,7 +219,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 6 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -218,7 +228,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "Has 37 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -227,7 +237,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "Has 7 relay(s)",
       "check": {
         "path": "statistics.component_types.relay",
@@ -236,7 +246,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -245,7 +255,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 8 transformer(s)",
       "check": {
         "path": "statistics.component_types.transformer",
@@ -254,7 +264,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
@@ -263,7 +273,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 5 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",

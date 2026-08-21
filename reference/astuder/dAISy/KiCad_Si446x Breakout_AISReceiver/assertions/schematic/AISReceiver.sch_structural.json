@@ -26,6 +26,16 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -35,7 +45,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "X1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -43,6 +53,16 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^X1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 1 detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

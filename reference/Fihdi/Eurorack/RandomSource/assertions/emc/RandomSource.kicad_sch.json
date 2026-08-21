@@ -6,52 +6,52 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~73 (tolerance 10%)",
+      "description": "Finding count ~70 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 69,
-        "max": 77
+        "min": 66,
+        "max": 74
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~32",
+      "description": "by_severity.error ~31",
       "check": {
         "path": "summary.by_severity.error",
+        "op": "range",
+        "min": 27,
+        "max": 35
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "by_severity.warning ~32",
+      "check": {
+        "path": "summary.by_severity.warning",
         "op": "range",
         "min": 28,
         "max": 36
       }
     },
     {
-      "id": "SEED-00000003",
-      "description": "by_severity.warning ~35",
-      "check": {
-        "path": "summary.by_severity.warning",
-        "op": "range",
-        "min": 31,
-        "max": 39
-      }
-    },
-    {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~6",
+      "description": "by_severity.info ~7",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 6,
+        "max": 8
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~22.0 (+-10)",
+      "description": "EMC risk score ~43.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 12.0,
-        "max": 32.0
+        "min": 33.0,
+        "max": 53.0
       }
     },
     {
@@ -67,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "16 decoupling finding(s)",
+      "description": "13 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 16
+        "value": 13
       }
     },
     {

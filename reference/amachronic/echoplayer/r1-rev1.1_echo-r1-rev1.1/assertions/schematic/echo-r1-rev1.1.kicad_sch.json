@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~223 (tolerance 10%)",
+      "description": "Net count ~198 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 216,
-        "max": 230
+        "min": 188,
+        "max": 208
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "13 analyze_connectivity detected",
+      "description": "1 analyze_usb_compliance detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "min_count",
         "value": 1
       }
@@ -118,20 +118,20 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "4 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000013",
-      "description": "4 audit_rail_sources detected",
+      "description": "4 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_power_pin_dc_paths",
         "op": "min_count",
         "value": 1
       }
@@ -362,7 +362,7 @@
     },
     {
       "id": "SEED-00000035",
-      "description": "5 detect_protection_devices detected",
+      "description": "2 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -445,6 +445,22 @@
     },
     {
       "id": "SEED-00000043",
+      "description": "1 validate_crystal_load_caps detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_crystal_load_caps",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "XT-001",
+        "tagged_at": "2026-08-21T00:44:44Z",
+        "tagged_reason": "new in v1.4, requires CrystalBlock dataclass (XT-001)"
+      }
+    },
+    {
+      "id": "SEED-00000044",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -454,7 +470,7 @@
       }
     },
     {
-      "id": "SEED-00000044",
+      "id": "SEED-00000045",
       "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -463,14 +479,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:44Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000045",
+      "id": "SEED-00000046",
       "description": "16 validate_voltage_levels detected",
       "check": {
         "path": "findings",
@@ -479,14 +495,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:44Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },
     {
-      "id": "SEED-00000046",
+      "id": "SEED-00000047",
       "description": "Has 57 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -495,7 +511,7 @@
       }
     },
     {
-      "id": "SEED-00000047",
+      "id": "SEED-00000048",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -504,7 +520,7 @@
       }
     },
     {
-      "id": "SEED-00000048",
+      "id": "SEED-00000049",
       "description": "Has 11 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -513,7 +529,7 @@
       }
     },
     {
-      "id": "SEED-00000049",
+      "id": "SEED-00000050",
       "description": "Has 10 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -522,7 +538,7 @@
       }
     },
     {
-      "id": "SEED-00000050",
+      "id": "SEED-00000051",
       "description": "Has 6 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -531,7 +547,7 @@
       }
     },
     {
-      "id": "SEED-00000051",
+      "id": "SEED-00000052",
       "description": "Has 29 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -540,7 +556,7 @@
       }
     },
     {
-      "id": "SEED-00000052",
+      "id": "SEED-00000053",
       "description": "Has 14 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

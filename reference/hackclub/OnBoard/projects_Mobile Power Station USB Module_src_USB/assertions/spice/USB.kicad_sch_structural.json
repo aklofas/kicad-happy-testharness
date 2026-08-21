@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling simulation(s)",
+      "description": "Exactly 4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -67,6 +67,46 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "Cb105 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCb105\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Ca105 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCa105\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Ca106 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCa106\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Cb106 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCb106\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "Cb205 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -76,7 +116,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000012",
       "description": "Ca205 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -86,7 +126,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000013",
       "description": "Ca206 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -96,7 +136,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000014",
       "description": "Cb206 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -106,13 +146,43 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Cb105 simulated as decoupling",
+      "id": "STRUCT-00000015",
+      "description": "Ca306 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bCb105\\b"
+        "pattern": "\\bCa306\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "Cb306 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCb306\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "Cb305 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCb305\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "Ca305 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCa305\\b"
       }
     }
   ]

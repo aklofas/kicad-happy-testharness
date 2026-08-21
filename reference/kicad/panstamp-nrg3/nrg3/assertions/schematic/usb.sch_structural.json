@@ -6,6 +6,16 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -15,17 +25,28 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 1 detect_rc_filters",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
+      "description": "R10 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R10$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "R11 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -36,7 +57,18 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
+      "description": "R16 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R16$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -46,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",

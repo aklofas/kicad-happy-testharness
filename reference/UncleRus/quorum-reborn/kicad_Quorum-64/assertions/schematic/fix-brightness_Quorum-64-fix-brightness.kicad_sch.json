@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~366 (tolerance 10%)",
+      "description": "Net count ~385 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 355,
-        "max": 377
+        "min": 373,
+        "max": 397
       }
     },
     {
@@ -118,6 +118,16 @@
     },
     {
       "id": "SEED-00000012",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "6 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -127,21 +137,11 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_sourcing_gate",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "1 detect_key_matrices detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_key_matrices",
         "op": "min_count",
         "value": 1
       }

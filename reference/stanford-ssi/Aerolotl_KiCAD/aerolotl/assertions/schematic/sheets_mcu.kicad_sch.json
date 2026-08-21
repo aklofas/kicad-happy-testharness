@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~115 (tolerance 10%)",
+      "description": "Net count ~108 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 109,
-        "max": 121
+        "min": 102,
+        "max": 114
       }
     },
     {
@@ -63,6 +63,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
@@ -72,8 +82,8 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "3 audit_rail_sources detected",
+      "id": "SEED-00000009",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "2 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -102,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -113,7 +123,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -123,7 +133,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "14 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -133,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "2 detect_lc_filters detected",
       "check": {
         "path": "findings",
@@ -143,7 +153,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
@@ -154,7 +164,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -164,7 +174,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -175,7 +185,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -185,7 +195,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -196,7 +206,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "1 detect_reset_supervisors detected",
       "check": {
         "path": "findings",
@@ -206,7 +216,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "All detect_reset_supervisors type values are valid",
       "check": {
         "path": "findings",
@@ -218,7 +228,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -228,7 +238,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "Has 27 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

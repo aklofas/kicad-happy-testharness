@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 243 analyze_connectivity",
+      "description": "Exactly 98 analyze_connectivity",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
         "op": "equals",
-        "value": 243
+        "value": 98
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 9 audit_connector_ground_distribution",
+      "description": "Exactly 8 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 9
+        "value": 8
       }
     },
     {
@@ -46,22 +46,22 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 2 audit_rail_sources",
+      "description": "Exactly 6 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 2
+        "value": 6
       }
     },
     {
@@ -233,17 +233,6 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "R5 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
       "description": "R6 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -254,7 +243,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "R4 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -262,6 +251,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "R5 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R5$"
       }
     },
     {

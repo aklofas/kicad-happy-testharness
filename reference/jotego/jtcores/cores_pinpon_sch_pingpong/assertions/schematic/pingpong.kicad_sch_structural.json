@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 10 analyze_connectivity",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_connectivity",
-        "op": "equals",
-        "value": 10
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 16 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
@@ -25,7 +15,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -35,7 +25,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 18 audit_esd_protection",
       "check": {
         "path": "findings",
@@ -45,13 +35,23 @@
       }
     },
     {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
       "id": "STRUCT-00000005",
-      "description": "Exactly 4 audit_rail_sources",
+      "description": "Exactly 9 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 4
+        "value": 9
       }
     },
     {
@@ -66,22 +66,22 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 2 detect_decoupling",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 6 detect_design_observations",
+      "description": "Exactly 12 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 6
+        "value": 12
       }
     },
     {
@@ -330,17 +330,17 @@
     },
     {
       "id": "STRUCT-00000032",
-      "description": "Exactly 2 validate_pullups",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 2
+        "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:10Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

@@ -16,6 +16,16 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -25,17 +35,17 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 detect_lc_filters",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 4 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 1
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "L1 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -43,6 +53,39 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "L2 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "L3 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "L6 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L6$"
       }
     }
   ]

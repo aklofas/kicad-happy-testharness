@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~95 (tolerance 10%)",
+      "description": "Net count ~89 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 90,
-        "max": 100
+        "min": 84,
+        "max": 94
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "6 analyze_connectivity detected",
+      "description": "5 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,7 +63,17 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -82,8 +92,8 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "13 detect_design_observations detected",
+      "id": "SEED-00000010",
+      "description": "12 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -92,8 +102,8 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "3 detect_label_aliases detected",
+      "id": "SEED-00000011",
+      "description": "4 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -102,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 12 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -111,7 +121,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 9 other(s)",
       "check": {
         "path": "statistics.component_types.other",

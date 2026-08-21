@@ -6,18 +6,18 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 rc_filter simulation(s)",
+      "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
-        "value": 2
+        "pattern": "^voltage_divider$",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R20 simulated as rc_filter",
+      "description": "R20 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -27,22 +27,12 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "C42 simulated as rc_filter",
+      "description": "R21 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC42\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "C43 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC43\\b"
+        "pattern": "\\bR21\\b"
       }
     }
   ]

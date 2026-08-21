@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~575 (tolerance 10%)",
+      "description": "Net count ~563 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 557,
-        "max": 593
+        "min": 546,
+        "max": 580
       }
     },
     {
@@ -143,6 +143,16 @@
     },
     {
       "id": "SEED-00000014",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -152,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -162,7 +172,17 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
+      "description": "1 detect_isolation_barriers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
       "description": "1 detect_label_aliases detected",
       "check": {
         "path": "findings",
@@ -172,8 +192,8 @@
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "7 validate_led_resistors detected",
+      "id": "SEED-00000019",
+      "description": "1 validate_led_resistors detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_led_resistors",
@@ -181,14 +201,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -197,14 +217,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -213,7 +233,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "Has 7 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -222,7 +242,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "Has 6 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -231,7 +251,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -240,7 +260,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000025",
       "description": "Has 8 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

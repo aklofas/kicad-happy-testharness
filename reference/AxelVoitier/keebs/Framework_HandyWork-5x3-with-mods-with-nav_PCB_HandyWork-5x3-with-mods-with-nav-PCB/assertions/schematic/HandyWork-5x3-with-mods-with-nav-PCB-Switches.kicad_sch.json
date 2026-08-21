@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~109 (tolerance 10%)",
+      "description": "Net count ~107 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 103,
-        "max": 115
+        "min": 101,
+        "max": 113
       }
     },
     {
@@ -44,6 +44,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "1 detect_key_matrices detected",
       "check": {
         "path": "findings",
@@ -53,7 +63,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "Has 46 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

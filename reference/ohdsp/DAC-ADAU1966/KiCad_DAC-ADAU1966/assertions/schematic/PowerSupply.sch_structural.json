@@ -16,6 +16,16 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -25,27 +35,27 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 detect_decoupling",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 1 detect_design_observations",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 2 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 5 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -55,7 +65,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "R301 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -66,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "R302 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -74,17 +84,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R302$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "R309 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R309$"
       }
     },
     {
@@ -111,6 +110,27 @@
     },
     {
       "id": "STRUCT-00000011",
+      "description": "Exactly 1 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R311 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R311$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Exactly 1 validate_led_resistors",
       "check": {
         "path": "findings",
@@ -119,9 +139,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:08Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     }

@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~25 (tolerance 10%)",
+      "description": "Simulation count ~27 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 22,
-        "max": 28
+        "min": 24,
+        "max": 30
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 8 passing simulation(s)",
+      "description": "At least 9 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 8
+        "value": 9
       }
     },
     {
@@ -58,6 +58,17 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "2 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "1 rf_chain simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -68,7 +79,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "2 rf_matching simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -79,7 +90,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "2 snubber_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -90,7 +101,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "4 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -101,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "2 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

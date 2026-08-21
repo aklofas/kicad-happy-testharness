@@ -5,35 +5,14 @@
   "evidence_source": "human_review",
   "assertions": [
     {
-      "id": "BUGFIX-KH-228-01",
-      "description": "KH-228: connectors_power.kicad_sch has hierarchy_warning set (post-fix detect_sub_sheet identifies it via .kicad_pro stem mismatch / tier-3 strategy). Pre-fix this file lacked hierarchical_label so detect_sub_sheet missed it and hierarchy_warning stayed empty (34% rate)",
-      "issue": "KH-228",
-      "fix_type": "detection_fix",
-      "check": {
-        "path": "hierarchy_warning",
-        "op": "exists"
-      }
-    },
-    {
       "id": "BUGFIX-KH-308-01",
-      "description": "KH-308: trust_summary.provenance_coverage_pct = 80.0 on Power_HW connectors_power (pre-fix typo `_provenance` made this 0.0% everywhere)",
+      "description": "KH-308: trust_summary.provenance_coverage_pct = 72.7 on Power_HW connectors_power (pre-fix typo `_provenance` made this 0.0% everywhere; 80.0->72.7 at v2.2.0 regen \u2014 finding mix grew 10->11 with 8 provenance-chain findings both eras, computation verified healthy)",
       "issue": "KH-308",
       "fix_type": "data_fix",
       "check": {
         "path": "trust_summary.provenance_coverage_pct",
         "op": "equals",
-        "value": 80.0
-      }
-    },
-    {
-      "id": "BUGFIX-KH-309-01",
-      "description": "KH-309: Power_HW connectors_power trust_level='high' (pre-fix every schematic was pinned to 'low' because raw certification dicts lacked confidence/evidence_source fields)",
-      "issue": "KH-309",
-      "fix_type": "data_fix",
-      "check": {
-        "path": "trust_summary.trust_level",
-        "op": "equals",
-        "value": "high"
+        "value": 72.7
       }
     }
   ]

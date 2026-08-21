@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~100 (tolerance 10%)",
+      "description": "Net count ~87 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 95,
-        "max": 105
+        "min": 82,
+        "max": 92
       }
     },
     {
@@ -98,17 +98,17 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "24 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "3 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -159,22 +159,22 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "1 detect_rc_filters detected",
+      "description": "2 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_voltage_dividers",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000017",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_voltage_dividers",
         "op": "not_contains_match",
-        "field": "cutoff_hz",
+        "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
@@ -188,14 +188,30 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
       "id": "SEED-00000019",
+      "description": "2 validate_voltage_levels detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-08-21T00:44:43Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "Has 15 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -204,7 +220,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 9 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -213,7 +229,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 11 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

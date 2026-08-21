@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~171 (tolerance 10%)",
+      "description": "Net count ~168 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 162,
-        "max": 180
+        "min": 159,
+        "max": 177
       }
     },
     {
@@ -63,6 +63,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "Has 10 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -81,7 +91,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "Has 51 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -90,7 +100,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 7 fuse(s)",
       "check": {
         "path": "statistics.component_types.fuse",
@@ -99,7 +109,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 46 other(s)",
       "check": {
         "path": "statistics.component_types.other",

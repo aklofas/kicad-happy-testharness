@@ -6,16 +6,26 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 16 audit_esd_protection",
+      "description": "Exactly 15 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 16
+        "value": 15
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_lifecycle_skipped",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 3 detect_design_observations",
       "check": {
         "path": "findings",
@@ -25,35 +35,24 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 6 detect_lc_filters",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 16 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 6
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "L8 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L8$"
+        "value": 16
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "L2 in detect_lc_filters",
+      "description": "L6 in detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L2$"
+        "pattern": "^L6$"
       }
     },
     {
@@ -69,6 +68,39 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "L2 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "L7 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "L8 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "L3 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -79,7 +111,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000011",
       "description": "L4 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -90,7 +122,18 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
+      "description": "L5 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Exactly 3 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -100,7 +143,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000014",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -111,7 +154,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000015",
       "description": "U3 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -122,7 +165,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000016",
       "description": "U4 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -133,28 +176,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "RV3 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^RV3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000017",
       "description": "Exactly 2 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -164,7 +186,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -175,7 +197,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -186,7 +208,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",
@@ -195,9 +217,9 @@
         "value": 2
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:05Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

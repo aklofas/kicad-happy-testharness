@@ -6,52 +6,52 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~53 (tolerance 10%)",
+      "description": "Finding count ~42 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 50,
-        "max": 56
+        "min": 37,
+        "max": 47
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~12",
+      "description": "by_severity.error ~11",
       "check": {
         "path": "summary.by_severity.error",
-        "op": "range",
-        "min": 10,
-        "max": 14
-      }
-    },
-    {
-      "id": "SEED-00000003",
-      "description": "by_severity.warning ~30",
-      "check": {
-        "path": "summary.by_severity.warning",
-        "op": "range",
-        "min": 27,
-        "max": 33
-      }
-    },
-    {
-      "id": "SEED-00000004",
-      "description": "by_severity.info ~11",
-      "check": {
-        "path": "summary.by_severity.info",
         "op": "range",
         "min": 9,
         "max": 13
       }
     },
     {
+      "id": "SEED-00000003",
+      "description": "by_severity.warning ~19",
+      "check": {
+        "path": "summary.by_severity.warning",
+        "op": "range",
+        "min": 17,
+        "max": 21
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "by_severity.info ~12",
+      "check": {
+        "path": "summary.by_severity.info",
+        "op": "range",
+        "min": 10,
+        "max": 14
+      }
+    },
+    {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~11.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 10
+        "min": 1.5,
+        "max": 21.5
       }
     },
     {
@@ -67,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "21 decoupling finding(s)",
+      "description": "10 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 21
+        "value": 10
       }
     },
     {

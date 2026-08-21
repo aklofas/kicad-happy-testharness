@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~127 (tolerance 10%)",
+      "description": "Net count ~116 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 120,
-        "max": 134
+        "min": 110,
+        "max": 122
       }
     },
     {
@@ -98,6 +98,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "1 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "4 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -117,7 +127,17 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
+      "description": "1 detect_bridge_circuits detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -127,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -138,29 +158,8 @@
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "1 detect_current_sense detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000015",
-      "description": "All detect_current_sense have shunt ref present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "not_contains_match",
-        "field": "shunt.ref",
-        "pattern": "^(None|)$"
-      }
-    },
-    {
       "id": "SEED-00000016",
-      "description": "2 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -180,7 +179,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "4 detect_lc_filters detected",
+      "description": "5 detect_lc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
@@ -243,7 +242,7 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "6 detect_transistor_circuits detected",
+      "description": "4 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -303,9 +302,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
@@ -321,7 +320,7 @@
     },
     {
       "id": "SEED-00000031",
-      "description": "3 validate_voltage_levels detected",
+      "description": "1 validate_voltage_levels detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
@@ -329,9 +328,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:48Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },

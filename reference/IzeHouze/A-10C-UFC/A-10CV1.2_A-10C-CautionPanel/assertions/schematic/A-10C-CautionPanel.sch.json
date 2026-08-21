@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~248 (tolerance 10%)",
+      "description": "Net count ~301 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 240,
-        "max": 256
+        "min": 291,
+        "max": 311
       }
     },
     {
@@ -143,6 +143,16 @@
     },
     {
       "id": "SEED-00000014",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -152,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -162,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "6 detect_motor_drivers detected",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "All detect_motor_drivers have driver_reference",
       "check": {
         "path": "findings",
@@ -183,7 +193,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "All detect_motor_drivers driver_type values are valid",
       "check": {
         "path": "findings",
@@ -195,7 +205,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -205,7 +215,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -216,7 +226,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "4 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -226,7 +236,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -237,8 +247,8 @@
       }
     },
     {
-      "id": "SEED-00000023",
-      "description": "10 validate_led_resistors detected",
+      "id": "SEED-00000024",
+      "description": "48 validate_led_resistors detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_led_resistors",
@@ -246,14 +256,14 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:43Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "Has 17 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -262,7 +272,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 7 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -271,7 +281,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 48 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -280,7 +290,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 48 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

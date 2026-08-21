@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~198 (tolerance 10%)",
+      "description": "Net count ~148 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 188,
-        "max": 208
+        "min": 140,
+        "max": 156
       }
     },
     {
@@ -43,20 +43,20 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "77 analyze_connectivity detected",
+      "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "audit_datasheet_coverage",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 audit_datasheet_coverage detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_datasheet_coverage",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -83,16 +83,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "1 detect_design_observations detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "1 detect_key_matrices detected",
       "check": {
         "path": "findings",
@@ -102,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "Has 52 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -111,7 +101,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "Has 46 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
@@ -120,7 +110,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "Has 20 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -129,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "Has 50 relay(s)",
       "check": {
         "path": "statistics.component_types.relay",

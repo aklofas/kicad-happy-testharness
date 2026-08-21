@@ -6,10 +6,10 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 analyze_connectivity",
+      "description": "Exactly 2 analyze_usb_compliance",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "analyze_usb_compliance",
         "op": "equals",
         "value": 2
       }
@@ -46,12 +46,12 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -276,12 +276,12 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "Exactly 2 detect_voltage_dividers",
+      "description": "Exactly 5 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 2
+        "value": 5
       }
     },
     {
@@ -297,6 +297,28 @@
     },
     {
       "id": "STRUCT-00000029",
+      "description": "R23 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R23$"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "R27 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R27$"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
       "description": "R3 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -307,7 +329,18 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000032",
+      "description": "R31 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R31$"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
       "description": "Exactly 2 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -317,7 +350,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000034",
       "description": "Exactly 1 validate_voltage_levels",
       "check": {
         "path": "findings",
@@ -326,9 +359,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:05Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

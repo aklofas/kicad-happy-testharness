@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~67 (tolerance 10%)",
+      "description": "Net count ~64 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 63,
-        "max": 71
+        "min": 60,
+        "max": 68
       }
     },
     {
@@ -108,6 +108,16 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "Has 11 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -136,7 +146,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "Has 5 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -145,7 +155,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "Has 14 other(s)",
       "check": {
         "path": "statistics.component_types.other",

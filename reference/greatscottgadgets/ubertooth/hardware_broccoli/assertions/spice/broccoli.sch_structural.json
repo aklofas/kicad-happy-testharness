@@ -17,24 +17,24 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 lc_filter simulation(s)",
+      "description": "Exactly 4 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 2
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 rc_filter simulation(s)",
+      "description": "Exactly 3 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -70,26 +70,36 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "L2 simulated as lc_filter",
+      "description": "R13 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bL2\\b"
+        "pattern": "\\bR13\\b"
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "C3 simulated as lc_filter",
+      "description": "C14 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC3\\b"
+        "pattern": "\\bC14\\b"
       }
     },
     {
       "id": "STRUCT-00000009",
+      "description": "R16 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR16\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "L1 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -99,17 +109,47 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "C4 simulated as lc_filter",
+      "id": "STRUCT-00000011",
+      "description": "C1 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC4\\b"
+        "pattern": "\\bC1\\b"
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
+      "description": "L2 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C3 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C5 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "Q1 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -119,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000016",
       "description": "Q2 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -129,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000017",
       "description": "C26 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -139,7 +179,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000018",
       "description": "C28 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -149,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000019",
       "description": "C6 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -159,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000020",
       "description": "C12 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -169,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000021",
       "description": "C7 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -179,7 +219,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000022",
       "description": "C25 simulated as decoupling",
       "check": {
         "path": "simulation_results",

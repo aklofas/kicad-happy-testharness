@@ -26,16 +26,26 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 6 audit_rail_sources",
+      "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
-        "value": 6
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 5 audit_rail_sources",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 detect_decoupling",
       "check": {
         "path": "findings",
@@ -45,7 +55,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 2 detect_design_observations",
       "check": {
         "path": "findings",
@@ -55,17 +65,27 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 3 detect_rc_filters",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 5 detect_integrated_ldos",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_integrated_ldos",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 5 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 5
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "R95 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -76,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "R56 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -87,7 +107,29 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
+      "description": "R57 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R57$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R58 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R58$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "R59 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -98,7 +140,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000014",
       "description": "Exactly 10 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -108,18 +150,18 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 13 validate_pullups",
+      "id": "STRUCT-00000015",
+      "description": "Exactly 11 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 13
+        "value": 11
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:37:03Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

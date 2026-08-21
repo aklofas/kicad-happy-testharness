@@ -6,63 +6,63 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~23 (tolerance 10%)",
+      "description": "Finding count ~20 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 18,
+        "max": 22
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~6",
+      "description": "by_severity.error ~5",
       "check": {
         "path": "summary.by_severity.error",
-        "op": "range",
-        "min": 5,
-        "max": 7
-      }
-    },
-    {
-      "id": "SEED-00000003",
-      "description": "by_severity.warning ~12",
-      "check": {
-        "path": "summary.by_severity.warning",
-        "op": "range",
-        "min": 10,
-        "max": 14
-      }
-    },
-    {
-      "id": "SEED-00000004",
-      "description": "by_severity.info ~5",
-      "check": {
-        "path": "summary.by_severity.info",
         "op": "range",
         "min": 4,
         "max": 6
       }
     },
     {
+      "id": "SEED-00000003",
+      "description": "by_severity.warning ~9",
+      "check": {
+        "path": "summary.by_severity.warning",
+        "op": "range",
+        "min": 8,
+        "max": 10
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "by_severity.info ~6",
+      "check": {
+        "path": "summary.by_severity.info",
+        "op": "range",
+        "min": 5,
+        "max": 7
+      }
+    },
+    {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~58.0 (+-10)",
+      "description": "EMC risk score ~79.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 48.0,
-        "max": 68.0
+        "min": 69.0,
+        "max": 89.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "4 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 1
       }
     },
     {

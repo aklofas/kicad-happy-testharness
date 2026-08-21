@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~82 (tolerance 10%)",
+      "description": "Net count ~78 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 77,
-        "max": 87
+        "min": 74,
+        "max": 82
       }
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "6 audit_esd_protection detected",
+      "description": "5 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -93,15 +93,15 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 6
+        "value": 5
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }

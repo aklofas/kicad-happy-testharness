@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "5 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -52,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "4 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -62,7 +72,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -72,7 +82,40 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
+      "description": "1 detect_level_shifters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All detect_level_shifters have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All detect_level_shifters type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "2 detect_lvds_interfaces detected",
       "check": {
         "path": "findings",
@@ -82,7 +125,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000013",
       "description": "3 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -92,7 +135,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000014",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -103,7 +146,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000015",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -113,7 +156,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000016",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -124,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000017",
       "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -134,7 +177,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000018",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -145,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000019",
       "description": "Has 16 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -154,7 +197,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000020",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

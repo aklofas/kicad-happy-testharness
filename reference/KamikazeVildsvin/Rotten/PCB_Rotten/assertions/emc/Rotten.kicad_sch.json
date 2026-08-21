@@ -6,63 +6,63 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~35 (tolerance 10%)",
+      "description": "Finding count ~32 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 28,
+        "max": 36
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~18",
+      "description": "by_severity.error ~17",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 16,
-        "max": 20
+        "min": 15,
+        "max": 19
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~9",
+      "description": "by_severity.warning ~6",
       "check": {
         "path": "summary.by_severity.warning",
+        "op": "range",
+        "min": 5,
+        "max": 7
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "by_severity.info ~9",
+      "check": {
+        "path": "summary.by_severity.info",
         "op": "range",
         "min": 8,
         "max": 10
       }
     },
     {
-      "id": "SEED-00000004",
-      "description": "by_severity.info ~8",
-      "check": {
-        "path": "summary.by_severity.info",
-        "op": "range",
-        "min": 7,
-        "max": 9
-      }
-    },
-    {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~44.5 (+-10)",
+      "description": "EMC risk score ~65.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 34.5,
-        "max": 54.5
+        "min": 55.5,
+        "max": 75.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "4 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 1
       }
     },
     {

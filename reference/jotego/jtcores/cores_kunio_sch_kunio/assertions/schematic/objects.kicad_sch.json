@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~613 (tolerance 10%)",
+      "description": "Net count ~548 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 594,
-        "max": 632
+        "min": 531,
+        "max": 565
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "55 analyze_connectivity detected",
+      "description": "47 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,7 +63,17 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 audit_rail_sources detected",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "7 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -103,7 +113,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "17 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -113,8 +123,18 @@
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "33 detect_label_aliases detected",
+      "id": "SEED-00000013",
+      "description": "1 detect_isolation_barriers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "32 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -123,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "5 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -133,7 +153,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -143,7 +163,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -154,7 +174,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "Has 18 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -163,7 +183,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000019",
       "description": "Has 10 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -172,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "Has 8 fuse(s)",
       "check": {
         "path": "statistics.component_types.fuse",
@@ -181,7 +201,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "Has 23 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -190,7 +210,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "Has 8 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -199,7 +219,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "Has 45 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -208,7 +228,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

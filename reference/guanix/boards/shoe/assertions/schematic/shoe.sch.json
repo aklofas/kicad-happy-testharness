@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~61 (tolerance 10%)",
+      "description": "Net count ~57 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 57,
-        "max": 65
+        "min": 54,
+        "max": 60
       }
     },
     {
@@ -88,6 +88,16 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -97,8 +107,18 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "3 detect_design_observations detected",
+      "id": "SEED-00000011",
+      "description": "1 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -107,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "1 detect_led_driver_ics detected",
       "check": {
         "path": "findings",
@@ -117,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000014",
       "description": "All detect_led_driver_ics have ref",
       "check": {
         "path": "findings",
@@ -128,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "All detect_led_driver_ics type values are valid",
       "check": {
         "path": "findings",
@@ -140,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -150,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "Has 18 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

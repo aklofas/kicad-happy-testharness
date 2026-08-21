@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~56 (tolerance 10%)",
+      "description": "Net count ~53 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 53,
-        "max": 59
+        "min": 50,
+        "max": 56
       }
     },
     {
@@ -133,10 +133,10 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 audit_power_pin_dc_paths detected",
+      "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
       }
@@ -194,6 +194,27 @@
     },
     {
       "id": "SEED-00000019",
+      "description": "1 detect_power_regulators detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000020",
+      "description": "All detect_power_regulators have ref present",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000021",
       "description": "3 detect_pwm_led_dimming detected",
       "check": {
         "path": "findings",
@@ -203,7 +224,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "3 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -213,7 +234,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -224,23 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
-      "description": "1 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "pre-v1.4",
-        "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
-        "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
-      }
-    },
-    {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "Has 12 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -249,7 +254,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "Has 5 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -258,7 +263,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

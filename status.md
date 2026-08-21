@@ -92,6 +92,34 @@ Last updated: 2026-07-26 (v2.2 budgeted gate c6b504a→e67aeb5 CLEAN under budge
 
 ## Completed batches
 
+### v2.2.0 combined corpus regen CLEAN under combined budget; corpus now tracks v2.2.0 (2026-08-20)
+
+Full 6-type corpus regen at `43dad23` (= v2.2.0; analyzer-identical to
+gate-clean `6b5be5e`), PYTHONHASHSEED=0. Before: 2,332,702 assertions /
+174 pre-existing fails (100.0%). Fracture set after regen: 48,099 fails →
+ALL bucketed into gate-ratified classes (record + classifier + buckets at
+`results/v220_regen/`): DC-003/#24 EMC 17,726; rail/pwr_flag 8,943;
+net/connectivity 8,031; spice ripple 4,021; detector ripple 3,418;
+summary 2,094; DO-DET 1,256; UC/ESD 903; v2.1 audits 857; VP-001 3;
+residue 854 hand-attributed to the same net/rail classes via retained
+v21/v22 gate diff records (CRMaze32/Afterburner/PatinhoFeio worked
+examples). **Era finding: the stale corpus predated v2.0 — the ratified
+v2.0 mirror class is part of the fracture set** (KH-198's board is in
+`v20_mirror_gate/affected_repos.txt`). Curated locks: BUGFIX 2/242 fails
+(KH-308 value 80.0→72.7 verified-healthy + updated; KH-198 anchor lost →
+TH-047, registry annotated); NEG 0; FND 9 attributed; BUGFIX-KH-307-03
+pre-flipped to heuristic_rule per fold-gate plan. Reseed all six types +
+`snapshot --all` (18,804 baselines) + schema auto-seed (86 additive-field
+entries) + `validate_run_id` 117,947/0 mismatched. Fix-on-discovery
+**TH-048** (seed.py enum-count gap, 5 false FAILs — fixed, see FIXED.md).
+**Final: 2,756,969 assertions (+424k) / 2,756,959 passed / 7 failed
+(itemized FND drift debt) / 3 errors — 100.0%; aspirational passing
+316→334.** ISSUES.md: KH-373..391 adopted + TH-047 filed (51 open =
+43 KH + 8 TH; next KH-392/TH-049). Gate evidence pruned per 26h:
+v22_gate + v22_gate_fold snap trees removed (~110G freed; records,
+rollups, diff records, walkers, walk reports all kept). Unit tree
+1,292/0 post-TH-048.
+
 ### v2.2 fold-increment gate `e67aeb5`→`6b5be5e` CLEAN under thermal evidence_source budget (2026-08-17)
 
 Incremental symmetric gate over the origin/main fold (PRs #35 docs / #36

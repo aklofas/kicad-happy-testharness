@@ -242,11 +242,14 @@ def _field_spec_assertions(sig_type, detections, ast_num):
             for item in detections
             if isinstance(item, dict) and item.get(field) is not None
         )
-        if all_valid and any(
-            item.get(field) is not None
-            for item in detections
-            if isinstance(item, dict)
-        ):
+        # Count only items that carry the field — a detector can emit mixed
+        # rule shapes (e.g. audit_led_circuits LA-AUD rows carry drive_method,
+        # LA-004 rows don't), and count_matches only matches field carriers.
+        n_with_field = sum(
+            1 for item in detections
+            if isinstance(item, dict) and item.get(field) is not None
+        )
+        if all_valid and n_with_field:
             assertions.append({
                 "id": f"SEED-{ast_num:08d}",
                 "description": f"All {sig_type} {field} values are valid",
@@ -256,7 +259,7 @@ def _field_spec_assertions(sig_type, detections, ast_num):
                     "op": "count_matches",
                     "field": field,
                     "pattern": pattern,
-                    "value": len(detections),
+                    "value": n_with_field,
                 },
             })
             ast_num += 1

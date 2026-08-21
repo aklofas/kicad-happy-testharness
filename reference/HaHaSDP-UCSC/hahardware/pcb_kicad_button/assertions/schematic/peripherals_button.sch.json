@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~8 (tolerance 10%)",
+      "description": "Net count ~7 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 7,
-        "max": 9
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -88,6 +88,16 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -97,28 +107,28 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "1 detect_rc_filters detected",
+      "id": "SEED-00000011",
+      "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_voltage_dividers",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
+      "id": "SEED-00000012",
+      "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_voltage_dividers",
         "op": "not_contains_match",
-        "field": "cutoff_hz",
+        "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "1 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -127,9 +137,9 @@
         "value": 1
       },
       "schema_era": {
-        "era": "pre-v1.4",
+        "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-05-17T03:28:47Z",
+        "tagged_at": "2026-08-21T00:44:42Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     }
