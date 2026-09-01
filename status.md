@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-09-01 (KH-402 incremental gate ced9c8c→da979fb CLEAN; PR #41 fold adopted; pre-tag at da979fb)
+Last updated: 2026-09-01 (v2.2.1 combined corpus regen CLEAN at d5fd7da; corpus tracks v2.2.1; TH-049 filed, TH-050/051 fixed-on-discovery)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,37 @@ Last updated: 2026-09-01 (KH-402 incremental gate ced9c8c→da979fb CLEAN; PR #4
 ---
 
 ## Completed batches
+
+### v2.2.1 combined corpus regen CLEAN; corpus now tracks v2.2.1; TH-049/050/051 filed/fixed (2026-09-01)
+
+Full 6-type regen at `d5fd7da` (= v2.2.1 tag; analyzer-identical to
+gate-clean `da979fb`), PYTHONHASHSEED=0, --jobs 32. Before-baseline
+2,756,969 / 24 fails / 3 errors — the 17 above the known-7 debt all traced
+to a partial output-contamination event (**TH-049** filed: 862 files
+rewritten 2026-08-31 03:22-03:26 by an unidentified killed sweep; proven
+early-leakage of gate-ratified classes via direct 67→54 VD-DET A/B; no OOM
+kill in kernel logs). Runner stage surfaced two harness bugs, both
+fixed-on-discovery with tests: **TH-050** (find_schematic_outputs fed
+capability_mode.json sidecars to spice/emc/thermal — 5,889 loud KeyErrors
+under the v2.2.1 skill; long-standing silent) and **TH-051** (dual-format
+twins raced on one {stem}_thermal.json under --jobs N — torn JSON,
+nondeterministic winner even when silent; dedup with deterministic
+.kicad_sch winner; thermal pairs 16,083 → 15,606). Plus the v2.2.0-queued
+orphan housekeeping: 127 ancient pre-v1.3/corrupt outputs removed
+(inventory kept). validate_run_id 117,975 / 0 mismatched. Fracture set
+7,345 fails + 156 error-records → ALL bucketed into gate-ratified classes
+(VD/RC dedup-picks 6,869 / 987 repos dominant; XL/CD 196; spice ripple
+223; KH-402 NC class incl. the PivotAvionics LB-001 8→0 exhibit verbatim;
+TH-051 winner-flips 5; orphan error-records 156). **Curated locks: ZERO
+BUGFIX + ZERO NEG failures** (53-row pre-scan, no pre-flips needed).
+Reseed all six types + snapshot --all (18,804 baselines) + schema
+auto-seed (~80 additive entries). **Final: 2,756,794 assertions /
+2,756,785 passed / 7 failed / 2 errors — 100.0%; aspirational 334/1,855**
+— the 7+2 are the v2.2.0 standing FND debt ITEM FOR ITEM. Record:
+`results/v221_regen/adjudication_v221_regen.md`. Gate snap trees pruned
+per 26h (~108G; v22x_gate + v22x_kh402_gate → records only). ISSUES: 35 open
+(26 KH + 9 TH) — TH-049 open (tripwire), TH-050/051 straight to FIXED.md;
+next KH-403 / TH-052. Unit tree 1,321/0 (103 files; +TH-050/051 tests).
 
 ### KH-402 incremental gate `ced9c8c`→`da979fb` CLEAN (PR #41 fold, one-class budget) (2026-09-01)
 

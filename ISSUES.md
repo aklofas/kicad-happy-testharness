@@ -61,10 +61,10 @@ hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
 nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
 KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 `docs/2026-07-24-kicad-parser-and-analysis-audit.md` — each entry cites its
-KHPA finding ID). Next TH number: **TH-049** (TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
+KHPA finding ID). Next TH number: **TH-052** (TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 34 open issues (26 KH + 8 TH).
+> 35 open issues (26 KH + 9 TH).
 
 ---
 
@@ -594,6 +594,35 @@ makes that the natural shape. Budget: none until fixed (crash → no output).
 ---
 
 ## Test Harness Issues
+
+### TH-049: partial results/outputs contamination between regens — unidentified full-corpus sweep, killed mid-flight
+
+**Severity:** LOW (before-baseline noise only THIS cycle — the v2.2.1 regen
+rewrites every output authoritatively — but "writer unidentified" is the
+kind of thing that recurs)
+**Where:** `results/outputs/` (862 files, 849 schematic), mtimes
+2026-08-31 03:22:17–03:26:47
+**Discovered:** 2026-09-01, v2.2.1 regen before-baseline (24 fails vs the
+expected 7 — the 17 extras all sat on contaminated files)
+
+**Facts:** a full-corpus `run_schematic`-shaped sweep ran with the
+post-batch analyzer (v2.2.x tree), alphabetical repo order, writing 862
+outputs before dying mid-corpus. Sidecar `capability_mode.json` run_ids
+were reused, so `inputs.run_id` still reads the 2026-08-20 regen — mtime
+and content (VD-DET dedup shapes, verified 67→54 by direct A/B on
+43dad23-vs-d5fd7da) are the tells. Timing coincides with a TaskStop-kill
+of a stale background `run_tests.py --unit`; but no unit-tier test can
+produce an UNSCOPED sweep as written (`tests/test_run_integration.py`
+always passes `--repo jgrip/commodorelcd`, which explains only the
+sweep's first file). Kernel logs show no OOM kill. Full forensics:
+`results/v221_regen/adjudication_v221_regen.md`.
+
+**Fix direction:** (a) identify the writer if it recurs (this entry is the
+tripwire — symptom: post-regen run_checks fails clustered on
+alphabetically-early repos with fresh mtimes but stale run_ids); (b)
+consider a guard: corpus runners refuse unscoped (no --repo /
+--cross-section) invocation unless an explicit --all flag is passed —
+would also prevent accidental full-corpus runs from test/CI contexts.
 
 ### TH-037: `add_repos.py` raises `KeyError: 'stats'` on fresh runs
 

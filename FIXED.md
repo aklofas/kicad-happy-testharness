@@ -11,6 +11,63 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-09-01 — TH-051: dual-format twins raced on one thermal output file under parallel runs
+
+**Severity:** MEDIUM-latent (silent nondeterministic winner even when it
+"worked": X.kicad_sch.json and X.sch.json — the same board analyzed in both
+formats — both strip to `{stem}_thermal.json`, so under `--jobs N` two
+workers wrote the SAME output concurrently; last-writer-wins at best, torn
+JSON at worst. v2.2.0's regen got lucky/zero; the v2.2.1 regen surfaced it
+as 15 intermittent thermal FAILs on 8 twin-pair boards with identical
+JSON-error offsets on both twins that MOVED between passes — the race
+signature. Sequential retry: 8/8 repos clean.)
+**File:** `run/run_thermal.py` (`_process_one_thermal` output naming;
+`find_thermal_pairs`)
+**Discovered & fixed same session** (v2.2.1 combined corpus regen)
+
+- **Fix:** `thermal_output_stem()` helper + dedup in `find_thermal_pairs`
+  keyed on (repo dir, output stem) — only the first twin runs (sorted order
+  prefers the modern `.kicad_sch`), making the winner deterministic AND
+  removing the race. Also halves redundant twin work.
+- **Verification:** new `tests/test_run_thermal_pairs.py` (2 tests);
+  thermal full-corpus pass 4 post-fix (see `regen_runners_pass4.log`).
+- Related cleanup in the same session: 127 ancient orphan outputs removed
+  (pre-v1.3 wrapper / corrupt JSON, inventory
+  `results/v221_regen/orphans_removed.txt`) — the v2.2.0 record's queued
+  housekeeping; they were crashing the v2.2.1 spice skill's summary print
+  (pre-existing skill bug on legacy-format inputs, crashes identically at
+  43dad23 — not a v2.2.x regression).
+
+---
+
+## 2026-09-01 — TH-050: find_schematic_outputs fed capability_mode.json sidecars to the spice/emc/thermal runners
+
+**Severity:** LOW-visible / long-standing (v2.2.0-and-earlier processed the
+sidecars SILENTLY, writing garbage `<type>/<repo>/capability_mode.json`
+outputs — 17,355 accumulated — that collide with those analyzers' own
+legitimate sidecar paths; the v2.2.1 spice skill's stricter error report
+turned the class loud: 5,889 `KeyError: 'total_elapsed_s'` FAILs and
+rc=1 on the v2.2.1 regen's spice/thermal passes)
+**File:** `utils.py` (`find_schematic_outputs`)
+**Discovered & fixed same session** (v2.2.1 combined corpus regen, pass 1)
+
+- **Root cause:** the discovery glob (`*.json` per repo dir) had no name
+  filter, so the analyzer's run-metadata sidecar rode along as an "analysis
+  output" into every consumer runner.
+- **Fix:** skip `json_file.name == "capability_mode.json"` in
+  `find_schematic_outputs` (central — covers run_spice/run_emc/run_thermal).
+- **Verification:** new
+  `tests/test_utils.py::test_find_schematic_outputs_skips_capability_mode_sidecar`
+  (27/27 file total); regen pass 2 eliminated the sidecar class entirely
+  (5,889 KeyErrors -> 0; remaining pass-2 failures were the distinct
+  orphan-debris and TH-051 classes, resolved separately). Residual debris: the historical garbage
+  `capability_mode.json` outputs under `results/outputs/{spice,emc,thermal}`
+  linger unasserted (deliberately not mass-deleted — the path collides with
+  each analyzer's own legitimate sidecar; same housekeeping bucket as the
+  v2.2.0 record's ancient pre-envelope orphans).
+
+---
+
 ## 2026-09-01 — KH-402 (MEDIUM): no-connect markers created mid-span connectivity — NC'd pins absorbed into passing wires' nets (GitHub PR #41, danielboston38)
 
 Externally reported AND fixed in one motion (FIXED-direct; never open in
