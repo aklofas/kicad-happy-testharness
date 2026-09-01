@@ -468,6 +468,12 @@ def find_schematic_outputs(repo_filter=None):
             for json_file in sorted(repo_dir.glob("*.json")):
                 if json_file.stat().st_size == 0:
                     continue
+                # capability_mode.json is the analyzer's run-metadata sidecar,
+                # not an analysis output — feeding it to the spice/emc/thermal
+                # consumers produces garbage units that collide with those
+                # analyzers' own sidecars (TH-050).
+                if json_file.name == "capability_mode.json":
+                    continue
                 outputs.append(json_file)
     return outputs
 

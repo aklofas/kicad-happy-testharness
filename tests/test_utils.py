@@ -152,6 +152,30 @@ def test_filter_manifest_root_no_prefix_collision():
     assert utils.filter_manifest_by_repo(lines, "owner/repo") == []
 
 
+# === find_schematic_outputs (TH-050) ===
+
+def test_find_schematic_outputs_skips_capability_mode_sidecar():
+    """TH-050: the capability_mode.json run-metadata sidecar must not be
+    returned as an analysis output — the spice/emc/thermal runners consume
+    this list as their input units."""
+    import json as _json
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        repo_dir = Path(td) / "schematic" / "owner" / "repo"
+        repo_dir.mkdir(parents=True)
+        (repo_dir / "board.kicad_sch.json").write_text(_json.dumps({"a": 1}))
+        (repo_dir / "capability_mode.json").write_text(_json.dumps({"run_id": "x"}))
+        (repo_dir / "empty.json").write_text("")
+        saved = utils.OUTPUTS_DIR
+        try:
+            utils.OUTPUTS_DIR = Path(td)
+            outs = utils.find_schematic_outputs()
+        finally:
+            utils.OUTPUTS_DIR = saved
+        names = [p.name for p in outs]
+        assert names == ["board.kicad_sch.json"], names
+
+
 # === Runner ===
 
 if __name__ == "__main__":

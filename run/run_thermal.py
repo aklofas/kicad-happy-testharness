@@ -37,16 +37,36 @@ from utils import (OUTPUTS_DIR, ANALYZER_TIMEOUT, resolve_kicad_happy_dir,
                    add_repo_filter_args, resolve_repos, DEFAULT_JOBS)
 
 
+def thermal_output_stem(name):
+    """Strip the schematic-output suffix to get the thermal output stem.
+
+    Both formats of a dual-format board (X.kicad_sch.json AND X.sch.json)
+    strip to the SAME stem — see find_thermal_pairs' dedup (TH-051).
+    """
+    for suffix in (".kicad_sch.json", ".sch.json"):
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    return name
+
+
 def find_thermal_pairs(repo_filter=None):
     """Find matching schematic+PCB output pairs for thermal analysis.
 
     Returns list of (schematic_json, pcb_json) tuples where both files exist
-    and share the same project prefix.
+    and share the same project prefix. Dual-format twins (X.kicad_sch.json +
+    X.sch.json) map to the same {stem}_thermal.json output; under parallel
+    runs two workers raced on that file, tearing it (TH-051) — keep only the
+    first twin (sorted order prefers the modern .kicad_sch).
     """
     pairs = []
+    seen = set()
     for sch_json in find_schematic_outputs(repo_filter):
+        key = (str(sch_json.parent), thermal_output_stem(sch_json.name))
+        if key in seen:
+            continue
         pcb_json = find_pcb_output(sch_json)
         if pcb_json:
+            seen.add(key)
             pairs.append((sch_json, pcb_json))
     return pairs
 
@@ -96,12 +116,7 @@ def _process_one_thermal(sch_json, pcb_json, thermal_out_dir, timeout,
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Output filename: replace .kicad_sch.json / .sch.json with _thermal.json
-    stem = sch_json.name
-    for suffix in (".kicad_sch.json", ".sch.json"):
-        if stem.endswith(suffix):
-            stem = stem[:-len(suffix)]
-            break
-    output_json = out_dir / f"{stem}_thermal.json"
+    output_json = out_dir / f"{thermal_output_stem(sch_json.name)}_thermal.json"
 
     if should_skip_resume(output_json, resume):
         return sch_json, "SKIPPED", None, output_json, 0.0
