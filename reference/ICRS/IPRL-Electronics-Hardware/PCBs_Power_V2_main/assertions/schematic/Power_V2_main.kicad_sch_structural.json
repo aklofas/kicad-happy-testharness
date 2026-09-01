@@ -66,10 +66,10 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 2 detect_crystal_circuits",
+      "description": "Exactly 2 detect_adc_circuits",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
+        "detector_filter": "detect_adc_circuits",
         "op": "equals",
         "value": 2
       }
@@ -297,6 +297,16 @@
     },
     {
       "id": "STRUCT-00000029",
+      "description": "Exactly 1 validate_i2c_bus",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_i2c_bus",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -306,7 +316,23 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000031",
+      "description": "Exactly 2 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 2
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "PU-001",
+        "tagged_at": "2026-09-01T17:46:24Z",
+        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
+      }
+    },
+    {
+      "id": "STRUCT-00000032",
       "description": "Exactly 2 validate_voltage_levels",
       "check": {
         "path": "findings",
@@ -317,7 +343,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-08-21T00:37:04Z",
+        "tagged_at": "2026-09-01T17:46:24Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

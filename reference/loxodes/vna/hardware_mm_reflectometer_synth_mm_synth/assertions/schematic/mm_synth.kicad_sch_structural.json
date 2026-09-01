@@ -660,6 +660,17 @@
     },
     {
       "id": "STRUCT-00000063",
+      "description": "R1002 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000064",
       "description": "R1206 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -670,7 +681,7 @@
       }
     },
     {
-      "id": "STRUCT-00000064",
+      "id": "STRUCT-00000065",
       "description": "R1641 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -681,7 +692,7 @@
       }
     },
     {
-      "id": "STRUCT-00000065",
+      "id": "STRUCT-00000066",
       "description": "R1642 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -692,7 +703,7 @@
       }
     },
     {
-      "id": "STRUCT-00000066",
+      "id": "STRUCT-00000067",
       "description": "R1802 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -703,7 +714,7 @@
       }
     },
     {
-      "id": "STRUCT-00000067",
+      "id": "STRUCT-00000068",
       "description": "R209 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -714,7 +725,7 @@
       }
     },
     {
-      "id": "STRUCT-00000068",
+      "id": "STRUCT-00000069",
       "description": "R2110 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -722,17 +733,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R2110$"
-      }
-    },
-    {
-      "id": "STRUCT-00000069",
-      "description": "R1002 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R1002$"
       }
     },
     {
@@ -998,12 +998,12 @@
     },
     {
       "id": "STRUCT-00000094",
-      "description": "Exactly 26 detect_voltage_dividers",
+      "description": "Exactly 20 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 26
+        "value": 20
       }
     },
     {
@@ -1258,7 +1258,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-08-21T00:37:09Z",
+        "tagged_at": "2026-09-01T17:46:29Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
@@ -1274,7 +1274,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-08-21T00:37:09Z",
+        "tagged_at": "2026-09-01T17:46:29Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

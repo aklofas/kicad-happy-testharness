@@ -183,27 +183,39 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "1 detect_crystal_circuits detected",
+      "description": "1 detect_adc_circuits detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
+        "detector_filter": "detect_adc_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000019",
-      "description": "All detect_crystal_circuits have reference present",
+      "description": "All detect_adc_circuits have ref",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
+        "detector_filter": "detect_adc_circuits",
         "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
+        "field": "ref",
+        "pattern": "^$"
       }
     },
     {
       "id": "SEED-00000020",
+      "description": "All detect_adc_circuits type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_adc_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(external_adc|voltage_reference)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000021",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -213,7 +225,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -223,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
@@ -233,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -243,7 +255,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -254,12 +266,12 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-08-21T00:44:43Z",
+        "tagged_at": "2026-09-01T17:46:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -268,7 +280,16 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000028",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

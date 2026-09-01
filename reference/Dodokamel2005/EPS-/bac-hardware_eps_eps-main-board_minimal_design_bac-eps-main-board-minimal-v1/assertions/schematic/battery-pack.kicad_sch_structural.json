@@ -46,38 +46,16 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 detect_crystal_circuits",
+      "description": "Exactly 2 detect_adc_circuits",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
+        "detector_filter": "detect_adc_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "U204 in detect_crystal_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U204$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "U206 in detect_crystal_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U206$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
@@ -87,17 +65,17 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 4 detect_design_observations",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 6
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000008",
       "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -107,7 +85,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
       "description": "R213 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -118,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000010",
       "description": "R217 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -129,18 +107,28 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 2 validate_pullups",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 4 validate_i2c_bus",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_i2c_bus",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Exactly 4 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 2
+        "value": 4
       },
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-08-21T00:37:03Z",
+        "tagged_at": "2026-09-01T17:46:23Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

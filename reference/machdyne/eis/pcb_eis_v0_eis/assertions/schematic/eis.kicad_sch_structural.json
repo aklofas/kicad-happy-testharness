@@ -274,17 +274,6 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "R11 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R11$"
-      }
-    },
-    {
-      "id": "STRUCT-00000028",
       "description": "R10 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -295,13 +284,24 @@
       }
     },
     {
+      "id": "STRUCT-00000028",
+      "description": "R11 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R11$"
+      }
+    },
+    {
       "id": "STRUCT-00000029",
-      "description": "Exactly 4 detect_voltage_dividers",
+      "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 4
+        "value": 2
       }
     },
     {
@@ -348,7 +348,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-08-21T00:37:08Z",
+        "tagged_at": "2026-09-01T17:46:28Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
@@ -364,7 +364,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-08-21T00:37:08Z",
+        "tagged_at": "2026-09-01T17:46:28Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

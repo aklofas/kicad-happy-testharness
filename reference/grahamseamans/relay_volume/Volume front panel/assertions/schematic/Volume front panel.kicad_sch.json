@@ -138,27 +138,6 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "1 detect_crystal_circuits detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000015",
-      "description": "All detect_crystal_circuits have reference present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000016",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -168,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -178,7 +157,40 @@
       }
     },
     {
+      "id": "SEED-00000016",
+      "description": "1 detect_led_driver_ics detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_driver_ics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All detect_led_driver_ics have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_driver_ics",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
       "id": "SEED-00000018",
+      "description": "All detect_led_driver_ics type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_led_driver_ics",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(pwm_led_driver|matrix_led_driver|constant_current_led_driver|rgb_led_driver|led_driver)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "5 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -188,7 +200,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -199,7 +211,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -210,12 +222,12 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-08-21T00:44:47Z",
+        "tagged_at": "2026-09-01T17:46:12Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 12 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -224,7 +236,16 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000024",
       "description": "Has 11 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

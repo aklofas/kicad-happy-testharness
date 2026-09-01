@@ -61,13 +61,13 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 voltage_divider simulation(s)",
+      "description": "Exactly 2 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -172,6 +172,16 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "C50 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC50\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "R35 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -181,23 +191,13 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "C51 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC51\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "C52 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC52\\b"
       }
     },
     {

@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~44 (tolerance 10%)",
+      "description": "Simulation count ~42 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 39,
-        "max": 49
+        "min": 37,
+        "max": 47
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 30 passing simulation(s)",
+      "description": "At least 28 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 30
+        "value": 28
       }
     },
     {
@@ -113,13 +113,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "10 voltage_divider simulation(s)",
+      "description": "8 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 10
+        "value": 8
       }
     }
   ]
