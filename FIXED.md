@@ -11,6 +11,48 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-09-01 — KH-402 (MEDIUM): no-connect markers created mid-span connectivity — NC'd pins absorbed into passing wires' nets (GitHub PR #41, danielboston38)
+
+Externally reported AND fixed in one motion (FIXED-direct; never open in
+ISSUES.md — number assigned at adoption, next KH → 403). Credit:
+danielboston38, who joins the v2.2.x release credits.
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py` (~:1583-1595,
+  `build_net_map` no_connect loop)
+- **Root cause:** the loop called both `add_point()` AND
+  `union_with_overlapping_wires()` for every NC marker. The latter unions
+  with every wire the marker's (x,y) lies ON — including a wire passing
+  MID-SPAN beneath it, which KiCad does not connect. Two wrong outcomes:
+  the NC'd pin was dragged into the passing wire's net (false connectivity
+  — hides floating pins), and the absorbing net inherited
+  `no_connect: true` (suppressing legitimate audits on the wire's real
+  net).
+- **Fix (`0fc045a`, squash of PR #41; folded to `v2.2.x-dev` as
+  `da979fb`; origin/main advanced 43dad23 → 0fc045a per fold precedent):**
+  drop the `union_with_overlapping_wires` call — `add_point()` key-sharing
+  already handles the legitimate marker-on-pin/endpoint absorption; only
+  the mid-span union is removed. KH-360's junction/label union untouched.
+- **Verification:** upstream — PR #41 kicad-cli netlist oracle 16/18 →
+  18/18 net agreement on the reporter's board; main-repo controller repro
+  both directions; post-fold contract 707/8/3 + unpinned determinism
+  double-run clean. Harness — `tests/test_kh402_nc_midspan.py` (5 tests:
+  mid-span split RED @ ced9c8c / GREEN @ da979fb, endpoint-NC absorption
+  preserved, isolated NC, plain mid-span pin guard, determinism
+  double-build); unit tree 1,318/0. Incremental gate ced9c8c→da979fb:
+  smoke STRICT-CLEAN;
+  full corpus 170,014 units / 0 downgrades / 42-of-149,629 pairs moved, ALL
+  attributed (32 schematic units across ~24 repos with geometry-verified
+  markers — 27 own-file mid-span, 4 via child sheets, 1 near-endpoint
+  0.018mm off-grid sub-variant; 9 emc board_info-metadata-only; 1 thermal
+  gain). Exact nets: NT-001 +10, LB-001 −8 (eight falsely-shorted I2C pairs
+  un-merged on one board), DO-DET/RS-001 +2 each, EP-AUD +1, TS-005 +1.
+- **Gate budget:** one class — NC-mid-span net splits / nc-tag removals /
+  downstream finding movement; corpus surfaced 32 units / ~24 repos (PR frequency scan under-predicted), each
+  geometry-attributed (record
+  `results/v22x_kh402_gate/adjudication_kh402.md`).
+
+---
+
 ## 2026-08-31 — v2.2.x maintenance batch: 25 fixes on main-repo `v2.2.x-dev` (`43dad23..ced9c8c`)
 
 Fixed in one SDD-planned batch (main-repo `.superpowers/sdd/2026-08-24-v2.2.x-maintenance-batch/`,

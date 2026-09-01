@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-08-31
+Last updated: 2026-09-01
 
 ---
 
@@ -34,7 +34,10 @@ Last updated: 2026-08-31
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-402** (KH-401 filed 2026-08-31 during the
+maximum. Next KH number: **KH-403** (KH-402 assigned 2026-09-01 at the
+PR #41 fold adoption — no-connect mid-span connectivity, externally
+reported+fixed by danielboston38, FIXED-direct, never open here;
+KH-401 filed 2026-08-31 during the
 v2.2.x gate adjudication — cross_analysis VS-002 crash on
 `board_outline.bounding_box: null`, pre-existing at v2.2.0, --full-only
 trigger, verified identical at 43dad23 and ced9c8c; KH-395..400 filed 2026-08-31 during

@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-08-31 (v2.2.x maintenance-batch gate 43dad23→ced9c8c CLEAN under 19-class budget; 25 fixes adopted; KH-401 filed)
+Last updated: 2026-09-01 (KH-402 incremental gate ced9c8c→da979fb CLEAN; PR #41 fold adopted; pre-tag at da979fb)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,30 @@ Last updated: 2026-08-31 (v2.2.x maintenance-batch gate 43dad23→ced9c8c CLEAN 
 ---
 
 ## Completed batches
+
+### KH-402 incremental gate `ced9c8c`→`da979fb` CLEAN (PR #41 fold, one-class budget) (2026-09-01)
+
+Incremental symmetric gate over the PR #41 fold (danielboston38 — no-connect
+markers no longer create mid-span connectivity; squash `0fc045a` + merge;
+origin/main also advanced 43dad23→0fc045a, so the eventual combined-regen
+baseline is 43dad23..da979fb). Scope pre-verified: `analyze_schematic.py`
++8/−2 only. Staged smoke STRICT-CLEAN (45s) → quick_200 (495s, 1 WARN,
+adjudicated) → full (1,515s): **170,014 units / 0 downgrades**; whole-output
+walk 149,629 pairs → **42 moved, 42 attributed** to the single budget class:
+32 schematic units (~24 repos) all geometry-verified (27 own-file mid-span
+markers, 4 via child sheets, 1 near-endpoint 0.018mm-off-grid sub-variant —
+same root cause, tolerance-union removed), 9 emc board_info-metadata-only,
+1 thermal gain (un-nc'd −12V rail enters scope). Exact nets: NT-001 +10,
+**LB-001 −8** (eight falsely-shorted I2C SCL/SDA pairs un-merged on
+PivotAvionics), DO-DET/RS-001 +2, EP-AUD +1, TS-005 +1 — the corrections
+are the fix working. pcb/gerber byte-identical; cross identical. Record:
+`results/v22x_kh402_gate/adjudication_kh402.md`. **Pre-tag requirement now
+satisfied AT `da979fb`.** Adoption: `tests/test_kh402_nc_midspan.py`
+(5 tests, RED @ ced9c8c / GREEN @ da979fb, hook-clean); unit tree
+**1,318/0**; contract unchanged 707/8/3. KH-402 recorded FIXED-direct
+(never open); next KH-403. Magnitude note: the PR's 0/2,058 frequency scan
+under-predicted — full corpus surfaced ~24 repos; all individually
+attributed.
 
 ### v2.2.x maintenance-batch gate `43dad23`→`ced9c8c` CLEAN under 19-class budget; 25 fixes adopted; KH-401 filed (2026-08-31)
 
