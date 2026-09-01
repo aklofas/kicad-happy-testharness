@@ -179,7 +179,51 @@ def test_different_same_width_labels_are_ambiguous():
     g.finalize()
     cid = g.cluster_at(0, 0)
     assert g.cluster_ordered(cid, 4) is None
-    assert any("ambiguous" in u["reason"] for u in g.unresolved)
+    assert {"reason": "ambiguous_bus_width", "name": "4"} in g.unresolved
+
+
+def test_ambiguous_width_note_is_deduped_across_repeated_calls():
+    # cluster_ordered() is called once per co-clustered sheet pin — several
+    # pins sharing one ambiguous cluster+width must not each add their own
+    # duplicate note (roadmap item 11 dedup requirement).
+    g = _bg([{"x1": 0, "y1": 0, "x2": 10, "y2": 0}])
+    assert g.add_bus_label("D[0..3]", 2, 0)
+    assert g.add_bus_label("A[0..3]", 8, 0)
+    g.finalize()
+    cid = g.cluster_at(0, 0)
+    for _ in range(3):
+        assert g.cluster_ordered(cid, 4) is None
+    matches = [u for u in g.unresolved
+               if u == {"reason": "ambiguous_bus_width", "name": "4"}]
+    assert len(matches) == 1
+    assert len(g.unresolved) == len(set(tuple(sorted(u.items())) for u in g.unresolved))
+
+
+def test_cluster_ordered_excludes_pin_role_attachments():
+    # A sheet-pin ("pin" role) attachment must never participate in
+    # cluster_ordered's canonical-ordering search: it carries the child's
+    # member names (mapped positionally elsewhere via match_ports), not the
+    # local wire's ordering — see the role-exclusion docstring on
+    # cluster_ordered (roadmap item 11 focused test).
+    g = _bg([{"x1": 0, "y1": 0, "x2": 10, "y2": 0}])
+    # Only a pin-role label at this width exists: with no local/hier
+    # candidate, the pin-role attachment must be excluded, not adopted.
+    assert g.add_bus_label("X[0..3]", 5, 0, role="pin")
+    g.finalize()
+    cid = g.cluster_at(0, 0)
+    assert g.cluster_ordered(cid, 4) is None
+    assert g.unresolved == []  # exclusion is silent, not an ambiguity note
+
+    # A co-located local label of the SAME width but a DIFFERENT member set
+    # wins outright — the pin-role attachment is excluded from the
+    # distinctness check too, so this is not flagged ambiguous.
+    g2 = _bg([{"x1": 0, "y1": 0, "x2": 10, "y2": 0}])
+    assert g2.add_bus_label("X[0..3]", 2, 0, role="pin")
+    assert g2.add_bus_label("D[0..3]", 8, 0, role="local")
+    g2.finalize()
+    cid2 = g2.cluster_at(0, 0)
+    assert g2.cluster_ordered(cid2, 4) == ["D0", "D1", "D2", "D3"]
+    assert g2.unresolved == []
 
 
 def _port(role, ns, name, members, sheet, cluster, parent_ordered=None):
@@ -221,7 +265,8 @@ def test_width_mismatch_flags_no_partial_map():
     hier = _port("hier", "/X", "D[0..7]", [f"D{i}" for i in range(8)], 1, 1)
     unresolved = []
     assert match_ports([pin], [hier], unresolved) == []
-    assert unresolved and "width" in unresolved[0]["reason"]
+    assert unresolved and unresolved[0]["reason"] == "bus_width_mismatch"
+    assert unresolved[0]["name"] == "D[0..7]"
 
 
 def test_missing_counterpart_flags():
@@ -230,6 +275,8 @@ def test_missing_counterpart_flags():
     unresolved = []
     assert match_ports([pin], [], unresolved) == []
     assert unresolved
+    assert unresolved[0]["reason"] == "no_hier_counterpart_for_pin"
+    assert unresolved[0]["name"] == "D[0..1]"
 
 
 def test_hier_port_without_pin_counterpart_flags():
@@ -240,7 +287,8 @@ def test_hier_port_without_pin_counterpart_flags():
     unresolved = []
     assert match_ports([], [hier], unresolved) == []
     assert unresolved
-    assert "D[0..1]" in unresolved[0]["reason"]
+    assert unresolved[0]["reason"] == "no_pin_counterpart_for_hier"
+    assert unresolved[0]["name"] == "D[0..1]"
 
 
 def test_duplicate_hier_ports_first_wins_plus_note():
@@ -255,4 +303,4 @@ def test_duplicate_hier_ports_first_wins_plus_note():
     assert ((0, 1, "D0"), (1, 3, "D0")) in pairs
     assert ((0, 1, "D1"), (1, 3, "D1")) in pairs
     assert len(pairs) == 2
-    assert any("duplicate" in u["reason"] for u in unresolved)
+    assert any(u["reason"] == "duplicate_hier_port" for u in unresolved)

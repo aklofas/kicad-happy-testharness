@@ -152,10 +152,11 @@ def _lib_diode(variant):
     )'''
 
 
-def _lib_ic(lib_id, pins):
+def _lib_ic(lib_id, pins, description=""):
     """Generate an IC lib_symbol with named pins.
 
     pins: list of (name, number, dx, dy, pin_type) where dx/dy are screen offsets.
+    description: optional Description property text (e.g. for KH-370 tests).
     """
     short = lib_id.split(":")[-1] if ":" in lib_id else lib_id
     pin_lines = []
@@ -170,11 +171,15 @@ def _lib_ic(lib_id, pins):
             f'(name "{name}" (effects (font (size 1.27 1.27)))) '
             f'(number "{num}" (effects (font (size 1.27 1.27)))))')
     pin_text = '\n'.join(pin_lines)
+    desc_line = ""
+    if description:
+        desc_line = (f'\n      (property "Description" "{description}" (at 0 0 0) '
+                     f'(effects (font (size 1.27 1.27)) hide))')
     return f'''    (symbol "{lib_id}" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
       (property "Reference" "U" (at 0 7.62 0) (effects (font (size 1.27 1.27))))
       (property "Value" "{short}" (at 0 -7.62 0) (effects (font (size 1.27 1.27))))
       (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
-      (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide)){desc_line}
       (symbol "{short}_0_1"
         (rectangle (start -6.35 6.35) (end 6.35 -6.35)
           (stroke (width 0.254) (type default)) (fill (type background)))
@@ -216,6 +221,7 @@ class Schematic:
         self._power_names = set()  # track power symbol names
         self._diode_variants = set()  # track diode variants for lib_symbols
         self._ic_defs = {}      # lib_id → pins list for IC lib_symbols
+        self._ic_descriptions = {}  # lib_id → Description property text
 
     def resistor(self, ref, value, at=(50, 50), angle=0):
         self._lib_ids.add("Device:R")
@@ -259,14 +265,17 @@ class Schematic:
         })
         return self
 
-    def ic(self, ref, value, lib_id, pins, at=(50, 50)):
+    def ic(self, ref, value, lib_id, pins, at=(50, 50), description=""):
         """Place a generic IC with named pins.
 
         pins: list of (name, number, dx, dy, pin_type) tuples.
         dx, dy are screen-coordinate offsets from component center.
         pin_type: "input", "output", "passive", "power_in", "power_out".
+        description: optional Description property text on the lib_symbol.
         """
         self._ic_defs[lib_id] = pins
+        if description:
+            self._ic_descriptions[lib_id] = description
         self._symbols.append({
             "lib_id": lib_id, "ref": ref, "value": value,
             "x": at[0], "y": at[1], "angle": 0, "pins": pins,
@@ -301,7 +310,7 @@ class Schematic:
         for variant in sorted(self._diode_variants):
             lines.append(_lib_diode(variant))
         for lid, pins in sorted(self._ic_defs.items()):
-            lines.append(_lib_ic(lid, pins))
+            lines.append(_lib_ic(lid, pins, self._ic_descriptions.get(lid, "")))
         for name in sorted(self._power_names):
             lines.append(_lib_power(name))
         lines.append('  )')
@@ -332,6 +341,10 @@ class Schematic:
             lines.append(f'      (effects (font (size 1.27 1.27)) hide))')
             lines.append(f'    (property "Datasheet" "~" (at {sym["x"]} {sym["y"]} 0)')
             lines.append(f'      (effects (font (size 1.27 1.27)) hide))')
+            _desc = self._ic_descriptions.get(lid, "")
+            if _desc:
+                lines.append(f'    (property "Description" "{_desc}" (at {sym["x"]} {sym["y"]} 0)')
+                lines.append(f'      (effects (font (size 1.27 1.27)) hide))')
             if sym.get("pins"):
                 for p in sym["pins"]:
                     lines.append(f'    (pin "{p[1]}" (uuid "{_uuid()}"))')

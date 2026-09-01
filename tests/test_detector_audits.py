@@ -115,16 +115,92 @@ def test_audit_connector_ground_distribution_low_gnd_ratio():
 
 
 # ---------------------------------------------------------------------------
+# audit_datasheet_coverage / audit_sourcing_gate (analyze_schematic.py)
+# DS-003 and SS-002 must agree on the coverage denominator: unique BOM
+# lines (value + footprint), not component references (KH-390). These two
+# audits take a plain components list (not an AnalysisContext), so they
+# don't use build_ctx() like the domain_detectors audits above.
+# ---------------------------------------------------------------------------
+
+def _bom_component(ref, value, footprint, mpn=None):
+    c = {
+        "reference": ref, "value": value, "type": "resistor",
+        "footprint": footprint, "in_bom": True, "dnp": False,
+    }
+    if mpn is not None:
+        c["mpn"] = mpn
+    return c
+
+
+def test_ds003_ss002_share_unique_bom_line_denominator(tmp_path):
+    """4 resistors share one value+footprint (2 with MPNs, 2 without) —
+    that line is fully covered under BOM-line grouping since one MPN'd
+    instance covers the whole line. A second line (2 capacitors, no MPN)
+    creates a genuine gap: 1 of 2 unique BOM lines lacks an MPN. DS-003
+    and SS-002 must report that same 1-of-2 basis, not DS-003's old
+    per-reference 4-of-6.
+    """
+    if _skip_if_no_kh():
+        return
+    from analyze_schematic import audit_datasheet_coverage, audit_sourcing_gate
+
+    components = [
+        _bom_component("R1", "10k", "Resistor_SMD:R_0402_1005Metric",
+                       mpn="RC0402FR-0710KL"),
+        _bom_component("R2", "10k", "Resistor_SMD:R_0402_1005Metric",
+                       mpn="RC0402FR-0710KL"),
+        _bom_component("R3", "10k", "Resistor_SMD:R_0402_1005Metric"),
+        _bom_component("R4", "10k", "Resistor_SMD:R_0402_1005Metric"),
+        _bom_component("C1", "100nF", "Capacitor_SMD:C_0402_1005Metric"),
+        _bom_component("C2", "100nF", "Capacitor_SMD:C_0402_1005Metric"),
+    ]
+
+    # DS-003 needs a datasheets/ dir with at least one file to take the
+    # "datasheets present, partial coverage" branch.
+    ds_dir = tmp_path / "datasheets"
+    ds_dir.mkdir()
+    (ds_dir / "dummy.pdf").write_text("x")
+
+    ds_findings = audit_datasheet_coverage(components, str(tmp_path))
+    ss_findings = audit_sourcing_gate(components)
+
+    ds003 = [f for f in ds_findings if f["rule_id"] == "DS-003"]
+    ss002 = [f for f in ss_findings if f["rule_id"] == "SS-002"]
+    assert len(ds003) == 1, f"expected one DS-003 finding, got {ds_findings}"
+    assert len(ss002) == 1, f"expected one SS-002 finding, got {ss_findings}"
+
+    # Same denominator: 2 unique BOM lines, 1 missing an MPN.
+    assert ds003[0]["bom_size"] == 2
+    assert ss002[0]["total_bom_lines"] == 2
+    assert ds003[0]["mpn_coverage_percent"] == 50.0
+    assert ss002[0]["mpn_coverage_percent"] == 50.0
+
+    # Both summaries must name the "unique BOM lines" basis.
+    assert "unique BOM lines" in ds003[0]["summary"]
+    assert "unique BOM lines" in ss002[0]["summary"]
+    assert "1 of 2 unique BOM lines" in ds003[0]["summary"]
+
+
+# ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    import tempfile
     tests = [(n, f) for n, f in globals().items()
              if n.startswith("test_") and callable(f)]
     passed = failed = 0
     for name, fn in sorted(tests):
         try:
-            fn()
+            # Inspect the function signature to determine if it needs tmp_path
+            import inspect
+            sig = inspect.signature(fn)
+            if "tmp_path" in sig.parameters:
+                # Create a TemporaryDirectory and pass it as Path for tests needing fixtures
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    fn(Path(tmpdir))
+            else:
+                fn()
             passed += 1
             print(f"  PASS: {name}")
         except AssertionError as e:

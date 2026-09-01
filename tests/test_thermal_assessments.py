@@ -31,6 +31,11 @@ OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs" / "thermal"
 CURRENT_SCHEMA_VERSION = "1.4.0"
 ASSESSMENT_RULE_IDS = {"TH-DET"}  # widen as new assessment-emitting detectors land
 
+_KH = os.environ.get("KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy"))
+sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
+
+from analyze_thermal import _thermal_confidence  # noqa: E402
+
 
 def _fresh_thermal_outputs(limit=200):
     """Yield (path, data) for fresh 1.4.0 thermal outputs."""
@@ -108,6 +113,42 @@ def test_assessments_field_always_present():
         f"`assessments` key missing from {len(missing)} thermal output(s) — "
         f"required at v1.4. First few: {missing[:5]}"
     )
+
+
+# ---------------------------------------------------------------------------
+# KH-387: package_table thermal estimates are heuristic-confidence
+# ---------------------------------------------------------------------------
+#
+# `_thermal_confidence` drives the `confidence` field on TS-*/TP-* findings
+# derived from each assessment. package_table (footprint-regex-matched
+# generic Rtheta_JA average) is not per-MPN datasheet data — same reasoning
+# PR #37 applied to evidence_source — so it must never earn "datasheet-backed"
+# confidence, regardless of where Tj_max came from. The corpus never
+# currently exercises tj_max_source=="datasheet" (datasheet plumbing gap,
+# KH-376), so this is a direct unit test of the real producer function
+# rather than a corpus-fixture scan (real field names: rtheta_ja_source,
+# tj_max_source — see analyze_thermal.py's _compute_junction_temps).
+
+def test_package_table_confidence_is_heuristic_even_with_datasheet_tj_max():
+    """A package_table rtheta_ja_source must yield 'heuristic' confidence
+    even when tj_max_source is 'datasheet' (the case that previously fell
+    through to the wrong 'datasheet-backed' return)."""
+    assessment = {"rtheta_ja_source": "package_table", "tj_max_source": "datasheet"}
+    assert _thermal_confidence(assessment) == "heuristic"
+
+
+def test_default_rtheta_confidence_still_heuristic():
+    """Regression guard: the pre-existing 'default' rtheta_ja_source path
+    is unaffected by the package_table fix."""
+    assessment = {"rtheta_ja_source": "default", "tj_max_source": "datasheet"}
+    assert _thermal_confidence(assessment) == "heuristic"
+
+
+def test_fully_datasheet_backed_confidence_reachable():
+    """Regression guard: a hypothetical future non-generic rtheta_ja_source
+    with datasheet Tj_max should still be able to earn 'datasheet-backed'."""
+    assessment = {"rtheta_ja_source": "datasheet", "tj_max_source": "datasheet"}
+    assert _thermal_confidence(assessment) == "datasheet-backed"
 
 
 # ---------------------------------------------------------------------------

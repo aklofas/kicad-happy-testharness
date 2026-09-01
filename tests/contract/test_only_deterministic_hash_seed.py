@@ -9,13 +9,13 @@ iterate hash-seeded sets, so the emitted JSON's ``findings[]`` ordering and
 nested ``component/net/pin/evidence`` list ordering depend on the interpreter's
 random hash seed.
 
-**This test is intentionally RED today.** It locks the contract that
-``--only-deterministic`` SHOULD provide; the product-side fix (sort findings +
-nested lists at the analyzer level, OR have ``--only-deterministic`` pin
-``PYTHONHASHSEED=0`` itself) is deferred to v1.5 (roadmap static-audit #16).
-Marked ``xfail(strict=True)`` so that when the v1.5 fix lands, the test
-FLIPS to XPASS, the suite fails loudly, and someone must remove the xfail
-marker — turning the test into a positive lock for the fix.
+**This test is GREEN as of the v2.2.x determinism batch (KH-366/KH-367).**
+It was ``xfail(strict=True)`` while the gap was open; the product-side fix
+landed by sorting the offending set iterations at the analyzer level (DO-DET
+rails, XV-002 refs, RC-DET candidate-cap pick, power-sequencing EN/PG pin
+resolution, and ~20 sibling sites in signal/domain/validation detectors).
+The xfail marker has been removed, converting this into a positive lock:
+any new hash-seeded set iteration that reaches analyzer output turns this RED.
 
 The v1.4 Layer 1 regression gate currently works around this gap by pinning
 ``PYTHONHASHSEED=0`` for every analyzer subprocess; see RUNBOOK Checklist 16.
@@ -93,21 +93,12 @@ def _strip_volatile_fields(envelope: dict) -> dict:
 
 # ---------------------------------------------------------------------------
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="LOG 7: --only-deterministic doesn't pin PYTHONHASHSEED itself; "
-           "v1.5 product fix deferred (roadmap static-audit #16). When v1.5 "
-           "fix lands this XPASSES → remove xfail to convert into a positive "
-           "lock.",
-)
 def test_only_deterministic_output_is_hash_seed_invariant(tmp_path):
     """Run analyze_schematic.py 3 times with PYTHONHASHSEED=0, =1, =random.
     With ``--only-deterministic`` set, the resulting envelopes (modulo
     legitimately-volatile provenance fields) MUST be byte-equal.
 
-    Today: RED — hash-seed-iterating detectors emit findings in
-    different order. v1.5 fix: sort findings + nested
-    component/net/pin/evidence lists at the analyzer level."""
+    Positive lock since KH-366/KH-367 (v2.2.x determinism batch)."""
     _skip_unless_corpus_and_kh_present()
 
     seed0_path = tmp_path / "seed_0.json"
