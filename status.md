@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-07-26 (v2.2 budgeted gate c6b504a→e67aeb5 CLEAN under budget; #25 bus connectivity + KH-359/360 adoption; kicad-cli netlist oracle adopted)
+Last updated: 2026-08-31 (v2.2.x maintenance-batch gate 43dad23→ced9c8c CLEAN under 19-class budget; 25 fixes adopted; KH-401 filed)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,51 @@ Last updated: 2026-07-26 (v2.2 budgeted gate c6b504a→e67aeb5 CLEAN under budge
 ---
 
 ## Completed batches
+
+### v2.2.x maintenance-batch gate `43dad23`→`ced9c8c` CLEAN under 19-class budget; 25 fixes adopted; KH-401 filed (2026-08-31)
+
+Full budgeted symmetric gate over the 31-commit v2.2.x maintenance batch
+(main-repo `v2.2.x-dev`, whole-range per feedback_handoff_release_scope;
+scope pre-verified: 15 analyzer files +754/−203). Staged smoke 45s →
+quick_200 499s → full 1,573s @ `--jobs 32`, PYTHONHASHSEED=0 (kept this
+gate per the class-18 rider; next gate may drop the pin as its own
+verification). **170,014 units / 141,636 PASS / 0 severity downgrades /
+2,697 FAIL repos — every delta attributed to the handoff's 19 budget
+classes.** Whole-output isolation walk over all 149,629 pairs
+(`walker_script_v22x.py`): 3 residue units, all hand-adjudicated as
+KH-370 (class 6) downstream (thermal Muffin Tj 49→50°C from un-hidden
+ADS1015 loads; thermal ut88 new TS-003 on shunt R6 via CS-DET unlock; emc
+minibadges CK-004 correctly stops applying to a non-crystal). Exact
+per-rule nets (`gate_rule_delta`): VD-DET −2,258 dedup; c6 family
+−50/−46/+37/+34/+30/+30; **RC-DET net exactly 0** (8c36212 watch passes
+despite 4,180 churn units); FV-001 zero firings; gerber byte-identical
+5,502/5,502. Conditional budgets property-verified: 212 strict-c11 repos
+all have conditional `.kicad_dru`; 87 c11_drops + 282 c12 repos all
+multi-settings (KH-361×KH-362 joint attribution); bus tokens 9/10
+vocabulary, zero out-of-vocab. Gate-blind surfaces covered by targeted
+`--full` A/B (kh392-antipad fixture + bitaxeUltra + XTA-Interface +
+4-board NR-001 chain): GP-001 strictly credit-only (fixture keeps the
+SENSE3 real-gap control; bitaxe 37→6 / 0 regressions), KH-394
+connectivity churn structurally representative-only, NR-001 reachable
+(ran:true; 0 fires on sample — corpus quantification at regen), BE-001 /
+VP-001 land at regen (--full-only). **NEW gate finding: plain-mode pcb
+snapshots carry only track summaries, so NR-001/RP-002/TW-001 are
+gate-blind — made visible by KH-381's own checks_run manifest.** Record:
+`results/v22x_gate/adjudication_v22x.md` (+ walker + walk report +
+rule-delta table; snap trees kept until v2.2.x ships per 26h exception).
+**Pre-tag requirement satisfied AT `ced9c8c`.** Adoption: 25 fixes →
+FIXED.md (KH-357/358/361-363/366-372/380-382/384/385/387-394 incl.
+corrections: KH-367 en_net = pin selection, build_net_map exonerated;
+KH-370 legacy-.sch deliberately permissive; KH-387 latent, live twin
+KH-398); 13 new + 4 extended test files (107 pytest: 58 RED @ base /
+107 GREEN @ candidate; 5 files fixed adoption-time for the bare-python3
+pre-push convention); contract 707/8/3 exact; unit tree 1,313/0 under
+venv AND system python3. **KH-401 filed** (VS-002 crash on
+`bounding_box: null` — pre-existing, found by the gate's --full A/B).
+ISSUES.md: 36 open (28 KH + 8 TH); next KH-402/TH-049. KH-371/372
+live-API validation run AUTHORIZED + executed 2026-08-31 (see LOG).
+KH-359/360 closure CONFIRMED by main-repo 2026-08-31 (shipped in v2.2.0)
+— moved to FIXED.md; open count now 34 (26 KH + 8 TH).
 
 ### v2.2.0 combined corpus regen CLEAN under combined budget; corpus now tracks v2.2.0 (2026-08-20)
 
