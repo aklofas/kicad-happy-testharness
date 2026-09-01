@@ -11,6 +11,320 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-08-31 — v2.2.x maintenance batch: 25 fixes on main-repo `v2.2.x-dev` (`43dad23..ced9c8c`)
+
+Fixed in one SDD-planned batch (main-repo `.superpowers/sdd/2026-08-24-v2.2.x-maintenance-batch/`,
+31 commits, every task independently reviewed; final whole-branch review clean). Harness
+adoption: 13 new test files + 4 extended + `_build_sch.py` fixture support +
+`tests/fixtures/kh392-antipad/` minimal-pair board. Adoption-file pytest sweep:
+107 tests — 58 RED at `43dad23` (every new file has RED coverage), 107 GREEN at
+`ced9c8c`. Full unit tree 1,313/0; contract suite 707 passed / 8 skipped / 3 xfailed
+(baseline moved from 706/8/4 — the `test_only_deterministic_hash_seed` xfail lock
+XPASSED and was converted to a positive lock per its own docstring).
+Corpus gate: full budgeted corpus gate 43dad23→ced9c8c **CLEAN**
+(170,014 units / 141,636 PASS / 0 downgrades; 149,629-pair whole-output walk
+with 3 hand-adjudicated class-6-downstream residue units; RC-DET net exactly
+0; FV-001 zero firings; gerber byte-identical; record
+`results/v22x_gate/adjudication_v22x.md`).
+
+### KH-357 (MEDIUM): BE-001 treated `rect` board outline as its diagonal — false edge-proximity findings (GitHub #31)
+
+- **File:** `skills/emc/scripts/emc_rules.py`
+- **Root cause:** a `rect` outline entry was measured as one segment start→end (the
+  diagonal), so components near the middle of a large board read as "near the edge".
+- **Fix (`a743adc`):** rect outlines expand to their 4 sides; distances measure to the
+  nearest side, corner-order independent.
+- **Verification:** `tests/test_kh357_be001_rect.py` (2 tests, RED→GREEN); task-28 A/B
+  on USBTTL (gr_rect outline): 2 false BE-001 disappear, `board_edge` category 2→0.
+- **Gate budget:** BE-001 drops near rect diagonals + possible NEW findings near real
+  edges on rect-outline boards (class 9).
+
+### KH-358 (MEDIUM): VP-001 tenting check read `remove_unused_layers` — a field nothing writes (audit KHPA-019)
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_via_in_pad`)
+- **Fix (`9287a72`):** reads the real via tenting field parsed from the board.
+- **Verification:** `tests/test_kh_v22x_pcb.py::test_vp001_reads_real_tenting_field`.
+- **Gate budget:** VP-001 flips on tented via-in-pad boards (class 3).
+
+### KH-361 (MEDIUM): `.kicad_dru` conditional rules applied as GLOBAL minimums (audit KHPA-016 part 3)
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py`
+- **Fix (`43cd662` + `ced9c8c` polish):** conditional rules are skipped first-in-loop
+  instead of applied board-wide; sorted `conditional_rules_skipped` list + `_count` +
+  count-aware note ("1 conditional rule ..." / "N conditional rules ..."), emitted only
+  when non-empty so unaffected boards stay byte-identical; `rules_checked` excludes skipped.
+- **Verification:** `tests/test_kh362_discovery.py` conditional-rule tests (RED→GREEN).
+- **Gate budget:** design_rule_compliance violation drops on conditional-`.kicad_dru`
+  boards + additive keys (class 11; may compound with KH-362 on the same boards).
+
+### KH-362 (LOW): project/.kicad_dru discovery returned the FIRST file in the directory, ignoring the board stem (audit KHPA-015)
+
+- **Files:** `skills/kicad/scripts/kicad_utils.py`, `analyze_pcb.py`, `project_config.py`
+- **Fix (`28e460a` + `30bab88`):** stem-matched `load_kicad_pro`/`load_kicad_dru`; a
+  shared `find_project_settings_file` helper routes both the loader AND the
+  `project_settings['source']` field (the old source path was an independent unsorted
+  `os.listdir` scan — a live filesystem-order determinism bug and wrong-provenance claim,
+  fixed in the same change with an adversarial listdir-monkeypatch RED test).
+- **Verification:** `tests/test_kh362_discovery.py` (11 tests).
+- **Gate budget:** netclass/design-rule shifts + `rules_source`/`source` naming the
+  stem-matched file on multi-`.kicad_pro` dirs (class 12).
+
+### KH-363 (LOW): stale module-global net-ID map could leak into pad `net_number` on re-entrant use (audit KHPA-017)
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py`
+- **Fix (`51b1553`):** net-ID map reset at the top of `analyze_pcb` before footprint
+  extraction.
+- **Verification:** `tests/test_kh_v22x_pcb.py::test_net_id_map_reset_before_footprint_extraction`.
+- **Gate budget:** none (single-run CLI outputs unaffected; re-entrant-use hygiene).
+
+### KH-366 (MEDIUM) / KH-367 (MEDIUM) / KH-382 (MEDIUM): hash-order nondeterminism — RC-DET pick, DO-DET list order, en_net identity, XV-002 order (+ ~21 sibling sites)
+
+- **Files:** `skills/kicad/scripts/signal_detectors.py`, `domain_detectors.py`,
+  `validation_detectors.py`, `cross_analysis.py`
+- **Root cause / correction:** KH-367's en_net defect was pin SELECTION in
+  `domain_detectors._match_pin` (unsorted set iteration picking an arbitrary EN pin) —
+  the originally-hypothesized `build_net_map` was EXONERATED (net numbering was already
+  deterministic). Fix lands on the lexicographic-first EN pin.
+- **Fix (`a5072a8` DO-DET rails_without_caps + rails_with_caps; `28a8836` XV-002
+  emission order; `a721848` RC-DET candidate pick + en_net + sibling audit: ~14
+  pick-changing + ~7 order-only sites across 4 files, itemized in the commit body):**
+  sorted iteration at every site that reaches analyzer output.
+- **Also (`85676da`):** CI determinism guard — analyzer must be byte-stable across
+  processes with unpinned PYTHONHASHSEED. The guard proved its value pre-landing by
+  catching KH-394 (below).
+- **Verification:** `tests/test_kh366_367_determinism.py` (4 tests, corpus-board
+  skipif-guarded); contract xfail lock `test_only_deterministic_hash_seed` XPASSED →
+  converted to positive lock (contract baseline 706/8/4 → 707/8/3); task-28 determinism
+  sweep 0 diffs unpinned across 4 fixtures.
+- **Gate budget:** vs-baseline diffs on affected boards are the fix landing (class 18):
+  RC-DET pick changes, DO-DET rails lists, en_net lexicographic-first, XV-002 order.
+
+### KH-368 (MEDIUM): JSONC comment-stripping corrupted string values containing `//` or `/* */` — config layer silently dropped
+
+- **File:** `skills/kicad/scripts/project_config.py`
+- **Fix (`f26a7ca`):** 4-state string-aware scanner replaces the two comment regexes;
+  `_TRAILING_COMMA` behavior preserved verbatim (its own non-string-awareness filed as
+  KH-400).
+- **Verification:** `tests/test_kh368_jsonc.py` (4 tests: URL survives, block marker in
+  string, escaped quotes).
+- **Gate budget:** URL-containing JSONC configs now load → suppression activations =
+  finding disappearances (class 13, small).
+
+### KH-369 (MEDIUM): GitHub Action schematic auto-detect was `find | head -1` — arbitrary project pick
+
+- **File:** `action/detect_project.sh`
+- **Fix (`02e222e` + `7c6e297` + `ced9c8c`):** deterministic ladder — one project or
+  fail with the candidate list; PCB-only invocations with explicit INPUT_PCB survive
+  missing/ambiguous schematics; PCB fallback sorted + node_modules-excluded.
+  **Release note obligation:** multi-project Action users must now set inputs explicitly.
+- **Verification:** `tests/test_kh369_entrypoint.py` (5 subprocess tests).
+- **Gate budget:** none (CI path only, class 19).
+
+### KH-370 (MEDIUM): KH-220 description-substring oscillator classification misfired on "internal oscillator" ICs → false XL-DET + CD-DET (GitHub #33)
+
+- **File:** `skills/kicad/scripts/kicad_utils.py` (`classify_component` KH-220 branch),
+  `signal_detectors.py` (XL-DET fallback)
+- **Fix (`3a96995`):** internal-oscillator phrase exclusions + corroborating pin
+  evidence; XL-DET fallback no longer invents `output_net`. **Deliberate residual:** the
+  legacy `.sch` parser path stays permissive (`pins is None` short-circuit, documented in
+  the classify_component docstring) — KH-370 symptoms can still occur on legacy `.sch`;
+  not a regression, out of the fix's scope.
+- **Verification:** `tests/test_kh370_oscillator.py` (5 tests, synthetic ADC
+  minimal-pair); hackrf-one A/B: real crystal entries byte-identical, 8 fabricated
+  output_net → null.
+- **Gate budget:** XL-DET active_oscillator drops + output_net→null; CD-DET
+  oscillator_output drops (class 6, could be broad).
+
+### KH-371 (LOW) / KH-372 (LOW): LC-ACT findings omitted provenance; LC-005 denominator counted only responding APIs, `status=None` as active
+
+- **File:** `skills/kicad/scripts/lifecycle_audit.py`
+- **Fix (`4266ac6`):** LC-ACT carries `confidence`/`evidence_source` (copied from the
+  sibling emit site) so `trust_level` is no longer forced low; lcsc-only-unknown
+  wording; LC-005 accounts attempted/responded/active_confirmed, `status=None`
+  structurally excluded, LCSC filtered as stock-only, firing rule `==1 && responded>=2`.
+- **Verification:** `tests/test_kh371_372_lifecycle.py` (6 offline tests) +
+  **live-API run 2026-08-31 (user-authorized), ALL TARGETS PASS** — board:
+  CIRCUITSTATE/Mitayi-Pico-D1 `Mitayi-Pico-D1.kicad_sch` (57 components, 20
+  unique MPNs; DigiKey + Mouser responding, element14 attempted/no key, LCSC
+  correctly excluded from lifecycle accounting as stock-only). Results: 39
+  findings (LC-ACT 11 / LC-005 11 / LC-006 8 / LC-004 8 / LC-001 1);
+  LC-ACT 11/11 carry confidence=deterministic + evidence_source=api_lookup;
+  LC-005 11/11 satisfy active_confirmed==1 && responded>=2 with counts named
+  ("3 attempted, 2 responded lifecycle source(s)"); all 8 unknowns say
+  "unknown", unknown∩active = ∅; ambiguous "Discontinued at DigiKey"
+  (discontinued:false) honestly lands as unknown, not active; trust_summary
+  39/39 deterministic / api_lookup, trust_level "high", zero
+  unknown-confidence findings (pre-fix this board would have been forced
+  low). LC-001 obsolete fired on W25Q32JVSSIQ (real DigiKey status). The
+  LCSC-only-RESPONDING wording variant was not exercisable on this board (no
+  part returned LCSC lifecycle data) — remains covered by the offline test.
+- **Gate budget:** not corpus-gateable (class 19).
+
+### KH-380 (HIGH) / KH-381 (MEDIUM): NR-001 was unreachable dead code; cross_analysis had no record of which checks ran
+
+- **File:** `skills/kicad/scripts/cross_analysis.py`
+- **Root cause (KH-380):** NR-001 read `board_outline['segments']`; the producer emits
+  `edges` — the rule had NEVER fired corpus-wide.
+- **Fix (`a1ac772`):** NR-001 reads edges (line/rect/arc; explicit circle skip avoiding
+  the KH-399-class sibling bug); `checks_run` manifest (CheckRun entries incl. honest
+  skip reasons) on every cross_analysis output.
+- **Verification:** `tests/test_kh380_381_cross_analysis.py` (4 tests).
+- **Gate budget:** NR-001 fires for the FIRST TIME EVER (class 14, NewKnown-style);
+  `checks_run` = additive REQUIRED envelope key on all cross_analysis outputs → known
+  schema-drift false-positive on stale corpus until regen (class 15; do NOT relax schema).
+
+### KH-384 (MEDIUM) / KH-385 (MEDIUM): deep_review_gate cwd-dependent script paths; elided quotes always failed
+
+- **File:** `skills/kicad/review/scripts/deep_review_gate.py`
+- **Fix (`6f014e1`):** script paths anchor to the analysis dir (project dir defaults to
+  its parent); elided quotes verify segment-wise in order (both norm and squash
+  branches) with deterministic difflib nearest-match reasons (80/40 thresholds) in
+  quarantine records.
+- **Verification:** `tests/test_kh384_385_gate.py` (5 tests).
+- **Gate budget:** deep_review is permanently excluded from regression-diff scope
+  (class 19).
+
+### KH-387 (MEDIUM): `_thermal_confidence` returned "datasheet-backed" for package_table Rθ
+
+- **File:** `skills/kicad/scripts/analyze_thermal.py:473`
+- **Fix (`8d5b566`):** package_table → "heuristic" (same rationale as PR #37's
+  evidence_source fix).
+- **Correction vs the filed budget note:** corpus movement is ZERO, not "large class" —
+  pre-fix, the `tj_max_source == "default_125"` check already caught every real corpus
+  board first (the datasheet tj_max path is corpus-wide dead, KH-376 plumbing gap). The
+  fix is LATENT-PROTECTIVE: it matters when KH-376 lands. The LIVE twin — the
+  assessment-level `confidence` at `analyze_thermal.py:444`, which has no such safety
+  net — is filed as **KH-398**.
+- **Verification:** `tests/test_thermal_assessments.py::test_package_table_confidence_is_heuristic_even_with_datasheet_tj_max`
+  (direct unit test of the producer function — the case the corpus can't reach).
+- **Gate budget:** zero thermal movement expected; ANY movement = escalate (class 10).
+
+### KH-388 (MEDIUM): VD-DET double-emission → duplicate findings sharing one finding_id + duplicate SPICE sims
+
+- **Files:** `skills/kicad/scripts/analyze_schematic.py` (flatten), `skills/spice/scripts/simulate_subcircuits.py`
+- **Fix (`12aaadb`):** dedup aliased VD-DET findings at flatten — id()-based dedup
+  general; semantic-key belt scoped to `detect_voltage_dividers` only (an unscoped key
+  collapsed 46→3 legitimate VM-001 findings and crashed on dict-valued components —
+  implementer-caught brief defect); spice consumer belt. `signal_detectors.py`
+  double-append untouched per the 8c36212 danger note.
+- **Verification:** `tests/test_kh388_vddet_dedup.py` (3 tests); bitaxeUltra A/B: 2
+  aliased dividers removed; 150-board spot-check: 29 boards affected, RC-DET 0 movement.
+- **Gate budget:** VD-DET duplicate drops (class 7); RC-DET must NOT gain (8c36212 watch).
+
+### KH-389 (MEDIUM): PM-002 negative "distance from board edge" leaked; off-board parts read "overhangs board edge" at ERROR
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_placement`)
+- **Fix (`15a5599`):** KH-344 rewrite unconditional in all branches (no negative mm
+  anywhere); AABB-disjoint off-board parts get a distinct classification at `warning`
+  severity ("placed off-board (N mm outside outline)"), same rule_id.
+- **Verification:** `tests/test_kh_v22x_pcb.py` PM-002 tests (2).
+- **Gate budget:** LARGE message/severity churn — ~22k findings / 6.7k boards (class 8).
+
+### KH-390 (LOW): DS-003 and SS-002 BOM-coverage denominators disagreed
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py`
+- **Fix (`5a85191`):** DS-003 groups by (value, footprint) unique BOM lines exactly like
+  SS-002 (`bom_size` KEY SEMANTICS changed: per-ref count → unique-BOM-line count, same
+  key name); both summaries label the basis ("unique BOM lines").
+- **Verification:** `tests/test_detector_audits.py::test_ds003_ss002_share_unique_bom_line_denominator`;
+  USBTTL A/B: bom_size 8→6.
+- **Gate budget:** DS-003 summary text + count churn corpus-wide (class 16).
+
+### KH-391 (LOW): summarize_findings mislabeled deep-review categories as rule_id, overflowed columns, 0/0/0 confidence
+
+- **File:** `skills/kicad/scripts/summarize_findings.py`
+- **Fix (`865a232` + `ee1dead`):** `dr:` prefix routed by source; rule column ≥21 chars
+  (fits `dr:`+longest category); dr counter; honest coverage in both text and JSON modes.
+- **Verification:** `tests/test_kh391_summarize.py` (5 tests).
+- **Gate budget:** none (display CLI, class 19).
+
+### KH-392 (HIGH): GP-001 sampler read every via ≥ ~0.7 mm as a reference-plane gap (GitHub #39)
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_return_path_continuity`)
+- **Root cause:** KiCad fills store the antipad void carved around a via; a track's
+  via-end sample probes center + 8 points at exactly 0.5 mm — all inside any void with
+  radius > 0.5 (KiCad default 0.8/0.4 via at 0.15 clearance → 0.55). Every plane-fanout
+  stub scored uniform 50.0% → severity-`error` EMC finding.
+- **Fix (`0f33fdf`):** antipad-aware sampling — a sample within `via_dia/2 + clearance`
+  (0.2 conservative + max zone clearance) of a via center is credited as an expected
+  void; grid-bucketed via lookup; credit-only accounting (coverage never decreases).
+- **Known residuals (deliberate, filed):** no via-layer-span filter (blind/buried vias
+  can over-credit on multi-layer boards — **KH-397**) + all-zones clearance max; the two
+  accepted false-negative mechanisms STACK on multi-layer/mixed-via/aggressive-clearance
+  boards (final-review rider).
+- **Verification:** `tests/test_kh392_kh393_gp001_power.py` +
+  `tests/fixtures/kh392-antipad/` minimal-pair board (SENSE1 0.8 vs SENSE2 0.6 via,
+  SENSE3 real-gap control); XTA-Interface A/B (207 vias): strictly monotonic coverage
+  improvement; bitaxeUltra A/B: 37→6 return_path entries, 31 GP-001 findings drop, 0
+  regressions.
+- **Gate budget:** GP-001 / return_path_continuity entry drops, credit-only (class 1).
+
+### KH-393 (HIGH): analyze_pcb never threaded power_rails into `is_power_net_name` — per-port rail names read as signal at all 5 call sites (GitHub #40)
+
+- **Files:** `skills/kicad/scripts/analyze_pcb.py` (5 sites: power routing, return
+  path, proximity pairs, current capacity, layer transitions), `kicad_utils.py`
+- **Fix (`e65188d`):** rails loaded from schematic analysis (`statistics.power_rails` —
+  the producer's real shape; the brief's top-level read was a verified-nonexistent
+  shape) and threaded through all 5 sites; `--power-rails` CLI flag for PCB-only runs;
+  additive `power_net_resolution` block on ALL pcb outputs makes the resolved
+  classification inspectable.
+- **Verification:** `tests/test_kh392_kh393_gp001_power.py` (P1_VBUS/VBUS minimal pair
+  incl. `--gp001-debug` RED→GREEN sample-site pair).
+- **Gate budget:** additive `power_net_resolution` block on all pcb outputs; zero
+  classification changes in corpus runs (no rails passed) (class 2).
+
+### KH-394 (MEDIUM): `disconnected_pads` pair order + island representative were PYTHONHASHSEED-dependent (fixed-on-discovery)
+
+- **File:** `skills/kicad/scripts/pcb_connectivity.py:335/:479`
+- **Discovered:** by the new v2.2.x determinism CI guard during pre-landing sanity
+  (2026-08-25) — unsorted `pad_keys` set iteration; NOT covered by KH-366/367's audit
+  (schematic-side files only). Never open in ISSUES.md.
+- **Fix (`60d0f9e`):** sort `pad_keys` before island-representative selection.
+- **Verification:** 6/6 unpinned trials clean both analyzers post-fix (4/6 differed
+  pre-fix); task-28: XTA-Interface + bitaxeUltra reorder deltas match this class exactly.
+- **Gate budget:** disconnected_pads pair-order churn in `--full` outputs (class 18;
+  the corpus gate runs non-full pcb, so mostly gate-invisible).
+
+---
+
+## 2026-08-31 — KH-359 / KH-360 (shipped in v2.2.0; tracker-hygiene closure)
+
+Both fixed by v2.2.0's core #25 hierarchical-bus-connectivity work (shipped
+2026-08-20, main `43dad23`); their ISSUES.md entries stayed open by a
+v2.2-arc tracker-hygiene miss — main-repo CONFIRMED closure 2026-08-31.
+Gate-validated in the v2.2 budgeted gate (`c6b504a`→`e67aeb5` CLEAN
+2026-07-26, `results/v22_gate/adjudication_v22.md`: KH-359 class-1 splits
+exercised on 750 units / 372 repos) and oracle-validated (kicad-cli netlist
+oracle 5/5 golden boards PASS --strict); harness tests
+`tests/test_kh359_kh360_netmap.py` + `tests/test_kh359_suppression_bare_tail.py`
+adopted 2026-07-26 (`d40ef20ca18`), RED @ c6b504a / GREEN @ e67aeb5.
+
+### KH-359 (HIGH): same-name local labels on different sheets MERGED in the output nets dict (audit KHPA-003)
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py` (`build_net_map`)
+- **Root cause:** union-find kept local labels sheet-scoped, but the final
+  `nets` dict was keyed by bare display name — a second disjoint root with an
+  already-present name silently extended the first net's pins. KiCad keeps
+  them separate (sheet path is part of local-label identity).
+- **Fix (v2.2.0 / #25):** sheet-qualified net identity at serialization —
+  multi-sheet same-name locals emit as distinct qualified keys with
+  `display_name`; corpus movement was the v2.2 gate's class-1 split budget.
+- **Verification:** netlist oracle 5/5 --strict; v2.2 gate class-1 exercised
+  750 units / 372 repos, 0 violations; harness tests above.
+
+### KH-360 (MEDIUM): `union_with_overlapping_wires` stopped after the first matching wire (audit KHPA-007)
+
+- **File:** `skills/kicad/scripts/analyze_schematic.py`
+- **Root cause:** `union(k, wk1); return` after the FIRST overlapping wire —
+  a mid-segment junction tap off an un-split backbone could leave the
+  backbone disconnected depending on wire insertion order.
+- **Fix (v2.2.0 / #25):** union every overlapping wire (early return
+  dropped); covered by the same netlist oracle.
+- **Verification:** oracle + v2.2 gate class-2 (junction-tap merges);
+  harness tests above.
+
+---
+
 ## 2026-08-20 — TH-048: seed.py enum-field assertions count None-field items in the expected total
 
 **Severity:** LOW (5 false FAILs at the v2.2.0 regen; latent since LA-004 shipped)
