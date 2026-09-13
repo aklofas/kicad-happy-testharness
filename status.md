@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-09-01 (v2.2.1 combined corpus regen CLEAN at d5fd7da; corpus tracks v2.2.1; TH-049 filed, TH-050/051 fixed-on-discovery)
+Last updated: 2026-09-13 later (v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,72 @@ Last updated: 2026-09-01 (v2.2.1 combined corpus regen CLEAN at d5fd7da; corpus 
 ---
 
 ## Completed batches
+
+### v2.3.0 correctness batch gate `788649f`→`b54b5c4` CLEAN; 18 fixes + 1 refutation adopted; KH-408..413 + TH-053 filed (2026-09-13 later)
+
+Main-repo agent's 35-commit batch on `worktree-v2.3-dev` (unmerged, user-gated):
+KH-373/374/375/376/377/378/379/383/386/396/397/398/399/400/401/405/406/407
+fixed, KH-395 REFUTED by the kicad-cli oracle (bus aliases ARE project-wide
+in KiCad — hatlabs/HALPI2), plus the spice `:678` guard, F-ref logic-IC
+classification (the PR #44 gate FYI) and EMC CK-001 order. Symmetric
+budgeted gate smoke (49 s) → quick_200 (692 s) → full (170,014 units,
+1,990 s): **0 severity downgrades**, gerber + cross_analysis 100% PASS.
+Whole-output walk 149,629 pairs (`results/v23_gate/walker_v23.py`, both
+worktrees' `kicad_utils` evaluated per unit for the 0V flips): schematic
+8,606 / pcb 15,236 / thermal 16,083 / emc 4,572 / cross 3 moved, **0
+violations** — every unit class-attributed (S1 power_budget 6,550 · S2
+sleep audit 2,723 · S3 regulator caps/dissipation content 1,653 · S6 sort
+order 348 · S5 F-ref 146 · S4 0V flips 25 · P1 pad drills · P2 decoupling
+association · P3 CP-003 7,507→277 = −96% all filled_polygon · T1
+components_skipped on every thermal unit · T2 1,248 confidence flips · T3
+313 same-unit downstream · E1 DC-001 −1,203 / DC-002 +2,874 · E2 PD-001
+−141 · E5 CK order · E6 SW-003/TH-001 22 same-unit downstream). PLUS a
+300-project `--full` pcb→emc→thermal chain A/B (`full_chain_ab.py`, new
+reusable tool, RUNBOOK 26g): 0 crashes, 0 violations, CP-003 163→1, BE-001
+−75 on 18/18 circle-outline boards, GP-001 zero movement. Record
+`results/v23_gate/adjudication_v23.md`. **Pre-tag requirement satisfied AT
+`b54b5c4`.** Adoption: 19 new root test files + 1 edited contract file,
+all RED@788649f / GREEN@b54b5c4 (bare + pytest); 7 runner summaries
+normalised (TH-052 count-loss sub-class); 15.8 MB hackrf fixture replaced
+by corpus-output reads (skip-if-absent). Unit tree 1,453 / 0 over 124 files; contract
+707/8/3. Trackers: ISSUES.md −19 / +7 (KH-408..413, TH-053), open 18 KH +
+10 TH, next KH-414 / TH-054; FIXED.md batch entry with per-issue
+root cause / fix commit / verification. Snap trees + chain outputs kept
+until v2.3.0 ships. Adoption COMMITTED locally on harness `v2.2-dev` (this
+commit; 20 test files + fixture + ISSUES/FIXED/RUNBOOK/status); push HELD
+pending user request.
+
+### PR #44/#43/#42 batch gate `3cf837b`→`788649f` CLEAN; adoption staged; KH-407 + TH-052 filed (2026-09-13)
+
+Main-repo `main` advanced 3cf837b → 788649f (PR #44 danielboston38 fuse
+bridge in PP-001 + `is_power_net_name` widening; PR #43 danielboston38
+SP-001 shorted two-pin detector; PR #42 AlanRosenthal lcsc search CLI +
+SKILL.md). Symmetric budgeted gate, staged smoke (1,844 units, 50 s) →
+quick_200 (41,257, 492 s) → full (170,014, 2,005 s): **0 severity
+downgrades**, gerber + cross_analysis 100% PASS. Whole-output walk over
+149,629 pairs (`results/v22x_pr44_gate/walker_pr44.py`, both worktrees'
+`is_power_net_name` evaluated side-by-side on each unit's own net names):
+schematic 4,200 / pcb 1,581 / thermal 9 / emc 40 / cross 349 moved across
+1,433 repos, **0 violations** — class a 2,793 sch + 1,581 pcb units (775
+distinct flipped names, 0 rail→signal, 0 must-NOT-flip hits, conditional
+aux sections toggling with the first rail); class b PP-001 −1,547 (686 loss
+units; 130 no-fuse/no-flip units all mechanically explained by a connector
+on the baseline walk's visited nets; 4 gain units / +18 ratified as the
+fuse-visible-input limit); class c SP-001 first-fire 1,343 units / 2,924
+findings (150 collapsed / 2,774 individual, invariants hold, SH-001
+nowhere, no new keys); class d 0 stage moves. Exact nets in the record
+(`adjudication_pr44.md`; rule-delta tool cross-check identical). **Pre-tag
+requirement satisfied AT `788649f`.** Residue: `0V<suffix>` grounds
+(0VA/0Vo/0VANA/0VCC, 25 units / 4 repos) now rails → **KH-407** LOW;
+`F1`=74LS32 typed fuse (jotego) FYI. Adoption: 2 new test files (28 tests)
+RED@3cf837b / GREEN@788649f; the PR #44 file arrived without a `__main__`
+runner and was a phantom "1 passed" in the hook (handoff's 1,336) — runner
+added, **unit tree 1,349 / 0 over 105 files**; the same silent-pass sits on
+17 pre-existing files (190 tests) → **TH-052** MEDIUM. Contract 707/8/3
+unchanged. #44/#43/#42 FIXED-direct; KH-405 stays open for the wmsc
+fallback half. Open issues 40 (31 KH + 9 TH); next KH-408 / TH-053.
+Snap trees kept until the next release ships (26h exception). NOTHING
+COMMITTED — review pending.
 
 ### v2.2.1 combined corpus regen CLEAN; corpus now tracks v2.2.1; TH-049/050/051 filed/fixed (2026-09-01)
 

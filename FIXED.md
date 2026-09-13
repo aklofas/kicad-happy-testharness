@@ -11,6 +11,261 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-09-13 — v2.3.0 correctness batch: 18 fixes + 1 refutation on main-repo `worktree-v2.3-dev` (`788649f..b54b5c4`, 35 commits, unmerged/unpushed pending user gate)
+
+Batch authored by the main-repo agent (SDD record `.superpowers/sdd/2026-09-13-v2.3-correctness-batch/`);
+harness adoption: 19 new root test files (28 → 124 files) + 1 edited contract
+file, every file RED @ 788649f / GREEN @ b54b5c4 under bare python3 AND venv
+pytest (`results/v23_gate/adoption_sweep.log`). Budgeted gate 788649f→b54b5c4
++ a 300-project `--full` pcb→emc→thermal chain A/B — record
+`results/v23_gate/adjudication_v23.md`. **Gate CLEAN:** 170,014 units / 0 severity downgrades; 149,629-pair
+whole-output walk 0 violations (schematic 8,606 / pcb 15,236 / thermal
+16,083 / emc 4,572 / cross 3 moved, every unit class-attributed); 300-project
+`--full` chain 0 crashes / 0 violations. **Pre-tag requirement satisfied AT
+`b54b5c4`.** Unit tree 1,453 / 0 over 124 files; contract 707/8/3.
+
+### KH-395 (LOW) — REFUTED, closed invalid: bus_alias resolution is project-wide in KiCad too
+
+- **Claim:** KiCad scopes `bus_alias` per schematic file; the analyzer merged
+  them project-wide.
+- **Refutation (kicad-cli netlist oracle, hatlabs/HALPI2-hardware):**
+  `can.kicad_sch`'s `CAN{SPI}` expands with the `SPI` alias declared ONLY in
+  `CM4_GPIO.kicad_sch`; XML net `/CAN.SCK` = U44.10 + J10.38 + J11.23.
+  Pre-fix analyzer 542 nets ≈ XML 536; the per-file-scoped implementation
+  gave 661 (over-split). Implementation `9d9b3c6` reverted by `947bd3b`;
+  behavior at b54b5c4 == 788649f. Side observation filed as KH-409.
+
+### KH-373 (HIGH): CP-003 touch-pad clearance measured origin-to-zone-bbox — "deterministic" 0.0 mm for enclosing pours
+
+- **Fix (`f2e6b60`, `5805cdf`, `ba3a269`, `b26e462`):** measure pad outline
+  to the filled-polygon edge (`_nearest_zone_copper_distance` 5-arg
+  signature); pad sampling uses KiCad's ABSOLUTE pad angle; touch pads need
+  positive evidence (TestPoint/keystone parts are no longer "touch pads");
+  findings carry `nets` + `measurement_basis` ("filled_polygon" →
+  deterministic; bbox bases → heuristic).
+- **Verification:** `tests/test_kh373_cp003_polygon_distance.py` (6) +
+  edited `tests/contract/test_kh339_cp003_filled_bbox.py` (3). Chain A/B
+  (300 projects, --full): CP-003 163 → 1, survivor basis filled_polygon,
+  positive clearance. Layer-1 gate: see record. Follow-ups KH-408 (thermal
+  pad-via rotation, same class) and KH-413 (THT-only touch pads).
+
+### KH-374 (HIGH): sleep_current_audit wrong on battery designs
+
+- **Fix (`bb85c39`, `dac45db`, `37b2844`):** consults EN connectivity (not
+  EN-pin presence) and battery-rail voltages; always-on rails un-zeroed;
+  battery-rail entries appear; `SLEEP_PULL_MIN_OHM = 100` floor drops shunts
+  from pull classification.
+- **Verification:** `tests/test_kh374_sleep_audit.py` (7). Gate: class S2,
+  section-only movement (handoff sample ~20% of boards).
+
+### KH-375 (HIGH): power_budget misses loads
+
+- **Fix (`44550ec`, `2539cca`, `d05f6aa`):** counts the iterated pin,
+  regulator-output rails and LED loads (incl. behind series resistors, never
+  anchoring through ground); `rails[*].other_loads[] {ref,type,estimated_mA
+  [,via]}`; LDO dissipation from total rail load (also rewrites PR-DET
+  `power_dissipation.estimated_iout_A/pdiss_W/_iout_provenance.basis`).
+- **Verification:** `tests/test_kh375_power_budget_loads.py` (11). Gate:
+  class S1 (~45% of boards in the handoff sample), thermal switching-reg
+  iout feed (TS-005/TP-001/TS-003 movement downstream of the same unit).
+
+### KH-376 (HIGH): datasheet-feature lookups called without project_dir
+
+- **Fix (`58a345d`, `3ac1478`):** `project_dir` threaded into
+  get_regulator_features/get_mcu_features at every validation_detectors
+  site; EMC derives it from `inputs.source_files`.
+- **Verification:** `tests/test_kh376_project_dir_plumbing.py` (6).
+  Corpus-invisible (no `datasheets/extracted/` anywhere in the corpus).
+
+### KH-377 (HIGH): EMC PD-001 counted series/feedforward caps as decouplers
+
+- **Fix (`5de954d`):** shunt-to-ground caps only (regulator findings'
+  `input_/output_capacitors` lists shrink accordingly); configurable
+  `project.pdn_transient_current_a`; band limit (out-of-band peaks → INFO);
+  unit formatting. **Non-additive rename:** PD-001 `transient_amps` →
+  `transient_a` (+ `transient_source`, `peaks_total`, `peaks_shown`,
+  `out_of_band_peaks`).
+- **Verification:** `tests/test_kh377_pd001.py` (15). Chain: PD-001 −4;
+  gate: class S3 (content-only regulator findings) + E2.
+
+### KH-378 (MEDIUM): GP-001 had no touch/sense-net exemption
+
+- **Fix (`6c510cd`, `b26e462`):** GP-001/RP-001 treat touch-pad nets as
+  intentional voids (GP-001 INFO variant with `is_touch_net`); test points
+  never demote GP-001.
+- **Verification:** `tests/test_kh378_touch_net_exemption.py` (9). Chain:
+  GP-001 zero movement after the test-point guard (the pre-fix 65
+  demotions in the main-repo sample were all test-point nets). Follow-up
+  KH-410 (RP-001 wording).
+
+### KH-379 (HIGH): DC-001 cap association required NO shared net
+
+- **Fix (`cb849a5`):** association requires a shared non-ground power net;
+  `decoupling_placement[].gnd_only_caps`; `nearby_caps` shared-power-net
+  only; ESD-only boards analysed.
+- **Verification:** `tests/test_kh379_decoupling_association.py` (3).
+  Chain: DC-001 −13 / DC-002 +35 / DC-003 −74; DC-001 losses matched by
+  DC-002 on the same IC except 2 — both TVS parts (hackrf U15, minibadges
+  U3) whose only "shared" net was GND, correctly dropped from decoupling
+  scope entirely.
+
+### KH-383 (HIGH): min-drill blind to footprint pad drills
+
+- **Fix (`d6bb650`, `b8a2b4b`, `ec9b459`):** pad drills feed DFM
+  `min_drill_mm` (emitted on via-less boards too) and design-rule
+  compliance; oval drills use the smaller dimension; via facts
+  `min_pad_drill_mm`; custom `hole_size` .kicad_dru rule uses the renamed
+  min_drill (boards with an unconditional hole_size rule previously
+  CRASHED under --full).
+- **Verification:** `tests/test_kh383_pad_drills.py` (9). Gate: class P1
+  (vias/dfm_summary/design_rule_compliance on most pcb units; DFM-001
+  gains on small-pad-drill boards incl. via-less ones). Follow-up KH-412
+  (`parameter` field; degenerate 0.00001 mm source drills on MeloCar).
+
+### KH-386 (HIGH): thermal silently dropped zero-load regulators
+
+- **Fix (`87ceaf2`):** `summary.components_skipped` (int, always) +
+  top-level `skipped_components[] {ref,value,reason}` when non-empty;
+  output-schema.md regenerated.
+- **Verification:** `tests/test_kh386_thermal_skipped.py` (3). Gate: class
+  T1 on every thermal unit (additive). Follow-up KH-411 (reason vocabulary).
+
+### KH-396 (MEDIUM) / KH-406 (LOW): hash-order nondeterminism — rf_chains component_roles, differential_pairs esd_protection
+
+- **Fix (`8bdc5b5`):** both sorted; det-guard fixture
+  `tests/fixtures/determinism/usb_dual_esd.kicad_sch` (Jana-Marie
+  analog-toolkit copy) wired into ci.yml's second determinism loop
+  (`if [ -f ]`-guarded, live once the harness-smoke pin passes adoption).
+- **Verification:** `tests/test_kh396_kh406_determinism.py` (2, seeds
+  1/7/123). Gate: class S6 (design_analysis differs only by list order —
+  sorted output differs from seed-0 hash order on 3 chain + N gate units).
+  Also `f807b65` sorts EMC CK-001 clock nets (pre-existing flake found by
+  the main-repo's determinism sweep; harness `tests/test_emc_ck001_order.py`
+  now reads the corpus hackrf-one outputs, skip-if-absent, instead of a
+  15 MB fixture copy) — CK-001/CK-002 order-only class E5 in the gate.
+
+### KH-397 (LOW): GP-001 via-antipad credit ignored layer span
+
+- **Fix (`94b65f8`):** `_via_spans_layer` check before crediting.
+- **Verification:** `tests/test_kh397_antipad_layer_span.py` (3).
+
+### KH-398 (MEDIUM) / KH-399 (LOW): TH-DET package_table confidence; EMC circle-edge distance
+
+- **Fix (`6fcd8c1`):** every package_table TH-DET assessment → heuristic;
+  `_point_to_edges_min_distance` handles circle-type outline edges.
+- **Verification:** `tests/test_kh398_kh399_confidence_circle.py` (8).
+  Chain: BE-001 −75 on 18 boards, every one with a circle outline edge
+  (walker-verified from the paired pcb `board_outline`); thermal T2
+  confidence flips deterministic→heuristic only.
+
+### KH-400 (LOW): JSONC trailing-comma regex not string-aware
+
+- **Fix (`354b2f6`):** string-aware strip in project_config's loader.
+- **Verification:** `tests/test_kh400_jsonc_trailing_comma.py` (4).
+
+### KH-401 (MEDIUM): cross_analysis VS-002 crashed on `bounding_box: null`
+
+- **Fix (`4c8a62c`):** null-safe producer reads.
+- **Verification:** `tests/test_kh401_null_bbox.py` (2). Gate:
+  cross_analysis identical corpus-wide (plain mode never reached the crash).
+
+### KH-405 (MEDIUM): lcsc jlcsearch `extra` block gone — fetcher half
+
+- **Fix (`7b848f0`, `b54b5c4`):** fetch/sync enrich the datasheet URL from
+  the wmsc `product/detail` endpoint; wmsc wins over an empty jlcsearch
+  datasheet block. Closes the issue fully (PR #42 landed the SKILL.md /
+  search-CLI half on 2026-09-13).
+- **Verification:** `tests/test_kh405_lcsc_wmsc_fallthrough.py` (4).
+  Network path — not corpus-visible.
+
+### KH-407 (LOW): `0V<suffix>` ground spellings read as rails (PR #44 residue)
+
+- **Fix (`34754c6`, `9cd345a`):** letter/underscore-suffixed `0V` names
+  (0VA, 0Vo, 0VANA, 0VCC) are ground, never rails; digit-suffixed (`0V9`)
+  stay rails.
+- **Verification:** `tests/test_kh407_zero_volt_names.py` (4). Gate: class
+  S4/P4 — the 25 PR #44-gate units flip back (openventilator RS-001 −1
+  each, jericholab RS-001 −8, protolux `+0V9` regulator now visible).
+
+### Un-numbered, same batch
+
+- **spice `simulate_subcircuits.py:678` KeyError** on reports lacking
+  `total_elapsed_s` (`2f6e4df`) — `tests/test_spice_summary_elapsed_guard.py`
+  (2). Was crashing the v2.2.1 spice summary on legacy inputs (noted at the
+  v2.2.1 regen).
+- **F-referenced logic ICs classified `fuse`** (`b2cb54e`, `6fb9e5f` — the
+  74LS32-as-`F1` FYI from the PR #44 gate): `classify_component` checks the
+  value for 74xx/4000-series logic before the F-ref fuse heuristic; fuse
+  current ratings still classify as fuse. `tests/test_f_ref_logic_ic_not_fuse.py`
+  (5). Gate: class S5 — jotego/jtcores + baldengineer/bit-preserve families
+  reclassify (bom/statistics/subcircuits/ic_pin_analysis move; PD-DET
+  "Protection Fn fuse" entries vanish, DO-DET/PU-001 gain the ICs; PP-001
+  PR #44 gains revert on jotego sf).
+
+---
+
+## 2026-09-13 — main advanced 3cf837b → 788649f: PR #44 (PP-001 fuse bridge + rail-name widening), PR #43 (SP-001 new rule), PR #42 (lcsc search CLI + SKILL.md half of KH-405)
+
+Three external contributions merged by the main-repo agent on 2026-09-13,
+all recorded FIXED-direct (never open in ISSUES.md). Budgeted gate
+`3cf837b`→`788649f` CLEAN — record
+`results/v22x_pr44_gate/adjudication_pr44.md`; **pre-tag requirement
+satisfied AT `788649f`.** Credits: danielboston38 (#44, #43),
+AlanRosenthal (#42).
+
+### PR #44 (danielboston38) — fuses bridge DC in PP-001; plain / suffixed / descriptive voltage names are power rails (`d650b5b`)
+
+- **Files:** `skills/kicad/scripts/signal_detectors.py`
+  (`audit_power_pin_dc_paths`: `_bridges_dc` accepts `type == "fuse"`; a
+  net reached during the hop walk that carries a connector is credited as
+  an external supply, the same way the start net already was);
+  `skills/kicad/scripts/kicad_utils.py` (`is_power_net_name`: plain and
+  letter-suffixed voltages `5V`/`12VIN`/`5VSB`, `<power-prefix>_nV`,
+  `*_VCC/VDD/AVDD/…` tails, gated `*_VBUS/VIN/VBAT/…` tails,
+  `<power-prefix>_VOUT`; maintainer tightening — `0V` stays ground-only,
+  `nV`+EN/PG/OK/… stay signals, `*_VOUT` needs a power prefix, the old
+  un-anchored `^\d+V\d` rule kept so `3V3-A` does not regress).
+- **Root cause:** `connector → fuse → (cap + IC power_in)` halted at the
+  fuse (not a bridge), saw only the cap, and emitted a false "no DC path"
+  error; `^\d+V\d` needed a trailing digit so `5V` — the single most
+  common rail label in the corpus (1,990 units flipped) — was a signal.
+- **Verification:** harness `tests/test_pr44_pp001_fuse_power_names.py`
+  (14 tests: 6 RED @ 3cf837b / 14 GREEN @ 788649f; runner block added at
+  adoption — see TH-052). Gate: class a moved 2,793 schematic + 1,581 pcb
+  units (775 distinct flipped names, 0 rail→signal, 0 must-NOT-flip hits);
+  class b PP-001 −1,547 corpus-wide (686 loss units, 130 no-fuse/no-flip
+  units all mechanically explained by a connector on the baseline walk's
+  visited nets; 4 gain units / +18 ratified as the pre-existing
+  fuse-visible-input limit). Vocabulary residue → KH-407 (`0V<suffix>`
+  grounds).
+
+### PR #43 (danielboston38) — SP-001 shorted two-pin component detector (`788649f`)
+
+- **Files:** `signal_detectors.py` (`detect_shorted_two_pin_components`),
+  `analyze_schematic.py` (wired into `analyze_signal_paths`, flattened),
+  `finding_schema.py` (`Det.SHORTED_TWO_PIN`), `output_filters.py`
+  (SP-001 → schematic stage). New rule, not a bug: the condition was
+  already computed and discarded by `index_two_pin_components`.
+  Renamed from the PR's SH-001 at merge (EMC owns SH-*). Review-round
+  guards: exactly-two-pin, `ferrite_bead` type string, unannotated refs
+  skipped, dedup by ref; maintainer addition: ≥5 hits on one net collapse
+  into one net-level finding (`confidence: heuristic`, `component_count`)
+  — the KH-403/404 over-union signature.
+- **Verification:** harness `tests/test_sp001_shorted_two_pin.py` (14
+  tests: ImportError @ 3cf837b / 14 GREEN @ 788649f). Gate first-fire:
+  1,343 units / 2,924 findings (150 collapsed, 2,774 individual), shape
+  invariants hold on every finding, SH-001 nowhere, no nested
+  `shorted_two_pin_components` key, no stage movement elsewhere.
+
+### PR #42 (AlanRosenthal) — `skills/lcsc/scripts/search_lcsc.py` component search CLI + SKILL.md API refresh (`b9a7ac6`, `3a9bd09`, `28ad2b0`)
+
+- Not corpus-visible (network path). Lands the SKILL.md/response-shape
+  half of **KH-405** (jlcsearch `extra` block gone); the
+  `fetch_datasheet_lcsc.py` wmsc fallback half **remains OPEN** in
+  ISSUES.md.
+
+---
+
 ## 2026-09-01 — TH-051: dual-format twins raced on one thermal output file under parallel runs
 
 **Severity:** MEDIUM-latent (silent nondeterministic winner even when it

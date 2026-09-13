@@ -1451,7 +1451,11 @@ check — it covers everything.
 ### 16a. Pre-flight checks
 
 ```bash
-# Unit tests (must be 100%)
+# Unit tests (must be 100%) — then READ the per-file lines: a
+# `WARN <file> (unparsed summary: '')` means the file has no stdlib
+# `if __name__ == "__main__":` runner and executed NOTHING under the hook
+# (counted as a phantom "1 passed" — TH-014 / TH-052 class). Add the runner
+# block (copy tests/test_sp001_shorted_two_pin.py's) before counting it.
 python3 run_tests.py --unit
 
 # Check for open issues
@@ -2688,9 +2692,23 @@ invisible to the gate on both sides: (1) aux-section changes
 those DIRECTLY (canary repo A/B + a corpus-wide walk over the gate's own
 snap trees, e.g. the KH-354 record: 3,442 units / 7,946 warnings removed /
 0 gained); (2) `--full`-only producers (`pcb_connectivity` → #24-class emc
-rules, VP-001 via-in-pad, DC-003 via lists) — cover with a targeted
-`--full` A/B on trigger-rich boards and budget the rest at corpus regen.
+rules, VP-001 via-in-pad, DC-003 via lists, BE-001, KH-394
+disconnected_pads order) — cover with a targeted `--full` A/B on
+trigger-rich boards and budget the rest at corpus regen; (3) segment-level
+track geometry (v2.2.x lesson): plain-mode pcb output carries only track
+SUMMARIES (`tracks.segment_count`, no `segments[]`), so cross_analysis
+rules needing per-segment positions (NR-001, RP-002, TW-001) skip
+corpus-wide in gates — the cross `checks_run` manifest (KH-381+) shows
+this directly (`ran:false, "no PCB track segments present"`); read a
+sample manifest BEFORE assuming a rule was exercised.
 A STRICT-CLEAN verdict only certifies the non-full findings surface.
+**Reusable --full chain A/B (v2.3 batch):** `results/v23_gate/full_chain_ab.py
+--base <wt> --cand <wt> --out <dir> [--n 300 --seed 23]` samples same-stem
+.kicad_pro/.kicad_sch/.kicad_pcb triples and runs schematic + pcb --full
+--proximity + emc + thermal on both worktrees (PYTHONHASHSEED=0); walk the
+result with a per-batch classifier in `--layout chain` mode (worked example
+`results/v23_gate/walker_v23.py`). Pass `--out` as an ABSOLUTE path — the
+analyzers run with cwd set to each unit's output dir.
 
 **Isolation-invariant walk for budgeted gates (v2.2 pattern):** when the
 budget is expressed as "boards triggering none of the expected classes must
