@@ -11,6 +11,222 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-06 — KH-418 + KH-420 follow-up: both v2.3.1-gate regressions FIXED on main-repo `main` @ `9fbbb26` (= b008afa + merge of `v2.3.x-dev` @ `28a7adf`, 8 commits; LOCAL, not pushed)
+
+Harness adoption: `tests/test_kh418_mpn_alias_rank.py` (14) +
+`tests/fixtures/kh418/` (5 fixtures) and
+`tests/test_kh420_zone_fill_segment_grid.py` (4; the NLoy timing test reads
+`repos/NLoy/...` skip-if-absent, `--only-deterministic`, asserts < 30 s).
+RED @ b008afa / GREEN @ 9fbbb26 (`results/v231b_gate/adoption_sweep.log`).
+Unit tree at 9fbbb26 1,537 / 0 over 139 files; contract 707 / 8 / 3.
+Incremental gate b008afa → 9fbbb26: `results/v231b_gate/adjudication_v231b.md`.
+
+### KH-418 (MEDIUM) — generic `Part#` / `Part Number` alias overrode an explicit `MPN` field (LCSC code picked as MPN)
+
+- **Fix:** `3f80577`, `ff8b5ec`, `dece11c`, `029e349`, `37c5b8d`, `28a7adf` —
+  `MPN_FIELD_ALIASES` split into PRIMARY (mpn, manufacturer p/n, mfr p/n,
+  mfg p/n, manufacturer part number, manufacturer_part_number,
+  mfr_part_number, mfg part, mfr no, manf#, mfpn, mpn#, …) and GENERIC
+  (part number, partnumber, part#, partno, partno.) tiers; primary always
+  outranks generic, file order only within a tier (`pick_mpn` /
+  `get_mpn_property`); bom_manager `get_canonical` precedence = project
+  convention field if primary-tier → symbol's own primary (file order) →
+  convention value → generic scan (incl. bom-local mp/mfn); whitespace-only
+  values never win a tier (blank-only symbols keep the pre-KH-418 pick so
+  they do not move); legacy `.sch` loop mirrors it. Documented, intended:
+  analyzers (no convention concept) and bom_manager may still differ on a
+  symbol carrying TWO different populated primary names when the project
+  standardised on the later one.
+- **Verification:** 14 tests + 5 fixtures (modern sch/pcb rank, majority,
+  two primaries, legacy blank primary). Gate: El-Luhb carriers revert from
+  the LCSC code to the MPN; Marble / Obsidian magnitudes in the record.
+
+### KH-420 (MEDIUM) — KH-413 touch-pad sampling 11× slower on touch-pad-dense boards
+
+- **Fix:** `0a230ba`, `1a31402` — exact per-fill segment grid in
+  `ZoneFills.min_edge_distance` (projection-centred ring search, cutoff
+  `hypot(|Q−C|, (r−1)·cell) ≥ best`, nearest-fill-first with early break);
+  reviewed proof + 60,000 exact-equality queries 0 mismatches;
+  byte-identical output on kh413 / simple-project / NLoy. NLoy
+  `--only-deterministic`: v2.3.0 9.8 s → b008afa 108.9 s → 8.5 s. The NLoy
+  `--full` cost (~85-90 s, pre-existing at v2.3.0) is `_point_in_polygon`
+  (124,904 calls) → **KH-422**.
+- **Verification:** 4 tests incl. the NLoy < 30 s timing test. Gate: zero
+  output movement; NLoy returns from timeout in pcb / emc / cross_analysis.
+
+---
+
+## 2026-10-05 — v2.3.1 maintenance batch: KH-408..415 FIXED on main-repo `main` @ `b008afa` (= merge of `v2.3.x-dev` @ `62bad2f`, 18 commits over `a01e9ca` = v2.3.0 + VALIDATION regen; LOCAL, not pushed)
+
+Batch authored by the main-repo agent (SDD record
+`.superpowers/sdd/2026-10-04-v2.3.1-maintenance-batch/`, handoff-draft.md +
+kh409-repro.md). Harness adoption: 11 new root test files (126 → 137) + 5
+fixture dirs (`tests/fixtures/kh408/`, `kh409-altium-bus/`, `kh412/`,
+`kh413/`, `kh414/`), every file RED @ a01e9ca / GREEN @ b008afa under bare
+python3 AND venv pytest (`results/v231_gate/adoption_sweep.log`). Unit tree
+at b008afa **1,519 / 0 over 137 files**; contract **707 / 8 / 3**. Budgeted
+gate a01e9ca → b008afa: record `results/v231_gate/adjudication_v231.md`.
+One regression found by the gate walk and filed back: **KH-418** (generic
+`Part#` overrides an explicit `MPN` with an LCSC code); riders filed as
+KH-416 / KH-417 / KH-419.
+
+### KH-414 (MEDIUM) — `Manufacturer P/N` / `Digikey P/N` property names not recognised; three divergent MPN alias lists
+
+- **Fix:** `49f971f`, `e5f1a19`, `14643c7`, `b537dbd` (+ final wave `2938653`
+  bom_manager `get_canonical` fall-through) — one shared MPN/DigiKey alias
+  set in `kicad_utils` used by analyze_schematic, analyze_pcb and
+  bom_manager; case-insensitive, whitespace-normalised field names
+  (`normalize_field_name`); file-order deterministic pick when two alias
+  fields are populated (was hash-order). PCB lookup now accepts every MPN
+  alias, not just the #46 names.
+- **Verification:** `tests/test_kh414_mpn_aliases.py` (7),
+  `test_kh414_mpn_fixture.py` (8), `test_kh414_bom_manager_aliases.py` (4),
+  `test_kh414_bom_manager_roundtrip.py` (5); fixture
+  `tests/fixtures/kh414/mpn_pn_fields.{kicad_sch,kicad_pcb}`. Gate: see the
+  v2.3.1 record (schematic alias fills + SS/DS movement; PCB `mpn` fills —
+  measured class sizes there, vs the harness pre-scan 108 boards / 67
+  repos / 4,089 parts and the main-repo PCB estimate ≈944 boards).
+- **Regression caught at the gate → KH-418** (file-order pick lets a generic
+  `Part#` holding an LCSC code beat an explicit `MPN`).
+
+### KH-408 (MEDIUM) — thermal-pad via containment composed footprint + pad rotation with the wrong sign
+
+- **Fix:** `6acaabe` — KiCad pad angles are absolute; the inverse transform
+  rotates by +angle (cross-checked against `_point_in_pad`).
+- **Verification:** `tests/test_kh408_thermal_via_rotation.py` (4), fixture
+  `kh408/qfn_rotated.kicad_pcb`. Gate: TV-001 content-only movement (via
+  counts) on rotated thermal-pad footprints — every moved unit's TV-001
+  footprint is rotated (walker fact `tv001_unrotated_fp` = 0).
+
+### KH-413 (LOW) — THT-only touch pads fell back to the footprint origin in CP-003 sampling
+
+- **Fix:** `7b3c9d7` — CP-003 samples THT pad outlines (layer-wildcard
+  match) instead of the origin.
+- **Verification:** `tests/test_kh413_tht_touch_pad.py` (3), fixture
+  `kh413/tht_touch_pad.kicad_pcb`. Rider NOT fixed → **KH-419** (circle/oval
+  THT pads sample bbox corners, 0.41·r outside the copper).
+
+### KH-412 (LOW) — DFM violation `parameter` stayed `via_drill` when the minimum drill came from a pad
+
+- **Fix:** `16e95a3`, `5b393a9`, `d2be032` — pad-sourced drill violations say
+  `pad_drill` (finding_id STABLE: summary unchanged, ref only in
+  message/description); sub-0.05 mm drills listed as
+  `vias.via_analysis.degenerate_drills[]` instead of folded into minimums;
+  `current_capacity.min_drill_mm` / `drill_size_distribution` / `ratings`
+  exclude degenerate vias; via-less boards with pad drills now emit
+  `vias.via_analysis` (`current_capacity.min_pad_drill_mm`); design-rule
+  `min_via_drill` / `.kicad_dru hole_size` violations gain `drill_source` +
+  `source_ref` (additive).
+- **Verification:** `tests/test_kh412_pad_drill_parameter.py` (9), fixtures
+  `kh412/pad_drill_min.kicad_pcb` (+ `.kicad_pro`),
+  `pad_drill_min_novias.kicad_pcb`. Harness pre-scan `(drill 0.0` literal:
+  9 files / 6 repos.
+
+### KH-411 (LOW) — `skipped_components[].reason == "below_min_pdiss"` also covered "never computed"
+
+- **Fix:** `a969e1a` — `no_pdiss_estimate` distinguished from
+  `below_min_pdiss`; LDOs with `power_dissipation` null now APPEAR in
+  `skipped_components` (they vanished before), `components_skipped` rises
+  by those.
+- **Verification:** `tests/test_kh411_skip_reason.py` (5, inline fixture).
+  Note: `gen_output_schema_md` does not descend into nested dataclass
+  descriptions, so the new enum value lives only in the `ThermalSkipped`
+  docstring.
+
+### KH-410 (LOW) — RP-001 still recommended stitching vias across touch-pad voids
+
+- **Fix:** `fe5cc0c` — RP-001 on a touch net recommends routing outside the
+  void; `is_touch_net` extra; finding_id stable, zero count/severity
+  movement.
+- **Verification:** `tests/test_kh410_rp001_touch_void.py` (3, inline).
+
+### KH-409 (LOW → REPRODUCED) — Altium-flat peer-sheet merge never tagged `_sheet` on peer bus elements
+
+- **Repro:** round 1 NOT reproduced on the symmetric fixture; round 2
+  reproduced with a bus_entry-tapped, plainly-labelled member wire on a
+  peer sheet (the bus pass's `cluster_member_set` filtering dropped it);
+  kicad-cli 10.0.6 oracle recorded in `kh409-repro.md`.
+- **Fix:** `42c14bb` — tag `_sheet` on peer-sheet bus wires/entries in the
+  Altium-flat merge. Side effect caught in review: two phantom pinless
+  `<name>[a..b]` bus-name nets the net map fabricated from untagged peer bus
+  labels disappear (`statistics.total_nets` 14 → 12 on the fixture,
+  matching `net_classification` entries removed, false
+  `unlabeled_entry_tap` unresolved markers gone).
+- **Verification:** `tests/test_kh409_peer_bus_sheet.py` (4), fixture
+  `kh409-altium-bus/` (page1/page2 + synthetic.kicad_pro + README). Rider
+  filed → **KH-416**.
+
+### KH-415 (LOW) — malformed `capability_mode.json` sidecar crashed the analyzer (`KeyError: 'run_id'`)
+
+- **Fix:** `0ac7257` — a malformed sidecar never crashes an analyzer
+  (stderr warning, in-memory record). Note: `capability_mode_ref.source`
+  still names the file when the record is in-memory (documented, not
+  changed).
+- **Verification:** `tests/test_kh415_capability_mode_malformed.py` (5,
+  temp-dir fixture). The harness-side trigger (TH-054 garbage sidecars) was
+  already removed 2026-10-05, so the corpus class is zero.
+
+---
+
+## 2026-10-05 — TH-054: run_emc masked analyzer crashes behind stale outputs — the EMC corpus had not been rewritten since 2026-08-20 (16,166 units) / 2026-05-15 (20,137 units)
+
+**Severity:** HIGH (harness-side; silent for two regens). Every EMC
+reference assertion reseeded at the v2.2.0 (2026-08-20, partially) and
+v2.2.1 (2026-09-01, entirely) regens was seeded from STALE outputs, and
+"EMC 36,462 units, 0 failures" in both regen logs was false — the analyzer
+crashed on every unit of every repo whose EMC output dir held a garbage
+`capability_mode.json`, and the runner reported the pre-existing file's
+summary as a PASS.
+**File:** `run/run_emc.py` (`run_one_emc`); trigger data = the TH-050 garbage
+`results/outputs/{emc,spice}/<repo>/capability_mode.json` files (5,843 + 5,843)
+**Discovered & fixed same session** (v2.3.0 corpus regen, 2026-10-05)
+
+- **Symptom:** the v2.3.0 regen's EMC pass "completed" in 2 min with rc 0 and
+  36,459 `-- (no findings)` lines, yet ZERO EMC output files carried a new
+  mtime; corpus EMC mtimes were 20,137 × 2026-05-15 and 16,166 × 2026-08-20
+  (nothing from 2026-09-01 either). Running the analyzer by hand on the
+  runner's exact command gave `KeyError: 'run_id'` from
+  `capability_mode.get_capability_mode_ref` with exit 1.
+- **Root cause (two layers):** (1) `analyze_emc.py` resolves its
+  `analysis_dir` to the output file's parent and reads
+  `capability_mode.json` there as its run record; under
+  `results/outputs/emc/<repo>/` that file was a TH-050 garbage EMC OUTPUT
+  (analyzer_type=emc, no top-level `run_id`) written 2026-08-20 when the
+  pre-fix runner fed the schematic sidecar in as an input — so every EMC
+  run in that repo dir died at startup (KH-415 filed for the analyzer's
+  side: no validation of a malformed sidecar). (2) `run_one_emc` treated
+  `returncode in (0, 1) and output_json.exists()` as success — exit 1 is
+  the analyzer's "critical findings" code, but the exists() check accepted
+  the STALE file from an earlier run, read ITS summary, and printed PASS.
+  The runner's log also reads `summary["total_checks"]` (pre-P12 key), so
+  every unit prints as `-- (no findings)` — cosmetic, but it hid the
+  anomaly in plain sight.
+- **Why 2026-05-15 for 20,137 units:** on 2026-08-20 the garbage sidecar was
+  written mid-repo (parallel workers); units processed before it in the same
+  repo dir were rewritten (16,166), units after it crashed and kept their
+  v1.4-rc.2-era output. On 2026-09-01 every unit crashed → zero rewrites.
+  `validate_run_id` cannot see this: it checks `inputs.run_id` against the
+  (garbage) sidecar, which the stale outputs still match.
+- **Fix:** `run_one_emc` records the output's mtime before launching and only
+  accepts exit 0/1 when the file was (re)written by this invocation;
+  otherwise it writes the `.err` and reports the failure. Garbage sidecars
+  removed: 11,686 proven-poisoned files (each verified `analyzer_type` ==
+  its dir type before unlink; inventory
+  `results/v230_regen/poisoned_sidecars_removed.txt`) — this discharges the
+  TH-050 record's "deliberately not mass-deleted" residue, now shown to be
+  load-bearing. EMC pass re-run with the fixed runner at the v2.3.0 tree.
+- **Verification:** new `tests/test_run_emc_crash_masking.py` (3 tests; the
+  stale-output crash case RED before the fix, GREEN after, exit-1-with-fresh-
+  output still PASS); EMC re-run rewrote every unit (counts in
+  `results/v230_regen/adjudication_v230_regen.md`). Consequence for this
+  regen: the EMC fracture set spans v1.4-rc.2 → v2.3.0 for 20,137 units and
+  v2.2.0 → v2.3.0 for 16,166, not the v2.2.1 → v2.3.0 budget — adjudicated
+  in the regen record. `run_thermal`/`run_spice` require exit 0 and were
+  verified to have rewritten their outputs this cycle; their `.exists()`
+  acceptance is the same shape and should get the same mtime guard (follow-up).
+
+---
+
 ## 2026-09-13 — v2.3.0 correctness batch: 18 fixes + 1 refutation on main-repo `worktree-v2.3-dev` (`788649f..b54b5c4`, 35 commits, unmerged/unpushed pending user gate)
 
 Batch authored by the main-repo agent (SDD record `.superpowers/sdd/2026-09-13-v2.3-correctness-batch/`);

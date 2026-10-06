@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-09-13 later (v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)
+Last updated: 2026-10-06 (KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,108 @@ Last updated: 2026-09-13 later (v2.3.0 correctness batch gate 788649f→b54b5c4 
 ---
 
 ## Completed batches
+
+### KH-418/KH-420 follow-up: incremental gate `b008afa`→`9fbbb26` CLEAN, no residue; both v2.3.1-gate regressions verified closed; pre-tag now at `9fbbb26`; KH-421..423 + TH-058 filed (2026-10-06)
+
+Main-repo `main` @ `9fbbb26` (local; b008afa + merge of `v2.3.x-dev` @ `28a7adf`,
+8 commits). Adoption: `test_kh418_mpn_alias_rank.py` (14) + 5 fixtures,
+`test_kh420_zone_fill_segment_grid.py` (4), RED @ b008afa / GREEN @ 9fbbb26;
+**unit tree 1,537/0 over 139 files; contract 707/8/3.** Full symmetric gate
+(2,793 s): **0 downgrades**; walk 149,627 pairs → schematic 60 / pcb 6 units
+moved, ALL KH-418 mpn value flips (generic→primary; El-Luhb LCSC codes revert
+to MPNs — 1,416 sch + 658 pcb records, P6b = 0; Marble pcb 20 blank→value
+exact; Marble sch 133 unique refs vs claimed 132; Obsidian sch 31 exact; tobo
+legacy exact; 0 value→blank anywhere); emc/cross 1 each = NLoy regaining its
+pcb pairing (KH-420); thermal/gerber identical; 300-project `--full` chain
+300/300 identical. NLoy `--only-deterministic` 197.5 s → 19.5 s under gate
+load, 8.6 s idle. One handoff claim did not reproduce (Obsidian PCB B1–B4
+blank→value — values present on both sides). KH-418/420 → FIXED.md; filed
+KH-421 (Marble U54 hash-seed nondeterminism), KH-422 (`--full`
+`_point_in_polygon` cost), KH-423 (legacy `.sch` `""` fields skipped), TH-058
+(load-sensitive timing test). Open 18 KH + 15 TH; next KH-424 / TH-059.
+Record `results/v231b_gate/adjudication_v231b.md`. **Pre-tag requirement
+satisfied AT `9fbbb26`.** NOTHING COMMITTED (v2.3.0 regen + v2.3.1 adoption +
+this follow-up all pending review).
+
+### v2.3.1 maintenance-batch gate `a01e9ca`→`b008afa` CLEAN under budget with two regressions filed back (KH-418, KH-420); KH-408..415 adopted FIXED-direct; KH-416..420 filed (2026-10-05 later)
+
+Main-repo `main` @ `b008afa` (local, = merge of `v2.3.x-dev` @ `62bad2f`, 18
+commits over `a01e9ca`). Adoption: 11 test files + 5 fixture dirs, all RED @
+a01e9ca / GREEN @ b008afa (bare + pytest, `results/v231_gate/
+adoption_sweep.log`, 57 tests); unit tree **1,519/0 over 137 files**,
+contract **707/8/3**. Staged symmetric gate smoke (45 s) → quick_200 (558 s)
+→ full (170,014 units, 2,060 s): **0 severity downgrades**, gerber 100%
+PASS; whole-output walk 149,627 pairs (`walker_v231.py`, alias fields
+blanked before the residual check) — schematic 649 / pcb 5,489 / thermal
+2,856 / emc 2 / cross 1 moved, every unit class-attributed (S1 alias fills
+599 · S3 pick-order 57 · P1 pcb mpn fills 996 · P2 KH-412 via_analysis
+3,975 + drill rules 330 · P4 TV-001 497 all rotated · P3 CP-003 12 · T1
+KH-411 2,836 · T2 35 same-repo · E2 ML-001 −10 MPN-shielding downstream);
+the only 2 "violations" are the KH-420 timeout's downstream units. 600-chain
+`--full` A/B 0 crashes / 0 violations, KH-410 RP-001 confirmed on the --full
+surface. **Measured KH-414 classes: schematic 599 units / 122 repos
+(pre-scan 108 boards under-predicted — the shipped alias set is far wider
+than the #46 names), PCB 996 units / 555 repos vs ≈944 / 443 estimate.**
+**Regressions found by the walk:** KH-418 (generic `Part#` holding an LCSC
+code overrides an explicit `MPN` — El-Luhb nvme carriers, 2 units / 659
+footprints) and KH-420 (KH-413 touch-pad sampling 11× slower on NLoy
+Touch_Keyboard 10x12, 10 s → 110 s → the single cand-side timeout in
+170,014 units). KH-313 lock re-anchored a THIRD time (fuad1502 loses all 10
+ML-001 once L7's MPN is known → CogniPilot/spinali_mcxn_t1_hub, ML-001 ×4 at
+both tips). Trackers: KH-408..415 → FIXED.md with SHAs; KH-416 (peer-sheet
+inner hierarchy tagging), KH-417 (`_pad_on_layer` NPTH wildcard), KH-418,
+KH-419 (KH-413 circle-pad bbox rider), KH-420 filed; open 17 KH + 14 TH,
+next KH-421 / TH-058. Record `results/v231_gate/adjudication_v231.md`
+(snap trees + `full_chain/` kept until v2.3.1 ships). Pre-tag: satisfied
+once KH-418/420 are fixed-and-re-gated (b008afa..tip) or explicitly
+accepted. NOTHING COMMITTED (v2.3.0 regen set + this adoption both pending
+review).
+
+### v2.3.0 corpus regen `d5fd7da`→`78b8f02` CLEAN under the combined budget; TH-054 EMC stale-corpus incident found + fixed; KH-414 sized; KH-415 + TH-055/056/057 filed (2026-10-05)
+
+Ship handoff (v2.3.0 live, main `78b8f02`, pin 892cbc93969 unchanged;
+analyzer identical to gate-clean `b54b5c4` — only PR #48's `Path.replace`
+swaps). Before-baseline = v2.2.1 ledger item-for-item (7 fails / 2 errors, no
+contamination). Six runners at `78b8f02`, PYTHONHASHSEED=0, 32 jobs:
+schematic 36,465 / pcb 18,661 (198 timeout-class) / gerber 5,502 / spice
+21,921 sims / thermal 15,606 pairs — and **EMC rewrote ZERO files until
+TH-054 was found**: `run_emc` accepted exit 1 + a pre-existing stale output
+as PASS, while `analyze_emc.py` crashed on every unit reading the TH-050
+garbage `capability_mode.json` in its output dir (`KeyError: 'run_id'`).
+The EMC corpus had not been rewritten since 2026-08-20 (16,166 units) /
+2026-05-15 (20,137) and the v2.2.1 EMC reseed was stale-seeded. Fixed
+in-session (mtime guard + 3 tests; 11,686 garbage files removed with
+inventory; EMC re-run 36,462/36,462). Chain oracle vs the v23 gate's `--full`
+chain candidate tree: schematic 300/300, thermal 300/300, pcb/emc 292/292
+non-timeout units byte-identical; the 8 diffs are v1.3-era pcb timeout
+outputs (→ **TH-055**, 148 schema-1.3.0 + 29 pre-schema + 21 none).
+Fracture set 94,809 fails: schematic 8,638 (PR #44 rail-name widening +
+PP-001 fuse bridging — directions match `adjudication_pr44.md` item for
+item — KH-407, F-ref, KH-374/375/377, order; residue 4 = standing debt +
+`5V` rail), pcb 5,776 (KH-379 decoupling + 3 FND debt), spice 4,226 (SP-001
+first-fire + downstream), thermal 103 (KH-398/375/386), gerber 0, emc 76,068
+(multi-era, TH-054; attributed by the chain oracle not by class). Curated
+locks: NEG 0; BUGFIX 5 fails on 3 locks, each A/B'd d5fd7da vs 78b8f02 —
+KH-299 ≥7→≥6 (`5V` group now a rail), KH-311 50→47 (invariant 47/47/47),
+KH-313 re-anchored to open-running-watch + one dead proxy removed
+(**TH-056**: TERES never reached the crash path); **TH-057** (bugfix
+generator merges by id, never updates values). Aspirational 334→343 (+9 all
+`5V/12V/48v` now rails, −0). One FND re-anchor (VIC-Reloaded power_rails +
+`5V`). Reseed all six types + `snapshot --all` 18,804 + `validate_schema
+scan`. **Final: 2,716,980 / 7 fails / 2 errors / 100.0%; aspirational
+343/1,855; validate_run_id 112,164/0.** The 7+2 = the v2.2.0 debt ledger
+unchanged. Total −39,814 (EMC reseeded from fresh outputs). **Baselines:
+unit tree 1,462/0 over 126 files (+9), contract 707/8/3.** KH-414 sized:
+108 boards / 67 repos / 4,089 parts (ISSUES.md). **KH-415** (analyzer
+sidecar read unvalidated) filed. `tools/generate_validation_md.py` fixed
+test-first (measured totals authoritative, release-agnostic gate section
+with `--gate-label/--gate-verdict`, sidecars excluded from counts; RUNBOOK
+16l) and `$KICAD_HAPPY_DIR/VALIDATION.md` regenerated with NO post-process
+(uncommitted, main-repo's to commit). v23_gate snap trees pruned (54G;
+`full_chain/` kept as the regen oracle). Records `results/v230_regen/`
+(`adjudication_v230_regen.md`, `lock_prescan.md`, `chain_oracle.py`,
+`kh414_prescan.py`). Open 20 KH + 14 TH; next KH-416 / TH-058. NOTHING
+COMMITTED — review pending.
 
 ### v2.3.0 correctness batch gate `788649f`→`b54b5c4` CLEAN; 18 fixes + 1 refutation adopted; KH-408..413 + TH-053 filed (2026-09-13 later)
 

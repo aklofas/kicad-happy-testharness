@@ -26,7 +26,7 @@ in each repo, not here.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-09-13
+Last updated: 2026-10-06
 
 ---
 
@@ -34,7 +34,7 @@ Last updated: 2026-09-13
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-414** (KH-408..413 filed 2026-09-13 from the v2.3.0 correctness batch — thermal-pad-via rotation sign, Altium peer-sheet `_sheet` tagging, RP-001 touch-void wording, thermal skip-reason vocabulary, DFM `parameter` pad-drill, THT-only touch pads; KH-373..379/383/386/396..401/405..407 FIXED and KH-395 REFUTED in that batch, see FIXED.md; KH-407 filed 2026-09-13 — `0V<suffix>` ground spellings read as rails after PR #44, gate residue; KH-406 filed 2026-09-12 — `differential_pairs[].esd_protection` set-order nondeterminism, pre-existing, found during PR #44 review; KH-403/404 filed 2026-09-10 — schematic connectivity over-unions on MAXI030 / Olivetti M20 L1, kicad-cli-refuted, surfaced by PR #43's SH-001 sample; KH-405 filed 2026-09-10 — jlcsearch `extra` block gone, lcsc datasheet fetch degraded; KH-402 assigned 2026-09-01 at the
+maximum. Next KH number: **KH-424** (KH-421..423 filed 2026-10-06 at the KH-418/420 follow-up adoption — Marble U54 hash-seed nondeterminism, `--full` `_point_in_polygon` cost, legacy `.sch` empty-field skip; KH-418 + KH-420 FIXED on main @ 9fbbb26, see FIXED.md; KH-420 filed 2026-10-05 at the v2.3.1 gate — KH-413 THT touch-pad sampling 11× slower on a 130-touch-pad board, the only candidate-side timeout in 170,014 units; KH-416..419 filed 2026-10-05 at the v2.3.1 batch adoption — peer-sheet inner-hierarchy sheet-pin tagging, `_pad_on_layer` NPTH wildcard, KH-414 regression: generic `Part#` overrides explicit `MPN` with an LCSC code, KH-413 circle-pad bbox rider; KH-408..415 FIXED in v2.3.1, see FIXED.md; KH-415 filed 2026-10-05 — `capability_mode.get_capability_mode_ref` KeyError on a malformed `capability_mode.json`, LOW, found at the v2.3.0 regen via TH-054; KH-414 filed 2026-10-04 — GitHub #46 `Manufacturer P/N`/`Digikey P/N` alias gap, three divergent MPN alias lists, MEDIUM; KH-408..413 filed 2026-09-13 from the v2.3.0 correctness batch — thermal-pad-via rotation sign, Altium peer-sheet `_sheet` tagging, RP-001 touch-void wording, thermal skip-reason vocabulary, DFM `parameter` pad-drill, THT-only touch pads; KH-373..379/383/386/396..401/405..407 FIXED and KH-395 REFUTED in that batch, see FIXED.md; KH-407 filed 2026-09-13 — `0V<suffix>` ground spellings read as rails after PR #44, gate residue; KH-406 filed 2026-09-12 — `differential_pairs[].esd_protection` set-order nondeterminism, pre-existing, found during PR #44 review; KH-403/404 filed 2026-09-10 — schematic connectivity over-unions on MAXI030 / Olivetti M20 L1, kicad-cli-refuted, surfaced by PR #43's SH-001 sample; KH-405 filed 2026-09-10 — jlcsearch `extra` block gone, lcsc datasheet fetch degraded; KH-402 assigned 2026-09-01 at the
 PR #41 fold adoption — no-connect mid-span connectivity, externally
 reported+fixed by danielboston38, FIXED-direct, never open here;
 KH-401 filed 2026-08-31 during the
@@ -61,10 +61,10 @@ hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
 nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
 KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 `docs/2026-07-24-kicad-parser-and-analysis-audit.md` — each entry cites its
-KHPA finding ID). Next TH number: **TH-054** (TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
+KHPA finding ID). Next TH number: **TH-059** (TH-058 filed 2026-10-06 — `test_kh420_zone_fill_segment_grid.py` wall-clock assertion (< 30 s on the NLoy corpus board) is load-sensitive: 8.5 s idle, 19.5 s with a 32-job gate running, so the pre-push hook can flake under load; TH-057 filed 2026-10-05 — generate_bugfix_assertions.py merges by assertion id and never updates a changed expected value, so a registry re-anchor silently does not land; TH-056 filed 2026-10-05 — KH-313 corpus-lock anchor lost: TERES never runs check_inductor_leakage's crash path (no PCB pairing, 0 rf_chains) and `categories_checked` semantics changed, lock re-anchored; TH-055 filed 2026-10-05 — the 198 pcb timeout-class units keep v1.3-era outputs (148 schema 1.3.0 / 29 pre-schema / 21 none) under a hard-coded 120 s `ANALYZER_TIMEOUT`, downstream emc/thermal stale too; TH-054 fixed-on-discovery 2026-10-05 at the v2.3.0 regen — run_emc masked analyzer crashes behind stale outputs, EMC corpus stale since 2026-08-20/2026-05-15, see FIXED.md; TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 35 open issues (26 KH + 9 TH).
+> 33 open issues (18 KH + 15 TH).
 
 ---
 
@@ -303,90 +303,223 @@ get_property path handles `private` fine; only the BOM regex path is affected.)
 (dedupe at discovery, real property parsing); interim: fix the visited-set
 order and widen the regex.
 
-### KH-408: `analyze_thermal_pad_vias` composes footprint and pad rotation with the wrong sign — pad-local transform double-counts rotation at non-90° footprint angles
+### KH-421: hash-seed nondeterminism on BerkeleyLab/Marble U54 (STM32F207) — PS-001 and a DO-DET "Regulator U54 missing capacitors" vary with PYTHONHASHSEED (539/538/537 findings at seeds 0/1/3)
 
-**Severity:** MEDIUM (thermal-via-under-pad credit lands on the wrong pad
-region for rotated footprints; the same absolute-angle mistake was fixed
-for CP-003 sampling in the v2.3 batch — KiCad's pad `at` angle is ABSOLUTE,
-not footprint-relative)
-**File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_thermal_pad_vias`,
-the `-total_angle` inverse board→pad-local transform)
-**Discovered:** 2026-09-13 (v2.3 batch, main-repo agent, while fixing KH-373)
+**Severity:** LOW-MEDIUM (pre-existing — identical at b008afa and 9fbbb26;
+KH-366/367 class; invisible to every harness gate because the gate pins
+`PYTHONHASHSEED=0`, so it needs the determinism-guard treatment, not a gate)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (PS-001 power-sequencing
++ DO-DET regulator-capacitor observation on U54; some set-ordered iteration
+upstream of both)
+**Discovered:** 2026-10-05, main-repo agent, KH-418 fix-wave determinism check
+(`follow-up-fix-wave-report.md`); filed by the harness 2026-10-06
 
-**Fix direction:** use the pad's absolute angle for the inverse transform
-(mirror the `ba3a269` CP-003 fix); add a rotated-footprint fixture with a
-thermal pad + via grid. Budget: TP-/TH-DET via-credit movement on boards
-with rotated thermal-pad footprints.
+**Fix direction:** find the set/dict-order dependence feeding U54's regulator
+/ capacitor association (sorted iteration or a stable key), add the Marble
+root sheet to the main-repo determinism CI guard's seed sweep (1/7/123).
 
-### KH-409: Altium-flat / hybrid peer-sheet merge never tags `_sheet` on peer bus elements (bus_wires / bus_entries / bus_aliases)
+**Gate budget (when fixed):** PS-001 / DO-DET content on Marble only; count
+stabilises at one of 537-539.
 
-**Severity:** LOW (implementation observation, needs a repro — per-sheet
-bus scoping downstream reads `_sheet` and silently treats untagged peer
-elements as sheet 0)
-**File:** `skills/kicad/scripts/analyze_schematic.py` (peer-sheet merge path
-for Altium-flat / hybrid projects)
-**Discovered:** 2026-09-13 (v2.3 batch, main-repo agent, during the KH-395
-investigation)
+### KH-422: `--full` pcb analysis spends ~85-90 s on NLoy Touch_Keyboard_10x12 in `_point_in_polygon` (124,904 calls) — pre-existing performance cost, not KH-413/KH-420
 
-**Fix direction:** tag `_sheet` on merged peer bus elements the same way
-symbols/wires are tagged; add an Altium-flat fixture with a bus on a peer
-sheet.
+**Severity:** LOW (performance only; 87 s at v2.3.0 on the main-repo box,
+unchanged by KH-420 which fixed the `--only-deterministic` 11× regression)
+**File:** `skills/kicad/scripts/analyze_pcb.py` (`zones_at_point` /
+`has_copper_at` / `fill_regions_at_point` called from
+`analyze_return_path_continuity`) and `pcb_connectivity.build_connectivity_graph`
+**Discovered:** 2026-10-05, main-repo agent, KH-420 profiling
+(`task-B-report.md`); filed by the harness 2026-10-06
 
-### KH-410: RP-001 (layer-transition stitching) still recommends stitching vias across touch-pad voids
+**Fix direction:** the KH-420 per-fill segment grid applied to point-in-polygon
+queries — the per-fill bbox prefilter already exists; add an edge-crossing
+index per fill so each query walks only the segments in its grid column.
+Target: the NLoy `--full` run under 30 s. Corpus relevance: the harness
+`run_pcb.py` runs `--full --proximity` under a 120 s cap, so touch-pad-dense
+boards sit in the TH-055 timeout class today.
 
-**Severity:** LOW (KH-378 exempted the GP-001/RP-001 *finding* on touch
-nets, but the RP-001 recommendation for a transition whose return path
-crosses a deliberate touch void still says "add stitching vias")
-**File:** `skills/emc/scripts/emc_rules.py` (return-path rules, RP-001
-recommendation text)
-**Discovered:** 2026-09-13 (v2.3 batch, main-repo agent, KH-378 follow-up)
+**Gate budget (when fixed):** none (exact algorithm, no output change —
+verify with the KH-420 equality-query method).
 
-**Fix direction:** when the void belongs to a touch net (`_touch_nets`),
-reword to "route the transition outside the touch void" and drop the via
-advice.
+### KH-423: legacy `.sch` parser skips truly-empty `""` custom fields entirely (`elif field_num >= 4 and field_val:`) — distinct from the KH-414 whitespace path
 
-### KH-411: thermal `skipped_components[].reason == "below_min_pdiss"` also covers "power_dissipation never computed upstream"
+**Severity:** LOW (pre-existing; an empty-string MPN/DigiKey/… field in a
+KiCad 5 schematic is dropped instead of recorded as present-but-blank, so
+"field exists but is empty" and "field absent" are indistinguishable on the
+legacy path; the KH-418 blank-value tiering could not be mirrored for `""`
+on that branch)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (legacy `.sch` field
+loop, `elif field_num >= 4 and field_val:`)
+**Discovered:** 2026-10-05, main-repo agent, KH-418 final wave (rider note);
+filed by the harness 2026-10-06
 
-**Severity:** LOW (vocabulary: KH-386's new skipped-components list reuses
-one reason string for two causes — a regulator with a real sub-threshold
-load and a regulator whose rail load was never estimated read the same)
-**File:** `skills/kicad/scripts/analyze_thermal.py`
-(`_estimate_all_power_dissipation`, skip reasons)
-**Discovered:** 2026-09-13 (v2.3 batch, main-repo agent, KH-386 follow-up)
+**Fix direction:** record custom fields with empty values (name present,
+value `""`) so the modern and legacy paths agree; `tests/fixtures/kh418/
+legacy_blank_primary.sch` is the natural fixture to extend with a `""`
+field.
 
-**Fix direction:** distinct reason `no_pdiss_estimate` when
-`power_dissipation` is absent; envelope-additive (new enum value).
+**Gate budget (when fixed):** nil (legacy boards whose `""` fields currently
+vanish gain blank entries; no MPN value changes).
 
-### KH-412: DFM violation `parameter` stays `"via_drill"` when the minimum drill came from a pad
+### KH-416: peer sheets' own inner `(sheet ...)` hierarchy never gets `_is_sheet_pin` / `_hier_ns` tagging — bus-pass role misclassification on hybrid Altium-flat projects
 
-**Severity:** LOW (KH-383 feeds pad drills into `min_drill_mm` and the
-message now names the pad and ref, but the structured `parameter` field on
-the DFM-001 / design-rule violation still says `via_drill`; consumers
-keying on the field misattribute)
-**File:** `skills/kicad/scripts/analyze_pcb.py` (DFM drill scan violation
-emitter; `check_design_rule_compliance` min_via_drill branch)
-**Discovered:** 2026-09-13 (v2.3 batch, main-repo agent, KH-383 follow-up).
-Harness gate rider: HamedMasafi/MeloCar `remote_3.kicad_pcb` carries five
-pads with `(drill 0.00001)` in the source — the new DFM-001 "Drill 1e-05mm"
-is faithful to the file; a sub-0.05 mm "treat as no drill" floor would be
-a reasonable addition.
+**Severity:** LOW (latent; found while ruling out a KH-409 candidate, not
+investigated or fixed)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (~l.9105-9121 main
+hierarchy "namespace hierarchical labels" post-process; bus-pass role
+classification `"pin"` vs `"hier"` ~l.1477)
+**Discovered:** 2026-10-04, main-repo agent, KH-409 round-1 investigation
+(`.superpowers/sdd/2026-10-04-v2.3.1-maintenance-batch/kh409-repro.md`,
+"Follow-up not pursued"); filed by the harness 2026-10-05
 
-**Fix direction:** `parameter: "pad_drill"` when the offending drill is a
-pad's; optional floor for degenerate drills.
+**Symptom / root cause:** a peer sheet's own inner `(sheet ...)` hierarchy
+(the genuine "hybrid" shape the merge loop's comments describe) never runs
+the post-process the main hierarchy loop runs, so `_is_sheet_pin` /
+`_hier_ns` are never set on a peer's own sheet-pin pseudo-labels and the
+bus pass would classify them as `"hier"` instead of `"pin"`. Distinct from
+KH-409 (bus_wires / bus_entries `_sheet` tagging, fixed in v2.3.1).
 
-### KH-413: THT-only touch pads fall back to the footprint origin in CP-003 pad sampling
+**Fix direction:** run the namespace post-process per peer sheet's inner
+hierarchy; fixture = Altium-flat project whose peer sheet contains a nested
+sheet with a bus crossing the sheet pin. Candidate for a
+hybrid-hierarchy-nesting task.
 
-**Severity:** LOW (KH-373 samples the pad outline for SMD pads; a touch
-footprint whose only copper is a THT pad has no outline sample and the
-clearance is measured from the footprint origin again)
-**File:** `skills/kicad/scripts/analyze_pcb.py` (CP-003 pad sampling,
-`_nearest_zone_copper_distance` callers)
-**Discovered:** 2026-09-13 (v2.3 batch, main-repo agent, KH-373 follow-up)
+**Gate budget:** none until fixed (bus_topology roles on hybrid projects).
 
-**Fix direction:** sample THT pad outlines (circle/oval from drill + annular
-ring) the same way; fixture with a THT-only touch pad.
+### KH-417: `_pad_on_layer` treats `np_thru_hole` pads carrying a `*.Cu` layer wildcard as copper
+
+**Severity:** LOW (inert at the only current call site — the CP-003
+touch-pad gate reaches `_pad_on_layer` only for pads already known to be
+touch candidates — but a sharp edge for any future caller that reads
+`_pad_on_layer` as "has copper on this layer")
+**File:** `skills/kicad/scripts/analyze_pcb.py` (~l.5636 `_pad_on_layer`)
+**Discovered:** 2026-10-04, main-repo agent, v2.3.1 Task 6 review; filed by
+the harness 2026-10-05
+
+**Fix direction:** exclude `np_thru_hole` pads (and pads with `layers: []`)
+before the wildcard match; add the explicit `layers: []` / NPTH case to the
+KH-413 fixture.
+
+**Gate budget:** none (no live behaviour change).
+
+### KH-419: CP-003 THT touch-pad sampling uses bbox corners for circle/oval pads — reads up to 0.41·r outside the copper (KH-413 rider)
+
+**Severity:** LOW (accuracy; a real arc-shaped fill around a 2 mm pad with
+0.5 mm clearance reads ≈0.09 mm — seen as 0.5 → 0.02 mm on
+CRImier/MyKiCad friendp J3 at the v2.3.1 gate)
+**File:** `skills/kicad/scripts/analyze_pcb.py` (CP-003 THT pad sampling
+added by KH-413, `7b3c9d7`)
+**Discovered:** 2026-10-04, main-repo agent final-wave review (spec-accepted
+rider for v2.3.1); filed by the harness 2026-10-05
+
+**Fix direction:** sample the pad circumference (circle) / stadium outline
+(oval) instead of the bounding-box corners; extend the KH-413 fixture with
+a circular THT pad inside an arc-shaped fill.
+
+**Gate budget (when fixed):** CP-003 `gnd_clearance_mm` grows on
+circle/oval THT touch pads; counts unchanged.
 
 ## Test Harness Issues
+
+### TH-058: `test_kh420_zone_fill_segment_grid.py` asserts wall-clock time (< 30 s on the NLoy corpus board) — load-sensitive in the unit tree / pre-push hook
+
+**Severity:** LOW (flake risk, not a correctness gap)
+**File:** `tests/test_kh420_zone_fill_segment_grid.py` (NLoy timing test,
+skip-if-absent, `--only-deterministic`)
+**Discovered:** 2026-10-06, KH-418/420 follow-up adoption — the board runs
+8.5 s idle (main-repo box), 19.5 s on this box while the 32-job incremental
+gate was running (base side took 197.5 s vs 110 s idle under the same load).
+The pre-push hook runs the whole unit tree; a concurrent gate or regen could
+push the test past 30 s and block a push for a non-regression.
+
+**Fix direction:** replace the absolute bound with a ratio against a
+same-run baseline (e.g. time a reference board, or compare against the
+`_point_in_polygon`-free path), or mark the timing assertion `TIER="perf"`
+and keep a cheap structural test (segment-grid equality queries) in the
+unit tier.
+
+### TH-057: `generate_bugfix_assertions.py --apply` merges by assertion id — a changed expected value in the registry never reaches the reference file
+
+**Severity:** LOW (one-line gotcha, but it defeats the documented RUNBOOK 4f
+"regenerate bugfix assertions" step for exactly the case it exists for)
+**File:** `regression/generate_bugfix_assertions.py` (~l.109-116: when the
+output file exists and `generated_by` matches, an assertion whose `id` is
+already present is skipped — the existing record wins)
+**Discovered:** 2026-10-05, v2.3.0 regen (KH-299 7→6 and KH-311 50→47
+re-anchors: `--issue KH-299 --apply` reported "Assertions generated: 1" yet
+the reference file still held `value: 7`; same for KH-311; stale
+KH-313-02/03 records likewise survived the registry removal)
+
+**Fix direction:** replace the matching record when the registry version
+differs (compare `check` + `description`), and drop records whose id is no
+longer in the registry for that project; print `updated`/`removed` counts.
+Workaround used this cycle: delete the affected `*_bugfix.json` files and
+run a full `--apply`.
+
+### TH-056: KH-313 corpus-lock anchor lost — TERES never exercises `check_inductor_leakage`'s crash path, and `summary.categories_checked` no longer means "categories that ran"
+
+**Severity:** LOW (regression guard for a fixed crash is weaker than it
+reads; same shape as TH-047 / KH-198)
+**File:** `regression/bugfix_registry.json` (KH-313 entry); main-repo
+`skills/emc/scripts/emc_rules.py::check_inductor_leakage(pcb, schematic)`
+**Discovered:** 2026-10-05, v2.3.0 regen (BUGFIX-KH-313-02/03 failed once the
+stale EMC output was finally rewritten — TH-054)
+
+**Symptom:** BUGFIX-KH-313-02 (`emc_inductor_leakage` ≥ 1 finding on
+OLIMEX/DIY-LAPTOP TERES Rev.C) and -03 (`summary.categories_checked == 10`)
+had passed against a 2026-05-15-era EMC output. On a fresh output at BOTH
+d5fd7da and 78b8f02 the board yields 8 findings in 2 categories and zero
+inductor-leakage findings: the legacy `.sch` has no PCB pairing in the EMC
+runner and `rf_chains` is empty, so the detector's bare-refdes RF-chain
+crash path (the KH-313 bug) is never reached; `categories_checked` now
+counts categories that produced findings, not categories executed.
+
+**Disposition at the regen:** -02 re-anchored to fuad1502/open-running-watch-hw
+(`open-running-watch.kicad_sch`, PCB-paired, ML-001 ×10 at v2.3.0) as a
+"detector executes" guard; -03 removed (its proxy is semantically dead);
+-01 (`summary` exists on TERES) kept. **2026-10-05 later (v2.3.1 gate):** that
+anchor flips to 0 ML-001 at b008afa — KH-414's PCB alias widening fills L7's
+MPN (`DFE252012F-2R2M=P2`) and the shielding lookup suppresses all 10 —
+re-anchored again to CogniPilot/spinali_mcxn_t1_hub (ML-001 ×4 at both
+78b8f02 and b008afa, PCB-paired, no timeout). Third anchor in two cycles:
+the contract fixture is the real fix.
+
+**Fix direction (main-repo):** a contract fixture reproducing the KH-313
+input shape (RF chain whose `components[]` holds a bare refdes string) so
+the crash path is pinned independent of the corpus; harness: audit other
+BUGFIX locks whose premise depends on an input pairing that the runner no
+longer produces.
+
+### TH-055: pcb timeout-class units keep v1.3-era outputs — 198 boards never re-analyzed since the 120 s cap was introduced; downstream emc/thermal stale too
+
+**Severity:** MEDIUM (corpus hygiene; every regen since v1.3 has carried these
+as "stale-but-consistent": v2.2.0 226, v2.2.1 211, v2.3.0 198 units)
+**File:** `utils.py` (`ANALYZER_TIMEOUT = 120`, module constant, no CLI/env
+override; `run/run_pcb.py` exposes no `--timeout` — only
+spice/emc/thermal runners do)
+**Discovered:** 2026-10-05, v2.3.0 corpus regen (chain-oracle check)
+
+**Symptom:** at the v2.3.0 regen 198 `.kicad_pcb` units hit the 120 s cap.
+Their `results/outputs/pcb/` files are whatever last completed: **148 at
+`schema_version` 1.3.0, 29 with no `schema_version` at all (pre-envelope),
+21 with no output ever**. The 8 of them that fall inside the v23 gate's
+300-project `--full` chain sample were the ONLY corpus units that differed
+from the chain's candidate tree (`results/v230_regen/chain_oracle_report.json`
+— e.g. acastles91/lifeSequencer emc GP-001 1 vs 77, RP-001 0 vs 22, DC-003
+0 vs 7, all because the corpus pcb input is a v1.3 file). The chain A/B
+completed every one of these boards with its own longer timeout, so they
+are slow, not broken. Their emc/thermal downstream outputs and every
+assertion seeded from them are v1.3-era as well.
+
+**Fix direction:** (1) make the cap overridable (`--timeout` on
+`run_pcb.py` / `run_schematic.py` / `run_gerbers.py`, or an env var read
+by `utils.ANALYZER_TIMEOUT`); (2) a dedicated long-timeout pass over the
+timeout-class list (`FAIL [...] *.kicad_pcb` lines in
+`results/v230_regen/regen_runners.log`) followed by emc + thermal for those
+repos and a reseed scoped to them — budgeted as its own class (v1.3 →
+v2.3.0 on 198 boards), NOT folded into a release regen; (3) consider
+writing the `.err` AND deleting the stale output on timeout so a v1.3 file
+cannot masquerade as current.
 
 ### TH-053: 17 pre-existing tests fail under plain `pytest tests/` but pass under `run_tests.py --unit` — tier filtering hides them from the pytest path
 
@@ -838,4 +971,4 @@ with the oracle on these paths). These are the bisect set for KH-403/404;
 the spork-8 pin-assignment variant may be a third root cause. SP-001's
 per-net collapse (>=5 hits) keeps user output to one finding per such net.
 
-_18 open KH-* + 10 open TH-* issues (2026-09-13 v2.3.0 correctness batch: −18 KH FIXED — 373/374/375/376/377/378/379/383/386/396/397/398/399/400/401/405/406/407 — and KH-395 REFUTED by the kicad-cli oracle, all in FIXED.md; +KH-408..413 LOW/MEDIUM follow-ups from the batch; +TH-053 LOW pytest-vs-run_tests tier disagreement. Remaining KH: 403/404 HIGH connectivity over-unions (kicad-cli-refuted, bisect set recorded), 355/364/365 audit remainder, 328..334 datasheets-infra backlog, 408..413 batch follow-ups. Earlier history: 31 open KH-* + 9 open TH-* issues (2026-09-13: +KH-407 LOW `0V<suffix>` grounds read as rails — PR #44 gate residue; +TH-052 MEDIUM 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; PR #44/#43/#42 merged and gated CLEAN at 788649f, KH-405 half-closed by #42; 2026-09-12: +KH-406 LOW differential_pairs esd_protection set-order nondeterminism; 2026-09-10: +KH-403/404 HIGH connectivity over-unions, +KH-405 MEDIUM jlcsearch API drift; post v2.2.x batch, 2026-08-31 — 25 fixes moved to FIXED.md, gate CLEAN): NEW: KH-401 MEDIUM (cross_analysis VS-002 crash on bounding_box null — pre-existing, --full-only, found during gate adjudication). 2026-08-31 Task-27 filings — MEDIUM: KH-396 (rf_chains component_roles hash-order — determinism-guard blind spot, needs RF fixture), KH-398 (TH-DET assessment-level confidence "deterministic" for package_table — LIVE twin of fixed KH-387, moves every package_table board when fixed); LOW: KH-395 (bus_alias project-wide merge), KH-397 (GP-001 antipad credit lacks via-layer-span filter — KH-392 rider, stacks with all-zones clearance max), KH-399 (EMC circle-outline edges fall to wrong distance branch), KH-400 (trailing-comma regex not string-aware — KH-368 remainder). 2026-08-20 SacMap-soak remainder — HIGH: KH-373 (CP-003 bbox 0.0mm, 78% corpus FP), KH-374 (sleep audit), KH-375 (power_budget loads; feeds thermal+EMC), KH-376 (datasheet gating dead — no project_dir; also keeps KH-387's fix latent), KH-377 (PD-001 feedforward-cap manufactured errors), KH-379 (DC-001 no-shared-net + DC-002 suppression), KH-383 (pad-drill blindness), KH-386 (thermal silent exclusion); MEDIUM: KH-378 (GP-001 touch-net exemption). The 2026-07-24 audit-batch remainder: KH-364/365 MEDIUM (KH-359/360 closure CONFIRMED by main-repo 2026-08-31 — shipped in v2.2.0, moved to FIXED.md). KH-355 LOW (multi-channel FB-pin selection, needs design — explicitly NOT addressed by the en_net lexicographic pick, see FIXED KH-366/367) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items (TH-047 KH-198 lock re-anchor). Audit reference: kicad-happy `docs/2026-07-24-kicad-parser-and-analysis-audit.md`. The v2.2.x maintenance batch KH-357/358/361-363/366-372/380-382/384/385/387-394 was fixed 2026-08-31 (25 fixes, budgeted gate CLEAN, `results/v22x_gate/adjudication_v22x.md`); the v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15; gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._
+_19 open KH-* + 10 open TH-* issues (2026-10-04: +KH-414 MEDIUM `Manufacturer P/N`/`Digikey P/N` MPN-alias gap from GitHub #46, needs a budgeted gate — SS-001/DS-001/missing_mpn/PCB mpn move. Earlier: 2026-09-13 v2.3.0 correctness batch: −18 KH FIXED — 373/374/375/376/377/378/379/383/386/396/397/398/399/400/401/405/406/407 — and KH-395 REFUTED by the kicad-cli oracle, all in FIXED.md; +KH-408..413 LOW/MEDIUM follow-ups from the batch; +TH-053 LOW pytest-vs-run_tests tier disagreement. Remaining KH: 403/404 HIGH connectivity over-unions (kicad-cli-refuted, bisect set recorded), 355/364/365 audit remainder, 328..334 datasheets-infra backlog, 408..413 batch follow-ups. Earlier history: 31 open KH-* + 9 open TH-* issues (2026-09-13: +KH-407 LOW `0V<suffix>` grounds read as rails — PR #44 gate residue; +TH-052 MEDIUM 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; PR #44/#43/#42 merged and gated CLEAN at 788649f, KH-405 half-closed by #42; 2026-09-12: +KH-406 LOW differential_pairs esd_protection set-order nondeterminism; 2026-09-10: +KH-403/404 HIGH connectivity over-unions, +KH-405 MEDIUM jlcsearch API drift; post v2.2.x batch, 2026-08-31 — 25 fixes moved to FIXED.md, gate CLEAN): NEW: KH-401 MEDIUM (cross_analysis VS-002 crash on bounding_box null — pre-existing, --full-only, found during gate adjudication). 2026-08-31 Task-27 filings — MEDIUM: KH-396 (rf_chains component_roles hash-order — determinism-guard blind spot, needs RF fixture), KH-398 (TH-DET assessment-level confidence "deterministic" for package_table — LIVE twin of fixed KH-387, moves every package_table board when fixed); LOW: KH-395 (bus_alias project-wide merge), KH-397 (GP-001 antipad credit lacks via-layer-span filter — KH-392 rider, stacks with all-zones clearance max), KH-399 (EMC circle-outline edges fall to wrong distance branch), KH-400 (trailing-comma regex not string-aware — KH-368 remainder). 2026-08-20 SacMap-soak remainder — HIGH: KH-373 (CP-003 bbox 0.0mm, 78% corpus FP), KH-374 (sleep audit), KH-375 (power_budget loads; feeds thermal+EMC), KH-376 (datasheet gating dead — no project_dir; also keeps KH-387's fix latent), KH-377 (PD-001 feedforward-cap manufactured errors), KH-379 (DC-001 no-shared-net + DC-002 suppression), KH-383 (pad-drill blindness), KH-386 (thermal silent exclusion); MEDIUM: KH-378 (GP-001 touch-net exemption). The 2026-07-24 audit-batch remainder: KH-364/365 MEDIUM (KH-359/360 closure CONFIRMED by main-repo 2026-08-31 — shipped in v2.2.0, moved to FIXED.md). KH-355 LOW (multi-channel FB-pin selection, needs design — explicitly NOT addressed by the en_net lexicographic pick, see FIXED KH-366/367) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items (TH-047 KH-198 lock re-anchor). Audit reference: kicad-happy `docs/2026-07-24-kicad-parser-and-analysis-audit.md`. The v2.2.x maintenance batch KH-357/358/361-363/366-372/380-382/384/385/387-394 was fixed 2026-08-31 (25 fixes, budgeted gate CLEAN, `results/v22x_gate/adjudication_v22x.md`); the v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15; gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._
