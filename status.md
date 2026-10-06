@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-06 (KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)
+Last updated: 2026-10-06 later (SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,25 @@ Last updated: 2026-10-06 (KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre
 ---
 
 ## Completed batches
+
+### SacMap soak fixes: incremental gate `9fbbb26`→`ef6d55c` CLEAN, no residue (via_in_pad budget line corrected); KH-419/424/425 FIXED; KH-426..441 filed; pre-tag now at `ef6d55c` (2026-10-06 later)
+
+Main-repo `main` @ `ef6d55c` (local; 9fbbb26 + merge of `v2.3.x-dev` @ `e6c7ad3`,
+3 commits). Adoption 3 files (14 tests) + `tests/fixtures/kh419/`, RED @
+9fbbb26 / GREEN @ ef6d55c; **unit tree 1,551/0 over 142 files; contract
+707/8/3.** Full symmetric gate (2,018 s): **0 downgrades**; walk 149,629 pairs
+→ schematic 1,575 units = VM-001 provenance deterministic→heuristic (10,372
+findings, 820 repos, 0 count deltas); pcb 2,067 units = CP-003 circle/oval
+clearance (12 units / 7 repos, **218 of the 277 corpus survivors**, 0
+count/confidence changes) + via_in_pad outline test (**2,057 units / 1,132
+repos: 8,152 removed, 5,100 NEW, 879 re-attributed, 678 same_net flips** — the
+handoff said "disappear only"; additions/removals verified correct with an
+independent geometry parser; first-match attribution nit → KH-441);
+gerber/thermal/emc/cross identical; 600-chain `--full` A/B 0 violations with
+emc + thermal identical. Soak long tail a–o filed as KH-426..440 (none
+folded). Open 33 KH + 15 TH; next KH-442 / TH-059. Record
+`results/v23x_soak_gate/adjudication_soak.md`. **Pre-tag requirement
+satisfied AT `ef6d55c`.** NOTHING COMMITTED (this set pending review).
 
 ### KH-418/KH-420 follow-up: incremental gate `b008afa`→`9fbbb26` CLEAN, no residue; both v2.3.1-gate regressions verified closed; pre-tag now at `9fbbb26`; KH-421..423 + TH-058 filed (2026-10-06)
 

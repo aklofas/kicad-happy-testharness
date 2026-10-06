@@ -11,6 +11,51 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-06 — SacMap soak fixes: KH-419 + KH-424 + KH-425 FIXED on main-repo `main` @ `ef6d55c` (= 9fbbb26 + merge of `v2.3.x-dev` @ `e6c7ad3`, 3 commits; LOCAL, not pushed)
+
+Source: SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/
+Old-Reviews/sacmap-rev2/8/`, REVIEW-2026-10-05.md + Appendix B). Harness
+adoption: `tests/test_kh419_circle_pad_outline.py` (7, incl. a skip-if-absent
+regression on the SacMap PCB) + `tests/fixtures/kh419/`,
+`tests/test_vm001_en_datasheet_fallback.py` (5, ctx-builder +
+monkeypatched `get_regulator_features`), `tests/test_diff_analysis_emc_float_delta.py`
+(2). Unit tree at ef6d55c 1,551 / 0 over 142 files; contract 707 / 8 / 3.
+Incremental gate 9fbbb26 → ef6d55c: `results/v23x_soak_gate/adjudication_soak.md`.
+The soak's 15-item long tail is filed as KH-426..440 (ISSUES.md).
+
+### KH-419 (LOW) — CP-003 THT touch-pad sampling used bbox corners for circle/oval pads (KH-413 rider)
+
+- **Fix:** `e6c7ad3` — `_pad_outline_points(shape, hw, hh)` samples the
+  circumference of circle pads / the stadium boundary of oval pads (8 points,
+  45° steps; verified exact); `_pad_sample_points` uses it, rotation by the
+  absolute pad angle unchanged; via-analysis `via_in_pad` now tests
+  `_point_in_pad(shape, angle)` instead of an unrotated bbox. SacMap TP1
+  CP-003 0.45 → 1.00 mm (true value), TP2 1.0 unchanged, TP2's false
+  `via_in_pad` entry gone.
+- **Verification:** 7 tests + `kh419/circle_touch_pad.kicad_pcb`. Gate:
+  CP-003 `gnd_clearance_mm` moves on circle/oval touch pads (class size in the
+  record), `via_in_pad` entries disappear for vias inside the box but outside
+  the outline; VP-001 unaffected.
+
+### KH-424 (MEDIUM) — VM-001: a TRUSTED regulator extraction lacking `en_v_ih_max` bypassed the regulator-EN heuristic (false ERROR "EN_5V 5.0V/3.3V domain crossing" on a correct 3.3 V GPIO→EN drive); reachable since KH-376 (v2.3.0)
+
+- **Fix:** `fea561e` — the datasheet branch decides only when it has a
+  threshold (`ds_decided`), otherwise the pre-existing heuristic runs; also
+  falls through when the extraction lacks `en_pin` entirely; provenance
+  confidence `deterministic` → `heuristic` to match the finding (finding_id
+  unaffected — provenance is not hashed).
+- **Verification:** 5 tests (TI TPS61023DRLR shape, no PDFs needed). Gate:
+  VM-001 `provenance.confidence` flips corpus-wide (facts-only); VM-001
+  disappearances only with a trusted extraction lacking an EN threshold
+  (corpus ≈ 0).
+
+### KH-425 (LOW) — `diff_analysis.py --text` crashed on EMC diffs (`format_text` formatted the float risk-score delta with `:+d`)
+
+- **Fix:** `eb46619` — `:+.1f`.
+- **Verification:** 2 tests. No analyzer output movement.
+
+---
+
 ## 2026-10-06 — KH-418 + KH-420 follow-up: both v2.3.1-gate regressions FIXED on main-repo `main` @ `9fbbb26` (= b008afa + merge of `v2.3.x-dev` @ `28a7adf`, 8 commits; LOCAL, not pushed)
 
 Harness adoption: `tests/test_kh418_mpn_alias_rank.py` (14) +

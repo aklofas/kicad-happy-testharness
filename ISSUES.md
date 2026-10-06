@@ -34,7 +34,7 @@ Last updated: 2026-10-06
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-424** (KH-421..423 filed 2026-10-06 at the KH-418/420 follow-up adoption — Marble U54 hash-seed nondeterminism, `--full` `_point_in_polygon` cost, legacy `.sch` empty-field skip; KH-418 + KH-420 FIXED on main @ 9fbbb26, see FIXED.md; KH-420 filed 2026-10-05 at the v2.3.1 gate — KH-413 THT touch-pad sampling 11× slower on a 130-touch-pad board, the only candidate-side timeout in 170,014 units; KH-416..419 filed 2026-10-05 at the v2.3.1 batch adoption — peer-sheet inner-hierarchy sheet-pin tagging, `_pad_on_layer` NPTH wildcard, KH-414 regression: generic `Part#` overrides explicit `MPN` with an LCSC code, KH-413 circle-pad bbox rider; KH-408..415 FIXED in v2.3.1, see FIXED.md; KH-415 filed 2026-10-05 — `capability_mode.get_capability_mode_ref` KeyError on a malformed `capability_mode.json`, LOW, found at the v2.3.0 regen via TH-054; KH-414 filed 2026-10-04 — GitHub #46 `Manufacturer P/N`/`Digikey P/N` alias gap, three divergent MPN alias lists, MEDIUM; KH-408..413 filed 2026-09-13 from the v2.3.0 correctness batch — thermal-pad-via rotation sign, Altium peer-sheet `_sheet` tagging, RP-001 touch-void wording, thermal skip-reason vocabulary, DFM `parameter` pad-drill, THT-only touch pads; KH-373..379/383/386/396..401/405..407 FIXED and KH-395 REFUTED in that batch, see FIXED.md; KH-407 filed 2026-09-13 — `0V<suffix>` ground spellings read as rails after PR #44, gate residue; KH-406 filed 2026-09-12 — `differential_pairs[].esd_protection` set-order nondeterminism, pre-existing, found during PR #44 review; KH-403/404 filed 2026-09-10 — schematic connectivity over-unions on MAXI030 / Olivetti M20 L1, kicad-cli-refuted, surfaced by PR #43's SH-001 sample; KH-405 filed 2026-09-10 — jlcsearch `extra` block gone, lcsc datasheet fetch degraded; KH-402 assigned 2026-09-01 at the
+maximum. Next KH number: **KH-442** (KH-441 filed 2026-10-06 at the soak-fix gate — via_in_pad first-match attribution ambiguity on rotated QFN/DFN; KH-424 VM-001 trusted-extraction EN fallthrough + KH-425 diff_analysis float delta FIXED-direct and KH-419 FIXED at the SacMap soak fixes @ ef6d55c, see FIXED.md; KH-426..440 filed 2026-10-06 from the SacMap rev2 run-8 soak long tail — XV MPN compare, `.kicad_dru` hole_size precedence, has_pull_up sign, find_pdf glob, SOT-563/θJA, lifecycle finding_id, RGB-LED/PTC power budget, extraction local_path staleness, PD-001 silence, DS-003 sidecars, touch-pad test points, trust_summary provenance (Aug B13), datasheet_verification null rules, sleep-audit riders, DRC lib-table doc note; KH-421..423 filed 2026-10-06 at the KH-418/420 follow-up adoption — Marble U54 hash-seed nondeterminism, `--full` `_point_in_polygon` cost, legacy `.sch` empty-field skip; KH-418 + KH-420 FIXED on main @ 9fbbb26, see FIXED.md; KH-420 filed 2026-10-05 at the v2.3.1 gate — KH-413 THT touch-pad sampling 11× slower on a 130-touch-pad board, the only candidate-side timeout in 170,014 units; KH-416..419 filed 2026-10-05 at the v2.3.1 batch adoption — peer-sheet inner-hierarchy sheet-pin tagging, `_pad_on_layer` NPTH wildcard, KH-414 regression: generic `Part#` overrides explicit `MPN` with an LCSC code, KH-413 circle-pad bbox rider; KH-408..415 FIXED in v2.3.1, see FIXED.md; KH-415 filed 2026-10-05 — `capability_mode.get_capability_mode_ref` KeyError on a malformed `capability_mode.json`, LOW, found at the v2.3.0 regen via TH-054; KH-414 filed 2026-10-04 — GitHub #46 `Manufacturer P/N`/`Digikey P/N` alias gap, three divergent MPN alias lists, MEDIUM; KH-408..413 filed 2026-09-13 from the v2.3.0 correctness batch — thermal-pad-via rotation sign, Altium peer-sheet `_sheet` tagging, RP-001 touch-void wording, thermal skip-reason vocabulary, DFM `parameter` pad-drill, THT-only touch pads; KH-373..379/383/386/396..401/405..407 FIXED and KH-395 REFUTED in that batch, see FIXED.md; KH-407 filed 2026-09-13 — `0V<suffix>` ground spellings read as rails after PR #44, gate residue; KH-406 filed 2026-09-12 — `differential_pairs[].esd_protection` set-order nondeterminism, pre-existing, found during PR #44 review; KH-403/404 filed 2026-09-10 — schematic connectivity over-unions on MAXI030 / Olivetti M20 L1, kicad-cli-refuted, surfaced by PR #43's SH-001 sample; KH-405 filed 2026-09-10 — jlcsearch `extra` block gone, lcsc datasheet fetch degraded; KH-402 assigned 2026-09-01 at the
 PR #41 fold adoption — no-connect mid-span connectivity, externally
 reported+fixed by danielboston38, FIXED-direct, never open here;
 KH-401 filed 2026-08-31 during the
@@ -64,7 +64,7 @@ KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 KHPA finding ID). Next TH number: **TH-059** (TH-058 filed 2026-10-06 — `test_kh420_zone_fill_segment_grid.py` wall-clock assertion (< 30 s on the NLoy corpus board) is load-sensitive: 8.5 s idle, 19.5 s with a 32-job gate running, so the pre-push hook can flake under load; TH-057 filed 2026-10-05 — generate_bugfix_assertions.py merges by assertion id and never updates a changed expected value, so a registry re-anchor silently does not land; TH-056 filed 2026-10-05 — KH-313 corpus-lock anchor lost: TERES never runs check_inductor_leakage's crash path (no PCB pairing, 0 rf_chains) and `categories_checked` semantics changed, lock re-anchored; TH-055 filed 2026-10-05 — the 198 pcb timeout-class units keep v1.3-era outputs (148 schema 1.3.0 / 29 pre-schema / 21 none) under a hard-coded 120 s `ANALYZER_TIMEOUT`, downstream emc/thermal stale too; TH-054 fixed-on-discovery 2026-10-05 at the v2.3.0 regen — run_emc masked analyzer crashes behind stale outputs, EMC corpus stale since 2026-08-20/2026-05-15, see FIXED.md; TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 33 open issues (18 KH + 15 TH).
+> 48 open issues (33 KH + 15 TH).
 
 ---
 
@@ -402,22 +402,206 @@ KH-413 fixture.
 
 **Gate budget:** none (no live behaviour change).
 
-### KH-419: CP-003 THT touch-pad sampling uses bbox corners for circle/oval pads — reads up to 0.41·r outside the copper (KH-413 rider)
+### KH-441: via-analysis `via_in_pad` attributes a via to the FIRST pad whose outline contains it — ambiguous on footprints where a pin pad's rotated extent and the exposed pad both contain the via (attribution + `same_net` flip with pad order)
 
-**Severity:** LOW (accuracy; a real arc-shaped fill around a 2 mm pad with
-0.5 mm clearance reads ≈0.09 mm — seen as 0.5 → 0.02 mm on
-CRImier/MyKiCad friendp J3 at the v2.3.1 gate)
-**File:** `skills/kicad/scripts/analyze_pcb.py` (CP-003 THT pad sampling
-added by KH-413, `7b3c9d7`)
-**Discovered:** 2026-10-04, main-repo agent final-wave review (spec-accepted
-rider for v2.3.1); filed by the harness 2026-10-05
+**Severity:** LOW (fact-field attribution; surfaced by the KH-419 outline test
+at the soak-fix gate: 879 entries re-attributed and 678 `same_net` flips on
+the 2,057 moved units, e.g. Thinkpad U2 via (35.4, 31.7) is inside both the
+unnumbered exposed pad and pad 57 at 45° and now reports pad `""` /
+`same_net: false` instead of `57` / `true`)
+**File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_vias` via-in-pad
+loop, `break` on first containing pad)
+**Discovered:** 2026-10-06, harness soak-fix gate 9fbbb26 → ef6d55c
+(`results/v23x_soak_gate/adjudication_soak.md`)
 
-**Fix direction:** sample the pad circumference (circle) / stadium outline
-(oval) instead of the bounding-box corners; extend the KH-413 fixture with
-a circular THT pad inside an arc-shaped fill.
+**Fix direction:** when several pads contain the via, prefer the pad on the
+via's net, then the smallest pad (the exposed pad's bounding rect swallows
+pin pads on rotated QFN/DFN footprints); report `pad: ""` only when no
+numbered pad contains the via. Fixture: a QFN at 45° with a via on a pin pad
+that also falls inside the exposed-pad rectangle.
 
-**Gate budget (when fixed):** CP-003 `gnd_clearance_mm` grows on
-circle/oval THT touch pads; counts unchanged.
+**Gate budget (when fixed):** `via_in_pad[].pad` / `same_net` on rotated
+QFN/DFN boards (subset of the KH-419 class); VP-001 unaffected.
+
+### KH-426: XV-001..003 never compare MPN schematic ↔ PCB — 17 stale footprint MPNs and `BSS138LT1G` vs `BSS138` on the SacMap board produce 0 findings
+
+**Severity:** MEDIUM (cross-analysis blind spot: a stale PCB MPN is exactly the sync error the XV rules exist for)
+**File:** `skills/kicad/scripts/cross_analysis.py` (XV-001..003 compare value/footprint only)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** the soak board's PCB carries 17 footprint MPNs that no longer match the schematic symbols' MPNs (incl. `BSS138LT1G` on the PCB vs `BSS138` in the schematic); XV-001/002/003 report nothing.
+
+**Fix direction:** add an MPN comparison to the XV sync check (normalised, case-insensitive, alias-tiered per KH-418) with its own rule or an XV-002 variant; fixture = one footprint whose `mpn` differs from the symbol's.
+
+**Gate budget (when fixed):** XV-* gains on boards with sch↔pcb MPN drift — size at the gate walk (the KH-414 PCB class, 996 units, is the candidate population).
+
+### KH-427: `design_rule_compliance` applies the `.kicad_pro` global min drill without honouring an UNCONDITIONAL `.kicad_dru` `hole_size` override — reports a violation native DRC does not
+
+**Severity:** MEDIUM (false design-rule violation on boards that relax/tighten drills via `.kicad_dru`; the KH-383/412 pad-drill work made the drill check more visible)
+**File:** `skills/kicad/scripts/analyze_pcb.py` (design-rule compliance drill branch; `.kicad_dru` parsing per KH-383)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** SacMap has an unconditional `(rule ... (constraint hole_size (min ...)))` in its `.kicad_dru`; the analyzer still evaluates the `.kicad_pro` `min_via_drill`/global drill and emits a violation KiCad's own DRC does not raise.
+
+**Fix direction:** when an unconditional `.kicad_dru` `hole_size` rule exists it supersedes the `.kicad_pro` global drill for that check (KiCad precedence: `.kicad_dru` > netclass > global); record `rules_source` accordingly. Fixture = `.kicad_pro` min drill 0.3 + `.kicad_dru` hole_size min 0.2 + a 0.25 mm drill → no violation.
+
+**Gate budget (when fixed):** DR drill-violation disappearances on boards with an unconditional `.kicad_dru` hole_size rule (erikbeerepoot/bramble class from the KH-383 gate).
+
+### KH-428: `power_sequencing.dependencies[].has_pull_up` is true for a 10 k pull-DOWN (sign of the resistor's rail end ignored)
+
+**Severity:** LOW (wrong polarity in a fact field; PS-00x reasoning about EN defaults inherits it)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (power-sequencing dependency builder, pull resistor classification)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** SacMap U-EN net has a 10 k resistor to GND; `dependencies[].has_pull_up` reads `true`.
+
+**Fix direction:** classify by the resistor's far-end net (rail → pull-up, ground → pull-down) and emit `has_pull_down` alongside; fixture with both polarities.
+
+**Gate budget (when fixed):** `has_pull_up` flips on boards with EN pull-downs; PS-001 content where the default-state text depends on it.
+
+### KH-429: `deep_review_gate.find_pdf` matches only `<MPN>.pdf` — sync-style `<MPN>_<desc>.pdf` names silently degrade datasheet quotes to "partial"
+
+**Severity:** LOW (Layer 2 evidence quality; the datasheet sync scripts write `<MPN>_<desc>.pdf`, so the common case misses)
+**File:** `skills/kicad/scripts/deep_review_gate.py` (`find_pdf`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** quotes against a PDF saved by `sync_datasheets_*` as `TPS61023DRLR_datasheet.pdf` are graded `partial` because `find_pdf` looks for `TPS61023DRLR.pdf` only.
+
+**Fix direction:** match `<MPN>*.pdf` (case-insensitive, sanitised MPN per `datasheet_lookup.sanitize_mpn`) and prefer the exact name when several exist.
+
+**Gate budget (when fixed):** none (Layer 2 only; `deep_review.json` is excluded from the diff scope).
+
+### KH-430: thermal package table lacks SOT-563, and the analyzer ignores the extraction's RθJA (142.7 vs default 150 °C/W)
+
+**Severity:** LOW (Tj estimates on SOT-563 parts fall back to a default even when the datasheet extraction carries the real θJA)
+**File:** `skills/thermal/scripts/analyze_thermal.py` (package table; θJA source precedence)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** SacMap U2 (SOT-563) is assessed with the 150 °C/W default; the cached extraction has `theta_ja = 142.7`.
+
+**Fix direction:** add SOT-563 (and the SOT-363/SC-70 family) to the package table; when a trusted extraction provides θJA use it ahead of the table and mark `evidence_source: datasheet`.
+
+**Gate budget (when fixed):** TH-DET/TS-00x content on SOT-563 boards and on boards with extracted θJA (corpus: ≈0 extractions).
+
+### KH-431: `lifecycle_audit` findings carry no `finding_id` (40/40) and the script has no `--analysis-dir`; not in the analysis manifest (LC-007 still emitted by the schematic analyzer)
+
+**Severity:** LOW-MEDIUM (Layer 2 merge keys on `finding_id`; lifecycle is the one analyzer outside the manifest/cache contract)
+**File:** `skills/kicad/scripts/lifecycle_audit.py`
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** every lifecycle finding on the soak board lacks `finding_id`; the script cannot write into `analysis/`; `analysis_manifest` has no lifecycle entry while `analyze_schematic` still emits LC-007 itself.
+
+**Fix direction:** route findings through `finding_schema.assign_finding_ids('lifecycle', …)`, add `--analysis-dir` + manifest registration like the other analyzers, and decide the LC-007 ownership (one emitter).
+
+**Gate budget (when fixed):** additive `finding_id` on every lifecycle finding; LC-007 single-source.
+
+### KH-432: power_budget counts an RGB LED as a flat 5 mA (cathode resistors R3/R4/R5 ignored, ~48 mA real) and ignores the USB VBUS load behind the PTC — thermal then skips U2 as `below_min_pdiss`
+
+**Severity:** MEDIUM (KH-375 rider: multi-die LEDs and PTC-fed loads are under-counted, so a regulator that really dissipates is skipped by thermal)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (power_budget LED load model, KH-375 series-resistor branch; VBUS/PTC path)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** SacMap RGB LED with three cathode resistors is budgeted at 5 mA total instead of ≈48 mA (three channels × (3.3 − Vf)/R); the VBUS consumer behind the PTC is not attributed to the rail; thermal `skipped_components` lists U2 `below_min_pdiss`.
+
+**Fix direction:** model multi-pin LEDs per channel through each cathode/anode resistor; treat a PTC (fuse-typed, KH-414 F-ref rules) as a pass-through for load attribution; fixture = RGB LED + 3 resistors + PTC-fed consumer.
+
+**Gate budget (when fixed):** `power_budget.rails[*].estimated_load_mA` up on RGB-LED / PTC boards, thermal T3-class downstream (TS-00x/TP-001), `skipped_components` shrink.
+
+### KH-433: datasheet staleness: `datasheet_lookup._resolve_pdf_path` uses `source.local_path`, stored by the extraction as an ABSOLUTE original-project path — any copied project reads its extractions as stale (irreproducible trust toggles between runs)
+
+**Severity:** MEDIUM (this is why the VM-001 repro differed between the reviewer's and the controller's run: trusted vs stale depended on whose copy of the project ran)
+**File:** `skills/datasheets/scripts/datasheet_lookup.py` (`_resolve_pdf_path`), extraction writers (`source.local_path`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** copy a project with `datasheets/extracted/` elsewhere → every extraction resolves its PDF through the old absolute path, fails the staleness check, and the analyzers drop to heuristic trust.
+
+**Fix direction:** store `local_path` relative to the project root (or to the extraction file) and resolve relative to the current project; keep a fallback to the absolute path for old extractions; a determinism-style test that copies a fixture project and asserts identical trust.
+
+**Gate budget (when fixed):** none in the corpus (no extractions); on extraction-bearing projects, trust flips heuristic → datasheet after copy.
+
+### KH-434: PD-001 is silent when evaluated with no peaks — no `checks_run`-style line in `category_summary`
+
+**Severity:** LOW (observability: a board with zero PDN peaks is indistinguishable from a board where the PDN check did not run)
+**File:** `skills/emc/scripts/emc_rules.py` (PD-001 / `category_summary`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** SacMap's EMC output has no PDN entry at all; nothing says the check ran and found 0 peaks.
+
+**Fix direction:** emit a `category_summary.pdn` (or `checks_run`) record with `peaks_total: 0` when the check runs and finds nothing, matching the `checks_run` convention in cross_analysis.
+
+**Gate budget (when fixed):** additive `category_summary` entry on every EMC unit with a PDN evaluation.
+
+### KH-435: DS-003 counts extraction JSON sidecars and symlinks as "datasheets"
+
+**Severity:** LOW (inflates datasheet coverage)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (`audit_datasheet_coverage`, DS-003 file census)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** a `datasheets/` dir with `<MPN>.json` extraction sidecars and symlinked PDFs is counted as more datasheets than PDFs present.
+
+**Fix direction:** count regular `.pdf` files only (resolve symlinks, dedupe by target), exclude `extracted/` and `*.json`.
+
+**Gate budget (when fixed):** DS-003 counts shrink on repos that ship extraction sidecars/symlinks (corpus: ≈0).
+
+### KH-436: `test_coverage` counts `Connector:TestPoint`-based touch pads as test points
+
+**Severity:** LOW (coverage metric inflated on capacitive-touch boards; same footprint family KH-373/413 already classify as touch pads)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (`test_coverage`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** SacMap's two capacitive touch pads (TestPoint symbols) are reported as test points.
+
+**Fix direction:** exclude symbols the touch-pad classifier recognises (net name / value / footprint touch markers used by CP-003) from the test-point census; fixture with one real TP and one touch TP.
+
+**Gate budget (when fixed):** `test_coverage` counts shrink on touch-pad boards (CP-003 population).
+
+### KH-437: `trust_summary.provenance_coverage_pct` 0.0 / `trust_level: low` on pcb / emc / thermal / lifecycle while every finding is `deterministic` (Aug B13, still open)
+
+**Severity:** LOW-MEDIUM (trust rollup contradicts the findings it summarises; consumers keyed on `trust_level` down-rank deterministic output)
+**File:** `skills/kicad/scripts/finding_schema.py` / per-analyzer `trust_summary` builders (pcb, emc, thermal, lifecycle)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** on the soak board all four non-schematic analyzers report `provenance_coverage_pct 0.0` and `trust_level low` although their findings carry `confidence: deterministic` with evidence sources.
+
+**Fix direction:** compute provenance coverage from the findings' `evidence_source`/`provenance` the same way the schematic analyzer does; one shared helper.
+
+**Gate budget (when fixed):** `trust_summary` values move on every pcb/emc/thermal unit (facts-only, no finding movement) — large additive-style class; pre-scan locks on `trust_level`/`provenance_coverage_pct`.
+
+### KH-438: `datasheet_verification.findings` entries with null `rule_id` / `summary`
+
+**Severity:** LOW (schema hygiene; Layer 2 merge and the harness differ skip null-rule findings)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (`datasheet_verification` section builder)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** entries in `datasheet_verification.findings` carry `rule_id: null`, `summary: null`.
+
+**Fix direction:** route them through `make_finding` with a DV-00x rule and a summary; or drop the section's pseudo-findings into `assessments`.
+
+**Gate budget (when fixed):** additive rule ids on extraction-bearing projects (corpus ≈0).
+
+### KH-439: sleep audit: U3 note "can be disabled via EN" next to `always-on`; 15 µA Iq placeholder vs 20 µA datasheet; `+BATT` assumed 3.7 V on a 2×AA board; MCU deep-sleep current absent
+
+**Severity:** LOW (KH-374 rider — four accounting gaps in one section on the soak board)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (`sleep_current_audit`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** contradictory EN note vs always-on classification; regulator Iq from a placeholder rather than the trusted extraction; battery chemistry inferred as Li-ion for a 2×AA pack (3.0 V nominal); the MCU's deep-sleep current is not an entry at all.
+
+**Fix direction:** (1) EN-disable note only when the rail is not always-on; (2) prefer extraction `iq` when trusted; (3) infer battery voltage from the battery symbol/value (`2xAA`, `AAA`, `18650`) with a stated assumption otherwise; (4) add MCU deep-sleep from the extraction or the MCU family table.
+
+**Gate budget (when fixed):** `sleep_current_audit` content on battery boards (KH-374 class population).
+
+### KH-440: docs: native DRC/ERC on a project copy without lib tables emits `lib_footprint` / `lib_symbol` warnings — skill should say so
+
+**Severity:** LOW (documentation; the kicad skill's DRC/ERC step surprises users on copied projects)
+**File:** `skills/kicad/SKILL.md` (DRC/ERC section)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** running `kicad-cli pcb drc` / `sch erc` on a copied project without `fp-lib-table` / `sym-lib-table` yields library-resolution warnings unrelated to the design.
+
+**Fix direction:** one doc note: copy the lib tables (or run from the original location) and how to recognise/ignore the lib_* class.
+
+**Gate budget (when fixed):** none.
 
 ## Test Harness Issues
 
