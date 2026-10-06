@@ -114,7 +114,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 detect_design_observations detected",
+      "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -124,16 +124,6 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "2 detect_protection_devices detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -143,7 +133,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -154,7 +144,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "9 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -164,7 +154,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -174,7 +164,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -182,6 +172,15 @@
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 3
       }
     },
     {

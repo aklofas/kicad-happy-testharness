@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~179 (tolerance 10%)",
+      "description": "Finding count ~123 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 170,
-        "max": 188
+        "min": 116,
+        "max": 130
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~64",
+      "description": "by_severity.error ~47",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 60,
-        "max": 68
+        "min": 42,
+        "max": 52
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~91",
+      "description": "by_severity.warning ~52",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 86,
-        "max": 96
+        "min": 49,
+        "max": 55
       }
     },
     {
@@ -56,13 +56,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "3 board_edge finding(s)",
+      "description": "1 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -122,13 +122,13 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "107 ground_plane finding(s)",
+      "description": "53 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 107
+        "value": 53
       }
     },
     {
@@ -222,11 +222,11 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "~108 net(s) with EMC scores",
+      "description": "~74 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 102
+        "value": 70
       }
     }
   ]

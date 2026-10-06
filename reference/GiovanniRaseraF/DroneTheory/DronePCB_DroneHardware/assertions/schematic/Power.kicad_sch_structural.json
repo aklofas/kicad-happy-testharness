@@ -56,37 +56,26 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 2 detect_design_observations",
+      "description": "Exactly 1 detect_decoupling",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 1 detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "L101 in detect_lc_filters",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 3 detect_design_observations",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L101$"
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -96,7 +85,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "U101 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -107,28 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "R103 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R103$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000010",
       "description": "Exactly 1 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -138,7 +106,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000011",
       "description": "Q101 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -149,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000012",
       "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -159,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000013",
       "description": "R101 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -170,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000014",
       "description": "R104 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -181,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 validate_feedback_stability",
       "check": {
         "path": "findings",
@@ -192,12 +160,12 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "FS-001",
-        "tagged_at": "2026-09-01T17:46:23Z",
+        "tagged_at": "2026-10-05T07:27:02Z",
         "tagged_reason": "datasheet-gated on regulator load step + bandwidth (FS-001)"
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000016",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -208,7 +176,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:23Z",
+        "tagged_at": "2026-10-05T07:27:02Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

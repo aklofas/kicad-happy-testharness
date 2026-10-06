@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -83,7 +83,7 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "1 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -93,7 +93,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "11 detect_design_observations detected",
+      "description": "15 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -176,6 +176,22 @@
     },
     {
       "id": "SEED-00000018",
+      "description": "1 validate_voltage_levels detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:26:51Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "Has 24 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -184,7 +200,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

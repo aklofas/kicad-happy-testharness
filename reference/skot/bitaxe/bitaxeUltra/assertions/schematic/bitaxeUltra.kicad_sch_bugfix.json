@@ -2,6 +2,7 @@
   "file_pattern": "bitaxeUltra.kicad_sch",
   "analyzer_type": "schematic",
   "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
   "assertions": [
     {
       "id": "BUGFIX-KH-027-01",
@@ -42,14 +43,14 @@
     },
     {
       "id": "BUGFIX-KH-299-01",
-      "description": "KH-299: at least 7 LB-001 label alias findings",
+      "description": "KH-299: at least 6 LB-001 label alias findings (was 7; the 4-sheet `5V` group is suppressed since PR #44 made `5V` a rail \u2014 v2.3.0 regen 2026-10-05)",
       "issue": "KH-299",
       "fix_type": "detection_fix",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
         "op": "min_count",
-        "value": 7
+        "value": 6
       }
     },
     {

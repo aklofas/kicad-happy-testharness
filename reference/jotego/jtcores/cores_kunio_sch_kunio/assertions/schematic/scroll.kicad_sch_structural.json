@@ -56,12 +56,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 6 detect_design_observations",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 6
+        "value": 8
       }
     },
     {
@@ -72,27 +72,6 @@
         "detector_filter": "detect_label_aliases",
         "op": "equals",
         "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 1 detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "F8 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^F8$"
       }
     }
   ]

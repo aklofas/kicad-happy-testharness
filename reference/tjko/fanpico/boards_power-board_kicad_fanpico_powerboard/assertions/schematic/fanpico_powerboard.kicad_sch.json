@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "11 audit_esd_protection detected",
+      "description": "10 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 11
+        "value": 10
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 11
+        "value": 10
       }
     },
     {
@@ -163,6 +163,16 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "2 detect_protection_devices detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "1 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -173,12 +183,12 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-09-01T17:46:14Z",
+        "tagged_at": "2026-10-05T07:26:53Z",
         "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "Has 11 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

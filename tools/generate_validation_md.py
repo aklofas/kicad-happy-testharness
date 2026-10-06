@@ -34,8 +34,11 @@ def _count_output_files(atype):
     d = OUTPUTS_DIR / atype
     if not d.exists():
         return 0
-    return sum(1 for _ in d.rglob("*.json") if _.name != "_timing.json"
-               and _.name != "_aggregate.json")
+    # capability_mode.json is the analyzer's per-repo run-metadata sidecar,
+    # not an analysis output; _timing/_aggregate* are runner bookkeeping.
+    return sum(1 for _ in d.rglob("*.json")
+               if _.name not in ("capability_mode.json", "_timing.json")
+               and not _.name.startswith("_aggregate"))
 
 
 def _count_issues(prefix):
@@ -135,17 +138,37 @@ def _load_catalog_stats():
     }
 
 
-def generate_markdown(check_results=None, gate_rollup=None):
+def _measured_assertion_stats(check_results):
+    """Assertion total + per-prefix breakdown from run_checks --json output.
+
+    The measured total is authoritative; the catalog's per-repo sums are only
+    the fallback when no check results are supplied.
+    """
+    by_type = Counter()
+    for r in check_results.get("results", []):
+        by_type[(r.get("id") or "?").split("-")[0]] += 1
+    return {"total": check_results.get("total", 0), "by_type": dict(by_type)}
+
+
+def generate_markdown(check_results=None, gate_rollup=None,
+                      gate_label=None, gate_verdict=None):
     """Generate VALIDATION.md content.
 
     check_results: dict from regression/run_checks.py --json (or None).
     gate_rollup:   dict from regression/run_v14_gate.py rollup (or None).
+    gate_label:    how to name the gate run (e.g. "the v2.3.0 batch gate
+                   (`788649f` → `b54b5c4`, harness `results/v23_gate/...`)").
+    gate_verdict:  verdict text; required when the rollup is not strict-clean
+                   (a budgeted gate's verdict lives in its adjudication record).
     """
     cat_stats = _load_catalog_stats()
-    assertion_stats = {
-        "total": cat_stats.get("assertion_total", 0),
-        "by_type": dict(cat_stats.get("assertion_by_type", {})),
-    }
+    if check_results:
+        assertion_stats = _measured_assertion_stats(check_results)
+    else:
+        assertion_stats = {
+            "total": cat_stats.get("assertion_total", 0),
+            "by_type": dict(cat_stats.get("assertion_by_type", {})),
+        }
     open_kh, closed_kh, max_kh = _count_kh_issues()
     open_th, closed_th, max_th = _count_th_issues()
     bugfix_count = 0
@@ -264,19 +287,29 @@ Assertions are seeded from validated output and checked on every run. When analy
         criteria = gate_rollup.get("pass_criteria", {})
         section = gate_rollup.get("section", "?")
         total_units = gate_rollup.get("total_units", 0)
-        clean = criteria.get("clean", False)
-        verdict = "**CLEAN**" if clean else "**FAIL**"
-        md += "### v1.4 Layer 1 regression gate\n\n"
-        md += f"v1.4 introduces the `--only-deterministic` flag to scope analyzer output to evidence-backed findings. The Layer 1 regression gate runs both v1.3.1 (plain) and v1.4 (`--only-deterministic`) over the harness corpus and diffs the resulting envelopes, asserting v1.4 does not silently drop or downgrade any v1.3.1 finding.\n\n"
-        md += f"Latest run: section `{section}`, {total_units:,} analyzer-runs. Verdict: {verdict}.\n\n"
+        if gate_verdict is None:
+            if not criteria.get("clean", False):
+                raise ValueError("gate rollup is not strict-clean; pass "
+                                 "--gate-verdict with the adjudicated verdict")
+            gate_verdict = "CLEAN"
+        run_ref = f"The run below is {gate_label}." if gate_label else ""
+        md += "### Layer 1 regression gate (pre-tag requirement)\n\n"
+        md += ("Before any release is tagged, the harness runs the candidate commit and the "
+               "previous release over the full corpus and diffs every analyzer envelope unit "
+               "by unit. Every unit that moves (FAIL, Disappeared, NewUnknown) must be "
+               "attributed to a budget class pre-registered in the change's review record, "
+               "and no finding may be silently downgraded; unexplained movement fails the "
+               f"gate. {run_ref}\n\n")
+        md += f"Latest run: section `{section}`, {total_units:,} analyzer-runs. Verdict: **{gate_verdict}**.\n\n"
         md += "| Outcome | Count |\n|---------|------:|\n"
         for key in ("PASS", "FAIL", "Disappeared", "Downgrades", "Upgrades",
                     "NewKnown", "NewUpgraded", "NewUnknown", "WARN", "SKIP"):
             md += f"| {key} | {totals.get(key, 0):,} |\n"
-        md += "\n*Gate is CLEAN when `Disappeared == 0`, `Downgrades == 0`, " \
-              "and `FAIL == 0`. `NewKnown` and `NewUpgraded` are tolerated " \
-              "(intentional new v1.4 findings); `NewUnknown` is reported but " \
-              "not gating.*\n\n"
+        md += ("\n*A gate is CLEAN when `Downgrades == 0` and every `FAIL`, `Disappeared` "
+               "and `NewUnknown` unit is attributed to a pre-registered budget class in the "
+               "adjudication record (a zero-delta gate has none to attribute). "
+               "`NewKnown`/`NewUpgraded` are intentional new findings; `SKIP` units have no "
+               "comparable baseline.*\n\n")
 
     md += f"""## Signal detector coverage
 
@@ -333,7 +366,7 @@ Each closed analyzer issue has a corresponding bugfix regression guard assertion
 | SPICE simulations | {spice_files:,} |
 | Components parsed | {cat_stats.get('total_components', 0):,} |
 | Nets traced | {cat_stats.get('total_nets', 0):,} |
-| Regression assertions | {assertion_stats.get('total', 0):,} at 100% |
+| Regression assertions | {assertion_stats.get('total', 0):,} at {rate_str} |
 | Bugfix guards | {bugfix_count} (100% — no regressions) |
 | Closed issues | {closed_kh} analyzer + {closed_th} harness |
 | Open issues | {open_kh} analyzer + {open_th} harness |
@@ -352,12 +385,23 @@ def main():
                              "if provided, assertion pass rate is computed from it")
     parser.add_argument("--gate-rollup", type=Path,
                         help="JSON rollup from regression/run_v14_gate.py; "
-                             "if provided, adds a v1.4 Layer 1 gate section")
+                             "if provided, adds a Layer 1 gate section")
+    parser.add_argument("--gate-label",
+                        help="How to name the gate run in the narrative, e.g. "
+                             "'the v2.3.0 batch gate (`788649f` → `b54b5c4`, "
+                             "harness `results/v23_gate/adjudication_v23.md`)'")
+    parser.add_argument("--gate-verdict",
+                        help="Verdict text for the gate section; REQUIRED when the "
+                             "rollup is not strict-clean (budgeted gate)")
     args = parser.parse_args()
 
     check_results = _load_check_results(args.check_results)
     gate_rollup = _load_gate_rollup(args.gate_rollup)
-    md = generate_markdown(check_results=check_results, gate_rollup=gate_rollup)
+    try:
+        md = generate_markdown(check_results=check_results, gate_rollup=gate_rollup,
+                               gate_label=args.gate_label, gate_verdict=args.gate_verdict)
+    except ValueError as e:
+        sys.exit(f"error: {e}")
 
     if args.output:
         args.output.write_text(md, encoding="utf-8")

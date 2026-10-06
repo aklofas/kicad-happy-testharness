@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "6 audit_esd_protection detected",
+      "description": "5 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -91,7 +91,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -103,7 +103,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -151,6 +151,16 @@
     },
     {
       "id": "SEED-00000015",
+      "description": "1 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -160,7 +170,17 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
+      "description": "1 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

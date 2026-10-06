@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling simulation(s)",
+      "description": "Exactly 4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -433,6 +433,46 @@
     },
     {
       "id": "STRUCT-00000043",
+      "description": "C33 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC33\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000044",
+      "description": "C34 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC34\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000045",
+      "description": "C41 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC41\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000046",
+      "description": "C40 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC40\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000047",
       "description": "R33 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -442,7 +482,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000048",
       "description": "R35 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -452,7 +492,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000049",
       "description": "R37 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -462,7 +502,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000050",
       "description": "R39 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -472,7 +512,7 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000051",
       "description": "C3 simulated as inrush",
       "check": {
         "path": "simulation_results",

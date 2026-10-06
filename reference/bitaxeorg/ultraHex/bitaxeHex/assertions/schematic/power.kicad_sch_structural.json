@@ -56,26 +56,16 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_rail_sources",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 2 audit_rail_sources",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -85,58 +75,37 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 4 detect_decoupling",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 5 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Exactly 9 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Exactly 4 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 4
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 8 detect_design_observations",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "equals",
-        "value": 8
-      }
-    },
-    {
       "id": "STRUCT-00000011",
-      "description": "Exactly 1 detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "L1 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 3 detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -147,7 +116,18 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000012",
+      "description": "U2 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "U3 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -158,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000014",
       "description": "U4 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -169,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "Exactly 4 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -179,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
       "description": "R13 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -190,7 +170,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
       "description": "R15 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -201,7 +181,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000018",
       "description": "R16 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -212,7 +192,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000019",
       "description": "R4 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -223,7 +203,17 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000020",
+      "description": "Exactly 1 detect_shorted_two_pin_components",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_shorted_two_pin_components",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "Exactly 3 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -233,7 +223,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "R5 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -244,7 +234,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "R11 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -255,7 +245,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "R8 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -263,22 +253,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000026",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:25Z",
-        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }
   ]

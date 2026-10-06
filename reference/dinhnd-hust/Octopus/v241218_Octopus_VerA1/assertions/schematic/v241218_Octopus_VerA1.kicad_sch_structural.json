@@ -170,22 +170,22 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 1 detect_decoupling",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 11 detect_design_observations",
+      "description": "Exactly 15 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 11
+        "value": 15
       }
     },
     {
@@ -928,8 +928,24 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:26Z",
+        "tagged_at": "2026-10-05T07:27:05Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
+      }
+    },
+    {
+      "id": "STRUCT-00000087",
+      "description": "Exactly 1 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:27:05Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }
   ]

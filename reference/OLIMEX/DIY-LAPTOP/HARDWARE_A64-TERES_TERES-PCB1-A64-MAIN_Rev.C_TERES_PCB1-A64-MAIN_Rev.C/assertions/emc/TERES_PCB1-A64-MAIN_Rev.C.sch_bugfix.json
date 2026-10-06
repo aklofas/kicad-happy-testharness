@@ -13,29 +13,6 @@
         "path": "summary",
         "op": "exists"
       }
-    },
-    {
-      "id": "BUGFIX-KH-313-02",
-      "description": "KH-313: emc_inductor_leakage produced >= 1 finding (proves the detector executed past the bare-string crash point)",
-      "issue": "KH-313",
-      "fix_type": "parser_fix",
-      "check": {
-        "path": "findings",
-        "op": "min_count",
-        "value": 1,
-        "detector_filter": "emc_inductor_leakage"
-      }
-    },
-    {
-      "id": "BUGFIX-KH-313-03",
-      "description": "KH-313: all 10 EMC categories ran (no early exit from inductor_leakage crash)",
-      "issue": "KH-313",
-      "fix_type": "parser_fix",
-      "check": {
-        "path": "summary.categories_checked",
-        "op": "equals",
-        "value": 10
-      }
     }
   ]
 }

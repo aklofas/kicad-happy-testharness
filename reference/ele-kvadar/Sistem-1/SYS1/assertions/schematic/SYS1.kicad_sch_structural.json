@@ -16,12 +16,12 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 4 audit_connector_ground_distribution",
+      "description": "Exactly 3 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -138,22 +138,22 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 5 detect_decoupling",
+      "description": "Exactly 6 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Exactly 17 detect_design_observations",
+      "description": "Exactly 18 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 17
+        "value": 18
       }
     },
     {
@@ -168,12 +168,12 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 6 detect_rc_filters",
+      "description": "Exactly 5 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -189,17 +189,6 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "R210 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R210$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
       "description": "R211 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -210,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "R212 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -218,6 +207,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R212$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "R210 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R210$"
       }
     },
     {
@@ -358,7 +358,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:26Z",
+        "tagged_at": "2026-10-05T07:27:05Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

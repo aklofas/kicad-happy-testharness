@@ -93,6 +93,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "3 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "1 detect_isolation_barriers detected",
       "check": {
         "path": "findings",
@@ -102,20 +112,10 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "2 detect_protection_devices detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000012",
-      "description": "Has 5 fuse(s)",
+      "description": "Has 5 ic(s)",
       "check": {
-        "path": "statistics.component_types.fuse",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
         "value": 3
       }

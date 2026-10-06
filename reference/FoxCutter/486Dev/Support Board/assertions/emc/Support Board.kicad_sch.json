@@ -6,63 +6,63 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~254 (tolerance 10%)",
+      "description": "Finding count ~244 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 246,
-        "max": 262
+        "min": 236,
+        "max": 252
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~78",
+      "description": "by_severity.error ~76",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 74,
-        "max": 82
+        "min": 72,
+        "max": 80
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~127",
+      "description": "by_severity.warning ~118",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 120,
-        "max": 134
+        "min": 112,
+        "max": 124
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~49",
+      "description": "by_severity.info ~50",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 44,
-        "max": 54
+        "min": 45,
+        "max": 56
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~11.5 (+-10)",
+      "description": "EMC risk score ~32.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 1.5,
-        "max": 21.5
+        "min": 22.5,
+        "max": 42.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "10 board_edge finding(s)",
+      "description": "2 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 10
+        "value": 2
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "3 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 1
       }
     },
     {

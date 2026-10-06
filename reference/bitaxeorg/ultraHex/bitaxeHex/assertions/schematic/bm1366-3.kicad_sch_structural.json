@@ -36,12 +36,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 9 audit_power_pin_dc_paths",
+      "description": "Exactly 6 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 9
+        "value": 6
       }
     },
     {
@@ -97,22 +97,22 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 3 detect_decoupling",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 7 detect_design_observations",
+      "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 7
+        "value": 6
       }
     },
     {
@@ -145,6 +145,22 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U24$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 3 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 3
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:27:04Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }
   ]

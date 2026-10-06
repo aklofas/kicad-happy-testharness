@@ -76,26 +76,58 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 detect_decoupling",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Exactly 5 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Exactly 2 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 3 detect_design_observations",
+      "id": "STRUCT-00000011",
+      "description": "U405 in detect_power_regulators",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "equals",
-        "value": 3
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U405$"
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
+      "description": "U406 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U406$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Exactly 6 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -105,7 +137,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000014",
       "description": "D403 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -116,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000015",
       "description": "D404 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -127,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000016",
       "description": "D405 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -138,7 +170,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000017",
       "description": "U402 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -149,7 +181,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000018",
       "description": "U403 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -160,7 +192,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000019",
       "description": "U404 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -171,7 +203,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000020",
       "description": "Exactly 2 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -181,7 +213,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000021",
       "description": "Exactly 4 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -191,7 +223,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000022",
       "description": "Q401 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -202,7 +234,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000023",
       "description": "Q402 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -213,7 +245,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000024",
       "description": "Q403 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -224,7 +256,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000025",
       "description": "Q404 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -235,7 +267,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000026",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -245,7 +277,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000027",
       "description": "Exactly 6 validate_voltage_levels",
       "check": {
         "path": "findings",
@@ -256,7 +288,7 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-09-01T17:46:26Z",
+        "tagged_at": "2026-10-05T07:27:05Z",
         "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }

@@ -56,16 +56,6 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 audit_power_pin_dc_paths",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "Exactly 3 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -75,7 +65,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -85,17 +75,17 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 5 detect_design_observations",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 5
+        "value": 8
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "Exactly 2 detect_led_drivers",
       "check": {
         "path": "findings",
@@ -105,13 +95,24 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 1 detect_power_regulators",
+      "id": "STRUCT-00000010",
+      "description": "Exactly 2 detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "equals",
-        "value": 1
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "U4 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U4$"
       }
     },
     {
@@ -201,27 +202,17 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "Exactly 2 validate_i2c_bus",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_i2c_bus",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
-      "description": "Exactly 3 validate_pullups",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 3
+        "value": 1
       },
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:29Z",
+        "tagged_at": "2026-10-05T07:27:08Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }

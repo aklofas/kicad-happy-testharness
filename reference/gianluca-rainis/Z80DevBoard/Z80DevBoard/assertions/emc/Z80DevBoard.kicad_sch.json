@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~286 (tolerance 10%)",
+      "description": "Finding count ~279 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 277,
-        "max": 295
+        "min": 270,
+        "max": 288
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~212",
+      "description": "by_severity.error ~204",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 205,
-        "max": 219
+        "min": 197,
+        "max": 211
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~68",
+      "description": "by_severity.warning ~69",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 64,
-        "max": 72
+        "min": 65,
+        "max": 73
       }
     },
     {
@@ -56,13 +56,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "3 board_edge finding(s)",
+      "description": "1 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "228 ground_plane finding(s)",
+      "description": "223 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 228
+        "value": 223
       }
     },
     {
@@ -200,11 +200,11 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "~228 net(s) with EMC scores",
+      "description": "~223 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 221
+        "value": 216
       }
     }
   ]

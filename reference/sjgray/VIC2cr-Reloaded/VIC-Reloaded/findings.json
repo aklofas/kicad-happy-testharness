@@ -34,12 +34,13 @@
           }
         },
         {
-          "description": "This is a VIC-20cr Commodore computer clone running entirely on a single +5V supply. No negative or other rails are used. The analyzer correctly reports only +5V and GND.",
+          "description": "This is a VIC-20cr Commodore computer clone running entirely on a single +5V supply. No negative or other rails are used. The analyzer correctly reports only +5V and GND. [re-anchored 2026-10-05 v2.3.0 regen: the text-label net `5V` is now classified as a rail by the PR #44 is_power_net_name widening, so power_rails reports +5V, 5V and GND — still a single 5 V supply]",
           "analyzer_section": "statistics",
           "check": {
             "path": "statistics.power_rails",
             "value": [
               "+5V",
+              "5V",
               "GND"
             ],
             "op": "equals"

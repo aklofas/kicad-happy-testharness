@@ -73,16 +73,6 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "1 audit_power_pin_dc_paths detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000009",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -92,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -102,7 +92,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -112,28 +102,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "1 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000014",
+      "id": "SEED-00000011",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

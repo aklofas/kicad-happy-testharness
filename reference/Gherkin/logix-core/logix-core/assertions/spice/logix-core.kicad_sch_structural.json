@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 decoupling simulation(s)",
+      "description": "Exactly 6 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -472,6 +472,16 @@
     },
     {
       "id": "STRUCT-00000047",
+      "description": "C54 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC54\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000048",
       "description": "R17 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -481,7 +491,7 @@
       }
     },
     {
-      "id": "STRUCT-00000048",
+      "id": "STRUCT-00000049",
       "description": "R18 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -491,7 +501,7 @@
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000050",
       "description": "C50 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -501,7 +511,7 @@
       }
     },
     {
-      "id": "STRUCT-00000050",
+      "id": "STRUCT-00000051",
       "description": "C60 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -511,7 +521,7 @@
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000052",
       "description": "C59 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -521,7 +531,7 @@
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000053",
       "description": "C61 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -531,7 +541,7 @@
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000054",
       "description": "C58 simulated as inrush",
       "check": {
         "path": "simulation_results",

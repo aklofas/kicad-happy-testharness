@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "11 decoupling finding(s)",
+      "description": "9 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 11
+        "value": 9
       }
     },
     {
@@ -243,6 +243,16 @@
     },
     {
       "id": "STRUCT-00000024",
+      "description": "U402 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU402\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
       "description": "C209 in EMC findings",
       "check": {
         "path": "findings",
@@ -252,23 +262,13 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "U203 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU203\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000026",
-      "description": "C204 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC204\\b"
       }
     },
     {
@@ -323,12 +323,12 @@
     },
     {
       "id": "STRUCT-00000032",
-      "description": "C208 in EMC findings",
+      "description": "C204 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC208\\b"
+        "pattern": "\\bC204\\b"
       }
     },
     {

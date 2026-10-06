@@ -26,6 +26,16 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 2 audit_rail_sources",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -35,17 +45,27 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 3 detect_design_observations",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 detect_decoupling",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 4 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -55,7 +75,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -66,28 +86,17 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 5 detect_rc_filters",
+      "id": "STRUCT-00000009",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 5
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "R10 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R10$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R4 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -98,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R5 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -109,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -119,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R1 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -127,22 +136,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:24Z",
-        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }
   ]

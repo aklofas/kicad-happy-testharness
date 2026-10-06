@@ -163,16 +163,6 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "1 audit_power_pin_dc_paths detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000017",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -182,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -192,8 +182,8 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "3 detect_design_observations detected",
+      "id": "SEED-00000018",
+      "description": "4 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -202,7 +192,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "5 detect_opamp_circuits detected",
       "check": {
         "path": "findings",
@@ -212,7 +202,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "All detect_opamp_circuits have reference present",
       "check": {
         "path": "findings",
@@ -223,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -233,7 +223,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000022",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -244,7 +234,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000023",
       "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -255,8 +245,24 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:07Z",
+        "tagged_at": "2026-10-05T07:26:46Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
+      }
+    },
+    {
+      "id": "SEED-00000024",
+      "description": "2 validate_voltage_levels detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:26:46Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },
     {

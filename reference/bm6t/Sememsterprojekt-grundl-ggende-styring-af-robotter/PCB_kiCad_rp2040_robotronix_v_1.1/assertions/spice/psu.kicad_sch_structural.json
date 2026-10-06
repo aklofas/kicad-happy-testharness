@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 3 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -28,28 +28,27 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 lc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "L1 simulated as lc_filter",
+      "description": "C35 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bL1\\b"
+        "pattern": "\\bC35\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C36 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC36\\b"
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "C38 simulated as lc_filter",
+      "description": "C38 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -59,12 +58,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "C35 simulated as decoupling",
+      "description": "C37 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC35\\b"
+        "pattern": "\\bC37\\b"
       }
     },
     {

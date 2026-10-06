@@ -53,13 +53,19 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
     if spice_enhanced:
         cmd.append("--spice-enhanced")
 
+    # A stale output from an earlier run must not stand in for this run's
+    # result: exit 1 means "critical findings" only if the analyzer actually
+    # (re)wrote the file (TH-054).
+    prev_mtime = output_json.stat().st_mtime_ns if output_json.exists() else None
     t0 = time.time()
     try:
         result = subprocess.run(cmd, capture_output=True, text=True,
                                 timeout=timeout)
         elapsed = time.time() - t0
         # Exit code 0 = success, 1 = critical findings (still valid output)
-        if result.returncode in (0, 1) and output_json.exists():
+        rewritten = (output_json.exists()
+                     and output_json.stat().st_mtime_ns != prev_mtime)
+        if result.returncode in (0, 1) and rewritten:
             with open(output_json) as f:
                 data = json.load(f)
             return 0, data.get("summary", {}), elapsed

@@ -93,6 +93,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "2 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "8 detect_label_aliases detected",
       "check": {
         "path": "findings",
@@ -102,7 +112,23 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
+      "description": "1 validate_pullups detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "PU-001",
+        "tagged_at": "2026-10-05T07:26:54Z",
+        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -111,16 +137,16 @@
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "Has 7 fuse(s)",
+      "id": "SEED-00000014",
+      "description": "Has 7 ic(s)",
       "check": {
-        "path": "statistics.component_types.fuse",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
         "value": 5
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "Has 7 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -129,7 +155,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "Has 12 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

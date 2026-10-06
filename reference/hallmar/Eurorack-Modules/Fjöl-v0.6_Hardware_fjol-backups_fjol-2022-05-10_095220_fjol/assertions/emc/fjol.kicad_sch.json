@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~169 (tolerance 10%)",
+      "description": "Finding count ~159 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 160,
-        "max": 178
+        "min": 151,
+        "max": 167
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~61",
+      "description": "by_severity.error ~63",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 57,
-        "max": 65
+        "min": 59,
+        "max": 67
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~85",
+      "description": "by_severity.warning ~73",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 80,
-        "max": 90
+        "min": 69,
+        "max": 77
       }
     },
     {
@@ -56,13 +56,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "12 board_edge finding(s)",
+      "description": "1 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 12
+        "value": 1
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "4 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -200,11 +200,11 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "~126 net(s) with EMC scores",
+      "description": "~120 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 119
+        "value": 114
       }
     }
   ]

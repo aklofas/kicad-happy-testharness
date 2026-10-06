@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 4 decoupling simulation(s)",
+      "description": "Exactly 6 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -483,6 +483,26 @@
     },
     {
       "id": "STRUCT-00000048",
+      "description": "C32 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC32\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000049",
+      "description": "C8 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000050",
       "description": "R5 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -492,7 +512,7 @@
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000051",
       "description": "R7 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -502,7 +522,7 @@
       }
     },
     {
-      "id": "STRUCT-00000050",
+      "id": "STRUCT-00000052",
       "description": "C14 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -512,7 +532,7 @@
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000053",
       "description": "C12 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -522,7 +542,7 @@
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000054",
       "description": "C13 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -532,7 +552,7 @@
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000055",
       "description": "C50 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -542,7 +562,7 @@
       }
     },
     {
-      "id": "STRUCT-00000054",
+      "id": "STRUCT-00000056",
       "description": "C39 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -552,7 +572,7 @@
       }
     },
     {
-      "id": "STRUCT-00000055",
+      "id": "STRUCT-00000057",
       "description": "C51 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -562,7 +582,7 @@
       }
     },
     {
-      "id": "STRUCT-00000056",
+      "id": "STRUCT-00000058",
       "description": "C64 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -572,7 +592,7 @@
       }
     },
     {
-      "id": "STRUCT-00000057",
+      "id": "STRUCT-00000059",
       "description": "C58 simulated as inrush",
       "check": {
         "path": "simulation_results",

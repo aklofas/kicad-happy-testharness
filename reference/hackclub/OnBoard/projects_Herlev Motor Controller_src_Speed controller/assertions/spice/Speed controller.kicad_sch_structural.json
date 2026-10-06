@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 3 decoupling simulation(s)",
+      "description": "Exactly 4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 5 transistor_circuit simulation(s)",
+      "description": "Exactly 3 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 5
+        "value": 3
       }
     },
     {
@@ -152,26 +152,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Q3 simulated as transistor_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Q4 simulated as transistor_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ4\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "Q5 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -181,7 +161,17 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
+      "description": "C1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "C10 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -191,7 +181,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -201,7 +191,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -211,7 +201,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "C4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -221,7 +211,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "C5 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -231,7 +221,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "C6 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -241,7 +231,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "Q6 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
@@ -251,7 +241,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "Q8 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
@@ -261,7 +251,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "C10 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -271,7 +261,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "C2 simulated as inrush",
       "check": {
         "path": "simulation_results",

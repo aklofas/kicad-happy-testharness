@@ -56,12 +56,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 audit_rail_sources",
+      "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -159,6 +159,27 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "Exactly 1 detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "DS1 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^DS1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",

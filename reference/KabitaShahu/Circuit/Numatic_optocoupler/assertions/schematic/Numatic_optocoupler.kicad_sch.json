@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "5 audit_esd_protection detected",
+      "description": "4 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -141,6 +141,16 @@
     },
     {
       "id": "SEED-00000014",
+      "description": "1 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -150,7 +160,17 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
+      "description": "4 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "1 detect_isolation_barriers detected",
       "check": {
         "path": "findings",
@@ -160,7 +180,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "1 detect_motor_drivers detected",
       "check": {
         "path": "findings",
@@ -170,7 +190,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000019",
       "description": "All detect_motor_drivers have driver_reference",
       "check": {
         "path": "findings",
@@ -181,7 +201,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "All detect_motor_drivers driver_type values are valid",
       "check": {
         "path": "findings",
@@ -193,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -202,7 +222,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

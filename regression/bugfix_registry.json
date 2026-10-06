@@ -1721,9 +1721,9 @@
           "path": "findings",
           "detector_filter": "detect_label_aliases",
           "op": "min_count",
-          "value": 7
+          "value": 6
         },
-        "description": "KH-299: at least 7 LB-001 label alias findings"
+        "description": "KH-299: at least 6 LB-001 label alias findings (was 7; the 4-sheet `5V` group is suppressed since PR #44 made `5V` a rail \u2014 v2.3.0 regen 2026-10-05)"
       }
     ]
   },
@@ -2589,9 +2589,9 @@
         "check": {
           "path": "trust_summary.total_findings",
           "op": "equals",
-          "value": 50
+          "value": 47
         },
-        "description": "KH-311: trust_summary.total_findings==50 (post-filter count, not pre-filter inflated value)"
+        "description": "KH-311: trust_summary.total_findings==47 (post-filter count, not pre-filter inflated value; re-anchored 50\u219247 at the v2.3.0 regen, invariant verified 47/47/47)"
       },
       {
         "repo": "bluepylons/A-Thinkpad-USB-keyboard",
@@ -2601,9 +2601,9 @@
         "check": {
           "path": "summary.total_findings",
           "op": "equals",
-          "value": 50
+          "value": 47
         },
-        "description": "KH-311: summary.total_findings==50 (matches trust_summary and len(findings) \u2014 invariant enforced)"
+        "description": "KH-311: summary.total_findings==47 (matches trust_summary and len(findings) \u2014 invariant enforced; re-anchored 50\u219247 at the v2.3.0 regen)"
       },
       {
         "repo": "bluepylons/A-Thinkpad-USB-keyboard",
@@ -2636,9 +2636,9 @@
         "description": "KH-313: EMC summary block exists (proves analyzer ran without AttributeError crash in check_inductor_leakage)"
       },
       {
-        "repo": "OLIMEX/DIY-LAPTOP",
-        "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
-        "source_file": "TERES_PCB1-A64-MAIN_Rev.C.sch",
+        "repo": "CogniPilot/spinali_mcxn_t1_hub",
+        "project": "kicad_spinali_mcxn_t1_hub",
+        "source_file": "spinali_mcxn_t1_hub.kicad_sch",
         "analyzer_type": "emc",
         "check": {
           "path": "findings",
@@ -2646,19 +2646,7 @@
           "value": 1,
           "detector_filter": "emc_inductor_leakage"
         },
-        "description": "KH-313: emc_inductor_leakage produced >= 1 finding (proves the detector executed past the bare-string crash point)"
-      },
-      {
-        "repo": "OLIMEX/DIY-LAPTOP",
-        "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
-        "source_file": "TERES_PCB1-A64-MAIN_Rev.C.sch",
-        "analyzer_type": "emc",
-        "check": {
-          "path": "summary.categories_checked",
-          "op": "equals",
-          "value": 10
-        },
-        "description": "KH-313: all 10 EMC categories ran (no early exit from inductor_leakage crash)"
+        "description": "KH-313: emc_inductor_leakage produced >= 1 finding on a PCB-paired board with an RF chain (ML-001 x4 at v2.3.0 AND at v2.3.1 b008afa; re-anchored twice: from OLIMEX TERES at the v2.3.0 regen, then from fuad1502/open-running-watch at the v2.3.1 gate where KH-414 filled its inductor MPN and the shielding lookup suppressed all 10 ML-001 \u2014 TERES has no PCB pairing and 0 rf_chains, so the detector never reached its crash path there, TH-056)"
       }
     ]
   },

@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~145 (tolerance 10%)",
+      "description": "Finding count ~146 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 137,
-        "max": 153
+        "min": 138,
+        "max": 154
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~120",
+      "description": "by_severity.error ~121",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
         "min": 114,
-        "max": 126
+        "max": 128
       }
     },
     {
@@ -67,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 decoupling finding(s)",
+      "description": "4 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 4
       }
     },
     {

@@ -66,12 +66,12 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 12 audit_power_pin_dc_paths",
+      "description": "Exactly 6 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 12
+        "value": 6
       }
     },
     {
@@ -127,22 +127,22 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 5 detect_decoupling",
+      "description": "Exactly 7 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 5
+        "value": 7
       }
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 14 detect_design_observations",
+      "description": "Exactly 16 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 14
+        "value": 16
       }
     },
     {
@@ -576,8 +576,24 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-09-01T17:46:27Z",
+        "tagged_at": "2026-10-05T07:27:06Z",
         "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
+      }
+    },
+    {
+      "id": "STRUCT-00000055",
+      "description": "Exactly 2 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 2
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:27:06Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }
   ]

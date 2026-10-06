@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "2 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 5
       }
     },
     {
@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "15 ground_plane finding(s)",
+      "description": "1 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 15
+        "value": 1
       }
     },
     {
@@ -114,12 +114,12 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Rule DC-001 present",
+      "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-001$"
+        "pattern": "^DC\\-002$"
       }
     },
     {
@@ -194,6 +194,16 @@
     },
     {
       "id": "STRUCT-00000019",
+      "description": "U501 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU501\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
       "description": "U404 in EMC findings",
       "check": {
         "path": "findings",
@@ -203,43 +213,33 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
-      "description": "C101 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC101\\b"
-      }
-    },
-    {
       "id": "STRUCT-00000021",
-      "description": "C108 in EMC findings",
+      "description": "U403 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC108\\b"
+        "pattern": "\\bU403\\b"
       }
     },
     {
       "id": "STRUCT-00000022",
+      "description": "U402 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU402\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
       "description": "U401 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU401\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
-      "description": "C701 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC701\\b"
       }
     },
     {

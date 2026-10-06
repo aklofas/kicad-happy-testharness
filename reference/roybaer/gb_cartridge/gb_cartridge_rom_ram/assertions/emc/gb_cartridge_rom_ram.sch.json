@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~46 (tolerance 10%)",
+      "description": "Finding count ~40 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 41,
-        "max": 51
+        "min": 36,
+        "max": 44
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.warning ~35",
+      "description": "by_severity.warning ~29",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 26,
+        "max": 32
       }
     },
     {
@@ -36,23 +36,23 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "EMC risk score ~68.5 (+-10)",
+      "description": "EMC risk score ~77.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 58.5,
-        "max": 78.5
+        "min": 67.5,
+        "max": 87.5
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "4 board_edge finding(s)",
+      "description": "1 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 4
+        "value": 1
       }
     },
     {
@@ -79,13 +79,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "12 ground_plane finding(s)",
+      "description": "9 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 12
+        "value": 9
       }
     },
     {
@@ -157,11 +157,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~25 net(s) with EMC scores",
+      "description": "~24 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 22
+        "value": 21
       }
     }
   ]

@@ -6,52 +6,52 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~299 (tolerance 10%)",
+      "description": "Finding count ~275 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 290,
-        "max": 308
+        "min": 266,
+        "max": 284
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~145",
+      "description": "by_severity.error ~135",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 137,
-        "max": 153
+        "min": 128,
+        "max": 142
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~110",
+      "description": "by_severity.warning ~98",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 104,
-        "max": 116
+        "min": 93,
+        "max": 103
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~44",
+      "description": "by_severity.info ~42",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 39,
-        "max": 49
+        "min": 37,
+        "max": 47
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~17.5 (+-10)",
+      "description": "EMC risk score ~0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 7.5,
-        "max": 27.5
+        "min": 0,
+        "max": 10
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "3 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 5
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "202 ground_plane finding(s)",
+      "description": "176 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 202
+        "value": 176
       }
     },
     {
@@ -222,11 +222,11 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "~208 net(s) with EMC scores",
+      "description": "~188 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 201
+        "value": 178
       }
     }
   ]

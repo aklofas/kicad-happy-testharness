@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 decoupling simulation(s)",
+      "description": "Exactly 8 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 8
       }
     },
     {
@@ -543,6 +543,46 @@
     },
     {
       "id": "STRUCT-00000054",
+      "description": "C12_TD1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC12_TD1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000055",
+      "description": "C8_TD1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC8_TD1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000056",
+      "description": "C12_TDV1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC12_TDV1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000057",
+      "description": "C8_TDV1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC8_TDV1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000058",
       "description": "C1_VARB1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -552,7 +592,7 @@
       }
     },
     {
-      "id": "STRUCT-00000055",
+      "id": "STRUCT-00000059",
       "description": "C2_VARB1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -562,7 +602,17 @@
       }
     },
     {
-      "id": "STRUCT-00000056",
+      "id": "STRUCT-00000060",
+      "description": "C3_LA1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC3_LA1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000061",
       "description": "C4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -572,7 +622,7 @@
       }
     },
     {
-      "id": "STRUCT-00000057",
+      "id": "STRUCT-00000062",
       "description": "C8 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -582,7 +632,7 @@
       }
     },
     {
-      "id": "STRUCT-00000058",
+      "id": "STRUCT-00000063",
       "description": "C1_LP1 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -592,7 +642,7 @@
       }
     },
     {
-      "id": "STRUCT-00000059",
+      "id": "STRUCT-00000064",
       "description": "L1_LP1 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -602,7 +652,7 @@
       }
     },
     {
-      "id": "STRUCT-00000060",
+      "id": "STRUCT-00000065",
       "description": "C2_LP1 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -612,7 +662,7 @@
       }
     },
     {
-      "id": "STRUCT-00000061",
+      "id": "STRUCT-00000066",
       "description": "C3_LP1 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -622,7 +672,7 @@
       }
     },
     {
-      "id": "STRUCT-00000062",
+      "id": "STRUCT-00000067",
       "description": "L2_LP1 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -632,7 +682,7 @@
       }
     },
     {
-      "id": "STRUCT-00000063",
+      "id": "STRUCT-00000068",
       "description": "L11 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -642,7 +692,7 @@
       }
     },
     {
-      "id": "STRUCT-00000064",
+      "id": "STRUCT-00000069",
       "description": "L12 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -652,7 +702,7 @@
       }
     },
     {
-      "id": "STRUCT-00000065",
+      "id": "STRUCT-00000070",
       "description": "L1_HP2 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -662,7 +712,7 @@
       }
     },
     {
-      "id": "STRUCT-00000066",
+      "id": "STRUCT-00000071",
       "description": "L2_HP2 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -672,7 +722,7 @@
       }
     },
     {
-      "id": "STRUCT-00000067",
+      "id": "STRUCT-00000072",
       "description": "C1_HP2 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -682,7 +732,7 @@
       }
     },
     {
-      "id": "STRUCT-00000068",
+      "id": "STRUCT-00000073",
       "description": "C2_HP2 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -692,7 +742,7 @@
       }
     },
     {
-      "id": "STRUCT-00000069",
+      "id": "STRUCT-00000074",
       "description": "C3_HP2 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -702,7 +752,7 @@
       }
     },
     {
-      "id": "STRUCT-00000070",
+      "id": "STRUCT-00000075",
       "description": "L3 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -712,7 +762,7 @@
       }
     },
     {
-      "id": "STRUCT-00000071",
+      "id": "STRUCT-00000076",
       "description": "L4 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -722,7 +772,7 @@
       }
     },
     {
-      "id": "STRUCT-00000072",
+      "id": "STRUCT-00000077",
       "description": "L5 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -732,7 +782,7 @@
       }
     },
     {
-      "id": "STRUCT-00000073",
+      "id": "STRUCT-00000078",
       "description": "L6 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -742,7 +792,7 @@
       }
     },
     {
-      "id": "STRUCT-00000074",
+      "id": "STRUCT-00000079",
       "description": "L8 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -752,7 +802,7 @@
       }
     },
     {
-      "id": "STRUCT-00000075",
+      "id": "STRUCT-00000080",
       "description": "L7 simulated as rf_matching",
       "check": {
         "path": "simulation_results",

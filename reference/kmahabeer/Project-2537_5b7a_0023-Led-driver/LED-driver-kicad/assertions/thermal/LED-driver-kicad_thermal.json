@@ -16,16 +16,26 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.info ~5",
+      "description": "by_severity.error ~1",
       "check": {
-        "path": "summary.by_severity.info",
+        "path": "summary.by_severity.error",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000003",
+      "description": "by_severity.info ~4",
+      "check": {
+        "path": "summary.by_severity.info",
+        "op": "range",
+        "min": 3,
+        "max": 5
+      }
+    },
+    {
+      "id": "SEED-00000004",
       "description": "Components analyzed ~2 (tolerance 10%)",
       "check": {
         "path": "summary.components_analyzed",
@@ -35,13 +45,13 @@
       }
     },
     {
-      "id": "SEED-00000004",
-      "description": "Thermal score ~100 (+-10)",
+      "id": "SEED-00000005",
+      "description": "Thermal score ~85 (+-10)",
       "check": {
         "path": "summary.thermal_score",
         "op": "range",
-        "min": 90,
-        "max": 100
+        "min": 75,
+        "max": 95
       }
     }
   ]

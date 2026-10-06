@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "3 audit_power_pin_dc_paths detected",
+      "description": "2 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
@@ -200,6 +200,22 @@
     },
     {
       "id": "SEED-00000020",
+      "description": "1 validate_voltage_levels detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:26:50Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
+      }
+    },
+    {
+      "id": "SEED-00000021",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -208,7 +224,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -217,7 +233,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "Has 7 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~360 (tolerance 10%)",
+      "description": "Finding count ~357 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 349,
-        "max": 371
+        "min": 346,
+        "max": 368
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~256",
+      "description": "by_severity.error ~253",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 248,
-        "max": 264
+        "min": 245,
+        "max": 261
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~16.0 (+-10)",
+      "description": "EMC risk score ~19.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 6.0,
-        "max": 26.0
+        "min": 9.0,
+        "max": 29.0
       }
     },
     {
@@ -67,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "4 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 2
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "254 ground_plane finding(s)",
+      "description": "253 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 254
+        "value": 253
       }
     },
     {

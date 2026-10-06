@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "2 board_edge finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^board_edge$",
-        "value": 2
+        "pattern": "^decoupling$",
+        "value": 1
       }
     },
     {
@@ -83,12 +83,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Rule BE-001 present",
+      "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^BE\\-001$"
+        "pattern": "^DC\\-002$"
       }
     },
     {
@@ -163,6 +163,16 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "U1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
@@ -172,7 +182,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
@@ -182,7 +192,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "J5 in EMC findings",
       "check": {
         "path": "findings",
@@ -192,43 +202,13 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "U3 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
-      "description": "C15 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC15\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
-      "description": "C16 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC16\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
-      "description": "C17 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC17\\b"
       }
     }
   ]

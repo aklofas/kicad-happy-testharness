@@ -338,6 +338,23 @@ new findings are correct, then re-seed.
 python3 run/run_{type}.py --jobs 16
 ```
 
+**After every runner pass, prove the outputs were actually rewritten** — a
+runner's PASS count is NOT evidence (TH-054: `run_emc` reported 36,462 PASS
+twice while rewriting zero files, because an exit-1 analyzer crash was masked
+by a pre-existing stale output). Before the pass, touch a marker file; after
+it, compare:
+
+```bash
+find results/outputs/{type} -name '*.json' ! -name capability_mode.json ! -name '_*' -newer <marker> | wc -l   # must ≈ unit count
+```
+
+Any shortfall beyond the known timeout class means the analyzer is failing
+silently — run it by hand on one unit (the runner's exact command) and read
+stderr before doing anything else. For a release regen, also run the chain
+oracle (`results/v230_regen/chain_oracle.py` pattern): the fresh corpus
+outputs for the gate's `--full` chain projects must equal the chain's
+candidate tree modulo inputs/capability_mode_ref/elapsed_s.
+
 ### 4c. Snapshot new baselines
 
 ```bash
@@ -1578,8 +1595,13 @@ No critical-risk unverified constants. No untagged equations in changed files.
 ### 16g. Schema inventory refresh
 
 ```bash
-python3 validate/validate_schema.py scan
+python3 validate/validate_schema.py scan      # WRITES reference/schema_inventory.json
+python3 validate/validate_schema.py diff      # must print NO SCHEMA CHANGES afterwards
 ```
+
+`auto-seed` only REPORTS new fields (it does not refresh the inventory) — the
+2026-09-01 and 2026-10-05 regens re-listed the same ~90 "new" fields until
+`scan` was run.
 
 Refresh the schema inventory to capture any new output fields introduced since
 the last release. Review for unexpected field additions or removals.
@@ -1686,15 +1708,22 @@ python3 tools/generate_catalog.py                    # refresh catalog first
 python3 regression/run_checks.py --json > /tmp/run_checks_release.json  # measured pass rate
 python3 tools/generate_validation_md.py \
   --check-results /tmp/run_checks_release.json \
-  --gate-rollup results/v14_gate/rollup_rc_{rc-version}_{short-sha}_full.json \
+  --gate-rollup results/{label}_gate/rollup_{label}_full.json \
+  --gate-label 'the vX.Y.Z batch gate (`<base>` → `<tip>`, harness `results/{label}_gate/adjudication_{label}.md`)' \
+  --gate-verdict 'CLEAN under the batch budget — <one-line summary from the adjudication record>' \
   --output $KICAD_HAPPY_DIR/VALIDATION.md
 ```
 
-The `--check-results` flag adds a measured-pass-rate caption to the
-regression-assertions section. The `--gate-rollup` flag injects a
-`### v1.4 Layer 1 regression gate` section citing the corpus-wide CLEAN
-verdict from step 16k. Without these flags the script still works but
-falls back to hardcoded "100%" claims with no gate section.
+`--check-results` makes the measured `run_checks --json` total AND the
+per-prefix breakdown authoritative (the catalog's per-repo sums are only the
+fallback when the flag is absent). `--gate-rollup` injects a release-agnostic
+`### Layer 1 regression gate (pre-tag requirement)` section; `--gate-label`
+names the run and `--gate-verdict` is REQUIRED whenever the rollup is not
+strict-clean (a budgeted gate's verdict lives in its adjudication record — the
+generator refuses to print a bare FAIL for an adjudicated-CLEAN budgeted gate).
+Output-file counts exclude the `capability_mode.json` sidecars. No manual
+post-processing of the generated file should ever be needed; if it is, fix the
+generator (tests: `tests/test_generate_validation_md.py`).
 
 Review the generated file — check assertion counts, issue ranges, and detector
 coverage look correct. Commit in kicad-happy (do NOT push — user manages that).

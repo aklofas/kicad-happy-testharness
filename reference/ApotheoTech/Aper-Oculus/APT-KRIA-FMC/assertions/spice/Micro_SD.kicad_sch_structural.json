@@ -6,6 +6,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 3 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -13,17 +24,6 @@
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
         "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 1 transistor_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
-        "value": 1
       }
     },
     {
@@ -78,12 +78,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Q9 simulated as transistor_circuit",
+      "description": "C85 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ9\\b"
+        "pattern": "\\bC85\\b"
       }
     }
   ]

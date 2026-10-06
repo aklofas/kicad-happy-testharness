@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "6 board_edge finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^board_edge$",
-        "value": 6
+        "pattern": "^decoupling$",
+        "value": 1
       }
     },
     {
@@ -83,12 +83,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Rule BE-001 present",
+      "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^BE\\-001$"
+        "pattern": "^DC\\-002$"
       }
     },
     {
@@ -153,22 +153,22 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "J18 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJ18\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "J18 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ18\\b"
       }
     }
   ]

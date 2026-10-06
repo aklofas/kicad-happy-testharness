@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling simulation(s)",
+      "description": "Exactly 3 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -442,6 +442,16 @@
     },
     {
       "id": "STRUCT-00000044",
+      "description": "C402 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC402\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000045",
       "description": "C805 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -451,7 +461,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000046",
       "description": "U201 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -461,23 +471,13 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
-      "description": "U902 simulated as rf_chain",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU902\\b"
-      }
-    },
-    {
       "id": "STRUCT-00000047",
-      "description": "U801 simulated as rf_chain",
+      "description": "U204 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU801\\b"
+        "pattern": "\\bU204\\b"
       }
     },
     {
@@ -492,6 +492,16 @@
     },
     {
       "id": "STRUCT-00000049",
+      "description": "U801 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU801\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000050",
       "description": "U901 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -501,13 +511,13 @@
       }
     },
     {
-      "id": "STRUCT-00000050",
-      "description": "U204 simulated as rf_chain",
+      "id": "STRUCT-00000051",
+      "description": "U902 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU204\\b"
+        "pattern": "\\bU902\\b"
       }
     }
   ]

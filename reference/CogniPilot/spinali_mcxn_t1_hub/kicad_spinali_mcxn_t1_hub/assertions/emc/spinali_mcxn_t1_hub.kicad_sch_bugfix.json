@@ -1,0 +1,20 @@
+{
+  "file_pattern": "spinali_mcxn_t1_hub.kicad_sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_bugfix_assertions.py",
+  "evidence_source": "human_review",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-313-02",
+      "description": "KH-313: emc_inductor_leakage produced >= 1 finding on a PCB-paired board with an RF chain (ML-001 x4 at v2.3.0 AND at v2.3.1 b008afa; re-anchored twice: from OLIMEX TERES at the v2.3.0 regen, then from fuad1502/open-running-watch at the v2.3.1 gate where KH-414 filled its inductor MPN and the shielding lookup suppressed all 10 ML-001 \u2014 TERES has no PCB pairing and 0 rf_chains, so the detector never reached its crash path there, TH-056)",
+      "issue": "KH-313",
+      "fix_type": "parser_fix",
+      "check": {
+        "path": "findings",
+        "op": "min_count",
+        "value": 1,
+        "detector_filter": "emc_inductor_leakage"
+      }
+    }
+  ]
+}

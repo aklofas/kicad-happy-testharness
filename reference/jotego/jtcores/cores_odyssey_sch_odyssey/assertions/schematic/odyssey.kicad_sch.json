@@ -73,7 +73,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "1 audit_rail_sources detected",
+      "description": "9 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -123,6 +123,22 @@
     },
     {
       "id": "SEED-00000013",
+      "description": "6 validate_voltage_levels detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:26:54Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 18 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

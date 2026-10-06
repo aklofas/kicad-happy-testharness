@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 7 decoupling simulation(s)",
+      "description": "Exactly 8 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -290,6 +290,16 @@
     },
     {
       "id": "STRUCT-00000029",
+      "description": "C6 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
       "description": "C19 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -299,7 +309,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000031",
       "description": "C18 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -309,7 +319,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000032",
       "description": "C20 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -319,7 +329,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000033",
       "description": "C21 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -329,7 +339,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000034",
       "description": "C22 simulated as inrush",
       "check": {
         "path": "simulation_results",

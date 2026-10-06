@@ -153,16 +153,6 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "2 audit_power_pin_dc_paths detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
       "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -172,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -182,8 +172,18 @@
       }
     },
     {
+      "id": "SEED-00000017",
+      "description": "2 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
       "id": "SEED-00000018",
-      "description": "4 detect_design_observations detected",
+      "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -214,27 +214,6 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "1 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000023",
       "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -244,7 +223,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000022",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -255,7 +234,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000023",
       "description": "2 validate_feedback_stability detected",
       "check": {
         "path": "findings",
@@ -266,12 +245,28 @@
       "schema_era": {
         "era": "v1.4",
         "tagged_by_rule": "FS-001",
-        "tagged_at": "2026-09-01T17:46:09Z",
+        "tagged_at": "2026-10-05T07:26:48Z",
         "tagged_reason": "datasheet-gated on regulator load step + bandwidth (FS-001)"
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000024",
+      "description": "1 validate_led_resistors detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_led_resistors",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "LR-001",
+        "tagged_at": "2026-10-05T07:26:48Z",
+        "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
+      }
+    },
+    {
+      "id": "SEED-00000025",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

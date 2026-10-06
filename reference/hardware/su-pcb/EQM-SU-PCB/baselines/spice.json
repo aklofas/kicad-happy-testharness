@@ -1,7 +1,7 @@
 {
   "Digital-Sensors.kicad_sch.json": {
     "by_type": {
-      "rc_filter": 2
+      "decoupling": 2
     },
     "fail": 0,
     "pass": 2,
@@ -11,29 +11,31 @@
     "warn": 0
   },
   "Dosimeter.kicad_sch.json": {
-    "by_type": {},
+    "by_type": {
+      "decoupling": 2
+    },
     "fail": 0,
-    "pass": 0,
-    "pass_rate": 0,
+    "pass": 2,
+    "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 0,
+    "total_sims": 2,
     "warn": 0
   },
   "EQM-SU-PCB.kicad_sch.json": {
     "by_type": {
       "current_sense": 1,
-      "decoupling": 2,
+      "decoupling": 3,
       "lc_filter": 1,
       "protection_device": 1,
-      "rc_filter": 17,
+      "rc_filter": 15,
       "transistor_circuit": 6,
       "voltage_divider": 33
     },
     "fail": 0,
-    "pass": 42,
-    "pass_rate": 68.9,
+    "pass": 41,
+    "pass_rate": 68.3,
     "skip": 18,
-    "total_sims": 61,
+    "total_sims": 60,
     "warn": 1
   },
   "Imaging.kicad_sch.json": {
@@ -47,24 +49,23 @@
   },
   "LCL.kicad_sch.json": {
     "by_type": {
-      "current_sense": 3,
-      "rc_filter": 8,
-      "snubber_circuit": 2,
+      "decoupling": 3,
       "transistor_circuit": 6,
       "voltage_divider": 3
     },
     "fail": 0,
-    "pass": 20,
-    "pass_rate": 90.9,
+    "pass": 12,
+    "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 22,
-    "warn": 2
+    "total_sims": 12,
+    "warn": 0
   },
   "MCU.kicad_sch.json": {
     "by_type": {
+      "decoupling": 2,
       "lc_filter": 1,
       "protection_device": 1,
-      "rc_filter": 5,
+      "rc_filter": 3,
       "voltage_divider": 1
     },
     "fail": 0,
@@ -88,26 +89,27 @@
   "Pump.kicad_sch.json": {
     "by_type": {
       "current_sense": 1,
-      "rc_filter": 1,
+      "decoupling": 2,
       "voltage_divider": 1
     },
     "fail": 0,
-    "pass": 3,
+    "pass": 4,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 3,
+    "total_sims": 4,
     "warn": 0
   },
   "SU-PCB-OLD_LCLs.kicad_sch.json": {
     "by_type": {
-      "rc_filter": 8,
+      "decoupling": 1,
+      "rc_filter": 6,
       "voltage_divider": 6
     },
     "fail": 0,
-    "pass": 14,
+    "pass": 13,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 14,
+    "total_sims": 13,
     "warn": 0
   },
   "SU-PCB-OLD_SUcameraAdaptor_SUcameraAdaptor_SUcameraAdaptor.sch.json": {
@@ -175,14 +177,13 @@
   },
   "SU-PCB-OLD_current_sensing.kicad_sch.json": {
     "by_type": {
-      "current_sense": 1,
       "rc_filter": 1
     },
     "fail": 0,
-    "pass": 2,
+    "pass": 1,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 2,
+    "total_sims": 1,
     "warn": 0
   },
   "SU-PCB-OLD_flow_pump_driver.kicad_sch.json": {
@@ -214,7 +215,8 @@
   },
   "SU-PCB-OLD_kicad5_LCLs.sch.json": {
     "by_type": {
-      "rc_filter": 15,
+      "decoupling": 1,
+      "rc_filter": 14,
       "voltage_divider": 14
     },
     "fail": 0,
@@ -318,34 +320,38 @@
   },
   "SU-PCB-OLD_kicad5_mcu.sch.json": {
     "by_type": {
-      "rc_filter": 5
+      "decoupling": 1,
+      "rc_filter": 1
     },
     "fail": 0,
-    "pass": 5,
+    "pass": 2,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 5,
+    "total_sims": 2,
     "warn": 0
   },
   "SU-PCB-OLD_kicad5_sensors.sch.json": {
-    "by_type": {},
+    "by_type": {
+      "decoupling": 1
+    },
     "fail": 0,
     "pass": 0,
-    "pass_rate": 0,
+    "pass_rate": 0.0,
     "skip": 0,
-    "total_sims": 0,
-    "warn": 0
+    "total_sims": 1,
+    "warn": 1
   },
   "SU-PCB-OLD_kicad5_su-pcb.sch.json": {
     "by_type": {
-      "rc_filter": 56,
+      "decoupling": 2,
+      "rc_filter": 21,
       "voltage_divider": 14
     },
     "fail": 0,
-    "pass": 66,
-    "pass_rate": 94.3,
+    "pass": 33,
+    "pass_rate": 89.2,
     "skip": 4,
-    "total_sims": 70,
+    "total_sims": 37,
     "warn": 0
   },
   "SU-PCB-OLD_kicad5_usb_fs_downstream.sch.json": {
@@ -368,28 +374,30 @@
   },
   "SU-PCB-OLD_mcu.kicad_sch.json": {
     "by_type": {
-      "lc_filter": 1,
-      "rc_filter": 4
+      "decoupling": 1,
+      "lc_filter": 1
     },
     "fail": 0,
-    "pass": 4,
-    "pass_rate": 80.0,
+    "pass": 1,
+    "pass_rate": 50.0,
     "skip": 0,
-    "total_sims": 5,
+    "total_sims": 2,
     "warn": 1
   },
   "SU-PCB-OLD_sensors.kicad_sch.json": {
-    "by_type": {},
+    "by_type": {
+      "decoupling": 1
+    },
     "fail": 0,
     "pass": 0,
-    "pass_rate": 0,
+    "pass_rate": 0.0,
     "skip": 0,
-    "total_sims": 0,
-    "warn": 0
+    "total_sims": 1,
+    "warn": 1
   },
   "SU-PCB-OLD_su-pcb.kicad_sch.json": {
     "by_type": {
-      "current_sense": 1,
+      "decoupling": 1,
       "lc_filter": 1,
       "rc_filter": 10,
       "voltage_divider": 6
@@ -423,22 +431,14 @@
   },
   "Valves.kicad_sch.json": {
     "by_type": {
+      "decoupling": 1,
       "rc_filter": 8
     },
     "fail": 0,
-    "pass": 8,
+    "pass": 9,
     "pass_rate": 100.0,
     "skip": 0,
-    "total_sims": 8,
-    "warn": 0
-  },
-  "capability_mode.json": {
-    "by_type": {},
-    "fail": 0,
-    "pass": 0,
-    "pass_rate": 0,
-    "skip": 0,
-    "total_sims": 0,
+    "total_sims": 9,
     "warn": 0
   }
 }

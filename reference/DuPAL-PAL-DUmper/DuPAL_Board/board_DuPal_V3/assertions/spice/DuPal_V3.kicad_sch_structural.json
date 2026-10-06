@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling simulation(s)",
+      "description": "Exactly 3 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -849,6 +849,26 @@
     },
     {
       "id": "STRUCT-00000085",
+      "description": "C2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000086",
+      "description": "C1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000087",
       "description": "C4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -858,7 +878,7 @@
       }
     },
     {
-      "id": "STRUCT-00000086",
+      "id": "STRUCT-00000088",
       "description": "C7 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -868,7 +888,7 @@
       }
     },
     {
-      "id": "STRUCT-00000087",
+      "id": "STRUCT-00000089",
       "description": "C12 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -878,7 +898,7 @@
       }
     },
     {
-      "id": "STRUCT-00000088",
+      "id": "STRUCT-00000090",
       "description": "C6 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -888,7 +908,7 @@
       }
     },
     {
-      "id": "STRUCT-00000089",
+      "id": "STRUCT-00000091",
       "description": "C10 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -898,7 +918,7 @@
       }
     },
     {
-      "id": "STRUCT-00000090",
+      "id": "STRUCT-00000092",
       "description": "C14 simulated as decoupling",
       "check": {
         "path": "simulation_results",

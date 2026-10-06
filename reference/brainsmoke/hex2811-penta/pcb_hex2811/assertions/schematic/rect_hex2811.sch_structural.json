@@ -16,12 +16,12 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 6 audit_esd_protection",
+      "description": "Exactly 5 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -77,20 +77,20 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 4 detect_design_observations",
+      "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 1 detect_label_aliases",
+      "description": "Exactly 1 detect_shorted_two_pin_components",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_label_aliases",
+        "detector_filter": "detect_shorted_two_pin_components",
         "op": "equals",
         "value": 1
       }
@@ -103,6 +103,22 @@
         "detector_filter": "validate_usb_bus",
         "op": "equals",
         "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Exactly 14 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 14
+      },
+      "schema_era": {
+        "era": "v1.4",
+        "tagged_by_rule": "VM-001",
+        "tagged_at": "2026-10-05T07:27:04Z",
+        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }
   ]

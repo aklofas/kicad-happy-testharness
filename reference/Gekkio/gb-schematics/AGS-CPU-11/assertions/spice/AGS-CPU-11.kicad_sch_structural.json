@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 9 decoupling simulation(s)",
+      "description": "Exactly 10 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 9
+        "value": 10
       }
     },
     {
@@ -742,6 +742,16 @@
     },
     {
       "id": "STRUCT-00000074",
+      "description": "C71 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC71\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000075",
       "description": "C75 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -751,7 +761,7 @@
       }
     },
     {
-      "id": "STRUCT-00000075",
+      "id": "STRUCT-00000076",
       "description": "C77 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -761,7 +771,7 @@
       }
     },
     {
-      "id": "STRUCT-00000076",
+      "id": "STRUCT-00000077",
       "description": "R25 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -771,7 +781,7 @@
       }
     },
     {
-      "id": "STRUCT-00000077",
+      "id": "STRUCT-00000078",
       "description": "R26 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",

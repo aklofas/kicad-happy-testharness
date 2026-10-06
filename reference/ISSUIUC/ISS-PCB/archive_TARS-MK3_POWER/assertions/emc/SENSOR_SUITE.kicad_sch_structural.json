@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -61,12 +61,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Rule DC-001 present",
+      "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^DC\\-001$"
+        "pattern": "^DC\\-002$"
       }
     },
     {
@@ -131,22 +131,12 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "C105 in EMC findings",
+      "description": "U8001 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC105\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "C102 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC102\\b"
+        "pattern": "\\bU8001\\b"
       }
     }
   ]

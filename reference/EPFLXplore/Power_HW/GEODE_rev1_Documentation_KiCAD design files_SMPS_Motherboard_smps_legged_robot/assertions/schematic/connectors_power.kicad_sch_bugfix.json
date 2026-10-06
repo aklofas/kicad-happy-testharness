@@ -14,6 +14,27 @@
         "op": "equals",
         "value": 72.7
       }
+    },
+    {
+      "id": "BUGFIX-KH-228-01",
+      "description": "KH-228: connectors_power.kicad_sch has hierarchy_warning set (post-fix detect_sub_sheet identifies it via .kicad_pro stem mismatch / tier-3 strategy). Pre-fix this file lacked hierarchical_label so detect_sub_sheet missed it and hierarchy_warning stayed empty (34% rate)",
+      "issue": "KH-228",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "hierarchy_warning",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-309-01",
+      "description": "KH-309: Power_HW connectors_power trust_level='high' (pre-fix every schematic was pinned to 'low' because raw certification dicts lacked confidence/evidence_source fields)",
+      "issue": "KH-309",
+      "fix_type": "data_fix",
+      "check": {
+        "path": "trust_summary.trust_level",
+        "op": "equals",
+        "value": "high"
+      }
     }
   ]
 }

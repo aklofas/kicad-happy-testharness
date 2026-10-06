@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 5 decoupling simulation(s)",
+      "description": "Exactly 6 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -1241,6 +1241,16 @@
     },
     {
       "id": "STRUCT-00000124",
+      "description": "C56 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC56\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000125",
       "description": "R41 simulated as bms_balance",
       "check": {
         "path": "simulation_results",

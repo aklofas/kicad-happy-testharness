@@ -46,12 +46,12 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 6 audit_power_pin_dc_paths",
+      "description": "Exactly 2 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 6
+        "value": 2
       }
     },
     {
@@ -86,22 +86,22 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 detect_decoupling",
+      "description": "Exactly 5 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 2
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 4 detect_design_observations",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 8
       }
     },
     {
@@ -116,6 +116,38 @@
     },
     {
       "id": "STRUCT-00000012",
+      "description": "Exactly 2 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "U201 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U201$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "U202 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U202$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -125,7 +157,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000016",
       "description": "R208 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -136,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000017",
       "description": "R210 in detect_voltage_dividers",
       "check": {
         "path": "findings",
