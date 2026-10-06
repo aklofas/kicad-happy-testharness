@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-06 later (SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)
+Last updated: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,25 @@ Last updated: 2026-10-06 later (SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pr
 ---
 
 ## Completed batches
+
+### v2.3.1 corpus regen `78b8f02`→`0684046` CLEAN under the three-gate budget; corpus now tracks v2.3.1; TH-059 + KH-442 filed (SPICE environment drift); NOTHING COMMITTED (2026-10-06 later)
+
+Ship handoff (v2.3.1 live, origin/main `0684046`, CI pin fc7a074fc7e;
+analyzer identical to gate-clean `ef6d55c`). Before-baseline = v2.3.0 ledger
+item-for-item. Six runners with per-pass rewritten-output audit (0 stale
+manifest units for every type — TH-054 lesson applied); chain oracle vs the
+soak gate's ef6d55c `--full` chain: 300/300 sch + thermal, 292/292 non-timeout
+pcb + emc identical. After-check 338 fails: KH-414 SS/DS 250 (24 repos),
+KH-420 timeout-recovery boards 14 (68040pc GP-001 173→67 etc., 6 boards back
+from the 120 s cap), KH-414 EMC shielding 2, SPICE environment drift 21 / 12
+repos (live DigiKey → behavioral opamp model → −520 dB warn; same at a fresh
+v2.3.0 run → **TH-059** batch SPICE hermeticity + **KH-442** behavioral model
+gain 0, 297 sims), 9 FND standing debt. NEG 0 / BUGFIX 0 lock fails;
+aspirational 343 unchanged. Reseed all six + `snapshot --all` 18,804 + schema
+`scan`/`diff` clean. **Final: 2,716,679 / 7 fails / 2 errors / 100.0%;
+validate_run_id 112,170/0; unit tree 1,551/0 over 142 files; contract
+707/8/3.** Record `results/v231_regen/adjudication_v231_regen.md`.
+v23x_soak_gate snap trees pruned. Open 34 KH + 16 TH; next KH-443 / TH-060.
 
 ### SacMap soak fixes: incremental gate `9fbbb26`→`ef6d55c` CLEAN, no residue (via_in_pad budget line corrected); KH-419/424/425 FIXED; KH-426..441 filed; pre-tag now at `ef6d55c` (2026-10-06 later)
 
