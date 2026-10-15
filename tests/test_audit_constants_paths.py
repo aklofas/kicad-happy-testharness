@@ -69,3 +69,42 @@ def test_relocate_renames_symbol_when_new_name_differs():
     moved = ac.relocate_registry(reg, [{"symbol": "a.OLD", "old_owner": "a.py",
                                         "new_owner": "b.py", "new_name": "NEW", "facade_until": None}])
     assert moved == 1 and reg["constants"][0]["name"] == "NEW"
+
+
+def test_relocate_moves_function_scope_constants_with_the_function():
+    old, new = "skills/kicad/scripts/analyze_schematic.py", "skills/kicad/scripts/schematic/sheets.py"
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-010", "file": old, "scope": "_parse_sheet", "function": "_parse_sheet",
+         "name": "pin_types", "status": "verified", "source": "KiCad docs"},
+        {"id": "CONST-011", "file": old, "scope": "_parse_sheet", "function": "_parse_sheet",
+         "name": "_parse_sheet:412", "status": "verified", "source": "s"},
+        {"id": "CONST-012", "file": old, "scope": "_parse_sheet.inner", "function": "inner",
+         "name": "LIMITS", "status": "unverified"},
+        {"id": "CONST-013", "file": old, "scope": "_parse_sheet_extra", "function": "_parse_sheet_extra",
+         "name": "keep", "status": "verified"},
+        {"id": "CONST-014", "file": old, "scope": "other", "function": "other",
+         "name": "keep2", "status": "verified"}]}
+    moved = ac.relocate_registry(reg, [{"symbol": "analyze_schematic._parse_sheet",
+                                        "old_owner": old, "new_owner": new,
+                                        "new_name": "parse_sheet", "facade_until": None}])
+    assert moved == 3
+    c = {e["id"]: e for e in reg["constants"]}
+    assert (c["CONST-010"]["file"], c["CONST-010"]["scope"], c["CONST-010"]["function"],
+            c["CONST-010"]["name"]) == (new, "parse_sheet", "parse_sheet", "pin_types")
+    assert c["CONST-010"]["status"] == "verified" and c["CONST-010"]["source"] == "KiCad docs"
+    assert c["CONST-010"]["relocated_from"] == old
+    assert c["CONST-011"]["name"] == "parse_sheet:412" and c["CONST-011"]["scope"] == "parse_sheet"
+    assert c["CONST-012"]["scope"] == "parse_sheet.inner" and c["CONST-012"]["function"] == "inner"
+    assert c["CONST-013"]["file"] == old and c["CONST-014"]["file"] == old
+    assert "relocated_from" not in c["CONST-013"]
+
+
+def test_relocate_function_same_name_keeps_scope():
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-020", "file": "a.py", "scope": "f", "function": "f", "name": "f:9",
+         "status": "verified"},
+        {"id": "CONST-021", "file": "a.py", "scope": "f:9", "name": "x", "status": "verified"}]}
+    assert ac.relocate_registry(reg, [{"symbol": "a.f", "old_owner": "a.py", "new_owner": "b.py",
+                                       "new_name": "f", "facade_until": None}]) == 2
+    assert [(e["file"], e["scope"], e["name"]) for e in reg["constants"]] == [
+        ("b.py", "f", "f:9"), ("b.py", "f:9", "x")]

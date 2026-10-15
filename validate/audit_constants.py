@@ -485,22 +485,50 @@ def qualify_registry_paths(registry, scanned_records):
     return ambiguous
 
 
+def _in_function_scope(scope, func):
+    """True when `scope` is function `func` itself, a nested scope under it
+    (`func.inner`), or the `func:<line>` synthetic form."""
+    if not scope:
+        return False
+    head = scope.split(".", 1)[0]
+    return head == func or (head.startswith(func + ":") and head[len(func) + 1:].isdigit())
+
+
 def relocate_registry(registry, relocations):
     """Apply a round's relocation map (spec §9 `relocations[]`) to registry entries.
 
-    Matches on (old_owner, name); rewrites file (and name when new_name differs),
-    records `relocated_from`, preserves every verification field. Returns count.
+    Matches on old_owner plus either the constant's own name (a moved constant)
+    or its scope (a moved function: its local constants carry
+    `scope == <function>` or a nested `<function>.<inner>` scope, and synthetic
+    names of the form `<function>:<line>`). Rewrites file, and when new_name
+    differs also the name / scope / function references to the old name;
+    records `relocated_from`; preserves every verification field. Returns count.
     """
     moved = 0
     for rl in relocations:
         old_name = rl["symbol"].rsplit(".", 1)[-1]
+        new_name = rl.get("new_name") or old_name
         for c in registry["constants"]:
-            if c.get("file") == rl["old_owner"] and c.get("name") == old_name:
-                c["relocated_from"] = c["file"]
-                c["file"] = rl["new_owner"]
-                if rl.get("new_name") and rl["new_name"] != old_name:
-                    c["name"] = rl["new_name"]
-                moved += 1
+            if c.get("file") != rl["old_owner"]:
+                continue
+            by_name = c.get("name") == old_name
+            by_scope = _in_function_scope(c.get("scope"), old_name)
+            if not (by_name or by_scope):
+                continue
+            c["relocated_from"] = c["file"]
+            c["file"] = rl["new_owner"]
+            if new_name != old_name:
+                if by_name:
+                    c["name"] = new_name
+                if by_scope:
+                    head, sep, rest = c["scope"].partition(".")
+                    c["scope"] = new_name + head[len(old_name):] + sep + rest
+                    if c.get("function") == old_name:
+                        c["function"] = new_name
+                    nm = c.get("name", "")
+                    if nm.startswith(old_name + ":") and nm[len(old_name) + 1:].isdigit():
+                        c["name"] = new_name + nm[len(old_name):]
+            moved += 1
     return moved
 
 
