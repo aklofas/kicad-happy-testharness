@@ -76,7 +76,7 @@ def run_chain(args):
     out_dir = Path(out_root) / side / owner / repo / unit
     out_dir.mkdir(parents=True, exist_ok=True)
     env = build_env(offline=True)
-    log = {"unit": unit, "side": side, "pcb": str(pcb_path)}
+    log = {"unit": unit, "side": side, "pcb_path": str(pcb_path)}  # "pcb" is the pcb step's result
     for name, cmd in chain_steps(pcb_path, Path(wt), out_dir):
         try:
             r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=timeout, cwd=str(out_dir))
@@ -103,18 +103,20 @@ def main(argv=None) -> int:
         print("--out must be ABSOLUTE (analyzers run with cwd=unit dir)", file=sys.stderr)
         return 2
     out.mkdir(parents=True, exist_ok=True)
+    base = str(Path(args.base).resolve())  # analyzers run with cwd=unit dir
+    cand = str(Path(args.cand).resolve()) if args.cand else None
     sample, population = sample_projects(args.n, args.seed)
     (out / "sample.json").write_text(json.dumps({"seed": args.seed, "n": args.n, "population": population,
                                                  "pcbs": [str(p) for p in sample]}, indent=2) + "\n")
     jobs = [(str(p), side, wt, str(out), args.timeout) for p in sample for side, wt in
-            sides_for(base=args.base, cand=args.cand)]
+            sides_for(base=base, cand=cand)]
     with (out / "chain_log.jsonl").open("w", encoding="utf-8") as log, \
             ProcessPoolExecutor(max_workers=args.jobs) as ex:
         for i, rec in enumerate(ex.map(run_chain, jobs), 1):
             log.write(json.dumps(rec) + "\n")
             if i % 50 == 0:
                 print(f"  {i}/{len(jobs)}")
-    print(f"done: {len(sample)} projects x {len(sides_for(base=args.base, cand=args.cand))} side(s) -> {out}")
+    print(f"done: {len(sample)} projects x {len(sides_for(base=base, cand=cand))} side(s) -> {out}")
     return 0
 
 

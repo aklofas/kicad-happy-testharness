@@ -56,3 +56,59 @@ def test_chain_steps_order_and_flags(tmp_path):
 def test_sides_default_to_baseline_only(tmp_path):
     assert fc.sides_for(base="/a", cand=None) == [("baseline", "/a")]
     assert fc.sides_for(base="/a", cand="/b") == [("baseline", "/a"), ("candidate", "/b")]
+
+
+def _fake_repos(monkeypatch, tmp_path):
+    repos = tmp_path / "trees"
+    pcb = repos / "o" / "r" / "b.kicad_pcb"
+    pcb.parent.mkdir(parents=True)
+    pcb.write_text("(kicad_pcb)")
+    monkeypatch.setattr(fc, "REPOS", repos)
+    return pcb
+
+
+def test_failed_schematic_step_keeps_pcb_key_free(monkeypatch, tmp_path):
+    pcb = _fake_repos(monkeypatch, tmp_path)
+    calls = []
+
+    class R:
+        returncode = 1
+        stderr = "boom"
+
+    def fake_run(cmd, *a, **k):
+        calls.append(cmd)
+        return R()
+
+    monkeypatch.setattr(fc.subprocess, "run", fake_run)
+    log = fc.run_chain((str(pcb), "baseline", str(tmp_path / "kh"), str(tmp_path / "out"), 5))
+    assert len(calls) == 1 and log["schematic"]["rc"] == 1
+    assert log["pcb_path"] == str(pcb) and "pcb" not in log
+    assert log.get("pcb", {}).get("rc", "absent") == "absent"  # Task 9 verification shape
+
+
+def test_main_resolves_relative_worktrees(monkeypatch, tmp_path):
+    pcb = _fake_repos(monkeypatch, tmp_path)
+    monkeypatch.setattr(fc, "sample_projects", lambda n, seed: ([pcb], 1))
+    seen = []
+
+    class Ex:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def map(self, fn, jobs):
+            seen.extend(jobs)
+            return iter([{"unit": "u"} for _ in jobs])
+
+    monkeypatch.setattr(fc, "ProcessPoolExecutor", Ex)
+    monkeypatch.chdir(tmp_path)
+    rc = fc.main(["--base", "kh_base", "--cand", "kh_cand", "--out", str(tmp_path / "out")])
+    assert rc == 0
+    wts = [j[2] for j in seen]
+    assert wts == [str(tmp_path / "kh_base"), str(tmp_path / "kh_cand")]
+    assert all(Path(w).is_absolute() for w in wts)
