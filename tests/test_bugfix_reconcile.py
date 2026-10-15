@@ -208,7 +208,7 @@ def test_apply_writes_atomically_and_preserves_format(tmp_path):
     new_pcb = ref / "fake/repo2/board/assertions/pcb/hw_board.kicad_pcb_bugfix.json"
     assert new_pcb.exists()
     assert json.loads(new_pcb.read_text())["analyzer_type"] == "pcb"
-    assert not list(ref.rglob("*.tmp"))
+    assert not list(ref.rglob("*.tmp-*"))
 
 
 def test_apply_is_idempotent(tmp_path):
@@ -266,3 +266,51 @@ def test_duplicate_id_in_existing_file_raises():
     with pytest.raises(gba.RegistryError, match="duplicate id BUGFIX-KH-900-01"):
         gba.reconcile_file(existing, _desired_for_a(), issue_filter=None, path=A_PATH)
 
+
+
+def test_apply_is_all_or_nothing_on_hand_authored_collision(tmp_path):
+    ref = _copy_ref(tmp_path)
+    hand = ref / "zzz/repo/proj/assertions/schematic/a.kicad_sch_bugfix.json"
+    hand.parent.mkdir(parents=True)
+    hand.write_text(json.dumps({"generated_by": "human", "assertions": []}))
+    before = (ref / A_PATH).read_bytes()
+    res = _cli("--registry", str(FIX / "registry_basic.json"),
+               "--reference-dir", str(ref), "--apply")
+    assert res.returncode == 2
+    assert "not generator-owned" in res.stderr
+    assert (ref / A_PATH).read_bytes() == before
+
+
+def test_apply_is_all_or_nothing_on_duplicate_id(tmp_path):
+    ref = _copy_ref(tmp_path)
+    dup = ref / "zzz/repo/proj/assertions/schematic/a.kicad_sch_bugfix.json"
+    dup.parent.mkdir(parents=True)
+    rec = {"id": "BUGFIX-KH-900-03", "description": "d", "issue": "KH-900",
+           "fix_type": "f", "check": {"path": "findings", "op": "min_count", "value": 1}}
+    dup.write_text(json.dumps({"generated_by": "generate_bugfix_assertions.py",
+                               "assertions": [rec, dict(rec)]}))
+    reg = tmp_path / "reg.json"
+    entry = json.loads((FIX / "registry_basic.json").read_text())
+    entry[0]["assertions"].append(dict(entry[0]["assertions"][0], repo="zzz/repo", project="proj"))
+    reg.write_text(json.dumps(entry))
+    before = (ref / A_PATH).read_bytes()
+    res = _cli("--registry", str(reg), "--reference-dir", str(ref), "--apply")
+    assert res.returncode == 2, res.stdout + res.stderr
+    assert "duplicate id" in res.stderr
+    assert (ref / A_PATH).read_bytes() == before
+
+
+def test_apply_and_dry_run_are_mutually_exclusive(tmp_path):
+    ref = _copy_ref(tmp_path)
+    before = (ref / A_PATH).read_bytes()
+    res = _cli("--registry", str(FIX / "registry_basic.json"),
+               "--reference-dir", str(ref), "--apply", "--dry-run")
+    assert res.returncode == 2
+    assert "mutually exclusive" in res.stderr
+    assert (ref / A_PATH).read_bytes() == before
+
+
+def test_write_atomic_cleans_tmp_on_failure(tmp_path):
+    with pytest.raises(TypeError):
+        gba.write_atomic(tmp_path / "x.json", {"bad": object()})
+    assert not list(tmp_path.glob("*"))

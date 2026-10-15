@@ -247,8 +247,12 @@ def write_atomic(path: Path, data: dict) -> None:
     """Write JSON with indent=2 + trailing newline via tmp + os.replace."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + f".tmp-{os.getpid()}")
-    tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    os.replace(tmp, path)
+    try:
+        tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        os.replace(tmp, path)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
 
 
 def _print_diff(diff: FileDiff, reference_dir: Path, out) -> None:
@@ -279,6 +283,8 @@ def reconcile(registry: list[dict], reference_dir: Path, *, issue_filter: str | 
     totals = Totals()
     groups = desired_assertions(registry, reference_dir, issue_filter)
     paths = set(groups) | _existing_generator_files(reference_dir)
+    plans = []
+    # Phase 1: compute and validate every file; nothing is printed or written.
     for path in sorted(paths):
         group = groups.get(path)
         desired = group.assertions if group else []
@@ -287,11 +293,16 @@ def reconcile(registry: list[dict], reference_dir: Path, *, issue_filter: str | 
             existing = json.loads(path.read_text(encoding="utf-8"))
         try:
             diff = reconcile_file(existing, desired, issue_filter=issue_filter, path=path)
-        except HandAuthoredCollision as e:
+        except (HandAuthoredCollision, RegistryError) as e:
             totals.errors.append(str(e))
             continue
         if issue_filter and existing is None and not desired:
             continue            # unrelated path when scoping by issue
+        plans.append((path, group, existing, diff))
+    if totals.errors:
+        return totals
+    # Phase 2: report, and write only when --apply.
+    for path, group, existing, diff in plans:
         totals.files += 1
         totals.added += len(diff.added)
         totals.updated += len(diff.updated)
@@ -331,6 +342,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--registry", type=Path, default=REGISTRY_FILE,
                         help="Registry JSON (default: regression/bugfix_registry.json)")
     args = parser.parse_args(argv)
+    if args.apply and args.dry_run:
+        parser.error("--apply and --dry-run are mutually exclusive")
     apply = bool(args.apply)
 
     try:
