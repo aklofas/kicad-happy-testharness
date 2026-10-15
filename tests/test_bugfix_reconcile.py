@@ -154,3 +154,115 @@ def test_check_diff_lines_cover_nested_and_added_keys():
     lines = gba.check_diff_lines(old, new)
     assert "  check.value: 7 -> 6" in lines
     assert "  check.detector_filter: <absent> -> 'detect_x'" in lines
+
+
+import os
+import shutil
+import subprocess
+
+
+def _copy_ref(tmp_path: Path) -> Path:
+    dst = tmp_path / "reference"
+    shutil.copytree(REF, dst)
+    return dst
+
+
+def _cli(*args) -> subprocess.CompletedProcess:
+    data_dir = Path(args[args.index("--reference-dir") + 1]).parent / "th_data"
+    env = {**os.environ, "KICAD_HAPPY_TESTHARNESS_DATA_DIR": str(data_dir)}
+    return subprocess.run(
+        [sys.executable, str(HARNESS_ROOT / "regression" / "generate_bugfix_assertions.py"), *args],
+        cwd=str(HARNESS_ROOT), capture_output=True, text=True, env=env)
+
+
+def test_dry_run_prints_buckets_and_writes_nothing(tmp_path):
+    ref = _copy_ref(tmp_path)
+    before = (ref / A_PATH).read_bytes()
+    res = _cli("--registry", str(FIX / "registry_basic.json"), "--reference-dir", str(ref))
+    assert res.returncode == 0, res.stderr
+    assert (ref / A_PATH).read_bytes() == before
+    assert "[DRY RUN]" in res.stdout
+    assert "+ BUGFIX-KH-901-07" in res.stdout
+    assert "~ BUGFIX-KH-900-01" in res.stdout
+    assert "check.value: 7 -> 6" in res.stdout
+    assert "- BUGFIX-KH-900-03" in res.stdout
+    assert "added 2" in res.stdout and "updated 1" in res.stdout
+    assert "removed 2" in res.stdout and "unchanged 1" in res.stdout
+    assert "Run with --apply" in res.stdout
+
+
+def test_apply_writes_atomically_and_preserves_format(tmp_path):
+    ref = _copy_ref(tmp_path)
+    res = _cli("--registry", str(FIX / "registry_basic.json"),
+               "--reference-dir", str(ref), "--apply")
+    assert res.returncode == 0, res.stderr
+    text = (ref / A_PATH).read_text(encoding="utf-8")
+    assert text.endswith("}\n")
+    data = json.loads(text)
+    assert list(data) == ["file_pattern", "analyzer_type", "generated_by", "assertions"]
+    assert data["generated_by"] == "generate_bugfix_assertions.py"
+    assert [a["id"] for a in data["assertions"]] == [
+        "BUGFIX-KH-900-01", "BUGFIX-KH-900-02", "BUGFIX-KH-901-07"]
+    assert data["assertions"][0]["check"]["value"] == 6
+    assert data["assertions"][0]["migration_note"].startswith("Path migrated")
+    new_pcb = ref / "fake/repo2/board/assertions/pcb/hw_board.kicad_pcb_bugfix.json"
+    assert new_pcb.exists()
+    assert json.loads(new_pcb.read_text())["analyzer_type"] == "pcb"
+    assert not list(ref.rglob("*.tmp"))
+
+
+def test_apply_is_idempotent(tmp_path):
+    ref = _copy_ref(tmp_path)
+    _cli("--registry", str(FIX / "registry_basic.json"), "--reference-dir", str(ref), "--apply")
+    snapshot = {p: p.read_bytes() for p in ref.rglob("*_bugfix.json")}
+    res = _cli("--registry", str(FIX / "registry_basic.json"), "--reference-dir", str(ref), "--apply")
+    assert res.returncode == 0
+    assert "added 0" in res.stdout and "updated 0" in res.stdout and "removed 0" in res.stdout
+    assert {p: p.read_bytes() for p in ref.rglob("*_bugfix.json")} == snapshot
+
+
+def test_apply_deletes_emptied_file(tmp_path):
+    ref = _copy_ref(tmp_path)
+    empty_registry = tmp_path / "empty.json"
+    empty_registry.write_text("[]")
+    res = _cli("--registry", str(empty_registry), "--reference-dir", str(ref), "--apply")
+    assert res.returncode == 0, res.stderr
+    assert not (ref / A_PATH).exists()          # every record removed -> file deleted
+    assert "deleted 1" in res.stdout
+    assert "removed 4" in res.stdout
+
+
+def test_hand_authored_collision_exits_2(tmp_path):
+    ref = tmp_path / "reference_hand"
+    shutil.copytree(REF_HAND, ref)
+    before = (ref / HAND_PATH).read_bytes()
+    res = _cli("--registry", str(FIX / "registry_basic.json"), "--reference-dir", str(ref))
+    assert res.returncode == 2
+    assert "hand.kicad_sch_bugfix.json" in res.stderr
+    assert "not generator-owned" in res.stderr
+    assert (ref / HAND_PATH).read_bytes() == before
+
+
+def test_issue_filter_cli_leaves_other_issue_untouched(tmp_path):
+    ref = _copy_ref(tmp_path)
+    res = _cli("--registry", str(FIX / "registry_basic.json"), "--reference-dir", str(ref),
+               "--issue", "KH-900", "--apply")
+    assert res.returncode == 0, res.stderr
+    ids = [a["id"] for a in json.loads((ref / A_PATH).read_text())["assertions"]]
+    assert ids == ["BUGFIX-KH-900-01", "BUGFIX-KH-900-02", "BUGFIX-KH-905-01"]
+
+
+def test_registry_error_exits_2(tmp_path):
+    ref = _copy_ref(tmp_path)
+    res = _cli("--registry", str(FIX / "registry_dup_ids.json"), "--reference-dir", str(ref))
+    assert res.returncode == 2
+    assert "duplicate id BUGFIX-KH-910-01" in res.stderr
+    assert (ref / A_PATH).exists()
+
+
+def test_duplicate_id_in_existing_file_raises():
+    existing = _existing(A_PATH)
+    existing["assertions"].append(dict(existing["assertions"][0]))
+    with pytest.raises(gba.RegistryError, match="duplicate id BUGFIX-KH-900-01"):
+        gba.reconcile_file(existing, _desired_for_a(), issue_filter=None, path=A_PATH)
+

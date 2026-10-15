@@ -207,6 +207,8 @@ def reconcile_file(existing: dict | None, desired: list[dict], *,
     seen: set[str] = set()
     for old in existing_records:
         oid = old.get("id")
+        if oid in desired_by_id and oid in seen:
+            raise RegistryError(f"duplicate id {oid} in existing file {path}")
         new = desired_by_id.get(oid)
         if new is None:
             if issue_filter and old.get("issue") != issue_filter:
@@ -227,3 +229,133 @@ def reconcile_file(existing: dict | None, desired: list[dict], *,
             diff.added.append(new)
             diff.result.append(new)
     return diff
+
+
+@dataclass
+class Totals:
+    files: int = 0
+    added: int = 0
+    updated: int = 0
+    removed: int = 0
+    unchanged: int = 0
+    files_written: int = 0
+    files_deleted: int = 0
+    errors: list[str] = field(default_factory=list)
+
+
+def write_atomic(path: Path, data: dict) -> None:
+    """Write JSON with indent=2 + trailing newline via tmp + os.replace."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + f".tmp-{os.getpid()}")
+    tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def _print_diff(diff: FileDiff, reference_dir: Path, out) -> None:
+    try:
+        rel = diff.path.relative_to(reference_dir)
+    except ValueError:
+        rel = diff.path
+    out(f"{rel}")
+    for a in diff.added:
+        out(f"  + {a['id']}  {a['description']}")
+    for old, new, lines in diff.updated:
+        out(f"  ~ {new['id']}  {new['description']}")
+        for line in lines:
+            out("  " + line)
+    for a in diff.removed:
+        out(f"  - {a['id']}  {a.get('description', '')}")
+
+
+def _existing_generator_files(reference_dir: Path) -> set[Path]:
+    """Every *_bugfix.json under reference_dir (any owner); collisions surface in reconcile_file."""
+    return set(Path(reference_dir).rglob("*_bugfix.json"))
+
+
+def reconcile(registry: list[dict], reference_dir: Path, *, issue_filter: str | None,
+              apply: bool, out=print) -> Totals:
+    """Reconcile every implied file plus every existing *_bugfix.json not implied."""
+    reference_dir = Path(reference_dir)
+    totals = Totals()
+    groups = desired_assertions(registry, reference_dir, issue_filter)
+    paths = set(groups) | _existing_generator_files(reference_dir)
+    for path in sorted(paths):
+        group = groups.get(path)
+        desired = group.assertions if group else []
+        existing = None
+        if path.exists():
+            existing = json.loads(path.read_text(encoding="utf-8"))
+        try:
+            diff = reconcile_file(existing, desired, issue_filter=issue_filter, path=path)
+        except HandAuthoredCollision as e:
+            totals.errors.append(str(e))
+            continue
+        if issue_filter and existing is None and not desired:
+            continue            # unrelated path when scoping by issue
+        totals.files += 1
+        totals.added += len(diff.added)
+        totals.updated += len(diff.updated)
+        totals.removed += len(diff.removed)
+        totals.unchanged += len(diff.unchanged)
+        if not diff.changed():
+            continue
+        _print_diff(diff, reference_dir, out)
+        if not apply:
+            continue
+        if not diff.result:
+            path.unlink()
+            totals.files_deleted += 1
+            continue
+        data = {
+            "file_pattern": (existing or {}).get("file_pattern", group.file_pattern if group else path.stem),
+            "analyzer_type": (existing or {}).get("analyzer_type", group.analyzer_type if group else "schematic"),
+            "generated_by": GENERATOR_MARKER,
+        }
+        for k, v in (existing or {}).items():            # keep any other top-level keys verbatim
+            if k not in data and k != "assertions":
+                data[k] = v
+        data["assertions"] = diff.result
+        write_atomic(path, data)
+        totals.files_written += 1
+    return totals
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--issue", help="Scope desired set AND removals to this issue (e.g. KH-150)")
+    parser.add_argument("--apply", action="store_true", help="Write files (default is dry-run)")
+    parser.add_argument("--dry-run", action="store_true", help="Preview only (default)")
+    parser.add_argument("--reference-dir", type=Path, default=DATA_DIR,
+                        help="Reference root (default: utils.DATA_DIR)")
+    parser.add_argument("--registry", type=Path, default=REGISTRY_FILE,
+                        help="Registry JSON (default: regression/bugfix_registry.json)")
+    args = parser.parse_args(argv)
+    apply = bool(args.apply)
+
+    try:
+        registry = load_registry(args.registry)
+        if not apply:
+            print("[DRY RUN] BUGFIX reconciliation (nothing written):\n")
+        totals = reconcile(registry, args.reference_dir, issue_filter=args.issue, apply=apply)
+    except RegistryError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 2
+
+    tag = "[DRY RUN] " if not apply else ""
+    print(f"\n{tag}Summary over {totals.files} files: added {totals.added}, "
+          f"updated {totals.updated}, removed {totals.removed}, unchanged {totals.unchanged}")
+    if apply:
+        print(f"  written {totals.files_written}, deleted {totals.files_deleted}")
+    elif totals.added or totals.updated or totals.removed:
+        print("\nRun with --apply to write files.")
+    if totals.errors:
+        print(f"\nERRORS ({len(totals.errors)}):", file=sys.stderr)
+        for err in totals.errors:
+            print(f"  {err}", file=sys.stderr)
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
