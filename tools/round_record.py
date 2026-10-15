@@ -369,7 +369,10 @@ def schema_identical(text) -> bool:
 
 
 def import_relocation_map(data: dict, inventory: dict) -> dict:
-    """Request fields carried by a product relocation map; unknown top-level keys are ignored."""
+    """Request fields carried by a product relocation map; unknown top-level keys are ignored.
+
+    `product_evidence` / `expected_sidecar_changes` in the record shape are carried verbatim;
+    the older `product_evidence_tip` {quick, schema, harness_live_<sha>} shape is converted."""
     extra = {"relocations": normalize_relocations(data.get("relocations", []), inventory)}
     if "removed" in data:
         extra["removed"] = data["removed"]
@@ -378,8 +381,13 @@ def import_relocation_map(data: dict, inventory: dict) -> dict:
             {"file": d["file"], "line": d["line"], "summary": d.get("summary", d.get("issue", "")),
              "fix_round": d.get("fix_round"), **({"decision": d["decision"]} if "decision" in d else {})}
             for d in data["known_defects_deferred"]]
+    if "expected_sidecar_changes" in data:
+        extra["expected_sidecar_changes"] = data["expected_sidecar_changes"]
     tip = data.get("product_evidence_tip")
-    if isinstance(tip, dict):
+    if isinstance(data.get("product_evidence"), dict):
+        # record shape carried verbatim (round-3 maps); validate_record checks it
+        extra["product_evidence"] = data["product_evidence"]
+    elif isinstance(tip, dict):
         # keep the SHA that only the key carries: "<sha>: <value>"
         pinned = [f"{k[len('harness_live_'):]}: {v}" for k, v in sorted(tip.items())
                   if k.startswith("harness_live_")]

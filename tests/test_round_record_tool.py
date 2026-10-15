@@ -353,3 +353,16 @@ def test_trailing_newline_budget_sha_rejected_by_both():
         jsonschema.validate(doc, SCHEMA)
     with pytest.raises(ValueError):
         round_record.validate_record(doc)
+
+
+def test_import_relocation_map_record_shape_sidecar_and_evidence():
+    # round-3 product map carries the request-record shapes directly (no product_evidence_tip)
+    data = {"relocations": [],
+            "expected_sidecar_changes": [{"file": "capability_mode.json", "leaf": "/schema_versions",
+                                          "reason": "schema dir from Path(__file__)"}],
+            "product_evidence": {"quick_json": "OK x6, 0 compare deltas (round3-quick.json)",
+                                 "schema_identical": True,
+                                 "pinned_harness": "7d1530f56b0: 3072 passed / 1 failed"}}
+    extra = round_record.import_relocation_map(data, _inv())
+    assert extra["expected_sidecar_changes"] == data["expected_sidecar_changes"]
+    assert extra["product_evidence"] == data["product_evidence"]
