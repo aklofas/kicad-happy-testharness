@@ -19,6 +19,19 @@ schema_version 1.4.0. Skips cleanly per analyzer if no fresh fixture.
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import glob
 import json
 import os
@@ -112,38 +125,43 @@ def _run_per_analyzer(analyzer_type):
 # Per-analyzer tests
 # ---------------------------------------------------------------------------
 
+@pytest.mark.corpus
 def test_schematic_compat_block():
     problems = _run_per_analyzer("schematic")
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} schematic compat issue(s). First few: {problems[:5]}"
 
 
+@pytest.mark.corpus
 def test_pcb_compat_block():
     problems = _run_per_analyzer("pcb")
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} pcb compat issue(s). First few: {problems[:5]}"
 
 
+@pytest.mark.corpus
 def test_gerber_compat_block():
     problems = _run_per_analyzer("gerber")
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} gerber compat issue(s). First few: {problems[:5]}"
 
 
+@pytest.mark.corpus
 def test_thermal_compat_block():
     problems = _run_per_analyzer("thermal")
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} thermal compat issue(s). First few: {problems[:5]}"
 
 
+@pytest.mark.corpus
 def test_emc_compat_block():
     problems = _run_per_analyzer("emc")
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} emc compat issue(s). First few: {problems[:5]}"
 
 

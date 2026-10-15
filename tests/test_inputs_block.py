@@ -29,6 +29,19 @@ Skips cleanly if no fresh fixtures exist for an analyzer type.
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import glob
 import json
 import os
@@ -188,24 +201,27 @@ def _run_per_analyzer(analyzer_type, required_upstream_stages):
 # Per-analyzer tests — raw-input analyzers
 # ---------------------------------------------------------------------------
 
+@pytest.mark.corpus
 def test_schematic_inputs_block():
     problems = _run_per_analyzer("schematic", set())
     if problems is None:
-        return  # no fresh fixtures
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} schematic inputs-block issue(s). First few: {problems[:5]}"
 
 
+@pytest.mark.corpus
 def test_pcb_inputs_block():
     problems = _run_per_analyzer("pcb", set())
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} pcb inputs-block issue(s). First few: {problems[:5]}"
 
 
+@pytest.mark.corpus
 def test_gerber_inputs_block():
     problems = _run_per_analyzer("gerber", set())
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} gerber inputs-block issue(s). First few: {problems[:5]}"
 
 
@@ -213,17 +229,19 @@ def test_gerber_inputs_block():
 # Per-analyzer tests — derivative analyzers
 # ---------------------------------------------------------------------------
 
+@pytest.mark.corpus
 def test_thermal_inputs_block_with_upstream():
     problems = _run_per_analyzer("thermal", DERIVATIVE_REQUIRED_STAGES["thermal"])
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} thermal inputs-block issue(s). First few: {problems[:5]}"
 
 
+@pytest.mark.corpus
 def test_emc_inputs_block_with_upstream():
     problems = _run_per_analyzer("emc", DERIVATIVE_REQUIRED_STAGES["emc"])
     if problems is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     assert not problems, f"{len(problems)} emc inputs-block issue(s). First few: {problems[:5]}"
 
 

@@ -12,6 +12,8 @@ except ImportError:  # pre-push hook runs root tests under bare python3 (no
         def skipif(*_a, **_k):
             return lambda fn: fn
 
+        corpus = staticmethod(lambda fn: fn)
+
     class _StubPytest:
         mark = _StubMark
 
@@ -117,6 +119,7 @@ M68K_SCH = REPOS / "ehbc-project/ehbc-proto1-board/projects/m68k-hbc/m68k-hbc.ki
 
 
 @pytest.mark.skipif(not PID_SCH.exists(), reason="corpus repo not present")
+@pytest.mark.corpus
 def test_rc_det_candidate_pick_stable():
     """KH-366: RC-DET parallel-cap candidate pick must not follow set hash order.
 
@@ -131,6 +134,7 @@ def test_rc_det_candidate_pick_stable():
 
 
 @pytest.mark.skipif(not M68K_SCH.exists(), reason="corpus repo not present")
+@pytest.mark.corpus
 def test_en_net_identity_stable():
     """KH-367: power-sequencing EN-pin resolution must not follow set hash order.
 

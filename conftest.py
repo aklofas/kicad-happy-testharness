@@ -79,3 +79,43 @@ def pytest_report_header(config):
     except Exception as e:  # noqa: BLE001 — header must never hide the real error
         lines.append(f"product_root: UNRESOLVED ({e})")
     return lines
+
+
+_REQUIRED = ("unit", "offline_contract")
+
+
+def _known_skips_path() -> Path:
+    return Path(os.environ.get("HARNESS_KNOWN_SKIPS", HARNESS_ROOT / "tests" / "known_skips.json"))
+
+
+def pytest_configure(config):
+    config._harness_unlisted_skips = []
+    try:
+        config._harness_known_skips = json.loads(_known_skips_path().read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        config._harness_known_skips = {}
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    rep = outcome.get_result()
+    if rep.skipped and not hasattr(rep, "wasxfail") \
+            and any(item.get_closest_marker(m) for m in _REQUIRED) \
+            and item.nodeid not in item.config._harness_known_skips:
+        reason = rep.longrepr[2] if isinstance(rep.longrepr, tuple) else str(rep.longrepr)
+        item.config._harness_unlisted_skips.append((item.nodeid, reason))
+
+
+def pytest_sessionfinish(session, exitstatus):
+    unlisted = getattr(session.config, "_harness_unlisted_skips", [])
+    if unlisted:
+        tr = session.config.pluginmanager.get_plugin("terminalreporter")
+        if tr is not None:
+            tr.write_line("")
+            tr.write_line(f"unlisted skips in required tiers ({len(unlisted)}) — add to "
+                          f"{_known_skips_path()} with a reason, or fix the test:", red=True)
+            for nodeid, reason in unlisted:
+                tr.write_line(f"  {nodeid}: {reason}")
+        if session.exitstatus == 0:
+            session.exitstatus = 1

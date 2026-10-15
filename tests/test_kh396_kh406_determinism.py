@@ -17,6 +17,19 @@ import subprocess
 import sys
 from pathlib import Path
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 SCH = os.path.join(_KH, "skills", "kicad", "scripts", "analyze_schematic.py")
@@ -43,9 +56,9 @@ def test_esd_protection_order_is_seed_independent():
     assert json.dumps(runs[0], sort_keys=True) == json.dumps(runs[1], sort_keys=True) == json.dumps(runs[2], sort_keys=True)
 
 
+@pytest.mark.corpus
 def test_rf_component_roles_order_is_seed_independent():
     if not HACKRF.exists():
-        import pytest
         pytest.skip("hackrf-one corpus board not present")
     runs = [_norm(HACKRF, s) for s in (1, 7, 123)]
     chains = [f for f in runs[0]["findings"] if f.get("rule_id") == "RF-DET"]

@@ -11,6 +11,19 @@ keyhole-ring GND clearance plus an island 0.1 mm from the bbox corner but
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import json
 import math
 import os
@@ -96,10 +109,10 @@ def test_fixture_via_in_pad_uses_outline():
     assert vip[0]["via_x"] == 127.0, vip
 
 
+@pytest.mark.corpus
 def test_sacmap_tp1_regression():
     if not SACMAP.exists():
-        print(f"SKIP: {SACMAP} not present")
-        return
+        pytest.skip("SacMap sandbox board absent (corpus tier)")
     f = [x for x in _cp003(SACMAP) if set(x["components"]) & {"TP1", "TP2"}]
     by_ref = {}
     for finding in f:

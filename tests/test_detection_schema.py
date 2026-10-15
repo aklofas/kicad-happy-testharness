@@ -2,6 +2,19 @@
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import json
 import math
 import os
@@ -287,6 +300,7 @@ def test_no_inverse_for_transistor():
 # 3c. Schema completeness — every findings detector covered
 # ============================================================
 
+@pytest.mark.corpus
 def test_schema_completeness_zebra_x():
     """Every findings detector in a real output has a SCHEMAS entry."""
     output_path = (
@@ -294,8 +308,7 @@ def test_schema_completeness_zebra_x():
         / "Dylanfg123" / "Zebra-X" / "ZeBra-X.kicad_sch.json"
     )
     if not output_path.exists():
-        # Skip if output not available (CI or fresh clone)
-        return
+        pytest.skip("Zebra-X schematic output absent (corpus tier)")
     with open(output_path) as f:
         data = json.load(f)
     # Extract unique detector short names from findings[]

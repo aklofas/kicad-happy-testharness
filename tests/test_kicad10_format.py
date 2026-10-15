@@ -18,12 +18,27 @@ pick another from `--cross-section kicad10`.
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import json
 import os
 import re
 import subprocess
 import sys
 from pathlib import Path
+
+pytestmark = pytest.mark.corpus  # every test reads repos/ fixtures
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 REPOS_DIR = HARNESS_DIR / "repos"
@@ -87,7 +102,7 @@ def _run_analyzer(script, fixture, *extra_args):
 def test_sch_fixture_is_kicad10():
     """Verify the first schematic fixture actually reports KiCad 10 version."""
     if _skip_if_no_fixture(_SCH_FIXTURES[0]):
-        return
+        pytest.skip("KiCad 10 corpus fixture or analyzer not available (corpus tier)")
     path = REPOS_DIR / _SCH_FIXTURES[0]
     ver = _read_file_version(path)
     assert ver in _KICAD10_SCH_VERSIONS, (
@@ -97,7 +112,7 @@ def test_sch_fixture_is_kicad10():
 def test_pcb_fixture_is_kicad10():
     """Verify the first PCB fixture actually reports KiCad 10 version."""
     if _skip_if_no_fixture(_PCB_FIXTURES[0]):
-        return
+        pytest.skip("KiCad 10 corpus fixture or analyzer not available (corpus tier)")
     path = REPOS_DIR / _PCB_FIXTURES[0]
     ver = _read_file_version(path)
     assert ver in _KICAD10_PCB_VERSIONS, (
@@ -111,7 +126,7 @@ def test_pcb_fixture_is_kicad10():
 def test_analyze_schematic_opens_kicad10_file():
     """analyze_schematic exits 0, emits schema_version 1.4.0, findings present."""
     if _skip_if_no_kh() or _skip_if_no_fixture(_SCH_FIXTURES[0]):
-        return
+        pytest.skip("KiCad 10 corpus fixture or analyzer not available (corpus tier)")
     path = REPOS_DIR / _SCH_FIXTURES[0]
     data = _run_analyzer("analyze_schematic.py", path)
     assert data.get("analyzer_type") == "schematic"
@@ -130,7 +145,7 @@ def test_analyze_schematic_detects_hidden_pins_on_kicad10():
     they were silently treated as visible.
     """
     if _skip_if_no_kh() or _skip_if_no_fixture(_SCH_FIXTURES[0]):
-        return
+        pytest.skip("KiCad 10 corpus fixture or analyzer not available (corpus tier)")
     path = REPOS_DIR / _SCH_FIXTURES[0]
     data = _run_analyzer("analyze_schematic.py", path)
     assert data.get("statistics", {}).get("total_nets", 0) > 0
@@ -143,7 +158,7 @@ def test_analyze_schematic_detects_hidden_pins_on_kicad10():
 def test_analyze_pcb_opens_kicad10_file():
     """analyze_pcb exits 0, emits schema_version 1.4.0."""
     if _skip_if_no_kh() or _skip_if_no_fixture(_PCB_FIXTURES[0]):
-        return
+        pytest.skip("KiCad 10 corpus fixture or analyzer not available (corpus tier)")
     path = REPOS_DIR / _PCB_FIXTURES[0]
     data = _run_analyzer("analyze_pcb.py", path, "--full")
     assert data.get("analyzer_type") == "pcb"
@@ -154,7 +169,7 @@ def test_analyze_pcb_opens_kicad10_file():
 def test_analyze_pcb_via_type_present_on_kicad10():
     """Every via in KiCad 10 output carries a `type` field (KH-318 fix)."""
     if _skip_if_no_kh() or _skip_if_no_fixture(_PCB_FIXTURES[0]):
-        return
+        pytest.skip("KiCad 10 corpus fixture or analyzer not available (corpus tier)")
     path = REPOS_DIR / _PCB_FIXTURES[0]
     data = _run_analyzer("analyze_pcb.py", path, "--full")
     vias_section = data.get("vias", {})
@@ -169,7 +184,7 @@ def test_analyze_pcb_via_type_present_on_kicad10():
 def test_analyze_pcb_second_fixture_opens():
     """Second fixture as additional coverage across v10 projects."""
     if _skip_if_no_kh() or _skip_if_no_fixture(_PCB_FIXTURES[1]):
-        return
+        pytest.skip("KiCad 10 corpus fixture or analyzer not available (corpus tier)")
     path = REPOS_DIR / _PCB_FIXTURES[1]
     data = _run_analyzer("analyze_pcb.py", path, "--full")
     assert data.get("analyzer_type") == "pcb"

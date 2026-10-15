@@ -80,3 +80,46 @@ def test_script_style_integration_file_is_ignored():
             "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))})
     assert proc.returncode in (0, 5), proc.stdout + proc.stderr
     assert "INTERNALERROR" not in proc.stdout + proc.stderr
+
+
+def _run_skip_tree(tmp_path, known):
+    """Run the tracked skip fixture under the root conftest with a given allowlist."""
+    tree = HARNESS / "tests" / "fixtures" / "h0" / "plan1" / "skip_tree"
+    allow = tmp_path / "known_skips.json"
+    allow.write_text(json.dumps(known))
+    env = {**os.environ, "HARNESS_KNOWN_SKIPS": str(allow),
+           "KICAD_HAPPY_DIR": os.environ.get("KICAD_HAPPY_DIR",
+                                             str(Path.home() / "Projects" / "kicad-happy"))}
+    return subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(tree)],
+                          capture_output=True, text=True, cwd=HARNESS, env=env)
+
+
+def test_unlisted_skip_fails_session(tmp_path):
+    proc = _run_skip_tree(tmp_path, {})
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    assert "unlisted skips in required tiers" in proc.stdout
+
+
+def test_listed_skip_is_allowed(tmp_path):
+    nodeid = "tests/fixtures/h0/plan1/skip_tree/test_skipper.py::test_s"
+    proc = _run_skip_tree(tmp_path, {nodeid: "fixture for the allowlist test"})
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert "unlisted skips" not in proc.stdout
+
+
+_CORPUS_TOKENS = ("REPOS_DIR", "OUTPUTS_DIR", "results/outputs", 'HARNESS_DIR / "results"',
+                  'HARNESS_DIR / "repos"', '"reference" /', "Projects/sandbox")
+
+
+def test_corpus_paths_require_marker():
+    allow = json.loads((HARNESS / "tests" / "corpus_marker_allowlist.json").read_text())
+    offenders = []
+    for f in sorted((HARNESS / "tests").rglob("test_*.py")):
+        rel = f.relative_to(HARNESS).as_posix()
+        if "/fixtures/" in rel or rel in allow:
+            continue
+        text = f.read_text(encoding="utf-8")
+        if any(tok in text for tok in _CORPUS_TOKENS) and "mark.corpus" not in text \
+                and 'TIER = "online"' not in text:
+            offenders.append(rel)
+    assert not offenders, f"corpus paths without @pytest.mark.corpus or allowlist entry: {offenders}"

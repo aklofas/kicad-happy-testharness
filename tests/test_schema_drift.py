@@ -42,6 +42,19 @@ trusting a PASS result on touched analyzers.
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import glob
 import json
 import os
@@ -269,56 +282,62 @@ def _derive_pcb_path(sch_path):
 # Per-analyzer tests
 # ---------------------------------------------------------------------------
 
+@pytest.mark.corpus
 def test_schematic_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_schematic.py")
     if schema is None:
         return
     emitted = _fresh_output("schematic")
     if emitted is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     _assert_no_drift(schema, emitted, "schematic")
 
 
+@pytest.mark.corpus
 def test_pcb_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_pcb.py")
     if schema is None:
         return
     emitted = _fresh_output("pcb")
     if emitted is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     _assert_no_drift(schema, emitted, "pcb")
 
 
+@pytest.mark.corpus
 def test_gerber_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_gerbers.py")
     if schema is None:
         return
     emitted = _fresh_output("gerber")
     if emitted is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     _assert_no_drift(schema, emitted, "gerber")
 
 
+@pytest.mark.corpus
 def test_emc_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/emc/scripts/analyze_emc.py")
     if schema is None:
         return
     emitted = _fresh_output("emc")
     if emitted is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     _assert_no_drift(schema, emitted, "emc")
 
 
+@pytest.mark.corpus
 def test_thermal_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_thermal.py")
     if schema is None:
         return
     emitted = _fresh_output("thermal")
     if emitted is None:
-        return
+        pytest.skip("no fresh results/outputs fixtures (corpus tier)")
     _assert_no_drift(schema, emitted, "thermal")
 
 
+@pytest.mark.corpus
 def test_cross_analysis_schema_drift():
     """cross_analysis has no persisted output dir — run it live on a pair."""
     script = f"{KICAD_HAPPY}/skills/kicad/scripts/cross_analysis.py"
@@ -344,7 +363,7 @@ def test_cross_analysis_schema_drift():
             pcb_json = candidate
             break
     if sch_json is None or pcb_json is None:
-        return
+        pytest.skip("no fresh schematic+pcb output pair under results/ (corpus tier)")
 
     r = subprocess.run(
         [sys.executable, script,

@@ -2,6 +2,19 @@
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import json
 import sys
 from pathlib import Path
@@ -101,11 +114,12 @@ def test_nullable_fields_none():
 
 
 # 9. Corpus spot-check (load one real output, validate it)
+@pytest.mark.corpus
 def test_corpus_spot_check():
     """Load one real schematic output and validate its design_intent."""
     sch_dir = OUTPUTS_DIR / "schematic"
     if not sch_dir.exists():
-        return  # skip if no outputs available
+        pytest.skip("no results/outputs/schematic (corpus tier)")
 
     # Find first non-empty JSON file
     found = None
@@ -127,7 +141,7 @@ def test_corpus_spot_check():
             break
 
     if not found:
-        return  # skip if no outputs
+        pytest.skip("no usable schematic output (corpus tier)")
 
     data = json.loads(found.read_text(encoding="utf-8"))
     issues = validate_design_intent(data, str(found.name))

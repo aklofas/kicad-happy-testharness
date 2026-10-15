@@ -19,6 +19,19 @@ with `schema_version == "1.4.0"`. Skips cleanly if no fresh fixture
 
 TIER = "unit"
 
+try:
+    import pytest
+except ImportError:  # run_tests.py runs this file under bare python3 (no pytest)
+    class _Mark:
+        corpus = staticmethod(lambda fn: fn)
+
+    class pytest:  # noqa: N801 - minimal stand-in; pytest-only features become no-ops
+        mark = _Mark
+
+        @staticmethod
+        def skip(reason=""):
+            raise SystemExit(0)
+
 import glob
 import json
 import os
@@ -66,11 +79,12 @@ def _fresh_thermal_outputs(limit=200):
         yielded += 1
 
 
+@pytest.mark.corpus
 def test_th_det_absent_from_findings():
     """Direction 1: TH-DET must never appear in findings[] post-v1.4."""
     samples = list(_fresh_thermal_outputs())
     if not samples:
-        return  # no fresh fixtures — skip cleanly
+        pytest.skip("no fresh thermal outputs under results/ (corpus tier)")
     offenders = []
     for path, data in samples:
         for finding in data.get("findings", []):
@@ -83,6 +97,7 @@ def test_th_det_absent_from_findings():
     )
 
 
+@pytest.mark.corpus
 def test_assessments_contain_only_known_rule_ids():
     """Direction 2: every assessments[] entry has a known rule_id.
 
@@ -90,7 +105,7 @@ def test_assessments_contain_only_known_rule_ids():
     """
     samples = list(_fresh_thermal_outputs())
     if not samples:
-        return
+        pytest.skip("no fresh thermal outputs under results/ (corpus tier)")
     offenders = []
     for path, data in samples:
         for assessment in data.get("assessments", []):
@@ -103,11 +118,12 @@ def test_assessments_contain_only_known_rule_ids():
     )
 
 
+@pytest.mark.corpus
 def test_assessments_field_always_present():
     """assessments[] is REQUIRED on every thermal envelope at v1.4."""
     samples = list(_fresh_thermal_outputs())
     if not samples:
-        return
+        pytest.skip("no fresh thermal outputs under results/ (corpus tier)")
     missing = [path for path, data in samples if "assessments" not in data]
     assert not missing, (
         f"`assessments` key missing from {len(missing)} thermal output(s) — "
