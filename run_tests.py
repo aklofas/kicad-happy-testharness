@@ -15,6 +15,7 @@ Usage:
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -178,6 +179,65 @@ def run_quick_sanity():
     return 1 if failed > 0 else 0
 
 
+_MAIN_RE = re.compile(r"^if __name__\s*==\s*['\"]__main__['\"]", re.MULTILINE)
+_SUMMARY_RE = re.compile(r"(\d+)\s+passed,\s+(\d+)\s+failed")
+_SKIPPED_RE = re.compile(r"(\d+)\s+skipped")
+
+
+def has_main_block(path):
+    """True iff the file contains an ``if __name__ == "__main__"`` runner."""
+    try:
+        return bool(_MAIN_RE.search(Path(path).read_text(encoding="utf-8")))
+    except OSError:
+        return False
+
+
+def run_test_file(path, timeout):
+    """Run one stdlib test file as a subprocess and return a result dict.
+
+    status: pass | fail | timeout | no_runner | unparsed. Only ``pass`` with
+    ``failed == 0`` counts toward a green run (TH-052: no phantom passes).
+    """
+    path = Path(path)
+    try:
+        rel = str(path.relative_to(HARNESS_DIR))
+    except ValueError:
+        rel = str(path)
+    base = {"file": rel, "passed": 0, "failed": 0, "skipped": 0, "detail": ""}
+    if not has_main_block(path):
+        return {**base, "status": "no_runner",
+                "detail": "no __main__ runner block (TH-052)"}
+    try:
+        result = subprocess.run([sys.executable, str(path)],
+                                capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return {**base, "status": "timeout", "detail": f"timed out after {timeout}s"}
+    lines = result.stdout.strip().split("\n")
+    summary = lines[-1] if lines else ""
+    m = _SUMMARY_RE.search(summary)
+    if m is None:
+        tail = "\n".join(l for l in lines[-3:] if l.strip())
+        if result.returncode != 0:
+            return {**base, "status": "fail", "failed": 1,
+                    "detail": f"exit {result.returncode}\n{tail}"}
+        return {**base, "status": "unparsed",
+                "detail": f"unparsed summary: {summary!r}"}
+    p, f = int(m.group(1)), int(m.group(2))
+    ms = _SKIPPED_RE.search(summary)
+    s = int(ms.group(1)) if ms else 0
+    status = "pass" if (result.returncode == 0 and f == 0) else "fail"
+    return {**base, "status": status, "passed": p, "failed": f, "skipped": s,
+            "detail": "" if status == "pass" else f"exit {result.returncode}"}
+
+
+def exit_code(results):
+    """0 iff every file passed with zero failures; 2 for an empty selection."""
+    if not results:
+        return 2
+    bad = [r for r in results if r["status"] != "pass" or r["failed"]]
+    return 1 if bad else 0
+
+
 def main():
     parser = argparse.ArgumentParser(description="Run all tests")
     parser.add_argument("--unit", action="store_true", help="Unit tests only (alias for --tier unit)")
@@ -224,6 +284,8 @@ def main():
             tier_filter = "unit"
         elif args.integration:
             tier_filter = "online"
+        if tier_filter is None and not args.integration and not args.unit:
+            tier_filter = "unit"
 
         # Determine which directories to scan
         dirs = ["tests", "integration"]
@@ -236,80 +298,26 @@ def main():
 
     if not tests:
         print("No test files found.")
-        return 0
+        return 2
 
-    total_passed = 0
-    total_failed = 0
-    total_skipped = 0
-    failures = []
-    file_results = []
-
+    results = []
     for test_file in tests:
-        rel = test_file.relative_to(HARNESS_DIR)
         timeout = INTEGRATION_TEST_TIMEOUT if "integration" in str(test_file) else TEST_TIMEOUT
-        try:
-            result = subprocess.run(
-                [sys.executable, str(test_file)],
-                capture_output=True, text=True, timeout=timeout,
-            )
-        except subprocess.TimeoutExpired:
-            total_skipped += 1
-            file_results.append({"file": str(rel), "passed": 0, "failed": 0, "status": "skip"})
-            if not args.json:
-                print(f"  SKIP  {rel} (timed out after {timeout}s)")
-            continue
+        r = run_test_file(test_file, timeout)
+        results.append(r)
+        if not args.json:
+            tag = "PASS" if r["status"] == "pass" else "FAIL"
+            counts = f"{r['passed']}p {r['failed']}f" + (f" {r['skipped']}s" if r["skipped"] else "")
+            detail = f"; {r['detail']}" if r["detail"] else ""
+            print(f"  {tag}  {r['file']} ({counts}{detail})")
 
-        # Parse last line for counts — try both summary formats
-        last_lines = result.stdout.strip().split("\n")
-        summary_line = last_lines[-1] if last_lines else ""
-        p = f = s = 0
-        parsed = False
-
-        if result.returncode == 0:
-            # Format 1: "N passed, N failed (N total)"
-            import re
-            m = re.search(r'(\d+)\s+passed,\s+(\d+)\s+failed', summary_line)
-            if m:
-                p = int(m.group(1))
-                f = int(m.group(2))
-                parsed = True
-                # Check for skipped
-                ms = re.search(r'(\d+)\s+skipped', summary_line)
-                if ms:
-                    s = int(ms.group(1))
-                total_passed += p
-                total_failed += f
-                total_skipped += s
-                status = f"{p}p {f}f" + (f" {s}s" if s else "")
-            else:
-                # Fallback: couldn't parse summary — warn instead of silently
-                # counting as "1 passed"
-                p = 1
-                total_passed += 1
-                status = "ok"
-                if not args.json:
-                    print(f"  WARN  {rel} (unparsed summary: {summary_line!r})")
-            file_results.append({"file": str(rel), "passed": p, "failed": f,
-                                 "skipped": s, "status": "pass", "parsed": parsed})
-            if not args.json and parsed:
-                print(f"  PASS  {rel} ({status})")
-        else:
-            total_failed += 1
-            failures.append(rel)
-            file_results.append({"file": str(rel), "passed": 0, "failed": 1, "status": "fail"})
-            if not args.json:
-                print(f"  FAIL  {rel}")
-                for line in last_lines[-3:]:
-                    if line.strip():
-                        print(f"        {line}")
-
+    total_passed = sum(r["passed"] for r in results)
+    total_failed = sum(r["failed"] for r in results)
+    total_skipped = sum(r["skipped"] for r in results)
+    failures = [r["file"] for r in results if r["status"] != "pass" or r["failed"]]
     if args.json:
-        print(json.dumps({
-            "total_passed": total_passed,
-            "total_failed": total_failed,
-            "total_skipped": total_skipped,
-            "files": file_results,
-        }, indent=2))
+        print(json.dumps({"total_passed": total_passed, "total_failed": total_failed,
+                          "total_skipped": total_skipped, "files": results}, indent=2))
     else:
         print()
         print("=" * 50)
@@ -317,9 +325,8 @@ def main():
         print(f"Files:   {len(tests)} test files ({len(tests) - len(failures)} ok, {len(failures)} failed)")
         print("=" * 50)
         if failures:
-            print(f"\nFailed: {', '.join(str(f) for f in failures)}")
-
-    return 1 if failures else 0
+            print(f"\nFailed: {', '.join(failures)}")
+    return exit_code(results)
 
 
 if __name__ == "__main__":
