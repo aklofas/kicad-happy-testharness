@@ -149,6 +149,17 @@ merging. New constants without authoritative sources are a hallucination risk.
 
 Record what was tested, pass rates, and any new findings.
 
+### 1i. Scan coverage + API bindings (v3 arc)
+
+`python3 tools/source_scan.py check --product $KICAD_HAPPY_DIR` must print CLEAN (lost emit
+sites / EQ ids / constants / files, unresolved emit sites, or a grown exception count fail
+it; re-baseline only with `--accept-baseline` and commit the diff). The same check runs in
+the required offline tier as `tests/test_scan_coverage_gate.py`. When the round moved
+symbols: `python3 tools/api_migration.py apply-map <relocation.json> --product $KICAD_HAPPY_DIR`
+lists every harness site to edit; `python3 tools/api_migration.py check` must be CLEAN before
+the round's response record is written. Policy text for the product's CONTRIBUTING:
+`tools/SCANNER_POLICY.md`.
+
 ---
 
 ## Checklist 2: Test a new kicad-happy feature
