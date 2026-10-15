@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -106,8 +107,9 @@ def test_propose_policy_flags_outside_metadata_roots_and_vocabulary():
     by = {a.get("pointer_glob") or a["pointer"]: a for a in prop["added"]}
     for k in ("/findings/*/evidence/score", "/findings/*/id", "/assessments/*/t"):
         assert by[k]["review"].startswith("pointer is outside metadata roots")
-    assert "review" not in by["/inputs/run_id"] and "review" not in by["/inputs/generated_at"]
-    assert by["/inputs/run_id"]["shape"] == "run_id"
+    assert "review" not in by["/inputs/generated_at"]
+    assert by["/inputs/run_id"]["shape"] == aa_run._UUID_RX  # uuid is not the named run_id form
+    assert by["/inputs/run_id"]["review"].startswith("uuid-shaped leaf")
     assert by["/inputs/generated_at"]["shape"] == "iso8601"
     assert by["/inputs/n"]["review"].startswith("numeric drift across units")
     assert by["/inputs/files/*/path"]["rewrite"] == "strip_root_prefix"
@@ -127,3 +129,53 @@ def test_skip_run_uses_strict_report(tmp_path):
     rc = aa_run.main(["--product", str(tmp_path), "--gate-dir", str(g),
                       "--cross-section", "smoke", "--skip-run"])
     assert rc == 1 and (g / "aa_report.json").exists() and (g / "field_report.json").exists()
+
+
+def test_timestamp_run_id_maps_to_named_shape():
+    rep = {"deltas": [{"unit": "u", "path": "/inputs/upstream_artifacts/0/run_id", "op": "changed",
+                       "before": "20260913T072438Z-aefff9", "after": "20260913T072500Z-bb0012"}]}
+    prop = aa_run.propose_policy(aa_run.summarize_strict_report(rep), {"name": "p", "leaves": []})
+    (entry,) = prop["added"]
+    assert entry["pointer_glob"] == "/inputs/upstream_artifacts/*/run_id"
+    assert entry["shape"] == "run_id" and "review" not in entry
+
+
+def test_proposal_note_names_keys_to_strip():
+    prop = aa_run.propose_policy({"leaves": []}, {"name": "p", "leaves": []})
+    for k in ("observed_units", "observed_deltas", "review"):
+        assert k in prop["note"]
+
+
+def _run_main(monkeypatch, tmp_path, rc, strict_age):
+    g = tmp_path / "g"
+    g.mkdir()
+    if strict_age is not None:
+        sp = g / "field_report_strict.json"
+        sp.write_text(json.dumps(REPORT))
+        old = sp.stat().st_mtime - strict_age
+        os.utime(sp, (old, old))
+    calls = []
+
+    def fake_run(cmd, *a, **k):
+        calls.append(cmd)
+        if len(calls) == 2:  # compare writes the report
+            (g / "field_report.json").write_text(json.dumps(dict(REPORT, deltas=[])))
+
+        class R:
+            returncode = rc if len(calls) == 1 else 0
+        return R()
+
+    monkeypatch.setattr(aa_run.subprocess, "run", fake_run)
+    out = aa_run.main(["--product", str(tmp_path), "--gate-dir", str(g), "--cross-section", "smoke"])
+    return out, calls
+
+
+def test_stale_strict_report_falls_back_to_compare(monkeypatch, tmp_path):
+    rc, calls = _run_main(monkeypatch, tmp_path, 0, strict_age=3600)
+    assert len(calls) == 2 and calls[1][1] == str(aa_run.COMPARE)
+    assert rc == 0  # compare output (no deltas) was used, not the stale strict report
+
+
+def test_gate_unexpected_exit_code_returns_2_without_compare(monkeypatch, tmp_path):
+    rc, calls = _run_main(monkeypatch, tmp_path, 3, strict_age=None)
+    assert rc == 2 and len(calls) == 1

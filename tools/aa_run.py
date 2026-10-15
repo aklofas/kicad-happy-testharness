@@ -29,6 +29,7 @@ POLICY_DIR = HARNESS_ROOT / "regression" / "normalization"
 
 _UUID = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 _ISO = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$")
+_RUN_ID = re.compile(r"^\d{8}T\d{6}Z-[0-9a-f]{6}$")  # field_compare named shape run_id
 _INDEX = re.compile(r"/\d+(?=/|$)")
 
 
@@ -72,6 +73,8 @@ def summarize_strict_report(report: dict) -> dict:
             "delta_count": len(ds),
             "ops": dict(Counter(d["op"] for d in ds)),
             "shape": guess_shape([v for v in values if v is not None]),
+            "run_id_form": all(isinstance(v, str) and _RUN_ID.match(v)
+                               for v in values if v is not None) and any(v is not None for v in values),
             "examples": [{"unit": d["unit"], "path": d["path"], "before": d.get("before"),
                           "after": d.get("after")} for d in ds[:3]],
         })
@@ -92,10 +95,14 @@ _OUTSIDE_REVIEW = ("pointer is outside metadata roots; a differing finding or co
                    "is a determinism bug \u2014 never auto-mask")
 
 
-def _shape_for(glob: str, shape: str) -> str | None:
+def _shape_for(leaf: dict) -> str | None:
     """Shape vocabulary of regression/field_compare (run_id/number/iso8601/regex); None = omit."""
+    shape = leaf["shape"]
     if shape == "uuid":
-        return "run_id" if glob.endswith("run_id") else _UUID_RX
+        # named shape run_id is the timestamp form only; uuids need the explicit regex
+        return "run_id" if leaf.get("run_id_form") else _UUID_RX
+    if leaf.get("run_id_form"):
+        return "run_id"
     if shape in ("iso8601", "number"):
         return shape
     return None  # abs_path uses rewrite; string/mixed have no valid shape
@@ -113,7 +120,7 @@ def propose_policy(aa_report: dict, policy: dict) -> dict:
         if glob in known:
             continue
         entry = {("pointer_glob" if "*" in glob else "pointer"): glob}
-        shape = _shape_for(glob, leaf["shape"])
+        shape = _shape_for(leaf)
         if shape:
             entry["shape"] = shape
         if leaf["shape"] == "abs_path":
@@ -128,11 +135,14 @@ def propose_policy(aa_report: dict, policy: dict) -> dict:
         elif leaf["shape"] == "number":
             entry["review"] = ("numeric drift across units \u2014 determinism bug or real change; "
                                "never auto-mask")
-        elif leaf["shape"] in ("string", "mixed"):
+        elif leaf["shape"] == "uuid" and shape == _UUID_RX:
+            entry["review"] = "uuid-shaped leaf \u2014 confirm it is volatile; regex shape emitted"
+        elif leaf["shape"] in ("string", "mixed") and not leaf.get("run_id_form"):
             entry["review"] = "non-volatile-looking shape \u2014 confirm before accepting"
         added.append(entry)
     return {"name": f"{policy['name']}-proposed", "added": added,
-            "existing": sorted(known), "note": "review each 'added' entry; never auto-accept"}
+            "existing": sorted(known), "note": ("review each 'added' entry; never auto-accept. Before pasting into a policy, "
+                     "strip the keys observed_units, observed_deltas and review: load_policy rejects them")}
 
 
 def build_commands(*, product_dir: Path, gate_dir: Path, selection: list[str], jobs: int,
