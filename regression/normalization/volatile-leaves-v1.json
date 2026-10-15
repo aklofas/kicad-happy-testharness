@@ -1,13 +1,13 @@
 {
   "name": "volatile-leaves-v1",
-  "description": "Exact volatile leaves of the six analyzer envelopes (schematic, pcb, gerber, thermal, emc, cross_analysis) as observed in results/v22x_pr44_gate snap trees on 2026-10-14. Whole blocks are never masked. To be confirmed by the plan-6 A/A run at product 6a91aaa (pending).",
+  "description": "Exact volatile leaves of the six analyzer envelopes (schematic, pcb, gerber, thermal, emc, cross_analysis) as observed in results/v22x_pr44_gate snap trees on 2026-10-14. Whole blocks are never masked. root_prefixes 'from_manifest' is a legacy token: the comparator itself supplies the two slot roots (as-given and resolved forms) as the prefixes. To be confirmed by the plan-6 A/A run at product 6a91aaa (pending).",
   "root_prefixes": "from_manifest",
   "leaves": [
     {"pointer": "/inputs/run_id", "shape": "run_id"},
     {"pointer": "/capability_mode_ref/run_id", "shape": "run_id", "equals": "/inputs/run_id"},
     {"pointer": "/elapsed_s", "shape": "number", "note": "cross_analysis/emc/thermal only"},
     {"pointer_glob": "/inputs/source_files/*", "rewrite": "strip_root_prefix"},
-    {"pointer": "/inputs/source_hashes", "rewrite": "strip_root_prefix_keys"},
+    {"pointer": "/inputs/source_hashes", "rewrite": "strip_root_prefix_keys", "verify_values": "sha256_of_key", "note": "chained analyzers key upstream snaps under the slot roots; those values are masked only after verifying each equals the sha256 of the keyed file. Repo-input keys stay compared."},
     {"pointer_glob": "/inputs/upstream_artifacts/*/path", "rewrite": "strip_root_prefix", "note": "chained analyzers only"},
     {"pointer_glob": "/inputs/upstream_artifacts/*/run_id", "shape": "run_id", "note": "chained analyzers only"},
     {"pointer_glob": "/inputs/upstream_artifacts/*/sha256", "shape": "^[0-9a-f]{64}$", "sha256_of": "path", "note": "chained analyzers only"}

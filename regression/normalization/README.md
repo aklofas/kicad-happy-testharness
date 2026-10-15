@@ -17,7 +17,8 @@ Leaf entry keys:
 | `equals` | absolute pointer that must hold the same value on the same side |
 | `sha256_of` | sibling key holding a file path; the leaf must equal that file's sha256 |
 | `note` | free-text scope note, ignored by the comparator |
-| `rewrite` | `strip_root_prefix` (string leaf) or `strip_root_prefix_keys` (dict keys) using the root prefixes from the run manifests |
+| `rewrite` | `strip_root_prefix` (string leaf) or `strip_root_prefix_keys` (dict keys), using the root prefixes the comparator supplies (see below); a prefix strips only on a path boundary (`s == root` or `s` starts with `root + "/"`) |
+| `verify_values` | `sha256_of_key`, only with `strip_root_prefix_keys`: a value whose key was actually stripped (lay under a slot root) is masked only if it matches `^[0-9a-f]{64}$` AND equals the sha256 of the file the unstripped key names, checked per side; a failure is a policy violation. Values whose keys lie outside the slot roots (repo input files) stay compared |
 
 Changing the leaf list is a **new policy version** (`volatile-leaves-v2.json`); the name
 travels in every field report and per-round record. The list is to be confirmed (pending) by the plan-6 A/A run
@@ -31,8 +32,25 @@ normal added/removed delta (absent != null applies). Absent on both sides is a n
 Some leaves exist only on some analyzer types (`/elapsed_s`: cross_analysis/emc/thermal;
 `/inputs/upstream_artifacts/...`: chained analyzers), so absence is expected.
 
-`root_prefixes` is either a list of strings or `"from_manifest"` (prefixes are read from
-the run manifests; `Policy.root_prefixes_from_manifest` is then True).
+`root_prefixes` is either a list of strings or `"from_manifest"`. Despite the name, nothing
+reads a manifest: `"from_manifest"` means the caller supplies the prefixes, and
+`compare_trees` always passes the two slot roots it compares, each in its as-given
+(absolute, symlinks kept) and resolved forms. The only path leaves that need stripping
+point into the slot trees; product paths never appear in envelopes.
+`Policy.root_prefixes_from_manifest` is then True, and a rewrite with no supplied prefixes
+is a policy violation.
+
+Re-evaluating a historical tree that was MOVED after the gate ran breaks prefix stripping,
+`sha256_of` and `verify_values`, because the envelopes hold the old absolute paths.
+
+## v1 edited in place (2026-10-15)
+
+`volatile-leaves-v1` gained `verify_values: sha256_of_key` on `/inputs/source_hashes`
+(chained emc/thermal/cross_analysis envelopes key their upstream snaps under the slot
+roots, and those values differ on every run because each upstream snap embeds its own
+run id; without the mask every chained unit failed strict, A/A included). The file was
+edited in place rather than bumped to v2 because no per-round record had consumed v1
+yet (plan 6 pending). From plan 6 on, any change to the leaf list is a new version.
 
 The `equals` linkage on `/capability_mode_ref/run_id` (equal to `/inputs/run_id`) holds on
 all six envelope types (reviewer-verified).

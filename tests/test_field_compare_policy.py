@@ -107,3 +107,14 @@ def test_tracked_policy_notes():
     assert p.root_prefixes_from_manifest is True
     el = [l for l in p.leaves if l.get("pointer") == "/elapsed_s"][0]
     assert el["note"] == "cross_analysis/emc/thermal only"
+
+
+def test_verify_values_validated(tmp_path):
+    ok = {"pointer": "/inputs/source_hashes", "rewrite": "strip_root_prefix_keys", "verify_values": "sha256_of_key"}
+    (tmp_path / "p.json").write_text(json.dumps({"name": "p", "leaves": [ok]}))
+    assert load_policy("p", policy_dir=tmp_path).leaves == [ok]
+    _bad(tmp_path, {"name": "p", "leaves": [dict(ok, verify_values="md5")]}, "verify_values must be one of")
+    _bad(tmp_path, {"name": "p", "leaves": [dict(ok, rewrite="strip_root_prefix")]},
+         "verify_values requires rewrite strip_root_prefix_keys")
+    _bad(tmp_path, {"name": "p", "leaves": [{"pointer": "/x", "verify_values": "sha256_of_key"}]},
+         "verify_values requires rewrite strip_root_prefix_keys")

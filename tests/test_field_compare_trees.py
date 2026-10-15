@@ -103,8 +103,9 @@ def test_identity_copied_from_manifests(tmp_path):
            "selection": {"source": "cross_section:smoke", "digest": "d", "unit_count": 1}, "argv": ["x"]}
     (tmp_path / "a" / "manifest.json").write_text(json.dumps(man))
     rep = compare_trees(tmp_path / "a", tmp_path / "b", mode="strict", policy=None)
-    assert rep["identity"]["a"] == {"profile": "standard", "harness": {"sha": "h" * 40},
-                                    "product": man["product"], "selection": man["selection"]}
+    assert rep["identity"]["a"] == {"run_id": None, "profile": "standard", "harness": {"sha": "h" * 40},
+                                    "product": man["product"], "selection": man["selection"],
+                                    "normalization_policy": None}
     assert rep["identity"]["b"] is None
 
 
@@ -142,3 +143,118 @@ def test_by_op_and_by_analyzer_reconcile_with_deltas(tmp_path):
     s = rep["summary"]
     assert s["deltas"] == len(rep["deltas"]) == sum(s["by_op"].values()) == sum(s["by_analyzer"].values())
     assert sum(u["delta_count"] for u in rep["units"]) == s["deltas"]
+
+
+def test_identity_carries_run_id_and_policy(tmp_path):
+    _write(tmp_path / "baseline", "schematic/u", _env(RUN_A))
+    _write(tmp_path / "candidate", "schematic/u", _env(RUN_A))
+    (tmp_path / "manifest.json").write_text(json.dumps({"run_id": "r-1", "normalization_policy": "volatile-leaves-v1"}))
+    rep = compare_trees(tmp_path / "baseline", tmp_path / "candidate", mode="strict", policy=None)
+    assert rep["identity"]["a"]["run_id"] == "r-1"
+    assert rep["identity"]["b"]["normalization_policy"] == "volatile-leaves-v1"
+
+
+# ---- I3: raw says so --------------------------------------------------------
+
+def test_raw_report_states_run_id_note_and_counts(tmp_path):
+    _write(tmp_path / "a", "schematic/u1", _env(RUN_A))
+    _write(tmp_path / "b", "schematic/u1", _env(RUN_B))                       # run id differs
+    _write(tmp_path / "a", "schematic/u2", _env(RUN_A))
+    _write(tmp_path / "b", "schematic/u2", _env(RUN_A, statistics={"total_nets": 7}))  # same run id
+    _write(tmp_path / "a", "schematic/u3", _env(RUN_A))
+    _write(tmp_path / "b", "schematic/u3", _env(RUN_A))                       # byte-identical
+    raw = compare_trees(tmp_path / "a", tmp_path / "b", mode="raw", policy=None)
+    assert "/inputs/run_id" in raw["note"] and "strict" in raw["note"]
+    assert raw["summary"]["run_id_differs"] == 1 and raw["summary"]["with_deltas"] == 2
+    strict = compare_trees(tmp_path / "a", tmp_path / "b", mode="strict", policy=None)
+    assert "note" not in strict and "run_id_differs" not in strict["summary"]
+
+
+# ---- I4: raw compares the per-unit file set ---------------------------------
+
+def test_raw_compares_unit_file_set(tmp_path):
+    pa = _write(tmp_path / "a", "emc/u", _env(RUN_A))
+    pb = _write(tmp_path / "b", "emc/u", _env(RUN_A))           # snap.json byte-identical
+    (pa.parent / "capability_mode.json").write_text('{"run_id": "1"}')
+    (pb.parent / "capability_mode.json").write_text('{"run_id": "2"}')
+    (pa.parent / "extra.json").write_text("{}")                  # sidecar only on side a
+    (pb.parent / "snap.json.stale").write_text("old")            # quarantine: ignored
+    (pb.parent / "snap.json.tmp-1-ab").write_text("partial")     # in-flight temp: ignored
+    raw = compare_trees(tmp_path / "a", tmp_path / "b", mode="raw", policy=None)
+    got = [(d["path"], d["op"]) for d in raw["deltas"]]
+    assert got == [("/capability_mode.json", "bytes"), ("/extra.json", "removed")]
+    assert raw["verdict"] == "deltas" and raw["summary"]["run_id_differs"] == 0
+    # strict stays snap.json fields only
+    strict = compare_trees(tmp_path / "a", tmp_path / "b", mode="strict", policy=None)
+    assert strict["verdict"] == "clean"
+
+
+def test_raw_snap_bytes_delta_names_the_file(tmp_path):
+    _write(tmp_path / "a", "schematic/u", _env(RUN_A))
+    _write(tmp_path / "b", "schematic/u", _env(RUN_B))
+    raw = compare_trees(tmp_path / "a", tmp_path / "b", mode="raw", policy=None)
+    assert [(d["path"], d["op"]) for d in raw["deltas"]] == [("/snap.json", "bytes")]
+
+
+# ---- I6: lexical_numeric complete + reorder-safe ----------------------------
+
+def test_lexical_numeric_is_complete_not_a_sample(tmp_path):
+    a = _write(tmp_path / "a", "schematic/u", None, text=json.dumps({f"k{i}": 1 for i in range(60)}))
+    b = _write(tmp_path / "b", "schematic/u", None,
+               text=json.dumps({f"k{i}": 1 for i in range(60)}).replace(": 1", ": 1.0"))
+    raw = compare_raw(a, b, unit="schematic/u", analyzer="schematic")
+    lex = [d for d in raw if d.op == "lexical_numeric"]
+    assert len(lex) == 1 and lex[0].before == ["1"] * 60 and lex[0].after == ["1.0"] * 60
+
+
+def test_lexical_numeric_ignores_pure_key_reorder(tmp_path):
+    a = _write(tmp_path / "a", "schematic/u", None, text='{"x": 1, "y": 2.0}')
+    b = _write(tmp_path / "b", "schematic/u", None, text='{"y": 2.0, "x": 1}')
+    raw = compare_raw(a, b, unit="schematic/u", analyzer="schematic")
+    assert [d.op for d in raw] == ["bytes"]
+
+
+# ---- I2: parallel comparison is byte-identical ------------------------------
+
+def test_jobs_1_and_4_reports_byte_identical(tmp_path, monkeypatch):
+    import concurrent.futures as cf
+    pools = []
+
+    class Recording(cf.ProcessPoolExecutor):
+        def __init__(self, *a, **k):
+            pools.append(k.get("max_workers"))
+            super().__init__(*a, **k)
+    monkeypatch.setattr(cf, "ProcessPoolExecutor", Recording)
+    for i in range(12):
+        _write(tmp_path / "a", f"schematic/u{i:02d}", _env(RUN_A))
+        _write(tmp_path / "b", f"schematic/u{i:02d}", _env(RUN_B, statistics={"total_nets": i}))
+    _write(tmp_path / "a", "pcb/only_a", _env(RUN_A))
+    _write(tmp_path / "a", "pcb/bad", _env(RUN_A))
+    _write(tmp_path / "b", "pcb/bad", None, text="{not json")
+    pol = load_policy("volatile-leaves-v1")
+    for mode, policy in (("raw", None), ("strict", pol)):
+        one = compare_trees(tmp_path / "a", tmp_path / "b", mode=mode, policy=policy, jobs=1)
+        four = compare_trees(tmp_path / "a", tmp_path / "b", mode=mode, policy=policy, jobs=4)
+        assert json.dumps(one, indent=1) == json.dumps(four, indent=1)
+    assert pools == [4, 4]                           # jobs=4 really ran in a pool (raw + strict)
+    assert one["summary"]["missing"] == 1 and one["summary"]["parse_errors"] == 1
+    assert one["summary"]["with_deltas"] == 11       # u03's total_nets equals the env's 3
+
+
+# ---- I7 / M2: symlinked slot root; posix unit paths --------------------------
+
+def test_symlinked_gate_root_strips_both_forms(tmp_path):
+    real = tmp_path / "real_gate"
+    link = tmp_path / "link_gate"
+    link.symlink_to(real, target_is_directory=True)
+    pol = load_policy("volatile-leaves-v1")
+    for recorded in (link, real):         # envelopes may record either form
+        for slot, run in (("baseline", RUN_A), ("candidate", RUN_B)):
+            d = _env(run)
+            d["inputs"]["source_files"] = [str(recorded / slot / "schematic" / "u" / "snap.json")]
+            p = real / slot / "pcb" / "u" / "snap.json"
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(d))
+        rep = compare_trees(link / "baseline", link / "candidate", mode="strict", policy=pol)
+        assert rep["verdict"] == "clean", (recorded, rep["deltas"])
+    assert rep["units"][0]["a"] == "pcb/u/snap.json"

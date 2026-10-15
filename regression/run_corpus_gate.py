@@ -11,7 +11,16 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
   * Phase B enumerates the Phase A success records, not directories on disk
   * --resume reuses a unit only on identity match (manifest + input sha)
   * exit 0 only when strict_clean AND census complete AND no both_failed /
-    dependency_missing SKIPs ("gate_pass"); `clean` is kept for history
+    dependency_missing SKIPs AND modes.strict_field_clean ("gate_pass"); `clean`
+    is kept for history
+  * after phase B the comparator modes run (raw + strict, budgeted with
+    --budget; spec §3.5) and land under rollup["modes"]. With --budget,
+    strict_field_clean is the budgeted verdict == clean.
+  * spec §2.4 read literally: gate_pass also requires the FINDINGS-level
+    strict_clean (zero WARN/Disappeared/Downgrades/NewUnknown/FAIL). An
+    output-changing round therefore exits 1 BY DESIGN even when its budget is
+    clean; read that round's verdict from modes.budgeted.verdict plus the
+    census/skip fields of gate_pass, not from the exit code.
   * per-unit diff records keep complete lists (no top-five truncation)
 
 Usage:
@@ -749,7 +758,8 @@ def main(argv=None):
     report = write_rollup(records, agg, section, layout, manifest)
     from regression.field_compare import BudgetError, run_modes  # local import keeps the gate importable standalone
     try:
-        modes = run_modes(layout.root, budget_path=Path(args.budget) if args.budget else None)
+        modes = run_modes(layout.root, budget_path=Path(args.budget) if args.budget else None,
+                          jobs=args.jobs)
     except (FileNotFoundError, BudgetError) as e:
         print(f"Error: comparator modes could not run: {e}", file=sys.stderr)
         sys.exit(2)

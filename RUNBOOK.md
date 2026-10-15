@@ -2806,7 +2806,7 @@ had accumulated ~434G before the 2026-07-15 cleanup recovered 370G.
 
 ### 26i. Field-level modes (H0, spec §3)
 
-The findings multiset diff (`regression_diff.py`) is the SECONDARY summary. The release
+The findings multiset diff (`regression_diff.py`) is the SECONDARY summary. The field-level
 claim is made by `regression/compare_snap_trees.py` over the gate's slot trees:
 
 ```bash
@@ -2815,15 +2815,39 @@ python3 regression/compare_snap_trees.py results/<gate>/baseline results/<gate>/
 python3 regression/compare_snap_trees.py results/<gate>/baseline results/<gate>/candidate --mode budgeted --budget regression/budgets/<id>.json -o results/<gate>/field_report_budgeted.json
 ```
 
-Three verdicts, never conflated: **raw** (bytes; fails on run ids by design), **strict**
-(fields under `regression/normalization/volatile-leaves-v1.json` — exact leaves only),
-**budgeted** (strict deltas classified by a tracked `regression/budgets/<id>.json`; any
-residual = not clean). `run_corpus_gate.py` runs them itself after phase B (pass
-`--budget FILE` for the budgeted verdict; a malformed budget fails before phase A) and
-stores the result under `rollup["modes"]`; the gate exit requires
-`modes.strict_field_clean`. Exit codes of the CLI: 0 clean, 1 deltas/residuals, 2 error.
-Reports are complete (every delta path), not samples; keep them with the gate record.
-Historical trees with `v131/`+`v14/` slot names are accepted by `run_modes()` as a fallback.
+Three verdicts, never conflated:
+- **raw** compares the per-unit file set (names + sha256 of every regular file in the unit
+  dir, `snap.json` and sidecars such as `capability_mode.json`, excluding `*.stale` and
+  `*.tmp-*`). It fails on run ids by design, and the report says so (`note`,
+  `summary.run_id_differs`). Spec §3.2's comparison of captured stdout/stderr/exit is
+  DEFERRED: the gate records only `exit_code`/`stderr_tail` in `units.jsonl`, and raw does
+  not read them.
+- **strict** compares fields under `regression/normalization/volatile-leaves-v1.json`,
+  exact leaves only. Chained `/inputs/source_hashes` values keyed under the slot roots are
+  masked only after each is verified as the sha256 of the keyed upstream snap.
+- **budgeted** classifies strict deltas against a tracked `regression/budgets/<id>.json`.
+  Any residual means not clean. A budget whose `normalization_policy` or
+  `baseline_sha`/`candidate_sha` contradict the run (policy in use; gate `manifest.json`
+  when present, SHA prefixes allowed) is an error, exit 2.
+
+`run_corpus_gate.py` runs them itself after phase B with the gate's `--jobs` (pass
+`--budget FILE` for the budgeted verdict; a malformed budget fails before phase A). The
+result is stored under `rollup["modes"]`, and the gate exit requires
+`modes.strict_field_clean`. With `--budget`, that is the budgeted verdict == clean.
+
+**Exit code vs round verdict.** Spec §2.4 read literally: `gate_pass.pass` ALSO requires the
+findings-level `strict_clean` (zero WARN/Disappeared/Downgrades/NewUnknown/FAIL). An
+output-changing round therefore exits 1 BY DESIGN even when its budget is clean. For such a
+round, read the verdict from `modes.budgeted.verdict` plus the `census_ok`/`skips_ok` fields
+of `gate_pass`, not from the exit code. Whether a clean budget should replace findings
+`strict_clean` in `gate_pass.pass` for `--kind gate --budget` is an open maintainer question.
+
+CLI exit codes: 0 clean, 1 deltas/residuals, 2 error. The CLI takes `--jobs` (default
+cpu_count); reports are byte-identical for any `--jobs`. Reports are complete (every delta
+path), not samples; keep them with the gate record. Historical trees with `v131/`+`v14/`
+slot names are accepted by `run_modes()` as a fallback. A historical tree that was MOVED
+after its gate ran cannot be re-evaluated in strict mode: its envelopes hold the old
+absolute paths, so prefix stripping and the sha256 linkage checks fail.
 
 ---
 

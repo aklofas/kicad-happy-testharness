@@ -108,7 +108,10 @@ def test_budget_outside_budgeted_mode_exits_2(tmp_path, mode):
 def test_budgeted_policy_none_writes_null_policy(tmp_path):
     a, b = _pair(tmp_path)
     out = tmp_path / "r.json"
-    rc = cli.main([a, b, "--mode", "budgeted", "--policy", "none", "--budget", str(FIX / "rs001_only.json"),
+    bud = json.loads((FIX / "rs001_only.json").read_text())
+    del bud["normalization_policy"]          # a budget naming a policy must match it (I8)
+    bp = tmp_path / "bud.json"; bp.write_text(json.dumps(bud))
+    rc = cli.main([a, b, "--mode", "budgeted", "--policy", "none", "--budget", str(bp),
                    "-o", str(out)])
     assert rc in (0, 1)
     assert json.loads(out.read_text())["policy"] is None

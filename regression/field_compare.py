@@ -8,8 +8,12 @@ and report COMPLETE per-path deltas. The findings multiset diff in
 unchanged.
 
 Modes
-  raw       byte identity per unit file (sha256); legitimately fails whenever
-            ``/inputs/run_id`` differs and says so.
+  raw       the per-unit file set (names + sha256 of every regular file in the unit
+            dir, excluding ``*.stale`` / ``*.tmp-*``); legitimately fails whenever
+            ``/inputs/run_id`` differs and says so in the report (``note`` +
+            ``summary.run_id_differs``). DEFERRED: spec §3.2's comparison of captured
+            stdout/stderr/exit is not built; the gate records only ``exit_code`` and
+            ``stderr_tail`` in ``units.jsonl``, which raw mode does not read.
   strict    recursive JSON field comparison; absent != null; bool != number;
             list order kept; only policy-listed leaves masked, each shape- and
             linkage-checked.
@@ -22,6 +26,7 @@ import copy
 import hashlib
 import importlib
 import json
+import os
 import re
 from collections import Counter
 from dataclasses import dataclass, field
@@ -30,8 +35,10 @@ from typing import Any
 
 POLICY_DIR = Path(__file__).resolve().parent / "normalization"
 
-_ALLOWED_LEAF_KEYS = {"pointer", "pointer_glob", "shape", "equals", "sha256_of", "rewrite", "note"}
+_ALLOWED_LEAF_KEYS = {"pointer", "pointer_glob", "shape", "equals", "sha256_of", "rewrite", "verify_values", "note"}
 _ALLOWED_REWRITES = {"strip_root_prefix", "strip_root_prefix_keys"}
+_ALLOWED_VERIFY = {"sha256_of_key"}
+_SHA256_RX = re.compile(r"^[0-9a-f]{64}$")
 NAMED_SHAPES = {
     "number": None,                         # checked by type, not regex
     "iso8601": r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$",
@@ -70,11 +77,16 @@ def _validate_leaf(leaf: dict, idx: int) -> None:
         raise PolicyError(f"leaf {idx}: exactly one of pointer/pointer_glob required")
     ptr = leaf[forms[0]]
     _check_pointer(ptr, idx, forms[0] == "pointer_glob")
-    for key in ("shape", "rewrite", "equals", "sha256_of", "note"):
+    for key in ("shape", "rewrite", "equals", "sha256_of", "verify_values", "note"):
         if key in leaf and not isinstance(leaf[key], str):
             raise PolicyError(f"leaf {idx}: {key} must be a string")
     if "rewrite" in leaf and leaf["rewrite"] not in _ALLOWED_REWRITES:
         raise PolicyError(f"leaf {idx}: rewrite must be one of {sorted(_ALLOWED_REWRITES)}")
+    if "verify_values" in leaf:
+        if leaf["verify_values"] not in _ALLOWED_VERIFY:
+            raise PolicyError(f"leaf {idx}: verify_values must be one of {sorted(_ALLOWED_VERIFY)}")
+        if leaf.get("rewrite") != "strip_root_prefix_keys":
+            raise PolicyError(f"leaf {idx}: verify_values requires rewrite strip_root_prefix_keys")
     if "equals" in leaf:
         _check_pointer(leaf["equals"], idx, False)
     shape = leaf.get("shape")
@@ -284,8 +296,28 @@ def _set_pointer(doc: Any, pointer: str, value: Any) -> None:
         cur[last] = value
 
 
-def _strip(s: Any, prefix: str) -> Any:
-    return s[len(prefix):] if prefix and isinstance(s, str) and s.startswith(prefix) else s
+def _prefix_set(p: Any) -> tuple[str, ...]:
+    """One side's root prefixes: a string or a sequence of strings (as-given + resolved forms)."""
+    items = [p] if isinstance(p, str) else list(p or ())
+    out = []
+    for x in items:
+        x = x.rstrip("/") if x != "/" else x
+        if x and x not in out:
+            out.append(x)
+    return tuple(out)
+
+
+def _strip_ex(s: Any, prefixes: tuple[str, ...]) -> tuple[Any, bool]:
+    """Strip the first prefix that matches on a path boundary (``s == pre`` or ``pre + "/"``)."""
+    if isinstance(s, str):
+        for pre in prefixes:
+            if s == pre or s.startswith(pre + "/"):
+                return s[len(pre):], True
+    return s, False
+
+
+def _strip(s: Any, prefixes: tuple[str, ...]) -> Any:
+    return _strip_ex(s, prefixes)[0]
 
 
 def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
@@ -295,11 +327,11 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
     b = copy.deepcopy(b)
     rewrites = any(lf.get("rewrite") for lf in policy.leaves)
     if root_prefixes is not None:
-        prefixes = (root_prefixes[0], root_prefixes[1])
+        prefixes = (_prefix_set(root_prefixes[0]), _prefix_set(root_prefixes[1]))
     elif len(policy.root_prefixes) >= 2:
-        prefixes = (policy.root_prefixes[0], policy.root_prefixes[1])
+        prefixes = (_prefix_set(policy.root_prefixes[0]), _prefix_set(policy.root_prefixes[1]))
     else:
-        prefixes = ("", "")
+        prefixes = ((), ())
         if policy.root_prefixes_from_manifest and rewrites:
             ctx.violations.append(f"{ctx.unit}: root prefixes required but not supplied")
     pointers: set[str] = set()
@@ -321,7 +353,10 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
                     _set_pointer(b, ptr, _strip(vb, prefixes[1]))
                 continue   # compared normally after rewrite
             if rewrite == "strip_root_prefix_keys":
-                for doc, found, val, pre in ((a, fa, va, prefixes[0]), (b, fb, vb, prefixes[1])):
+                verify = leaf.get("verify_values")
+                verified: list[set] = [set(), set()]
+                for si, (side, doc, found, val, pre) in enumerate(
+                        (("a", a, fa, va, prefixes[0]), ("b", b, fb, vb, prefixes[1]))):
                     if not found:
                         continue
                     if not isinstance(val, dict):
@@ -329,13 +364,23 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
                         continue
                     new: dict = {}
                     for k, v in val.items():
-                        nk = _strip(k, pre)
+                        nk, stripped = _strip_ex(k, pre)
                         if nk in new:
                             ctx.violations.append(
                                 f"{ctx.unit} {ptr}: strip_root_prefix_keys collision on {nk}")
-                        else:
-                            new[nk] = v
+                            continue
+                        new[nk] = v
+                        if verify and stripped:
+                            # verify-then-mask: only a slot-rooted key whose value is the sha256 of
+                            # the file it names; keys outside the slot roots stay compared
+                            err = _verify_sha256_of_key(k, nk, v, pre)
+                            if err:
+                                ctx.violations.append(f"{ctx.unit} {join_pointer(ptr, nk)}: {err} on side {side}")
+                            else:
+                                verified[si].add(nk)
                     _set_pointer(doc, ptr, new)
+                for nk in sorted(verified[0] & verified[1]):
+                    ctx.masked.add(join_pointer(ptr, nk))
                 continue
             # masking leaves: refuse containers, require presence on both sides
             if (fa and _kind(va) in ("dict", "list")) or (fb and _kind(vb) in ("dict", "list")):
@@ -361,7 +406,7 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
                 for side, doc, v, pre in (("a", a, va, prefixes[0]), ("b", b, vb, prefixes[1])):
                     found, p = resolve_pointer(doc, join_pointer(parent, sib))
                     # the sibling may already have been prefix-stripped; re-add the prefix for I/O
-                    cand = [p, pre + p] if found and isinstance(p, str) else []
+                    cand = [p] + [x + p for x in pre] if found and isinstance(p, str) else []
                     target = next((c for c in cand if c and Path(c).is_file()), None)
                     if target is None:
                         ctx.violations.append(f"{ctx.unit} {ptr}: sha256_of {sib}: linked file missing on side {side}")
@@ -371,14 +416,28 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
     return a, b
 
 
+def _verify_sha256_of_key(key: str, stripped_key: str, value: Any, prefixes: tuple[str, ...]) -> str | None:
+    """None when ``value`` is a sha256 hex digest equal to the file ``key`` names (tried as
+    recorded, then re-rooted under each of this side's prefixes); else a violation reason."""
+    if not isinstance(value, str) or not _SHA256_RX.match(value):
+        return f"source hash value {value!r} fails shape ^[0-9a-f]{{64}}$"
+    target = next((c for c in [key] + [x + stripped_key for x in prefixes] if Path(c).is_file()), None)
+    if target is None:
+        return "verify_values sha256_of_key: keyed file missing"
+    if _sha256(Path(target)) != value:
+        return "verify_values sha256_of_key: mismatch"
+    return None
+
+
 def compare_strict(a: Any, b: Any, policy: Policy | None, *, unit: str, analyzer: str,
                    key_order: bool = False,
-                   root_prefixes: tuple[str, str] | None = None) -> tuple[list[Delta], list[str]]:
+                   root_prefixes: tuple | None = None) -> tuple[list[Delta], list[str]]:
     """Recursive field comparison. Returns (deltas, policy_violations).
 
     Two NaNs compare equal. ``key_order=True`` emits a ``key_order`` delta for any
     dict whose key sequence differs, including when the key sets differ.
-    ``root_prefixes`` = (a_root, b_root) overrides ``policy.root_prefixes``.
+    ``root_prefixes`` = (a, b), each a root string or a sequence of root strings,
+    overrides ``policy.root_prefixes``; a prefix strips only on a path boundary.
     """
     ctx = _Ctx(unit, analyzer, key_order)
     if policy is not None:
@@ -394,23 +453,62 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def compare_raw(a_path: Path, b_path: Path, *, unit: str, analyzer: str) -> list[Delta]:
+def compare_raw(a_path: Path, b_path: Path, *, unit: str, analyzer: str, path: str = "") -> list[Delta]:
     """Byte identity. One ``bytes`` delta when the files differ; additionally one
-    ``lexical_numeric`` delta when the parsed JSON is equal but number spelling differs."""
+    ``lexical_numeric`` delta when the parsed JSON is equal but number spelling differs.
+
+    ``lexical_numeric`` is complete and reorder-safe: ``before``/``after`` are the sorted
+    multiset differences of the number tokens (a pure key reorder yields nothing)."""
     ab, bb = Path(a_path).read_bytes(), Path(b_path).read_bytes()
     if ab == bb:
         return []
-    out = [Delta(unit, analyzer, "", "bytes", hashlib.sha256(ab).hexdigest(), hashlib.sha256(bb).hexdigest())]
+    out = [Delta(unit, analyzer, path, "bytes", hashlib.sha256(ab).hexdigest(), hashlib.sha256(bb).hexdigest())]
     try:
         pa, pb = json.loads(ab), json.loads(bb)
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, UnicodeDecodeError):
         return out
     if pa == pb:
-        ta, tb = _NUM_TOKEN.findall(ab.decode("utf-8", "replace")), _NUM_TOKEN.findall(bb.decode("utf-8", "replace"))
-        if ta != tb:
-            diff = [(x, y) for x, y in zip(ta, tb) if x != y][:50]
-            out.append(Delta(unit, analyzer, "", "lexical_numeric", [x for x, _ in diff], [y for _, y in diff]))
+        ca = Counter(_NUM_TOKEN.findall(ab.decode("utf-8", "replace")))
+        cb = Counter(_NUM_TOKEN.findall(bb.decode("utf-8", "replace")))
+        before, after = sorted((ca - cb).elements()), sorted((cb - ca).elements())
+        if before or after:
+            out.append(Delta(unit, analyzer, path, "lexical_numeric", before, after))
     return out
+
+
+RAW_NOTE = ("raw compares bytes of every file in each unit directory (snap.json and sidecars, "
+            "excluding *.stale and *.tmp-*). Analyzer envelopes embed /inputs/run_id, so any two "
+            "runs differ in raw mode even on identical code; summary.run_id_differs counts those "
+            "units. The strict verdict is the field-level claim.")
+
+
+def _unit_files(unit_dir: Path) -> dict[str, Path]:
+    """Regular files directly in a unit dir, minus quarantined (*.stale) and in-flight (*.tmp-*) files."""
+    return {f.name: f for f in sorted(Path(unit_dir).iterdir())
+            if f.is_file() and not f.name.endswith(".stale") and ".tmp-" not in f.name}
+
+
+def compare_raw_unit(a_dir: Path, b_dir: Path, *, unit: str, analyzer: str) -> list[Delta]:
+    """Raw mode for one unit: the file-name set (``added``/``removed`` at ``/<file>``) plus
+    ``bytes`` (and ``lexical_numeric``) per differing file, path naming the file."""
+    fa, fb = _unit_files(a_dir), _unit_files(b_dir)
+    out: list[Delta] = []
+    for name in sorted(set(fa) | set(fb)):
+        ptr = join_pointer("", name)
+        if name not in fb:
+            out.append(Delta(unit, analyzer, ptr, "removed", _sha256(fa[name]), None))
+        elif name not in fa:
+            out.append(Delta(unit, analyzer, ptr, "added", None, _sha256(fb[name])))
+        else:
+            out.extend(compare_raw(fa[name], fb[name], unit=unit, analyzer=analyzer, path=ptr))
+    return out
+
+
+def _run_id_of(path: Path) -> tuple[bool, Any]:
+    try:
+        return resolve_pointer(json.loads(Path(path).read_text(encoding="utf-8")), "/inputs/run_id")
+    except (OSError, ValueError):
+        return False, None
 
 
 def iter_units(root: Path) -> list[tuple[str, str, Path]]:
@@ -436,52 +534,84 @@ def _manifest_identity(root: Path) -> dict | None:
         return None
     if not isinstance(data, dict):
         return None
-    return {k: data.get(k) for k in ("profile", "harness", "product", "selection")}
+    return {k: data.get(k) for k in ("run_id", "profile", "harness", "product", "selection", "normalization_policy")}
+
+
+def _root_forms(root: Path) -> tuple[str, ...]:
+    """As-given (absolute, symlinks kept) and fully resolved forms of a slot root."""
+    given, resolved = os.path.abspath(str(root)), str(Path(root).resolve())
+    return (given,) if given == resolved else (given, resolved)
+
+
+def _compare_unit(task: tuple) -> tuple[dict, list[Delta], list[str], bool]:
+    """One unit of compare_trees (module-level so ProcessPoolExecutor can pickle it)."""
+    unit, analyzer, pa, pb, rec, mode, policy, key_order, prefixes = task
+    if mode == "raw":
+        ds = compare_raw_unit(pa.parent, pb.parent, unit=unit, analyzer=analyzer)
+        run_id_differs = False
+        if any(d.path == "/snap.json" and d.op == "bytes" for d in ds):
+            run_id_differs = _run_id_of(pa) != _run_id_of(pb)
+        return rec, ds, [], run_id_differs
+    docs = []
+    for side, p in (("a", pa), ("b", pb)):
+        try:
+            docs.append(json.loads(p.read_text(encoding="utf-8")))
+        except (json.JSONDecodeError, OSError, UnicodeDecodeError):
+            return dict(rec, status=f"parse_error_{side}"), [], [], False
+    ds, viol = compare_strict(docs[0], docs[1], policy, unit=unit, analyzer=analyzer,
+                              key_order=key_order, root_prefixes=prefixes)
+    return rec, ds, viol, False
 
 
 def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | None,
                   key_order: bool = False,
-                  root_prefixes: tuple[str, str] | None = None) -> dict:
+                  root_prefixes: tuple | None = None, jobs: int = 1) -> dict:
+    """Compare two snap trees. ``root_prefixes`` = (a, b), each a string or a sequence of
+    strings; by default each side's as-given and resolved root forms. ``jobs`` > 1 runs the
+    per-unit comparisons in a process pool; results are reassembled in sorted unit order,
+    so the report is byte-identical for any ``jobs``."""
     if mode not in ("raw", "strict", "budgeted"):
         raise ValueError(f"mode must be raw|strict|budgeted, got {mode!r}")
+    prefixes = root_prefixes or (_root_forms(a_root), _root_forms(b_root))
     a_root, b_root = Path(a_root).resolve(), Path(b_root).resolve()
-    prefixes = root_prefixes or (str(a_root), str(b_root))
     a_units = {u: (an, p) for u, an, p in iter_units(a_root)}
     b_units = {u: (an, p) for u, an, p in iter_units(b_root)}
     units_out, deltas, violations = [], [], []
     counts = Counter()
+    tasks = []
     for unit in sorted(set(a_units) | set(b_units)):
         analyzer = (a_units.get(unit) or b_units.get(unit))[0]
         rec = {"unit": unit, "analyzer": analyzer,
-               "a": str(a_units[unit][1].relative_to(a_root)) if unit in a_units else None,
-               "b": str(b_units[unit][1].relative_to(b_root)) if unit in b_units else None,
+               "a": a_units[unit][1].relative_to(a_root).as_posix() if unit in a_units else None,
+               "b": b_units[unit][1].relative_to(b_root).as_posix() if unit in b_units else None,
                "status": "compared", "delta_count": 0}
         if unit not in a_units or unit not in b_units:
             rec["status"] = "missing_a" if unit not in a_units else "missing_b"
+            tasks.append(rec)
+            continue
+        tasks.append((unit, analyzer, a_units[unit][1], b_units[unit][1], rec, mode, policy, key_order, prefixes))
+    work = [t for t in tasks if isinstance(t, tuple)]
+    if jobs > 1 and len(work) > 1:
+        from concurrent.futures import ProcessPoolExecutor
+        with ProcessPoolExecutor(max_workers=jobs) as pool:
+            done = iter(list(pool.map(_compare_unit, work, chunksize=max(1, len(work) // (jobs * 8)))))
+    else:
+        done = iter([_compare_unit(t) for t in work])
+    for t in tasks:
+        if isinstance(t, dict):
             counts["missing"] += 1
+            units_out.append(t)
+            continue
+        rec, ds, viol, rid = next(done)
+        if rec["status"] != "compared":
+            counts["parse_errors"] += 1
             units_out.append(rec)
             continue
-        pa, pb = a_units[unit][1], b_units[unit][1]
-        if mode == "raw":
-            ds = compare_raw(pa, pb, unit=unit, analyzer=analyzer)
-        else:
-            docs = []
-            for side, p in (("a", pa), ("b", pb)):
-                try:
-                    docs.append(json.loads(p.read_text(encoding="utf-8")))
-                except (json.JSONDecodeError, OSError, UnicodeDecodeError):
-                    rec["status"] = f"parse_error_{side}"
-                    break
-            if rec["status"] != "compared":
-                counts["parse_errors"] += 1
-                units_out.append(rec)
-                continue
-            ds, viol = compare_strict(docs[0], docs[1], policy, unit=unit, analyzer=analyzer,
-                                      key_order=key_order, root_prefixes=prefixes)
-            violations.extend(viol)
+        violations.extend(viol)
         rec["delta_count"] = len(ds)
         counts["compared"] += 1
         counts["identical" if not ds else "with_deltas"] += 1
+        counts["run_id_differs"] += int(rid)
         deltas.extend(ds)
         units_out.append(rec)
     by_op = Counter(d.op for d in deltas)
@@ -490,17 +620,22 @@ def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | Non
                "with_deltas": counts["with_deltas"], "missing": counts["missing"],
                "parse_errors": counts["parse_errors"], "deltas": len(deltas),
                "by_op": dict(sorted(by_op.items())), "by_analyzer": dict(sorted(by_an.items()))}
+    if mode == "raw":
+        summary["run_id_differs"] = counts["run_id_differs"]
     if counts["missing"] or counts["parse_errors"] or violations:
         verdict = "error"
     elif deltas:
         verdict = "deltas"
     else:
         verdict = "clean"
-    return {"report_version": 1, "mode": mode, "policy": policy.name if policy else None,
-            "key_order": key_order, "a_root": str(a_root), "b_root": str(b_root),
-            "identity": {"a": _manifest_identity(a_root), "b": _manifest_identity(b_root)},
-            "units": units_out, "deltas": [d.to_json() for d in deltas],
-            "policy_violations": violations, "summary": summary, "budget": None, "verdict": verdict}
+    report = {"report_version": 1, "mode": mode, "policy": policy.name if policy else None,
+              "key_order": key_order, "a_root": str(a_root), "b_root": str(b_root),
+              "identity": {"a": _manifest_identity(a_root), "b": _manifest_identity(b_root)},
+              "units": units_out, "deltas": [d.to_json() for d in deltas],
+              "policy_violations": violations, "summary": summary, "budget": None, "verdict": verdict}
+    if mode == "raw":
+        report["note"] = RAW_NOTE
+    return report
 
 
 # ---- budgets (Task 5) --------------------------------------------------------
@@ -682,10 +817,13 @@ def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = No
         if not hit:
             residuals.append(d)
     violations = []
+    bound_status = {}
     for i, c in enumerate(classes):
         bound = (c.get("unit_bound") or {}).get("max_units")
         n_units = len({d.unit for d in claimed[i]})
-        if bound is not None and n_units > bound:
+        ok = bound is None or n_units <= bound
+        bound_status[c["id"]] = {"max_units": bound, "units": n_units, "ok": ok}
+        if not ok:
             violations.append(f"class {c['id']} claimed {n_units} units > max_units {bound}")
     allowed_missing = int(budget.get("unexplained_missing_units_allowed", 0))
     if missing_units > allowed_missing:
@@ -695,17 +833,61 @@ def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = No
             "claimed": {c["id"]: [d.to_json() for d in claimed[i]] for i, c in enumerate(classes)},
             "claimed_counts": {c["id"]: len(claimed[i]) for i, c in enumerate(classes) if claimed[i]},
             "claimed_units": {c["id"]: len({d.unit for d in claimed[i]}) for i, c in enumerate(classes) if claimed[i]},
+            "bound_status": bound_status,
             "residuals": [d.to_json() for d in residuals], "violations": violations}
 
 
 def docs_for_report(report: dict, a_root: Path, b_root: Path) -> dict:
-    """Load (a_doc, b_doc) per compared unit so budget `where`/predicates can resolve findings."""
+    """Load (a_doc, b_doc) for compared units WITH deltas only (evaluate_budget consults
+    docs[delta.unit] alone), so budget `where`/predicates can resolve findings without
+    holding the whole corpus in memory."""
     docs = {}
     for u in report["units"]:
-        if u["status"] == "compared":
+        if u["status"] == "compared" and u.get("delta_count", 0) > 0:
             docs[u["unit"]] = (json.loads((Path(a_root) / u["a"]).read_text(encoding="utf-8")),
                                json.loads((Path(b_root) / u["b"]).read_text(encoding="utf-8")))
     return docs
+
+
+def _sha_agrees(budget_sha: Any, run_sha: Any) -> bool:
+    return isinstance(budget_sha, str) and isinstance(run_sha, str) and bool(budget_sha) and bool(run_sha) \
+        and (run_sha.startswith(budget_sha) or budget_sha.startswith(run_sha))
+
+
+def check_budget_identity(budget: dict, strict_report: dict) -> None:
+    """Raise BudgetError when the budget names a different normalization policy or product
+    SHAs than this run. Policy is checked against the report's policy and, with a gate
+    manifest, the manifest's; SHAs only when a manifest identity is present (prefixes allowed)."""
+    bp = budget.get("normalization_policy")
+    if bp is not None and bp != strict_report.get("policy"):
+        raise BudgetError(f"budget {budget['budget_id']}: normalization_policy {bp!r} != "
+                          f"comparator policy {strict_report.get('policy')!r}")
+    for ident in (strict_report.get("identity") or {}).values():
+        if not ident:
+            continue
+        mp = ident.get("normalization_policy")
+        if bp is not None and mp is not None and mp != bp:
+            raise BudgetError(f"budget {budget['budget_id']}: normalization_policy {bp!r} != manifest {mp!r}")
+        product = ident.get("product") or {}
+        for slot in ("baseline", "candidate"):
+            want = budget.get(f"{slot}_sha")
+            have = (product.get(slot) or {}).get("sha")
+            if want is not None and have is not None and not _sha_agrees(want, have):
+                raise BudgetError(f"budget {budget['budget_id']}: {slot}_sha {want!r} does not match "
+                                  f"manifest {slot} sha {have!r}")
+
+
+def budgeted_report(strict_report: dict, budget: dict, a_root: Path, b_root: Path) -> dict:
+    """The one budgeted field report (CLI and run_modes share it): identity check, docs for
+    units with deltas, evaluate_budget, verdict error|clean|residuals."""
+    check_budget_identity(budget, strict_report)
+    s = strict_report["summary"]
+    ev = evaluate_budget([Delta(**d) for d in strict_report["deltas"]], budget,
+                         docs=docs_for_report(strict_report, a_root, b_root), missing_units=s["missing"])
+    missing_allowed = int(budget.get("unexplained_missing_units_allowed", 0))
+    hard_error = s["missing"] > missing_allowed or s["parse_errors"] > 0 or bool(strict_report["policy_violations"])
+    verdict = "error" if hard_error else ("clean" if ev["clean"] else "residuals")
+    return dict(strict_report, mode="budgeted", budget=ev, verdict=verdict)
 
 
 def _slots(gate_root: Path) -> tuple[Path, Path]:
@@ -720,16 +902,17 @@ def _slots(gate_root: Path) -> tuple[Path, Path]:
 
 
 def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bool = False,
-              policy_name: str = "volatile-leaves-v1", write_reports: bool = True) -> dict:
+              policy_name: str = "volatile-leaves-v1", write_reports: bool = True, jobs: int = 1) -> dict:
     """Run raw + strict (+ budgeted) over a gate's two slots. Returns the dict the gate
-    stores under rollup['modes']; writes field_report_<mode>.json beside the slots."""
+    stores under rollup['modes']; writes field_report_<mode>.json beside the slots.
+    A budget whose policy/SHAs contradict the gate manifest raises BudgetError."""
     g = Path(gate_root)
     a_root, b_root = _slots(g)
     policy = load_policy(policy_name)
     out: dict = {"policy": policy.name, "key_order": key_order}
 
-    raw = compare_trees(a_root, b_root, mode="raw", policy=None)
-    strict = compare_trees(a_root, b_root, mode="strict", policy=policy, key_order=key_order)
+    raw = compare_trees(a_root, b_root, mode="raw", policy=None, jobs=jobs)
+    strict = compare_trees(a_root, b_root, mode="strict", policy=policy, key_order=key_order, jobs=jobs)
     if write_reports:
         (g / "field_report_raw.json").write_text(json.dumps(raw, indent=1), encoding="utf-8")
         (g / "field_report_strict.json").write_text(json.dumps(strict, indent=1), encoding="utf-8")
@@ -743,14 +926,8 @@ def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bo
         return out
 
     budget = load_budget(Path(budget_path))
-    deltas = [Delta(**d) for d in strict["deltas"]]
-    ev = evaluate_budget(deltas, budget, docs=docs_for_report(strict, a_root, b_root),
-                         missing_units=strict["summary"]["missing"])
-    missing_allowed = int(budget.get("unexplained_missing_units_allowed", 0))
-    hard_error = (strict["summary"]["missing"] > missing_allowed or strict["summary"]["parse_errors"] > 0
-                  or bool(strict["policy_violations"]))
-    verdict = "error" if hard_error else ("clean" if ev["clean"] else "residuals")
-    budgeted = dict(strict, mode="budgeted", budget=ev, verdict=verdict)
+    budgeted = budgeted_report(strict, budget, a_root, b_root)
+    ev, verdict = budgeted["budget"], budgeted["verdict"]
     if write_reports:
         (g / "field_report_budgeted.json").write_text(json.dumps(budgeted, indent=1), encoding="utf-8")
     out["budgeted"] = {"verdict": verdict, "report": "field_report_budgeted.json", "budget_id": budget["budget_id"],

@@ -15,12 +15,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from regression.field_compare import (  # noqa: E402
-    BudgetError, Delta, PolicyError, compare_trees, docs_for_report, evaluate_budget, load_budget, load_policy,
+    BudgetError, PolicyError, budgeted_report, compare_trees, load_budget, load_policy,
 )
 
 
@@ -31,6 +32,8 @@ def main(argv=None) -> int:
     ap.add_argument("--policy", default="volatile-leaves-v1", help="normalization policy name, or 'none'")
     ap.add_argument("--budget", help="budget record JSON (required for --mode budgeted)")
     ap.add_argument("--key-order", action="store_true", help="also report object key-order differences")
+    ap.add_argument("--jobs", "-j", type=int, default=os.cpu_count() or 1,
+                    help="worker processes for the per-unit comparison (default: cpu_count)")
     ap.add_argument("-o", "--output", required=True)
     args = ap.parse_args(argv)
 
@@ -60,23 +63,13 @@ def main(argv=None) -> int:
             return 2
 
     report = compare_trees(a_root, b_root, mode="strict" if args.mode == "budgeted" else args.mode,
-                           policy=policy, key_order=args.key_order)
-    report["mode"] = args.mode
-    missing_allowed = int(budget.get("unexplained_missing_units_allowed", 0)) if budget else 0
-    hard_error = (report["summary"]["missing"] > missing_allowed or report["summary"]["parse_errors"] > 0
-                  or bool(report["policy_violations"]))
-
+                           policy=policy, key_order=args.key_order, jobs=args.jobs)
     if args.mode == "budgeted":
-        deltas = [Delta(**d) for d in report["deltas"]]
         try:
-            report["budget"] = evaluate_budget(deltas, budget, docs=docs_for_report(report, a_root, b_root),
-                                               missing_units=report["summary"]["missing"])
+            report = budgeted_report(report, budget, a_root, b_root)
         except BudgetError as e:
             print(f"error: {e}", file=sys.stderr)
             return 2
-        report["verdict"] = "error" if hard_error else ("clean" if report["budget"]["clean"] else "residuals")
-    else:
-        report["verdict"] = "error" if hard_error else ("deltas" if report["summary"]["deltas"] else "clean")
 
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)

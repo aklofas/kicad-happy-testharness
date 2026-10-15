@@ -18,6 +18,8 @@ def test_identical_code_pair_raw_differs_strict_clean():
     raw = compare_trees(IDENT / "baseline", IDENT / "candidate", mode="raw", policy=None)
     strict = compare_trees(IDENT / "baseline", IDENT / "candidate", mode="strict", policy=pol)
     assert raw["verdict"] == "deltas" and raw["summary"]["by_op"] == {"bytes": 1}
+    assert raw["summary"]["run_id_differs"] == 1 and "/inputs/run_id" in raw["note"]
+    assert [d["path"] for d in raw["deltas"]] == ["/snap.json"]
     assert strict["verdict"] == "clean" and strict["policy_violations"] == []
     bare = compare_trees(IDENT / "baseline", IDENT / "candidate", mode="strict", policy=None)
     assert {d["path"] for d in bare["deltas"]} == {"/inputs/run_id", "/capability_mode_ref/run_id"}

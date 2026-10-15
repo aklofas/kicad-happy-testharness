@@ -272,3 +272,15 @@ def test_residual_allowance_honoured():
     b = _budget([], unexplained_deltas_allowed=1)
     assert evaluate_budget([_d("/a")], b)["clean"]
     assert not evaluate_budget([_d("/a"), _d("/b")], b)["clean"]
+
+
+def test_bound_status_reported_per_class():
+    b = _budget([{"id": "bounded", "path_glob": "/findings/*/severity", "unit_bound": {"max_units": 1}},
+                 {"id": "open", "path_glob": "/statistics/**"},
+                 {"id": "unused", "path_glob": "/nothing", "unit_bound": {"max_units": 0}}])
+    ds = [_d("/findings/0/severity"), _d("/findings/0/severity", unit="schematic/o/r/k2"), _d("/statistics/x")]
+    ev = evaluate_budget(ds, b)
+    assert ev["bound_status"] == {"bounded": {"max_units": 1, "units": 2, "ok": False},
+                                  "open": {"max_units": None, "units": 1, "ok": True},
+                                  "unused": {"max_units": 0, "units": 0, "ok": True}}
+    assert ev["violations"] == ["class bounded claimed 2 units > max_units 1"] and ev["clean"] is False
