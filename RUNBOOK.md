@@ -407,17 +407,24 @@ python3 regression/seed_structural.py --all --type {type}
 
 SEED tolerance scales with count: <50 items →10%, 50-200 →5%, >200 →3%.
 
-### 4f. Regenerate and audit bugfix assertions
+### 4f. Reconcile and audit bugfix assertions
 
 ```bash
-python3 regression/generate_bugfix_assertions.py --apply
+python3 regression/generate_bugfix_assertions.py            # dry-run: added / updated / removed / unchanged
+python3 regression/generate_bugfix_assertions.py --apply    # write (atomic), after reviewing the diff above
 python3 regression/audit_bugfix_paths.py
 ```
 
-The first command ensures BUGFIX-* assertions stay in sync with the bugfix registry.
-The second verifies all bugfix assertions resolve to actual output files — any
-"unmatched" entries indicate wrong `project` or `source_file` paths in the registry.
-Fix them before proceeding.
+The generator is a grouped reconciliation (TH-057): every `*_bugfix.json`
+is brought into agreement with the registry by id — changed expected values
+print as `~ BUGFIX-… check.value: 7 -> 6`, registry removals as `- …`, and a
+file whose last record was removed is deleted. `--issue KH-nnn` scopes both
+additions and removals to that issue; other issues' records in the same file
+are untouched. Hand-authored files at a generator path are an error, and any
+error anywhere aborts the run before a single file is written (two-phase).
+The audit then verifies all bugfix assertions resolve to actual output files —
+any "unmatched" entries indicate wrong `project` or `source_file` paths in the
+registry. Fix them before proceeding.
 
 ### 4g. Run assertions to verify 100% pass
 
@@ -2903,12 +2910,12 @@ if any gating-notes key references a detector that does NOT appear at any
 ### 27c. Bump `CURRENT_SCHEMA_ERA` in `regression/schema_era.py`
 
 ```python
-CURRENT_SCHEMA_ERA = "v1.5"
-KNOWN_ERAS = ("pre-v1.4", "v1.4", "v1.5")
+CURRENT_SCHEMA_ERA = "v3.0"
+KNOWN_ERAS = ("pre-v1.4", "v1.4", "v3.0")   # v3.0 is already present; this step only moves CURRENT
 ```
 
 KNOWN_ERAS is append-only — never remove old values. Run the module unit
-test (`python3 tests/test_schema_era_module.py`) to confirm.
+tests (`python3 -m pytest tests/test_schema_era_module.py tests/test_schema_era_required.py`) to confirm.
 
 ### 27d. Identify repos where assertions fracture against new analyzer output
 
@@ -2920,20 +2927,22 @@ Failures should concentrate in the v1.5-changed-detector set. Anything outside
 that set is a true regression and must be investigated separately before
 proceeding.
 
-### 27e. Tag pre-v1.5 assertions, then re-seed affected repos
+### 27e. Tag pre-v3.0 assertions, then re-seed affected repos
 
 ```bash
-# Optionally tag any existing v1.4-tagged assertions in the new changed set
-# (rare — only if a detector behavior changed AGAIN in v1.5).
-python3 regression/tag_assertions.py --schema-era v1.4 --apply
+# Tag the OLD-era assertions whose detector is in the NEW changed set:
+# selection registry = new era, stamped value = old era (TH-057 / A4 fix —
+# the old single --schema-era flag selected the old set by mistake).
+python3 regression/tag_assertions.py --select-era v3.0 --stamp-era v1.4 --dry-run
+python3 regression/tag_assertions.py --select-era v3.0 --stamp-era v1.4 --apply
 
 # Re-seed each failing repo at the new era.
-python3 regression/seed.py --repo X --schema-era v1.5
-python3 regression/seed_structural.py --repo X --schema-era v1.5
+python3 regression/seed.py --repo X --schema-era v3.0
+python3 regression/seed_structural.py --repo X --schema-era v3.0
 ```
 
-`tag_assertions.py` is idempotent and skips already-tagged assertions
-unless `--force`.
+`tag_assertions.py` is idempotent, skips already-tagged assertions unless
+`--force`, and exits 2 (touching nothing) when the selection registry is missing.
 
 ### 27f. Hand-annotate `bugfix_registry.json` entries
 
@@ -2989,7 +2998,7 @@ See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
 | Promote to reference | `python3 regression/promote.py --repo {repo} --apply` |
 | Full validation pipeline | `python3 harness.py validate` |
 | Quick validation | `python3 harness.py validate --cross-section smoke` |
-| Bugfix assertion gen | `python3 regression/generate_bugfix_assertions.py --apply` |
+| Bugfix assertion reconcile | `python3 regression/generate_bugfix_assertions.py` (dry-run) then `--apply` |
 | Bugfix coverage audit | `python3 regression/audit_bugfix_coverage.py` |
 | Findings drift | `python3 regression/drift.py --repo {repo}` |
 | Finding refresh | `python3 regression/refresh_findings.py` |

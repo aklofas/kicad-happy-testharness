@@ -11,6 +11,49 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-15 — TH-057: `generate_bugfix_assertions.py --apply` merged by id and never updated a changed expected value; stale records survived registry removal
+
+**Severity:** LOW as filed, but it defeated RUNBOOK 4f for exactly the case it
+exists for and is a prerequisite to the v3.0 relock (report A4 / §8 TH-057).
+**File:** `regression/generate_bugfix_assertions.py`
+**Discovered:** 2026-10-05, v2.3.0 regen (KH-299 7→6 / KH-311 50→47 re-anchors
+did not land; KH-313-02/03 removals survived). **Fixed:** 2026-10-15, H0 plan 5.
+
+- **Root cause:** the old writer appended a registry record only when its id was
+  absent from the existing generator-owned file (old l.109–116); an id already
+  present won forever, removed registry rows were never dropped, `--issue`
+  could not express removal, and "generated N" counted unchanged rows.
+- **Fix:** grouped reconciliation per output file — desired set from the
+  registry (ordinal ids over unpinned assertions, optional pinned `"id"`, duplicate
+  ids per file and incomplete rows are errors), matched by id into added / updated
+  (exact owned-key diff, non-generator keys such as `migration_note` preserved) /
+  removed (scoped to `--issue` when given) / unchanged; dry-run default prints
+  every bucket; `--apply` is two-phase (every file validated before any write),
+  writes atomically (tmp + `os.replace`, tmp removed on failure), deletes a file
+  whose last record was removed, and refuses hand-authored files at a generator
+  path; `--apply` and `--dry-run` are mutually exclusive. `--reference-dir` /
+  `--registry` added for tests. Companion A4 work in the same plan: `schema_era`
+  knows `v3.0` and its helpers take `required=`; `tag_assertions.py` separates
+  `--select-era` from `--stamp-era` and aborts on a missing registry instead of
+  tagging nothing.
+- **Verification:** `tests/test_bugfix_reconcile.py` (26), `tests/test_schema_era_required.py` (6),
+  `tests/test_tag_assertions_select_stamp.py` (6); existing `test_tag_assertions.py`,
+  `test_schema_era_module.py`, `test_seed_schema_era_stamping.py`,
+  `test_run_checks_era_filter.py` still green. Real-registry dry-run at
+  harness `f1473386ea3` (NOT applied — curated-lock representation changes are adjudicated
+  at the v3 baseline / relock, plan 6):
+  ~ BUGFIX-KH-125-01  KH-125: At least 2 opamp circuits detected on main sheet
+  ~ BUGFIX-KH-042-01  KH-042: 13 DNP resistor instances correctly counted
+  ~ BUGFIX-KH-156-01  KH-156: ESP32-P4-PC thermal_pad_vias <= 10 (was ~19 from paste-only pads)
+  ~ BUGFIX-KH-147-01  KH-147: No false LED drivers on zx-sizif-512
+  ~ BUGFIX-KH-165-01  KH-165: CH32V003F4U6 thermal_pad_vias detected (pad_area ~2.72mm2)
+  ~ BUGFIX-KH-167-01  KH-167: U3 (RCLAMP0502N) not in decoupling analysis
+  - BUGFIX-KH-116-01  KH-116: No RC filters with output_net == GND (was false positive)
+  ~ BUGFIX-KH-163-01  KH-163: IC2 (BD00FC0W) now has thermal_pad_vias entry (was missing)
+  ~ BUGFIX-KH-119-01  KH-119: LC filters at most 14 (was 23 from overcounting)
+  ~ BUGFIX-KH-015-01  KH-015: signal_analysis section exists on legacy .sch file
+  [DRY RUN] Summary over 142 files: added 0, updated 9, removed 1, unchanged 231
+
 ## 2026-10-15 — H0 plan 2: run identity, fresh outputs, corpus gate (TH-055, TH-059)
 
 Harness-only. `harnesslib/{identity,execution,selection,profiles}.py` plus runners on
