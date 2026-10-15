@@ -11,6 +11,27 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-15 — TH-069: `discover.py` listed a directory named `*.kicad_pcb` as a pcb unit
+
+**Severity:** LOW (one unit; a ledger slot and a crash mis-attributed to the product).
+**File:** `discover.py`
+**Discovered:** 2026-10-15, round-2 reply triage of the ledgered pcb crash units.
+**Fixed:** 2026-10-15, v3 round-3 reply (commit `7a554f1a4ef` + manifest regen).
+
+- **Root cause:** the schematic / legacy `.sch` / pcb / project globs in
+  `discover_in` had no regular-file check, so a gerber export folder named
+  `repos/BrettHallen/Conversion_Boards/TFC_10-pin/TFC_10-pin 2.kicad_pcb/` became a
+  pcb unit that `analyze_pcb.py` refused with exit 2 on both gate sides.
+- **Fix:** `p.is_file()` on all four unit globs (gerber discovery already had it).
+- **Verification:** `tests/test_discover_regular_files.py` (RED → GREEN; a directory
+  named `*.kicad_pcb` / `*.kicad_sch` / `*.kicad_pro` is skipped, the gerber dir
+  inside it is still found); full `discover.py` rerun after the round-3 gate: pcb
+  18,661 → 18,660 (the TFC directory only), schematic 36,465 / gerber 5,502 /
+  projects 12,554 unchanged. The `crash_units` ledger entry for the directory
+  (`reference/baseline_debts/6a91aaa.json`, exit 2, accepted by the round-2 verdict)
+  stays as provenance and can never match again; it drops out at the next
+  `baseline_ledger build`.
+
 ## 2026-10-15 — TH-057: `generate_bugfix_assertions.py --apply` merged by id and never updated a changed expected value; stale records survived registry removal
 
 **Severity:** LOW as filed, but it defeated RUNBOOK 4f for exactly the case it

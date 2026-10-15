@@ -92,6 +92,60 @@ Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa �
 
 ## Completed batches
 
+### 2026-10-15 later (7) — v3 ROUND 3 GATE 6a91aaa→3d4a420 ACCEPTED (FULL standard profile, strict-field 0 deltas); harness re-baselined at 3d4a420 (CI pin checkpoint 4 candidate)
+
+Candidate `3d4a420` (v3-dev: 10 commits over 8912a5a — kicad_core/model.py typed records,
+netquery build_pin_to_net_map/BridgeFacts, kicad_types.build_analysis_context, RS/PP audits
+on shared BridgeFacts, sexp_parser + load_jsonc into kicad_core with facades, capability_mode
+Path(__file__) fix, SPICE --model-cache-dir/--offline, CONTRIBUTING; budget EMPTY). Gate
+`regression/run_corpus_gate.py --all --kind structural --profile standard --ledger
+reference/baseline_debts/6a91aaa.json --jobs 32` (baseline = clean clone
+`results/v3_baseline/product_6a91aaa`, candidate = the v3-dev worktree; 2,605 s wall,
+selection 60,628 inputs / 170,023 unit records): **149,629 PASS / 0 WARN / 0 FAIL / 20,394
+SKIP** (20,379 thermal not_applicable + 6 both_failed + 9 dependency_missing = the 15
+ledgered identities: KH-447 timeouts discrete-nes ram/row_group + LT3514 with their 9 emc/
+thermal/cross dependents, KH-446 crashes holy60-3d/tofyKeeb exit 1, TH-069 TFC directory
+exit 2 — identical exit codes both sides); findings STRICT-CLEAN; census exact (sch 36,465 /
+pcb 18,661 / gerber 5,502 / emc+thermal+cross 36,462); **strict-field 0 deltas over 149,629
+compared units, 0 policy violations** (`volatile-leaves-v1`); raw differs by the two run-id
+leaves only (299,258 byte deltas, run_id_differs 149,629); candidate_failures 0; GATE PASS
+exit 0 on the first evaluation (ledgered_skips 15 / unledgered 0 / unaccepted 0). `--schema`
+byte-identical 6/6 both sides and equal to the round-2 capture. **Declared sidecar leaf
+verified by direct diff** (`results/v3_round3_gate_aux/sidecar_diff.{py,json}`): 149,634
+capability_mode.json pairs, 0 one-sided; the only differing leaves are `run_id` (149,634) and
+`schema_versions` (149,634: `{}` on every baseline unit → the 8-entry map on every candidate
+unit); no other leaf differs. **Verdict: ACCEPT.** Attempt 1 of the gate was refused (exit 2)
+because the baseline clone carried an untracked `analysis/capability_mode.json` written by
+some earlier stdout-mode analyzer run with the clone as cwd — deleted, RUNBOOK gate preflight
+note added. Evidence `results/v3_round3_gate/` (rollup, units.jsonl, manifest, field reports,
+request/response records, converted map) + `results/v3_round3_gate_aux/` (schema ×6, scan
+check/accept, registry scans, sidecar diff, tier logs, the maintainer's handoff files);
+round-2 snap trees pruned (records kept); round-3 snap trees (55 G) kept until round 4 ships.
+
+Re-baseline at 3d4a420: `source_scan.py check --accept-baseline` (the 53 "lost" constants
+were all line-keyed — TH-070 — no lost files/sites/EQ; now CLEAN); constants registry
+rescanned (720; 0 added / 0 updated / 0 removed; 30 hash-changed entries = per-function
+result-dict literals in analyze_schematic/signal_detectors plus `_GENERATORS` /
+`TEMPLATE_REGISTRY` whose context moved with the SPICE cache change — `_CAP_DERATING`,
+`_STANDARD_LIB_PINS`, `_uc_specs`, `TEMPLATE_REGISTRY` have 0 diff lines in 8912a5a..3d4a420,
+TH-065 class); equation registry rescanned (105, line shifts only); round-3 map applied:
+31 harness sites in 4 files migrated off the facades (`validate/verify_parser.py` +
+`tests/test_detect_sub_sheet.py` → `kicad_core.sexp`; `tests/test_kh400_jsonc_trailing_comma.py`
++ `tests/test_kh368_jsonc.py` → `kicad_core.project._strip_jsonc`; `build_pin_to_net_map`
+appears only in two docstrings); dispositions r03 done for 6 symbols (`api_migration check` =
+the one expected `normalize_severity` violation until H1; blind list still empty — kh368's
+dynamic `spec_from_file_location` binding is gone). **TH-069 FIXED** (discover.py regular-file
+filter; manifests regenerated: pcb 18,661 → 18,660, nothing else moved — the next round's
+expected census shrinks by that unit; the ledger entry stays as provenance). Importer gap the
+maintainer hit fixed (`round_record.py new-request --relocation-map` now carries record-shape
+`product_evidence` / `expected_sidecar_changes`). Tiers against 3d4a420 with
+`KICAD_HAPPY_DIR` = the v3-dev worktree: before re-baseline 3,074 passed / 1 failed
+(test_scan_coverage_not_lost, as the maintainer measured) / 8 skipped / 4 xfailed; after:
+**3,075 passed / 0 failed / 8 skipped / 4 xfailed** (3,087 collected). No new filings. Open
+58 (38 KH + 20 TH); next KH-448 / TH-071. Still owed by the harness before the round-4 gate:
+migrate `tests/contract/_build_ctx.py` + the direct `AnalysisContext(` constructions to
+`kicad_types.build_analysis_context` (facades stay until that lands in a pushed checkpoint).
+
 ### 2026-10-15 later (6) — ROUND-2 VERDICT RECEIVED acknowledged; crash_units ledger stamps landed
 
 Main-repo reply (LOG `[main-repo] 2026-10-15 — ROUND-2 VERDICT RECEIVED`): round-2 ACCEPT
