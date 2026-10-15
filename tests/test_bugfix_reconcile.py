@@ -310,7 +310,15 @@ def test_apply_and_dry_run_are_mutually_exclusive(tmp_path):
     assert (ref / A_PATH).read_bytes() == before
 
 
-def test_write_atomic_cleans_tmp_on_failure(tmp_path):
-    with pytest.raises(TypeError):
-        gba.write_atomic(tmp_path / "x.json", {"bad": object()})
-    assert not list(tmp_path.glob("*"))
+def test_write_atomic_cleans_tmp_on_failure(tmp_path, monkeypatch):
+    real = Path.write_text
+
+    def partial_write(self, *a, **k):
+        real(self, "partial", encoding="utf-8")
+        raise OSError("disk full")
+
+    monkeypatch.setattr(Path, "write_text", partial_write)
+    with pytest.raises(OSError, match="disk full"):
+        gba.write_atomic(tmp_path / "x.json", {"a": 1})
+    assert not list(tmp_path.glob("*.tmp-*"))
+    assert not (tmp_path / "x.json").exists()
