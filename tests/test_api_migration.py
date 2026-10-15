@@ -362,7 +362,7 @@ def test_load_relocations_product_shape_uses_inventory(tmp_path):
 
 
 def test_apply_map_skips_unbound_symbols_with_one_note(tmp_path):
-    """A product map lists everything it moved; names the harness never bound are skipped
+    """A product-shape map lists everything it moved; names the harness never bound are skipped
     with ONE summary note, exit 0, and the listed sites are unchanged."""
     bound = {"old": "kicad_utils.normalize_field_name", "new": "kicad_core.fields.normalize_field_name",
              "facade": True, "retire": "round 9"}
@@ -372,9 +372,7 @@ def test_apply_map_skips_unbound_symbols_with_one_note(tmp_path):
     mixed.write_text(json.dumps({"relocations": [
         bound,
         {"old": "kicad_utils.not_bound_a", "new": "kicad_core.fields.not_bound_a", "facade": False},
-        {"symbol": "kicad_utils.not_bound_b", "old_owner": "skills/kicad/scripts/kicad_utils.py",
-         "new_owner": "skills/kicad/scripts/kicad_core/fields.py", "new_name": "not_bound_b",
-         "facade_until": None}]}))
+        {"old": "kicad_utils.not_bound_b", "new": "kicad_core.fields.not_bound_b", "facade": False}]}))
     run = lambda m: subprocess.run([sys.executable, str(TOOL), "apply-map", str(m), "--json"],  # noqa: E731
                                    capture_output=True, text=True)
     r0, r = run(only), run(mixed)
@@ -383,3 +381,26 @@ def test_apply_map_skips_unbound_symbols_with_one_note(tmp_path):
     notes = [ln for ln in r.stderr.splitlines() if ln.startswith("note:")]
     assert notes == ["note: 2 relocations name symbols the harness never bound (skipped)"]
     assert "error" not in r.stderr and "note: " not in r0.stderr.replace("warning:", "")
+
+
+def test_apply_map_record_shape_unknown_symbol_is_hard_error(tmp_path):
+    """A record-shape map is hand-written: a symbol not in the inventory is a typo (exit 2)."""
+    m = tmp_path / "map.json"
+    m.write_text(json.dumps([{"symbol": "kicad_utils.typo_name", "old_owner": "skills/kicad/scripts/kicad_utils.py",
+                              "new_owner": "skills/kicad/scripts/kicad_core/fields.py", "new_name": "typo_name",
+                              "facade_until": None}]))
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(m)], capture_output=True, text=True)
+    assert r.returncode == 2 and "error: kicad_utils.typo_name not in inventory" in r.stderr
+    assert "never bound" not in r.stderr
+
+
+def test_apply_map_mixed_map_skips_product_entries_errors_record_entries(tmp_path):
+    m = tmp_path / "map.json"
+    m.write_text(json.dumps({"relocations": [
+        {"old": "kicad_utils.not_bound_a", "new": "kicad_core.fields.not_bound_a", "facade": False},
+        {"symbol": "kicad_utils.typo_b", "old_owner": "skills/kicad/scripts/kicad_utils.py",
+         "new_owner": "skills/kicad/scripts/kicad_core/fields.py", "new_name": "typo_b", "facade_until": None}]}))
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(m)], capture_output=True, text=True)
+    assert r.returncode == 2
+    assert "error: kicad_utils.typo_b not in inventory" in r.stderr
+    assert "note: 1 relocations name symbols the harness never bound (skipped)" in r.stderr

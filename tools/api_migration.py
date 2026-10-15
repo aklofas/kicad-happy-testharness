@@ -105,6 +105,13 @@ def _dotted_from_owner(owner: str) -> str:
     return ".".join(parts)
 
 
+def _product_shape_flags(path: Path) -> list[bool]:
+    """Per entry: True for the product shape {old, new, ...} (aligned with normalize_relocations)."""
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    rel = data["relocations"] if isinstance(data, dict) else data
+    return [isinstance(r, dict) and "old" in r and "new" in r for r in rel]
+
+
 def _load_relocations(path: Path, inventory: dict | None = None) -> list[dict]:
     """Record-shape or product-shape relocations (round_record.normalize_relocations)."""
     data = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -487,6 +494,7 @@ def cmd_apply_map(args) -> int:
     inv = load_inventory(args.inventory)
     try:
         rel = _load_relocations(args.map, inv)
+        product_shape = _product_shape_flags(args.map)
     except (ValueError, KeyError, TypeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -499,12 +507,22 @@ def cmd_apply_map(args) -> int:
             bad = True
     if bad:
         return 2
-    # a product map lists everything it moved; names the harness never bound have no sites
-    unbound = [r for r in rel if tuple(r["symbol"].rpartition(".")[::2]) not in known]
-    if unbound:
-        print(f"note: {len(unbound)} relocations name symbols the harness never bound (skipped)",
-              file=sys.stderr)
-    rel = [r for r in rel if r not in unbound]
+    # a product-shape map lists everything it moved: names the harness never bound have no sites
+    # (skipped, one note); a record-shape entry is hand-written, so an unknown symbol is a typo
+    kept, skipped = [], 0
+    for r, prod in zip(rel, product_shape):
+        if tuple(r["symbol"].rpartition(".")[::2]) in known:
+            kept.append(r)
+        elif prod:
+            skipped += 1
+        else:
+            print(f"error: {r['symbol']} not in inventory", file=sys.stderr)
+            bad = True
+    if skipped:
+        print(f"note: {skipped} relocations name symbols the harness never bound (skipped)", file=sys.stderr)
+    if bad:
+        return 2
+    rel = kept
     edits = plan_edits(inv, rel)
     if args.json:
         print(json.dumps(edits, indent=1))
