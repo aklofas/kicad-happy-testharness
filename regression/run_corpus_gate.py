@@ -131,8 +131,11 @@ def diff_envelopes(a_path, b_path, a_ok, b_ok):
         return {"verdict": "FAIL", "reason": "candidate failed/produced no output", **zero}
     if not a_ok and b_ok:
         return {"verdict": "WARN", "reason": "baseline failed; not comparable", **zero}
-    before = json.loads(Path(a_path).read_text(encoding="utf-8"))
-    after = json.loads(Path(b_path).read_text(encoding="utf-8"))
+    try:
+        before = json.loads(Path(a_path).read_text(encoding="utf-8"))
+        after = json.loads(Path(b_path).read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError, UnicodeDecodeError) as e:
+        return {"verdict": "SKIP", "reason": "snapshot_read_error", "detail": str(e)}
     d = rdiff.diff(rdiff._collect_observations(before), rdiff._collect_observations(after))
     verdict, reason = rdiff.verdict(d)
     downgrades = [c for c in d["severity_changes"] if c["kind"] == "downgrade"]

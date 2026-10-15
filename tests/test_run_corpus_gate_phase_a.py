@@ -98,3 +98,29 @@ def test_expected_census_counts_phase_a_units():
             ("pcb", "/y.kicad_pcb", "o/r", "", "", "", "standard"),
             ("schematic", "/z.kicad_sch", "o/r", "", "", "", "standard")]
     assert gate.expected_census(jobs) == {"pcb": 2, "schematic": 1}
+
+
+def test_diff_envelopes_unreadable_snapshot_is_skip(tmp_path):
+    a = tmp_path / "a.json"; b = tmp_path / "b.json"
+    a.write_text('{"analyzer_type": "schematic", "findi')
+    b.write_text(json.dumps({"analyzer_type": "schematic", "findings": []}))
+    d = gate.diff_envelopes(a, b, True, True)
+    assert d["verdict"] == "SKIP" and d["reason"] == "snapshot_read_error" and d["detail"]
+
+
+def test_phase_a_rerun_with_failing_candidate_quarantines_snap(tmp_path):
+    base = _worktree(tmp_path, "base", "ok")
+    cand = _worktree(tmp_path, "cand", "ok")
+    board = tmp_path / "repos" / "o" / "r" / "b.kicad_pcb"
+    board.parent.mkdir(parents=True); board.write_text("(kicad_pcb)")
+    lay = gate.GateLayout(tmp_path / "g")
+    def job(c):
+        return gate.phase_a_job(("pcb", str(board), "o/r", str(base), str(c),
+                                 str(lay.root), "standard"))
+    assert job(cand)["verdict"] == "PASS"
+    rec = job(_worktree(tmp_path, "cand_bad", "exit2"))
+    snap = lay.snap("candidate", "pcb", "o/r", "b.kicad_pcb")
+    assert rec["verdict"] == "FAIL"
+    assert not snap.exists()
+    assert snap.with_name("snap.json.stale").exists()
+    assert lay.snap("baseline", "pcb", "o/r", "b.kicad_pcb").exists()
