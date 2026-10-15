@@ -12,8 +12,9 @@ optional `analyzer`, `op` (subset of the comparator ops: added/removed/changed/t
 key_order/bytes/lexical_numeric), `where` (`rule_id`/`detector` lists resolved from the
 finding at that index on either side; only valid under `/findings/*` and `/assessments/*`),
 `direction` (`any|up|down|none`, severity changes only), `value_relation` (`any|equal`),
-`unit_bound` (`{"max_units": N}`), `predicate` (`"package.module:function"` taking
-`(delta, a_doc, b_doc)`; the module lives in this directory and is tracked), `evidence`.
+`unit_bound` (`{"max_units": N}`), `predicate` (`"module:function"` — `module` is a bare name imported as
+`regression.budgets.<module>`, the function takes `(delta, a_doc, b_doc)`; the module lives in
+this directory and is tracked), `evidence`.
 
 The historical walkers under `results/*/walker_*.py` were ad hoc predicates; a predicate
 that matters now lives here, versioned with the budget that uses it.
