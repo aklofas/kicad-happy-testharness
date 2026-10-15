@@ -92,6 +92,54 @@ Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa �
 
 ## Completed batches
 
+### 2026-10-15 later (5) — v3 ROUND 2 GATE 6a91aaa→8912a5a ACCEPTED; harness re-baselined at 8912a5a (CI pin checkpoint 3 candidate)
+
+Candidate `8912a5a` (v3-dev: a000482 round-2 tip + be63888 CI pin ckpt-2 + KH-445 re-id;
+32 commits over 6a91aaa, budget EMPTY). Gate `regression/run_corpus_gate.py --kind gate
+--cross-section quick_200 --profile standard` (257 repos, 32 jobs, 672 s; baseline = clean
+clone `results/v3_baseline/product_6a91aaa`, candidate = the v3-dev worktree): 41,260
+units → 35,931 PASS / 0 WARN / 0 FAIL / 5,329 SKIP (5,322 thermal not_applicable + 4
+both_failed + 3 dependency_missing — the LT3514 timeout + its 3 dependents were ledgered;
+the 3 pcb crash units were NOT ledgerable until this commit added the `crash_units` group:
+`baseline_ledger check` never inspected crashes, so plan 6's "0 new identities" was vacuous
+for them — ledger rebuilt with `--carry-accepted-from`, crash entries `accepted_by: null`
+pending the maintainer); findings STRICT-CLEAN; census exact (sch 8,878 / pcb 4,892 /
+gerber 856 / emc+thermal+cross 8,877); **strict-field 0 deltas over 35,931 compared units,
+0 policy violations** (`volatile-leaves-v1`); raw differs on every unit by the two run-id
+leaves only (71,862 byte deltas, run_id_differs 35,931). `--schema` byte-identical 6/6 and
+equal to the round-1 capture. Gate exit was 1 purely from those seven skips → gate now takes `--ledger`
+(ledger-aware skips_ok, this commit; re-evaluation of the recorded run = pass). **Verdict: ACCEPT.** Evidence
+`results/v3_round2_gate/` (rollup, units.jsonl, manifest, field_report_{raw,strict}.json,
+gate log, converted relocation map) + `results/v3_round2_gate_aux/` (schema ×6 both sides,
+scan check before/after acceptance, pre-acceptance coverage baseline copy).
+
+Re-baseline at 8912a5a (this commit): `source_scan.py check --accept-baseline` (files 90→103;
+the 156 "lost" constants were line shifts / file moves — TH-070; EQ-065 retired = dead
+`apply_rotation` deleted in round 1); equation registry rescanned (105 equations: EQ-108
+added for `emc_formulas.trace_resistance_ohm` and verified by Pouillet's law, EQ-065 gone,
+EQ-042 single-site `check_thermal_emc`; 79 verified / 18 stale / 8 unverified); constants
+registry rescanned (718; 155 added / 390 updated / 156 removed = TH-065 churn); 48 harness
+import sites in 11 test files migrated `kicad_utils` → `kicad_core.{fields,classify,
+netnames,parts,project}` and `diff_analysis` → `diff_engine` (dispositions r02 done for 22
+symbols; `api_migration check` = the one expected `normalize_severity` violation until H1);
+debts ledger `accepted_by` stamped on all 24 entries (ruling Q3). Tiers against 8912a5a:
+before re-baseline 2,934 passed / 1 failed (test_scan_coverage_not_lost, as the maintainer
+measured) / 8 skipped / 4 xfailed; after: GREEN (counts in the LOG entry). **From now on
+`KICAD_HAPPY_DIR` must point at the v3-dev worktree** for the unit/contract tiers.
+
+Rulings landed: I9 — `--kind structural` (alias `gate`) requires an EMPTY budget (exit 2
+otherwise); `--kind output-changing|relock` require `--budget` and pass on census ok AND
+skips ok AND budgeted verdict clean (findings strict_clean informational); budget class
+`expected_magnitude` with a 2× cap → `over_budget` verdict; `budget_sha256` + ledger path/sha
+recorded in rollup + manifest. Per-round record additions (request `removed`,
+`known_defects_deferred`, `expected_sidecar_changes`, `product_evidence`; response
+`apply_map_result`, `accept_baseline_diff`, `scan_coverage_verdict`, `budget_sha256`) +
+`round_record.py new-request --relocation-map` importer for the product's map shape.
+Filed: KH-446 (empty `.kicad_pcb` → traceback exit 1), KH-447 (three schematic roots time
+out at 120 s, LT3514 = 17 KB / 0 symbols), TH-069 (`discover.py` lists a directory named
+`*.kicad_pcb`), TH-070 (coverage identity by line/file → false losses every structural
+round). Open 59 (38 KH + 21 TH); next KH-448 / TH-071.
+
 ### 2026-10-15 later (4) — H0 plan 6: v3 baseline acquired at 6a91aaa (local, unpushed)
 
 Code: `regression/round_record.schema.json` + `tools/round_record.py` (spec §9 per-round
