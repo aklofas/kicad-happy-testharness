@@ -25,7 +25,7 @@ from pathlib import Path
 
 POLICY_DIR = Path(__file__).resolve().parent / "normalization"
 
-_ALLOWED_LEAF_KEYS = {"pointer", "pointer_glob", "shape", "equals", "sha256_of", "rewrite"}
+_ALLOWED_LEAF_KEYS = {"pointer", "pointer_glob", "shape", "equals", "sha256_of", "rewrite", "note"}
 _ALLOWED_REWRITES = {"strip_root_prefix", "strip_root_prefix_keys"}
 NAMED_SHAPES = {
     "number": None,                         # checked by type, not regex
@@ -43,6 +43,17 @@ class Policy:
     name: str
     leaves: list[dict] = field(default_factory=list)
     root_prefixes: list[str] = field(default_factory=list)
+    root_prefixes_from_manifest: bool = False
+
+
+def _check_pointer(ptr, idx: int, glob: bool) -> None:
+    if not isinstance(ptr, str) or not ptr.startswith("/"):
+        raise PolicyError(f"leaf {idx}: pointer must start with '/' (RFC 6901): {ptr!r}")
+    for tok in ptr[1:].split("/"):
+        if glob and tok == "*":
+            continue
+        if re.search(r"~(?![01])", tok):
+            raise PolicyError(f"leaf {idx}: bad '~' escape in pointer {ptr!r}")
 
 
 def _validate_leaf(leaf: dict, idx: int) -> None:
@@ -53,18 +64,20 @@ def _validate_leaf(leaf: dict, idx: int) -> None:
     if len(forms) != 1:
         raise PolicyError(f"leaf {idx}: exactly one of pointer/pointer_glob required")
     ptr = leaf[forms[0]]
-    if not isinstance(ptr, str) or not ptr.startswith("/"):
-        raise PolicyError(f"leaf {idx}: pointer must start with '/' (RFC 6901): {ptr!r}")
+    _check_pointer(ptr, idx, forms[0] == "pointer_glob")
+    for key in ("shape", "rewrite", "equals", "sha256_of", "note"):
+        if key in leaf and not isinstance(leaf[key], str):
+            raise PolicyError(f"leaf {idx}: {key} must be a string")
     if "rewrite" in leaf and leaf["rewrite"] not in _ALLOWED_REWRITES:
         raise PolicyError(f"leaf {idx}: rewrite must be one of {sorted(_ALLOWED_REWRITES)}")
-    if "equals" in leaf and not str(leaf["equals"]).startswith("/"):
-        raise PolicyError(f"leaf {idx}: equals must be an absolute pointer")
+    if "equals" in leaf:
+        _check_pointer(leaf["equals"], idx, False)
     shape = leaf.get("shape")
     if shape is not None and shape not in NAMED_SHAPES:
         try:
             re.compile(shape)
         except re.error as e:
-            raise PolicyError(f"leaf {idx}: shape is not a valid regex: {e}") from e
+            raise PolicyError(f"bad shape regex at {ptr}: {e}") from e
 
 
 def load_policy(name: str, policy_dir: Path | None = None) -> Policy:
@@ -76,7 +89,9 @@ def load_policy(name: str, policy_dir: Path | None = None) -> Policy:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         raise PolicyError(f"policy {name!r}: invalid JSON: {e}") from e
-    if data.get("name") != name:
+    if not isinstance(data, dict):
+        raise PolicyError(f"policy {name!r}: top level must be an object")
+    if not isinstance(data.get("name"), str) or data["name"] != name:
         raise PolicyError(f"policy file {path.name} declares name {data.get('name')!r}, expected {name!r}")
     leaves = data.get("leaves")
     if not isinstance(leaves, list):
@@ -86,5 +101,8 @@ def load_policy(name: str, policy_dir: Path | None = None) -> Policy:
             raise PolicyError(f"leaf {i}: must be an object")
         _validate_leaf(leaf, i)
     rp = data.get("root_prefixes", [])
-    root_prefixes = [] if rp == "from_manifest" else list(rp)
-    return Policy(name=name, leaves=leaves, root_prefixes=root_prefixes)
+    if rp == "from_manifest":
+        return Policy(name=name, leaves=leaves, root_prefixes=[], root_prefixes_from_manifest=True)
+    if not isinstance(rp, list) or not all(isinstance(x, str) for x in rp):
+        raise PolicyError(f"policy {name!r}: root_prefixes must be 'from_manifest' or a list of strings")
+    return Policy(name=name, leaves=leaves, root_prefixes=list(rp))

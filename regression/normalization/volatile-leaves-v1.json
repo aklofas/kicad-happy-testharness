@@ -1,15 +1,15 @@
 {
   "name": "volatile-leaves-v1",
-  "description": "Exact volatile leaves of the six analyzer envelopes (schematic, pcb, gerber, thermal, emc, cross_analysis) as observed in results/v22x_pr44_gate snap trees on 2026-10-14. Whole blocks are never masked. Confirmed/extended empirically by the plan-6 A/A run at product 6a91aaa.",
+  "description": "Exact volatile leaves of the six analyzer envelopes (schematic, pcb, gerber, thermal, emc, cross_analysis) as observed in results/v22x_pr44_gate snap trees on 2026-10-14. Whole blocks are never masked. To be confirmed by the plan-6 A/A run at product 6a91aaa (pending).",
   "root_prefixes": "from_manifest",
   "leaves": [
     {"pointer": "/inputs/run_id", "shape": "run_id"},
     {"pointer": "/capability_mode_ref/run_id", "shape": "run_id", "equals": "/inputs/run_id"},
-    {"pointer": "/elapsed_s", "shape": "number"},
+    {"pointer": "/elapsed_s", "shape": "number", "note": "cross_analysis/emc/thermal only"},
     {"pointer_glob": "/inputs/source_files/*", "rewrite": "strip_root_prefix"},
     {"pointer": "/inputs/source_hashes", "rewrite": "strip_root_prefix_keys"},
-    {"pointer_glob": "/inputs/upstream_artifacts/*/path", "rewrite": "strip_root_prefix"},
-    {"pointer_glob": "/inputs/upstream_artifacts/*/run_id", "shape": "run_id"},
-    {"pointer_glob": "/inputs/upstream_artifacts/*/sha256", "shape": "^[0-9a-f]{64}$", "sha256_of": "path"}
+    {"pointer_glob": "/inputs/upstream_artifacts/*/path", "rewrite": "strip_root_prefix", "note": "chained analyzers only"},
+    {"pointer_glob": "/inputs/upstream_artifacts/*/run_id", "shape": "run_id", "note": "chained analyzers only"},
+    {"pointer_glob": "/inputs/upstream_artifacts/*/sha256", "shape": "^[0-9a-f]{64}$", "sha256_of": "path", "note": "chained analyzers only"}
   ]
 }
