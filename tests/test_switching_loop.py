@@ -16,6 +16,8 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
+
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
@@ -260,12 +262,12 @@ def test_sw003_fallback_no_precomputed():
 # 2f. End-to-end (corpus scan)
 # ---------------------------------------------------------------------------
 
+@pytest.mark.corpus
 def test_end_to_end_corpus_output():
     """Find a real corpus PCB output with switching_loop_areas and validate it."""
     pcb_dir = _RESULTS / "pcb"
     if not pcb_dir.exists():
-        print("  SKIP  test_end_to_end_corpus_output (no pcb outputs dir)")
-        return
+        pytest.skip("no pcb outputs dir (corpus tier)")
 
     found = None
     scanned = 0
@@ -292,8 +294,7 @@ def test_end_to_end_corpus_output():
             break
 
     if not found:
-        print("  SKIP  test_end_to_end_corpus_output (no output with switching_loop_areas found)")
-        return
+        pytest.skip("no output with switching_loop_areas found (corpus tier)")
 
     data, path = found
     loops = data["switching_loop_areas"]
@@ -342,6 +343,8 @@ def main():
         try:
             t()
             passed += 1
+        except pytest.skip.Exception as e:
+            print(f"  SKIP  {t.__name__}: {e}")
         except Exception as e:
             print(f"  FAIL  {t.__name__}: {e}")
             failed += 1

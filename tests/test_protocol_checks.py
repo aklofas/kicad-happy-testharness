@@ -12,6 +12,8 @@ TIER = "unit"
 import json
 import os
 import sys
+
+import pytest
 from pathlib import Path
 
 _HARNESS = Path(__file__).resolve().parent.parent
@@ -25,13 +27,8 @@ _RESULTS = _HARNESS / "results" / "outputs"
 # Helpers
 # ---------------------------------------------------------------------------
 
-class _SkipTest(Exception):
-    """Raised to skip a test gracefully."""
-    pass
-
-
 def _skip(reason: str):
-    raise _SkipTest(reason)
+    pytest.skip(f"{reason} (corpus tier)")
 
 
 def _find_output_with(output_type, check_fn, max_scan=5000):
@@ -60,7 +57,7 @@ def _find_output_with(output_type, check_fn, max_scan=5000):
 
 
 def _skip_if_none(data, feature_name):
-    """Raise _SkipTest if data is None."""
+    """Skip (corpus tier) if data is None."""
     if data is None:
         _skip(f"no {feature_name} output found in corpus")
     return False
@@ -84,6 +81,7 @@ def _get_protocol_finding(data, protocol, check_key=None):
 # 3a. I2C VOL check
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_i2c_vol_compatibility_field_structure():
     """I2C vol_compatibility check has required fields when present."""
     def check(data):
@@ -106,6 +104,7 @@ def test_i2c_vol_compatibility_field_structure():
     assert vc["speed_mode"] in ("standard", "fast", "fast_plus", "high_speed")
 
 
+@pytest.mark.corpus
 def test_i2c_vol_pullup_exceeds_max():
     """When vol_compatibility triggers, pull_up_ohms > max_for_vol."""
     def check(data):
@@ -125,6 +124,7 @@ def test_i2c_vol_pullup_exceeds_max():
 # 3b. I2C bus current budget
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_i2c_bus_current_budget_structure():
     """I2C bus_current_budget check has required fields."""
     def check(data):
@@ -144,6 +144,7 @@ def test_i2c_bus_current_budget_structure():
     assert bcb["estimated_leakage_ua"] > 0
 
 
+@pytest.mark.corpus
 def test_i2c_bus_current_leakage_exceeds_threshold():
     """Bus current budget warning fires when leakage > 10% of pull-up current."""
     def check(data):
@@ -163,6 +164,7 @@ def test_i2c_bus_current_leakage_exceeds_threshold():
 # 3c. SPI device loading
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_spi_device_loading_warning_when_many_devices():
     """SPI device_loading warning fires when >4 devices on bus."""
     def check(data):
@@ -177,6 +179,7 @@ def test_spi_device_loading_warning_when_many_devices():
     assert dl["device_count"] > 4, f"expected >4 devices, got {dl['device_count']}"
 
 
+@pytest.mark.corpus
 def test_spi_no_device_loading_when_few_devices():
     """SPI bus with <=4 devices should not have device_loading warning."""
     def check(data):
@@ -210,6 +213,7 @@ def test_spi_no_device_loading_when_few_devices():
 # 3d. UART RS-232 transceiver detection
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_uart_rs232_transceiver_detection():
     """UART finding detects RS-232 transceiver and reports it."""
     def check(data):
@@ -227,6 +231,7 @@ def test_uart_rs232_transceiver_detection():
     assert "detail" in rs
 
 
+@pytest.mark.corpus
 def test_uart_rs232_charge_pump_caps():
     """RS-232 transceiver check includes charge pump capacitor validation."""
     def check(data):
@@ -251,6 +256,7 @@ def test_uart_rs232_charge_pump_caps():
 # 3e. USB VBUS capacitance
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_usb_vbus_capacitance_warning():
     """USB vbus_capacitance warning fires when total < 1uF.
 
@@ -282,6 +288,7 @@ def test_usb_vbus_capacitance_warning():
         break
 
 
+@pytest.mark.corpus
 def test_usb_vbus_capacitance_pass():
     """USB vbus_capacitance passes when total >= 1uF.
 
@@ -313,6 +320,7 @@ def test_usb_vbus_capacitance_pass():
 # 3f. Ethernet impedance advisory
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_ethernet_impedance_advisory_present():
     """Ethernet interface has impedance_advisory field."""
     def check(data):
@@ -335,6 +343,7 @@ def test_ethernet_impedance_advisory_present():
         break
 
 
+@pytest.mark.corpus
 def test_ethernet_impedance_advisory_magnetics_pass():
     """Ethernet with magnetics gets pass on impedance_advisory."""
     def check(data):
@@ -359,6 +368,7 @@ def test_ethernet_impedance_advisory_magnetics_pass():
 # 3g. HDMI termination check
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_hdmi_termination_field_present():
     """HDMI/DVI interface entry has termination check field."""
     def check(data):
@@ -381,6 +391,7 @@ def test_hdmi_termination_field_present():
         break
 
 
+@pytest.mark.corpus
 def test_hdmi_termination_warning_no_resistors():
     """HDMI without termination resistors gets warning."""
     def check(data):
@@ -406,6 +417,7 @@ def test_hdmi_termination_warning_no_resistors():
 # 3h. LVDS detection
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_lvds_interfaces_detected():
     """LVDS interfaces are detected in findings."""
     def check(data):
@@ -423,6 +435,7 @@ def test_lvds_interfaces_detected():
         f"unexpected role: {entry['role']}"
 
 
+@pytest.mark.corpus
 def test_lvds_impedance_requirement():
     """LVDS entries include impedance_required field."""
     def check(data):
@@ -515,6 +528,7 @@ def test_diff_pair_skew_usb_within_tolerance():
 # 3j. KH-229 — vbus_capacitance must be string, detail in separate key
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_kh229_vbus_capacitance_is_string():
     """KH-229: vbus_capacitance must be a status string, not a dict."""
     def check(data):
@@ -539,6 +553,7 @@ def test_kh229_vbus_capacitance_is_string():
             break
 
 
+@pytest.mark.corpus
 def test_kh229_vbus_detail_separate():
     """KH-229: vbus_capacitance_detail dict on connector when status is pass/warning."""
     def check(data):
@@ -585,7 +600,7 @@ if __name__ == "__main__":
             t()
             passed += 1
             print(f"  PASS  {name}")
-        except _SkipTest as e:
+        except pytest.skip.Exception as e:
             skipped += 1
             print(f"  SKIP  {name}: {e}")
         except Exception:

@@ -10,6 +10,8 @@ TIER = "unit"
 import json
 import os
 import sys
+
+import pytest
 from collections import Counter
 from pathlib import Path
 
@@ -24,13 +26,8 @@ RESULTS = _HARNESS / "results" / "outputs" / "schematic"
 # Skip support (no pytest dependency)
 # ---------------------------------------------------------------------------
 
-class _SkipTest(Exception):
-    """Raised to skip a test gracefully."""
-    pass
-
-
 def _skip(reason: str):
-    raise _SkipTest(reason)
+    pytest.skip(f"{reason} (corpus tier)")
 
 
 def _load_outputs(repo: str, filename_substring: str = ""):
@@ -163,6 +160,7 @@ def test_kh220_crystal_oscillator_desc_with_crystal_libid():
 # 4d. KH-221 — TIA vs compensator discrimination
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_kh221_tia_in_corpus():
     """Corpus should contain at least one transimpedance opamp classification."""
     for repo in ("Ceenzr/StusTM", "jkominek/adcstudy"):
@@ -200,6 +198,7 @@ def test_kh221_tia_vs_compensator_logic():
 # 4e. KH-222 — Multi-unit deduplication
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_kh222_no_duplicate_led_audit_refs():
     """biomimetics/MRIRobot_PCB led_audit should have no duplicate refs."""
     outputs = _load_outputs("biomimetics/MRIRobot_PCB")
@@ -214,6 +213,7 @@ def test_kh222_no_duplicate_led_audit_refs():
         assert not dups, f"Duplicate refs in led_audit: {dups}"
 
 
+@pytest.mark.corpus
 def test_kh222_no_duplicate_usb_connectors():
     """biomimetics/MRIRobot_PCB usb_compliance connectors should have no dups."""
     outputs = _load_outputs("biomimetics/MRIRobot_PCB")
@@ -238,6 +238,7 @@ def test_kh222_no_duplicate_usb_connectors():
 # 4f. KH-223 — Power sequencing pin name normalization
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_kh223_power_sequencing_has_controlled_enables():
     """Zebra-X power_sequencing should detect controlled enable pins.
 
@@ -258,6 +259,7 @@ def test_kh223_power_sequencing_has_controlled_enables():
     _skip("no power_sequencing data in Zebra-X outputs")
 
 
+@pytest.mark.corpus
 def test_kh223_power_good_signals_detected():
     """Zebra-X should have power-good (PG) signals detected."""
     outputs = _load_outputs("Dylanfg123/Zebra-X")
@@ -277,6 +279,7 @@ def test_kh223_power_good_signals_detected():
 # 4g. KH-224 — Multi-unit IC power domain accumulation
 # ===========================================================================
 
+@pytest.mark.corpus
 def test_kh224_zynq_multiple_power_rails():
     """U200 (Zynq) in Zebra-X should have >1 power rail.
 
@@ -388,7 +391,7 @@ if __name__ == "__main__":
             fn()
             passed += 1
             print(f"  PASS  {name}")
-        except _SkipTest as e:
+        except pytest.skip.Exception as e:
             skipped += 1
             print(f"  SKIP  {name}: {e}")
         except AssertionError as e:

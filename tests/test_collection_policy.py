@@ -1,4 +1,5 @@
 """Root conftest.py marker derivation and default tier selection (B9, TH-053)."""
+import ast
 import json
 import os
 import shutil
@@ -108,7 +109,39 @@ def test_listed_skip_is_allowed(tmp_path):
 
 
 _CORPUS_TOKENS = ("REPOS_DIR", "OUTPUTS_DIR", "results/outputs", 'HARNESS_DIR / "results"',
-                  'HARNESS_DIR / "repos"', '"reference" /', "Projects/sandbox")
+                  'HARNESS_DIR / "repos"', '"reference" /', "Projects/sandbox",
+                  '"results" / "outputs"', '/ "repos"', '"repos/')
+
+
+def _has_token(text):
+    return any(tok in text for tok in _CORPUS_TOKENS)
+
+
+def _is_corpus_marker(node):
+    return "mark.corpus" in ast.unparse(node)
+
+
+def _corpus_offenders(tree, text):
+    """Names of test functions that touch corpus paths (directly or via a
+    module-level helper) without a corpus marker."""
+    helpers = {n.name for n in tree.body
+               if isinstance(n, ast.FunctionDef) and not n.name.startswith("test_")
+               and _has_token(ast.get_source_segment(text, n) or "")}
+    module_marked = any(
+        isinstance(n, ast.Assign) and any(getattr(t, "id", "") == "pytestmark" for t in n.targets)
+        and _is_corpus_marker(n.value) for n in tree.body)
+    if module_marked:
+        return []
+    bad = []
+    for n in ast.walk(tree):
+        if not (isinstance(n, ast.FunctionDef) and n.name.startswith("test_")):
+            continue
+        calls = {c.func.id for c in ast.walk(n)
+                 if isinstance(c, ast.Call) and isinstance(c.func, ast.Name)}
+        touches = _has_token(ast.get_source_segment(text, n) or "") or bool(calls & helpers)
+        if touches and not any(_is_corpus_marker(d) for d in n.decorator_list):
+            bad.append(n.name)
+    return bad
 
 
 def test_corpus_paths_require_marker():
@@ -119,7 +152,7 @@ def test_corpus_paths_require_marker():
         if "/fixtures/" in rel or rel in allow:
             continue
         text = f.read_text(encoding="utf-8")
-        if any(tok in text for tok in _CORPUS_TOKENS) and "mark.corpus" not in text \
-                and 'TIER = "online"' not in text:
-            offenders.append(rel)
-    assert not offenders, f"corpus paths without @pytest.mark.corpus or allowlist entry: {offenders}"
+        if 'TIER = "online"' in text:
+            continue
+        offenders += [f"{rel}::{name}" for name in _corpus_offenders(ast.parse(text), text)]
+    assert not offenders, f"corpus-reading tests without @pytest.mark.corpus or allowlist entry: {offenders}"

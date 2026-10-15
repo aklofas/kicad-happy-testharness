@@ -6,6 +6,8 @@ import sys
 import os
 from pathlib import Path
 
+import pytest
+
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
@@ -54,15 +56,13 @@ _AMP_FILES = {
 def _skip_if_missing(*paths):
     for p in paths:
         if not p.exists():
-            print(f"SKIP: corpus file not found: {p}")
-            return True
-    return False
+            pytest.skip(f"corpus file not found: {p} (corpus tier)")
 
 
+@pytest.mark.corpus
 def test_tier3_pro_stem_match_root():
     """Root schematic stem matches .kicad_pro → False."""
-    if _skip_if_missing(_AMP_FILES["root"]):
-        return
+    _skip_if_missing(_AMP_FILES["root"])
     tree = parse_file(str(_AMP_FILES["root"]))
     # Remove symbol_instances and sheet blocks so tier 3 is the deciding tier
     tree_stripped = [e for e in tree
@@ -71,26 +71,26 @@ def test_tier3_pro_stem_match_root():
     assert detect_sub_sheet(tree_stripped, file_path=str(_AMP_FILES["root"])) is False
 
 
+@pytest.mark.corpus
 def test_tier3_pro_stem_no_match_power():
     """Sub-sheet 'power' doesn't match .kicad_pro stem → True."""
-    if _skip_if_missing(_AMP_FILES["power"]):
-        return
+    _skip_if_missing(_AMP_FILES["power"])
     tree = parse_file(str(_AMP_FILES["power"]))
     assert detect_sub_sheet(tree, file_path=str(_AMP_FILES["power"])) is True
 
 
+@pytest.mark.corpus
 def test_tier3_pro_stem_no_match_op_amp():
     """Sub-sheet 'op_amplifier_left' doesn't match → True."""
-    if _skip_if_missing(_AMP_FILES["op_amp"]):
-        return
+    _skip_if_missing(_AMP_FILES["op_amp"])
     tree = parse_file(str(_AMP_FILES["op_amp"]))
     assert detect_sub_sheet(tree, file_path=str(_AMP_FILES["op_amp"])) is True
 
 
+@pytest.mark.corpus
 def test_tier3_pro_stem_no_match_audio():
     """Sub-sheet 'audio_jack' doesn't match → True."""
-    if _skip_if_missing(_AMP_FILES["audio"]):
-        return
+    _skip_if_missing(_AMP_FILES["audio"])
     tree = parse_file(str(_AMP_FILES["audio"]))
     assert detect_sub_sheet(tree, file_path=str(_AMP_FILES["audio"])) is True
 
@@ -117,10 +117,10 @@ def test_tier5_bare_tree_defaults_false():
 
 # === Backward compatibility ===
 
+@pytest.mark.corpus
 def test_backward_compat_no_file_path():
     """Calling detect_sub_sheet(tree) without file_path still works on root."""
-    if _skip_if_missing(_AMP_FILES["root"]):
-        return
+    _skip_if_missing(_AMP_FILES["root"])
     tree = parse_file(str(_AMP_FILES["root"]))
     # Root has symbol_instances → tier 1 returns False even without file_path
     assert detect_sub_sheet(tree) is False
@@ -138,21 +138,20 @@ _ROOT_SCHEMATICS = [
 ]
 
 
+@pytest.mark.corpus
 def test_zero_false_positives_on_roots():
     """Multiple root schematics from different repos all return False."""
     tested = 0
     for sch in _ROOT_SCHEMATICS:
         if not sch.exists():
-            print(f"SKIP: {sch}")
             continue
         tree = parse_file(str(sch))
         result = detect_sub_sheet(tree, file_path=str(sch))
         assert result is False, f"False positive on root: {sch}"
         tested += 1
     if tested == 0:
-        print("SKIP: no corpus root schematics found")
-    else:
-        print(f"Verified {tested} root schematics")
+        pytest.skip("no corpus root schematics found (corpus tier)")
+    print(f"Verified {tested} root schematics")
 
 
 if __name__ == "__main__":
@@ -164,6 +163,8 @@ if __name__ == "__main__":
             fn()
             passed += 1
             print(f"  PASS: {name}")
+        except pytest.skip.Exception as e:
+            print(f"  SKIP: {name}: {e}")
         except AssertionError as e:
             failed += 1
             print(f"  FAIL: {name}: {e}")
