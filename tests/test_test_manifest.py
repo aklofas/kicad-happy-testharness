@@ -73,3 +73,22 @@ def test_phantom_file_with_zero_collected_is_missing():
                          "status": "pass", "parsed": False}]}
     rows = {r["file"]: r for r in compare_legacy(legacy, {})}
     assert rows["tests/test_gone.py"]["note"].startswith("MISSING")
+
+
+def test_tier_move_is_not_missing():
+    legacy = {"files": [{"file": "tests/test_moved.py", "passed": 7, "failed": 0,
+                         "status": "pass", "parsed": True}]}
+    manifest = {f"tests/test_moved.py::test_{i}": ["corpus"] for i in range(7)}
+    rows = {r["file"]: r for r in compare_legacy(legacy, manifest, tier="unit")}
+    row = rows["tests/test_moved.py"]
+    assert row["collected"] == 0
+    assert row["note"].startswith("moved to tier(s) corpus")
+    assert not row["note"].startswith("MISSING")
+
+
+def test_file_absent_from_manifest_is_missing():
+    legacy = {"files": [{"file": "tests/test_gone.py", "passed": 2, "failed": 0,
+                         "status": "pass", "parsed": True}]}
+    manifest = {"tests/test_other.py::test_x": ["unit"]}
+    rows = {r["file"]: r for r in compare_legacy(legacy, manifest, tier="unit")}
+    assert rows["tests/test_gone.py"]["note"].startswith("MISSING")

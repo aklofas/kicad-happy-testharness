@@ -36,18 +36,32 @@ def write_manifest(out: Path, paths: list[str], marker_expr: str | None,
     return 0
 
 
-def compare_legacy(legacy: dict, manifest: dict) -> list[dict]:
-    collected = Counter(nodeid.split("::", 1)[0] for nodeid in manifest)
+def compare_legacy(legacy: dict, manifest: dict, tier: str = "unit") -> list[dict]:
+    """Per-file legacy-vs-pytest rows. ``manifest`` is an all-tiers manifest.
+
+    ``collected`` counts a file's node ids carrying ``tier``. A file whose ids
+    all sit in other tiers is a tier move, not a loss; a file with no ids at
+    all is MISSING.
+    """
+    by_file: dict[str, list[str]] = {}
+    for nodeid, markers in manifest.items():
+        by_file.setdefault(nodeid.split("::", 1)[0], []).append((nodeid, markers))
     legacy_by_file = {row["file"]: row for row in legacy.get("files", [])}
     rows = []
-    for f in sorted(set(collected) | set(legacy_by_file)):
+    for f in sorted(set(by_file) | set(legacy_by_file)):
         lrow = legacy_by_file.get(f)
         lp = lrow["passed"] if lrow else 0
-        c = collected.get(f, 0)
-        if lrow is None:
-            note = "not in legacy run"
-        elif c == 0:
+        items = by_file.get(f, [])
+        in_tier = [nid for nid, markers in items if tier in markers]
+        others = [(nid, markers) for nid, markers in items if tier not in markers]
+        c = len(in_tier)
+        if not items:
             note = "MISSING under pytest — investigate"
+        elif c == 0:
+            tiers = sorted({m for _, markers in others for m in markers})
+            note = f"moved to tier(s) {' '.join(tiers)} ({len(others)})"
+        elif lrow is None:
+            note = "not in legacy run"
         elif lrow.get("parsed") is False or lrow.get("status") in ("no_runner", "unparsed"):
             note = "legacy count was a phantom pass"
         else:
@@ -63,19 +77,23 @@ def main() -> int:
     ap.add_argument("-m", dest="marker_expr", default=None)
     ap.add_argument("--all-tiers", action="store_true")
     ap.add_argument("--compare-legacy", type=Path, help="run_tests.py --json output")
-    ap.add_argument("--manifest", type=Path, help="manifest to compare against")
+    ap.add_argument("--manifest", type=Path, help="all-tiers manifest to compare against")
+    ap.add_argument("--tier", default="unit", help="tier the legacy count is compared with")
     args = ap.parse_args()
     if args.out:
         return write_manifest(args.out, args.paths, args.marker_expr, args.all_tiers)
     if args.compare_legacy and args.manifest:
         rows = compare_legacy(json.loads(args.compare_legacy.read_text(encoding="utf-8")),
-                              json.loads(args.manifest.read_text(encoding="utf-8")))
+                              json.loads(args.manifest.read_text(encoding="utf-8")),
+                              tier=args.tier)
         print(f"{'file':70} {'legacy':>7} {'pytest':>7} {'delta':>6}  note")
         for r in rows:
             print(f"{r['file']:70} {r['legacy_passed']:7d} {r['collected']:7d} {r['delta']:6d}  {r['note']}")
         missing = [r for r in rows if r["note"].startswith("MISSING")]
+        moved = [r for r in rows if r["note"].startswith("moved")]
         print(f"\nfiles: {len(rows)}; legacy passed {sum(r['legacy_passed'] for r in rows)}; "
-              f"pytest collected {sum(r['collected'] for r in rows)}; missing {len(missing)}")
+              f"pytest collected {sum(r['collected'] for r in rows)}; moved {len(moved)}; "
+              f"missing {len(missing)}")
         return 1 if missing else 0
     ap.error("need --out, or --compare-legacy with --manifest")
     return 2
