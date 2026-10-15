@@ -166,3 +166,15 @@ def test_shipped_exception_file_loads_and_has_required_keys():
     assert exc["version"] == 1
     for e in exc["exceptions"]:
         assert {"id", "file", "callee", "reason", "count", "retire_by"} <= set(e)
+
+
+def test_apply_exceptions_unmatched_resolved_reason_site_is_not_dropped():
+    exc = _fake_exceptions()
+    exc["exceptions"] = [e for e in exc["exceptions"] if e["id"] != "det-enum"]
+    enum = source_scan.resolve_det_enum(FAKE)
+    sites = [s for p in source_scan.iter_product_sources(FAKE)
+             for s in source_scan.emit_sites(FAKE, p, enum)]
+    remaining, _, _ = source_scan.apply_exceptions(sites, exc)
+    reasons = [s.reason for s in remaining]
+    assert "detector:enum-attribute-resolved" in reasons
+    assert "positional-emc:mixed-shape" in reasons

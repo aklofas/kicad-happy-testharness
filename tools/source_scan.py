@@ -9,6 +9,7 @@ diff used by `check`. Never imports or evals product code: ast only.
 from __future__ import annotations
 
 import ast
+import json
 from dataclasses import dataclass, asdict
 from pathlib import Path
 
@@ -164,8 +165,6 @@ def emit_sites(product_root: Path, path: Path,
     return sites
 
 
-import json
-
 EXCEPTIONS_PATH = Path(__file__).resolve().parent / "scan_exceptions.json"
 
 
@@ -196,8 +195,7 @@ def apply_exceptions(sites: list[EmitSite], exceptions: dict
                 matched = e
                 break
         if matched is None:
-            if not s.resolved:
-                remaining.append(s)
+            remaining.append(s)
             continue
         counts[matched["id"]] += 1
     violations: list[str] = []
