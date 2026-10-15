@@ -117,3 +117,52 @@ def test_emit_sites_latin1_cookie(tmp_path):
     f.write_bytes(src)
     sites = source_scan.emit_sites(root, f)
     assert len(sites) == 1 and sites[0].detector == "détecteur" and sites[0].resolved
+
+
+def _fake_exceptions():
+    return {"version": 1, "exceptions": [
+        {"id": "emc-positional", "file": "skills/emc/scripts/emc_rules.py",
+         "callee": "_make_finding", "reason": "positional-emc", "count": 2},
+        {"id": "det-enum", "file": "skills/kicad/scripts/validation_detectors.py",
+         "callee": "make_finding", "reason": "detector:enum-attribute-resolved", "count": 1},
+        {"id": "uc-loop", "file": "skills/kicad/scripts/validation_detectors.py",
+         "callee": "make_finding", "reason": "rule_id:nonliteral", "count": 1},
+    ]}
+
+
+def test_apply_exceptions_absorbs_counted_sites_only():
+    enum = source_scan.resolve_det_enum(FAKE)
+    sites = [s for p in source_scan.iter_product_sources(FAKE)
+             for s in source_scan.emit_sites(FAKE, p, enum)]
+    remaining, counts, violations = source_scan.apply_exceptions(sites, _fake_exceptions())
+    assert counts == {"emc-positional": 2, "det-enum": 1, "uc-loop": 1}
+    assert violations == []
+    # the mixed-shape EMC call is not covered by any exception
+    assert [s.reason for s in remaining] == ["positional-emc:mixed-shape"]
+
+
+def test_apply_exceptions_count_growth_is_violation():
+    exc = _fake_exceptions()
+    exc["exceptions"][0]["count"] = 1          # ledger says 1, tree has 2
+    sites = [s for p in source_scan.iter_product_sources(FAKE)
+             for s in source_scan.emit_sites(FAKE, p, source_scan.resolve_det_enum(FAKE))]
+    _, counts, violations = source_scan.apply_exceptions(sites, exc)
+    assert counts["emc-positional"] == 2
+    assert any("emc-positional" in v and "grew" in v for v in violations)
+
+
+def test_apply_exceptions_zero_match_is_violation():
+    exc = _fake_exceptions()
+    exc["exceptions"].append({"id": "ghost", "file": "skills/none.py", "callee": "x",
+                              "reason": "positional-emc", "count": 3})
+    sites = [s for p in source_scan.iter_product_sources(FAKE)
+             for s in source_scan.emit_sites(FAKE, p, source_scan.resolve_det_enum(FAKE))]
+    _, _, violations = source_scan.apply_exceptions(sites, exc)
+    assert any("ghost" in v and "matched 0" in v for v in violations)
+
+
+def test_shipped_exception_file_loads_and_has_required_keys():
+    exc = source_scan.load_exceptions()
+    assert exc["version"] == 1
+    for e in exc["exceptions"]:
+        assert {"id", "file", "callee", "reason", "count", "retire_by"} <= set(e)

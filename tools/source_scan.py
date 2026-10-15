@@ -162,3 +162,49 @@ def emit_sites(product_root: Path, path: Path,
         sites.append(EmitSite(file_rel, call.lineno, callee or "<expr>", detector, rule_id,
                               era, resolved, ";".join(reasons)))
     return sites
+
+
+import json
+
+EXCEPTIONS_PATH = Path(__file__).resolve().parent / "scan_exceptions.json"
+
+
+def load_exceptions(path: Path | None = None) -> dict:
+    p = Path(path) if path else EXCEPTIONS_PATH
+    data = json.loads(p.read_text(encoding="utf-8"))
+    if data.get("version") != 1 or "exceptions" not in data:
+        raise ValueError(f"{p}: not a version-1 scan_exceptions file")
+    return data
+
+
+def apply_exceptions(sites: list[EmitSite], exceptions: dict
+                     ) -> tuple[list[EmitSite], dict[str, int], list[str]]:
+    """Absorb unresolved sites matched by an exception (file+callee+reason).
+
+    Returns (still_unresolved, matched_counts_by_exception_id, violations).
+    A violation is an exception matching more sites than its recorded count,
+    or matching zero sites (a stale entry that must be removed).
+    """
+    counts: dict[str, int] = {e["id"]: 0 for e in exceptions["exceptions"]}
+    remaining: list[EmitSite] = []
+    for s in sites:
+        if s.resolved and s.reason == "":
+            continue          # fully literal site: nothing to absorb
+        matched = None
+        for e in exceptions["exceptions"]:
+            if s.file == e["file"] and s.callee == e["callee"] and s.reason == e["reason"]:
+                matched = e
+                break
+        if matched is None:
+            if not s.resolved:
+                remaining.append(s)
+            continue
+        counts[matched["id"]] += 1
+    violations: list[str] = []
+    for e in exceptions["exceptions"]:
+        n = counts[e["id"]]
+        if n > e["count"]:
+            violations.append(f"exception {e['id']} grew: matched {n} > recorded {e['count']}")
+        if n == 0:
+            violations.append(f"exception {e['id']} matched 0 sites (stale entry; remove it)")
+    return remaining, counts, violations

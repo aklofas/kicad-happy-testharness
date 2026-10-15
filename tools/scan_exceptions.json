@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "measured_at_product_sha": "6a91aaaea124152b2923326c1cf77278e0999cd4",
+  "rule": "Each entry's count may only shrink. A shrink must be committed together with the product-side change that removed the sites. A grow fails `source_scan.py check`.",
+  "exceptions": [
+    {
+      "id": "emc-positional-make-finding",
+      "file": "skills/emc/scripts/emc_rules.py",
+      "callee": "_make_finding",
+      "reason": "positional-emc",
+      "count": 53,
+      "detector_derivation": "emc_<category> from positional arg 0; rule_id from positional arg 2 (both literal strings today)",
+      "retire_by": "v3.0 output-changing round that reshapes EMC findings (spec §4.1); emitted detector strings stay frozen"
+    },
+    {
+      "id": "det-enum-shorted-two-pin",
+      "file": "skills/kicad/scripts/signal_detectors.py",
+      "callee": "make_finding",
+      "reason": "detector:enum-attribute-resolved",
+      "count": 2,
+      "literal_source": "skills/kicad/scripts/finding_schema.py class Det, member SHORTED_TWO_PIN = 'detect_shorted_two_pin_components'",
+      "retire_by": "any product round touching SP-001 emission; replace with the literal string"
+    },
+    {
+      "id": "usb-compliance-rule-id-loop",
+      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "callee": "make_finding",
+      "reason": "rule_id:nonliteral",
+      "count": 1,
+      "note": "rule_id=_rid iterates the UC-001..UC-004 spec dict; the four rule IDs are literal keys of that dict",
+      "retire_by": "any product round touching analyze_usb_compliance; unroll or pass literals"
+    }
+  ]
+}
