@@ -38,9 +38,9 @@ def new_identities(ledger: dict, *, units_lines: Iterable[str] | None = None,
     return out
 
 
-def ledgered_crashes(ledger: dict) -> set[str]:
-    """Ledgered both-sided crash identities (a ledger without the group reads as empty)."""
-    return {e["identity"] for e in ledger.get("crash_units", [])}
+def ledgered_crashes(ledger: dict) -> dict[str, object]:
+    """Ledgered both-sided crashes as {identity: exit_code} (a ledger without the group is empty)."""
+    return {e["identity"]: e.get("exit_code") for e in ledger.get("crash_units", [])}
 
 
 def _crash_sides(rec: dict) -> tuple[bool, bool]:
@@ -48,13 +48,19 @@ def _crash_sides(rec: dict) -> tuple[bool, bool]:
             (rec.get("candidate") or {}).get("status") == "crash")
 
 
-def new_crash(rec: dict, known: set[str]) -> str | None:
+def new_crash(rec: dict, known: dict) -> str | None:
     """The new-debt identity a unit record's crash carries, or None. A one-sided crash is
-    always new (a round delta); a both-sided crash is new only when not ledgered."""
+    always new (a round delta); a both-sided crash is new unless its identity is ledgered
+    with the SAME exit_code on both sides (a changed exit code is a shape change, ruling Q3)."""
     ident = f"{rec['analyzer']}/{rec['unit_id']}"
     base_cr, cand_cr = _crash_sides(rec)
     if base_cr and cand_cr:
-        return None if ident in known else ident
+        if ident not in known:
+            return ident
+        codes = ((rec.get("baseline") or {}).get("exit_code"), (rec.get("candidate") or {}).get("exit_code"))
+        if codes != (known[ident], known[ident]):
+            return f"{ident} (exit_code {codes[0]}/{codes[1]} != ledgered {known[ident]})"
+        return None
     if base_cr or cand_cr:
         return f"{ident} ({'baseline' if base_cr else 'candidate'})"
     return None
@@ -82,24 +88,29 @@ def new_timeout(rec: dict, known: set[str]) -> str | None:
     return None
 
 
-def skip_is_ledgered(rec: dict, known: set[str], upstream: dict | None = None,
-                     crashes: set[str] = frozenset()) -> bool:
-    """A gate SKIP is a known baseline debt iff it is a both_failed unit whose crash on BOTH
-    sides is in `crashes` (crash_units) or whose baseline-side timeout is ledgered
-    (new_timeout finds nothing new) with no crash on either side, or a dependency_missing
-    unit whose upstream schematic record is such a unit. A crash on one side only and
-    snapshot_read_error are never covered."""
+def skip_covering(rec: dict, known: set[str], upstream: dict | None = None,
+                  crashes: dict | None = None) -> str | None:
+    """The ledger identity that covers a gate SKIP, or None. A both_failed unit is covered by
+    its crash_units entry when it crashed on BOTH sides with the ledgered exit_code, else by its
+    baseline-side timeout (new_timeout finds nothing new) when neither side crashed; a
+    dependency_missing unit is covered by whatever covers its upstream schematic record. A
+    crash on one side only and snapshot_read_error are never covered."""
+    crashes = crashes or {}
     reason = rec.get("reason")
     if reason == "both_failed":
         base_cr, cand_cr = _crash_sides(rec)
+        ident, base_to, _ = _timeout_sides(rec)
         if base_cr or cand_cr:
-            return base_cr and cand_cr and new_crash(rec, crashes) is None
-        _, base_to, _ = _timeout_sides(rec)
-        return base_to and new_timeout(rec, known) is None
-    if reason == "dependency_missing":
-        return upstream is not None and upstream.get("reason") == "both_failed" \
-            and skip_is_ledgered(upstream, known, crashes=crashes)
-    return False
+            return ident if base_cr and cand_cr and new_crash(rec, crashes) is None else None
+        return ident if base_to and new_timeout(rec, known) is None else None
+    if reason == "dependency_missing" and upstream is not None and upstream.get("reason") == "both_failed":
+        return skip_covering(upstream, known, crashes=crashes)
+    return None
+
+
+def skip_is_ledgered(rec: dict, known: set[str], upstream: dict | None = None,
+                     crashes: dict | None = None) -> bool:
+    return skip_covering(rec, known, upstream=upstream, crashes=crashes) is not None
 
 
 def run_check(args) -> int:

@@ -339,9 +339,30 @@ def test_recheck_cli_exit_code_and_summary(capsys):
 
 def test_recheck_round2_passes_with_crash_units_ledgered(tmp_path):
     led = json.loads(LEDGER_FIX.read_text())
-    led["crash_units"] = [{"identity": f"pcb/{u}", "analyzer": "pcb", "unit_id": u, "exit_code": 2,
+    codes = {CRASHES[0]: 2, CRASHES[1]: 1, CRASHES[2]: 1}   # as recorded in the round-2 units
+    led["crash_units"] = [{"identity": f"pcb/{u}", "analyzer": "pcb", "unit_id": u, "exit_code": codes[u],
                            "detail": "no_output", "accepted_by": None} for u in CRASHES]
     p = tmp_path / "ledger.json"
     p.write_text(json.dumps(led))
     gp = gate.recheck_gate_pass(RECHECK, ledger=str(p))["gate_pass"]
     assert gp["pass"] is True and gp["ledgered_skips"] == 7 and gp["unledgered_skips"] == []
+    assert gp["ledgered_unaccepted"]["count"] == 4   # 3 crashes + the LT3514 timeout, all unstamped
+    led["crash_units"][1]["exit_code"] = 2           # ruling Q3: a changed exit code is a round delta
+    p.write_text(json.dumps(led))
+    gp = gate.recheck_gate_pass(RECHECK, ledger=str(p))["gate_pass"]
+    assert gp["unledgered_skips"] == [f"both_failed pcb {CRASHES[1]}"]
+
+
+# ---- review I3a: covering ledger entries without accepted_by are reported ------------
+
+def test_ledgered_unaccepted_reported_skips_ok_unchanged():
+    recs = _round2_like()
+    led = {"timeout_units": [{"identity": f"schematic/{SCH}", "accepted_by": None}]}
+    gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=led)
+    assert gp["skips_ok"] is True and gp["ledgered_skips"] == 4
+    assert gp["ledgered_unaccepted"] == {"count": 1, "identities": [f"schematic/{SCH}"]}
+    led["timeout_units"][0]["accepted_by"] = "LOG later (4)"
+    gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=led)
+    assert gp["ledgered_unaccepted"] == {"count": 0, "identities": []}
+    gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=None)
+    assert gp["ledgered_unaccepted"] == {"count": 0, "identities": []}

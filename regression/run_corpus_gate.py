@@ -314,6 +314,8 @@ def _print_summary(report):
                   f"   unledgered_skips={len(gp['unledgered_skips'])}")
             for u in gp["unledgered_skips"][:30]:
                 print(f"       unledgered: {u}")
+            for u in (gp.get("ledgered_unaccepted") or {}).get("identities", []):
+                print(f"       ledgered but accepted_by null: {u}")
     m = report.get("modes", {})
     if "raw" in m:
         print(f"modes: raw={m['raw']['verdict']} strict={m['strict']['verdict']} "
@@ -591,35 +593,42 @@ def ledger_identity(path):
 
 
 def split_bad_skips(records, ledger):
-    """(ledgered count, sorted "reason analyzer identity" list of bad SKIPs the ledger does not cover)."""
+    """(ledgered count, sorted "reason analyzer identity" list of bad SKIPs the ledger does not
+    cover, sorted ledger identities that cover a skip but carry accepted_by null)."""
     bad = [r for r in records if r.get("verdict") == "SKIP" and r.get("reason") in BAD_SKIP_REASONS]
     if ledger is None:
-        return 0, sorted(f"{r['reason']} {r['analyzer']} {r['identity']}" for r in bad)
+        return 0, sorted(f"{r['reason']} {r['analyzer']} {r['identity']}" for r in bad), []
     blc = _ledger_check()
     known, crashes = blc.ledgered_timeouts(ledger), blc.ledgered_crashes(ledger)
+    accepted = {e["identity"]: e.get("accepted_by") for g in ("timeout_units", "crash_units")
+                for e in ledger.get(g, [])}
     upstream = {r["unit_id"]: r for r in records if r.get("analyzer") == "schematic"}
-    ledgered, unledgered = 0, []
+    ledgered, unledgered, unaccepted = 0, [], set()
     for r in bad:
-        if blc.skip_is_ledgered(r, known, upstream=upstream.get(r["unit_id"]), crashes=crashes):
-            ledgered += 1
-        else:
+        cover = blc.skip_covering(r, known, upstream=upstream.get(r["unit_id"]), crashes=crashes)
+        if cover is None:
             unledgered.append(f"{r['reason']} {r['analyzer']} {r['identity']}")
-    return ledgered, sorted(unledgered)
+            continue
+        ledgered += 1
+        if accepted.get(cover) is None:
+            unaccepted.add(cover)
+    return ledgered, sorted(unledgered), sorted(unaccepted)
 
 
 def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census,
                       skip_records=None, ledger=None):
     if skip_records is None:  # counts only: no identities to match against a ledger
-        ledgered = 0
+        ledgered, unaccepted = 0, []
         unledgered = [f"{r} (count {skip_breakdown[r]})" for r in BAD_SKIP_REASONS if skip_breakdown.get(r, 0)]
     else:
-        ledgered, unledgered = split_bad_skips(skip_records, ledger)
+        ledgered, unledgered, unaccepted = split_bad_skips(skip_records, ledger)
     skips_ok = not unledgered
     census_ok = all(executed_census.get(a, 0) == n for a, n in expected_census.items())
     strict = bool(criteria["strict_clean"])
     return {"pass": strict and skips_ok and census_ok, "strict_clean": strict,
             "census_ok": census_ok, "skips_ok": skips_ok,
             "ledgered_skips": ledgered, "unledgered_skips": unledgered,
+            "ledgered_unaccepted": {"count": len(unaccepted), "identities": unaccepted},
             "skip_breakdown": dict(skip_breakdown),
             "expected_census": dict(expected_census), "executed_census": dict(executed_census)}
 
@@ -805,6 +814,8 @@ def _recheck_main(argv):
           f"ledgered_skips={gp['ledgered_skips']}  unledgered_skips={len(gp['unledgered_skips'])}")
     for u in gp["unledgered_skips"]:
         print(f"  unledgered: {u}")
+    for u in gp["ledgered_unaccepted"]["identities"]:
+        print(f"  ledgered but accepted_by null: {u}")
     sys.exit(0 if gp["pass"] else 1)
 
 

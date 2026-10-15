@@ -140,7 +140,7 @@ def test_both_sided_crash_covered_iff_in_crash_units():
     assert blc.skip_is_ledgered(_skip("pcb", "o/r/c.kicad_pcb", "both_failed", "crash", "crash"), t, crashes=c)
     assert not blc.skip_is_ledgered(_skip("pcb", "o/r/d.kicad_pcb", "both_failed", "crash", "crash"), t, crashes=c)
     # a ledger without the group reads as empty
-    assert blc.ledgered_crashes({"timeout_units": []}) == set()
+    assert blc.ledgered_crashes({"timeout_units": []}) == {}
 
 
 def test_one_sided_crash_never_covered():
@@ -178,3 +178,39 @@ def test_check_reports_uncovered_crashes_like_timeouts():
     assert new["crash_units"] == ["pcb/o/r/base.kicad_pcb (baseline)", "pcb/o/r/cand.kicad_pcb (candidate)",
                                   "pcb/o/r/new.kicad_pcb"]
     assert new["timeout_units"] == []
+
+
+# ---- review M4: a both-sided crash is covered only when identity AND exit_code match ----
+
+def _crash_rec(code_b, code_c, uid="o/r/c.kicad_pcb"):
+    return {"analyzer": "pcb", "unit_id": uid, "identity": uid, "verdict": "SKIP", "reason": "both_failed",
+            "baseline": {"status": "crash", "exit_code": code_b}, "candidate": {"status": "crash", "exit_code": code_c}}
+
+
+EXIT_LEDGER = {"crash_units": [{"identity": "pcb/o/r/c.kicad_pcb", "exit_code": 2, "accepted_by": None}]}
+
+
+def test_crash_covered_only_with_matching_exit_code():
+    c = blc.ledgered_crashes(EXIT_LEDGER)
+    assert c == {"pcb/o/r/c.kicad_pcb": 2}
+    assert blc.skip_is_ledgered(_crash_rec(2, 2), set(), crashes=c) is True
+    assert blc.skip_is_ledgered(_crash_rec(1, 1), set(), crashes=c) is False
+    assert blc.skip_is_ledgered(_crash_rec(2, 1), set(), crashes=c) is False
+
+
+def test_check_reports_exit_code_change_as_new():
+    lines = [json.dumps(_crash_rec(2, 2)), json.dumps(_crash_rec(1, 1, uid="o/r/c2.kicad_pcb"))]
+    led = {"crash_units": [{"identity": "pcb/o/r/c.kicad_pcb", "exit_code": 2},
+                           {"identity": "pcb/o/r/c2.kicad_pcb", "exit_code": 2}]}
+    assert blc.new_identities(led, units_lines=lines)["crash_units"] == [
+        "pcb/o/r/c2.kicad_pcb (exit_code 1/1 != ledgered 2)"]
+
+
+def test_skip_covering_returns_the_ledger_identity():
+    t = blc.ledgered_timeouts({"timeout_units": [{"identity": "schematic/o/r/a.kicad_sch"}]})
+    up = _skip("schematic", "o/r/a.kicad_sch", "both_failed")
+    dep = _skip("emc", "o/r/a.kicad_sch", "dependency_missing", "skipped", "skipped")
+    assert blc.skip_covering(up, t) == "schematic/o/r/a.kicad_sch"
+    assert blc.skip_covering(dep, t, upstream=up) == "schematic/o/r/a.kicad_sch"
+    assert blc.skip_covering(_crash_rec(2, 2), t, crashes=blc.ledgered_crashes(EXIT_LEDGER)) == "pcb/o/r/c.kicad_pcb"
+    assert blc.skip_covering(_crash_rec(3, 3), t, crashes=blc.ledgered_crashes(EXIT_LEDGER)) is None
