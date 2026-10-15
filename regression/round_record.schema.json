@@ -4,8 +4,8 @@
   "title": "v3 per-round handoff record (spec §9)",
   "oneOf": [{"$ref": "#/$defs/request"}, {"$ref": "#/$defs/response"}],
   "$defs": {
-    "sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-    "skill_path": {"type": "string", "pattern": "^skills/[A-Za-z0-9_./-]+\\.py$"},
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{40}$(?![\\s\\S])"},
+    "skill_path": {"type": "string", "pattern": "^skills/[A-Za-z0-9_./-]+\\.py$(?![\\s\\S])"},
     "relocation": {
       "type": "object", "additionalProperties": false,
       "required": ["symbol", "old_owner", "new_owner", "new_name", "facade_until"],
@@ -14,7 +14,7 @@
         "old_owner": {"$ref": "#/$defs/skill_path"},
         "new_owner": {"$ref": "#/$defs/skill_path"},
         "new_name": {"type": "string", "minLength": 1},
-        "facade_until": {"type": ["string", "null"], "pattern": "^r[0-9]{2,3}(-[a-z0-9-]+)?$"}
+        "facade_until": {"type": ["string", "null"], "pattern": "^r[0-9]{2,3}(-[a-z0-9-]+)?$(?![\\s\\S])"}
       }
     },
     "request": {
@@ -23,14 +23,14 @@
                    "relocations", "profiles", "budget", "old_artifact_checks", "relock"],
       "properties": {
         "record_version": {"const": 1},
-        "round_id": {"type": "string", "pattern": "^r[0-9]{2,3}-[a-z0-9-]+$"},
+        "round_id": {"type": "string", "pattern": "^r[0-9]{2,3}-[a-z0-9-]+$(?![\\s\\S])"},
         "baseline_sha": {"$ref": "#/$defs/sha"},
         "candidate_sha": {"$ref": "#/$defs/sha"},
         "kind": {"enum": ["structural", "output-changing", "relock"]},
         "relocations": {"type": "array", "items": {"$ref": "#/$defs/relocation"}},
         "profiles": {"type": "array", "minItems": 1, "uniqueItems": true,
           "items": {"enum": ["standard", "full-chain", "hierarchy", "spice-offline", "long-tail"]}},
-        "budget": {"type": ["string", "null"], "pattern": "^regression/budgets/[a-z0-9-]+\\.json$"},
+        "budget": {"type": ["string", "null"], "pattern": "^regression/budgets/[a-z0-9-]+\\.json$(?![\\s\\S])"},
         "old_artifact_checks": {"type": "array", "items": {"type": "string"}},
         "expected": {"type": "object"},
         "relock": {"type": "boolean"},
@@ -43,7 +43,7 @@
           "properties": {"file": {"$ref": "#/$defs/skill_path"},
                          "line": {"type": "integer", "minimum": 1},
                          "summary": {"type": "string"},
-                         "fix_round": {"type": ["string", "null"], "pattern": "^r[0-9]{2,3}(-[a-z0-9-]+)?$"},
+                         "fix_round": {"type": ["string", "null"], "pattern": "^r[0-9]{2,3}(-[a-z0-9-]+)?$(?![\\s\\S])"},
                          "decision": {"type": "string"}}}},
         "expected_sidecar_changes": {"type": "array", "items": {
           "type": "object", "additionalProperties": false, "required": ["file", "leaf", "reason"],
@@ -63,10 +63,10 @@
                    "ledger_hits", "filings", "evidence", "verdict"],
       "properties": {
         "record_version": {"const": 1},
-        "round_id": {"type": "string", "pattern": "^r[0-9]{2,3}-[a-z0-9-]+$"},
+        "round_id": {"type": "string", "pattern": "^r[0-9]{2,3}-[a-z0-9-]+$(?![\\s\\S])"},
         "harness_sha": {"$ref": "#/$defs/sha"},
         "run_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 8}},
-        "normalization_policy": {"type": "string", "pattern": "^volatile-leaves-v[0-9]+$"},
+        "normalization_policy": {"type": "string", "pattern": "^volatile-leaves-v[0-9]+$(?![\\s\\S])"},
         "executed": {"type": "object", "additionalProperties": false,
           "required": ["units", "pairs_by_analyzer", "checks", "tests"],
           "properties": {
@@ -102,7 +102,7 @@
           "properties": {"migrated": {"type": "integer"}, "pending": {"type": "integer"},
                          "facade_still_used": {"type": "array", "items": {"type": "string"}}}},
         "ledger_hits": {"type": "array", "items": {"type": "string"}},
-        "filings": {"type": "array", "items": {"type": "string", "pattern": "^(KH|TH)-[0-9]{3}$"}},
+        "filings": {"type": "array", "items": {"type": "string", "pattern": "^(KH|TH)-[0-9]{3}$(?![\\s\\S])"}},
         "evidence": {"type": "object", "required": ["manifest", "rollup"],
           "properties": {"manifest": {"type": "string"}, "rollup": {"type": "string"},
                          "adjudication": {"type": ["string", "null"]}}},
@@ -113,7 +113,7 @@
                          "files": {"type": "array", "items": {"type": "string"}}}},
         "accept_baseline_diff": {"type": ["string", "null"]},
         "scan_coverage_verdict": {"enum": ["pass", "fail", "not_run"]},
-        "budget_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+        "budget_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"}
       }
     }
   }

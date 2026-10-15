@@ -292,3 +292,64 @@ def test_summarize_prints_new_response_fields():
     assert "scan coverage pass" in text and "budget sha256 aaaaaaaaaaaa" in text
     plain = round_record.summarize_response(_load("round_response_ok.json"))
     assert "apply-map" not in plain and "scan coverage" not in plain
+
+
+# ---- review fix wave: I1 schema_identical vocabulary, M5 owner ambiguity, M2 fullmatch ----
+
+@pytest.mark.parametrize("text,want", [
+    ("byte-identical x6 vs round-1 capture", True), ("identical", True), ("schema Identical x6", True),
+    ("not identical (3 diffs)", False), ("NOT byte-identical", False), ("non-identical", False),
+    ("non identical", False), ("Not   identical", False),
+])
+def test_schema_identical_vocabulary(text, want):
+    assert round_record.schema_identical(text) is want
+
+
+@pytest.mark.parametrize("text", ["differs in 3 files", "", "identicalish", "unidentical", None])
+def test_schema_identical_unrecognised_raises(text):
+    with pytest.raises(ValueError, match="schema"):
+        round_record.schema_identical(text)
+
+
+def test_import_raises_on_unrecognised_schema_note():
+    data = {"relocations": [], "product_evidence_tip": {"quick": "OK", "schema": "differs",
+                                                         "harness_live_abc1234": "x"}}
+    with pytest.raises(ValueError, match="differs"):
+        round_record.import_relocation_map(data, _inv())
+
+
+def test_owner_of_warns_on_ambiguous_product_paths(capsys):
+    rels = round_record.normalize_relocations(
+        [{"old": "cross_analysis.analyze", "new": "kicad_utils.analyze", "facade": False}], _inv())
+    err = capsys.readouterr().err
+    assert rels[0]["old_owner"] in ("skills/kicad/scripts/cross_analysis.py",)
+    assert "cross_analysis" not in err  # derived path is among them: no ambiguity
+    inv = {"modules": [{"module": "m", "product_paths": ["skills/a/m.py", "skills/b/m.py"]}]}
+    rels = round_record.normalize_relocations([{"old": "m.f", "new": "m.g", "facade": False}], inv)
+    err = capsys.readouterr().err
+    assert rels[0]["old_owner"] == "skills/a/m.py"
+    assert "module m has several product_paths" in err and "skills/a/m.py" in err and "skills/b/m.py" in err
+    assert err.count("several product_paths") == 1
+
+
+@pytest.mark.parametrize("mut", [
+    lambda d: d.update(baseline_sha="6a91aaaea124152b2923326c1cf77278e0999cd4\n"),
+    lambda d: d.update(round_id="r03-schematic-reader-split\n"),
+    lambda d: d["relocations"][0].update(old_owner="skills/kicad/scripts/analyze_schematic.py\n"),
+])
+def test_trailing_newline_rejected_by_both(mut):
+    doc = _load("round_request_ok.json")
+    mut(doc)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(doc, SCHEMA)
+    with pytest.raises(ValueError):
+        round_record.validate_record(doc)
+
+
+def test_trailing_newline_budget_sha_rejected_by_both():
+    doc = json.loads((R2 / "round_response_full.json").read_text())
+    doc["budget_sha256"] = "a" * 64 + "\n"
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(doc, SCHEMA)
+    with pytest.raises(ValueError):
+        round_record.validate_record(doc)

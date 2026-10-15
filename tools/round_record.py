@@ -101,14 +101,14 @@ def _request_additions(doc, probs):
                               optional=("decision",)):
             if "decision" in it and not isinstance(it["decision"], str):
                 probs.append(f"{tag}.decision must be a string")
-            if not (isinstance(it["file"], str) and _SKILL_PATH.match(it["file"])):
+            if not (isinstance(it["file"], str) and _SKILL_PATH.fullmatch(it["file"])):
                 probs.append(f"{tag}.file must be a skills/ .py path")
             if not _is_int(it["line"]) or it["line"] < 1:
                 probs.append(f"{tag}.line must be an integer >= 1")
             if not isinstance(it["summary"], str):
                 probs.append(f"{tag}.summary must be a string")
             fr = it["fix_round"]
-            if fr is not None and not (isinstance(fr, str) and _FACADE_UNTIL.match(fr)):
+            if fr is not None and not (isinstance(fr, str) and _FACADE_UNTIL.fullmatch(fr)):
                 probs.append(f"{tag}.fix_round must be null or a round id")
     if "expected_sidecar_changes" in doc:
         for tag, it in _items(doc, "expected_sidecar_changes", ("file", "leaf", "reason"), probs):
@@ -141,13 +141,13 @@ def _response_additions(doc, probs):
     if "scan_coverage_verdict" in doc and doc["scan_coverage_verdict"] not in SCAN_VERDICTS:
         probs.append(f"scan_coverage_verdict must be one of {SCAN_VERDICTS}")
     if "budget_sha256" in doc and doc["budget_sha256"] is not None \
-            and not (isinstance(doc["budget_sha256"], str) and _SHA256.match(doc["budget_sha256"])):
+            and not (isinstance(doc["budget_sha256"], str) and _SHA256.fullmatch(doc["budget_sha256"])):
         probs.append("budget_sha256 must be null or 64 lowercase hex")
 
 
 def _request_problems(doc, probs):
     for k in ("baseline_sha", "candidate_sha"):
-        if not _SHA.match(str(doc[k])):
+        if not _SHA.fullmatch(str(doc[k])):
             probs.append(f"{k} must be a full 40-hex sha")
     if doc["kind"] not in KINDS:
         probs.append(f"kind must be one of {KINDS}")
@@ -156,7 +156,7 @@ def _request_problems(doc, probs):
             or any(not isinstance(p, str) or p not in PROFILES for p in profiles)
             or len(set(profiles)) != len(profiles)):
         probs.append(f"profiles must be a non-empty unique subset of {PROFILES}")
-    if doc["budget"] is not None and not (isinstance(doc["budget"], str) and _BUDGET.match(doc["budget"])):
+    if doc["budget"] is not None and not (isinstance(doc["budget"], str) and _BUDGET.fullmatch(doc["budget"])):
         probs.append("budget must be null or regression/budgets/<name>.json")
     if not isinstance(doc["old_artifact_checks"], list) or any(
             not isinstance(x, str) for x in doc["old_artifact_checks"]):
@@ -185,20 +185,20 @@ def _request_problems(doc, probs):
             if k in r and not (isinstance(r[k], str) and r[k]):
                 probs.append(f"{tag}.{k} must be a non-empty string")
         for k in ("old_owner", "new_owner"):
-            if k in r and not (isinstance(r[k], str) and _SKILL_PATH.match(r[k])):
+            if k in r and not (isinstance(r[k], str) and _SKILL_PATH.fullmatch(r[k])):
                 probs.append(f"{tag}.{k} must be a skills/ .py path")
         fu = r.get("facade_until")
-        if "facade_until" in r and fu is not None and not (isinstance(fu, str) and _FACADE_UNTIL.match(fu)):
+        if "facade_until" in r and fu is not None and not (isinstance(fu, str) and _FACADE_UNTIL.fullmatch(fu)):
             probs.append(f"{tag}.facade_until must be null or a round id")
 
 
 def _response_problems(doc, probs):
-    if not _SHA.match(str(doc["harness_sha"])):
+    if not _SHA.fullmatch(str(doc["harness_sha"])):
         probs.append("harness_sha must be a full 40-hex sha")
     ids = doc["run_ids"]
     if not isinstance(ids, list) or not ids or any(not isinstance(x, str) or len(x) < 8 for x in ids):
         probs.append("run_ids must be a non-empty list of strings of length >= 8")
-    if not (isinstance(doc["normalization_policy"], str) and _POLICY.match(doc["normalization_policy"])):
+    if not (isinstance(doc["normalization_policy"], str) and _POLICY.fullmatch(doc["normalization_policy"])):
         probs.append("normalization_policy must match ^volatile-leaves-v[0-9]+$")
     ex = _obj(doc, "executed", probs, ("units", "pairs_by_analyzer", "checks", "tests"), exact=True)
     if ex is not None:
@@ -249,7 +249,7 @@ def _response_problems(doc, probs):
     if not isinstance(lh, list) or any(not isinstance(x, str) for x in lh):
         probs.append("ledger_hits must be a list of strings")
     fl = doc["filings"]
-    if not isinstance(fl, list) or any(not (isinstance(x, str) and _FILING.match(x)) for x in fl):
+    if not isinstance(fl, list) or any(not (isinstance(x, str) and _FILING.fullmatch(x)) for x in fl):
         probs.append("filings must be a list of KH-NNN / TH-NNN ids")
     ev = _obj(doc, "evidence", probs, ("manifest", "rollup"))
     if ev is not None:
@@ -272,7 +272,7 @@ def _problems(doc) -> tuple[str | None, list[str]]:
     probs += [f"unknown key {k}" for k in doc if k not in allowed]
     if probs:
         return kind, probs
-    if not (isinstance(doc["round_id"], str) and _ROUND_ID.match(doc["round_id"])):
+    if not (isinstance(doc["round_id"], str) and _ROUND_ID.fullmatch(doc["round_id"])):
         probs.append("round_id must match ^r[0-9]{2,3}-[a-z0-9-]+$")
     (_request_problems if kind == "request" else _response_problems)(doc, probs)
     return kind, probs
@@ -306,7 +306,13 @@ def _owner_of(module: str, inventory: dict, warned: set) -> str:
     for m in inventory.get("modules", []):
         if m.get("module") == module and m.get("product_paths"):
             paths = m["product_paths"]
-            return derived if derived in paths else paths[0]
+            if derived in paths:
+                return derived
+            if len(paths) > 1 and ("paths", module) not in warned:
+                warned.add(("paths", module))
+                print(f"warning: module {module} has several product_paths {paths}; using {paths[0]}",
+                      file=sys.stderr)
+            return paths[0]
     if module not in warned:
         warned.add(module)
         print(f"warning: module {module} not in the inventory; owner derived as {derived}", file=sys.stderr)
@@ -314,7 +320,7 @@ def _owner_of(module: str, inventory: dict, warned: set) -> str:
 
 
 def _facade_round(retire) -> str:
-    m = re.match(r"^round\s+([0-9]+)$", str(retire or "").strip())
+    m = re.fullmatch(r"round\s+([0-9]+)", str(retire or "").strip())
     if not m:
         raise ValueError(f"relocation retire must be 'round N' when facade is true, got {retire!r}")
     return "r%02d" % int(m.group(1))
@@ -347,6 +353,21 @@ def normalize_relocations(data, inventory: dict) -> list[dict]:
     return out
 
 
+_IDENTICAL = re.compile(r"\b(?:byte-)?identical\b", re.I)
+_NOT_IDENTICAL = re.compile(r"\b(?:not|non)[\s-]*(?:byte-)?identical\b", re.I)
+
+
+def schema_identical(text) -> bool:
+    """Exact vocabulary for the product's --schema note: '(byte-)identical' as a whole word is
+    True, the same preceded by not/non/non- is False; anything else raises (never guess)."""
+    s = text if isinstance(text, str) else ""
+    if _NOT_IDENTICAL.search(s):
+        return False
+    if _IDENTICAL.search(s):
+        return True
+    raise ValueError(f"product_evidence_tip.schema {text!r} is not a recognised identical/not identical note")
+
+
 def import_relocation_map(data: dict, inventory: dict) -> dict:
     """Request fields carried by a product relocation map; unknown top-level keys are ignored."""
     extra = {"relocations": normalize_relocations(data.get("relocations", []), inventory)}
@@ -363,7 +384,7 @@ def import_relocation_map(data: dict, inventory: dict) -> dict:
         pinned = [f"{k[len('harness_live_'):]}: {v}" for k, v in sorted(tip.items())
                   if k.startswith("harness_live_")]
         extra["product_evidence"] = {"quick_json": str(tip.get("quick", "")),
-                                     "schema_identical": "identical" in str(tip.get("schema", "")),
+                                     "schema_identical": schema_identical(tip.get("schema")),
                                      "pinned_harness": pinned[0] if pinned else ""}
     return extra
 
