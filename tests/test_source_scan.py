@@ -154,6 +154,17 @@ def test_apply_exceptions_count_growth_is_violation():
     assert any("emc-positional" in v and "grew" in v for v in violations)
 
 
+def test_apply_exceptions_partial_shrink_is_violation():
+    exc = _fake_exceptions()
+    exc["exceptions"][0]["count"] = 3          # ledger says 3, tree has 2
+    sites = [s for p in source_scan.iter_product_sources(FAKE)
+             for s in source_scan.emit_sites(FAKE, p, source_scan.resolve_det_enum(FAKE))]
+    _, counts, violations = source_scan.apply_exceptions(sites, exc)
+    assert counts["emc-positional"] == 2
+    assert violations == ["exception emc-positional shrank: matched 2 < recorded 3"
+                          " — shrink the ledger entry in the same commit"]
+
+
 def test_apply_exceptions_zero_match_is_violation():
     exc = _fake_exceptions()
     exc["exceptions"].append({"id": "ghost", "file": "skills/none.py", "callee": "x",

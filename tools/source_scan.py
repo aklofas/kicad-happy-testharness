@@ -185,7 +185,9 @@ def apply_exceptions(sites: list[EmitSite], exceptions: dict
 
     Returns (still_unresolved, matched_counts_by_exception_id, violations).
     A violation is an exception matching more sites than its recorded count,
-    or matching zero sites (a stale entry that must be removed).
+    fewer (but not zero) sites than its recorded count (a shrink the ledger
+    must reflect in the same commit), or zero sites (a stale entry that must
+    be removed).
     """
     counts: dict[str, int] = {e["id"]: 0 for e in exceptions["exceptions"]}
     remaining: list[EmitSite] = []
@@ -206,8 +208,11 @@ def apply_exceptions(sites: list[EmitSite], exceptions: dict
         n = counts[e["id"]]
         if n > e["count"]:
             violations.append(f"exception {e['id']} grew: matched {n} > recorded {e['count']}")
-        if n == 0:
+        elif n == 0:
             violations.append(f"exception {e['id']} matched 0 sites (stale entry; remove it)")
+        elif n < e["count"]:
+            violations.append(f"exception {e['id']} shrank: matched {n} < recorded {e['count']}"
+                              " — shrink the ledger entry in the same commit")
     return remaining, counts, violations
 
 
