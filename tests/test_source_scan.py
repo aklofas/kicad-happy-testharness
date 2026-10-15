@@ -344,3 +344,50 @@ def test_check_accept_baseline_ratchets_growth(tmp_path):
     (grown / "skills/kicad/scripts/schematic/extra.py").unlink()
     r = run("check", "--product", str(grown), "--exceptions", str(exc), "--baseline", str(base))
     assert r.returncode == 1 and "lost_files: skills/kicad/scripts/schematic/extra.py" in r.stdout
+
+
+TRIPWIRE_SRC = (
+    '"""Tripwire: importing or executing this module must never happen."""\n'
+    'from finding_schema import make_finding\n'
+    'raise RuntimeError("imported!")\n'
+    'TRIP_MAX_OHMS = 4700\n'
+    '\n'
+    'def detect_trip(ctx):\n'
+    '    # EQ-999: trip = ctx\n'
+    '    return [make_finding(detector="d", rule_id="R-1", category="x",\n'
+    '                         summary="s", description="x", schema_era="v1.4")]\n')
+
+
+def test_scanners_never_import_product_code(tmp_path):
+    """Every scanner walks a module that raises at import time, without raising,
+    and still finds its emit site, EQ tag and constant (spec: ast only)."""
+    sys.path.insert(0, str(HARNESS / "validate"))
+    import audit_constants
+    import audit_equations
+    import detect_changes
+    import discover_versioned_detectors as dvd
+    prod = tmp_path / "prod"
+    shutil.copytree(FAKE, prod)
+    trip = prod / "skills" / "kicad" / "scripts" / "tripwire.py"
+    trip.write_text(TRIPWIRE_SRC, encoding="utf-8")
+    rel = "skills/kicad/scripts/tripwire.py"
+    before = set(sys.modules)
+
+    sites = source_scan.emit_sites(prod, trip)
+    assert [(s.detector, s.rule_id, s.schema_era, s.resolved) for s in sites] == [
+        ("d", "R-1", "v1.4", True)]
+    snap = source_scan.coverage_snapshot(prod, exceptions=_fake_exceptions())
+    assert rel in snap["files"] and snap["emit_sites"]["d|R-1"] == 1
+    assert snap["eq_ids"]["EQ-999"] == rel
+    assert f"{rel}|module|TRIP_MAX_OHMS" in snap["constants"]
+    assert detect_changes.build_module_index(prod)["tripwire"] == rel
+    assert "skills/kicad/scripts/finding_schema.py" in detect_changes._build_dependency_graph(prod)[rel]
+    assert any(r["file"] == rel and r["name"] == "TRIP_MAX_OHMS"
+               for r in audit_constants.iter_constant_records(prod))
+    assert {"eq_id": "EQ-999", "file": rel}.items() <= next(
+        e for e in audit_equations.iter_equations(prod) if e["eq_id"] == "EQ-999").items()
+    out = dvd.discover(prod, "v1.4")
+    assert out["detectors"]["d"]["rules"] == ["R-1"]
+    assert out["detectors"]["d"]["source_file"] == rel
+    assert "tripwire" not in sys.modules
+    assert not {m for m in set(sys.modules) - before if "tripwire" in m}
