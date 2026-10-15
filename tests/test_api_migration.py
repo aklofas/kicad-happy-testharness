@@ -361,22 +361,25 @@ def test_load_relocations_product_shape_uses_inventory(tmp_path):
     assert rels[0]["old_owner"] == "skills/kicad/scripts/kicad_utils.py"
 
 
-def test_apply_map_product_shape_unbound_symbol_is_note_not_error(tmp_path):
-    m = tmp_path / "map.json"
-    m.write_text(json.dumps({"relocations": [
-        {"old": "kicad_utils.normalize_field_name", "new": "kicad_core.fields.normalize_field_name",
-         "facade": True, "retire": "round 9"},
-        {"old": "kicad_utils.not_bound_by_harness", "new": "kicad_core.fields.not_bound_by_harness",
-         "facade": False}]}))
-    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(m)], capture_output=True, text=True)
-    assert r.returncode == 0, r.stderr
-    assert "note: kicad_utils.not_bound_by_harness has no harness sites" in r.stderr
-
-
-def test_apply_map_record_shape_unknown_symbol_still_errors(tmp_path):
-    m = tmp_path / "map.json"
-    m.write_text(json.dumps([{"symbol": "kicad_utils.typo_name", "old_owner": "skills/kicad/scripts/kicad_utils.py",
-                              "new_owner": "skills/kicad/scripts/kicad_core/fields.py", "new_name": "typo_name",
-                              "facade_until": None}]))
-    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(m)], capture_output=True, text=True)
-    assert r.returncode == 2 and "error: kicad_utils.typo_name not in inventory" in r.stderr
+def test_apply_map_skips_unbound_symbols_with_one_note(tmp_path):
+    """A product map lists everything it moved; names the harness never bound are skipped
+    with ONE summary note, exit 0, and the listed sites are unchanged."""
+    bound = {"old": "kicad_utils.normalize_field_name", "new": "kicad_core.fields.normalize_field_name",
+             "facade": True, "retire": "round 9"}
+    only = tmp_path / "only.json"
+    only.write_text(json.dumps({"relocations": [bound]}))
+    mixed = tmp_path / "mixed.json"
+    mixed.write_text(json.dumps({"relocations": [
+        bound,
+        {"old": "kicad_utils.not_bound_a", "new": "kicad_core.fields.not_bound_a", "facade": False},
+        {"symbol": "kicad_utils.not_bound_b", "old_owner": "skills/kicad/scripts/kicad_utils.py",
+         "new_owner": "skills/kicad/scripts/kicad_core/fields.py", "new_name": "not_bound_b",
+         "facade_until": None}]}))
+    run = lambda m: subprocess.run([sys.executable, str(TOOL), "apply-map", str(m), "--json"],  # noqa: E731
+                                   capture_output=True, text=True)
+    r0, r = run(only), run(mixed)
+    assert r0.returncode == 0 and r.returncode == 0, r.stderr
+    assert json.loads(r.stdout) == json.loads(r0.stdout) and json.loads(r.stdout)
+    notes = [ln for ln in r.stderr.splitlines() if ln.startswith("note:")]
+    assert notes == ["note: 2 relocations name symbols the harness never bound (skipped)"]
+    assert "error" not in r.stderr and "note: " not in r0.stderr.replace("warning:", "")
