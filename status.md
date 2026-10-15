@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-15 later (3) (H0 plan 5: grouped two-phase BUGFIX reconciliation closes TH-057, registry back-synced for 8 hand-migrated locks, schema_era v3.0 + --select-era/--stamp-era; unit tier 2,144 pass / 1 xfail; prior: H0 plan 4: package-aware scanners + literal-tag policy + coverage baseline @6a91aaa + API inventory adoption; unit tier 2,103 pass / 1 xfail; KH-445, TH-065, TH-066 filed; prior: H0 plan 3: field-level comparator raw/strict/budgeted + volatile-leaves-v1 + budgets + gate --budget, comparator suite 176, unit tier 2,046 pass / 1 xfail; prior: H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files))
+Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa — A/A strict-clean on smoke/quick_200/full corpus, policy v1 confirmed as-is, trees + ledger + round-record schema; unit tier 2,229 pass / 1 xfail; TH-068 filed; prior: H0 plan 5: grouped two-phase BUGFIX reconciliation closes TH-057, registry back-synced for 8 hand-migrated locks, schema_era v3.0 + --select-era/--stamp-era; unit tier 2,144 pass / 1 xfail; prior: H0 plan 4: package-aware scanners + literal-tag policy + coverage baseline @6a91aaa + API inventory adoption; unit tier 2,103 pass / 1 xfail; KH-445, TH-065, TH-066 filed; prior: H0 plan 3: field-level comparator raw/strict/budgeted + volatile-leaves-v1 + budgets + gate --budget, comparator suite 176, unit tier 2,046 pass / 1 xfail; prior: H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files))
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,29 @@ Last updated: 2026-10-15 later (3) (H0 plan 5: grouped two-phase BUGFIX reconcil
 ---
 
 ## Completed batches
+
+### 2026-10-15 later (4) — H0 plan 6: v3 baseline acquired at 6a91aaa (local, unpushed)
+
+Code: `regression/round_record.schema.json` + `tools/round_record.py` (spec §9 per-round
+request/response records; stdlib checker kept in parity with the schema by test),
+`tools/aa_run.py` (A/A driver, volatile-leaf report, policy PROPOSAL for human review,
+`--fixture-trees` snapify), `tools/baseline_ledger.py build|check` (+ `baseline_ledger_check.py`),
+`regression/full_chain_baseline.py` (tracked --full chain recipe). Operational, on a clean
+local clone of the product at `6a91aaa` (`results/v3_baseline/product_6a91aaa`): A/A same
+SHA both slots — smoke 1,615 units (57 s), quick_200 35,931 (673 s), FULL CORPUS 149,629
+(2,435 s) — strict CLEAN on all three under `volatile-leaves-v1` with 0 policy violations
+(raw differs on every unit = run ids only) → policy v1 CONFIRMED AS-IS (0 leaves added,
+0 determinism filings). Standard baseline tree census exact (sch 36,465 / pcb 18,661 /
+gerber 5,502 / emc+thermal+cross 36,462); debts = 6 both_failed (3 schematic timeouts,
+3 pcb crashes) + 9 downstream; hierarchy 3/3 PASS; SPICE cache inventory 261 dirs /
+1,225 files (= v2.3.1); full-chain 300 projects (seed 23) all four steps rc 0, 0 timeouts;
+oracle vs stored v2.3.1 outputs: schematic 300/300 + thermal 300/300 identical, pcb/emc
+292/300 — the 8 diffs = TH-055 stale stored outputs (2026-05-11, schema 1.3.0, no run_id), not analyzer movement. Checks at 6a91aaa 2,716,679 / 7 fail / 2 err / 100.0%
+(aspirational 343/1,855) = the v2.3.1 debt ledger; contract 686 passed / 8 skipped / 3
+xfailed. Ledger `reference/baseline_debts/6a91aaa.json`: checks 9 / contract 11 /
+timeout_units 3 / nondeterminism 1 (KH-421), self-check 0 new identities. Fixture lane:
+non-chained 12/12 identical, chained 9 unverifiable after the basetemp move → TH-068.
+Sizes: standard 55 G, aa_quick200 16 G, aa_smoke 626 M, full-chain 636 M.
 
 ### 2026-10-15 later (3) — H0 plan 5 landed (local, unpushed)
 
