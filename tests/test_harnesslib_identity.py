@@ -198,3 +198,39 @@ def test_append_is_tail_only_fast(tmp_path):
         log.append({"analyzer": "a", "unit_id": str(i), "pad": "x" * 200})
     assert time.monotonic() - t < 2
     assert len(log.by_unit()) == 2000
+
+
+def test_sha256_path_file_and_directory(tmp_path):
+    f = tmp_path / "one.txt"
+    f.write_bytes(b"abc")
+    assert ident.sha256_path(f) == ident.sha256_file(f)
+    d1 = tmp_path / "g1"
+    (d1 / "sub").mkdir(parents=True)
+    (d1 / "a.gbr").write_bytes(b"A")
+    (d1 / "sub" / "b.drl").write_bytes(b"B")
+    base = ident.sha256_path(d1)
+    # same tree built in a different creation order -> same digest
+    d2 = tmp_path / "g2"
+    (d2 / "sub").mkdir(parents=True)
+    (d2 / "sub" / "b.drl").write_bytes(b"B")
+    (d2 / "a.gbr").write_bytes(b"A")
+    assert ident.sha256_path(d2) == base
+    (d2 / "a.gbr").write_bytes(b"A2")
+    assert ident.sha256_path(d2) != base
+    (d2 / "a.gbr").write_bytes(b"A")
+    (d2 / "a.gbr").rename(d2 / "c.gbr")
+    assert ident.sha256_path(d2) != base
+    (d2 / "c.gbr").rename(d2 / "a.gbr")
+    (d2 / "link").symlink_to(d2 / "a.gbr")
+    assert ident.sha256_path(d2) == base      # symlinks are skipped
+
+
+def test_unit_is_current_requires_matching_run_id(tmp_path):
+    out = tmp_path / "o.json"
+    out.write_text("{}")
+    log = ident.UnitLog(tmp_path / "root")
+    log.append({"analyzer": "pcb", "unit_id": "u", "input_sha256": "in", "status": "ok",
+                "output_sha256": ident.sha256_file(out), "run_id": "R1"})
+    assert ident.unit_is_current(log, "pcb", "u", "in", out)
+    assert ident.unit_is_current(log, "pcb", "u", "in", out, run_id="R1")
+    assert not ident.unit_is_current(log, "pcb", "u", "in", out, run_id="R2")

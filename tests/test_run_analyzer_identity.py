@@ -132,3 +132,58 @@ def test_resume_disabled_when_extra_args_change(env, capsys):
 def test_resume_disabled_on_dirty_worktree(env, capsys):
     out = _resume_after(env, capsys, lambda: (env.product / "junk.txt").write_text("x"))
     assert "resume disabled: dirty worktree" in out and "Skip:" not in out
+
+
+def _second_board(env):
+    b2 = env.board.with_name("ok2.kicad_pcb")
+    b2.write_text("(kicad_pcb 2)")
+    (env.tmp / "manifests" / "all_pcbs.txt").write_text(f"{env.board}\n{b2}\n")
+    return b2
+
+
+def test_resume_after_crashed_new_sha_run_reruns_unreached_units(env, capsys):
+    _second_board(env)
+    out_root = env.data / "results" / "outputs" / "pcb"
+    env.utils.run_analyzer(_config("ok"), _args())          # run A at product SHA A
+    subprocess.run(["git", "-C", str(env.product), "-c", "user.email=t@t", "-c", "user.name=t",
+                    "commit", "-q", "--allow-empty", "-m", "B"], check=True)
+    env.utils.run_analyzer(_config("ok"), _args())          # run B at SHA B (non-resume)
+    m = json.loads((out_root / "manifest.json").read_text())
+    # simulate a crash after one unit: keep only B's first record, no totals
+    recs = [json.loads(l) for l in (out_root / "units.jsonl").read_text().splitlines()]
+    b_recs = [r for r in recs if r["run_id"] == m["run_id"]]
+    assert len(b_recs) == 2
+    (out_root / "units.jsonl").write_text(json.dumps(b_recs[0]) + "\n")
+    m["totals"] = None
+    (out_root / "manifest.json").write_text(json.dumps(m))
+    capsys.readouterr()
+    env.utils.run_analyzer(_config("ok"), _args(resume=True))
+    out = capsys.readouterr().out
+    assert "Skip:  1" in out and out.count("PASS [") == 1     # unreached unit reran
+    # A's records were archived, never deleted
+    assert list(out_root.glob("units.*.jsonl"))
+
+
+def test_unit_records_carry_run_id(env):
+    env.utils.run_analyzer(_config("ok"), _args())
+    out_root = env.data / "results" / "outputs" / "pcb"
+    m = json.loads((out_root / "manifest.json").read_text())
+    recs = [json.loads(l) for l in (out_root / "units.jsonl").read_text().splitlines()]
+    assert recs and all(r["run_id"] == m["run_id"] for r in recs)
+
+
+def test_gerber_directory_unit_runs(env, capsys):
+    gdir = env.tmp / "repos" / "o" / "r" / "gerbers"
+    gdir.mkdir()
+    (gdir / "a.gbr").write_text("G04*")
+    (env.tmp / "manifests" / "all_gerbers.txt").write_text(f"{gdir}\n")
+    cfg = {"type_name": "gerber", "analyzer_script": "analyze_pcb.py",
+           "manifest_file": "all_gerbers.txt", "output_subdir": "gerber",
+           "summarize": lambda d: "ok", "extra_args": ["--mode", "ok", "--type", "gerber"]}
+    env.utils.run_analyzer(cfg, _args())
+    assert "PASS" in capsys.readouterr().out
+    env.utils.run_analyzer(cfg, _args(resume=True))
+    assert "Skip:  1" in capsys.readouterr().out
+    (gdir / "a.gbr").write_text("G04 changed*")
+    env.utils.run_analyzer(cfg, _args(resume=True))
+    assert "Skip:" not in capsys.readouterr().out

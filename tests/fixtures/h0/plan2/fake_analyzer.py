@@ -1,6 +1,7 @@
 """Fake analyzer for execution tests.
 
 Usage: fake_analyzer.py <mode> -o <out>   (mode is the first positional)
+A directory input (gerber units) is accepted and ignored; only -o matters.
 Modes: ok | ok_exit1 | exit2 | nothing | garbage | sleep | ok_wrong_type
        | binary (non-UTF-8 output file, exit 0)
        | badstderr (valid output, non-UTF-8 bytes on stderr, exit 0)

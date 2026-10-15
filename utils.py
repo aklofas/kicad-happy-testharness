@@ -38,7 +38,7 @@ INTEGRATION_TEST_TIMEOUT = 600
 from harnesslib.execution import (run_once, build_env, recorded_env,  # noqa: F401,E402
                                   RunResult, STATUSES, ACCEPTED_EXITS)
 from harnesslib.identity import (RunSpec, WorktreeRef, git_worktree_ref,  # noqa: F401,E402
-                                 sha256_file, UnitLog, unit_is_current)
+                                 sha256_file, sha256_path, UnitLog, unit_is_current)
 from harnesslib.selection import EmptySelection, NoSelection, filter_units  # noqa: F401,E402
 
 # Default parallelism — use all available CPUs for max throughput
@@ -745,7 +745,7 @@ def run_analyzer(config, args=None):
     from harnesslib.execution import build_env, recorded_env
     from harnesslib.identity import (RunSpec, git_worktree_ref, write_manifest,
                                      finish_manifest, UnitLog, unit_is_current,
-                                     sha256_file, input_digest)
+                                     sha256_path, input_digest)
     import platform, uuid
     env = build_env(offline=not getattr(args, "online", False))
     out_root = OUTPUTS_DIR / output_subdir
@@ -760,19 +760,23 @@ def run_analyzer(config, args=None):
                    argv=tuple(a for a in sys.argv[1:] if a != "--resume") + tuple(extra_args or ()),
                    selection_source=selection_source, unit_ids=tuple(unit_ids),
                    normalization_policy="volatile-leaves-v1", env=recorded_env(env))
-    input_hashes = {f: sha256_file(f) for f in files}
-    from harnesslib.identity import read_manifest, manifests_match
+    input_hashes = {f: sha256_path(f) for f in files}
+    from harnesslib.identity import read_manifest, manifests_match, UNITS_NAME
     do_resume = getattr(args, "resume", False)
     try:
         prev = read_manifest(out_root)
     except (OSError, ValueError):
         prev = None
-    log = UnitLog(out_root)
-    write_manifest(out_root, spec, run_id=str(uuid.uuid4()),
-                   expected_census={output_subdir: len(files)},
-                   input_digest=input_digest((_uid(f), h) for f, h in input_hashes.items()),
-                   runtime={"python": platform.python_version(),
-                            "platform": platform.platform()})
+    run_id = str(uuid.uuid4())
+
+    def _write(rid):
+        write_manifest(out_root, spec, run_id=rid,
+                       expected_census={output_subdir: len(files)},
+                       input_digest=input_digest((_uid(f), h) for f, h in input_hashes.items()),
+                       runtime={"python": platform.python_version(),
+                                "platform": platform.platform()})
+
+    _write(run_id)
     if do_resume:
         if prev is None:
             print("resume disabled: no prior manifest")
@@ -782,6 +786,15 @@ def run_analyzer(config, args=None):
             if not same:
                 print("resume disabled: " + "; ".join(reasons))
                 do_resume = False
+    if do_resume:
+        # continue the matched run: its records stay current only under its run_id
+        run_id = prev.get("run_id") or run_id
+        _write(run_id)
+    elif prev is not None and (out_root / UNITS_NAME).exists():
+        # never let a later resume see records from an earlier, different run
+        old_id = prev.get("run_id") or "unknown"
+        os.replace(out_root / UNITS_NAME, out_root / f"units.{old_id}.jsonl")
+    log = UnitLog(out_root)
 
     print(f"=== Running {type_name} analysis ===")
     print(f"Analyzer: {analyzer}")
@@ -826,13 +839,14 @@ def run_analyzer(config, args=None):
 
     def _record(file_path, returncode, elapsed, status, out_sha):
         log.append({"analyzer": output_subdir, "unit_id": _uid(file_path),
-                    "input_sha256": input_hashes[file_path], "status": status,
+                    "run_id": run_id, "input_sha256": input_hashes[file_path], "status": status,
                     "exit_code": returncode, "output_sha256": out_sha,
                     "elapsed_s": round(elapsed, 3)})
 
     def _current(file_path, outfile):
         return do_resume and unit_is_current(log, output_subdir, _uid(file_path),
-                                             input_hashes[file_path], outfile)
+                                             input_hashes[file_path], outfile,
+                                             run_id=run_id)
 
     cap = getattr(args, "timeout", ANALYZER_TIMEOUT)
     status_totals = Counter()

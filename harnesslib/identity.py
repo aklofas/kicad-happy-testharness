@@ -62,6 +62,23 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def sha256_path(path: Path) -> str:
+    """Digest of a unit input: a file's bytes, or a directory's content tree.
+
+    Gerber units are directories. The directory digest covers every regular
+    file beneath it (symlinks skipped) as sorted "<posix relpath>\t<sha256>"
+    lines, so renames and content edits both change it."""
+    p = Path(path)
+    if not p.is_dir():
+        return sha256_file(p)
+    lines = []
+    for f in p.rglob("*"):
+        if f.is_symlink() or not f.is_file():
+            continue
+        lines.append(f"{f.relative_to(p).as_posix()}\t{sha256_file(f)}")
+    return hashlib.sha256("\n".join(sorted(lines)).encode("utf-8")).hexdigest()
+
+
 def selection_digest(unit_ids: Iterable[str]) -> str:
     return hashlib.sha256("\n".join(sorted(unit_ids)).encode("utf-8")).hexdigest()
 
@@ -232,9 +249,16 @@ class UnitLog:
 
 
 def unit_is_current(log: UnitLog, analyzer: str, unit_id: str,
-                    input_sha256: str, output_path: Path) -> bool:
+                    input_sha256: str, output_path: Path,
+                    run_id: str | None = None) -> bool:
+    """True if the logged record still describes a valid output.
+
+    When run_id is given the record must carry it, so records left by a
+    different (e.g. crashed-over) run are never reused."""
     rec = log.by_unit().get(f"{analyzer}/{unit_id}")
     if rec is None or rec.get("status") not in OK_STATUSES:
+        return False
+    if run_id is not None and rec.get("run_id") != run_id:
         return False
     if rec.get("input_sha256") != input_sha256:
         return False

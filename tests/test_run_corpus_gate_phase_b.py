@@ -301,7 +301,7 @@ def test_nonempty_gate_dir_without_resume_exits_2(corpus):
     assert ident.read_manifest(gd)["run_id"] == run_id
 
 
-def test_resume_mismatch_archives_old_run(corpus):
+def test_resume_mismatch_exits_2_and_leaves_tree_untouched(corpus, capsys):
     base = _fake_worktree(corpus, "base", "ok")
     cand = _fake_worktree(corpus, "cand", "ok")
     gd = corpus / "gd"
@@ -309,15 +309,89 @@ def test_resume_mismatch_archives_old_run(corpus):
             "--repo", "o/r", "--jobs", "1"]
     assert _run_main(argv) == 0
     old = ident.read_manifest(gd)
+    before = sorted(p.name for p in gd.iterdir())
     subprocess.run(["git", "-C", str(cand), "-c", "user.email=t@t", "-c", "user.name=t",
                     "commit", "-q", "--allow-empty", "-m", "y"], check=True)
+    capsys.readouterr()
+    assert _run_main(argv + ["--resume"]) == 2
+    assert "identity mismatch" in capsys.readouterr().err
+    assert ident.read_manifest(gd)["run_id"] == old["run_id"]
+    assert sorted(p.name for p in gd.iterdir()) == before     # nothing archived or rewritten
+
+
+@pytest.mark.parametrize("legacy", ["v131", "v14", "baseline", "diff"])
+def test_legacy_or_partial_gate_dir_is_refused(corpus, legacy):
+    base = _fake_worktree(corpus, "base", "ok")
+    gd = corpus / "gd"
+    (gd / legacy).mkdir(parents=True)
+    argv = ["--baseline-dir", str(base), "--candidate-dir", str(base), "--gate-dir", str(gd),
+            "--repo", "o/r", "--jobs", "1"]
+    assert _run_main(argv) == 2
+    assert _run_main(argv + ["--resume"]) == 2
+    assert not (gd / "manifest.json").exists()
+
+
+def test_gerber_directory_unit_end_to_end(corpus):
+    gdir = corpus / "repos" / "o" / "r" / "fab"
+    gdir.mkdir()
+    (gdir / "a.gbr").write_text("G04*")
+    (corpus / "manifests" / "all_gerbers.txt").write_text(str(gdir) + "\n")
+    base = _fake_worktree(corpus, "base", "ok")
+    cand = _fake_worktree(corpus, "cand", "ok")
+    gd = corpus / "gd"
+    argv = ["--baseline-dir", str(base), "--candidate-dir", str(cand), "--gate-dir", str(gd),
+            "--repo", "o/r", "--jobs", "1"]
+    assert _run_main(argv) == 0
+    recs = {r["analyzer"]: r for r in ident.UnitLog(gd)}
+    assert recs["gerber"]["input_sha256"] == ident.sha256_path(gdir)
     assert _run_main(argv + ["--resume"]) == 0
-    new = ident.read_manifest(gd)
-    assert new["run_id"] != old["run_id"]
-    arch = json.loads((gd / f"manifest.{old['run_id']}.json").read_text())
-    assert arch["identity"]["candidate_sha"] == old["identity"]["candidate_sha"]
-    assert (gd / f"units.{old['run_id']}.jsonl").exists()
-    assert not any(r.get("reused") for r in ident.UnitLog(gd))
+    assert all(r.get("reused") for r in ident.UnitLog(gd))
+    (gdir / "a.gbr").write_text("G04 changed*")
+    assert _run_main(argv + ["--resume"]) == 0
+    assert not {r["analyzer"]: r for r in ident.UnitLog(gd)}["gerber"].get("reused")
+
+
+def test_worker_exception_is_fail_unit_and_run_completes(corpus, monkeypatch):
+    extra = corpus / "repos" / "o" / "r" / "c.kicad_pcb"
+    extra.write_text("(kicad_pcb)")
+    mf = corpus / "manifests" / "all_pcbs.txt"
+    mf.write_text(mf.read_text() + str(extra) + "\n")
+    real = gate.phase_a_job
+
+    def flaky(job):
+        if job[1].endswith("c.kicad_pcb"):
+            raise RuntimeError("boom")
+        return real(job)
+
+    monkeypatch.setattr(gate, "phase_a_job", flaky)
+    base = _fake_worktree(corpus, "base", "ok")
+    gd = corpus / "gd"
+    argv = ["--baseline-dir", str(base), "--candidate-dir", str(base), "--gate-dir", str(gd),
+            "--repo", "o/r", "--jobs", "1", "--label", "t"]
+    assert _run_main(argv) == 1
+    recs = {f"{r['analyzer']}/{r['unit_id']}": r for r in ident.UnitLog(gd)}
+    bad = recs["pcb/o/r/" + gate.safe_name(str(extra))]
+    assert bad["verdict"] == "FAIL" and bad["reason"] == "worker_exception"
+    assert "boom" in bad["detail"] and bad["baseline"] is None and bad["candidate"] is None
+    assert any(r["analyzer"] == "schematic" and r["verdict"] == "PASS" for r in recs.values())
+    assert json.loads((gd / "rollup_t.json").read_text())["gate_pass"]["pass"] is False
+
+
+def test_records_are_logged_as_each_unit_completes(corpus, monkeypatch):
+    seen = []
+    real = gate.phase_b_job
+
+    def spy(job):
+        # at Phase B start every Phase A record must already be on disk
+        seen.append(sorted({r["analyzer"] for r in ident.UnitLog(gd)}))
+        return real(job)
+
+    monkeypatch.setattr(gate, "phase_b_job", spy)
+    base = _fake_worktree(corpus, "base", "ok")
+    gd = corpus / "gd"
+    assert _run_main(["--baseline-dir", str(base), "--candidate-dir", str(base),
+                      "--gate-dir", str(gd), "--repo", "o/r", "--jobs", "1"]) == 0
+    assert seen and "pcb" in seen[0] and "schematic" in seen[0]
 
 
 def test_resume_match_archives_log_under_run_id(corpus):

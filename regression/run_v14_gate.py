@@ -70,7 +70,7 @@ def translate_argv(argv):
             out.append(a)
             i += 1
     for flag, default in _DEFAULTS.items():
-        if flag not in out:
+        if flag not in out and not any(a.startswith(flag + "=") for a in out):
             out += [flag, default]
     return out
 

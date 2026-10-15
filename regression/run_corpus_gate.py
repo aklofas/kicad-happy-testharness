@@ -47,7 +47,7 @@ sys.path.insert(0, str(HARNESS_DIR / "regression"))
 
 import regression_diff as rdiff  # noqa: E402
 from harnesslib.execution import run_once, build_env, recorded_env  # noqa: E402
-from harnesslib.identity import (RunSpec, git_worktree_ref, sha256_file, input_digest,  # noqa: E402
+from harnesslib.identity import (RunSpec, git_worktree_ref, sha256_path, input_digest,  # noqa: E402
                                  write_manifest, finish_manifest, read_manifest,
                                  manifests_match, identity_key, unit_is_current,
                                  MANIFEST_VERSION, UnitLog)
@@ -179,7 +179,7 @@ def phase_a_job(args):
     cand = run_once(lambda o: file_cmd(analyzer, candidate_dir, input_path, o, profile),
                     cand_out, analyzer=analyzer, timeout=profile.timeout_s, env=env)
     rec = {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
-           "input_sha256": sha256_file(input_path),
+           "input_sha256": sha256_path(input_path),
            "baseline": _side(base), "candidate": _side(cand)}
     rec.update(diff_envelopes(base_out, cand_out, _ok(base), _ok(cand)))
     diff_out = lay.diff(analyzer, repo, key)
@@ -318,8 +318,9 @@ def _pcb_key_for(sch_key):
 
 
 def _both_ok(rec):
-    return (rec["baseline"]["status"] in OK_STATUSES
-            and rec["candidate"]["status"] in OK_STATUSES)
+    b, c = rec.get("baseline"), rec.get("candidate")
+    return (isinstance(b, dict) and isinstance(c, dict)
+            and b["status"] in OK_STATUSES and c["status"] in OK_STATUSES)
 
 
 def build_phase_b_jobs(a_records, layout, baseline_dir, candidate_dir, profile):
@@ -440,23 +441,50 @@ def resume_plan(layout, spec, input_shas=None):
     return reusable, []
 
 
-def _run_jobs(jobs, worker, jobs_n, label):
+def _exception_record(analyzer, repo, unit_id, exc):
+    """A worker that raised is a FAIL unit, not a dead run (report I2)."""
+    return {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
+            "verdict": "FAIL", "reason": "worker_exception",
+            "detail": f"{type(exc).__name__}: {exc}", "baseline": None, "candidate": None}
+
+
+def _exc_record_a(job, exc):
+    analyzer, input_path, repo = job[0], job[1], job[2]
+    return _exception_record(analyzer, repo, f"{repo}/{safe_name(input_path)}", exc)
+
+
+def _exc_record_b(job, exc):
+    analyzer, repo, sch_key = job[0], job[1], job[2]
+    return _exception_record(analyzer, repo, f"{repo}/{sch_key}", exc)
+
+
+def _run_jobs(jobs, worker, jobs_n, label, sink, on_error):
+    """Run jobs, handing each record to sink(record) as it completes."""
     if not jobs:
         return []
     print(f"  {label}: {len(jobs)} units, {jobs_n} workers")
     results, t0, done = [], time.time(), 0
+
+    def finish(job, get):
+        nonlocal done
+        try:
+            rec = get()
+        except Exception as exc:  # noqa: BLE001 - any worker failure is a FAIL unit
+            rec = on_error(job, exc)
+        sink(rec)
+        results.append(rec)
+        done += 1
+        if done % 200 == 0:
+            print(f"    {done}/{len(jobs)} ({time.time()-t0:.0f}s)")
+
     if jobs_n <= 1:
         for job in jobs:
-            results.append(worker(job)); done += 1
-            if done % 200 == 0:
-                print(f"    {done}/{len(jobs)} ({time.time()-t0:.0f}s)")
+            finish(job, lambda j=job: worker(j))
     else:
         with ProcessPoolExecutor(max_workers=jobs_n) as pool:
-            futs = [pool.submit(worker, job) for job in jobs]
+            futs = {pool.submit(worker, job): job for job in jobs}
             for fut in as_completed(futs):
-                results.append(fut.result()); done += 1
-                if done % 200 == 0:
-                    print(f"    {done}/{len(jobs)} ({time.time()-t0:.0f}s)")
+                finish(futs[fut], fut.result)
     print(f"  {label} done: {len(results)} units in {time.time()-t0:.0f}s")
     return results
 
@@ -590,15 +618,17 @@ def main(argv=None):
     gd = Path(args.gate_dir)
     layout = GateLayout(gd if gd.is_absolute() else HARNESS_DIR / gd)
     prev_run_id = None
+    present = [n for n in ("manifest.json", "baseline", "candidate", "diff", "v131", "v14")
+               if (layout.root / n).exists()]
     if layout.manifest.exists():
         try:
             prev_run_id = read_manifest(layout.root).get("run_id") or "unknown"
         except (OSError, ValueError):
             prev_run_id = "unreadable"
-        if not args.resume:
-            print(f"Error: gate dir already holds run {prev_run_id}; pass --resume or a fresh --gate-dir",
-                  file=sys.stderr)
-            sys.exit(2)
+    if present and not args.resume:
+        print(f"Error: gate dir {layout.root} is not empty ({', '.join(present)}); "
+              f"pass --resume or a fresh --gate-dir", file=sys.stderr)
+        sys.exit(2)
 
     repos, selection_source = resolve_repos_with_source(args, require_explicit_all=True)
     section = (args.label or getattr(args, "cross_section", None)
@@ -614,11 +644,15 @@ def main(argv=None):
                    selection_source=selection_source, unit_ids=tuple(unit_ids),
                    normalization_policy="volatile-leaves-v1", env=recorded_env(env))
 
-    input_shas = {a_key(j): sha256_file(j[1]) for j in a_jobs}
+    input_shas = {a_key(j): sha256_path(j[1]) for j in a_jobs}
     reusable = {}
     if args.resume:
         reusable, reasons = resume_plan(layout, spec, input_shas=input_shas)
-        print(f"  resume: {len(reusable)} reusable units" + (f"; identity mismatch: {reasons}" if reasons else ""))
+        if reasons and present:
+            print(f"Error: identity mismatch ({'; '.join(reasons)}); pass a fresh --gate-dir",
+                  file=sys.stderr)
+            sys.exit(2)
+        print(f"  resume: {len(reusable)} reusable units")
 
     # archive (never delete) the previous run's identity and log
     layout.root.mkdir(parents=True, exist_ok=True)
@@ -648,8 +682,8 @@ def main(argv=None):
     print("\n[Phase A] " + " / ".join(a for a in PHASE_A if a in profile.analyzers))
     a_keys = [a_key(j) for j in a_jobs]
     a_results = [reuse(k) for k in a_keys if k in reusable]
-    for rec in _run_jobs([j for j in a_jobs if a_key(j) not in reusable], phase_a_job, args.jobs, "Phase A"):
-        log.append(rec); a_results.append(rec)
+    a_results += _run_jobs([j for j in a_jobs if a_key(j) not in reusable], phase_a_job,
+                           args.jobs, "Phase A", log.append, _exc_record_a)
     rerun_a = {k for k in a_keys if k not in reusable}
 
     print("\n[Phase B] " + " / ".join(a for a in PHASE_B if a in profile.analyzers))
@@ -675,8 +709,7 @@ def main(argv=None):
             b_results.append(reuse(f"{j[0]}/{j[1]}/{j[2]}"))
         else:
             todo_b.append(j)
-    for rec in _run_jobs(todo_b, phase_b_job, args.jobs, "Phase B"):
-        log.append(rec); b_results.append(rec)
+    b_results += _run_jobs(todo_b, phase_b_job, args.jobs, "Phase B", log.append, _exc_record_b)
 
     # Phase B expectation: one unit per Phase A schematic success pair per analyzer
     # (thermal's not_applicable units included so the census balances)

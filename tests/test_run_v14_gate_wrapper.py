@@ -62,3 +62,10 @@ def test_missing_value_exits_2():
         with pytest.raises(SystemExit) as e:
             wrapper.translate_argv(["--all", flag])
         assert e.value.code == 2
+
+
+def test_equals_forms_suppress_defaults():
+    new = wrapper.translate_argv(["--gate-dir=results/x_gate", "--baseline-dir=/a",
+                                  "--candidate-dir=/b"])
+    assert new == ["--gate-dir=results/x_gate", "--baseline-dir=/a", "--candidate-dir=/b"]
+    assert not any("/tmp/kh-" in a or "v14_gate" in a for a in new)
