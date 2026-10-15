@@ -1,0 +1,36 @@
+{
+  "file_pattern": "a.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-900-01",
+      "description": "KH-900: seven detect_x findings",
+      "issue": "KH-900",
+      "fix_type": "detection_fix",
+      "check": {"path": "findings", "op": "min_count", "value": 7, "detector_filter": "detect_x"},
+      "migration_note": "Path migrated from: signal_analysis.x"
+    },
+    {
+      "id": "BUGFIX-KH-900-02",
+      "description": "KH-900: summary present",
+      "issue": "KH-900",
+      "fix_type": "detection_fix",
+      "check": {"path": "summary", "op": "exists"}
+    },
+    {
+      "id": "BUGFIX-KH-900-03",
+      "description": "KH-900: stale record no longer in registry",
+      "issue": "KH-900",
+      "fix_type": "detection_fix",
+      "check": {"path": "findings", "op": "exists"}
+    },
+    {
+      "id": "BUGFIX-KH-905-01",
+      "description": "KH-905: other issue sharing this file",
+      "issue": "KH-905",
+      "fix_type": "crash_fix",
+      "check": {"path": "summary", "op": "exists"}
+    }
+  ]
+}

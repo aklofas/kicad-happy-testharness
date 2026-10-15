@@ -137,3 +137,93 @@ def desired_assertions(registry: list[dict], reference_dir: Path,
                 "check": ast_def["check"],
             })
     return groups
+
+
+def owned_view(record: dict) -> dict:
+    """Generator-owned keys of a record, in canonical order."""
+    return {k: record[k] for k in OWNED_KEYS if k in record}
+
+
+def _flatten(prefix: str, value):
+    """Yield (dotted_path, leaf) pairs for diffing nested check dicts."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            yield from _flatten(f"{prefix}.{k}" if prefix else k, v)
+    else:
+        yield prefix, value
+
+
+def check_diff_lines(old: dict, new: dict) -> list[str]:
+    """Human-readable lines for every owned-key difference between two records."""
+    before = dict(_flatten("", owned_view(old)))
+    after = dict(_flatten("", owned_view(new)))
+    lines = []
+    for key in sorted(set(before) | set(after)):
+        if before.get(key, "<absent>") == after.get(key, "<absent>") and (key in before) == (key in after):
+            continue
+        b = repr(before[key]) if key in before else "<absent>"
+        a = repr(after[key]) if key in after else "<absent>"
+        lines.append(f"  {key}: {b} -> {a}")
+    return lines
+
+
+def merge_record(old: dict, new: dict) -> dict:
+    """Owned keys from ``new`` (canonical order), then ``old``'s extra keys verbatim."""
+    merged = {k: new[k] for k in OWNED_KEYS if k in new}
+    for k, v in old.items():
+        if k not in OWNED_KEYS:
+            merged[k] = v
+    return merged
+
+
+@dataclass
+class FileDiff:
+    path: Path
+    added: list[dict] = field(default_factory=list)
+    updated: list[tuple[dict, dict, list[str]]] = field(default_factory=list)
+    removed: list[dict] = field(default_factory=list)
+    unchanged: list[dict] = field(default_factory=list)
+    result: list[dict] = field(default_factory=list)
+
+    def changed(self) -> bool:
+        return bool(self.added or self.updated or self.removed)
+
+
+def reconcile_file(existing: dict | None, desired: list[dict], *,
+                   issue_filter: str | None, path: Path) -> FileDiff:
+    """Diff one generator-owned file against its desired records.
+
+    ``existing`` is the parsed current file or None. Records are matched by
+    id. Removal is scoped to ``issue_filter`` when given. Retained records
+    keep their file order; added records are appended in registry order.
+    """
+    diff = FileDiff(path=path)
+    if existing is not None and existing.get("generated_by") != GENERATOR_MARKER:
+        raise HandAuthoredCollision(
+            f"{path} is not generator-owned (generated_by={existing.get('generated_by')!r}); "
+            "move or rename the hand-authored file before reconciling")
+    existing_records = list((existing or {}).get("assertions", []))
+    desired_by_id = {a["id"]: a for a in desired}
+    seen: set[str] = set()
+    for old in existing_records:
+        oid = old.get("id")
+        new = desired_by_id.get(oid)
+        if new is None:
+            if issue_filter and old.get("issue") != issue_filter:
+                diff.result.append(old)          # other issue, out of scope: keep verbatim
+            else:
+                diff.removed.append(old)
+            continue
+        seen.add(oid)
+        if owned_view(old) == owned_view(new):
+            diff.unchanged.append(old)
+            diff.result.append(old)
+        else:
+            merged = merge_record(old, new)
+            diff.updated.append((old, merged, check_diff_lines(old, merged)))
+            diff.result.append(merged)
+    for new in desired:
+        if new["id"] not in seen:
+            diff.added.append(new)
+            diff.result.append(new)
+    return diff
