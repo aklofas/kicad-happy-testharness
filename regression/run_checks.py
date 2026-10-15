@@ -24,7 +24,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import evaluate_assertion, load_assertions
 from utils import (OUTPUTS_DIR, DATA_DIR, project_prefix, ANALYZER_TYPES,
-                   DEFAULT_JOBS, add_repo_filter_args, resolve_repos)
+                   DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
+                   resolve_kicad_happy_dir, HARNESS_DIR)
 from regression.schema_era import era_filter, CURRENT_SCHEMA_ERA
 
 
@@ -206,10 +207,10 @@ def main():
 
     # Resolve repo filtering
     repo_list = resolve_repos(args)
-    repo_name = repo_list[0] if repo_list and len(repo_list) == 1 else None
+    repo_name = repo_list[0] if repo_list is not None and len(repo_list) == 1 else None
 
     # Load assertion sets — if cross-section, load per-repo and merge
-    if repo_list and len(repo_list) > 1:
+    if repo_list is not None and len(repo_list) > 1:
         assertion_sets = []
         for rn in repo_list:
             assertion_sets.extend(load_assertions(
@@ -287,6 +288,9 @@ def main():
             "pass_rate": f"{passed/total*100:.1f}%" if total > 0 else "N/A",
             "results": all_results,
         }
+        from harnesslib.identity import git_worktree_ref  # run_checks may run standalone
+        out["product_sha"] = git_worktree_ref(resolve_kicad_happy_dir()).sha
+        out["harness_sha"] = git_worktree_ref(HARNESS_DIR).sha
         if aspirational_total > 0:
             out["aspirational"] = {
                 "total": aspirational_total,

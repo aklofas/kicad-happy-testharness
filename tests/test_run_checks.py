@@ -266,6 +266,29 @@ def test_exit_0_when_errors_with_allow_flag():
         assert rc == 0, f"Expected exit 0 when only errors with --allow-errors, got {rc}"
 
 
+def test_json_output_carries_product_and_harness_sha():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _write_assertion_file(tmpdir, [{
+            "id": "TEST-SHA", "description": "x",
+            "check": {"path": "component_count", "op": "range", "min": 0, "max": 9},
+        }])
+        _rc, out = _run_checks(tmpdir, extra_args=["--allow-errors"])
+        assert out is not None
+        assert len(out["product_sha"]) == 40 and len(out["harness_sha"]) == 40
+
+
+def test_empty_repo_list_exits_2_not_all():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        empty = Path(tmpdir) / "empty.txt"
+        empty.write_text("# nothing\n")
+        env = os.environ.copy()
+        env["KICAD_HAPPY_TESTHARNESS_DATA_DIR"] = str(tmpdir)
+        r = subprocess.run([sys.executable, str(RUN_CHECKS), "--json",
+                            "--repo-list", str(empty)],
+                           capture_output=True, text=True, env=env, timeout=30)
+        assert r.returncode == 2 and "repo-list:" in r.stderr
+
+
 if __name__ == "__main__":
     tests = [(name, obj) for name, obj in globals().items()
              if name.startswith("test_") and callable(obj)]

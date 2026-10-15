@@ -81,20 +81,21 @@ def cmd_run(args):
     elif args.repo:
         filter_args = ["--repo", args.repo]
 
+    run_filter_args = filter_args or ["--all"]  # mutating runs need explicit --all
     resume_flag = ["--resume"] if args.resume else []
 
     steps.append(([py, "run_tests.py", "--tier", "unit"], "Unit tests"))
 
     for analyzer in ("run_schematic", "run_pcb", "run_gerbers"):
-        cmd = [py, f"run/{analyzer}.py"] + filter_args + resume_flag
+        cmd = [py, f"run/{analyzer}.py"] + run_filter_args + resume_flag
         steps.append((cmd, f"Analyzer: {analyzer}"))
 
     if not args.skip_spice:
-        cmd = [py, "run/run_spice.py"] + filter_args + resume_flag
+        cmd = [py, "run/run_spice.py"] + run_filter_args + resume_flag
         steps.append((cmd, "SPICE simulations"))
 
     if not args.skip_emc:
-        cmd = [py, "run/run_emc.py"] + filter_args + resume_flag
+        cmd = [py, "run/run_emc.py"] + run_filter_args + resume_flag
         steps.append((cmd, "EMC analysis"))
 
     check_cmd = [py, "regression/run_checks.py"] + filter_args

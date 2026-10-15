@@ -223,9 +223,10 @@ def load_cross_section(name):
 
 
 def add_repo_filter_args(parser):
-    """Add --repo, --cross-section, and --repo-list to an argparse parser.
+    """Add --repo, --cross-section, --repo-list and --all to an argparse parser.
 
-    These are mutually exclusive options for selecting which repos to process.
+    The first three are mutually exclusive selectors; --all is the explicit
+    whole-corpus switch required by mutating batch runs (B12/TH-049).
     """
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--repo", help="Process only this repo (owner/repo)")
@@ -234,35 +235,38 @@ def add_repo_filter_args(parser):
                             "(from reference/cross_sections.json)")
     group.add_argument("--repo-list",
                        help="Process repos listed in a file (one per line)")
+    group.add_argument("--all", dest="all_repos", action="store_true",
+                       help="Process the whole corpus (required for mutating runs)")
     return group
 
 
-def resolve_repos(args):
-    """Resolve the repo list from parsed args.
+def resolve_repos_with_source(args, require_explicit_all=False):
+    """Resolve (repos, selection_source) from parsed args.
 
-    Returns a list of repo names, or None (meaning all repos).
-    Uses --repo, --cross-section, or --repo-list from add_repo_filter_args().
+    repos is a list, or None meaning all repos. An explicit empty selection
+    exits 2; a run with no selector and no --all exits 2 when
+    require_explicit_all is set.
     """
-    repo = getattr(args, "repo", None)
-    cross_section = getattr(args, "cross_section", None)
-    repo_list = getattr(args, "repo_list", None)
+    from harnesslib.selection import resolve_selection, EmptySelection, NoSelection
+    try:
+        return resolve_selection(
+            repo=getattr(args, "repo", None),
+            cross_section=getattr(args, "cross_section", None),
+            repo_list=getattr(args, "repo_list", None),
+            all_=getattr(args, "all_repos", False),
+            require_explicit_all=require_explicit_all,
+            load_cross_section=load_cross_section)
+    except NoSelection as e:
+        print(f"Error: {e} ({len(list_repos())} repos in corpus)", file=sys.stderr)
+        sys.exit(2)
+    except (EmptySelection, FileNotFoundError) as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(2)
 
-    if repo:
-        return [repo]
-    if cross_section:
-        return load_cross_section(cross_section)
-    if repo_list:
-        path = Path(repo_list)
-        if not path.exists():
-            print(f"Error: {path} not found", file=sys.stderr)
-            sys.exit(1)
-        repos = []
-        for line in path.read_text(encoding="utf-8").splitlines():
-            line = line.strip()
-            if line and not line.startswith("#"):
-                repos.append(line)
-        return repos
-    return None
+
+def resolve_repos(args, require_explicit_all=False):
+    """Resolve the repo list from parsed args: a list, or None (all repos)."""
+    return resolve_repos_with_source(args, require_explicit_all)[0]
 
 
 def resolve_kicad_happy_dir():
@@ -696,8 +700,8 @@ def run_analyzer(config, args=None):
 
     files = [line.strip() for line in manifest.read_text(encoding="utf-8").splitlines() if line.strip()]
 
-    repo_list = resolve_repos(args)
-    if repo_list:
+    repo_list, selection_source = resolve_repos_with_source(args, require_explicit_all=True)
+    if repo_list is not None:
         filtered = []
         for rn in repo_list:
             filtered.extend(filter_manifest_by_repo(files, rn))
