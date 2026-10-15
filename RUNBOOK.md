@@ -2804,6 +2804,27 @@ The trees are reproducible from the pinned SHAs (~35 min full corpus,
 only after adjudication is fully closed. Rationale: eight retained gates
 had accumulated ~434G before the 2026-07-15 cleanup recovered 370G.
 
+### 26i. Field-level modes (H0, spec §3)
+
+The findings multiset diff (`regression_diff.py`) is the SECONDARY summary. The release
+claim is made by `regression/compare_snap_trees.py` over the gate's slot trees:
+
+```bash
+python3 regression/compare_snap_trees.py results/<gate>/baseline results/<gate>/candidate --mode raw      -o results/<gate>/field_report_raw.json
+python3 regression/compare_snap_trees.py results/<gate>/baseline results/<gate>/candidate --mode strict   -o results/<gate>/field_report_strict.json
+python3 regression/compare_snap_trees.py results/<gate>/baseline results/<gate>/candidate --mode budgeted --budget regression/budgets/<id>.json -o results/<gate>/field_report_budgeted.json
+```
+
+Three verdicts, never conflated: **raw** (bytes; fails on run ids by design), **strict**
+(fields under `regression/normalization/volatile-leaves-v1.json` — exact leaves only),
+**budgeted** (strict deltas classified by a tracked `regression/budgets/<id>.json`; any
+residual = not clean). `run_corpus_gate.py` runs them itself after phase B (pass
+`--budget FILE` for the budgeted verdict; a malformed budget fails before phase A) and
+stores the result under `rollup["modes"]`; the gate exit requires
+`modes.strict_field_clean`. Exit codes of the CLI: 0 clean, 1 deltas/residuals, 2 error.
+Reports are complete (every delta path), not samples; keep them with the gate record.
+Historical trees with `v131/`+`v14/` slot names are accepted by `run_modes()` as a fallback.
+
 ---
 
 ## Checklist 27: Era bump for a new minor version (v1.5 and beyond)
