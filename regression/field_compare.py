@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import importlib
 import json
 import re
 from collections import Counter
@@ -500,3 +501,188 @@ def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | Non
             "identity": {"a": _manifest_identity(a_root), "b": _manifest_identity(b_root)},
             "units": units_out, "deltas": [d.to_json() for d in deltas],
             "policy_violations": violations, "summary": summary, "budget": None, "verdict": verdict}
+
+
+# ---- budgets (Task 5) --------------------------------------------------------
+
+SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
+_CLASS_KEYS = {"id", "analyzer", "path_glob", "op", "where", "direction", "value_relation",
+               "unit_bound", "predicate", "evidence"}
+_WHERE_KEYS = {"rule_id", "detector"}
+
+
+class BudgetError(ValueError):
+    """Malformed budget record or unusable predicate."""
+
+
+def _validate_class(i: int, c: Any) -> None:
+    if not isinstance(c, dict) or "id" not in c or "path_glob" not in c:
+        raise BudgetError(f"class {i}: 'id' and 'path_glob' are required")
+    cid = c["id"]
+    unknown = set(c) - _CLASS_KEYS
+    if unknown:
+        raise BudgetError(f"class {cid}: unknown key(s) {sorted(unknown)}")
+    glob = c["path_glob"]
+    if not isinstance(glob, str) or (glob and glob != "**" and not glob.startswith("/")):
+        raise BudgetError(f"class {cid}: path_glob must be a pointer-style string")
+    if "**" in (split_pointer(glob) if glob.startswith("/") else [])[:-1]:
+        raise BudgetError(f"class {cid}: path_glob '**' is only allowed as the last segment")
+    if "op" in c:
+        if not isinstance(c["op"], list):
+            raise BudgetError(f"class {cid}: op must be a list")
+        bad_ops = set(c["op"]) - set(OPS)
+        if bad_ops:
+            raise BudgetError(f"class {cid}: unknown op(s) {sorted(bad_ops)}")
+    if "where" in c:
+        w = c["where"]
+        if (not isinstance(w, dict) or not w or set(w) - _WHERE_KEYS
+                or not all(isinstance(v, list) for v in w.values())):
+            raise BudgetError(f"class {cid}: where must be a non-empty object of rule_id/detector lists")
+    if c.get("direction", "any") not in ("any", "up", "down", "none"):
+        raise BudgetError(f"class {cid}: direction must be any|up|down|none")
+    if c.get("value_relation", "any") not in ("any", "equal"):
+        raise BudgetError(f"class {cid}: value_relation must be any|equal")
+    if "unit_bound" in c:
+        ub = c["unit_bound"]
+        mu = ub.get("max_units") if isinstance(ub, dict) else None
+        if not isinstance(ub, dict) or set(ub) != {"max_units"} or isinstance(mu, bool) or not isinstance(mu, int) or mu < 0:
+            raise BudgetError(f"class {cid}: unit_bound must be {{\"max_units\": non-negative int}}")
+    if "predicate" in c:
+        mod, _, fn = str(c["predicate"]).partition(":")
+        if not mod or not fn:
+            raise BudgetError(f"class {cid}: predicate must be 'module:function', got {c['predicate']!r}")
+
+
+def load_budget(path: Path) -> dict:
+    try:
+        b = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        raise BudgetError(f"cannot read budget {path}: {e}") from e
+    if not isinstance(b, dict):
+        raise BudgetError("budget must be a JSON object")
+    for k in ("budget_id", "classes", "unexplained_deltas_allowed", "unexplained_missing_units_allowed", "relock"):
+        if k not in b:
+            raise BudgetError(f"budget missing required key {k!r}")
+    for k in ("unexplained_deltas_allowed", "unexplained_missing_units_allowed"):
+        if isinstance(b[k], bool) or not isinstance(b[k], int) or b[k] < 0:
+            raise BudgetError(f"{k} must be a non-negative integer")
+    if not isinstance(b["relock"], bool):
+        raise BudgetError("relock must be a boolean")
+    if not isinstance(b["classes"], list):
+        raise BudgetError("classes must be a list")
+    for i, c in enumerate(b["classes"]):
+        _validate_class(i, c)
+    return b
+
+
+def _glob_match(glob: str, path: str) -> bool:
+    """Segment-wise match: ``*`` = exactly one segment, trailing ``**`` = any remainder (incl. none)."""
+    if glob == "**":
+        return True
+    want = split_pointer(glob)
+    toks = split_pointer(path)
+    trailing = bool(want) and want[-1] == "**"
+    if trailing:
+        want = want[:-1]
+        if len(toks) < len(want):
+            return False
+        toks = toks[:len(want)]
+    elif len(toks) != len(want):
+        return False
+    return all(w == "*" or w == t for w, t in zip(want, toks))
+
+
+def _finding_at(doc: Any, path: str) -> dict | None:
+    toks = split_pointer(path)
+    if len(toks) >= 2 and toks[0] in ("findings", "assessments") and toks[1].isdigit():
+        found, f = resolve_pointer(doc, f"/{escape_token(toks[0])}/{toks[1]}")
+        return f if found and isinstance(f, dict) else None
+    return None
+
+
+def _where_ok(cls: dict, delta: Delta, a_doc: Any, b_doc: Any) -> bool:
+    where = cls.get("where")
+    if not where:
+        return True
+    for f in (_finding_at(a_doc, delta.path), _finding_at(b_doc, delta.path)):
+        if f is None:
+            continue
+        if all(f.get(key) in where[key] for key in ("rule_id", "detector") if key in where):
+            return True
+    return False
+
+
+def _direction_ok(cls: dict, delta: Delta) -> bool:
+    d = cls.get("direction", "any")
+    if d == "any":
+        return True
+    if delta.op != "changed" or not delta.path.endswith("/severity"):
+        return False
+    sb, sa = SEVERITY_ORDER.get(delta.before), SEVERITY_ORDER.get(delta.after)
+    if sb is None or sa is None:
+        return False
+    return {"up": sa > sb, "down": sa < sb, "none": sa == sb}[d]
+
+
+def _load_predicate(spec: str):
+    mod, _, fn = spec.partition(":")
+    if not mod or not fn:
+        raise BudgetError(f"predicate must be 'module:function', got {spec!r}")
+    try:
+        f = getattr(importlib.import_module(mod), fn)
+    except (ImportError, AttributeError) as e:
+        raise BudgetError(f"predicate {spec!r} cannot be loaded: {e}") from e
+    if not callable(f):
+        raise BudgetError(f"predicate {spec!r} is not callable")
+    return f
+
+
+def _class_claims(cls: dict, delta: Delta, docs, pred) -> bool:
+    if cls.get("analyzer") and cls["analyzer"] != delta.analyzer:
+        return False
+    if not _glob_match(cls["path_glob"], delta.path):
+        return False
+    if "op" in cls and delta.op not in cls["op"]:
+        return False
+    a_doc, b_doc = (docs or {}).get(delta.unit, (None, None))
+    if not _where_ok(cls, delta, a_doc, b_doc):
+        return False
+    if not _direction_ok(cls, delta):
+        return False
+    if cls.get("value_relation", "any") == "equal" and delta.before != delta.after:
+        return False
+    if pred is not None and not pred(delta, a_doc, b_doc):
+        return False
+    return True
+
+
+def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = None,
+                    missing_units: int = 0) -> dict:
+    """Classify deltas against budget classes. A delta is claimed iff ALL selectors of some class match."""
+    preds = {c["id"]: (_load_predicate(c["predicate"]) if c.get("predicate") else None)
+             for c in budget["classes"]}
+    claimed: dict[str, list[Delta]] = {c["id"]: [] for c in budget["classes"]}
+    residuals: list[Delta] = []
+    for d in deltas:
+        hit = False
+        for c in budget["classes"]:
+            if _class_claims(c, d, docs, preds[c["id"]]):
+                claimed[c["id"]].append(d)
+                hit = True
+        if not hit:
+            residuals.append(d)
+    violations = []
+    for c in budget["classes"]:
+        bound = (c.get("unit_bound") or {}).get("max_units")
+        n_units = len({d.unit for d in claimed[c["id"]]})
+        if bound is not None and n_units > bound:
+            violations.append(f"class {c['id']} claimed {n_units} units > max_units {bound}")
+    allowed_missing = int(budget.get("unexplained_missing_units_allowed", 0))
+    if missing_units > allowed_missing:
+        violations.append(f"{missing_units} missing units > unexplained_missing_units_allowed {allowed_missing}")
+    clean = len(residuals) <= int(budget.get("unexplained_deltas_allowed", 0)) and not violations
+    return {"budget_id": budget["budget_id"], "clean": clean,
+            "claimed": {k: [d.to_json() for d in v] for k, v in claimed.items()},
+            "claimed_counts": {k: len(v) for k, v in claimed.items() if v},
+            "claimed_units": {k: len({d.unit for d in v}) for k, v in claimed.items() if v},
+            "residuals": [d.to_json() for d in residuals], "violations": violations}

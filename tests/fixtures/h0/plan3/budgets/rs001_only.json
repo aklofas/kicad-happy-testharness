@@ -1,0 +1,18 @@
+{
+  "budget_id": "fixture-rs001-severity",
+  "baseline_sha": "0000000000000000000000000000000000000000",
+  "candidate_sha": "1111111111111111111111111111111111111111",
+  "harness_sha": "2222222222222222222222222222222222222222",
+  "profile": "standard",
+  "normalization_policy": "volatile-leaves-v1",
+  "classes": [
+    {"id": "rs001-severity-down", "analyzer": "schematic",
+     "path_glob": "/findings/*/severity", "op": ["changed"],
+     "where": {"rule_id": ["RS-001"]}, "direction": "down",
+     "unit_bound": {"max_units": 2},
+     "evidence": "tests/fixtures/h0/plan3 synthetic class"}
+  ],
+  "unexplained_deltas_allowed": 0,
+  "unexplained_missing_units_allowed": 0,
+  "relock": false
+}

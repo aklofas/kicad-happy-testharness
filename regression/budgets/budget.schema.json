@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "kicad-happy-testharness budget record v1",
+  "type": "object",
+  "required": ["budget_id", "classes", "unexplained_deltas_allowed", "unexplained_missing_units_allowed", "relock"],
+  "properties": {
+    "budget_id": {"type": "string"},
+    "baseline_sha": {"type": "string"}, "candidate_sha": {"type": "string"}, "harness_sha": {"type": "string"},
+    "profile": {"type": "string"}, "normalization_policy": {"type": "string"},
+    "classes": {"type": "array", "items": {
+      "type": "object", "required": ["id", "path_glob"],
+      "properties": {
+        "id": {"type": "string"}, "analyzer": {"type": "string"}, "path_glob": {"type": "string"},
+        "op": {"type": "array", "items": {"enum": ["added", "removed", "changed", "type_changed", "key_order", "bytes", "lexical_numeric"]}},
+        "where": {"type": "object", "properties": {"rule_id": {"type": "array"}, "detector": {"type": "array"}}},
+        "direction": {"enum": ["any", "up", "down", "none"]},
+        "value_relation": {"enum": ["any", "equal"]},
+        "unit_bound": {"type": "object", "properties": {"max_units": {"type": "integer"}}},
+        "predicate": {"type": "string"}, "evidence": {"type": "string"}
+      }}},
+    "unexplained_deltas_allowed": {"type": "integer"},
+    "unexplained_missing_units_allowed": {"type": "integer"},
+    "relock": {"type": "boolean"}
+  }
+}
