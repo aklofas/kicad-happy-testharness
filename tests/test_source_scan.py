@@ -1,6 +1,9 @@
 """Tests for tools/source_scan.py — the shared recursive source walker (A2)."""
 from __future__ import annotations
 
+import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -178,3 +181,79 @@ def test_apply_exceptions_unmatched_resolved_reason_site_is_not_dropped():
     reasons = [s.reason for s in remaining]
     assert "detector:enum-attribute-resolved" in reasons
     assert "positional-emc:mixed-shape" in reasons
+
+
+def test_coverage_snapshot_distinguishes_same_basename():
+    snap = source_scan.coverage_snapshot(FAKE, exceptions=_fake_exceptions())
+    assert "skills/kicad/scripts/schematic/reader.py|module|SHEET_DEPTH_MAX" in snap["constants"]
+    assert "skills/kicad/scripts/pcb/reader.py|module|SHEET_DEPTH_MAX" in snap["constants"]
+    assert snap["eq_ids"]["EQ-902"] == "skills/kicad/scripts/pcb/reader.py"
+    assert snap["emit_sites"]["detect_nested|NX-001"] == 1
+    assert snap["emit_sites"]["validate_pullups|PU-001"] == 1
+    assert snap["untagged_era_sites"] >= 1
+
+
+def test_coverage_diff_detects_lost_site_and_constant(tmp_path):
+    base = source_scan.coverage_snapshot(FAKE, exceptions=_fake_exceptions())
+    shrunk = tmp_path / "prod"
+    shutil.copytree(FAKE, shrunk)
+    (shrunk / "skills/kicad/scripts/schematic/reader.py").write_text(
+        '"""emptied"""\nSHEET_DEPTH_MAX = 8\n', encoding="utf-8")
+    cur = source_scan.coverage_snapshot(shrunk, exceptions=_fake_exceptions())
+    d = source_scan.coverage_diff(base, cur)
+    assert d["lost_sites"] == ["detect_nested|NX-001"]
+    assert d["lost_eq"] == []
+    assert d["lost_files"] == []
+    assert not d["clean"]
+
+
+def test_coverage_diff_lost_file(tmp_path):
+    base = source_scan.coverage_snapshot(FAKE, exceptions=_fake_exceptions())
+    shrunk = tmp_path / "prod"
+    shutil.copytree(FAKE, shrunk)
+    (shrunk / "skills/kicad/scripts/pcb/reader.py").unlink()
+    d = source_scan.coverage_diff(base, source_scan.coverage_snapshot(shrunk, exceptions=_fake_exceptions()))
+    assert d["lost_files"] == ["skills/kicad/scripts/pcb/reader.py"]
+    assert "skills/kicad/scripts/pcb/reader.py|module|SHEET_DEPTH_MAX" in d["lost_constants"]
+    assert d["lost_eq"] == ["EQ-902"]
+
+
+def test_check_cli_exit_codes(tmp_path):
+    exc = tmp_path / "exc.json"
+    exc.write_text(json.dumps(_fake_exceptions()))
+    base = tmp_path / "base.json"
+    tool = str(HARNESS / "tools" / "source_scan.py")
+    r = subprocess.run([sys.executable, tool, "snapshot", "--product", str(FAKE),
+                        "--exceptions", str(exc), "-o", str(base)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    r = subprocess.run([sys.executable, tool, "check", "--product", str(FAKE),
+                        "--exceptions", str(exc), "--baseline", str(base)],
+                       capture_output=True, text=True)
+    # the mixed-shape EMC call is unresolved and not excepted -> 1
+    assert r.returncode == 1 and "positional-emc:mixed-shape" in r.stdout
+    shrunk = tmp_path / "prod"
+    shutil.copytree(FAKE, shrunk)
+    (shrunk / "skills/kicad/scripts/pcb/reader.py").unlink()
+    # --accept-baseline never absorbs unresolved sites: except the mixed-shape call first
+    full = _fake_exceptions()
+    full["exceptions"].append({"id": "emc-mixed", "file": "skills/emc/scripts/emc_rules.py",
+                               "callee": "_make_finding",
+                               "reason": "positional-emc:mixed-shape", "count": 1})
+    exc_full = tmp_path / "exc_full.json"
+    exc_full.write_text(json.dumps(full))
+    r = subprocess.run([sys.executable, tool, "check", "--product", str(shrunk),
+                        "--exceptions", str(exc), "--baseline", str(base), "--accept-baseline"],
+                       capture_output=True, text=True)
+    assert r.returncode == 1 and "unresolved" in r.stdout
+    r = subprocess.run([sys.executable, tool, "check", "--product", str(shrunk),
+                        "--exceptions", str(exc_full), "--baseline", str(base), "--accept-baseline"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "skills/kicad/scripts/pcb/reader.py" not in json.loads(base.read_text())["files"]
+
+
+def test_check_cli_missing_product_is_usage_error(tmp_path):
+    tool = str(HARNESS / "tools" / "source_scan.py")
+    r = subprocess.run([sys.executable, tool, "check", "--product", str(tmp_path / "nope")],
+                       capture_output=True, text=True)
+    assert r.returncode == 2
