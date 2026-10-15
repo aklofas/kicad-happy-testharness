@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 
-mode = sys.argv[1]
+mode = sys.argv[sys.argv.index("--mode") + 1] if "--mode" in sys.argv else sys.argv[1]
 out = sys.argv[sys.argv.index("-o") + 1]
 atype = sys.argv[sys.argv.index("--type") + 1] if "--type" in sys.argv else "pcb"
 

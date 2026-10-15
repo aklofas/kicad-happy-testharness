@@ -439,7 +439,7 @@ def list_projects_in_data(repo_name):
 # ---------------------------------------------------------------------------
 
 def should_skip_resume(outfile, resume):
-    """Check if output file exists and is valid JSON (for --resume)."""
+    """DEPRECATED (TH-049): parses-as-JSON is not identity. Use harnesslib.identity.unit_is_current."""
     if not resume:
         return False
     outfile = Path(outfile)
@@ -614,24 +614,32 @@ def validate_output(outfile, analyzer_type):
 # Shared analyzer runner
 # ---------------------------------------------------------------------------
 
-def _run_one(analyzer, file_path, outfile, errfile, extra_args=None, timeout=None):
-    """Run a single analyzer subprocess. Returns (returncode, outfile, elapsed_s).
+def _run_one(analyzer, file_path, outfile, errfile, extra_args=None, timeout=None,
+             analyzer_type="schematic", env=None):
+    """Run one analyzer subprocess through harnesslib.execution.run_once.
 
+    Returns (returncode, outfile, elapsed_s, status, output_sha256). The output
+    is written to a private temp path, validated, and published atomically; a
+    stale previous output is quarantined as <outfile>.stale on any failure (B12).
     `timeout` is the per-file cap in seconds (default: standard profile)."""
+    from harnesslib.execution import run_once, build_env
     cap = ANALYZER_TIMEOUT if timeout is None else timeout
-    cmd = [sys.executable, str(analyzer), file_path, "-o", str(outfile)]
-    if extra_args:
-        cmd.extend(extra_args)
-    t0 = time.time()
-    try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=cap,
-        )
-        errfile.write_text(result.stderr, encoding="utf-8")
-        return result.returncode, outfile, time.time() - t0
-    except subprocess.TimeoutExpired:
+
+    def make_cmd(out_path):
+        cmd = [sys.executable, str(analyzer), file_path, "-o", str(out_path)]
+        if extra_args:
+            cmd.extend(extra_args)
+        return cmd
+
+    res = run_once(make_cmd, Path(outfile), analyzer=analyzer_type, timeout=cap,
+                   env=env or build_env(offline=True))
+    if res.status == "timeout":
         errfile.write_text(f"Timed out after {cap}s", encoding="utf-8")
-        return None, outfile, time.time() - t0
+    elif res.status in ("ok", "ok_findings_exit"):
+        errfile.write_text("", encoding="utf-8")
+    else:
+        errfile.write_text(res.stderr_tail or res.detail, encoding="utf-8")
+    return res.exit_code, outfile, res.elapsed_s, res.status, res.output_sha256
 
 
 def _print_detector_aggregate(sch_output_dir):
@@ -688,7 +696,9 @@ def run_analyzer(config, args=None):
         parser.add_argument("--json", action="store_true",
                             help="Print JSON summary line at end of output")
         parser.add_argument("--resume", action="store_true",
-                            help="Skip files that already have valid output JSON")
+                            help="Skip units whose input and output match the recorded run identity")
+        parser.add_argument("--online", action="store_true",
+                            help="keep distributor credentials in the analyzer environment")
         parser.add_argument("--timeout", type=int, default=ANALYZER_TIMEOUT,
                             help=f"Per-file analyzer cap in seconds (default {ANALYZER_TIMEOUT})")
         args = parser.parse_args()
@@ -725,6 +735,33 @@ def run_analyzer(config, args=None):
     extra_args = config.get("extra_args")
     jobs = getattr(args, "jobs", 1)
 
+    from harnesslib.execution import build_env, recorded_env
+    from harnesslib.identity import (RunSpec, git_worktree_ref, write_manifest,
+                                     finish_manifest, UnitLog, unit_is_current,
+                                     sha256_file, input_digest)
+    import platform, uuid
+    env = build_env(offline=not getattr(args, "online", False))
+    out_root = OUTPUTS_DIR / output_subdir
+    out_root.mkdir(parents=True, exist_ok=True)
+
+    def _uid(f):
+        return f"{repo_name_from_path(f)}/{safe_name(f)}"
+
+    unit_ids = sorted(_uid(f) for f in files)
+    spec = RunSpec(kind="batch", profile="standard", harness=git_worktree_ref(HARNESS_DIR),
+                   baseline=None, candidate=git_worktree_ref(kicad_happy),
+                   argv=tuple(a for a in sys.argv[1:] if a != "--resume"),
+                   selection_source=selection_source, unit_ids=tuple(unit_ids),
+                   normalization_policy="volatile-leaves-v1", env=recorded_env(env))
+    input_hashes = {f: sha256_file(f) for f in files}
+    # Read the prior log before the manifest is rewritten; UnitLog is append-only.
+    log = UnitLog(out_root)
+    write_manifest(out_root, spec, run_id=str(uuid.uuid4()),
+                   expected_census={output_subdir: len(files)},
+                   input_digest=input_digest((_uid(f), h) for f, h in input_hashes.items()),
+                   runtime={"python": platform.python_version(),
+                            "platform": platform.platform()})
+
     print(f"=== Running {type_name} analysis ===")
     print(f"Analyzer: {analyzer}")
     print(f"Files: {len(files)}")
@@ -751,63 +788,67 @@ def run_analyzer(config, args=None):
     do_resume = getattr(args, "resume", False)
     skipped = 0
 
-    def _format_result(i, relpath, returncode, outfile):
-        if returncode == 0:
+    def _format_result(i, relpath, returncode, outfile, status):
+        if status in ("ok", "ok_findings_exit"):
             if do_validate:
                 ok, msg = validate_output(outfile, output_subdir)
                 if not ok:
                     return False, f"VFAIL [{i}] {relpath}\n     {msg}"
-            try:
-                with open(outfile) as f:
-                    d = json.load(f)
-                summary = summarize(d)
-                return True, f"PASS [{i}] {relpath} ({summary})"
-            except Exception:
-                return True, f"PASS [{i}] {relpath} (parse_error)"
-        elif returncode is None:
+            with open(outfile) as f:
+                summary = summarize(json.load(f))
+            return True, f"PASS [{i}] {relpath} ({summary})"
+        if status == "timeout":
             return False, f"FAIL [{i}] {relpath}\n     Timed out"
-        else:
-            err_path = outfile.with_suffix(".err")
-            err_lines = err_path.read_text(encoding="utf-8").strip().splitlines() if err_path.exists() else []
-            err_msg = err_lines[-1] if err_lines else f"exit {returncode}"
-            return False, f"FAIL [{i}] {relpath}\n     {err_msg}"
+        err_path = outfile.with_suffix(".err")
+        err_lines = err_path.read_text(encoding="utf-8").strip().splitlines() if err_path.exists() else []
+        err_msg = err_lines[-1] if err_lines else f"exit {returncode}"
+        return False, f"FAIL [{i}] {relpath}\n     {status}: {err_msg}"
 
+    def _record(file_path, returncode, elapsed, status, out_sha):
+        log.append({"analyzer": output_subdir, "unit_id": _uid(file_path),
+                    "input_sha256": input_hashes[file_path], "status": status,
+                    "exit_code": returncode, "output_sha256": out_sha,
+                    "elapsed_s": round(elapsed, 3)})
+
+    def _current(file_path, outfile):
+        return do_resume and unit_is_current(log, output_subdir, _uid(file_path),
+                                             input_hashes[file_path], outfile)
+
+    cap = getattr(args, "timeout", ANALYZER_TIMEOUT)
+    status_totals = Counter()
     if jobs <= 1:
         for i, file_path in enumerate(files, 1):
             relpath, outfile, errfile = _prepare(file_path)
-            if should_skip_resume(outfile, do_resume):
+            if _current(file_path, outfile):
                 skipped += 1
                 continue
-            returncode, _, elapsed = _run_one(analyzer, file_path, outfile, errfile, extra_args,
-                                             timeout=getattr(args, "timeout", ANALYZER_TIMEOUT))
+            returncode, _, elapsed, status, out_sha = _run_one(
+                analyzer, file_path, outfile, errfile, extra_args, cap, output_subdir, env)
+            _record(file_path, returncode, elapsed, status, out_sha)
+            status_totals[status] += 1
             timings.append((relpath, elapsed))
-            ok, msg = _format_result(i, relpath, returncode, outfile)
-            if ok:
-                passed += 1
-            else:
-                failed += 1
+            ok, msg = _format_result(i, relpath, returncode, outfile, status)
+            passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
             print(msg)
     else:
-        # Parallel execution
         tasks = {}
         with ProcessPoolExecutor(max_workers=jobs) as pool:
             for i, file_path in enumerate(files, 1):
                 relpath, outfile, errfile = _prepare(file_path)
-                if should_skip_resume(outfile, do_resume):
+                if _current(file_path, outfile):
                     skipped += 1
                     continue
-                future = pool.submit(_run_one, analyzer, file_path, outfile, errfile, extra_args,
-                                    getattr(args, "timeout", ANALYZER_TIMEOUT))
-                tasks[future] = (i, relpath, outfile)
+                future = pool.submit(_run_one, analyzer, file_path, outfile, errfile,
+                                     extra_args, cap, output_subdir, env)
+                tasks[future] = (i, relpath, outfile, file_path)
             for future in as_completed(tasks):
-                i, relpath, outfile = tasks[future]
-                returncode, _, elapsed = future.result()
+                i, relpath, outfile, file_path = tasks[future]
+                returncode, _, elapsed, status, out_sha = future.result()
+                _record(file_path, returncode, elapsed, status, out_sha)
+                status_totals[status] += 1
                 timings.append((relpath, elapsed))
-                ok, msg = _format_result(i, relpath, returncode, outfile)
-                if ok:
-                    passed += 1
-                else:
-                    failed += 1
+                ok, msg = _format_result(i, relpath, returncode, outfile, status)
+                passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
                 print(msg)
 
     total = passed + failed
@@ -842,6 +883,8 @@ def run_analyzer(config, args=None):
     }
     timing_file.write_text(json.dumps(timing_data, indent=2), encoding="utf-8")
 
+    finish_manifest(out_root, {**dict(status_totals), "skipped": skipped})
+
     # Detector aggregate for schematic runs
     if output_subdir == "schematic":
         _print_detector_aggregate(OUTPUTS_DIR / output_subdir)
@@ -858,3 +901,5 @@ def run_analyzer(config, args=None):
             "avg_per_file_s": round(avg_elapsed, 3) if total > 0 else 0,
         }
         print(json.dumps(summary))
+    if failed:
+        sys.exit(1)
