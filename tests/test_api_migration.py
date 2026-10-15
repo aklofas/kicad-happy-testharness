@@ -142,3 +142,39 @@ def test_apply_map_ok_on_fixture(tmp_path):
 def test_status_cli_runs():
     r = subprocess.run([sys.executable, str(TOOL), "status"], capture_output=True, text=True)
     assert r.returncode == 0 and "undecided" in r.stdout and "308" in r.stdout
+
+
+def test_scan_alias_mock_dotted_and_fixture_exclusion(tmp_path):
+    t = tmp_path / "tests"
+    (t / "fixtures" / "fp").mkdir(parents=True)
+    (t / "fixtures" / "fp" / "bad.py").write_text("from zzz_fixture import q\n")
+    (t / "test_y.py").write_text(
+        "from unittest import mock\n"
+        "import kicad_utils\n"
+        "import analyze_pcb as ap\n"
+        "import pkg.mod\n"
+        "def test_b():\n"
+        "    with mock.patch.object(kicad_utils, 'x'):\n"
+        "        pass\n"
+        "    with mock.patch('lifecycle_audit.audit_component'):\n"
+        "        pass\n"
+        "    ap._point_in_pad(1)\n"
+        "    with mock.patch.object(pkg.mod, 'y'):\n"
+        "        pass\n"
+        "    with mock.patch.object(ap, 'z'):\n"
+        "        pass\n", encoding="utf-8")
+    found = {(f["module"], f["symbol"]) for f in am.scan_harness_imports(tmp_path)}
+    assert ("kicad_utils", "x") in found
+    assert ("lifecycle_audit", "audit_component") in found
+    assert ("analyze_pcb", "_point_in_pad") in found
+    assert ("analyze_pcb", "<module>") in found
+    assert ("mod", "y") in found
+    assert ("analyze_pcb", "z") in found
+    assert not any(m == "zzz_fixture" for m, _ in found)
+
+
+def test_apply_map_missing_key_exit_2(tmp_path):
+    bad = tmp_path / "reloc.json"
+    bad.write_text(json.dumps([{"symbol": "analyze_pcb.x", "old_owner": "a"}]))
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(bad)], capture_output=True, text=True)
+    assert r.returncode == 2 and "error:" in r.stderr and "Traceback" not in r.stderr

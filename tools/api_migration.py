@@ -135,12 +135,33 @@ def _harness_py_files(harness_root: Path):
     for d in HARNESS_CODE_DIRS:
         base = root / d
         if base.is_dir():
-            yield from sorted(p for p in base.rglob("*.py") if "__pycache__" not in p.parts)
+            yield from sorted(p for p in base.rglob("*.py")
+                              if "__pycache__" not in p.parts
+                              and "fixtures" not in p.relative_to(base).parts)
+
+
+def _chain(node, aliases):
+    """Dotted name of a Name/Attribute chain with its root resolved via aliases, else None."""
+    parts = []
+    while isinstance(node, ast.Attribute):
+        parts.append(node.attr)
+        node = node.value
+    if not isinstance(node, ast.Name):
+        return None
+    parts.append(aliases.get(node.id, node.id))
+    return ".".join(reversed(parts))
+
+
+def _is_patch_name(node) -> bool:
+    return (isinstance(node, ast.Name) and node.id == "patch") or \
+           (isinstance(node, ast.Attribute) and node.attr == "patch")
 
 
 def scan_harness_imports(harness_root: Path) -> list[dict]:
-    """Static census of (module, symbol) the harness binds to: imports, patch.object,
-    patch('mod.sym'), monkeypatch.setattr(mod, 'sym', ...)."""
+    """Static census of (module, symbol) the harness binds to. Covers import statements,
+    patch.object / mock.patch.object, patch('mod.sym'), monkeypatch.setattr(mod, 'sym', ...)
+    targets, and direct `alias.attr` access through an `import X [as a]` binding. It does NOT
+    cover re-exported or dynamically built names."""
     out = []
     root = Path(harness_root)
     for py in _harness_py_files(root):
@@ -149,6 +170,14 @@ def scan_harness_imports(harness_root: Path) -> list[dict]:
         except SyntaxError:
             continue
         relf = py.relative_to(root).as_posix()
+        aliases = {}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for a in node.names:
+                    if a.asname:
+                        aliases[a.asname] = a.name
+                    else:
+                        aliases.setdefault(a.name.split(".")[0], a.name.split(".")[0])
         for node in ast.walk(tree):
             if isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
                 for a in node.names:
@@ -156,23 +185,31 @@ def scan_harness_imports(harness_root: Path) -> list[dict]:
             elif isinstance(node, ast.Import):
                 for a in node.names:
                     out.append({"file": relf, "line": node.lineno, "module": a.name, "symbol": "<module>"})
-            elif isinstance(node, ast.Call):
-                fn = node.func
-                name = fn.attr if isinstance(fn, ast.Attribute) else fn.id if isinstance(fn, ast.Name) else None
-                if name == "object" and isinstance(fn, ast.Attribute) and isinstance(fn.value, ast.Name) \
-                        and fn.value.id == "patch" and len(node.args) >= 2 \
-                        and isinstance(node.args[0], ast.Name) and isinstance(node.args[1], ast.Constant):
-                    out.append({"file": relf, "line": node.lineno, "module": node.args[0].id,
-                                "symbol": node.args[1].value})
-                elif name == "setattr" and isinstance(fn, ast.Attribute) and isinstance(fn.value, ast.Name) \
-                        and fn.value.id == "monkeypatch" and len(node.args) >= 2 \
-                        and isinstance(node.args[0], ast.Name) and isinstance(node.args[1], ast.Constant):
-                    out.append({"file": relf, "line": node.lineno, "module": node.args[0].id,
-                                "symbol": node.args[1].value})
-                elif name == "patch" and node.args and isinstance(node.args[0], ast.Constant) \
-                        and isinstance(node.args[0].value, str) and "." in node.args[0].value:
-                    mod, _, sym = node.args[0].value.rpartition(".")
-                    out.append({"file": relf, "line": node.lineno, "module": mod, "symbol": sym})
+            elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) \
+                    and node.value.id in aliases:
+                out.append({"file": relf, "line": node.lineno, "module": aliases[node.value.id],
+                            "symbol": node.attr})
+            if not isinstance(node, ast.Call):
+                continue
+            fn = node.func
+            target = None            # (module-expr node, symbol)
+            if isinstance(fn, ast.Attribute) and fn.attr == "object" and _is_patch_name(fn.value) \
+                    and len(node.args) >= 2 and isinstance(node.args[1], ast.Constant):
+                target = (node.args[0], node.args[1].value)
+            elif isinstance(fn, ast.Attribute) and fn.attr == "setattr" \
+                    and isinstance(fn.value, ast.Name) and fn.value.id == "monkeypatch" \
+                    and len(node.args) >= 2 and isinstance(node.args[1], ast.Constant):
+                target = (node.args[0], node.args[1].value)
+            elif _is_patch_name(fn) and node.args and isinstance(node.args[0], ast.Constant) \
+                    and isinstance(node.args[0].value, str) and "." in node.args[0].value:
+                mod, _, sym = node.args[0].value.rpartition(".")
+                out.append({"file": relf, "line": node.lineno, "module": mod, "symbol": sym})
+                continue
+            if target and isinstance(target[1], str):
+                dotted = _chain(target[0], aliases)
+                if dotted:
+                    out.append({"file": relf, "line": node.lineno,
+                                "module": dotted.rsplit(".", 1)[-1], "symbol": target[1]})
     return out
 
 
@@ -205,7 +242,11 @@ def cmd_status(args) -> int:
 
 def cmd_apply_map(args) -> int:
     inv = load_inventory(args.inventory)
-    rel = _load_relocations(args.map)
+    try:
+        rel = _load_relocations(args.map)
+    except (ValueError, KeyError, TypeError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     known = {(m["module"], s["symbol"]) for m in inv["modules"] for s in m["symbols"]}
     bad = False
     for r in rel:
