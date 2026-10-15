@@ -64,3 +64,48 @@ def test_filter_units_none_keeps_all_and_list_filters():
     assert sel.filter_units(units, None) == units
     assert sel.filter_units(units, ["c/d"]) == ["c/d/y.kicad_sch"]
     assert sel.filter_units(units, []) == []
+
+
+# --- utils wiring (CLI + resolve_repos_with_source) ---
+import argparse  # noqa: E402
+import subprocess  # noqa: E402
+
+import utils  # noqa: E402
+
+_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _args(**kw):
+    ns = dict(repo=None, cross_section=None, repo_list=None, all_repos=False)
+    ns.update(kw)
+    return argparse.Namespace(**ns)
+
+
+def test_utils_no_selector_exits_2_when_all_required():
+    with pytest.raises(SystemExit) as e:
+        utils.resolve_repos_with_source(_args(), require_explicit_all=True)
+    assert e.value.code == 2
+
+
+def test_utils_all_and_sources(tmp_path, monkeypatch):
+    assert utils.resolve_repos_with_source(_args(all_repos=True), True) == (None, "all")
+    assert utils.resolve_repos_with_source(_args(repo="x/y"), True) == (["x/y"], "repo:x/y")
+    monkeypatch.setattr(utils, "load_cross_section", lambda n: ["a/b"])
+    assert utils.resolve_repos_with_source(_args(cross_section="s"), True) == (["a/b"], "cross_section:s")
+    f = tmp_path / "l.txt"
+    f.write_text("a/b\n")
+    repos, src = utils.resolve_repos_with_source(_args(repo_list=str(f)), True)
+    assert repos == ["a/b"] and src == f"repo-list:{f}"
+
+
+def test_cli_no_selector_exits_2_with_count():
+    r = subprocess.run([sys.executable, str(_ROOT / "run" / "run_gerbers.py")],
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 2 and "repos in corpus" in r.stderr and "--all" in r.stderr
+
+
+def test_cli_all_with_repo_rejected_by_argparse():
+    r = subprocess.run([sys.executable, str(_ROOT / "run" / "run_gerbers.py"),
+                        "--all", "--repo", "x/y"],
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 2 and "not allowed with" in r.stderr

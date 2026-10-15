@@ -61,9 +61,9 @@ python3 checkout.py
 python3 discover.py
 
 # 4. Run analyzers (use --jobs for parallelism, --repo to target one repo)
-python3 run/run_schematic.py --jobs 4
-python3 run/run_pcb.py --jobs 4
-python3 run/run_gerbers.py --jobs 4
+python3 run/run_schematic.py --all --jobs 4
+python3 run/run_pcb.py --all --jobs 4
+python3 run/run_gerbers.py --all --jobs 4
 
 # 4b. Run SPICE simulations (requires ngspice, reads schematic outputs)
 python3 run/run_spice.py --jobs 16
@@ -89,6 +89,8 @@ python3 harness.py validate                        # full validation
 python3 harness.py validate --cross-section smoke  # smoke pack subset
 python3 harness.py run --smoke                     # generate + validate smoke pack
 ```
+
+A mutating full-corpus run requires `--all`; an empty selection exits 2 (B12/TH-049).
 
 ### Requirements
 

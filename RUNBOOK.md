@@ -37,13 +37,15 @@ changed, stop here.
 Only re-run the types flagged by `tools/detect_changes.py`. Use `--jobs 16` for speed.
 
 ```bash
-python3 run/run_schematic.py --jobs 16          # if schematic affected
-python3 run/run_pcb.py --jobs 16                # if pcb affected
-python3 run/run_gerbers.py --jobs 16            # if gerber affected
+python3 run/run_schematic.py --all --jobs 16          # if schematic affected
+python3 run/run_pcb.py --all --jobs 16                # if pcb affected
+python3 run/run_gerbers.py --all --jobs 16            # if gerber affected
 python3 run/run_spice.py --jobs 16              # if spice affected
 python3 run/run_emc.py --jobs 8                 # if emc affected
 python3 run/run_thermal.py --jobs 8             # if thermal affected (needs sch+pcb)
 ```
+
+A mutating full-corpus run requires `--all`; an empty selection exits 2 (B12/TH-049).
 
 Add `--repo {repo}` to test a single repo first before full corpus.
 Add `--cross-section quick_200` to test a balanced ~200-repo subset.
@@ -1490,9 +1492,9 @@ python3 tools/detect_changes.py --since {last_release_tag}
 Run ALL analyzer types on the full corpus:
 
 ```bash
-python3 run/run_schematic.py --jobs 16
-python3 run/run_pcb.py --jobs 16
-python3 run/run_gerbers.py --jobs 16
+python3 run/run_schematic.py --all --jobs 16
+python3 run/run_pcb.py --all --jobs 16
+python3 run/run_gerbers.py --all --jobs 16
 python3 run/run_spice.py --jobs 16
 python3 run/run_emc.py --jobs 8
 ```
@@ -2009,7 +2011,7 @@ assertions require a spec entry.
 ### 19a. Run full schematic batch
 
 ```bash
-python3 run/run_schematic.py --jobs 16
+python3 run/run_schematic.py --all --jobs 16
 ```
 
 Verify 0 crashes. Check the Detector Summary at the end — the new detector should
@@ -2885,7 +2887,7 @@ See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
 
 | Task | Command |
 |------|---------|
-| Run all schematic analysis | `python3 run/run_schematic.py --jobs 16` |
+| Run all schematic analysis | `python3 run/run_schematic.py --all --jobs 16` |
 | Run all assertions | `python3 regression/run_checks.py` |
 | Run assertions for one type | `python3 regression/run_checks.py --type schematic` |
 | Run assertions for one repo | `python3 regression/run_checks.py --repo OpenMower` |
