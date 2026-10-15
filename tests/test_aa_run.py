@@ -159,7 +159,7 @@ def _run_main(monkeypatch, tmp_path, rc, strict_age):
     def fake_run(cmd, *a, **k):
         calls.append(cmd)
         if len(calls) == 2:  # compare writes the report
-            (g / "field_report.json").write_text(json.dumps(dict(REPORT, deltas=[])))
+            (g / "field_report.json").write_text(json.dumps(dict(REPORT, deltas=[], verdict="clean")))
 
         class R:
             returncode = rc if len(calls) == 1 else 0
@@ -179,3 +179,121 @@ def test_stale_strict_report_falls_back_to_compare(monkeypatch, tmp_path):
 def test_gate_unexpected_exit_code_returns_2_without_compare(monkeypatch, tmp_path):
     rc, calls = _run_main(monkeypatch, tmp_path, 3, strict_age=None)
     assert rc == 2 and len(calls) == 1
+
+
+def _skip_run_with(tmp_path, report):
+    g = tmp_path / "g"
+    g.mkdir()
+    (g / "field_report_strict.json").write_text(json.dumps(report))
+    rc = aa_run.main(["--product", str(tmp_path), "--gate-dir", str(g), "--cross-section", "smoke",
+                      "--skip-run"])
+    return rc, json.loads((g / "aa_report.json").read_text())
+
+
+def test_one_sided_missing_unit_is_error_not_clean(tmp_path, capsys):
+    report = {"mode": "strict", "deltas": [], "policy_violations": [], "verdict": "error",
+              "summary": {"units": 2, "compared": 0, "missing": 2, "parse_errors": 0, "deltas": 0}}
+    rc, aa = _skip_run_with(tmp_path, report)
+    assert rc == 2 and aa["clean"] is False and aa["error"] is True
+    assert aa["verdict"] == "error" and aa["missing"] == 2 and aa["parse_errors"] == 0
+    assert "A/A ERROR" in capsys.readouterr().out
+
+
+def test_error_verdict_with_compared_units_is_error(tmp_path):
+    report = {"mode": "strict", "deltas": [], "policy_violations": [], "verdict": "error",
+              "summary": {"units": 3, "compared": 2, "missing": 1, "parse_errors": 0, "deltas": 0}}
+    rc, aa = _skip_run_with(tmp_path, report)
+    assert rc == 2 and aa["clean"] is False and aa["units_compared"] == 2
+
+
+def test_zero_compared_clean_verdict_is_error(tmp_path, capsys):
+    report = {"mode": "strict", "deltas": [], "policy_violations": [], "verdict": "clean",
+              "summary": {"units": 0, "compared": 0, "missing": 0, "parse_errors": 0, "deltas": 0}}
+    rc, aa = _skip_run_with(tmp_path, report)
+    assert rc == 2 and aa["clean"] is False
+    assert "A/A ERROR" in capsys.readouterr().out
+
+
+def test_clean_report_with_units_is_clean(tmp_path):
+    report = {"mode": "strict", "deltas": [], "policy_violations": [], "verdict": "clean",
+              "summary": {"units": 1, "compared": 1, "missing": 0, "parse_errors": 0, "deltas": 0}}
+    rc, aa = _skip_run_with(tmp_path, report)
+    assert rc == 0 and aa["clean"] is True
+
+
+def _envelope(atype, score=1.0):
+    return {"analyzer_type": atype, "summary": {"total_findings": 1},
+            "findings": [{"detector": "detect_x", "rule_id": "XX-001", "score": score}]}
+
+
+def _basetemp(root, score=1.0):
+    (root / "test_a0").mkdir(parents=True)
+    (root / "test_a0" / "schematic.json").write_text(json.dumps(_envelope("schematic", score)))
+    run = root / "analysis0" / "custom-analysis" / "20261015T101500Z-a1b2c3"
+    run.mkdir(parents=True)
+    (run / "pcb.json").write_text(json.dumps(_envelope("pcb")))
+    (run / "manifest.json").write_text(json.dumps({"current": run.name}))  # no analyzer_type
+    (root / "notes.json").write_text("[1, 2]")
+    (root / "broken.json").write_text("{nope")
+    return root
+
+
+def test_snapify_maps_envelopes_to_units(tmp_path):
+    src = _basetemp(tmp_path / "bt")
+    n = aa_run.snapify(src, tmp_path / "snap")
+    assert n == 2
+    got = sorted(p.relative_to(tmp_path / "snap").as_posix() for p in (tmp_path / "snap").rglob("snap.json"))
+    assert got == ["pcb/analysis0/custom-analysis/RUN-0/pcb/snap.json",
+                   "schematic/test_a0/schematic/snap.json"]
+
+
+def test_snapify_aligns_run_dirs_across_sides(tmp_path):
+    a = _basetemp(tmp_path / "a")
+    b = _basetemp(tmp_path / "b")
+    (b / "analysis0" / "custom-analysis" / "20261015T101500Z-a1b2c3").rename(
+        b / "analysis0" / "custom-analysis" / "20261015T111111Z-ffffff")
+    aa_run.snapify(a, tmp_path / "sa")
+    aa_run.snapify(b, tmp_path / "sb")
+    ua = sorted(p.relative_to(tmp_path / "sa") for p in (tmp_path / "sa").rglob("snap.json"))
+    ub = sorted(p.relative_to(tmp_path / "sb") for p in (tmp_path / "sb").rglob("snap.json"))
+    assert ua == ub
+
+
+def _fixture_main(tmp_path, b_score):
+    a = _basetemp(tmp_path / "raw_a")
+    b = _basetemp(tmp_path / "raw_b", score=b_score)
+    g = tmp_path / "aa"
+    rc = aa_run.main(["--fixture-trees", str(a), str(b), "--gate-dir", str(g)])
+    return rc, json.loads((g / "aa_report.json").read_text())
+
+
+def test_fixture_trees_identical_is_clean(tmp_path, capsys):
+    rc, aa = _fixture_main(tmp_path, 1.0)
+    assert rc == 0 and aa["clean"] is True and aa["units_compared"] == 2
+    assert "A/A CLEAN: 2 units" in capsys.readouterr().out
+
+
+def test_fixture_trees_differing_value_is_deltas(tmp_path, capsys):
+    rc, aa = _fixture_main(tmp_path, 2.0)
+    assert rc == 1 and aa["clean"] is False and aa["error"] is False
+    assert [l["pointer_glob"] for l in aa["leaves"]] == ["/findings/*/score"]
+    assert "A/A DELTAS" in capsys.readouterr().out
+
+
+def test_fixture_trees_refuse_reused_gate_dir(tmp_path):
+    a = _basetemp(tmp_path / "raw_a")
+    g = tmp_path / "aa"
+    (g / "baseline" / "x").mkdir(parents=True)
+    assert aa_run.main(["--fixture-trees", str(a), str(a), "--gate-dir", str(g)]) == 2
+
+
+def test_fixture_trees_reject_selection_flags(tmp_path):
+    with pytest.raises(SystemExit):
+        aa_run.main(["--fixture-trees", str(tmp_path), str(tmp_path), "--gate-dir", str(tmp_path / "g"),
+                     "--cross-section", "smoke"])
+
+
+def test_run_mode_requires_product_and_selection(tmp_path):
+    with pytest.raises(SystemExit):
+        aa_run.main(["--gate-dir", str(tmp_path / "g"), "--cross-section", "smoke"])
+
