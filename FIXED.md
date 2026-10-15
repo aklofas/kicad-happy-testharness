@@ -15,10 +15,10 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 Harness-only. Test collection is now pytest end to end; `run_tests.py` is a thin
 alias. Legacy `run_tests.py --json` at `7abf547` reported 1,551 passes over 142
-files; the unit-tier pytest collection is 1,777 items (`results/h0/collection_compare.txt`:
-files 237, legacy passed 1551, pytest collected 1777, moved 1, **missing 0**).
+files; the unit-tier pytest collection is 1,745 items (`results/h0/collection_compare.txt`:
+files 237, legacy passed 1551, pytest collected 1745, moved 1, **missing 0**).
 23 phantom rows (17 files with no `__main__` block = 190 tests never executed,
-plus 6 files whose non-standard summary line hid their counts) account for +224;
+plus 6 files whose non-standard summary line hid their counts) account for +222;
 `tests/test_kicad10_format.py` moved to the corpus tier (all 7 tests read `repos/`).
 Honest counts at HEAD: `run_tests.py --unit` 1744 passed, 791 deselected, 1 xfailed;
 bare `pytest -q` 2434 passed, 8 skipped, 100 deselected, 4 xfailed;
