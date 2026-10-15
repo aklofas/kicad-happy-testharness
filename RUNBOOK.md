@@ -420,8 +420,15 @@ is brought into agreement with the registry by id — changed expected values
 print as `~ BUGFIX-… check.value: 7 -> 6`, registry removals as `- …`, and a
 file whose last record was removed is deleted. `--issue KH-nnn` scopes both
 additions and removals to that issue; other issues' records in the same file
-are untouched. Hand-authored files at a generator path are an error, and any
-error anywhere aborts the run before a single file is written (two-phase).
+are untouched. Hand-authored files at a generator path are an error. Every
+validation error (hand-authored collision, duplicate id, incomplete registry row)
+is collected before any write, so those abort the run with nothing written
+(two-phase). An I/O error during the write phase can still leave earlier files
+written; rerunning is idempotent and converges. Duplicate ids are checked per
+output file, not registry-wide, on purpose: the real registry reuses `-01`
+across different files for KH-066, KH-077, KH-118 and KH-150. An updated record
+that keeps a non-current `schema_era` prints a `! … keeps schema_era=…` warning
+(see 27f).
 The audit then verifies all bugfix assertions resolve to actual output files —
 any "unmatched" entries indicate wrong `project` or `source_file` paths in the
 registry. Fix them before proceeding.

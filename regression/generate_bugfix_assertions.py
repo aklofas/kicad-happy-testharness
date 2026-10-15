@@ -18,6 +18,18 @@ was removed. Hand-authored files at a generator path are never touched
 (error). ``--issue KH-nnn`` restricts BOTH the desired set and removals to
 that issue; other issues' records in the same file are preserved.
 
+Limits, deliberately accepted:
+  * Validation (hand-authored collision, duplicate id, incomplete row) is
+    all-or-nothing: every file is checked before the first write. An I/O
+    error during the write phase can still leave earlier files written; a
+    rerun is idempotent and converges.
+  * Duplicate ids are checked per OUTPUT FILE, not registry-wide. The real
+    registry reuses ``-01`` across different files for KH-066, KH-077,
+    KH-118 and KH-150, which a registry-wide check would reject.
+  * ``schema_era`` on an updated record is kept verbatim; when it is not
+    CURRENT_SCHEMA_ERA a ``! <id> keeps schema_era=...`` warning is printed,
+    because default run_checks will skip that record.
+
 Output: reference/{repo}/{project}/assertions/{type}/{file}_bugfix.json
 
 Usage:
