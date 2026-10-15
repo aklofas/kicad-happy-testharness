@@ -344,7 +344,7 @@ python3 regression/seed.py --repo X --schema-era v1.4
 Use `--no-schema-era` only for debug runs where era stamping interferes with
 what you're testing. See `regression/schema_era.py` for the module API and
 `docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md` for the
-full design. For bumping the era at v1.5+, see Checklist 27.
+full design. For bumping the era at v3.0+, see Checklist 27.
 
 ### 4a. Verify the change is correct
 
@@ -2880,16 +2880,16 @@ absolute paths, so prefix stripping and the sha256 linkage checks fail.
 
 ---
 
-## Checklist 27: Era bump for a new minor version (v1.5 and beyond)
+## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 
-When the analyzer ships a new minor version with material detector behavior
-changes (e.g., v1.5 lands the missing dataclasses that activate v1.4's
-datasheet-gated paths), follow this sequence to roll the harness forward.
+When the analyzer ships a new era with material detector behavior changes
+(the next one is v3.0; this checklist was first written for a planned v1.5 bump
+that never shipped), follow this sequence to roll the harness forward.
 Spec: `docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md` §3.7.
 
 ### 27a. Hand-curate gating notes for the new era
 
-Create `regression/_v15_gating_notes.json` (or `_v{N}_gating_notes.json`)
+Create `regression/_v30_gating_notes.json` (or `_v{N}_gating_notes.json`)
 mirroring the structure of `_v14_gating_notes.json`. One entry per detector
 literal that changes in the new era. Each value is a one-line human-readable
 gating summary.
@@ -2899,13 +2899,13 @@ gating summary.
 ```bash
 export KICAD_HAPPY_DIR=/home/aklofas/Projects/kicad-happy
 python3 tools/discover_versioned_detectors.py \
-    --era v1.5 \
-    --gating-notes regression/_v15_gating_notes.json
+    --era v3.0 \
+    --gating-notes regression/_v30_gating_notes.json
 ```
 
-This writes `regression/v15_changed_detectors.json`. Discovery fails loudly
+This writes `regression/v30_changed_detectors.json`. Discovery fails loudly
 if any gating-notes key references a detector that does NOT appear at any
-`schema_era="v1.5"` emit site — catches typos and renames.
+`schema_era="v3.0"` emit site — catches typos and renames.
 
 ### 27c. Bump `CURRENT_SCHEMA_ERA` in `regression/schema_era.py`
 
@@ -2923,7 +2923,7 @@ tests (`python3 -m pytest tests/test_schema_era_module.py tests/test_schema_era_
 python3 regression/run_checks.py --cross-section quick_200 2>&1 | grep FAIL
 ```
 
-Failures should concentrate in the v1.5-changed-detector set. Anything outside
+Failures should concentrate in the v3.0-changed-detector set. Anything outside
 that set is a true regression and must be investigated separately before
 proceeding.
 
@@ -2947,9 +2947,9 @@ python3 regression/seed_structural.py --repo X --schema-era v3.0
 ### 27f. Hand-annotate `bugfix_registry.json` entries
 
 For each registry entry whose `assertions[].check.detector_filter` is in
-the v1.5-changed set, add:
+the v3.0-changed set, add:
 - `first_appeared_era: "v1.4"`
-- `corrected_era: "v1.5"`
+- `corrected_era: "v3.0"`
 - `migration_note: "<short rationale>"`
 
 ### 27g. Verify regression baseline shift
