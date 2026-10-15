@@ -21,6 +21,7 @@ HARNESS_DIR = Path(__file__).resolve().parent.parent
 
 def write_manifest(out: Path, paths: list[str], marker_expr: str | None,
                    all_tiers: bool) -> int:
+    out.unlink(missing_ok=True)  # a stale manifest must never pass the existence check
     cmd = [sys.executable, "-m", "pytest", "--collect-only", "-q",
            "--manifest-out", str(out)]
     if all_tiers:
@@ -45,10 +46,10 @@ def compare_legacy(legacy: dict, manifest: dict) -> list[dict]:
         c = collected.get(f, 0)
         if lrow is None:
             note = "not in legacy run"
-        elif lrow.get("parsed") is False or lrow.get("status") in ("no_runner", "unparsed"):
-            note = "legacy count was a phantom pass"
         elif c == 0:
             note = "MISSING under pytest — investigate"
+        elif lrow.get("parsed") is False or lrow.get("status") in ("no_runner", "unparsed"):
+            note = "legacy count was a phantom pass"
         else:
             note = ""
         rows.append({"file": f, "legacy_passed": lp, "collected": c, "delta": c - lp, "note": note})

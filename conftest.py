@@ -50,13 +50,6 @@ def pytest_collection_modifyitems(config, items):
         if not any(item.get_closest_marker(m) for m in TIER_MARKERS):
             item.add_marker(getattr(pytest.mark, _derived_tier(item)))
 
-    manifest_out = config.getoption("--manifest-out")
-    if manifest_out:
-        data = {item.nodeid: sorted(m.name for m in item.iter_markers()
-                                    if m.name in TIER_MARKERS) for item in items}
-        Path(manifest_out).write_text(json.dumps(data, indent=2, sort_keys=True) + "\n",
-                                      encoding="utf-8")
-
     if config.getoption("-m") or config.getoption("--all-tiers"):
         return
     keep, drop = [], []
@@ -66,6 +59,15 @@ def pytest_collection_modifyitems(config, items):
     if drop:
         config.hook.pytest_deselected(items=drop)
         items[:] = keep
+
+
+def pytest_collection_finish(session):
+    manifest_out = session.config.getoption("--manifest-out")
+    if manifest_out:
+        data = {item.nodeid: sorted(m.name for m in item.iter_markers()
+                                    if m.name in TIER_MARKERS) for item in session.items}
+        Path(manifest_out).write_text(json.dumps(data, indent=2, sort_keys=True) + "\n",
+                                      encoding="utf-8")
 
 
 def pytest_report_header(config):
