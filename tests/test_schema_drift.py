@@ -286,7 +286,7 @@ def _derive_pcb_path(sch_path):
 def test_schematic_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_schematic.py")
     if schema is None:
-        return
+        pytest.skip("schematic --schema unavailable")
     emitted = _fresh_output("schematic")
     if emitted is None:
         pytest.skip("no fresh results/outputs fixtures (corpus tier)")
@@ -297,7 +297,7 @@ def test_schematic_schema_drift():
 def test_pcb_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_pcb.py")
     if schema is None:
-        return
+        pytest.skip("pcb --schema unavailable")
     emitted = _fresh_output("pcb")
     if emitted is None:
         pytest.skip("no fresh results/outputs fixtures (corpus tier)")
@@ -308,7 +308,7 @@ def test_pcb_schema_drift():
 def test_gerber_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_gerbers.py")
     if schema is None:
-        return
+        pytest.skip("gerber --schema unavailable")
     emitted = _fresh_output("gerber")
     if emitted is None:
         pytest.skip("no fresh results/outputs fixtures (corpus tier)")
@@ -319,7 +319,7 @@ def test_gerber_schema_drift():
 def test_emc_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/emc/scripts/analyze_emc.py")
     if schema is None:
-        return
+        pytest.skip("emc --schema unavailable")
     emitted = _fresh_output("emc")
     if emitted is None:
         pytest.skip("no fresh results/outputs fixtures (corpus tier)")
@@ -330,7 +330,7 @@ def test_emc_schema_drift():
 def test_thermal_schema_drift():
     schema = _schema(f"{KICAD_HAPPY}/skills/kicad/scripts/analyze_thermal.py")
     if schema is None:
-        return
+        pytest.skip("thermal --schema unavailable")
     emitted = _fresh_output("thermal")
     if emitted is None:
         pytest.skip("no fresh results/outputs fixtures (corpus tier)")
@@ -343,7 +343,7 @@ def test_cross_analysis_schema_drift():
     script = f"{KICAD_HAPPY}/skills/kicad/scripts/cross_analysis.py"
     schema = _schema(script)
     if schema is None:
-        return
+        pytest.skip("cross_analysis --schema unavailable")
 
     sch_json = None
     pcb_json = None
@@ -371,7 +371,7 @@ def test_cross_analysis_schema_drift():
         capture_output=True, text=True, timeout=60,
     )
     if r.returncode != 0:
-        return
+        pytest.skip(f"cross_analysis run failed: {r.returncode}")
     try:
         emitted = json.loads(r.stdout)
     except json.JSONDecodeError:

@@ -22,6 +22,10 @@ except ImportError:  # pre-push hook runs root tests under bare python3 (no
         def skipif(*_a, **_k):
             return lambda fn: fn
 
+        @staticmethod
+        def xfail(*_a, **_k):
+            return lambda fn: fn
+
     class _StubPytest:
         mark = _StubMark
 
@@ -94,6 +98,7 @@ def run_pcb(path, *args):
     return json.loads(out.stdout)
 
 
+@pytest.mark.xfail(strict=True, reason="TH-060: premise stale since PR #44 broadened is_power_net_name; P1_VBUS now classified power by heuristics")
 def test_kh393_power_rails_threaded(fixture_path, tmp_path):
     """KH-393 (GitHub #40): P1_VBUS doesn't look like a power net by name
     heuristics alone, so without an override it's absent from
