@@ -1,5 +1,6 @@
 """tests/product_root.py is the one required bridge to KICAD_HAPPY_DIR."""
 import importlib
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -7,6 +8,21 @@ from pathlib import Path
 import pytest
 
 HARNESS = Path(__file__).resolve().parent.parent
+
+
+_MODS = ("tests.product_root", "tests.contract._paths")
+
+
+@pytest.fixture(autouse=True)
+def _restore_modules():
+    """Fake-env re-imports must not leak into the rest of the pytest process."""
+    saved = {m: sys.modules.get(m) for m in _MODS}
+    yield
+    for m, mod in saved.items():
+        if mod is None:
+            sys.modules.pop(m, None)
+        else:
+            sys.modules[m] = mod
 
 
 def _fresh_import(monkeypatch, env):
@@ -77,11 +93,21 @@ def test_sibling_fallback_requires_flag(monkeypatch, tmp_path):
     assert "HARNESS_ALLOW_SIBLING_FALLBACK" in str(ei.value)
 
 
-def test_contract_paths_reexports(monkeypatch):
-    monkeypatch.setenv("KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))
+def test_contract_paths_reexports(monkeypatch, tmp_path):
+    root = _fake_product(tmp_path)
+    monkeypatch.setenv("KICAD_HAPPY_DIR", str(root))
     sys.modules.pop("tests.product_root", None)
     sys.modules.pop("tests.contract._paths", None)
     paths = importlib.import_module("tests.contract._paths")
     pr = importlib.import_module("tests.product_root")
-    assert paths.MAIN_REPO_ROOT == pr.PRODUCT_ROOT
+    assert paths.MAIN_REPO_ROOT == pr.PRODUCT_ROOT == root.resolve()
     assert paths.HARNESS_ROOT == pr.HARNESS_ROOT == HARNESS
+
+
+def test_isolation_after_fake_tests():
+    real = os.environ.get("KICAD_HAPPY_DIR")
+    if not real:
+        pytest.skip("KICAD_HAPPY_DIR unset")
+    mod = importlib.import_module("tests.product_root")
+    assert mod.PRODUCT_ROOT == Path(real).resolve()
+    assert mod.PRODUCT_ROOT.exists()
