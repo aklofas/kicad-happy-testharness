@@ -18,6 +18,11 @@ HARNESS_ROOT = Path(__file__).resolve().parent
 TIER_MARKERS = ("unit", "offline_contract", "corpus", "online", "perf")
 DEFAULT_EXPR = "unit or offline_contract"
 
+# Script-style online check: its body runs at import and ends in sys.exit, so
+# collecting it crashes pytest. Run it as `python3 integration/test_datasheet_extraction.py`;
+# converting it to pytest functions is a deferred item.
+collect_ignore = ["integration/test_datasheet_extraction.py"]
+
 
 def pytest_addoption(parser):
     parser.addoption("--all-tiers", action="store_true", default=False,

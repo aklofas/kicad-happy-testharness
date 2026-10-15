@@ -69,3 +69,14 @@ def test_unknown_marker_is_rejected():
 def test_header_reports_product_sha():
     rc, _, out = _collect(quiet=False)
     assert "product_root:" in out and "sha=" in out
+
+
+def test_script_style_integration_file_is_ignored():
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider",
+         "integration/"],
+        capture_output=True, text=True, cwd=HARNESS,
+        env={**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
+            "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))})
+    assert proc.returncode in (0, 5), proc.stdout + proc.stderr
+    assert "INTERNALERROR" not in proc.stdout + proc.stderr
