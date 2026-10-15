@@ -33,7 +33,25 @@
         "budget": {"type": ["string", "null"], "pattern": "^regression/budgets/[a-z0-9-]+\\.json$"},
         "old_artifact_checks": {"type": "array", "items": {"type": "string"}},
         "expected": {"type": "object"},
-        "relock": {"type": "boolean"}
+        "relock": {"type": "boolean"},
+        "removed": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["symbol", "harness_refs"],
+          "properties": {"symbol": {"type": "string", "minLength": 1},
+                         "harness_refs": {"type": "array", "items": {"type": "string"}}}}},
+        "known_defects_deferred": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["file", "line", "summary", "fix_round"],
+          "properties": {"file": {"$ref": "#/$defs/skill_path"},
+                         "line": {"type": "integer", "minimum": 1},
+                         "summary": {"type": "string"},
+                         "fix_round": {"type": ["string", "null"], "pattern": "^r[0-9]{2,3}(-[a-z0-9-]+)?$"}}}},
+        "expected_sidecar_changes": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["file", "leaf", "reason"],
+          "properties": {"file": {"type": "string"}, "leaf": {"type": "string", "pattern": "^/"},
+                         "reason": {"type": "string"}}}},
+        "product_evidence": {"type": "object", "additionalProperties": false,
+          "required": ["quick_json", "schema_identical", "pinned_harness"],
+          "properties": {"quick_json": {"type": "string"}, "schema_identical": {"type": "boolean"},
+                         "pinned_harness": {"type": "string"}}}
       }
     },
     "side_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
@@ -87,7 +105,14 @@
         "evidence": {"type": "object", "required": ["manifest", "rollup"],
           "properties": {"manifest": {"type": "string"}, "rollup": {"type": "string"},
                          "adjudication": {"type": ["string", "null"]}}},
-        "verdict": {"enum": ["accept", "reject", "accept-with-filings"]}
+        "verdict": {"enum": ["accept", "reject", "accept-with-filings"]},
+        "apply_map_result": {"type": "object", "additionalProperties": false,
+          "required": ["sites_migrated", "files"],
+          "properties": {"sites_migrated": {"type": "integer", "minimum": 0},
+                         "files": {"type": "array", "items": {"type": "string"}}}},
+        "accept_baseline_diff": {"type": ["string", "null"]},
+        "scan_coverage_verdict": {"enum": ["pass", "fail", "not_run"]},
+        "budget_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
       }
     }
   }

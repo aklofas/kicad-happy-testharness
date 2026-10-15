@@ -340,3 +340,43 @@ def test_apply_map_missing_key_exit_2(tmp_path):
     bad.write_text(json.dumps([{"symbol": "analyze_pcb.x", "old_owner": "a"}]))
     r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(bad)], capture_output=True, text=True)
     assert r.returncode == 2 and "error:" in r.stderr and "Traceback" not in r.stderr
+
+
+PRODUCT_MAP = HARNESS / "tests" / "fixtures" / "h0" / "round2" / "relocation_map_product.json"
+
+
+def test_apply_map_accepts_product_shape_map():
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(PRODUCT_MAP), "--json"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    edits = json.loads(r.stdout)
+    assert edits and all(e["module"] == "kicad_utils" and e["new_module"] == "kicad_core.fields" for e in edits)
+    assert {e["symbol"] for e in edits} == {"normalize_field_name", "MPN_FIELD_ALIASES_PRIMARY",
+                                            "MPN_FIELD_ALIASES_GENERIC"}
+    assert all(e["facade_until"] == "r09" for e in edits)
+
+
+def test_load_relocations_product_shape_uses_inventory(tmp_path):
+    rels = am._load_relocations(PRODUCT_MAP, am.load_inventory(INV))
+    assert rels[0]["old_owner"] == "skills/kicad/scripts/kicad_utils.py"
+
+
+def test_apply_map_product_shape_unbound_symbol_is_note_not_error(tmp_path):
+    m = tmp_path / "map.json"
+    m.write_text(json.dumps({"relocations": [
+        {"old": "kicad_utils.normalize_field_name", "new": "kicad_core.fields.normalize_field_name",
+         "facade": True, "retire": "round 9"},
+        {"old": "kicad_utils.not_bound_by_harness", "new": "kicad_core.fields.not_bound_by_harness",
+         "facade": False}]}))
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(m)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "note: kicad_utils.not_bound_by_harness has no harness sites" in r.stderr
+
+
+def test_apply_map_record_shape_unknown_symbol_still_errors(tmp_path):
+    m = tmp_path / "map.json"
+    m.write_text(json.dumps([{"symbol": "kicad_utils.typo_name", "old_owner": "skills/kicad/scripts/kicad_utils.py",
+                              "new_owner": "skills/kicad/scripts/kicad_core/fields.py", "new_name": "typo_name",
+                              "facade_until": None}]))
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(m)], capture_output=True, text=True)
+    assert r.returncode == 2 and "error: kicad_utils.typo_name not in inventory" in r.stderr

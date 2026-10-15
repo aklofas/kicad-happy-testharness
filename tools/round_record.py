@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Per-round handoff record helper (spec §9).
 
-  new-request  --round-id R --baseline SHA --candidate SHA --kind K --profile P [--profile P2] -o FILE
+  new-request  --round-id R --baseline SHA --candidate SHA --kind K --profile P [--profile P2]
+               [--relocation-map MAP.json] -o FILE
   validate     FILE                     exit 0 (prints kind) / 1 (prints reasons to stderr)
   summarize    RESPONSE.json            prints the LOG paragraph
 
@@ -26,7 +27,7 @@ PROFILES = ("standard", "full-chain", "hierarchy", "spice-offline", "long-tail")
 VERDICT_WORDS = {
     "raw": ("clean", "deltas", "error"),
     "strict": ("clean", "deltas", "error"),
-    "budgeted": ("clean", "residuals", "error", "n/a"),
+    "budgeted": ("clean", "residuals", "over_budget", "error", "n/a"),
     "findings_summary": ("strict_clean", "clean", "not_clean"),
 }
 FINAL_VERDICTS = ("accept", "reject", "accept-with-filings")
@@ -39,8 +40,13 @@ RESPONSE_KEYS = ("record_version", "round_id", "harness_sha", "run_ids", "normal
 
 _POLICY = re.compile(r"^volatile-leaves-v[0-9]+$")
 _FILING = re.compile(r"^(KH|TH)-[0-9]{3}$")
-REQUEST_OPTIONAL = ("expected",)
+REQUEST_OPTIONAL = ("expected", "removed", "known_defects_deferred", "expected_sidecar_changes",
+                    "product_evidence")
+RESPONSE_OPTIONAL = ("apply_map_result", "accept_baseline_diff", "scan_coverage_verdict", "budget_sha256")
 RELOCATION_KEYS = ("symbol", "old_owner", "new_owner", "new_name", "facade_until")
+SCAN_VERDICTS = ("pass", "fail", "not_run")
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+INVENTORY_PATH = Path(__file__).resolve().parents[1] / "reference" / "product_api" / "inventory_6a91aaa.json"
 
 
 def _is_int(x) -> bool:
@@ -68,6 +74,73 @@ def _counts(v, name, probs):
         probs.append(f"{name} must be an object of non-negative integers")
 
 
+def _items(doc, key, keys, probs):
+    """Yield (tag, item) for each object in optional list doc[key] whose key set is exactly `keys`."""
+    v = doc[key]
+    if not isinstance(v, list):
+        probs.append(f"{key} must be a list")
+        return
+    for i, it in enumerate(v):
+        tag = f"{key}[{i}]"
+        if not isinstance(it, dict) or set(it) != set(keys):
+            probs.append(f"{tag} must be an object with exactly keys {keys}")
+            continue
+        yield tag, it
+
+
+def _request_additions(doc, probs):
+    if "removed" in doc:
+        for tag, it in _items(doc, "removed", ("symbol", "harness_refs"), probs):
+            if not (isinstance(it["symbol"], str) and it["symbol"]):
+                probs.append(f"{tag}.symbol must be a non-empty string")
+            if not isinstance(it["harness_refs"], list) or any(not isinstance(x, str) for x in it["harness_refs"]):
+                probs.append(f"{tag}.harness_refs must be a list of strings")
+    if "known_defects_deferred" in doc:
+        for tag, it in _items(doc, "known_defects_deferred", ("file", "line", "summary", "fix_round"), probs):
+            if not (isinstance(it["file"], str) and _SKILL_PATH.match(it["file"])):
+                probs.append(f"{tag}.file must be a skills/ .py path")
+            if not _is_int(it["line"]) or it["line"] < 1:
+                probs.append(f"{tag}.line must be an integer >= 1")
+            if not isinstance(it["summary"], str):
+                probs.append(f"{tag}.summary must be a string")
+            fr = it["fix_round"]
+            if fr is not None and not (isinstance(fr, str) and _FACADE_UNTIL.match(fr)):
+                probs.append(f"{tag}.fix_round must be null or a round id")
+    if "expected_sidecar_changes" in doc:
+        for tag, it in _items(doc, "expected_sidecar_changes", ("file", "leaf", "reason"), probs):
+            if not all(isinstance(it[k], str) for k in ("file", "leaf", "reason")):
+                probs.append(f"{tag} fields must be strings")
+            elif not it["leaf"].startswith("/"):
+                probs.append(f"{tag}.leaf must start with /")
+    if "product_evidence" in doc:
+        pe = _obj(doc, "product_evidence", probs, ("quick_json", "schema_identical", "pinned_harness"), exact=True)
+        if pe is not None:
+            for k in ("quick_json", "pinned_harness"):
+                if k in pe and not isinstance(pe[k], str):
+                    probs.append(f"product_evidence.{k} must be a string")
+            if "schema_identical" in pe and not isinstance(pe["schema_identical"], bool):
+                probs.append("product_evidence.schema_identical must be a boolean")
+
+
+def _response_additions(doc, probs):
+    if "apply_map_result" in doc:
+        am = _obj(doc, "apply_map_result", probs, ("sites_migrated", "files"), exact=True)
+        if am is not None:
+            if "sites_migrated" in am and (not _is_int(am["sites_migrated"]) or am["sites_migrated"] < 0):
+                probs.append("apply_map_result.sites_migrated must be a non-negative integer")
+            if "files" in am and (not isinstance(am["files"], list)
+                                  or any(not isinstance(x, str) for x in am["files"])):
+                probs.append("apply_map_result.files must be a list of strings")
+    if "accept_baseline_diff" in doc and doc["accept_baseline_diff"] is not None \
+            and not isinstance(doc["accept_baseline_diff"], str):
+        probs.append("accept_baseline_diff must be a string or null")
+    if "scan_coverage_verdict" in doc and doc["scan_coverage_verdict"] not in SCAN_VERDICTS:
+        probs.append(f"scan_coverage_verdict must be one of {SCAN_VERDICTS}")
+    if "budget_sha256" in doc and doc["budget_sha256"] is not None \
+            and not (isinstance(doc["budget_sha256"], str) and _SHA256.match(doc["budget_sha256"])):
+        probs.append("budget_sha256 must be null or 64 lowercase hex")
+
+
 def _request_problems(doc, probs):
     for k in ("baseline_sha", "candidate_sha"):
         if not _SHA.match(str(doc[k])):
@@ -88,6 +161,7 @@ def _request_problems(doc, probs):
         probs.append("relock must be a boolean")
     if "expected" in doc and not isinstance(doc["expected"], dict):
         probs.append("expected must be an object")
+    _request_additions(doc, probs)
     rels = doc["relocations"]
     if not isinstance(rels, list):
         probs.append("relocations must be a list")
@@ -180,6 +254,7 @@ def _response_problems(doc, probs):
                 probs.append(f"evidence.{k} must be a string")
         if "adjudication" in ev and ev["adjudication"] is not None and not isinstance(ev["adjudication"], str):
             probs.append("evidence.adjudication must be a string or null")
+    _response_additions(doc, probs)
 
 
 def _problems(doc) -> tuple[str | None, list[str]]:
@@ -189,7 +264,7 @@ def _problems(doc) -> tuple[str | None, list[str]]:
         return None, ["record_version must be 1"]
     kind, keys = ("response", RESPONSE_KEYS) if "harness_sha" in doc else ("request", REQUEST_KEYS)
     probs = [f"missing key {k}" for k in keys if k not in doc]
-    allowed = keys + (REQUEST_OPTIONAL if kind == "request" else ())
+    allowed = keys + (REQUEST_OPTIONAL if kind == "request" else RESPONSE_OPTIONAL)
     probs += [f"unknown key {k}" for k in doc if k not in allowed]
     if probs:
         return kind, probs
@@ -217,6 +292,75 @@ def new_request(round_id: str, baseline_sha: str, candidate_sha: str,
     }
 
 
+def load_inventory(path: Path = INVENTORY_PATH) -> dict:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _owner_of(module: str, inventory: dict, warned: set) -> str:
+    """Skill path of dotted `module`: the inventory's product path, else derived (with a warning)."""
+    derived = "skills/kicad/scripts/" + module.replace(".", "/") + ".py"
+    for m in inventory.get("modules", []):
+        if m.get("module") == module and m.get("product_paths"):
+            paths = m["product_paths"]
+            return derived if derived in paths else paths[0]
+    if module not in warned:
+        warned.add(module)
+        print(f"warning: module {module} not in the inventory; owner derived as {derived}", file=sys.stderr)
+    return derived
+
+
+def _facade_round(retire) -> str:
+    m = re.match(r"^round\s+([0-9]+)$", str(retire or "").strip())
+    if not m:
+        raise ValueError(f"relocation retire must be 'round N' when facade is true, got {retire!r}")
+    return "r%02d" % int(m.group(1))
+
+
+def normalize_relocations(data, inventory: dict) -> list[dict]:
+    """Relocations in the record shape. Accepts a list (or a map dict with 'relocations') whose
+    entries are either the record shape {symbol, old_owner, new_owner, new_name, facade_until}
+    or the product shape {old, new, facade, retire}."""
+    rels = data["relocations"] if isinstance(data, dict) else data
+    if not isinstance(rels, list):
+        raise ValueError("relocations must be a list")
+    out, warned = [], set()
+    for r in rels:
+        if not isinstance(r, dict):
+            raise ValueError(f"relocation must be an object: {r!r}")
+        if "old" in r and "new" in r:
+            old_mod, _, _ = str(r["old"]).rpartition(".")
+            new_mod, _, new_name = str(r["new"]).rpartition(".")
+            if not old_mod or not new_mod:
+                raise ValueError(f"relocation old/new must be dotted module.symbol: {r!r}")
+            out.append({"symbol": r["old"], "old_owner": _owner_of(old_mod, inventory, warned),
+                        "new_owner": _owner_of(new_mod, inventory, warned), "new_name": new_name,
+                        "facade_until": _facade_round(r.get("retire")) if r.get("facade") else None})
+            continue
+        for k in ("symbol", "old_owner", "new_owner", "new_name"):
+            if k not in r:
+                raise ValueError(f"relocation missing {k!r}: {r}")
+        out.append({**r, "facade_until": r.get("facade_until")})
+    return out
+
+
+def import_relocation_map(data: dict, inventory: dict) -> dict:
+    """Request fields carried by a product relocation map; unknown top-level keys are ignored."""
+    extra = {"relocations": normalize_relocations(data.get("relocations", []), inventory)}
+    if "removed" in data:
+        extra["removed"] = data["removed"]
+    if "known_defects_deferred" in data:
+        extra["known_defects_deferred"] = [
+            {"file": d["file"], "line": d["line"], "summary": d.get("summary", d.get("issue", "")),
+             "fix_round": d.get("fix_round")} for d in data["known_defects_deferred"]]
+    tip = data.get("product_evidence_tip")
+    if isinstance(tip, dict):
+        pinned = [v for k, v in sorted(tip.items()) if k.startswith("harness_live_")]
+        extra["product_evidence"] = {"quick_json": str(tip.get("quick", "")),
+                                     "schema_identical": "identical" in str(tip.get("schema", "")),
+                                     "pinned_harness": str(pinned[0]) if pinned else ""}
+    return extra
+
+
 def summarize_response(resp: dict) -> str:
     v = resp["verdicts"]
     ex = resp["executed"]
@@ -232,7 +376,21 @@ def summarize_response(resp: dict) -> str:
         f"ledger hits {len(resp['ledger_hits'])}; "
         f"filings {', '.join(resp['filings']) or 'none'}; verdict {resp['verdict']}. "
         f"Evidence: `{resp['evidence']['manifest']}`, `{resp['evidence']['rollup']}`."
-    )
+    ) + _summarize_additions(resp)
+
+
+def _summarize_additions(resp: dict) -> str:
+    parts = []
+    am = resp.get("apply_map_result")
+    if am:
+        parts.append(f"apply-map migrated {am['sites_migrated']} sites in {len(am['files'])} files")
+    if "accept_baseline_diff" in resp:
+        parts.append(f"accept-baseline diff: {resp['accept_baseline_diff'] or 'none'}")
+    if "scan_coverage_verdict" in resp:
+        parts.append(f"scan coverage {resp['scan_coverage_verdict']}")
+    if "budget_sha256" in resp:
+        parts.append(f"budget sha256 {(resp['budget_sha256'] or 'none')[:12]}")
+    return (" " + "; ".join(parts) + ".") if parts else ""
 
 
 def main(argv=None) -> int:
@@ -244,6 +402,8 @@ def main(argv=None) -> int:
     nr.add_argument("--candidate", required=True)
     nr.add_argument("--kind", required=True, choices=KINDS)
     nr.add_argument("--profile", action="append", required=True, choices=PROFILES)
+    nr.add_argument("--relocation-map", default=None, metavar="MAP.json",
+                    help="product relocation map (record or product shape) imported into the request")
     nr.add_argument("-o", "--output", required=True)
     va = sub.add_parser("validate")
     va.add_argument("file")
@@ -254,6 +414,12 @@ def main(argv=None) -> int:
     try:
         if args.cmd == "new-request":
             doc = new_request(args.round_id, args.baseline, args.candidate, args.kind, args.profile)
+            if args.relocation_map:
+                try:
+                    data = json.loads(Path(args.relocation_map).read_text(encoding="utf-8"))
+                    doc.update(import_relocation_map(data, load_inventory()))
+                except (OSError, KeyError, TypeError) as e:
+                    raise ValueError(f"--relocation-map {args.relocation_map}: {e}") from e
             validate_record(doc)
             Path(args.output).write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
             print(args.output)

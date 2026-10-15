@@ -18,6 +18,10 @@ import json
 import sys
 from pathlib import Path
 
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+from round_record import normalize_relocations  # noqa: E402  (sibling in tools/)
+
 HARNESS_ROOT = Path(__file__).resolve().parents[1]
 API_DIR = HARNESS_ROOT / "reference" / "product_api"
 INVENTORY_PATH = API_DIR / "inventory_6a91aaa.json"
@@ -101,15 +105,15 @@ def _dotted_from_owner(owner: str) -> str:
     return ".".join(parts)
 
 
-def _load_relocations(path: Path) -> list[dict]:
+def _is_product_shape(data) -> bool:
+    rel = data.get("relocations", []) if isinstance(data, dict) else data
+    return isinstance(rel, list) and any(isinstance(r, dict) and "old" in r and "new" in r for r in rel)
+
+
+def _load_relocations(path: Path, inventory: dict | None = None) -> list[dict]:
+    """Record-shape or product-shape relocations (round_record.normalize_relocations)."""
     data = json.loads(Path(path).read_text(encoding="utf-8"))
-    rel = data["relocations"] if isinstance(data, dict) else data
-    for r in rel:
-        for k in ("symbol", "old_owner", "new_owner", "new_name"):
-            if k not in r:
-                raise ValueError(f"relocation missing {k!r}: {r}")
-        r.setdefault("facade_until", None)
-    return rel
+    return normalize_relocations(data, inventory if inventory is not None else load_inventory())
 
 
 def sites_for(inventory: dict, module: str, symbol: str) -> list[dict]:
@@ -487,7 +491,8 @@ def cmd_status(args) -> int:
 def cmd_apply_map(args) -> int:
     inv = load_inventory(args.inventory)
     try:
-        rel = _load_relocations(args.map)
+        rel = _load_relocations(args.map, inv)
+        product_shape = _is_product_shape(json.loads(Path(args.map).read_text(encoding="utf-8")))
     except (ValueError, KeyError, TypeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -496,6 +501,10 @@ def cmd_apply_map(args) -> int:
     for r in rel:
         module, _, symbol = r["symbol"].rpartition(".")
         if (module, symbol) not in known:
+            if product_shape:
+                # a product map relocates whole facades; most names have no harness binding
+                print(f"note: {r['symbol']} has no harness sites (not in inventory)", file=sys.stderr)
+                continue
             print(f"error: {r['symbol']} not in inventory", file=sys.stderr)
             bad = True
         if args.product and not (Path(args.product) / r["new_owner"]).exists():

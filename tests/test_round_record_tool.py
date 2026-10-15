@@ -173,3 +173,108 @@ def test_malformed_response_shapes_raise_valueerror():
         resp[key] = val
         with pytest.raises(ValueError, match=key):
             round_record.validate_record(resp)
+
+
+# ---- round-2 record additions: runtime checker parity, importer, CLI ---------
+
+R2 = ROOT / "tests" / "fixtures" / "h0" / "round2"
+PRODUCT_MAP = R2 / "relocation_map_product.json"
+from tests.test_round_record_schema import REQ_BAD, RESP_BAD  # noqa: E402
+
+
+@pytest.mark.parametrize("name", ["round_request_full.json", "round_response_full.json"])
+def test_parity_full_fixtures_pass_both(name):
+    doc = json.loads((R2 / name).read_text())
+    jsonschema.validate(doc, SCHEMA)
+    round_record.validate_record(doc)
+
+
+@pytest.mark.parametrize("case", sorted(f"req:{k}" for k in REQ_BAD) + sorted(f"resp:{k}" for k in RESP_BAD))
+def test_parity_new_field_mutations_rejected_by_both(case):
+    side, key = case.split(":")
+    name, fn = (("round_request_full.json", REQ_BAD[key]) if side == "req"
+                else ("round_response_full.json", RESP_BAD[key]))
+    doc = json.loads((R2 / name).read_text())
+    fn(doc)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(doc, SCHEMA)
+    with pytest.raises(ValueError):
+        round_record.validate_record(doc)
+
+
+def test_runtime_accepts_over_budget_verdict():
+    resp = _load("round_response_ok.json")
+    resp["verdicts"]["budgeted"] = "over_budget"
+    jsonschema.validate(resp, SCHEMA)
+    assert round_record.validate_record(resp) == "response"
+
+
+def _inv():
+    return round_record.load_inventory(round_record.INVENTORY_PATH)
+
+
+def test_normalize_relocations_product_shape(capsys):
+    data = json.loads(PRODUCT_MAP.read_text())
+    rels = round_record.normalize_relocations(data["relocations"], _inv())
+    assert rels[0] == {"symbol": "kicad_utils.normalize_field_name",
+                       "old_owner": "skills/kicad/scripts/kicad_utils.py",
+                       "new_owner": "skills/kicad/scripts/kicad_core/fields.py",
+                       "new_name": "normalize_field_name", "facade_until": "r09"}
+    assert [r["new_name"] for r in rels] == ["normalize_field_name", "MPN_FIELD_ALIASES_PRIMARY",
+                                             "MPN_FIELD_ALIASES_GENERIC"]
+    err = capsys.readouterr().err
+    assert "kicad_core.fields" in err and "not in the inventory" in err
+
+
+def test_normalize_relocations_inventory_dotted_module_and_no_facade():
+    rels = round_record.normalize_relocations(
+        [{"old": "datasheet_types.codec.decode", "new": "kicad_utils.decode", "facade": False}], _inv())
+    assert rels == [{"symbol": "datasheet_types.codec.decode",
+                     "old_owner": "skills/datasheets/datasheet_types/codec.py",
+                     "new_owner": "skills/kicad/scripts/kicad_utils.py",
+                     "new_name": "decode", "facade_until": None}]
+
+
+def test_normalize_relocations_record_shape_passthrough_and_dict_input():
+    rec = json.loads((FIX / "round_request_ok.json").read_text())["relocations"]
+    assert round_record.normalize_relocations(rec, _inv()) == rec
+    assert round_record.normalize_relocations({"relocations": rec}, _inv()) == rec
+    with pytest.raises(ValueError, match="new_owner"):
+        round_record.normalize_relocations([{"symbol": "a.b", "old_owner": "x"}], _inv())
+
+
+def test_import_relocation_map_product_extras():
+    extra = round_record.import_relocation_map(json.loads(PRODUCT_MAP.read_text()), _inv())
+    assert len(extra["relocations"]) == 3
+    assert extra["known_defects_deferred"] == [{"file": "skills/kicad/scripts/capability_mode.py", "line": 97,
+                                                "summary": "relative schema path + read_text() without utf-8",
+                                                "fix_round": None}]
+    pe = extra["product_evidence"]
+    assert pe["quick_json"].startswith("OK x6") and pe["schema_identical"] is True
+    assert pe["pinned_harness"].startswith("2934 passed")
+    assert "removed" not in extra
+    data = {"relocations": [], "removed": [{"symbol": "diff_analysis._SCHEMAS", "harness_refs": []}]}
+    assert round_record.import_relocation_map(data, _inv())["removed"] == data["removed"]
+
+
+def test_cli_new_request_with_relocation_map(tmp_path):
+    out = tmp_path / "req.json"
+    r = subprocess.run([sys.executable, TOOL, "new-request", "--round-id", "r02-kicad-core", "--baseline", SHA_A,
+                        "--candidate", SHA_B, "--kind", "structural", "--profile", "standard",
+                        "--relocation-map", str(PRODUCT_MAP), "-o", str(out)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    doc = json.loads(out.read_text())
+    assert len(doc["relocations"]) == 3 and doc["relocations"][0]["facade_until"] == "r09"
+    assert doc["known_defects_deferred"][0]["line"] == 97 and doc["product_evidence"]["schema_identical"] is True
+    jsonschema.validate(doc, SCHEMA)
+    r = subprocess.run([sys.executable, TOOL, "validate", str(out)], capture_output=True, text=True)
+    assert r.returncode == 0 and "request" in r.stdout
+
+
+def test_summarize_prints_new_response_fields():
+    text = round_record.summarize_response(json.loads((R2 / "round_response_full.json").read_text()))
+    assert "apply-map migrated 4 sites in 1 files" in text
+    assert "accept-baseline diff: reference/scan_coverage_baseline.json: +2 files" in text
+    assert "scan coverage pass" in text and "budget sha256 aaaaaaaaaaaa" in text
+    plain = round_record.summarize_response(_load("round_response_ok.json"))
+    assert "apply-map" not in plain and "scan coverage" not in plain
