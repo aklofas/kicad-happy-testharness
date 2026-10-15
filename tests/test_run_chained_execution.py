@@ -1,5 +1,9 @@
 """run_emc / run_thermal use the shared run_once recipe: accepted exit {0,1},
-unexpected exit is a failure, previous output quarantined (B12)."""
+unexpected exit is a failure, previous output quarantined (B12).
+
+Runner subprocesses must always set KICAD_HAPPY_TESTHARNESS_DATA_DIR to tmp_path
+— never run a mutating runner against the live tree in a test.
+"""
 TIER = "unit"
 
 import os
@@ -113,10 +117,19 @@ def test_thermal_default_timeout_from_standard_profile():
     assert run_thermal.ANALYZER_TIMEOUT == PROFILES["standard"].timeout_s
 
 
-def test_unqualified_runs_exit_2_without_all():
-    env = dict(os.environ)
+def test_unqualified_runs_exit_2_without_all(tmp_path):
+    env = {**os.environ, "KICAD_HAPPY_TESTHARNESS_DATA_DIR": str(tmp_path)}
     for name in ("run_emc.py", "run_thermal.py"):
         r = subprocess.run([sys.executable, str(ROOT / "run" / name)],
                            capture_output=True, text=True, env=env, timeout=60)
         assert r.returncode == 2, (name, r.returncode, r.stderr)
         assert "--all" in r.stderr
+    assert not any((tmp_path / "outputs").rglob("*")) if (tmp_path / "outputs").exists() else True
+
+
+def test_success_removes_stale_err(tmp_path):
+    sch, pcb = _inputs(tmp_path)
+    out = tmp_path / "x_thermal.json"
+    out.with_suffix(".err").write_text("old failure")
+    rc, _, _ = run_one_thermal(_script(tmp_path, "ok", "thermal"), sch, pcb, out)
+    assert rc == 0 and not out.with_suffix(".err").exists()

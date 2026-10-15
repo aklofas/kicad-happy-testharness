@@ -74,6 +74,15 @@ def find_thermal_pairs(repo_filter=None):
     return pairs
 
 
+def _err_first_line(err_file):
+    """First line of the .err file: the 'status: detail' summary."""
+    try:
+        lines = err_file.read_text(encoding="utf-8").strip().splitlines()
+        return lines[0] if lines else "unknown error"
+    except OSError:
+        return "unknown error"
+
+
 def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
                     timeout=ANALYZER_TIMEOUT, env=None):
     """Run analyze_thermal.py on one schematic+PCB pair.
@@ -94,6 +103,7 @@ def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
     res = run_once(make_cmd, output_json, analyzer="thermal", timeout=timeout,
                    env=env or build_env(offline=True))
     if res.status in ("ok", "ok_findings_exit"):
+        output_json.with_suffix(".err").unlink(missing_ok=True)
         with open(output_json) as f:
             data = json.load(f)
         return 0, data.get("summary", {}), res.elapsed_s
@@ -215,14 +225,13 @@ def main():
         if returncode != 0 and returncode is not None:
             errors += 1
             err_file = output_json.with_suffix(".err")
-            err_msg = (err_file.read_text(encoding="utf-8").strip().splitlines()[-1]
-                       if err_file.exists() else "unknown error")
+            err_msg = _err_first_line(err_file)
             print(f"FAIL [{i:4d}] {rel}")
             print(f"           {err_msg}")
             continue
         if summary is None:
             errors += 1
-            print(f"FAIL [{i:4d}] {rel} (timeout)")
+            print(f"FAIL [{i:4d}] {rel} ({_err_first_line(output_json.with_suffix('.err'))})")
             continue
 
         tc = summary.get("total_checks", 0)
