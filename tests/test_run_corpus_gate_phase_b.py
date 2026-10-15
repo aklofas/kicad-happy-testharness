@@ -288,3 +288,72 @@ def test_main_requires_explicit_selection(corpus):
     base = _fake_worktree(corpus, "base", "ok")
     assert _run_main(["--baseline-dir", str(base), "--candidate-dir", str(base),
                       "--gate-dir", str(corpus / "gd")]) == 2
+
+
+def test_nonempty_gate_dir_without_resume_exits_2(corpus):
+    base = _fake_worktree(corpus, "base", "ok")
+    gd = corpus / "gd"
+    argv = ["--baseline-dir", str(base), "--candidate-dir", str(base), "--gate-dir", str(gd),
+            "--repo", "o/r", "--jobs", "1"]
+    assert _run_main(argv) == 0
+    run_id = ident.read_manifest(gd)["run_id"]
+    assert _run_main(argv) == 2
+    assert ident.read_manifest(gd)["run_id"] == run_id
+
+
+def test_resume_mismatch_archives_old_run(corpus):
+    base = _fake_worktree(corpus, "base", "ok")
+    cand = _fake_worktree(corpus, "cand", "ok")
+    gd = corpus / "gd"
+    argv = ["--baseline-dir", str(base), "--candidate-dir", str(cand), "--gate-dir", str(gd),
+            "--repo", "o/r", "--jobs", "1"]
+    assert _run_main(argv) == 0
+    old = ident.read_manifest(gd)
+    subprocess.run(["git", "-C", str(cand), "-c", "user.email=t@t", "-c", "user.name=t",
+                    "commit", "-q", "--allow-empty", "-m", "y"], check=True)
+    assert _run_main(argv + ["--resume"]) == 0
+    new = ident.read_manifest(gd)
+    assert new["run_id"] != old["run_id"]
+    arch = json.loads((gd / f"manifest.{old['run_id']}.json").read_text())
+    assert arch["identity"]["candidate_sha"] == old["identity"]["candidate_sha"]
+    assert (gd / f"units.{old['run_id']}.jsonl").exists()
+    assert not any(r.get("reused") for r in ident.UnitLog(gd))
+
+
+def test_resume_match_archives_log_under_run_id(corpus):
+    base = _fake_worktree(corpus, "base", "ok")
+    gd = corpus / "gd"
+    argv = ["--baseline-dir", str(base), "--candidate-dir", str(base), "--gate-dir", str(gd),
+            "--repo", "o/r", "--jobs", "1"]
+    assert _run_main(argv) == 0
+    old_id = ident.read_manifest(gd)["run_id"]
+    assert _run_main(argv + ["--resume"]) == 0
+    assert (gd / f"units.{old_id}.jsonl").exists()
+
+
+def test_phase_b_not_reused_after_pcb_dependency_disappears(corpus):
+    base = _fake_worktree(corpus, "base", "ok")
+    cand = _fake_worktree(corpus, "cand", "ok")
+    flag = corpus / "pcbmode.txt"
+    flag.write_text("ok")
+    (cand / "skills/kicad/scripts/analyze_pcb.py").write_text(
+        "import sys, subprocess\n"
+        "a = sys.argv\n"
+        f"mode = open({str(flag)!r}).read().strip()\n"
+        f"sys.exit(subprocess.call([sys.executable, {str(FAKE)!r}, mode, '-o', a[a.index('-o') + 1], '--type', 'pcb']))\n")
+    subprocess.run(["git", "-C", str(cand), "add", "-A"], check=True)
+    subprocess.run(["git", "-C", str(cand), "-c", "user.email=t@t", "-c", "user.name=t",
+                    "commit", "-q", "-m", "flag"], check=True)
+    gd = corpus / "gd"
+    argv = ["--baseline-dir", str(base), "--candidate-dir", str(cand), "--gate-dir", str(gd),
+            "--repo", "o/r", "--jobs", "1"]
+    assert _run_main(argv) == 0
+    assert all(r["deps"]["pcb"] for r in ident.UnitLog(gd) if r["analyzer"] in ("thermal", "emc", "cross_analysis"))
+    flag.write_text("exit2")
+    Path((corpus / "manifests" / "all_pcbs.txt").read_text().strip()).write_text("(kicad_pcb changed)")  # input change forces a pcb rerun
+    assert _run_main(argv + ["--resume"]) == 1   # pcb candidate now fails
+    recs = {r["analyzer"]: r for r in ident.UnitLog(gd)}
+    assert recs["thermal"]["verdict"] == "SKIP" and recs["thermal"]["reason"] == "not_applicable"
+    for a in ("emc", "cross_analysis"):
+        assert not recs[a].get("reused") and recs[a]["deps"]["pcb"] is None
+    assert recs["schematic"].get("reused")

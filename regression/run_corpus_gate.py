@@ -20,6 +20,11 @@ Usage:
     python3 regression/run_corpus_gate.py ... --profile long-tail --repo-list results/timeouts.txt
     python3 regression/run_corpus_gate.py ... --all --jobs 32          # full corpus (explicit)
     python3 regression/run_corpus_gate.py ... --resume                 # identity-matched resume
+
+A non-empty --gate-dir without --resume is an error (exit 2). With --resume the
+previous manifest.json/units.jsonl are archived as manifest.<run_id>.json /
+units.<run_id>.jsonl (never deleted). argv is part of the run identity, so a
+changed --jobs/--label (or any other flag) breaks resume by design.
 """
 from __future__ import annotations
 
@@ -363,7 +368,8 @@ def phase_b_job(args):
     base, cand = sides["baseline"], sides["candidate"]
     unit_id = f"{repo}/{sch_key}"
     rec = {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
-           "input_sha256": sch_input_sha, "baseline": _side(base), "candidate": _side(cand)}
+           "input_sha256": sch_input_sha, "baseline": _side(base), "candidate": _side(cand),
+           "deps": {"schematic": unit_id, "pcb": f"{repo}/{pcb_key}" if pcb_key else None}}
     rec.update(diff_envelopes(lay.snap("baseline", analyzer, repo, sch_key),
                               lay.snap("candidate", analyzer, repo, sch_key), _ok(base), _ok(cand)))
     diff_out = lay.diff(analyzer, repo, sch_key)
@@ -583,6 +589,16 @@ def main(argv=None):
         sys.exit(2)
     gd = Path(args.gate_dir)
     layout = GateLayout(gd if gd.is_absolute() else HARNESS_DIR / gd)
+    prev_run_id = None
+    if layout.manifest.exists():
+        try:
+            prev_run_id = read_manifest(layout.root).get("run_id") or "unknown"
+        except (OSError, ValueError):
+            prev_run_id = "unreadable"
+        if not args.resume:
+            print(f"Error: gate dir already holds run {prev_run_id}; pass --resume or a fresh --gate-dir",
+                  file=sys.stderr)
+            sys.exit(2)
 
     repos, selection_source = resolve_repos_with_source(args, require_explicit_all=True)
     section = (args.label or getattr(args, "cross_section", None)
@@ -604,10 +620,14 @@ def main(argv=None):
         reusable, reasons = resume_plan(layout, spec, input_shas=input_shas)
         print(f"  resume: {len(reusable)} reusable units" + (f"; identity mismatch: {reasons}" if reasons else ""))
 
-    # rotate the previous unit log so this run's log is complete and self-contained
+    # archive (never delete) the previous run's identity and log
     layout.root.mkdir(parents=True, exist_ok=True)
-    if layout.units.exists():
-        os.replace(layout.units, layout.root / "units.prev.jsonl")
+    if prev_run_id is not None:
+        for src, name in ((layout.manifest, f"manifest.{prev_run_id}.json"),
+                          (layout.units, f"units.{prev_run_id}.jsonl")):
+            if src.exists():
+                os.replace(src, layout.root / name)
+                print(f"  archived previous {src.name} -> {name}")
     write_manifest(layout.root, spec, run_id=str(uuid.uuid4()), expected_census=expected_census(a_jobs),
                    input_digest=input_digest(sorted(input_shas_by_unit(a_jobs, input_shas))),
                    runtime={"python": platform.python_version(), "platform": platform.platform()})
@@ -641,10 +661,10 @@ def main(argv=None):
         rec = reusable.get(f"{analyzer}/{repo}/{sch_key}")
         if rec is None or rec.get("input_sha256") != j[8]:
             return False
-        deps = {f"schematic/{repo}/{sch_key}"}
-        if pcb_key:
-            deps.add(f"pcb/{repo}/{pcb_key}")
-        return not (deps & rerun_a)
+        deps = {"schematic": f"{repo}/{sch_key}", "pcb": f"{repo}/{pcb_key}" if pcb_key else None}
+        if rec.get("deps") != deps:
+            return False
+        return not any(f"{kind}/{uid}" in rerun_a for kind, uid in deps.items() if uid)
 
     b_results = []
     for rec in b_skips:
