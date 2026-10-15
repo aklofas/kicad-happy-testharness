@@ -31,19 +31,25 @@ def env(tmp_path, monkeypatch):
     scripts = product / "skills" / "kicad" / "scripts"
     scripts.mkdir(parents=True)
     (scripts / "analyze_pcb.py").write_text(FAKE.read_text())
+    subprocess.run(["git", "-C", str(product), "add", "-A"], check=True)
+    subprocess.run(["git", "-C", str(product), "-c", "user.email=t@t", "-c", "user.name=t",
+                    "commit", "-q", "-m", "scripts"], check=True)
     repos = tmp_path / "repos" / "o" / "r"
     repos.mkdir(parents=True)
     board = repos / "ok.kicad_pcb"
     board.write_text("(kicad_pcb)")
+    harness = tmp_path / "harness"
+    _git_init(harness)
     monkeypatch.setenv("KICAD_HAPPY_TESTHARNESS_DATA_DIR", str(data))
     monkeypatch.setenv("KICAD_HAPPY_DIR", str(product))
     import importlib, utils
     importlib.reload(utils)
+    monkeypatch.setattr(utils, "HARNESS_DIR", harness)
     monkeypatch.setattr(utils, "REPOS_DIR", tmp_path / "repos")
     monkeypatch.setattr(utils, "MANIFESTS_DIR", tmp_path / "manifests")
     (tmp_path / "manifests").mkdir()
     (tmp_path / "manifests" / "all_pcbs.txt").write_text(f"{board}\n")
-    return SimpleNamespace(utils=utils, tmp=tmp_path, board=board, data=data)
+    return SimpleNamespace(utils=utils, tmp=tmp_path, board=board, data=data, product=product)
 
 
 def _args(**over):
@@ -96,3 +102,33 @@ def test_all_corpus_without_all_flag_exits_2(env):
     with pytest.raises(SystemExit) as ei:
         env.utils.run_analyzer(_config("ok"), _args(repo=None))
     assert ei.value.code == 2
+
+
+def _resume_after(env, capsys, mutate=None, extra=()):
+    env.utils.run_analyzer(_config("ok"), _args())
+    capsys.readouterr()
+    if mutate:
+        mutate()
+    cfg = _config("ok")
+    cfg["extra_args"] = cfg["extra_args"] + list(extra)
+    env.utils.run_analyzer(cfg, _args(resume=True))
+    return capsys.readouterr().out
+
+
+def test_resume_disabled_when_product_sha_changes(env, capsys):
+    def commit():
+        subprocess.run(["git", "-C", str(env.product), "-c", "user.email=t@t",
+                        "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "y"],
+                       check=True)
+    out = _resume_after(env, capsys, commit)
+    assert "resume disabled" in out and "Skip:" not in out
+
+
+def test_resume_disabled_when_extra_args_change(env, capsys):
+    out = _resume_after(env, capsys, extra=("--type", "pcb"))
+    assert "resume disabled" in out and "Skip:" not in out
+
+
+def test_resume_disabled_on_dirty_worktree(env, capsys):
+    out = _resume_after(env, capsys, lambda: (env.product / "junk.txt").write_text("x"))
+    assert "resume disabled: dirty worktree" in out and "Skip:" not in out

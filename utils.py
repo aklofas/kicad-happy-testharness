@@ -750,17 +750,31 @@ def run_analyzer(config, args=None):
     unit_ids = sorted(_uid(f) for f in files)
     spec = RunSpec(kind="batch", profile="standard", harness=git_worktree_ref(HARNESS_DIR),
                    baseline=None, candidate=git_worktree_ref(kicad_happy),
-                   argv=tuple(a for a in sys.argv[1:] if a != "--resume"),
+                   argv=tuple(a for a in sys.argv[1:] if a != "--resume") + tuple(extra_args or ()),
                    selection_source=selection_source, unit_ids=tuple(unit_ids),
                    normalization_policy="volatile-leaves-v1", env=recorded_env(env))
     input_hashes = {f: sha256_file(f) for f in files}
-    # Read the prior log before the manifest is rewritten; UnitLog is append-only.
+    from harnesslib.identity import read_manifest, manifests_match
+    do_resume = getattr(args, "resume", False)
+    try:
+        prev = read_manifest(out_root)
+    except (OSError, ValueError):
+        prev = None
     log = UnitLog(out_root)
     write_manifest(out_root, spec, run_id=str(uuid.uuid4()),
                    expected_census={output_subdir: len(files)},
                    input_digest=input_digest((_uid(f), h) for f, h in input_hashes.items()),
                    runtime={"python": platform.python_version(),
                             "platform": platform.platform()})
+    if do_resume:
+        if prev is None:
+            print("resume disabled: no prior manifest")
+            do_resume = False
+        else:
+            same, reasons = manifests_match(prev, read_manifest(out_root))
+            if not same:
+                print("resume disabled: " + "; ".join(reasons))
+                do_resume = False
 
     print(f"=== Running {type_name} analysis ===")
     print(f"Analyzer: {analyzer}")
@@ -785,7 +799,6 @@ def run_analyzer(config, args=None):
         return relpath, outfile, errfile
 
     do_validate = getattr(args, "validate", False)
-    do_resume = getattr(args, "resume", False)
     skipped = 0
 
     def _format_result(i, relpath, returncode, outfile, status):
