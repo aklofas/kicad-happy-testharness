@@ -2,7 +2,6 @@
 
 from tests.contract._paths import MAIN_REPO_ROOT, HARNESS_ROOT
 
-import json
 import sys
 from pathlib import Path
 
