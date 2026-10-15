@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Read-only inventory of SPICE model caches the spice skill wrote under repos/.
+"""Read-only inventory of every spice/ directory under repos/.
 
 The spice skill resolves its model cache to <project>/spice/models/ beside the
-corpus schematic (TH-059). This tool never writes under --repos-root; it hashes
-every file in every */spice/models/ dir and writes one JSON inventory so a
-baseline tree can prove the cache did not change between two runs.
+corpus schematic (TH-059), and other simulator output can land elsewhere under
+spice/. run_spice.py --workdir keeps the harness's own simulation work files out
+of repos/, but the simulator's model-cache write into the corpus checkout is NOT
+prevented until the product gains --model-cache-dir. This tool exists to detect
+it: it hashes every file under every spice/ dir (recursively, keyed by path
+relative to that spice/ dir, e.g. models/manifest.json) and never writes under
+--repos-root.
 
 Usage:
     python3 tools/inventory_spice_caches.py --repos-root repos -o results/v3_baseline/6a91aaa/spice_cache_inventory.json
@@ -32,15 +36,15 @@ def build_inventory(repos_root: Path) -> dict:
     repos_root = Path(repos_root)
     dirs = {}
     files = 0
-    for models in sorted(repos_root.rglob("spice/models")):
-        if not models.is_dir():
+    for spice in sorted(repos_root.rglob("spice")):
+        if not spice.is_dir() or ".git" in spice.relative_to(repos_root).parts:
             continue
-        rel = models.relative_to(repos_root).as_posix()
+        rel = spice.relative_to(repos_root).as_posix()
         entry = {"manifest_sha256": None, "files": {}}
-        for f in sorted(p for p in models.iterdir() if p.is_file()):
-            entry["files"][f.name] = _sha(f)
+        for f in sorted(p for p in spice.rglob("*") if p.is_file()):
+            entry["files"][f.relative_to(spice).as_posix()] = _sha(f)
             files += 1
-        entry["manifest_sha256"] = entry["files"].get("manifest.json")
+        entry["manifest_sha256"] = entry["files"].get("models/manifest.json")
         dirs[rel] = entry
     return {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "repos_root": str(repos_root.resolve()), "dirs": dirs,

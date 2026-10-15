@@ -16,6 +16,12 @@ Prerequisites:
     2. Schematic analysis outputs exist in results/outputs/schematic/
        (run run/run_schematic.py first)
 
+Isolation (TH-059): --workdir keeps the harness's simulation work files out of
+repos/, and distributor credentials are stripped unless --online. The
+simulator's model-cache write into <project>/spice/models/ in the corpus
+checkout is NOT prevented until the product gains --model-cache-dir;
+tools/inventory_spice_caches.py --check detects it.
+
 Environment:
     KICAD_HAPPY_DIR  Path to kicad-happy repo (required if not at ../kicad-happy)
 """
@@ -164,8 +170,12 @@ def main():
     parser.add_argument("--resume", action="store_true",
                         help="Skip files that already have valid output JSON")
     parser.add_argument("--workdir", default=None,
-                        help="Scratch root for simulation files (default: "
-                             "results/spice_work/<timestamp>); never inside repos/ (TH-059)")
+                        help="Scratch root for the harness's simulation work files "
+                             "(default: results/spice_work/<timestamp>); never inside "
+                             "repos/. The simulator's own model-cache write into the "
+                             "corpus checkout is NOT prevented until the product gains "
+                             "--model-cache-dir; use tools/inventory_spice_caches.py "
+                             "--check to detect it (TH-059)")
     parser.add_argument("--online", action="store_true",
                         help="Keep distributor credentials in the simulator env "
                              "(default: stripped, hermetic offline run)")

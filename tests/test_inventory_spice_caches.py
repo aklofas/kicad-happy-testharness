@@ -16,6 +16,11 @@ def _tree(tmp_path):
     d.mkdir(parents=True)
     (d / "manifest.json").write_text('{"TL074": {"file": "TL074.sub"}}')
     (d / "TL074.sub").write_text(".subckt TL074\n.ends\n")
+    (d / "sub").mkdir()
+    (d / "sub" / "x.lib").write_text("lib")
+    w = tmp_path / "root" / "o" / "r" / "hw2" / "spice" / "work"
+    w.mkdir(parents=True)
+    (w / "net.cir").write_text("* c")
     (tmp_path / "root" / "o" / "r" / "not_spice").mkdir(parents=True)
     return tmp_path / "root"
 
@@ -27,9 +32,12 @@ def test_inventory_lists_dirs_and_hashes(tmp_path):
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     doc = json.loads(out.read_text())
-    assert doc["dir_count"] == 1 and doc["file_count"] == 2
-    entry = doc["dirs"]["o/r/hw/spice/models"]
-    assert len(entry["manifest_sha256"]) == 64 and set(entry["files"]) == {"manifest.json", "TL074.sub"}
+    assert doc["dir_count"] == 2 and doc["file_count"] == 4
+    entry = doc["dirs"]["o/r/hw/spice"]
+    assert len(entry["manifest_sha256"]) == 64
+    assert set(entry["files"]) == {"models/manifest.json", "models/TL074.sub", "models/sub/x.lib"}
+    other = doc["dirs"]["o/r/hw2/spice"]
+    assert other["manifest_sha256"] is None and set(other["files"]) == {"work/net.cir"}
 
 
 def test_check_detects_changed_and_new_files(tmp_path):
@@ -39,7 +47,7 @@ def test_check_detects_changed_and_new_files(tmp_path):
     r = subprocess.run([sys.executable, str(TOOL), "--repos-root", str(repos), "--check", str(out)],
                        capture_output=True, text=True)
     assert r.returncode == 0
-    (repos / "o" / "r" / "hw" / "spice" / "models" / "NEW.sub").write_text("x")
+    (repos / "o" / "r" / "hw2" / "spice" / "work" / "NEW.sub").write_text("x")
     r = subprocess.run([sys.executable, str(TOOL), "--repos-root", str(repos), "--check", str(out)],
                        capture_output=True, text=True)
     assert r.returncode == 1 and "NEW.sub" in r.stdout
