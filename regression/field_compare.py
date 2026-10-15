@@ -642,7 +642,7 @@ def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | Non
 
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 _CLASS_KEYS = {"id", "analyzer", "path_glob", "op", "where", "direction", "value_relation",
-               "unit_bound", "predicate", "evidence"}
+               "unit_bound", "predicate", "evidence", "expected_magnitude"}
 _WHERE_KEYS = {"rule_id", "detector"}
 
 
@@ -694,6 +694,10 @@ def _validate_class(i: int, c: Any) -> None:
             raise BudgetError(f"class {cid}: unit_bound must be {{\"max_units\": non-negative int}}")
     if "predicate" in c:
         _split_predicate(c["predicate"], cid)
+    if "expected_magnitude" in c:
+        em = c["expected_magnitude"]
+        if isinstance(em, bool) or not isinstance(em, int) or em < 0:
+            raise BudgetError(f"class {cid}: expected_magnitude must be a non-negative int")
 
 
 def load_budget(path: Path) -> dict:
@@ -818,13 +822,21 @@ def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = No
             residuals.append(d)
     violations = []
     bound_status = {}
+    over_budget = []
     for i, c in enumerate(classes):
         bound = (c.get("unit_bound") or {}).get("max_units")
         n_units = len({d.unit for d in claimed[i]})
         ok = bound is None or n_units <= bound
-        bound_status[c["id"]] = {"max_units": bound, "units": n_units, "ok": ok}
+        mag = c.get("expected_magnitude")
+        n_deltas = len(claimed[i])
+        over = mag is not None and n_deltas > 2 * mag
+        bound_status[c["id"]] = {"max_units": bound, "units": n_units, "ok": ok,
+                                 "expected_magnitude": mag, "deltas": n_deltas, "over_budget": over}
         if not ok:
             violations.append(f"class {c['id']} claimed {n_units} units > max_units {bound}")
+        if over:
+            over_budget.append(c["id"])
+            violations.append(f"class {c['id']} claimed {n_deltas} deltas > 2x expected_magnitude {mag} (over_budget)")
     allowed_missing = int(budget.get("unexplained_missing_units_allowed", 0))
     if missing_units > allowed_missing:
         violations.append(f"{missing_units} missing units > unexplained_missing_units_allowed {allowed_missing}")
@@ -833,7 +845,7 @@ def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = No
             "claimed": {c["id"]: [d.to_json() for d in claimed[i]] for i, c in enumerate(classes)},
             "claimed_counts": {c["id"]: len(claimed[i]) for i, c in enumerate(classes) if claimed[i]},
             "claimed_units": {c["id"]: len({d.unit for d in claimed[i]}) for i, c in enumerate(classes) if claimed[i]},
-            "bound_status": bound_status,
+            "bound_status": bound_status, "over_budget": sorted(over_budget),
             "residuals": [d.to_json() for d in residuals], "violations": violations}
 
 
@@ -879,14 +891,20 @@ def check_budget_identity(budget: dict, strict_report: dict) -> None:
 
 def budgeted_report(strict_report: dict, budget: dict, a_root: Path, b_root: Path) -> dict:
     """The one budgeted field report (CLI and run_modes share it): identity check, docs for
-    units with deltas, evaluate_budget, verdict error|clean|residuals."""
+    units with deltas, evaluate_budget, verdict with precedence
+    error > over_budget > residuals > clean."""
     check_budget_identity(budget, strict_report)
     s = strict_report["summary"]
     ev = evaluate_budget([Delta(**d) for d in strict_report["deltas"]], budget,
                          docs=docs_for_report(strict_report, a_root, b_root), missing_units=s["missing"])
     missing_allowed = int(budget.get("unexplained_missing_units_allowed", 0))
     hard_error = s["missing"] > missing_allowed or s["parse_errors"] > 0 or bool(strict_report["policy_violations"])
-    verdict = "error" if hard_error else ("clean" if ev["clean"] else "residuals")
+    if hard_error:
+        verdict = "error"
+    elif ev["over_budget"]:
+        verdict = "over_budget"
+    else:
+        verdict = "clean" if ev["clean"] else "residuals"
     return dict(strict_report, mode="budgeted", budget=ev, verdict=verdict)
 
 
@@ -932,6 +950,6 @@ def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bo
         (g / "field_report_budgeted.json").write_text(json.dumps(budgeted, indent=1), encoding="utf-8")
     out["budgeted"] = {"verdict": verdict, "report": "field_report_budgeted.json", "budget_id": budget["budget_id"],
                        "claimed_counts": ev["claimed_counts"], "residuals": len(ev["residuals"]),
-                       "violations": len(ev["violations"])}
+                       "violations": len(ev["violations"]), "over_budget": ev["over_budget"]}
     out["strict_field_clean"] = verdict == "clean"
     return out

@@ -53,3 +53,17 @@ def test_run_modes_requires_two_slots(tmp_path):
     (tmp_path / "baseline").mkdir()
     with pytest.raises(FileNotFoundError, match="candidate"):
         run_modes(tmp_path)
+
+
+def test_run_modes_exposes_over_budget_list(tmp_path):
+    _gate(tmp_path, sev_b="info")
+    m = run_modes(tmp_path, budget_path=FIX / "rs001_only.json")
+    assert m["budgeted"]["over_budget"] == []
+    budget = json.loads((FIX / "rs001_only.json").read_text())
+    budget["classes"][0]["expected_magnitude"] = 0
+    bp = tmp_path / "ob.json"
+    bp.write_text(json.dumps(budget))
+    m = run_modes(tmp_path, budget_path=bp)
+    assert m["budgeted"]["verdict"] == "over_budget"
+    assert m["budgeted"]["over_budget"] == ["rs001-severity-down"]
+    assert m["strict_field_clean"] is False

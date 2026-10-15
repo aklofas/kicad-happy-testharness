@@ -60,7 +60,8 @@ def test_cli_and_run_modes_produce_equal_budgeted_reports(tmp_path):
     via_gate = json.loads((tmp_path / "field_report_budgeted.json").read_text())
     assert rc == 0 and m["budgeted"]["verdict"] == "clean"
     assert via_cli == via_gate
-    assert via_cli["budget"]["bound_status"] == {"rs001-severity-down": {"max_units": 2, "units": 1, "ok": True}}
+    assert via_cli["budget"]["bound_status"] == {"rs001-severity-down": {
+        "max_units": 2, "units": 1, "ok": True, "expected_magnitude": None, "deltas": 1, "over_budget": False}}
 
 
 def test_budget_policy_mismatch_is_budget_error(tmp_path):
@@ -100,3 +101,55 @@ def test_no_manifest_skips_sha_check(tmp_path):
     a, b = _gate(tmp_path)
     rep = budgeted_report(_strict(a, b), load_budget(FIX / "rs001_only.json"), a, b)
     assert rep["verdict"] == "clean" and rep["mode"] == "budgeted"
+
+
+# ---- over_budget verdict precedence ------------------------------------------
+
+def _synthetic_strict(n_deltas, *, policy_violations=(), missing=0):
+    deltas = [{"unit": "schematic/o/r/u", "analyzer": "schematic", "path": f"/a/{i}", "op": "changed",
+               "before": 0, "after": 1} for i in range(n_deltas)]
+    return {"policy": "volatile-leaves-v1", "identity": {}, "units": [], "deltas": deltas,
+            "policy_violations": list(policy_violations),
+            "summary": {"missing": missing, "parse_errors": 0}}
+
+
+def _b(classes, allowed=0):
+    return {"budget_id": "t", "classes": classes, "unexplained_deltas_allowed": allowed,
+            "unexplained_missing_units_allowed": 0, "relock": False}
+
+
+def test_verdict_over_budget_beats_residuals(tmp_path):
+    strict = _synthetic_strict(3)
+    strict["deltas"].append({**strict["deltas"][0], "path": "/unclaimed"})
+    rep = budgeted_report(strict, _b([{"id": "c", "path_glob": "/a/*", "expected_magnitude": 1}]),
+                          tmp_path, tmp_path)
+    assert rep["verdict"] == "over_budget" and rep["budget"]["over_budget"] == ["c"]
+
+
+def test_verdict_error_beats_over_budget(tmp_path):
+    strict = _synthetic_strict(3, policy_violations=["v"])
+    rep = budgeted_report(strict, _b([{"id": "c", "path_glob": "/a/*", "expected_magnitude": 1}]),
+                          tmp_path, tmp_path)
+    assert rep["verdict"] == "error"
+
+
+def test_verdict_residuals_and_clean(tmp_path):
+    rep = budgeted_report(_synthetic_strict(2), _b([{"id": "c", "path_glob": "/x/*"}]), tmp_path, tmp_path)
+    assert rep["verdict"] == "residuals"
+    rep = budgeted_report(_synthetic_strict(2), _b([{"id": "c", "path_glob": "/a/*", "expected_magnitude": 1}]),
+                          tmp_path, tmp_path)
+    assert rep["verdict"] == "clean"
+
+
+def test_cli_prints_over_budget_classes_and_exits_1(tmp_path, capsys):
+    a, b = _gate(tmp_path)
+    budget = json.loads((FIX / "rs001_only.json").read_text())
+    budget["classes"][0]["expected_magnitude"] = 0
+    bp = tmp_path / "ob.json"
+    bp.write_text(json.dumps(budget))
+    rc = cli.main([str(a), str(b), "--mode", "budgeted", "--budget", str(bp), "--jobs", "1",
+                   "-o", str(tmp_path / "r.json")])
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "budgeted: over_budget" in out
+    assert "over_budget: rs001-severity-down claimed 1 deltas > 2x expected_magnitude 0" in out

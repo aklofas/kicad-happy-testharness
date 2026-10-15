@@ -68,3 +68,9 @@ def test_top_level_oneof_distinguishes_kinds():
     v = jsonschema.Draft202012Validator(SCHEMA)
     v.validate(json.loads((FIX / "round_request_ok.json").read_text()))
     v.validate(json.loads((FIX / "round_response_ok.json").read_text()))
+
+
+def test_response_accepts_over_budget_verdict():
+    resp = json.loads((FIX / "round_response_ok.json").read_text())
+    resp["verdicts"]["budgeted"] = "over_budget"
+    _validator("response").validate(resp)

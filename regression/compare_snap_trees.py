@@ -6,7 +6,7 @@ Usage:
   python3 regression/compare_snap_trees.py A_ROOT B_ROOT --mode budgeted \
       --budget regression/budgets/<id>.json -o report.json
 
-Exit codes: 0 clean, 1 deltas (raw/strict) or residuals (budgeted), 2 error
+Exit codes: 0 clean, 1 deltas (raw/strict) or residuals/over_budget (budgeted), 2 error
 (missing root, missing/unparseable units beyond the budget's allowance, policy
 violation, bad arguments). The report is written on every exit except bad
 arguments / missing roots.
@@ -80,8 +80,13 @@ def main(argv=None) -> int:
           f"parse_errors {s['parse_errors']} deltas {s['deltas']}"
           + (f" residuals {len(report['budget']['residuals'])}" if report["budget"] else "")
           + (f" policy_violations {len(report['policy_violations'])}" if report["policy_violations"] else ""))
+    if report["budget"]:
+        for cid in report["budget"].get("over_budget", []):
+            st = report["budget"]["bound_status"][cid]
+            print(f"over_budget: {cid} claimed {st['deltas']} deltas > 2x expected_magnitude "
+                  f"{st['expected_magnitude']}")
     print(f"report: {out}")
-    return {"clean": 0, "deltas": 1, "residuals": 1, "error": 2}[report["verdict"]]
+    return {"clean": 0, "deltas": 1, "residuals": 1, "over_budget": 1, "error": 2}[report["verdict"]]
 
 
 if __name__ == "__main__":

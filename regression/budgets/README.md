@@ -14,7 +14,11 @@ finding at that index on either side; only valid under `/findings/*` and `/asses
 `direction` (`any|up|down|none`, severity changes only), `value_relation` (`any|equal`),
 `unit_bound` (`{"max_units": N}`), `predicate` (`"module:function"` — `module` is a bare name imported as
 `regression.budgets.<module>`, the function takes `(delta, a_doc, b_doc)`; the module lives in
-this directory and is tracked), `evidence`.
+this directory and is tracked), `evidence`, `expected_magnitude` (non-negative int: the
+number of deltas the product expects the class to claim).
+
+`direction` + `expected_magnitude` are stated by the product handoff; a class claiming more
+than 2× its `expected_magnitude` is `over_budget` and fails the round until re-budgeted.
 
 The historical walkers under `results/*/walker_*.py` were ad hoc predicates; a predicate
 that matters now lives here, versioned with the budget that uses it.

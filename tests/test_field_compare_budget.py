@@ -280,7 +280,69 @@ def test_bound_status_reported_per_class():
                  {"id": "unused", "path_glob": "/nothing", "unit_bound": {"max_units": 0}}])
     ds = [_d("/findings/0/severity"), _d("/findings/0/severity", unit="schematic/o/r/k2"), _d("/statistics/x")]
     ev = evaluate_budget(ds, b)
-    assert ev["bound_status"] == {"bounded": {"max_units": 1, "units": 2, "ok": False},
-                                  "open": {"max_units": None, "units": 1, "ok": True},
-                                  "unused": {"max_units": 0, "units": 0, "ok": True}}
+    nocap = {"expected_magnitude": None, "over_budget": False}
+    assert ev["bound_status"] == {"bounded": {"max_units": 1, "units": 2, "ok": False, "deltas": 2, **nocap},
+                                  "open": {"max_units": None, "units": 1, "ok": True, "deltas": 1, **nocap},
+                                  "unused": {"max_units": 0, "units": 0, "ok": True, "deltas": 0, **nocap}}
     assert ev["violations"] == ["class bounded claimed 2 units > max_units 1"] and ev["clean"] is False
+
+
+# ---- expected_magnitude cap (ruling I9 record additions) ---------------------
+
+def _many(n):
+    return [_d(f"/a/{i}", before=0, after=1) for i in range(n)]
+
+
+def _cap_budget(mag=None):
+    cls = {"id": "c", "path_glob": "/a/*"}
+    if mag is not None:
+        cls["expected_magnitude"] = mag
+    return _budget([cls])
+
+
+def test_expected_magnitude_over_twice_is_over_budget():
+    ev = evaluate_budget(_many(7), _cap_budget(3))
+    assert ev["clean"] is False and ev["over_budget"] == ["c"]
+    assert ev["bound_status"]["c"]["expected_magnitude"] == 3
+    assert ev["bound_status"]["c"]["deltas"] == 7 and ev["bound_status"]["c"]["over_budget"] is True
+    assert "class c claimed 7 deltas > 2x expected_magnitude 3 (over_budget)" in ev["violations"]
+
+
+def test_expected_magnitude_at_twice_is_ok():
+    ev = evaluate_budget(_many(6), _cap_budget(3))
+    assert ev["clean"] is True and ev["over_budget"] == []
+    assert ev["bound_status"]["c"]["over_budget"] is False and ev["bound_status"]["c"]["deltas"] == 6
+
+
+def test_missing_expected_magnitude_means_no_cap():
+    ev = evaluate_budget(_many(50), _cap_budget(None))
+    assert ev["clean"] is True and ev["over_budget"] == []
+    assert ev["bound_status"]["c"]["expected_magnitude"] is None
+
+
+def test_over_budget_list_sorted():
+    b = _budget([{"id": "z", "path_glob": "/a/*", "expected_magnitude": 0},
+                 {"id": "b", "path_glob": "/a/*", "expected_magnitude": 1}])
+    assert evaluate_budget(_many(3), b)["over_budget"] == ["b", "z"]
+
+
+@pytest.mark.parametrize("bad", [-1, "3", 1.5, True, None])
+def test_load_budget_rejects_bad_expected_magnitude(tmp_path, bad):
+    p = _write(tmp_path, _budget([{"id": "c", "path_glob": "/a", "expected_magnitude": bad}]))
+    with pytest.raises(BudgetError, match="class c: expected_magnitude must be a non-negative int"):
+        load_budget(p)
+
+
+def test_load_budget_accepts_expected_magnitude(tmp_path):
+    p = _write(tmp_path, _budget([{"id": "c", "path_glob": "/a", "expected_magnitude": 0}]))
+    assert load_budget(p)["classes"][0]["expected_magnitude"] == 0
+
+
+def test_budget_schema_declares_expected_magnitude():
+    import jsonschema
+    schema = json.loads((Path(__file__).resolve().parents[1] / "regression" / "budgets" /
+                         "budget.schema.json").read_text())
+    v = jsonschema.Draft202012Validator(schema)
+    v.validate(_budget([{"id": "c", "path_glob": "/a", "expected_magnitude": 4}]))
+    with pytest.raises(jsonschema.ValidationError):
+        v.validate(_budget([{"id": "c", "path_glob": "/a", "expected_magnitude": -1}]))
