@@ -43,6 +43,7 @@ FILE_TO_TYPES = {
 # Glob patterns for broader matching
 GLOB_PATTERNS = {
     "skills/emc/": {"emc"},
+    "skills/datasheets/": {"datasheets"},
     "skills/spice/": {"spice"},
     "skills/kicad/scripts/": {"schematic", "pcb"},
 }
@@ -189,74 +190,97 @@ ENTRY_POINTS = {
 }
 
 
-def build_module_index(kicad_happy_dir):
-    """Dotted module name -> root-relative path, package-qualified (report A2).
+def _index_base(relp):
+    """Path parts of the import root for a root-relative file path: the
+    skills/<skill>/scripts dir when the file lives under it, else skills/<skill>."""
+    parts = Path(relp).parts
+    if len(parts) >= 3 and parts[0] == "skills":
+        if len(parts) > 3 and parts[2] == "scripts":
+            return parts[:3]
+        return parts[:2]
+    return ()
 
-    A file skills/<skill>/scripts/a/b.py is importable as 'a.b' from any script
-    in that skill (scripts/ is on sys.path), and 'a' maps to a/__init__.py.
-    Sibling packages beside scripts/ (skills/datasheets/datasheet_types) are
-    indexed by their package name too.
-    """
+
+def _discover_modules(kicad_happy_dir):
+    """[(dotted_name, root_relative_path)] for EVERY .py under skills/."""
     root = Path(kicad_happy_dir)
-    index = {}
+    found = []
     for skill_dir in sorted((root / "skills").glob("*")):
         if not skill_dir.is_dir():
             continue
-        roots = [skill_dir / "scripts", skill_dir]
-        for base in roots:
+        for base in (skill_dir / "scripts", skill_dir):
             if not base.is_dir():
                 continue
             for py in sorted(base.rglob("*.py")):
                 if "__pycache__" in py.parts:
                     continue
                 relp = py.relative_to(root).as_posix()
+                if Path(*_index_base(relp)) != base.relative_to(root):
+                    continue   # scripts/ files are indexed under the scripts base only
                 parts = py.relative_to(base).with_suffix("").parts
                 if parts[-1] == "__init__":
                     parts = parts[:-1]
-                if not parts:
-                    continue
-                if base == skill_dir and parts[0] == "scripts":
-                    continue   # scripts/ files were indexed under the scripts base
-                index.setdefault(".".join(parts), relp)
+                if parts:
+                    found.append((".".join(parts), relp))
+    return found
+
+
+def build_module_index(kicad_happy_dir):
+    """Dotted module name -> root-relative path, package-qualified (report A2).
+
+    A file skills/<skill>/scripts/a/b.py is importable as 'a.b' from any script
+    in that skill (scripts/ is on sys.path), and 'a' maps to a/__init__.py.
+    Sibling packages beside scripts/ (skills/datasheets/datasheet_types) are
+    indexed by their package name too. Name collisions keep the first path and
+    warn on stderr naming both.
+    """
+    index = {}
+    for name, relp in _discover_modules(kicad_happy_dir):
+        if name in index and index[name] != relp:
+            print(f"warning: module name '{name}' is ambiguous: {index[name]} "
+                  f"shadows {relp}", file=sys.stderr)
+            continue
+        index[name] = relp
     return index
 
 
 def resolve_import(importer_rel, node, index):
     """Root-relative paths an Import/ImportFrom node resolves to inside the tree."""
     out = set()
+
+    def walk_up(name):
+        while name:
+            if name in index:
+                return index[name]
+            name = name.rpartition(".")[0]
+        return None
+
     if isinstance(node, ast.Import):
         for alias in node.names:
-            name = alias.name
-            while name:
-                if name in index:
-                    out.add(index[name])
-                    break
-                name = name.rpartition(".")[0]
+            hit = walk_up(alias.name)
+            if hit:
+                out.add(hit)
         return out
     if not isinstance(node, ast.ImportFrom):
         return out
     if node.level == 0:
         base = node.module or ""
     else:
-        pkg_parts = Path(importer_rel).with_suffix("").parts
-        # drop the file name, then (level-1) more packages
-        pkg_parts = pkg_parts[:-1]
-        if pkg_parts and pkg_parts[-1] == "__init__":
-            pkg_parts = pkg_parts[:-1]
+        base_parts = _index_base(importer_rel)
+        # package of the importer, relative to its import root (filename dropped)
+        pkg = list(Path(importer_rel).parts[len(base_parts):-1])
         cut = node.level - 1
-        pkg_parts = pkg_parts[:len(pkg_parts) - cut] if cut else pkg_parts
-        # strip the skills/<skill>/scripts prefix to get the dotted package
-        dotted = []
-        for p in reversed(pkg_parts):
-            if p == "scripts":
-                break
-            dotted.append(p)
-        dotted.reverse()
-        base = ".".join(dotted + ([node.module] if node.module else []))
-    candidates = [base] + [f"{base}.{a.name}" if base else a.name for a in node.names]
-    for cand in candidates:
+        if cut > len(pkg):
+            return out   # relative import above the import root
+        pkg = pkg[:len(pkg) - cut]
+        base = ".".join(pkg + ([node.module] if node.module else []))
+    for a in node.names:
+        cand = f"{base}.{a.name}" if base else a.name
         if cand in index:
             out.add(index[cand])
+    hit = walk_up(base)
+    if hit:
+        out.add(hit)
     return out
 
 
@@ -265,7 +289,7 @@ def _build_dependency_graph(kicad_happy_dir):
     root = Path(kicad_happy_dir)
     index = build_module_index(root)
     graph = {}
-    for relp in sorted(set(index.values())):
+    for relp in sorted({r for _, r in _discover_modules(root)}):
         try:
             tree = ast.parse((root / relp).read_bytes())
         except (OSError, SyntaxError):

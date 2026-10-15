@@ -138,8 +138,8 @@ def test_impact_map_reaches_nested_and_thermal():
     g = dc._build_dependency_graph(FAKE)
     impact = dc._compute_impact_map(g, dc.ENTRY_POINTS)
     assert impact["skills/kicad/scripts/schematic/reader.py"] == {"schematic"}
-    assert "thermal" in impact["skills/kicad/scripts/pcb/reader.py"] or \
-           "thermal" in impact["skills/kicad/scripts/pcb/__init__.py"]
+    assert impact["skills/kicad/scripts/pcb/reader.py"] == {"thermal"}
+    assert impact["skills/kicad/scripts/pcb/__init__.py"] == {"thermal"}
     assert impact["skills/datasheets/datasheet_types/__init__.py"] == {"datasheets"}
 
 
@@ -163,3 +163,51 @@ def test_git_failure_is_diagnostic_exit_2(tmp_path):
                        env={**os.environ, "KICAD_HAPPY_DIR": str(tmp_path)})
     assert r.returncode == 2, r.stdout + r.stderr
     assert "git" in r.stderr.lower()
+
+
+def test_relative_import_in_sibling_package_resolves():
+    g = dc._build_dependency_graph(FAKE)
+    init = "skills/datasheets/datasheet_types/__init__.py"
+    base = "skills/datasheets/datasheet_types/base_block.py"
+    assert base in g[init]
+    impact = dc._compute_impact_map(g, dc.ENTRY_POINTS)
+    assert impact[base] == {"datasheets"}
+
+
+def test_dot_import_inside_package_init_resolves():
+    g = dc._build_dependency_graph(FAKE)
+    assert "skills/kicad/scripts/schematic/reader.py" in g["skills/kicad/scripts/schematic/__init__.py"]
+
+
+def test_collision_keeps_both_files_as_nodes_and_warns(tmp_path, capsys):
+    for sk in ("a", "b"):
+        d = tmp_path / "skills" / sk / "scripts"
+        d.mkdir(parents=True)
+        (d / "x.py").write_text("")
+    g = dc._build_dependency_graph(tmp_path)
+    assert "skills/a/scripts/x.py" in g and "skills/b/scripts/x.py" in g
+    err = capsys.readouterr().err
+    assert "skills/a/scripts/x.py" in err and "skills/b/scripts/x.py" in err
+
+
+def test_datasheets_prefix_covers_standalone_scripts():
+    f = "skills/datasheets/scripts/validate_sanity_vector.py"
+    assert (FAKE / f).exists()
+    assert dc.map_file_to_types(f) == {"datasheets"}
+
+
+def test_relative_import_above_root_resolves_to_nothing():
+    import ast
+    idx = dc.build_module_index(FAKE)
+    node = ast.parse("from ... import reader").body[0]
+    assert dc.resolve_import("skills/kicad/scripts/schematic/reader.py", node, idx) == set()
+    node = ast.parse("from .. import finding_schema").body[0]
+    assert dc.resolve_import("skills/kicad/scripts/analyze_schematic.py", node, idx) == set()
+
+
+def test_from_import_walks_up_to_indexed_prefix():
+    import ast
+    idx = dc.build_module_index(FAKE)
+    node = ast.parse("from schematic.nothing_here import y").body[0]
+    assert dc.resolve_import("skills/kicad/scripts/analyze_schematic.py", node, idx) == \
+        {"skills/kicad/scripts/schematic/__init__.py"}
