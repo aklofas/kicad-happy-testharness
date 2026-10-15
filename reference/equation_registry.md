@@ -2,19 +2,19 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-15T11:34:37.786299+00:00
+**Last scan:** 2026-10-15T18:08:28.593587+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 106 |
-| Verified | 82 |
+| Total equations | 105 |
+| Verified | 80 |
 | Unverified | 7 |
-| Stale | 17 |
-| Critical impact | 10 |
-| High impact | 35 |
-| Medium impact | 39 |
+| Stale | 18 |
+| Critical impact | 11 |
+| High impact | 34 |
+| Medium impact | 38 |
 | Low impact | 22 |
 
 ## skills/emc/scripts/emc_formulas.py
@@ -48,6 +48,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-091 | `trace_inductance_h` | L = Z₀/v_phase × length (Wheeler microstrip inductance) | parasitic | high | **verified** |
 | EQ-092 | `distributed_pdn_impedance_sweep` | Z_IC = Z_local \|\| (Z_reg + Z_trace) (distributed PDN impedance) | impedance | high | **verified** |
 | EQ-105 | `estimate_inductor_h_field` | H = (m · sin θ) / (4π · r³), with m = N · I · A (magnetic moment) | unknown | medium | **verified** |
+| EQ-108 | `None` | R_trace = rho * L / (W * T) — DC trace resistance | emc_radiation | critical | **verified** |
 
 ## skills/emc/scripts/emc_rules.py
 
@@ -62,7 +63,6 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-040 | `check_layer_transition_stitching` | Via distance from layer transition vias | parasitic | high | **stale** |
 | EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **stale** |
 | EQ-042 | `check_thermal_emc` | DC bias derating lookup + ferrite µ thermal degradation | thermal | medium | **verified** |
-| EQ-042 | `check_thermal_emc` | DC bias derating lookup + ferrite µ thermal degradation | thermal | medium | **verified** |
 | EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **verified** |
 | EQ-086 | `check_decoupling_via_distance` | d = √(Δx²+Δy²) (cap-to-via distance for connection inductance) | parasitic | high | **stale** |
 | EQ-087 | `check_clock_near_connector` | d = √(Δx²+Δy²) (clock trace midpoint to connector distance) | parasitic | high | **verified** |
@@ -71,7 +71,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-094 | `estimate_switching_emissions` | V_n = V_peak × 2/(nπ) × sin(nπD) (trapezoidal harmonic envelope) | emc_radiation | critical | **verified** |
 | EQ-095 | `check_switching_node_area` | A_track = Σ(width_mm × length_mm) (switching node copper area) | emc_radiation | medium | **verified** |
 | EQ-096 | `check_pdn_distributed` | I_reflected = P_downstream / V_upstream (reflected transient current) | impedance | medium | **verified** |
-| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **verified** |
+| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **stale** |
 
 ## skills/kicad/scripts/analyze_pcb.py
 
@@ -112,15 +112,19 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-062 | `analyze_pdn_impedance` | \|Z\| = √(ESR²+(ωL-1/ωC)²) swept over frequency | impedance | high | **verified** |
 | EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **stale** |
 | EQ-064 | `analyze_wire_geometry` | L = √(Δx²+Δy²) (wire segment length) | filter_design | high | **verified** |
-| EQ-065 | `apply_rotation` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | filter_design | high | **verified** |
 | EQ-097 | `_detect_i2c_buses` | t_r = 0.8473 * R_pullup * C_bus (RC time constant to 70% VDD) | filter_design | high | **verified** |
 
-## skills/kicad/scripts/kicad_utils.py
+## skills/kicad/scripts/kicad_core/passives.py
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
 | EQ-066 | `estimate_cap_esl` | ESL estimate from package size (empirical table) | unknown | medium | **verified** |
 | EQ-067 | `estimate_cap_esr` | ESR estimate from package size + capacitance (empirical) | unknown | medium | **verified** |
+
+## skills/kicad/scripts/kicad_core/values.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
 | EQ-068 | `parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **verified** |
 | EQ-107 | `snap_to_e_series` | Log-decade snapping — normalize v into [1, 10) via | unknown | medium | **verified** |
 

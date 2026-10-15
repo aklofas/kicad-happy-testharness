@@ -49,7 +49,7 @@ def _load_outputs(repo: str, filename_substring: str = ""):
 # 4a. KH-218 — Vref lookup table additions
 # ===========================================================================
 
-from kicad_utils import lookup_regulator_vref
+from kicad_core.parts import lookup_regulator_vref
 
 
 def test_kh218_tps62912_vref():
@@ -115,7 +115,7 @@ def test_kh219_load_switch_description_excluded():
 # 4c. KH-220 — Oscillator description-based classification
 # ===========================================================================
 
-from kicad_utils import classify_component
+from kicad_core.classify import classify_component
 
 
 def test_kh220_xo_by_description():

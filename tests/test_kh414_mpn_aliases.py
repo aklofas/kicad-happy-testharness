@@ -21,8 +21,8 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from kicad_utils import (normalize_field_name, MPN_FIELD_ALIASES,
-                         DIGIKEY_FIELD_ALIASES, pick_field, get_property_ci)
+from kicad_core.fields import (normalize_field_name, MPN_FIELD_ALIASES,
+                               DIGIKEY_FIELD_ALIASES, pick_field, get_property_ci)
 
 
 def test_normalize_collapses_whitespace_and_case():

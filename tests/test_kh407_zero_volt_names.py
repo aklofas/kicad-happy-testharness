@@ -16,7 +16,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from kicad_utils import is_ground_name, is_power_net_name  # noqa: E402
+from kicad_core.netnames import is_ground_name, is_power_net_name  # noqa: E402
 
 ZERO = ("0V", "0VA", "0Vo", "0VANA", "0VCC", "0V_A", "+0V", "0VD", "/Power/0VA")
 ZERO_DIGIT = ("0V9", "0V85", "0V95", "0V5")

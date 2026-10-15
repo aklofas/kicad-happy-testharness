@@ -24,7 +24,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from kicad_utils import classify_component  # noqa: E402
+from kicad_core.classify import classify_component  # noqa: E402
 
 
 def test_f_ref_logic_ic_classifies_as_ic():

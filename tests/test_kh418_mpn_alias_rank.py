@@ -21,8 +21,8 @@ _KH = Path(os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"
 sys.path.insert(0, str(_KH / "skills" / "kicad" / "scripts"))
 sys.path.insert(0, str(_KH / "skills" / "bom" / "scripts"))
 
-from kicad_utils import (MPN_FIELD_ALIASES, MPN_FIELD_ALIASES_PRIMARY,
-                         MPN_FIELD_ALIASES_GENERIC, pick_mpn, get_mpn_property)
+from kicad_core.fields import (MPN_FIELD_ALIASES, MPN_FIELD_ALIASES_PRIMARY,
+                               MPN_FIELD_ALIASES_GENERIC, pick_mpn, get_mpn_property)
 
 SCH = _KH / "skills/kicad/scripts/analyze_schematic.py"
 PCB = _KH / "skills/kicad/scripts/analyze_pcb.py"

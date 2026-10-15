@@ -1,7 +1,7 @@
 """
 KH-362: .kicad_pro / .kicad_dru discovery must match by board stem.
 
-`load_kicad_pro` and `load_kicad_dru` in kicad_utils.py used to take
+`load_kicad_pro` and `load_kicad_dru` (kicad_core/project.py since v3 round 2) used to take
 whatever ``*.kicad_pro`` / ``*.kicad_dru`` file `os.listdir` happened to
 list first in the directory. In a multi-project directory (several
 boards sharing a folder) that silently picks the wrong project's
@@ -33,7 +33,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-import kicad_utils  # noqa: E402
+from kicad_core.project import load_kicad_pro, load_kicad_dru  # noqa: E402
 from analyze_pcb import analyze_pcb, analyze_design_rule_compliance  # noqa: E402
 
 _FIXTURE_DIR = _HARNESS / "tests" / "fixtures" / "simple-project"
@@ -59,7 +59,7 @@ def test_pro_stem_match_picks_correct_project(tmp_path):
     _write_pro(tmp_path / "boardB.kicad_pro", "B")
     (tmp_path / "boardB.kicad_pcb").touch()
 
-    result = kicad_utils.load_kicad_pro(str(tmp_path / "boardB.kicad_pcb"))
+    result = load_kicad_pro(str(tmp_path / "boardB.kicad_pcb"))
     assert result == {"_marker": "B"}
 
 
@@ -67,7 +67,7 @@ def test_pro_single_non_matching_stem_still_returned(tmp_path, capsys):
     _write_pro(tmp_path / "onlyone.kicad_pro", "only")
     (tmp_path / "target.kicad_pcb").touch()
 
-    result = kicad_utils.load_kicad_pro(str(tmp_path / "target.kicad_pcb"))
+    result = load_kicad_pro(str(tmp_path / "target.kicad_pcb"))
     assert result == {"_marker": "only"}
     assert capsys.readouterr().err == ""
 
@@ -77,7 +77,7 @@ def test_pro_ambiguous_no_match_warns_and_falls_back(tmp_path, capsys):
     _write_pro(tmp_path / "other2.kicad_pro", "other2")
     (tmp_path / "target.kicad_pcb").touch()
 
-    result = kicad_utils.load_kicad_pro(str(tmp_path / "target.kicad_pcb"))
+    result = load_kicad_pro(str(tmp_path / "target.kicad_pcb"))
     # Deterministic fallback: alphabetically first candidate.
     assert result == {"_marker": "other1"}
     assert "target" in capsys.readouterr().err
@@ -89,13 +89,13 @@ def test_pro_tolerates_commented_json(tmp_path):
     )
     (tmp_path / "commented.kicad_pcb").touch()
 
-    result = kicad_utils.load_kicad_pro(str(tmp_path / "commented.kicad_pcb"))
+    result = load_kicad_pro(str(tmp_path / "commented.kicad_pcb"))
     assert result == {"_marker": "c"}
 
 
 def test_pro_no_candidates_returns_none(tmp_path):
     (tmp_path / "target.kicad_pcb").touch()
-    assert kicad_utils.load_kicad_pro(str(tmp_path / "target.kicad_pcb")) is None
+    assert load_kicad_pro(str(tmp_path / "target.kicad_pcb")) is None
 
 
 # --- .kicad_dru ---------------------------------------------------------
@@ -105,7 +105,7 @@ def test_dru_stem_match_picks_correct_ruleset(tmp_path):
     _write_dru(tmp_path / "boardB.kicad_dru", _DRU_B)
     (tmp_path / "boardB.kicad_pcb").touch()
 
-    result = kicad_utils.load_kicad_dru(str(tmp_path / "boardB.kicad_pcb"))
+    result = load_kicad_dru(str(tmp_path / "boardB.kicad_pcb"))
     assert result[0]["name"] == "Rule B"
 
 
@@ -113,7 +113,7 @@ def test_dru_single_non_matching_stem_still_returned(tmp_path, capsys):
     _write_dru(tmp_path / "onlyone.kicad_dru", _DRU_A)
     (tmp_path / "target.kicad_pcb").touch()
 
-    result = kicad_utils.load_kicad_dru(str(tmp_path / "target.kicad_pcb"))
+    result = load_kicad_dru(str(tmp_path / "target.kicad_pcb"))
     assert result[0]["name"] == "Rule A"
     assert capsys.readouterr().err == ""
 
@@ -123,14 +123,14 @@ def test_dru_ambiguous_no_match_warns_and_falls_back(tmp_path, capsys):
     _write_dru(tmp_path / "other2.kicad_dru", _DRU_B)
     (tmp_path / "target.kicad_pcb").touch()
 
-    result = kicad_utils.load_kicad_dru(str(tmp_path / "target.kicad_pcb"))
+    result = load_kicad_dru(str(tmp_path / "target.kicad_pcb"))
     assert result[0]["name"] == "Rule A"  # sorted first candidate
     assert "target" in capsys.readouterr().err
 
 
 def test_dru_no_candidates_returns_none(tmp_path):
     (tmp_path / "target.kicad_pcb").touch()
-    assert kicad_utils.load_kicad_dru(str(tmp_path / "target.kicad_pcb")) is None
+    assert load_kicad_dru(str(tmp_path / "target.kicad_pcb")) is None
 
 
 # --- scope-bump: analyze_pcb.py's project_settings['source'] must agree
@@ -202,7 +202,7 @@ def test_conditional_rule_skipped_unconditional_still_enforced(tmp_path):
     _write_dru(tmp_path / "board.kicad_dru", _DRU_CONDITIONAL_AND_UNCONDITIONAL)
     (tmp_path / "board.kicad_pcb").touch()
 
-    custom_rules = kicad_utils.load_kicad_dru(str(tmp_path / "board.kicad_pcb"))
+    custom_rules = load_kicad_dru(str(tmp_path / "board.kicad_pcb"))
     assert custom_rules is not None
 
     # 0.2mm drill: would violate the conditional plated-hole-size rule

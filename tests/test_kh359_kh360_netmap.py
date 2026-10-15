@@ -95,7 +95,7 @@ def test_kh359_sheet_names_fallback_and_instance_stems():
 # ---------------------------------------------------------------------------
 
 def test_qualified_keys_classify_as_power_and_ground():
-    from kicad_utils import is_power_net_name, is_ground_name
+    from kicad_core.netnames import is_power_net_name, is_ground_name
     assert is_ground_name("/inc8b/GND")
     assert is_ground_name("/inc8b#2/GND")
     assert is_power_net_name("/psu/VCC")

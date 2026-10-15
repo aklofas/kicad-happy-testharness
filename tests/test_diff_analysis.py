@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 import analysis_cache
 import diff_analysis
+import diff_engine
 from detection_schema import compute_detection_id
 
 
@@ -229,7 +230,7 @@ def test_attribution_exists_when_component_and_signal_change():
              "cutoff_hz": 338.63}
         ],
     )
-    result = diff_analysis.diff_schematic(base, head, threshold=1.0)
+    result = diff_engine.diff_schematic(base, head, threshold=1.0)
 
     # Should have both component and signal_analysis changes
     assert "components" in result, "Expected component changes"
@@ -270,7 +271,7 @@ def test_attribution_only_with_both_component_and_signal():
              "cutoff_hz": 340.0}
         ],
     )
-    result = diff_analysis.diff_schematic(base, head, threshold=1.0)
+    result = diff_engine.diff_schematic(base, head, threshold=1.0)
 
     # Signal changes exist but no component changes, so no attribution
     if "signal_analysis" in result:
@@ -307,7 +308,7 @@ def test_no_attribution_when_signal_changes_unrelated():
              "cutoff_hz": 340.0}
         ],
     )
-    result = diff_analysis.diff_schematic(base, head, threshold=1.0)
+    result = diff_engine.diff_schematic(base, head, threshold=1.0)
 
     # U1 changed value but is not referenced in rc_filter, so no attribution
     if "signal_analysis" in result:
@@ -332,7 +333,7 @@ def test_regression_schematic_new_erc_warning():
             ],
         },
     }
-    regressions = diff_analysis.classify_regressions("schematic", diff_result)
+    regressions = diff_engine.classify_regressions("schematic", diff_result)
     assert len(regressions) >= 1
     erc_regs = [r for r in regressions if r["category"] == "erc"]
     assert len(erc_regs) == 1
@@ -348,7 +349,7 @@ def test_regression_schematic_new_single_pin_net():
             },
         },
     }
-    regressions = diff_analysis.classify_regressions("schematic", diff_result)
+    regressions = diff_engine.classify_regressions("schematic", diff_result)
     assert len(regressions) >= 1
     conn_regs = [r for r in regressions if r["category"] == "connectivity"]
     assert len(conn_regs) == 1
@@ -366,7 +367,7 @@ def test_regression_schematic_removed_protection_device():
             },
         },
     }
-    regressions = diff_analysis.classify_regressions("schematic", diff_result)
+    regressions = diff_engine.classify_regressions("schematic", diff_result)
     assert len(regressions) >= 1
     prot_regs = [r for r in regressions if r["category"] == "protection"]
     assert len(prot_regs) == 1
@@ -383,7 +384,7 @@ def test_regression_emc_new_critical_finding():
             ],
         },
     }
-    regressions = diff_analysis.classify_regressions("emc", diff_result)
+    regressions = diff_engine.classify_regressions("emc", diff_result)
     assert len(regressions) >= 1
     emc_regs = [r for r in regressions if r["category"] == "emc"]
     assert len(emc_regs) == 1
@@ -395,7 +396,7 @@ def test_regression_emc_risk_score_increase():
     diff_result = {
         "risk_score": {"base": 42, "head": 58, "delta": 16},
     }
-    regressions = diff_analysis.classify_regressions("emc", diff_result)
+    regressions = diff_engine.classify_regressions("emc", diff_result)
     assert len(regressions) >= 1
     risk_regs = [r for r in regressions if r["category"] == "emc_risk"]
     assert len(risk_regs) == 1
@@ -410,7 +411,7 @@ def test_regression_spice_pass_to_fail():
              "base_status": "pass", "head_status": "fail"},
         ],
     }
-    regressions = diff_analysis.classify_regressions("spice", diff_result)
+    regressions = diff_engine.classify_regressions("spice", diff_result)
     assert len(regressions) >= 1
     spice_regs = [r for r in regressions if r["category"] == "spice"]
     assert len(spice_regs) == 1
@@ -424,7 +425,7 @@ def test_regression_pcb_unrouted_increase():
             "connectivity.unrouted_count": {"base": 0, "head": 3, "delta": 3},
         },
     }
-    regressions = diff_analysis.classify_regressions("pcb", diff_result)
+    regressions = diff_engine.classify_regressions("pcb", diff_result)
     assert len(regressions) >= 1
     routing_regs = [r for r in regressions if r["category"] == "routing"]
     assert len(routing_regs) >= 1
@@ -444,7 +445,7 @@ def test_no_regressions_on_improvements():
         },
         "risk_score": {"base": 58, "head": 42, "delta": -16},
     }
-    regressions = diff_analysis.classify_regressions("emc", diff_result)
+    regressions = diff_engine.classify_regressions("emc", diff_result)
     # Risk score decrease (delta < 0) should not be flagged
     risk_regs = [r for r in regressions if r["category"] == "emc_risk"]
     assert len(risk_regs) == 0, "Decreasing risk score should not be a regression"
@@ -507,7 +508,7 @@ def test_diff_matching_uses_detection_id():
          "capacitor": {"ref": "C1", "farads": 1e-7},
          "cutoff_hz": 159.15}
     ]
-    result = diff_analysis._diff_lists(
+    result = diff_engine._diff_lists(
         base_items, head_items,
         id_fields=["resistor.ref", "capacitor.ref"],
         value_fields=["cutoff_hz"],
@@ -533,7 +534,7 @@ def test_diff_falls_back_to_identity_fields():
          "capacitor": {"ref": "C1", "farads": 1e-7},
          "cutoff_hz": 338.63}
     ]
-    result = diff_analysis._diff_lists(
+    result = diff_engine._diff_lists(
         base_items, head_items,
         id_fields=["resistor.ref", "capacitor.ref"],
         value_fields=["cutoff_hz"],

@@ -35,7 +35,7 @@ _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 from kicad_types import AnalysisContext  # noqa: E402
-from kicad_utils import is_power_net_name, is_ground_name  # noqa: E402
+from kicad_core.netnames import is_power_net_name, is_ground_name  # noqa: E402
 from signal_detectors import audit_power_pin_dc_paths  # noqa: E402
 
 

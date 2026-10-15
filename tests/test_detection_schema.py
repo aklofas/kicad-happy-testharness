@@ -354,7 +354,7 @@ def test_schema_completeness_zebra_x():
 
 def test_signal_registry_structure():
     """SIGNAL_REGISTRY from diff_analysis.py is a dict with (list, list) values."""
-    from diff_analysis import SIGNAL_REGISTRY
+    from diff_engine import SIGNAL_REGISTRY
 
     assert isinstance(SIGNAL_REGISTRY, dict)
     assert len(SIGNAL_REGISTRY) > 10, (
@@ -377,7 +377,7 @@ def test_signal_registry_structure():
 
 def test_signal_registry_matches_schemas():
     """SIGNAL_REGISTRY keys match SCHEMAS keys exactly."""
-    from diff_analysis import SIGNAL_REGISTRY
+    from diff_engine import SIGNAL_REGISTRY
 
     reg_keys = set(SIGNAL_REGISTRY.keys())
     schema_keys = set(SCHEMAS.keys())
@@ -389,7 +389,7 @@ def test_signal_registry_matches_schemas():
 
 def test_signal_registry_fields_from_schema():
     """SIGNAL_REGISTRY values are derived from SCHEMAS identity/value fields."""
-    from diff_analysis import SIGNAL_REGISTRY
+    from diff_engine import SIGNAL_REGISTRY
 
     for key in SCHEMAS:
         schema = SCHEMAS[key]
