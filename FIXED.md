@@ -11,6 +11,59 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-15 — H0 plan 1: honest test collection (TH-052, TH-053, TH-058)
+
+Harness-only. Test collection is now pytest end to end; `run_tests.py` is a thin
+alias. Legacy `run_tests.py --json` at `7abf547` reported 1,551 passes over 142
+files; the unit-tier pytest collection is 1,777 items (`results/h0/collection_compare.txt`:
+files 237, legacy passed 1551, pytest collected 1777, moved 1, **missing 0**).
+23 phantom rows (17 files with no `__main__` block = 190 tests never executed,
+plus 6 files whose non-standard summary line hid their counts) account for +224;
+`tests/test_kicad10_format.py` moved to the corpus tier (all 7 tests read `repos/`).
+Honest counts at HEAD: `run_tests.py --unit` 1774 passed, 760 deselected, 1 xfailed;
+bare `pytest -q` 2464 passed, 8 skipped, 69 deselected, 4 xfailed;
+`pytest tests/contract/` 690 passed, 8 skipped, 17 deselected, 3 xfailed
+(690 + 17 = 707, the historical contract count). Two pre-existing failures that
+honest collection surfaced are explicit xfails (a81858a): `test_kh393_power_rails_threaded`
+(TH-060) and `test_schema_completeness_zebra_x` (TH-042).
+
+### TH-052: 17 root `tests/` files had no `__main__` runner — 190 tests silently counted as "1 passed"
+
+- **Root cause:** `run_tests.py` ran each file under bare python3 and, when the
+  summary was unparseable, fell back to `p = 1` with status ok and only a `WARN`
+  line. Files with no runner block executed nothing yet counted as a pass.
+- **Fix:** fail-closed runner (`f5bf716`, `8854685`); pytest collection via
+  `pytest.ini` + root `conftest.py` (`45e9818`, `beda2e9`) with a manifest
+  comparison tool (`52eae63`, `3382ded`, `56c3cea`, `c28ca6e`); `run_tests.py`
+  became a thin pytest alias (`58022d8`). Product-root bridge `3115f96`, `702d9c9`,
+  `0674009`; known-skips allowlist and corpus-marker audit `2cb4f6d`, `a81858a`.
+- **Verification:** `collection_compare.txt` shows the 17 phantom files now
+  collected with real counts and `missing 0`; unit tier `1774 passed, 760
+  deselected, 1 xfailed`; pre-push hook rc=0.
+
+### TH-053: pytest and `run_tests.py` disagreed on tiers — 17 tests failed under plain `pytest tests/`
+
+- **Root cause:** the `TIER` filter lived only in `run_tests.py`; the root
+  `tests/` tree had no `conftest.py`, so bare pytest collected online/corpus files.
+- **Fix:** `pytest.ini` markers (`unit`, `offline_contract`, `corpus`, `online`,
+  `perf`; default `unit or offline_contract`) and a root `conftest.py` that
+  applies tier selection (`45e9818`, `beda2e9`); `run_tests.py` delegates to it
+  (`58022d8`).
+- **Verification:** bare `pytest -q` is green: 2464 passed, 8 skipped, 69
+  deselected, 4 xfailed; `run_tests.py --unit` and pytest select the same tier.
+
+### TH-058: NLoy zone-fill timing test asserted absolute wall-clock bounds
+
+- **Root cause:** `test_kh420_zone_fill_segment_grid.py` bounded the NLoy board at
+  < 30 s absolute (8.5 s idle, 19.5 s under a gate), and the datasheet-db fetcher
+  tests slept in real time.
+- **Fix (`1761b72`):** fake clock for the rate limiter; the NLoy timing bound
+  moved to the `perf` tier, structural test stays in unit.
+- **Verification:** `tests/test_datasheet_db_fetcher.py` 23 tests in ~0.05 s
+  (was ~1 s of real sleeping); timing test no longer in the unit selection.
+
+---
+
 ## 2026-10-14 — KH-444 (MEDIUM): AM-001 structurally silent on extractions keyed `<domain>_max` (GitHub PR #51, imrcly)
 
 Externally reported AND fixed in one motion (FIXED-direct; never open in

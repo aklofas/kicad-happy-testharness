@@ -378,8 +378,8 @@ python3 tools/generate_catalog.py --query "category=ESP32"    # query by categor
 python3 tools/generate_catalog.py --query "tags contains rf"  # query by tag
 
 # Testing
-python3 run_tests.py --unit                             # unit tests (424 tests)
-python3 run_tests.py --tier unit                        # same as --unit
+python3 run_tests.py --unit                             # unit tests (1,774 pass + 1 xfail; thin alias over pytest, see pytest.ini)
+python3 run_tests.py --tier unit                        # same as --unit (required tiers: unit / offline_contract)
 python3 run_tests.py --tier online                      # integration tests (need API keys)
 python3 run_tests.py --quick-sanity                     # assertions on smoke pack repos
 ```
@@ -429,7 +429,7 @@ FIXED.md                    # Closed issues with fix details
 checkout.py                 # Clone repos + check upstream updates
 discover.py                 # Find KiCad files, write manifests
 harness.py                  # Unified entry point (test, validate, run, health, status)
-run_tests.py                # Test runner (--unit, --tier unit|online|all, --json)
+run_tests.py                # Thin alias over pytest (--unit, --tier unit|online|all = --all-tiers, --json via junit)
 utils.py                    # Shared utilities (path resolution, unified runner, output validation)
 RUNBOOK.md                  # 20 operational checklists for agents
 

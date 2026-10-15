@@ -61,10 +61,10 @@ hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
 nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
 KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 `docs/2026-07-24-kicad-parser-and-analysis-audit.md` — each entry cites its
-KHPA finding ID). Next TH number: **TH-060** (TH-059 filed 2026-10-06 at the v2.3.1 regen — batch SPICE side effects: spice/ dirs in repos/ + live DigiKey lookups; TH-058 filed 2026-10-06 — `test_kh420_zone_fill_segment_grid.py` wall-clock assertion (< 30 s on the NLoy corpus board) is load-sensitive: 8.5 s idle, 19.5 s with a 32-job gate running, so the pre-push hook can flake under load; TH-057 filed 2026-10-05 — generate_bugfix_assertions.py merges by assertion id and never updates a changed expected value, so a registry re-anchor silently does not land; TH-056 filed 2026-10-05 — KH-313 corpus-lock anchor lost: TERES never runs check_inductor_leakage's crash path (no PCB pairing, 0 rf_chains) and `categories_checked` semantics changed, lock re-anchored; TH-055 filed 2026-10-05 — the 198 pcb timeout-class units keep v1.3-era outputs (148 schema 1.3.0 / 29 pre-schema / 21 none) under a hard-coded 120 s `ANALYZER_TIMEOUT`, downstream emc/thermal stale too; TH-054 fixed-on-discovery 2026-10-05 at the v2.3.0 regen — run_emc masked analyzer crashes behind stale outputs, EMC corpus stale since 2026-08-20/2026-05-15, see FIXED.md; TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
+KHPA finding ID). Next TH number: **TH-062** (TH-061 filed 2026-10-15 — test_datasheet_db_cli.py fallback fixture writes under repos/; TH-060 filed 2026-10-15 — test_kh393_power_rails_threaded premise stale since PR #44, now strict xfail; TH-052/053/058 fixed 2026-10-15 (H0 plan 1, honest pytest collection), see FIXED.md; TH-059 filed 2026-10-06 at the v2.3.1 regen — batch SPICE side effects: spice/ dirs in repos/ + live DigiKey lookups; TH-058 filed 2026-10-06 — `test_kh420_zone_fill_segment_grid.py` wall-clock assertion (< 30 s on the NLoy corpus board) is load-sensitive: 8.5 s idle, 19.5 s with a 32-job gate running, so the pre-push hook can flake under load; TH-057 filed 2026-10-05 — generate_bugfix_assertions.py merges by assertion id and never updates a changed expected value, so a registry re-anchor silently does not land; TH-056 filed 2026-10-05 — KH-313 corpus-lock anchor lost: TERES never runs check_inductor_leakage's crash path (no PCB pairing, 0 rf_chains) and `categories_checked` semantics changed, lock re-anchored; TH-055 filed 2026-10-05 — the 198 pcb timeout-class units keep v1.3-era outputs (148 schema 1.3.0 / 29 pre-schema / 21 none) under a hard-coded 120 s `ANALYZER_TIMEOUT`, downstream emc/thermal stale too; TH-054 fixed-on-discovery 2026-10-05 at the v2.3.0 regen — run_emc masked analyzer crashes behind stale outputs, EMC corpus stale since 2026-08-20/2026-05-15, see FIXED.md; TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 51 open issues (35 KH + 16 TH).
+> 50 open issues (35 KH + 15 TH).
 
 ---
 
@@ -687,6 +687,30 @@ QFN/DFN boards (subset of the KH-419 class); VP-001 unaffected.
 
 ## Test Harness Issues
 
+### TH-061: `tests/test_datasheet_db_cli.py` plants and deletes a file under `HARNESS_DIR/repos/.test_fallback/` — a write into the corpus checkout tree
+
+**Severity:** LOW (corpus inputs must be immutable; the fixture cleans up after
+itself, but a crash between plant and delete leaves a stray dir in `repos/`)
+**File:** `tests/test_datasheet_db_cli.py` (~lines 481-527, the `.test_fallback`
+fixture)
+**Discovered:** 2026-10-15, H0 plan 1 Task 4 corpus-marker audit.
+
+**Fix direction:** point the fallback fixture at `tmp_path` and monkeypatch the
+CLI's repos root, so no test writes into `repos/`.
+
+### TH-060: `test_kh393_power_rails_threaded` premise is stale — "P1_VBUS is not classified power by name heuristics" no longer holds
+
+**Severity:** LOW (one explicit strict xfail; the `--power-rails` override half
+of the test still holds)
+**File:** `tests/test_kh392_kh393_gp001_power.py::test_kh393_power_rails_threaded`
+**Discovered:** 2026-10-15, H0 plan 1 (honest collection). The first assertion
+became false when PR #44 (2026-09-13) broadened `is_power_net_name`. Never
+noticed because the file had no `__main__` block (TH-052 phantom pass). Now
+`xfail(strict=True)` citing this issue (commit a81858a).
+
+**Fix direction:** split the test: keep the override assertions; pick a fixture
+net the heuristics do not match for the negative half; then drop the xfail.
+
 ### TH-059: batch SPICE runs have side effects outside `results/` — the spice skill writes `spice/` model-cache dirs into the corpus checkouts (261 dirs, 82 MB under `repos/`) and makes live DigiKey lookups (creds in the harness env) — run-to-run drift of `summary.pass` locks
 
 **Severity:** MEDIUM (reproducibility: the v2.3.1 regen moved 21 SPICE
@@ -712,23 +736,6 @@ run and `cache:<MPN>` afterwards — results depend on network + cache state.
 runner env) so corpus runs are hermetic; one-time cleanup of the 261 `spice/`
 dirs (or `git clean` scoped to them) with an inventory; RUNBOOK note that
 SPICE locks are environment-sensitive until then.
-
-### TH-058: `test_kh420_zone_fill_segment_grid.py` asserts wall-clock time (< 30 s on the NLoy corpus board) — load-sensitive in the unit tree / pre-push hook
-
-**Severity:** LOW (flake risk, not a correctness gap)
-**File:** `tests/test_kh420_zone_fill_segment_grid.py` (NLoy timing test,
-skip-if-absent, `--only-deterministic`)
-**Discovered:** 2026-10-06, KH-418/420 follow-up adoption — the board runs
-8.5 s idle (main-repo box), 19.5 s on this box while the 32-job incremental
-gate was running (base side took 197.5 s vs 110 s idle under the same load).
-The pre-push hook runs the whole unit tree; a concurrent gate or regen could
-push the test past 30 s and block a push for a non-regression.
-
-**Fix direction:** replace the absolute bound with a ratio against a
-same-run baseline (e.g. time a reference board, or compare against the
-`_point_in_polygon`-free path), or mark the timing assertion `TIER="perf"`
-and keep a cheap structural test (segment-grid equality queries) in the
-unit tier.
 
 ### TH-057: `generate_bugfix_assertions.py --apply` merges by assertion id — a changed expected value in the registry never reaches the reference file
 
@@ -812,54 +819,6 @@ repos and a reseed scoped to them — budgeted as its own class (v1.3 →
 v2.3.0 on 198 boards), NOT folded into a release regen; (3) consider
 writing the `.err` AND deleting the stale output on timeout so a v1.3 file
 cannot masquerade as current.
-
-### TH-053: 17 pre-existing tests fail under plain `pytest tests/` but pass under `run_tests.py --unit` — tier filtering hides them from the pytest path
-
-**Severity:** LOW (the two runners disagree on what the suite IS: files
-declaring `TIER = "online"` or reading corpus data are skipped/filtered by
-`run_tests.py --unit` but collected by a bare `pytest tests/`, e.g.
-`test_kh393_power_rails_threaded`; contributors running pytest see red on a
-green tree)
-**File:** `run_tests.py` (TIER filter); the root `tests/` tree has no
-`conftest.py` (only `tests/contract/` does)
-**Discovered:** 2026-09-13 (v2.3 batch, main-repo agent, while running the
-new tests under pytest)
-
-**Fix direction:** a root `tests/conftest.py` that reads each module's
-`TIER` and skips non-unit files under pytest, so the two runners agree;
-document `run_tests.py --unit` as the canonical runner.
-
-### TH-052: 17 root `tests/` files have no `__main__` runner — 190 tests silently skipped by the pre-push hook (`run_tests.py --unit`), each counted as "1 passed"
-
-**Severity:** MEDIUM (the hook's "N/0" baseline over-claims: every bare-python3
-"verified" count since the v2.2 era included these files as 1 pass each while
-executing nothing — the TH-014 class, recurring)
-**Where:** `run_tests.py` fallback at ~:284 (unparsed summary → `p = 1`,
-status ok, only a `WARN` line in the log) + the 17 files below.
-**Discovered:** 2026-09-13 (S49) adopting PR #44 — `tests/test_pr44_pp001_fuse_power_names.py`
-arrived without a runner block, the hook logged
-`WARN ... (unparsed summary: '')` and counted it 1/0; adding the stdlib
-runner moved the tree 1,336 → 1,349 (+13 = 14 real − 1 phantom). The same
-WARN line sits on 17 pre-existing files (no `__main__`, no pytest import —
-they run only under venv pytest): test_bus_resolver (26 tests),
-test_kh359_kh360_netmap (19), test_kh359_suppression_bare_tail (6),
-test_kh362_discovery (11), test_kh366_367_determinism (4), test_kh368_jsonc
-(4), test_kh369_entrypoint (5), test_kh370_oscillator (5),
-test_kh371_372_lifecycle (6), test_kh384_385_gate (5), test_kh388_vddet_dedup
-(3), test_kh392_kh393_gp001_power (4), test_kh_v22x_pcb (10),
-test_regression_diff_identity (17), test_v14_default_contract_gate (27),
-test_v14_gate_criteria (14), test_v14_hierarchy_gate (24) — **190 tests**.
-Six more files print a non-standard summary (`6/6 passed`, `All tests
-passed!`) — they DO execute, only the count is lost.
-
-**Fix direction:** (a) add the stdlib `__main__` runner (the
-test_sp001_shorted_two_pin.py block) to the 17 files → hook baseline
-becomes 1,349 − 17 + 190 = 1,522 if all pass; (b) harden `run_tests.py`:
-when a file has no `__main__` block, import it and run its `test_*`
-callables instead of counting a phantom pass, and make the unparsed-summary
-fallback a FAIL, not a WARN. Do (a) first (surgical), then (b) so the
-class cannot recur. Verify each file GREEN under bare python3 before
-counting it.
 
 ### TH-049: partial results/outputs contamination between regens — unidentified full-corpus sweep, killed mid-flight
 
@@ -1263,4 +1222,4 @@ with the oracle on these paths). These are the bisect set for KH-403/404;
 the spork-8 pin-assignment variant may be a third root cause. SP-001's
 per-net collapse (>=5 hits) keeps user output to one finding per such net.
 
-_34 open KH-* + 16 open TH-* issues (2026-10-06: v2.3.1 shipped @ 0684046 and the corpus regen ran CLEAN. Closed this cycle, all in FIXED.md: KH-408..415, KH-418/420 (v2.3.1 batch + follow-up), KH-419/424/425 (SacMap soak fixes), TH-054 (run_emc crash masking). Open KH: 328..334 datasheets-infra backlog; 355/364/365 audit remainder; 403/404 HIGH connectivity over-unions; 416/417 v2.3.1 riders; 421 Marble hash-seed nondeterminism; 422 `--full` point-in-polygon cost; 423 legacy `.sch` empty fields; 426..440 SacMap soak long tail; 441 via_in_pad attribution; 442 behavioral opamp gain 0. Open TH: 037..042/044/047 legacy; 049 contamination tripwire; 052/053 test-runner gaps; 055 timeout-class v1.3-era pcb outputs (191 boards); 056 KH-313 anchor; 057 bugfix generator merge-by-id; 058 load-sensitive timing test; 059 batch SPICE hermeticity. Earlier history: 19 open KH-* + 10 open TH-* issues (2026-10-04: +KH-414 MEDIUM `Manufacturer P/N`/`Digikey P/N` MPN-alias gap from GitHub #46, needs a budgeted gate — SS-001/DS-001/missing_mpn/PCB mpn move. Earlier: 2026-09-13 v2.3.0 correctness batch: −18 KH FIXED — 373/374/375/376/377/378/379/383/386/396/397/398/399/400/401/405/406/407 — and KH-395 REFUTED by the kicad-cli oracle, all in FIXED.md; +KH-408..413 LOW/MEDIUM follow-ups from the batch; +TH-053 LOW pytest-vs-run_tests tier disagreement. Remaining KH: 403/404 HIGH connectivity over-unions (kicad-cli-refuted, bisect set recorded), 355/364/365 audit remainder, 328..334 datasheets-infra backlog, 408..413 batch follow-ups. Earlier history: 31 open KH-* + 9 open TH-* issues (2026-09-13: +KH-407 LOW `0V<suffix>` grounds read as rails — PR #44 gate residue; +TH-052 MEDIUM 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; PR #44/#43/#42 merged and gated CLEAN at 788649f, KH-405 half-closed by #42; 2026-09-12: +KH-406 LOW differential_pairs esd_protection set-order nondeterminism; 2026-09-10: +KH-403/404 HIGH connectivity over-unions, +KH-405 MEDIUM jlcsearch API drift; post v2.2.x batch, 2026-08-31 — 25 fixes moved to FIXED.md, gate CLEAN): NEW: KH-401 MEDIUM (cross_analysis VS-002 crash on bounding_box null — pre-existing, --full-only, found during gate adjudication). 2026-08-31 Task-27 filings — MEDIUM: KH-396 (rf_chains component_roles hash-order — determinism-guard blind spot, needs RF fixture), KH-398 (TH-DET assessment-level confidence "deterministic" for package_table — LIVE twin of fixed KH-387, moves every package_table board when fixed); LOW: KH-395 (bus_alias project-wide merge), KH-397 (GP-001 antipad credit lacks via-layer-span filter — KH-392 rider, stacks with all-zones clearance max), KH-399 (EMC circle-outline edges fall to wrong distance branch), KH-400 (trailing-comma regex not string-aware — KH-368 remainder). 2026-08-20 SacMap-soak remainder — HIGH: KH-373 (CP-003 bbox 0.0mm, 78% corpus FP), KH-374 (sleep audit), KH-375 (power_budget loads; feeds thermal+EMC), KH-376 (datasheet gating dead — no project_dir; also keeps KH-387's fix latent), KH-377 (PD-001 feedforward-cap manufactured errors), KH-379 (DC-001 no-shared-net + DC-002 suppression), KH-383 (pad-drill blindness), KH-386 (thermal silent exclusion); MEDIUM: KH-378 (GP-001 touch-net exemption). The 2026-07-24 audit-batch remainder: KH-364/365 MEDIUM (KH-359/360 closure CONFIRMED by main-repo 2026-08-31 — shipped in v2.2.0, moved to FIXED.md). KH-355 LOW (multi-channel FB-pin selection, needs design — explicitly NOT addressed by the en_net lexicographic pick, see FIXED KH-366/367) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items (TH-047 KH-198 lock re-anchor). Audit reference: kicad-happy `docs/2026-07-24-kicad-parser-and-analysis-audit.md`. The v2.2.x maintenance batch KH-357/358/361-363/366-372/380-382/384/385/387-394 was fixed 2026-08-31 (25 fixes, budgeted gate CLEAN, `results/v22x_gate/adjudication_v22x.md`); the v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15; gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._
+_34 open KH-* + 15 open TH-* issues (2026-10-15: TH-052/053/058 FIXED (H0 plan 1), +TH-060/061 filed. Earlier: 2026-10-06: v2.3.1 shipped @ 0684046 and the corpus regen ran CLEAN. Closed this cycle, all in FIXED.md: KH-408..415, KH-418/420 (v2.3.1 batch + follow-up), KH-419/424/425 (SacMap soak fixes), TH-054 (run_emc crash masking). Open KH: 328..334 datasheets-infra backlog; 355/364/365 audit remainder; 403/404 HIGH connectivity over-unions; 416/417 v2.3.1 riders; 421 Marble hash-seed nondeterminism; 422 `--full` point-in-polygon cost; 423 legacy `.sch` empty fields; 426..440 SacMap soak long tail; 441 via_in_pad attribution; 442 behavioral opamp gain 0. Open TH: 037..042/044/047 legacy; 049 contamination tripwire; 052/053 test-runner gaps; 055 timeout-class v1.3-era pcb outputs (191 boards); 056 KH-313 anchor; 057 bugfix generator merge-by-id; 058 load-sensitive timing test; 059 batch SPICE hermeticity. Earlier history: 19 open KH-* + 10 open TH-* issues (2026-10-04: +KH-414 MEDIUM `Manufacturer P/N`/`Digikey P/N` MPN-alias gap from GitHub #46, needs a budgeted gate — SS-001/DS-001/missing_mpn/PCB mpn move. Earlier: 2026-09-13 v2.3.0 correctness batch: −18 KH FIXED — 373/374/375/376/377/378/379/383/386/396/397/398/399/400/401/405/406/407 — and KH-395 REFUTED by the kicad-cli oracle, all in FIXED.md; +KH-408..413 LOW/MEDIUM follow-ups from the batch; +TH-053 LOW pytest-vs-run_tests tier disagreement. Remaining KH: 403/404 HIGH connectivity over-unions (kicad-cli-refuted, bisect set recorded), 355/364/365 audit remainder, 328..334 datasheets-infra backlog, 408..413 batch follow-ups. Earlier history: 31 open KH-* + 9 open TH-* issues (2026-09-13: +KH-407 LOW `0V<suffix>` grounds read as rails — PR #44 gate residue; +TH-052 MEDIUM 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; PR #44/#43/#42 merged and gated CLEAN at 788649f, KH-405 half-closed by #42; 2026-09-12: +KH-406 LOW differential_pairs esd_protection set-order nondeterminism; 2026-09-10: +KH-403/404 HIGH connectivity over-unions, +KH-405 MEDIUM jlcsearch API drift; post v2.2.x batch, 2026-08-31 — 25 fixes moved to FIXED.md, gate CLEAN): NEW: KH-401 MEDIUM (cross_analysis VS-002 crash on bounding_box null — pre-existing, --full-only, found during gate adjudication). 2026-08-31 Task-27 filings — MEDIUM: KH-396 (rf_chains component_roles hash-order — determinism-guard blind spot, needs RF fixture), KH-398 (TH-DET assessment-level confidence "deterministic" for package_table — LIVE twin of fixed KH-387, moves every package_table board when fixed); LOW: KH-395 (bus_alias project-wide merge), KH-397 (GP-001 antipad credit lacks via-layer-span filter — KH-392 rider, stacks with all-zones clearance max), KH-399 (EMC circle-outline edges fall to wrong distance branch), KH-400 (trailing-comma regex not string-aware — KH-368 remainder). 2026-08-20 SacMap-soak remainder — HIGH: KH-373 (CP-003 bbox 0.0mm, 78% corpus FP), KH-374 (sleep audit), KH-375 (power_budget loads; feeds thermal+EMC), KH-376 (datasheet gating dead — no project_dir; also keeps KH-387's fix latent), KH-377 (PD-001 feedforward-cap manufactured errors), KH-379 (DC-001 no-shared-net + DC-002 suppression), KH-383 (pad-drill blindness), KH-386 (thermal silent exclusion); MEDIUM: KH-378 (GP-001 touch-net exemption). The 2026-07-24 audit-batch remainder: KH-364/365 MEDIUM (KH-359/360 closure CONFIRMED by main-repo 2026-08-31 — shipped in v2.2.0, moved to FIXED.md). KH-355 LOW (multi-channel FB-pin selection, needs design — explicitly NOT addressed by the en_net lexicographic pick, see FIXED KH-366/367) + datasheets-infra backlog KH-328..334 (LOW) + harness-side TH items (TH-047 KH-198 lock re-anchor). Audit reference: kicad-happy `docs/2026-07-24-kicad-parser-and-analysis-audit.md`. The v2.2.x maintenance batch KH-357/358/361-363/366-372/380-382/384/385/387-394 was fixed 2026-08-31 (25 fixes, budgeted gate CLEAN, `results/v22x_gate/adjudication_v22x.md`); the v2.1 bug batch KH-338..346 + KH-348..350 was fixed 2026-07-15; gate-adjudication finds KH-354/KH-356 were fixed 2026-07-16 — see FIXED.md._

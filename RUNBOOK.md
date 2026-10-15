@@ -1470,11 +1470,12 @@ check — it covers everything.
 ### 16a. Pre-flight checks
 
 ```bash
-# Unit tests (must be 100%) — then READ the per-file lines: a
-# `WARN <file> (unparsed summary: '')` means the file has no stdlib
-# `if __name__ == "__main__":` runner and executed NOTHING under the hook
-# (counted as a phantom "1 passed" — TH-014 / TH-052 class). Add the runner
-# block (copy tests/test_sp001_shorted_two_pin.py's) before counting it.
+# Unit tests (must be 100%). run_tests.py is a thin alias over pytest
+# (required tiers `unit` / `offline_contract`, see pytest.ini), so every
+# test file is collected and counted for real; phantom passes (TH-014 /
+# TH-052 class) are gone. The local pre-push hook (.git/hooks/pre-push,
+# untracked) requires KICAD_HAPPY_DIR exported and runs this through
+# .venv/bin/python when present, else python3.
 python3 run_tests.py --unit
 
 # Check for open issues
@@ -2903,8 +2904,8 @@ See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
 | Reset health baseline | `python3 tools/generate_health_report.py --reset-baseline "reason"` |
 | Prune stale seed assertions | `python3 regression/seed.py --all --type {type} --prune-stale` |
 | Audit bugfix paths | `python3 regression/audit_bugfix_paths.py` |
-| Unit tests | `python3 run_tests.py --unit` |
-| Unit tests (tier filter) | `python3 run_tests.py --tier unit\|online\|all` |
+| Unit tests (thin alias over pytest; required tiers `unit` / `offline_contract`, see `pytest.ini`) | `python3 run_tests.py --unit` |
+| Unit tests (tier filter; `--tier all` = `--all-tiers`) | `python3 run_tests.py --tier unit\|online\|all` |
 | Re-seed assertions | `python3 regression/seed.py --all --type {type}` |
 | Promote to reference | `python3 regression/promote.py --repo {repo} --apply` |
 | Full validation pipeline | `python3 harness.py validate` |
