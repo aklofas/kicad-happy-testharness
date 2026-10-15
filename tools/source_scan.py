@@ -228,20 +228,42 @@ def _product_sha(product_root: Path) -> str:
         return "unknown"
 
 
+def _validate_on_path() -> None:
+    p = str(HARNESS_ROOT / "validate")
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+
 def _constants(product_root: Path) -> list[str]:
-    sys.path.insert(0, str(HARNESS_ROOT / "validate"))
+    _validate_on_path()
     import audit_constants  # noqa: E402  (harness module, not product)
     return sorted({f"{r['file']}|{r['scope']}|{r['name']}"
                    for r in audit_constants.iter_constant_records(product_root)})
 
 
 def _equations(product_root: Path) -> dict[str, str]:
-    sys.path.insert(0, str(HARNESS_ROOT / "validate"))
+    _validate_on_path()
     import audit_equations  # noqa: E402
     return {e["eq_id"]: e["file"] for e in audit_equations.iter_equations(product_root)}
 
 
+def _constant_eq_roots() -> list[str]:
+    """Roots the constants / EQ registries walk (narrower than `files`; TH-066)."""
+    _validate_on_path()
+    import audit_constants  # noqa: E402
+    import audit_equations  # noqa: E402
+    return sorted(set(audit_constants.SCAN_ROOTS) | set(audit_equations.SCAN_ROOTS))
+
+
 def coverage_snapshot(product_root: Path, exceptions: dict | None = None) -> dict:
+    """Coverage at the product's HEAD.
+
+    `files` and `emit_sites` cover every walked file (iter_product_sources);
+    `eq_ids` and `constants` cover only `constant_eq_roots` (the audit tools'
+    SCAN_ROOTS), a narrower set — see tools/SCANNER_POLICY.md and TH-066.
+    `untagged_era_sites` maps `detector|rule_id` to its count of resolved sites
+    carrying no schema_era; `untagged_era_total` is its sum (display only).
+    """
     root = Path(product_root)
     exceptions = exceptions or load_exceptions()
     enum = resolve_det_enum(root)
@@ -257,12 +279,19 @@ def coverage_snapshot(product_root: Path, exceptions: dict | None = None) -> dic
         else:
             key = f"<unresolved>|{s.reason}|{s.file}"
         emit[key] = emit.get(key, 0) + 1
+    untagged: dict[str, int] = {}
+    for s in sites:
+        if s.resolved and s.schema_era is None:
+            key = f"{s.detector}|{s.rule_id}"
+            untagged[key] = untagged.get(key, 0) + 1
     return {
-        "snapshot_version": 1,
+        "snapshot_version": 2,
         "product_sha": _product_sha(root),
         "files": [rel(root, p) for p in files],
+        "constant_eq_roots": _constant_eq_roots(),
         "emit_sites": dict(sorted(emit.items())),
-        "untagged_era_sites": sum(1 for s in sites if s.resolved and s.schema_era is None),
+        "untagged_era_sites": dict(sorted(untagged.items())),
+        "untagged_era_total": sum(untagged.values()),
         "unresolved": [s.to_dict() for s in remaining],
         "exception_counts": counts,
         "exception_violations": violations,
@@ -272,8 +301,12 @@ def coverage_snapshot(product_root: Path, exceptions: dict | None = None) -> dic
 
 
 def coverage_diff(baseline: dict, current: dict) -> dict:
+    """Losses (fail) and growth (ratchet candidates) of `current` vs `baseline`."""
+    if not isinstance(baseline.get("untagged_era_sites"), dict):
+        raise ValueError("baseline predates snapshot_version 2; re-run `snapshot`")
     lost_sites = sorted(k for k, n in baseline["emit_sites"].items()
                         if current["emit_sites"].get(k, 0) < n)
+    b_untag, c_untag = baseline["untagged_era_sites"], current["untagged_era_sites"]
     out = {
         "lost_files": sorted(set(baseline["files"]) - set(current["files"])),
         "lost_sites": lost_sites,
@@ -281,22 +314,43 @@ def coverage_diff(baseline: dict, current: dict) -> dict:
         "lost_constants": sorted(set(baseline["constants"]) - set(current["constants"])),
         "unresolved": current["unresolved"],
         "exception_violations": current["exception_violations"],
-        "new_untagged_era": max(0, current["untagged_era_sites"] - baseline["untagged_era_sites"]),
+        "new_untagged_era": sorted(k for k, n in c_untag.items() if n > b_untag.get(k, 0)),
+        "constant_eq_roots_changed": (
+            [] if baseline.get("constant_eq_roots") == current["constant_eq_roots"]
+            else [f"{baseline.get('constant_eq_roots')} -> {current['constant_eq_roots']}"]),
     }
-    out["clean"] = not any(out[k] for k in ("lost_files", "lost_sites", "lost_eq", "lost_constants",
-                                            "unresolved", "exception_violations")) \
-        and out["new_untagged_era"] == 0
+    out["clean"] = not any(out[k] for k in FAIL_KEYS)
+    out["grew"] = {
+        "files": sorted(set(current["files"]) - set(baseline["files"])),
+        "sites": sorted(k for k, n in current["emit_sites"].items()
+                        if n > baseline["emit_sites"].get(k, 0)),
+        "eq": sorted(set(current["eq_ids"]) - set(baseline["eq_ids"])),
+        "constants": sorted(set(current["constants"]) - set(baseline["constants"])),
+        "untagged_era_decreased": sorted(k for k, n in b_untag.items()
+                                         if c_untag.get(k, 0) < n),
+    }
     return out
 
 
+FAIL_KEYS = ("lost_files", "lost_sites", "lost_eq", "lost_constants", "unresolved",
+             "exception_violations", "new_untagged_era", "constant_eq_roots_changed")
+
+
+def _growth_summary(grew: dict) -> str:
+    return (f"{len(grew['files'])} files, {len(grew['sites'])} site keys, {len(grew['eq'])} EQ, "
+            f"{len(grew['constants'])} constants, "
+            f"{len(grew['untagged_era_decreased'])} untagged-era decreases")
+
+
 def _print_diff(d: dict) -> None:
-    for key in ("lost_files", "lost_sites", "lost_eq", "lost_constants", "exception_violations"):
+    for key in ("lost_files", "lost_sites", "lost_eq", "lost_constants", "exception_violations",
+                "constant_eq_roots_changed"):
         for item in d[key]:
             print(f"  {key}: {item}")
     for s in d["unresolved"]:
         print(f"  unresolved: {s['file']}:{s['line']} {s['callee']} {s['reason']}")
-    if d["new_untagged_era"]:
-        print(f"  new emit sites without schema_era: {d['new_untagged_era']}")
+    for k in d["new_untagged_era"]:
+        print(f"  new emit site without schema_era: {k}")
 
 
 def main(argv=None) -> int:
@@ -335,7 +389,8 @@ def main(argv=None) -> int:
         args.output.write_text(json.dumps(current, indent=1) + "\n", encoding="utf-8")
         print(f"wrote {args.output} ({len(current['files'])} files, "
               f"{sum(current['emit_sites'].values())} sites, {len(current['eq_ids'])} EQ, "
-              f"{len(current['constants'])} constants)")
+              f"{len(current['constants'])} constants, "
+              f"{current['untagged_era_total']} untagged-era)")
         return 0
 
     if not args.baseline.exists():
@@ -346,7 +401,14 @@ def main(argv=None) -> int:
     print(f"scan coverage vs {args.baseline.name} (baseline sha {baseline['product_sha'][:7]}, "
           f"current {current['product_sha'][:7]})")
     _print_diff(d)
+    grew = any(d["grew"].values())
     if d["clean"]:
+        if grew and args.accept_baseline:
+            args.baseline.write_text(json.dumps(current, indent=1) + "\n", encoding="utf-8")
+            print(f"coverage grew: {_growth_summary(d['grew'])} (baseline updated)")
+        elif grew:
+            print(f"coverage grew: {_growth_summary(d['grew'])}; "
+                  "ratchet with --accept-baseline in this round's commit")
         print("CLEAN")
         return 0
     if args.accept_baseline and not d["unresolved"] and not d["exception_violations"]:

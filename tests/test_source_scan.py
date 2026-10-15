@@ -201,7 +201,11 @@ def test_coverage_snapshot_distinguishes_same_basename():
     assert snap["eq_ids"]["EQ-902"] == "skills/kicad/scripts/pcb/reader.py"
     assert snap["emit_sites"]["detect_nested|NX-001"] == 1
     assert snap["emit_sites"]["validate_pullups|PU-001"] == 1
-    assert snap["untagged_era_sites"] >= 1
+    # SP-001 (enum-resolved, no schema_era) is the fixture's one resolved untagged site
+    assert snap["untagged_era_sites"] == {"detect_shorted_two_pin_components|SP-001": 1}
+    assert snap["untagged_era_total"] == 1
+    assert snap["constant_eq_roots"] == ["skills/emc/scripts", "skills/kicad/scripts",
+                                         "skills/spice/scripts"]
 
 
 def test_coverage_diff_detects_lost_site_and_constant(tmp_path):
@@ -252,10 +256,12 @@ def test_check_cli_exit_codes(tmp_path):
                                "reason": "positional-emc:mixed-shape", "count": 1})
     exc_full = tmp_path / "exc_full.json"
     exc_full.write_text(json.dumps(full))
+    before = base.read_bytes()
     r = subprocess.run([sys.executable, tool, "check", "--product", str(shrunk),
                         "--exceptions", str(exc), "--baseline", str(base), "--accept-baseline"],
                        capture_output=True, text=True)
     assert r.returncode == 1 and "unresolved" in r.stdout
+    assert base.read_bytes() == before        # a refused accept never touches the baseline
     r = subprocess.run([sys.executable, tool, "check", "--product", str(shrunk),
                         "--exceptions", str(exc_full), "--baseline", str(base), "--accept-baseline"],
                        capture_output=True, text=True)
@@ -268,3 +274,73 @@ def test_check_cli_missing_product_is_usage_error(tmp_path):
     r = subprocess.run([sys.executable, tool, "check", "--product", str(tmp_path / "nope")],
                        capture_output=True, text=True)
     assert r.returncode == 2
+
+
+def _full_exceptions_file(tmp_path):
+    full = _fake_exceptions()
+    full["exceptions"].append({"id": "emc-mixed", "file": "skills/emc/scripts/emc_rules.py",
+                               "callee": "_make_finding",
+                               "reason": "positional-emc:mixed-shape", "count": 1})
+    p = tmp_path / "exc_full.json"
+    p.write_text(json.dumps(full))
+    return p
+
+
+def test_coverage_diff_per_key_untagged_era(tmp_path):
+    """Tagging one rule's site while a new untagged site of another rule appears
+    nets to zero overall; the per-key map still reports the new key."""
+    base = source_scan.coverage_snapshot(FAKE, exceptions=_fake_exceptions())
+    prod = tmp_path / "prod"
+    shutil.copytree(FAKE, prod)
+    vd = prod / "skills/kicad/scripts/validation_detectors.py"
+    src = vd.read_text(encoding="utf-8")
+    src = src.replace('summary="short", description="x")]',
+                      'summary="short", description="x", schema_era="v3.0")]')
+    src += ('\n\ndef detect_new(ctx):\n    return [make_finding(detector="detect_new", '
+            'rule_id="NW-001", category="x", summary="s", description="x")]\n')
+    vd.write_text(src, encoding="utf-8")
+    cur = source_scan.coverage_snapshot(prod, exceptions=_fake_exceptions())
+    assert cur["untagged_era_total"] == base["untagged_era_total"]
+    d = source_scan.coverage_diff(base, cur)
+    assert d["new_untagged_era"] == ["detect_new|NW-001"]
+    assert not d["clean"]
+    assert d["grew"]["untagged_era_decreased"] == ["detect_shorted_two_pin_components|SP-001"]
+
+
+def test_coverage_diff_rejects_v1_baseline():
+    base = source_scan.coverage_snapshot(FAKE, exceptions=_fake_exceptions())
+    base["untagged_era_sites"] = 1
+    with pytest.raises(ValueError, match="snapshot_version 2"):
+        source_scan.coverage_diff(base, base)
+
+
+def test_check_accept_baseline_ratchets_growth(tmp_path):
+    exc = _full_exceptions_file(tmp_path)
+    base = tmp_path / "base.json"
+    tool = str(HARNESS / "tools" / "source_scan.py")
+    run = lambda *a: subprocess.run([sys.executable, tool, *a], capture_output=True, text=True)
+    r = run("snapshot", "--product", str(FAKE), "--exceptions", str(exc), "-o", str(base))
+    assert r.returncode == 0, r.stderr
+    grown = tmp_path / "prod"
+    shutil.copytree(FAKE, grown)
+    (grown / "skills/kicad/scripts/schematic/extra.py").write_text(
+        "from ..finding_schema import make_finding\nEXTRA_LIMIT = 7\n\n"
+        "def f(a):\n    # EQ-950: y = a\n    return [make_finding(detector='detect_extra', "
+        "rule_id='EX-950', category='x', summary='s', description='x', schema_era='v3.0')]\n",
+        encoding="utf-8")
+    before = base.read_bytes()
+    r = run("check", "--product", str(grown), "--exceptions", str(exc), "--baseline", str(base))
+    assert r.returncode == 0, r.stdout
+    assert "CLEAN" in r.stdout and "coverage grew: 1 files, 1 site keys, 1 EQ, 1 constants" in r.stdout
+    assert base.read_bytes() == before        # no flag: growth noted, baseline untouched
+    r = run("check", "--product", str(grown), "--exceptions", str(exc), "--baseline", str(base),
+            "--accept-baseline")
+    assert r.returncode == 0, r.stdout
+    assert "(baseline updated)" in r.stdout
+    data = json.loads(base.read_text())
+    assert "skills/kicad/scripts/schematic/extra.py" in data["files"]
+    assert data["emit_sites"]["detect_extra|EX-950"] == 1 and "EQ-950" in data["eq_ids"]
+    # the ratcheted floor now protects the new coverage: deleting the file fails
+    (grown / "skills/kicad/scripts/schematic/extra.py").unlink()
+    r = run("check", "--product", str(grown), "--exceptions", str(exc), "--baseline", str(base))
+    assert r.returncode == 1 and "lost_files: skills/kicad/scripts/schematic/extra.py" in r.stdout
