@@ -43,38 +43,9 @@ from utils import DATA_DIR, OUTPUTS_DIR, resolve_kicad_happy_dir
 REGISTRY_PATH = DATA_DIR / "constants_registry.json"
 MARKDOWN_PATH = DATA_DIR / "constants_registry.md"
 
-SCRIPTS_SUBDIR = Path("skills") / "kicad" / "scripts"
-SPICE_SCRIPTS_SUBDIR = Path("skills") / "spice" / "scripts"
-EMC_SCRIPTS_SUBDIR = Path("skills") / "emc" / "scripts"
-
-# Analyzer source files to scan (relative to kicad-happy repo root)
-ANALYZER_FILES = [
-    "analyze_schematic.py",
-    "analyze_pcb.py",
-    "analyze_gerbers.py",
-    "kicad_utils.py",
-    "kicad_types.py",
-    "signal_detectors.py",
-    "sexp_parser.py",
-]
-
-# SPICE skill source files to scan
-SPICE_FILES = [
-    "spice_templates.py",
-    "spice_results.py",
-    "spice_models.py",
-    "spice_part_library.py",
-    "spice_model_generator.py",
-    "spice_model_cache.py",
-    "simulate_subcircuits.py",
-]
-
-# EMC skill source files to scan
-EMC_FILES = [
-    "emc_formulas.py",
-    "emc_rules.py",
-    "analyze_emc.py",
-]
+# Skill script trees scanned recursively (root-relative). Report A2: the old
+# explicit basename lists missed nested packages and collided on basenames.
+SCAN_ROOTS = ("skills/kicad/scripts", "skills/spice/scripts", "skills/emc/scripts")
 
 
 # ---------------------------------------------------------------------------
@@ -427,60 +398,110 @@ class ConstantVisitor(ast.NodeVisitor):
         return None
 
 
-def scan_file(filepath):
-    """Scan a single Python file for constants. Returns list of ConstantInfo."""
+def scan_file(filepath, product_root=None):
+    """Scan one Python file. `file` is root-relative when product_root is given."""
     try:
-        source = filepath.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError) as e:
+        source = filepath.read_bytes()
+    except OSError as e:
         print(f"  Warning: could not read {filepath}: {e}", file=sys.stderr)
         return []
-
     try:
         tree = ast.parse(source, filename=str(filepath))
     except SyntaxError as e:
         print(f"  Warning: syntax error in {filepath}: {e}", file=sys.stderr)
         return []
-
-    visitor = ConstantVisitor(filepath.name)
+    label = (filepath.resolve().relative_to(Path(product_root).resolve()).as_posix()
+             if product_root else filepath.name)
+    visitor = ConstantVisitor(label)
     visitor.visit(tree)
     return visitor.constants
 
 
-def scan_all(scripts_dir):
-    """Scan all analyzer and SPICE source files. Returns list of ConstantInfo."""
-    all_constants = []
-    for fname in ANALYZER_FILES:
-        fpath = scripts_dir / fname
-        if not fpath.exists():
-            print(f"  Skipping {fname} (not found)", file=sys.stderr)
+def iter_source_files(product_root):
+    """Every *.py under SCAN_ROOTS, recursive, sorted by root-relative path."""
+    root = Path(product_root)
+    files = []
+    for sub in SCAN_ROOTS:
+        base = root / sub
+        if not base.is_dir():
             continue
-        constants = scan_file(fpath)
+        files.extend(p for p in base.rglob("*.py") if "__pycache__" not in p.parts)
+    return sorted(files, key=lambda p: p.resolve().relative_to(root.resolve()).as_posix())
+
+
+def scan_all(product_root):
+    """Scan every source file under SCAN_ROOTS. Returns list of ConstantInfo."""
+    all_constants = []
+    for fpath in iter_source_files(product_root):
+        constants = scan_file(fpath, product_root)
         all_constants.extend(constants)
-        print(f"  {fname}: {len(constants)} constants")
-
-    # Also scan SPICE skill scripts
-    spice_dir = scripts_dir.parent.parent / "spice" / "scripts"
-    if spice_dir.exists():
-        for fname in SPICE_FILES:
-            fpath = spice_dir / fname
-            if not fpath.exists():
-                continue
-            constants = scan_file(fpath)
-            all_constants.extend(constants)
-            print(f"  spice/{fname}: {len(constants)} constants")
-
-    # Also scan EMC skill scripts
-    emc_dir = scripts_dir.parent.parent / "emc" / "scripts"
-    if emc_dir.exists():
-        for fname in EMC_FILES:
-            fpath = emc_dir / fname
-            if not fpath.exists():
-                continue
-            constants = scan_file(fpath)
-            all_constants.extend(constants)
-            print(f"  emc/{fname}: {len(constants)} constants")
-
+        label = fpath.resolve().relative_to(Path(product_root).resolve()).as_posix()
+        print(f"  {label}: {len(constants)} constants")
     return all_constants
+
+
+def iter_constant_records(product_root):
+    """Plain-dict projection for other tools (source_scan coverage snapshot)."""
+    out = []
+    for info in scan_all_quiet(product_root):
+        out.append({"file": info.file, "scope": info.scope, "name": info.name,
+                    "line": info.line, "type": info.const_type,
+                    "value": info.value_repr if info.value_repr is not None
+                             else f"{info.const_type}[{info.entry_count}]"})
+    return out
+
+
+def scan_all_quiet(product_root):
+    all_constants = []
+    for fpath in iter_source_files(product_root):
+        all_constants.extend(scan_file(fpath, product_root))
+    return all_constants
+
+
+def qualify_registry_paths(registry, scanned_records):
+    """Upgrade v1 basename `file` fields to root-relative paths.
+
+    Returns a list of (id, basename, candidates) for entries whose basename
+    matches more than one scanned file; the caller must abort on a non-empty list.
+    """
+    if registry.get("version", 1) >= 2:
+        return []
+    by_base = {}
+    for r in scanned_records:
+        by_base.setdefault(Path(r["file"]).name, set()).add(r["file"])
+    ambiguous = []
+    for c in registry["constants"]:
+        f = c.get("file", "")
+        if "/" in f:
+            continue
+        cands = sorted(by_base.get(f, ()))
+        if len(cands) == 1:
+            c["file"] = cands[0]
+        elif len(cands) > 1:
+            ambiguous.append((c["id"], f, cands))
+        # zero candidates: file no longer scanned; leave for the removed-report
+    if not ambiguous:
+        registry["version"] = 2
+    return ambiguous
+
+
+def relocate_registry(registry, relocations):
+    """Apply a round's relocation map (spec §9 `relocations[]`) to registry entries.
+
+    Matches on (old_owner, name); rewrites file (and name when new_name differs),
+    records `relocated_from`, preserves every verification field. Returns count.
+    """
+    moved = 0
+    for rl in relocations:
+        old_name = rl["symbol"].rsplit(".", 1)[-1]
+        for c in registry["constants"]:
+            if c.get("file") == rl["old_owner"] and c.get("name") == old_name:
+                c["relocated_from"] = c["file"]
+                c["file"] = rl["new_owner"]
+                if rl.get("new_name") and rl["new_name"] != old_name:
+                    c["name"] = rl["new_name"]
+                moved += 1
+    return moved
 
 
 # ---------------------------------------------------------------------------
@@ -736,7 +757,7 @@ def _next_id(registry):
 
 
 def _match_existing(registry, file, scope, name):
-    """Find an existing registry entry by (file, scope, name)."""
+    """Find an existing registry entry by (file, scope, name); `file` is root-relative."""
     for c in registry.get("constants", []):
         if c.get("file") == file and c.get("scope", "module") == scope and c.get("name") == name:
             return c
@@ -872,17 +893,21 @@ def update_registry(registry, scanned):
 def cmd_scan(args):
     """Scan analyzer scripts and update the registry."""
     kicad_happy = resolve_kicad_happy_dir()
-    scripts_dir = kicad_happy / SCRIPTS_SUBDIR
-
-    if not scripts_dir.exists():
-        print(f"Error: {scripts_dir} not found", file=sys.stderr)
+    if not (kicad_happy / SCAN_ROOTS[0]).exists():
+        print(f"Error: {kicad_happy / SCAN_ROOTS[0]} not found", file=sys.stderr)
         sys.exit(1)
-
-    print(f"Scanning {scripts_dir}")
-    scanned = scan_all(scripts_dir)
+    print(f"Scanning {kicad_happy} ({', '.join(SCAN_ROOTS)})")
+    scanned = scan_all(kicad_happy)
     print(f"\nTotal constants found: {len(scanned)}")
 
     registry = load_registry()
+    ambiguous = qualify_registry_paths(
+        registry, [{"file": s.file, "name": s.name, "scope": s.scope} for s in scanned])
+    if ambiguous:
+        for cid, base, cands in ambiguous:
+            print(f"Error: {cid} file {base!r} is ambiguous: {cands}", file=sys.stderr)
+        print("Resolve with: audit_constants.py relocate --map <relocation.json>", file=sys.stderr)
+        sys.exit(2)
     old_hashes = {(c["file"], c["name"]): c.get("content_hash") for c in registry["constants"]}
 
     added, updated, removed = update_registry(registry, scanned)
@@ -903,6 +928,17 @@ def cmd_scan(args):
                 print(f"  - {key[0]}:{key[1]}")
             elif old_h != new_h:
                 print(f"  ~ {key[0]}:{key[1]} (hash changed)")
+
+
+def cmd_relocate(args):
+    """Apply a product round's relocation map to the registry."""
+    relocations = json.loads(Path(args.map).read_text(encoding="utf-8"))
+    if isinstance(relocations, dict):
+        relocations = relocations.get("relocations", [])
+    registry = load_registry()
+    moved = relocate_registry(registry, relocations)
+    save_registry(registry)
+    print(f"Relocated {moved} registry entries")
 
 
 # ---------------------------------------------------------------------------
@@ -1613,6 +1649,9 @@ def main():
     p_scan = sub.add_parser("scan", help="Scan scripts, update registry")
     p_scan.add_argument("--diff", action="store_true", help="Show what changed")
 
+    p_reloc = sub.add_parser("relocate", help="Apply a relocation map (spec §9) to registry paths")
+    p_reloc.add_argument("--map", required=True, help="relocation JSON (list or {relocations: [...]})")
+
     # list
     p_list = sub.add_parser("list", help="List constants")
     p_list.add_argument("--unverified", action="store_true", help="Unverified only")
@@ -1652,6 +1691,7 @@ def main():
 
     cmds = {
         "scan": cmd_scan,
+        "relocate": cmd_relocate,
         "list": cmd_list,
         "show": cmd_show,
         "verify": cmd_verify,
