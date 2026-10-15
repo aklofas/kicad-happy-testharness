@@ -22,6 +22,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 POLICY_DIR = Path(__file__).resolve().parent / "normalization"
 
@@ -106,3 +107,141 @@ def load_policy(name: str, policy_dir: Path | None = None) -> Policy:
     if not isinstance(rp, list) or not all(isinstance(x, str) for x in rp):
         raise PolicyError(f"policy {name!r}: root_prefixes must be 'from_manifest' or a list of strings")
     return Policy(name=name, leaves=leaves, root_prefixes=list(rp))
+
+
+# ---- strict comparison (Task 2) ---------------------------------------------
+
+OPS = ("added", "removed", "changed", "type_changed", "key_order", "bytes", "lexical_numeric")
+
+
+@dataclass(frozen=True)
+class Delta:
+    unit: str
+    analyzer: str
+    path: str
+    op: str
+    before: Any
+    after: Any
+
+    def to_json(self) -> dict:
+        return {"unit": self.unit, "analyzer": self.analyzer, "path": self.path,
+                "op": self.op, "before": self.before, "after": self.after}
+
+
+# RFC 6901 helpers
+
+def escape_token(token: Any) -> str:
+    return str(token).replace("~", "~0").replace("/", "~1")
+
+
+def _unescape_token(token: str) -> str:
+    return token.replace("~1", "/").replace("~0", "~")
+
+
+def join_pointer(parent: str, token: Any) -> str:
+    return f"{parent}/{escape_token(token)}"
+
+
+def split_pointer(pointer: str) -> list[str]:
+    if pointer == "":
+        return []
+    if not pointer.startswith("/"):
+        raise ValueError(f"pointer must start with '/': {pointer!r}")
+    return [_unescape_token(t) for t in pointer[1:].split("/")]
+
+
+def resolve_pointer(doc: Any, pointer: str) -> tuple[bool, Any]:
+    cur = doc
+    for tok in split_pointer(pointer):
+        if isinstance(cur, dict):
+            if tok not in cur:
+                return False, None
+            cur = cur[tok]
+        elif isinstance(cur, list):
+            if not tok.isdigit() or int(tok) >= len(cur):
+                return False, None
+            cur = cur[int(tok)]
+        else:
+            return False, None
+    return True, cur
+
+
+def _kind(v: Any) -> str:
+    if isinstance(v, bool):
+        return "bool"
+    if isinstance(v, (int, float)):
+        return "number"
+    if v is None:
+        return "null"
+    if isinstance(v, str):
+        return "string"
+    if isinstance(v, list):
+        return "list"
+    if isinstance(v, dict):
+        return "dict"
+    return type(v).__name__
+
+
+class _Ctx:
+    __slots__ = ("unit", "analyzer", "key_order", "deltas", "masked", "violations")
+
+    def __init__(self, unit, analyzer, key_order):
+        self.unit, self.analyzer, self.key_order = unit, analyzer, key_order
+        self.deltas: list[Delta] = []
+        self.masked: set[str] = set()      # exact pointers masked by policy (Task 3)
+        self.violations: list[str] = []
+
+    def emit(self, path, op, before, after):
+        self.deltas.append(Delta(self.unit, self.analyzer, path, op, before, after))
+
+
+def _walk(a: Any, b: Any, path: str, ctx: _Ctx) -> None:
+    if path in ctx.masked:
+        return
+    ka, kb = _kind(a), _kind(b)
+    if ka != kb:
+        ctx.emit(path, "type_changed", a, b)
+        return
+    if ka == "dict":
+        if ctx.key_order and list(a.keys()) != list(b.keys()):
+            ctx.emit(path, "key_order", list(a.keys()), list(b.keys()))
+        for k in a:
+            p = join_pointer(path, k)
+            if k in b:
+                _walk(a[k], b[k], p, ctx)
+            elif p not in ctx.masked:
+                ctx.emit(p, "removed", a[k], None)
+        for k in b:
+            if k not in a:
+                p = join_pointer(path, k)
+                if p not in ctx.masked:
+                    ctx.emit(p, "added", None, b[k])
+        return
+    if ka == "list":
+        n = min(len(a), len(b))
+        for i in range(n):
+            _walk(a[i], b[i], join_pointer(path, i), ctx)
+        for i in range(n, len(a)):
+            ctx.emit(join_pointer(path, i), "removed", a[i], None)
+        for i in range(n, len(b)):
+            ctx.emit(join_pointer(path, i), "added", None, b[i])
+        return
+    if a != b:
+        ctx.emit(path, "changed", a, b)
+
+
+def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx) -> tuple[Any, Any]:
+    """Masking seam; Task 3 replaces this body. No-op while the policy has no leaves."""
+    if policy.leaves:
+        raise NotImplementedError("policy masking lands in Task 3")
+    return a, b
+
+
+def compare_strict(a: Any, b: Any, policy: Policy | None, *, unit: str, analyzer: str,
+                   key_order: bool = False) -> tuple[list[Delta], list[str]]:
+    """Recursive field comparison. Returns (deltas, policy_violations)."""
+    ctx = _Ctx(unit, analyzer, key_order)
+    if policy is not None:
+        a, b = _apply_policy(a, b, policy, ctx)
+    _walk(a, b, "", ctx)
+    return ctx.deltas, ctx.violations
