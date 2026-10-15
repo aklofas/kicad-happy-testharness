@@ -132,7 +132,7 @@ def test_output_changing_passes_on_clean_budget_despite_findings(kind):
     assert gp["pass"] is True
     assert gp["strict_clean"] is False  # kept as information
     assert gp["kind"] == kind
-    assert gp["criterion"] == f"{kind}: census_ok AND skips_ok AND budgeted verdict clean"
+    assert gp["criterion"] == f"{kind}: census_ok AND skips_ok AND budgeted verdict clean AND candidate_failures == 0"
 
 
 @pytest.mark.parametrize("verdict", ["residuals", "over_budget", "error"])
@@ -148,7 +148,8 @@ def test_output_changing_still_needs_census_and_skips(census_ok, skips_ok):
 
 
 def test_structural_unchanged_and_criterion():
-    crit = "structural: findings strict_clean AND strict_field_clean AND census_ok AND skips_ok"
+    crit = ("structural: findings strict_clean AND strict_field_clean AND census_ok AND skips_ok "
+            "AND candidate_failures == 0")
     out = gate.apply_modes(_gp(strict_clean=False), _modes("n/a", strict_field_clean=True))
     assert out["gate_pass"]["pass"] is False
     assert out["gate_pass"]["kind"] == "structural" and out["gate_pass"]["criterion"] == crit
@@ -189,7 +190,7 @@ def test_print_summary_shows_kind_criterion_and_budget(capsys):
     gate._print_summary(report)
     out = capsys.readouterr().out
     assert "kind: output-changing" in out
-    assert "output-changing: census_ok AND skips_ok AND budgeted verdict clean" in out
+    assert "output-changing: census_ok AND skips_ok AND budgeted verdict clean AND candidate_failures == 0" in out
     assert "budget: t" in out and "abababababab" in out
     assert "over_budget: C1, C2" in out
 
@@ -366,3 +367,108 @@ def test_ledgered_unaccepted_reported_skips_ok_unchanged():
     assert gp["ledgered_unaccepted"] == {"count": 0, "identities": []}
     gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=None)
     assert gp["ledgered_unaccepted"] == {"count": 0, "identities": []}
+
+
+# ---- review I2: candidate-only failures are never budgetable ------------------------
+
+def _cand_fail(analyzer="pcb", uid="o/r/x.kicad_pcb"):
+    return {"analyzer": analyzer, "repo": "o/r", "unit_id": uid, "identity": uid, "verdict": "FAIL",
+            "reason": gate.CANDIDATE_FAILED_REASON, "baseline": {"status": "ok"}, "candidate": {"status": "crash"}}
+
+
+def test_diff_envelopes_uses_candidate_failed_reason(tmp_path):
+    a = tmp_path / "a.json"
+    a.write_text("{}")
+    assert gate.diff_envelopes(a, tmp_path / "missing.json", True, False)["reason"] == gate.CANDIDATE_FAILED_REASON
+
+
+def test_candidate_failures_counted_and_gate_every_kind():
+    recs = [_cand_fail(), {"analyzer": "pcb", "unit_id": "o/r/y", "identity": "o/r/y", "verdict": "FAIL",
+                           "reason": "worker_exception"}]
+    gp = gate.compute_gate_pass(_crit(), _skips([]), {}, {}, skip_records=recs)
+    assert gp["candidate_failures"] == 1 and gp["pass"] is False
+    for kind in ("output-changing", "relock"):
+        rep = {"gate_pass": {"pass": False, "strict_clean": False, "census_ok": True, "skips_ok": True,
+                             "candidate_failures": 1}, "modes": {}, "identity": {}}
+        out = gate.apply_modes(rep, _modes("clean"), kind=kind)
+        assert out["gate_pass"]["pass"] is False, kind
+        assert "candidate_failures == 0" in out["gate_pass"]["criterion"]
+    rep = {"gate_pass": {"pass": True, "strict_clean": True, "census_ok": True, "skips_ok": True,
+                         "candidate_failures": 0}, "modes": {}, "identity": {}}
+    assert gate.apply_modes(rep, _modes("clean"), kind="relock")["gate_pass"]["pass"] is True
+    assert "candidate_failures == 0" in gate.apply_modes(rep, _modes("n/a", True))["gate_pass"]["criterion"]
+
+
+def test_print_summary_shows_candidate_failures(capsys):
+    report = gate.apply_modes({"gate_pass": {"pass": False, "strict_clean": False, "census_ok": True,
+                                             "skips_ok": True, "candidate_failures": 2},
+                               "modes": {}, "identity": {}}, _modes("clean"), kind="output-changing")
+    report.update({"section": "s", "total_units": 0, "rollup": [], "fail_repo_count": 0, "fail_repos": [],
+                   "new_known_rule_distribution": {}, "new_upgraded_rule_distribution": {},
+                   "new_unknown_rule_distribution": {},
+                   "totals": {k: 0 for k in ("PASS", "WARN", "FAIL", "SKIP", "Disappeared", "Downgrades",
+                                             "NewKnown", "NewUnknown")},
+                   "pass_criteria": {"disappeared_count": 0, "severity_downgrades": 0, "fail_verdicts": 2,
+                                     "new_unknown_count": 0, "new_upgraded_count": 0, "warn_count": 0,
+                                     "clean": False, "strict_clean": False}})
+    gate._print_summary(report)
+    assert "candidate_failures=2" in capsys.readouterr().out
+
+
+# ---- review I3b: the ledger must belong to the run's baseline ----------------------
+
+def test_check_ledger_sha_full_prefix_and_mismatch(tmp_path):
+    full = "6a91aaaea124152b2923326c1cf77278e0999cd4"
+    gate.check_ledger_sha({"product_sha": full}, "l.json", full)
+    gate.check_ledger_sha({"product_sha": "6a91aaa"}, "l.json", full)
+    with pytest.raises(gate.LedgerError, match=r"--ledger l.json product_sha 0000000 != baseline 6a91aaae"):
+        gate.check_ledger_sha({"product_sha": "0000000"}, "l.json", full)
+    with pytest.raises(gate.LedgerError, match="product_sha None"):
+        gate.check_ledger_sha({}, "l.json", full)
+
+
+def test_recheck_rejects_ledger_for_another_baseline(tmp_path, capsys):
+    led = json.loads(LEDGER_FIX.read_text())
+    led["product_sha"] = "f" * 40
+    p = tmp_path / "other.json"
+    p.write_text(json.dumps(led))
+    with pytest.raises(gate.LedgerError):
+        gate.recheck_gate_pass(RECHECK, ledger=str(p))
+    with pytest.raises(SystemExit) as ex:
+        gate.main(["--recheck", str(RECHECK), "--ledger", str(p)])
+    assert ex.value.code == 2
+    assert f"Error: --ledger {p} product_sha {'f' * 40} != baseline" in capsys.readouterr().err
+
+
+def _git_repo(path):
+    import subprocess
+    path.mkdir()
+    subprocess.run(["git", "-C", str(path), "init", "-q"], check=True)
+    subprocess.run(["git", "-C", str(path), "-c", "user.email=t@t", "-c", "user.name=t",
+                    "commit", "-q", "--allow-empty", "-m", "x"], check=True)
+    return path
+
+
+def test_main_rejects_ledger_for_another_baseline_before_phase_a(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("KICAD_HAPPY_TESTHARNESS_DATA_DIR", str(tmp_path / "data"))
+    base, cand = _git_repo(tmp_path / "base"), _git_repo(tmp_path / "cand")
+    p = tmp_path / "l.json"
+    p.write_text(json.dumps({"product_sha": "f" * 40, "timeout_units": []}))
+    with pytest.raises(SystemExit) as ex:
+        gate.main(["--baseline-dir", str(base), "--candidate-dir", str(cand), "--gate-dir", str(tmp_path / "g"),
+                   "--repo", "x", "--ledger", str(p)])
+    assert ex.value.code == 2 and not (tmp_path / "g").exists()
+    assert f"Error: --ledger {p} product_sha {'f' * 40} != baseline" in capsys.readouterr().err
+
+
+# ---- review M3: recheck warns when the manifest has no kind ---------------------------
+
+def test_recheck_warns_when_manifest_has_no_kind(tmp_path, capsys):
+    d = tmp_path / "g"
+    shutil.copytree(RECHECK, d)
+    m = json.loads((d / "manifest.json").read_text())
+    m.pop("kind")
+    (d / "manifest.json").write_text(json.dumps(m))
+    gp = gate.recheck_gate_pass(d, ledger=str(LEDGER_FIX))["gate_pass"]
+    assert gp["kind"] == "structural"
+    assert "warning: manifest has no kind; rechecking as structural" in capsys.readouterr().err

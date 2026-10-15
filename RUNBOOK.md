@@ -2875,15 +2875,17 @@ result is stored under `rollup["modes"]`, and the gate exit requires
 
 | `--kind` | `--budget` | `gate_pass.pass` |
 |---|---|---|
-| `structural` (default; `gate` is a deprecated alias) | forbidden (exit 2) | findings `strict_clean` AND `strict_field_clean` AND `census_ok` AND `skips_ok` |
+| `structural` (default; `gate` is a deprecated alias) | forbidden (exit 2) | findings `strict_clean` AND `strict_field_clean` AND `census_ok` AND `skips_ok` AND `candidate_failures == 0` |
 | `aa`, `baseline` | forbidden (exit 2) | same as `structural` |
-| `output-changing`, `relock` | required (exit 2 without) | `census_ok` AND `skips_ok` AND `modes.budgeted.verdict == "clean"` |
+| `output-changing`, `relock` | required (exit 2 without) | `census_ok` AND `skips_ok` AND `modes.budgeted.verdict == "clean"` AND `candidate_failures == 0` |
 
 For the output-changing kinds the findings-level `strict_clean` stays in `gate_pass` as
-information only. `gate_pass` records the resolved `kind` and its `criterion`; the budget
+information only. `candidate_failures` counts units whose baseline succeeded and candidate failed or produced no output; they are never budgetable. `gate_pass` records the resolved `kind` and its `criterion`; the budget
 file's sha256 lands in `modes.budgeted.budget_sha256`, `identity.budget_sha256` and the
 finished manifest (null without a budget).
-`skips_ok` consults the baseline-debts ledger (`--ledger FILE`, default `reference/baseline_debts/<baseline sha7>.json` when present): a both_failed / dependency_missing SKIP fails it only when `tools/baseline_ledger_check.skip_is_ledgered` does not cover it (a both_failed unit is covered by its `timeout_units` or, when it crashed on BOTH sides, its `crash_units` identity; a crash on one side only is never covered; a dependency_missing unit follows its upstream); see `gate_pass.ledgered_skips` / `unledgered_skips`. `run_corpus_gate.py --recheck GATE_DIR [--ledger FILE]` re-evaluates a finished gate's `gate_pass` from its `units.jsonl` + rollup without re-running analyzers (exit 0/1).
+`skips_ok` consults the baseline-debts ledger (`--ledger FILE`, default `reference/baseline_debts/<baseline sha7>.json` when present): a both_failed / dependency_missing SKIP fails it only when `tools/baseline_ledger_check.skip_is_ledgered` does not cover it (a both_failed unit is covered by its `timeout_units` or, when it crashed on BOTH sides with the ledgered `exit_code`, its `crash_units` identity; a crash on one side only or with another exit code is never covered; a dependency_missing unit follows its upstream); see `gate_pass.ledgered_skips` / `unledgered_skips`. `gate_pass.ledgered_unaccepted` lists covering ledger entries whose `accepted_by` is null (provenance only; coverage alone governs `skips_ok`). The ledger's `product_sha` (full or prefix) must match the run's baseline sha, else exit 2. `run_corpus_gate.py --recheck GATE_DIR [--ledger FILE]` re-evaluates a finished gate's `gate_pass` from its `units.jsonl` + rollup without re-running analyzers (exit 0/1).
+`--recheck` trusts the stored `modes` (including `budgeted.verdict`) and does not re-run the comparator.
+`--recheck` takes the kind from `manifest.json` and falls back to `structural`, with a warning, only when the manifest has no `kind`.
 
 CLI exit codes: 0 clean, 1 deltas/residuals, 2 error. The CLI takes `--jobs` (default
 cpu_count); reports are byte-identical for any `--jobs`. Reports are complete (every delta

@@ -20,10 +20,12 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
     literally for the output-changing kinds):
       kind             --budget    gate_pass.pass
       structural       forbidden   findings strict_clean AND strict_field_clean
-                                   AND census_ok AND skips_ok
+                                   AND census_ok AND skips_ok AND candidate_failures == 0
       aa, baseline     forbidden   same as structural
       output-changing  required    census_ok AND skips_ok AND budgeted verdict clean
+                                   AND candidate_failures == 0
       relock           required    same as output-changing
+    candidate_failures (baseline ok, candidate failed/no output) are never budgetable.
     For the output-changing kinds the findings strict_clean stays in gate_pass
     as information only. `--kind gate` is a deprecated alias for structural.
     gate_pass records the resolved `kind` and its `criterion`; the sha256 of
@@ -32,8 +34,11 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
   * skips_ok consults the baseline-debts ledger (--ledger; default
     reference/baseline_debts/<baseline sha7>.json when present): a both_failed /
     dependency_missing SKIP is bad only when tools/baseline_ledger_check does not
-    cover its identity (timeout_units, or crash_units for a both-sided crash). gate_pass records ledgered_skips + unledgered_skips; the
-    ledger path + sha256 land in the rollup identity and the finished manifest.
+    cover its identity (timeout_units, or crash_units for a both-sided crash with the
+    ledgered exit_code). gate_pass records ledgered_skips, unledgered_skips and
+    ledgered_unaccepted (covering entries with accepted_by null); the ledger's
+    product_sha must match the baseline sha (exit 2); the ledger path + sha256 land in
+    the rollup identity and the finished manifest.
 
 Usage:
     python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-base --candidate-dir /tmp/kh-cand \\
@@ -154,6 +159,9 @@ def _ok(res) -> bool:
     return res.status in ("ok", "ok_findings_exit")
 
 
+CANDIDATE_FAILED_REASON = "candidate failed/produced no output"
+
+
 def diff_envelopes(a_path, b_path, a_ok, b_ok):
     """Diff two snapshot envelopes with regression_diff; complete lists kept."""
     if not a_ok and not b_ok:
@@ -161,7 +169,7 @@ def diff_envelopes(a_path, b_path, a_ok, b_ok):
     zero = {"disappeared_count": 0, "severity_downgrades": 0, "severity_upgrades": 0,
             "new_known_count": 0, "new_upgraded_count": 0, "new_unknown_count": 0}
     if a_ok and not b_ok:
-        return {"verdict": "FAIL", "reason": "candidate failed/produced no output", **zero}
+        return {"verdict": "FAIL", "reason": CANDIDATE_FAILED_REASON, **zero}
     if not a_ok and b_ok:
         return {"verdict": "WARN", "reason": "baseline failed; not comparable", **zero}
     try:
@@ -306,7 +314,8 @@ def _print_summary(report):
     gp = report.get("gate_pass")
     if gp is not None:
         print(f"  => GATE {'PASS' if gp['pass'] else 'FAIL'}: strict_clean={gp['strict_clean']} "
-              f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']}")
+              f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']} "
+              f"candidate_failures={gp.get('candidate_failures', 0)}")
         if "kind" in gp:
             print(f"     kind: {gp['kind']}   criterion: {gp['criterion']}")
         if "ledgered_skips" in gp:
@@ -586,6 +595,19 @@ def resolve_ledger(arg, baseline_sha):
     return default if baseline_sha and default.is_file() else None
 
 
+class LedgerError(ValueError):
+    """The ledger cannot be used for this run (e.g. built for another baseline)."""
+
+
+def check_ledger_sha(ledger_doc, path, baseline_sha):
+    """The ledger's product_sha (full or prefix) must name the run's baseline sha."""
+    have = ledger_doc.get("product_sha") if isinstance(ledger_doc, dict) else None
+    ok = (isinstance(have, str) and isinstance(baseline_sha, str) and have and baseline_sha
+          and (baseline_sha.startswith(have) or have.startswith(baseline_sha)))
+    if not ok:
+        raise LedgerError(f"--ledger {path} product_sha {have} != baseline {baseline_sha}")
+
+
 def ledger_identity(path):
     if path is None:
         return {"ledger": None, "ledger_sha256": None}
@@ -622,11 +644,13 @@ def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census
         unledgered = [f"{r} (count {skip_breakdown[r]})" for r in BAD_SKIP_REASONS if skip_breakdown.get(r, 0)]
     else:
         ledgered, unledgered, unaccepted = split_bad_skips(skip_records, ledger)
+    cand_fail = sum(1 for r in skip_records or () if r.get("verdict") == "FAIL"
+                    and r.get("reason") == CANDIDATE_FAILED_REASON)
     skips_ok = not unledgered
     census_ok = all(executed_census.get(a, 0) == n for a, n in expected_census.items())
     strict = bool(criteria["strict_clean"])
-    return {"pass": strict and skips_ok and census_ok, "strict_clean": strict,
-            "census_ok": census_ok, "skips_ok": skips_ok,
+    return {"pass": strict and skips_ok and census_ok and cand_fail == 0, "strict_clean": strict,
+            "census_ok": census_ok, "skips_ok": skips_ok, "candidate_failures": cand_fail,
             "ledgered_skips": ledgered, "unledgered_skips": unledgered,
             "ledgered_unaccepted": {"count": len(unaccepted), "identities": unaccepted},
             "skip_breakdown": dict(skip_breakdown),
@@ -716,8 +740,10 @@ def build_arg_parser():
 KIND_CHOICES = ("structural", "output-changing", "relock", "aa", "baseline", "gate")
 BUDGETED_KINDS = ("output-changing", "relock")
 CRITERIA = {
-    "structural": "structural: findings strict_clean AND strict_field_clean AND census_ok AND skips_ok",
-    **{k: f"{k}: census_ok AND skips_ok AND budgeted verdict clean" for k in BUDGETED_KINDS},
+    "structural": ("structural: findings strict_clean AND strict_field_clean AND census_ok AND skips_ok "
+                   "AND candidate_failures == 0"),
+    **{k: f"{k}: census_ok AND skips_ok AND budgeted verdict clean AND candidate_failures == 0"
+       for k in BUDGETED_KINDS},
 }
 
 
@@ -757,7 +783,9 @@ def apply_modes(report, modes, kind="structural", budget_sha256=None):
     gp = report.setdefault("gate_pass", {})
     gp["strict_field_clean"] = bool(modes.get("strict_field_clean"))
     if kind in BUDGETED_KINDS:
+        # a candidate-only analyzer failure is never budgetable (review I2)
         gp["pass"] = (bool(gp.get("census_ok")) and bool(gp.get("skips_ok"))
+                      and gp.get("candidate_failures", 0) == 0
                       and (modes.get("budgeted") or {}).get("verdict") == "clean")
     else:
         gp["pass"] = bool(gp.get("pass")) and gp["strict_field_clean"]
@@ -785,10 +813,15 @@ def recheck_gate_pass(gate_dir, ledger=None, use_default_ledger=True):
     baseline_sha = (report.get("identity") or {}).get("baseline_sha")
     ledger_path = resolve_ledger(ledger, baseline_sha) if (ledger or use_default_ledger) else None
     ledger_doc = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path else None
+    if ledger_doc is not None:
+        check_ledger_sha(ledger_doc, ledger_path, baseline_sha)
     gp = compute_gate_pass(report["pass_criteria"], agg["skip_breakdown"],
                            report["gate_pass"]["expected_census"], agg["executed_census"],
                            skip_records=records, ledger=ledger_doc)
-    kind = read_manifest(root).get("kind") or "structural"
+    kind = read_manifest(root).get("kind")
+    if not kind:
+        print("warning: manifest has no kind; rechecking as structural", file=sys.stderr)
+        kind = "structural"
     kind = "structural" if kind == "gate" else kind
     modes = report.get("modes") or {}
     out = apply_modes({"gate_pass": gp, "modes": {}, "identity": {}}, modes, kind=kind,
@@ -803,13 +836,17 @@ def _recheck_main(argv):
     args = ap.parse_args(argv)
     try:
         res = recheck_gate_pass(args.recheck, ledger=args.ledger)
+    except LedgerError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(2)
     except (OSError, ValueError, KeyError) as e:
         print(f"Error: --recheck {args.recheck}: {e}", file=sys.stderr)
         sys.exit(2)
     gp = res["gate_pass"]
     print(f"recheck {args.recheck}: GATE {'PASS' if gp['pass'] else 'FAIL'}  kind={gp['kind']}  "
           f"strict_clean={gp['strict_clean']} strict_field_clean={gp['strict_field_clean']} "
-          f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']}")
+          f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']} "
+          f"candidate_failures={gp['candidate_failures']}")
     print(f"  ledger: {res['ledger']}  sha256 {(res['ledger_sha256'] or '-')[:12]}  "
           f"ledgered_skips={gp['ledgered_skips']}  unledgered_skips={len(gp['unledgered_skips'])}")
     for u in gp["unledgered_skips"]:
@@ -859,6 +896,12 @@ def main(argv=None):
     except (OSError, ValueError) as e:
         print(f"Error: --ledger {ledger_path}: {e}", file=sys.stderr)
         sys.exit(2)
+    if ledger is not None:
+        try:
+            check_ledger_sha(ledger, ledger_path, base_ref.sha)
+        except LedgerError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(2)
     gd = Path(args.gate_dir)
     layout = GateLayout(gd if gd.is_absolute() else HARNESS_DIR / gd)
     prev_run_id = None
