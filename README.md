@@ -66,10 +66,10 @@ python3 run/run_pcb.py --all --jobs 4
 python3 run/run_gerbers.py --all --jobs 4
 
 # 4b. Run SPICE simulations (requires ngspice, reads schematic outputs)
-python3 run/run_spice.py --jobs 16
+python3 run/run_spice.py --all --jobs 16
 
 # 4c. Run EMC analysis (reads schematic + PCB outputs)
-python3 run/run_emc.py --jobs 16
+python3 run/run_emc.py --all --jobs 16
 
 # 5. Snapshot and compare baselines
 python3 regression/snapshot.py --repo {repo}

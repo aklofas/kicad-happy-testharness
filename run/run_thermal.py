@@ -12,7 +12,7 @@ Usage:
     python3 run/run_thermal.py --all
     python3 run/run_thermal.py --repo Dylanfg123/Zebra-X
     python3 run/run_thermal.py --jobs 16
-    python3 run/run_thermal.py --cross-section smoke --resume
+    python3 run/run_thermal.py --cross-section smoke
 
 Prerequisites:
     1. Schematic analysis outputs in results/outputs/schematic/
@@ -143,6 +143,10 @@ def main():
     parser.add_argument("--resume", action="store_true",
                         help="Skip files that already have valid output JSON")
     args = parser.parse_args()
+    if args.resume:
+        print("identity-based resume is not implemented for this runner yet (TH-064); "
+              "rerun without --resume", file=sys.stderr)
+        sys.exit(2)
 
     # Resolve paths
     kicad_happy = resolve_kicad_happy_dir()

@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import json
+import glob
 import os
 import secrets
 import signal
@@ -91,7 +92,7 @@ def _quarantine(dest: Path) -> None:
 
 
 def _cleanup(temp: Path) -> None:
-    for p in temp.parent.glob(temp.name + "*"):
+    for p in temp.parent.glob(glob.escape(temp.name) + "*"):
         try:
             p.unlink()
         except OSError:

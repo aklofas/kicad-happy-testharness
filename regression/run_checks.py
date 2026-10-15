@@ -289,7 +289,10 @@ def main():
             "results": all_results,
         }
         from harnesslib.identity import git_worktree_ref  # run_checks may run standalone
-        out["product_sha"] = git_worktree_ref(resolve_kicad_happy_dir()).sha
+        try:
+            out["product_sha"] = git_worktree_ref(resolve_kicad_happy_dir()).sha
+        except Exception:  # not a git checkout (e.g. exported tree)
+            out["product_sha"] = None
         out["harness_sha"] = git_worktree_ref(HARNESS_DIR).sha
         if aspirational_total > 0:
             out["aspirational"] = {

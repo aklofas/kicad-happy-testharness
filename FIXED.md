@@ -38,8 +38,8 @@ Harness-only. `harnesslib/{identity,execution,selection,profiles}.py` plus runne
 
 - **Fixed (harness half):** `run/run_spice.py` passes `--workdir` under scratch (refuses a
   workdir inside `repos/`), strips distributor credentials from the simulator env unless
-  `--online`, records `offline`/`credentials_present` in the batch manifest, and runs
-  through `run_once` (`--outer-timeout`). `tools/inventory_spice_caches.py` hashes every
+  `--online`, and runs through `run_once` (`--outer-timeout`). It writes no batch
+  manifest, so offline/credential state is not recorded per run. `tools/inventory_spice_caches.py` hashes every
   existing `repos/**/spice/` dir read-only (261 dirs / 1,225 files on this box) and
   `--check` detects drift. Commits: 3e22d06f6e8, 10366df3e2e.
 - **NOT fixed (product half, main-repo agent's):** `simulate_subcircuits.py --model-cache-dir`

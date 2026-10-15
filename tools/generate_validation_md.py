@@ -38,6 +38,7 @@ def _count_output_files(atype):
     # not an analysis output; _timing/_aggregate* are runner bookkeeping.
     return sum(1 for _ in d.rglob("*.json")
                if _.name not in ("capability_mode.json", "_timing.json")
+               and not (_.parent == d and _.name == "manifest.json")
                and not _.name.startswith("_aggregate"))
 
 

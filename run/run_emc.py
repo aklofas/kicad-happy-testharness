@@ -126,6 +126,10 @@ def main():
                         "findings; hides GP-001 and other INFO-gated visibility "
                         "signals). Default: off (full output).")
     args = parser.parse_args()
+    if args.resume:
+        print("identity-based resume is not implemented for this runner yet (TH-064); "
+              "rerun without --resume", file=sys.stderr)
+        sys.exit(2)
 
     # Resolve paths
     kicad_happy = resolve_kicad_happy_dir()

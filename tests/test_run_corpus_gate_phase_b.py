@@ -332,7 +332,7 @@ def test_legacy_or_partial_gate_dir_is_refused(corpus, legacy):
 
 
 def test_gerber_directory_unit_end_to_end(corpus):
-    gdir = corpus / "repos" / "o" / "r" / "fab"
+    gdir = corpus.joinpath("repos", "o", "r", "fab")
     gdir.mkdir()
     (gdir / "a.gbr").write_text("G04*")
     (corpus / "manifests" / "all_gerbers.txt").write_text(str(gdir) + "\n")
@@ -352,7 +352,7 @@ def test_gerber_directory_unit_end_to_end(corpus):
 
 
 def test_worker_exception_is_fail_unit_and_run_completes(corpus, monkeypatch):
-    extra = corpus / "repos" / "o" / "r" / "c.kicad_pcb"
+    extra = corpus.joinpath("repos", "o", "r", "c.kicad_pcb")
     extra.write_text("(kicad_pcb)")
     mf = corpus / "manifests" / "all_pcbs.txt"
     mf.write_text(mf.read_text() + str(extra) + "\n")

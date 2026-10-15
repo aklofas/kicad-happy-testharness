@@ -184,6 +184,10 @@ def main():
                         help="Per-file process cap in seconds (default: "
                              f"{PROFILES['spice-offline'].timeout_s})")
     args = parser.parse_args()
+    if args.resume:
+        print("identity-based resume is not implemented for this runner yet (TH-064); "
+              "rerun without --resume", file=sys.stderr)
+        sys.exit(2)
 
     env = build_env(offline=not args.online)
     workdir_root = Path(args.workdir) if args.workdir else \

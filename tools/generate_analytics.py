@@ -153,7 +153,10 @@ def collect_signal_detector_coverage():
     detector_repos = defaultdict(set)
     total_repos = set()
 
-    for f in (RESULTS_DIR / "outputs" / "schematic").rglob("*.json"):
+    sch_dir = RESULTS_DIR / "outputs" / "schematic"
+    for f in sch_dir.rglob("*.json"):
+        if f.parent == sch_dir:  # batch manifest.json, not a per-repo output
+            continue
         # results/outputs/schematic/{owner}/{repo}/{file}.json
         repo = f"{f.parts[-3]}/{f.parts[-2]}"
         total_repos.add(repo)

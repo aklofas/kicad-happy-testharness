@@ -94,7 +94,7 @@ Last updated: 2026-10-15 (H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,8
 
 ### 2026-10-15 — H0 plan 2 landed (local, unpushed)
 
-2026-10-15 — H0 plan 2 landed (local, unpushed): harnesslib + run_corpus_gate; unit tier 1,851 passed / 1 xfailed; TH-055/059(harness half) fixed; TH-063 filed; next TH-064.
+Plan 2 landed locally (unpushed). New `harnesslib/{identity,execution,selection,profiles}`; `utils.run_analyzer` now writes a batch manifest + `units.jsonl` and resumes only on identity match; emc/thermal/spice run through `run_once`; `regression/run_corpus_gate.py` (slots, manifest, phase A/B, identity resume, `gate_pass`) replaces the gate body, with `run_v14_gate.py` kept as a flag-compatible wrapper. Final review fixes: gerber directory units hash by tree, batch logs are archived and run_id-stamped, gate records are logged per unit and worker exceptions become FAIL units, resumed gates refuse mismatched or legacy trees, emc/thermal/spice refuse `--resume` (TH-064). TH-055/059 (harness half) fixed; TH-063/064 filed; next TH-065. Unit tier 1,851 passed / 1 xfailed at the first landing; the delta against plan 1's 1,744 comes from the new harnesslib and gate tests.
 
 ### 2026-10-14 — H0 plan 1: honest test collection (TH-052/053/058)
 

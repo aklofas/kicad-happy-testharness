@@ -40,9 +40,9 @@ Only re-run the types flagged by `tools/detect_changes.py`. Use `--jobs 16` for 
 python3 run/run_schematic.py --all --jobs 16          # if schematic affected
 python3 run/run_pcb.py --all --jobs 16                # if pcb affected
 python3 run/run_gerbers.py --all --jobs 16            # if gerber affected
-python3 run/run_spice.py --jobs 16              # if spice affected
-python3 run/run_emc.py --jobs 8                 # if emc affected
-python3 run/run_thermal.py --jobs 8             # if thermal affected (needs sch+pcb)
+python3 run/run_spice.py --all --jobs 16              # if spice affected
+python3 run/run_emc.py --all --jobs 8                 # if emc affected
+python3 run/run_thermal.py --all --jobs 8             # if thermal affected (needs sch+pcb)
 ```
 
 A mutating full-corpus run requires `--all`; an empty selection exits 2 (B12/TH-049).
@@ -1495,14 +1495,14 @@ Run ALL analyzer types on the full corpus:
 python3 run/run_schematic.py --all --jobs 16
 python3 run/run_pcb.py --all --jobs 16
 python3 run/run_gerbers.py --all --jobs 16
-python3 run/run_spice.py --jobs 16
-python3 run/run_emc.py --jobs 8
+python3 run/run_spice.py --all --jobs 16
+python3 run/run_emc.py --all --jobs 8
 ```
 
 Check all exit 0. Note any error counts.
 
 ```bash
-python3 run/run_thermal.py --jobs 8            # thermal (needs sch+pcb)
+python3 run/run_thermal.py --all --jobs 8            # thermal (needs sch+pcb)
 ```
 
 ### 16c. Full assertion suite
@@ -2061,7 +2061,7 @@ python3 validate/validate_schema.py scan
 ### 19g. Run EMC batch (if detector output affects EMC)
 
 ```bash
-python3 run/run_emc.py --jobs 16
+python3 run/run_emc.py --all --jobs 16
 python3 regression/run_checks.py --type emc
 ```
 
@@ -2164,8 +2164,8 @@ purged repos are skipped on resume.
 If SPICE and EMC were skipped during bulk import (`--skip-spice --skip-emc`):
 
 ```bash
-python3 run/run_spice.py --jobs 16
-python3 run/run_emc.py --jobs 8
+python3 run/run_spice.py --all --jobs 16
+python3 run/run_emc.py --all --jobs 8
 python3 regression/seed.py --all
 python3 regression/seed_structural.py --all
 python3 regression/run_checks.py

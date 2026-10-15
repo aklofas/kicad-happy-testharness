@@ -91,11 +91,11 @@ def cmd_run(args):
         steps.append((cmd, f"Analyzer: {analyzer}"))
 
     if not args.skip_spice:
-        cmd = [py, "run/run_spice.py"] + run_filter_args + resume_flag
+        cmd = [py, "run/run_spice.py"] + run_filter_args  # no resume: TH-064
         steps.append((cmd, "SPICE simulations"))
 
     if not args.skip_emc:
-        cmd = [py, "run/run_emc.py"] + run_filter_args + resume_flag
+        cmd = [py, "run/run_emc.py"] + run_filter_args  # no resume: TH-064
         steps.append((cmd, "EMC analysis"))
 
     check_cmd = [py, "regression/run_checks.py"] + filter_args

@@ -2,6 +2,7 @@
 """harnesslib.selection: None means all, [] is an error (report B12, TH-049)."""
 TIER = "unit"
 
+import os
 import sys
 from pathlib import Path
 
@@ -98,14 +99,20 @@ def test_utils_all_and_sources(tmp_path, monkeypatch):
     assert repos == ["a/b"] and src == f"repo-list:{f}"
 
 
-def test_cli_no_selector_exits_2_with_count():
+def _hermetic_env(tmp_path):
+    return {**os.environ, "KICAD_HAPPY_TESTHARNESS_DATA_DIR": str(tmp_path)}
+
+
+def test_cli_no_selector_exits_2_with_count(tmp_path):
     r = subprocess.run([sys.executable, str(_ROOT / "run" / "run_gerbers.py")],
-                       capture_output=True, text=True, timeout=60)
+                       capture_output=True, text=True, timeout=60, env=_hermetic_env(tmp_path))
+    assert list(tmp_path.rglob("*")) == []
     assert r.returncode == 2 and "repos in corpus" in r.stderr and "--all" in r.stderr
 
 
-def test_cli_all_with_repo_rejected_by_argparse():
+def test_cli_all_with_repo_rejected_by_argparse(tmp_path):
     r = subprocess.run([sys.executable, str(_ROOT / "run" / "run_gerbers.py"),
                         "--all", "--repo", "x/y"],
-                       capture_output=True, text=True, timeout=60)
+                       capture_output=True, text=True, timeout=60, env=_hermetic_env(tmp_path))
+    assert list(tmp_path.rglob("*")) == []
     assert r.returncode == 2 and "not allowed with" in r.stderr
