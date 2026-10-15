@@ -60,6 +60,16 @@ def _setup_fake_kicad_happy(tmp: Path) -> Path:
     scripts = tmp / "skills" / "kicad" / "scripts"
     scripts.mkdir(parents=True)
     (scripts / "validation_detectors.py").write_text(SYNTHETIC_ANALYZER)
+    nested = scripts / "schematic"
+    nested.mkdir()
+    (nested / "__init__.py").write_text("")
+    (nested / "reader.py").write_text(
+        'from ..finding_schema import make_finding\n'
+        'def detect_nested(ctx):\n'
+        '    return [make_finding(detector="detect_nested", rule_id="NX-001", schema_era="v1.4")]\n'
+        'def detect_bad(ctx):\n'
+        '    rid = "ZZ-001"\n'
+        '    return [make_finding(detector="detect_bad", rule_id=rid, schema_era="v1.4")]\n')
     return tmp
 
 
@@ -100,6 +110,8 @@ def test_discover_finds_v14_rules_groups_by_detector():
         assert sorted(data["detectors"]["validate_pullups"]["rules"]) == ["PU-001", "VM-001"]
         # Primary rule = lowest sorted
         assert data["detectors"]["validate_pullups"]["primary_rule"] == "PU-001"
+        assert data["detectors"]["validate_pullups"]["source_file"] == \
+            "skills/kicad/scripts/validation_detectors.py"
 
 
 def test_discover_captures_emit_from_private_helper():
@@ -197,6 +209,37 @@ def test_discover_default_gating_summary_fallback():
         summary = data["detectors"]["validate_pullups"]["gating_summary"]
         assert "validate_pullups" in summary
         assert "v1.4" in summary
+
+
+def test_discover_recurses_into_packages_and_reports_relative_paths():
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        _setup_fake_kicad_happy(tmp)
+        out = tmp / "out.json"
+        result = _run_tool("--era", "v1.4", "--output", str(out),
+                           env_extra={"KICAD_HAPPY_DIR": str(tmp)})
+        assert result.returncode == 0, result.stderr
+        data = json.loads(out.read_text())
+        assert "detect_nested" in data["detectors"]
+        assert data["detectors"]["detect_nested"]["source_file"] == \
+            "skills/kicad/scripts/schematic/reader.py"
+        assert "skills/kicad/scripts/schematic/reader.py" in data["source_files_scanned"]
+        assert data["source_files_scanned_count"] == 3   # validation_detectors, __init__, reader
+
+
+def test_discover_lists_unresolved_sites_and_excludes_them():
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        _setup_fake_kicad_happy(tmp)
+        out = tmp / "out.json"
+        result = _run_tool("--era", "v1.4", "--output", str(out),
+                           env_extra={"KICAD_HAPPY_DIR": str(tmp)})
+        assert result.returncode == 0, result.stderr
+        data = json.loads(out.read_text())
+        assert "detect_bad" not in data["detectors"]
+        assert data["unresolved_sites"] == [{
+            "file": "skills/kicad/scripts/schematic/reader.py", "line": 6,
+            "callee": "make_finding", "reason": "rule_id:nonliteral"}]
 
 
 def main() -> int:

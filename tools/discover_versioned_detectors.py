@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Discover versioned detector functions from kicad-happy analyzer source.
 
-AST-parses $KICAD_HAPPY_DIR/skills/kicad/scripts/*.py for emit-sites of
+AST-parses (via tools/source_scan.py) $KICAD_HAPPY_DIR/skills/kicad/scripts/**/*.py for emit-sites of
 callables with detector=<str>, rule_id=<str>, AND schema_era=<target>
 keywords. The detector literal is what each finding self-declares and is
 what regression assertions match via detector_filter; it is also what
@@ -18,7 +18,6 @@ Design: docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md §4
 from __future__ import annotations
 
 import argparse
-import ast
 import json
 import os
 import subprocess
@@ -26,6 +25,9 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import source_scan  # noqa: E402  (harness sibling module)
 
 
 def _resolve_kicad_happy() -> Path:
@@ -55,34 +57,20 @@ def _git_commit_and_branch(repo: Path) -> tuple[str, str]:
         return "unknown", "unknown"
 
 
-def _collect_detector_rule_pairs(source_path: Path, era: str) -> list[tuple[str, str]]:
-    """Return list of (detector, rule_id) for every emit-site whose call
-    has detector=<str>, rule_id=<str>, AND schema_era=<era> keywords.
-
-    Walks every Call in the module, not just those inside detector-prefixed
-    functions, so emit-sites inside private helpers (e.g. _make_ex_001)
-    are captured. Grouping by the explicit `detector=` literal matches
-    what regression assertions filter on, which decouples discovery from
-    the helper's function name.
-    """
-    tree = ast.parse(source_path.read_text())
+def _collect_detector_rule_pairs(kicad_happy: Path, source_path: Path, era: str,
+                                 det_enum: dict[str, str]) -> tuple[list[tuple[str, str]], list[dict]]:
+    """(resolved (detector, rule_id) pairs tagged with `era`, unresolved site records)."""
     pairs: list[tuple[str, str]] = []
-    for call in ast.walk(tree):
-        if not isinstance(call, ast.Call):
+    unresolved: list[dict] = []
+    for s in source_scan.emit_sites(kicad_happy, source_path, det_enum):
+        if not s.resolved:
+            if s.reason != "positional-emc":   # EMC legacy shape is ledgered, not reported here
+                unresolved.append({"file": s.file, "line": s.line, "callee": s.callee,
+                                   "reason": s.reason})
             continue
-        detector = None
-        rule_id = None
-        schema_era_val = None
-        for kw in call.keywords:
-            if kw.arg == "detector" and isinstance(kw.value, ast.Constant):
-                detector = kw.value.value
-            elif kw.arg == "rule_id" and isinstance(kw.value, ast.Constant):
-                rule_id = kw.value.value
-            elif kw.arg == "schema_era" and isinstance(kw.value, ast.Constant):
-                schema_era_val = kw.value.value
-        if detector and rule_id and schema_era_val == era:
-            pairs.append((detector, rule_id))
-    return pairs
+        if s.schema_era == era:
+            pairs.append((s.detector, s.rule_id))
+    return pairs, unresolved
 
 
 def _fallback_summary(detector: str, era: str, rules: list[str]) -> str:
@@ -99,16 +87,18 @@ def discover(kicad_happy: Path, era: str,
     detector_data: dict[str, dict] = defaultdict(
         lambda: {"rules": set(), "source_files": set(), "emit_line_count": 0}
     )
-    scanned: list[str] = []
-
-    for path in sorted(scripts.glob("*.py")):
-        pairs = _collect_detector_rule_pairs(path, era)
-        if not pairs:
-            continue
-        scanned.append(path.name)
+    det_enum = source_scan.resolve_det_enum(kicad_happy)
+    files = [p for p in source_scan.iter_product_sources(kicad_happy)
+             if source_scan.rel(kicad_happy, p).startswith("skills/kicad/scripts/")]
+    scanned = [source_scan.rel(kicad_happy, p) for p in files]
+    unresolved_sites: list[dict] = []
+    for path in files:
+        pairs, unresolved = _collect_detector_rule_pairs(kicad_happy, path, era, det_enum)
+        unresolved_sites.extend(unresolved)
+        relp = source_scan.rel(kicad_happy, path)
         for detector, rule_id in pairs:
             detector_data[detector]["rules"].add(rule_id)
-            detector_data[detector]["source_files"].add(path.name)
+            detector_data[detector]["source_files"].add(relp)
             detector_data[detector]["emit_line_count"] += 1
 
     # Typo-check: every non-metadata gating-notes key must be a discovered detector
@@ -145,6 +135,8 @@ def discover(kicad_happy: Path, era: str,
         "kicad_happy_commit": commit,
         "kicad_happy_branch": branch,
         "source_files_scanned": sorted(scanned),
+        "source_files_scanned_count": len(scanned),
+        "unresolved_sites": sorted(unresolved_sites, key=lambda u: (u["file"], u["line"])),
         "detectors": detectors,
     }
 
