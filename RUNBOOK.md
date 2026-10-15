@@ -2610,10 +2610,20 @@ surface that is missing from the set shows up as `new_unknown` (WARN).
 ### 26c. Run the gate, staged
 
 ```bash
-python3 regression/run_v14_gate.py --cross-section smoke      --jobs 16
-python3 regression/run_v14_gate.py --cross-section quick_200  --jobs 16
-python3 regression/run_v14_gate.py                           --jobs 16   # full
+G="--baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14"
+python3 regression/run_corpus_gate.py $G --gate-dir results/<label>_gate --label <label> --cross-section smoke     --jobs 16
+python3 regression/run_corpus_gate.py $G --gate-dir results/<label>_gate --label <label> --cross-section quick_200 --jobs 16
+python3 regression/run_corpus_gate.py $G --gate-dir results/<label>_gate --label <label> --all                    --jobs 16   # full
 ```
+
+`regression/run_v14_gate.py` is now only a compatibility wrapper (kept one
+release): it maps `--v131-dir`/`--v14-dir` to `--baseline-dir`/`--candidate-dir`,
+drops `--symmetric` (always symmetric), and maps `--timeout N>120` to
+`--profile long-tail`. Use `run_corpus_gate.py` directly. A non-empty
+`--gate-dir` needs `--resume` or a fresh dir; the full corpus needs `--all`.
+Per-unit outputs live in the `baseline/` and `candidate/` slots. Exit 0 means
+`gate_pass` (strict_clean + census + no both_failed/dependency_missing SKIPs);
+`manifest.json` and `units.jsonl` are part of the evidence.
 
 Validate on smoke first (catches driver bugs cheaply), then quick_200, then
 the full corpus. The driver runs each analyzer twice per unit (v1.3.1 plain,
@@ -2672,14 +2682,15 @@ only fair flag setting when both sides have v1.4 layering.
 git -C ~/Projects/kicad-happy worktree add /tmp/kh-baseline <baseline-SHA>
 git -C ~/Projects/kicad-happy worktree add /tmp/kh-candidate <candidate-SHA>
 
-python3 regression/run_v14_gate.py --symmetric \
-  --v131-dir /tmp/kh-baseline --v14-dir /tmp/kh-candidate \
+python3 regression/run_corpus_gate.py \
+  --baseline-dir /tmp/kh-baseline --candidate-dir /tmp/kh-candidate \
   --gate-dir results/<label>_gate \
-  --label <label> --cross-section <smoke|quick_200|full> --jobs 32
+  --label <label> --cross-section <smoke|quick_200> --jobs 32   # full corpus: --all
 ```
 
-**Slot-naming holdover:** `--v131-dir` is the baseline, `--v14-dir` is the
-candidate. Bit-for-bit identical to default mode otherwise.
+**Slot names:** `--baseline-dir` is the baseline (output slot `baseline/`),
+`--candidate-dir` is the candidate (`candidate/`). Old `--v131-dir`/`--v14-dir`
+still work through the `run_v14_gate.py` wrapper.
 
 **Always pair with `--gate-dir`** to keep symmetric runs from clobbering
 the historical `results/v14_gate/` v1.3.1-vs-v1.4 records. The override
@@ -2710,7 +2721,7 @@ with property X"), walk these records, collect delta repos, and verify the
 property per repo (worked example: the 2026-07-11 mirror-fix gate greps
 each delta repo's `.kicad_sch` for `(at .. 90|270)`+`(mirror x)`; 1,074
 repos, 0 violations). For exact per-rule net deltas, aggregate from the raw
-`snap.json` pairs under `<gate-dir>/v131/...` + `<gate-dir>/v14/...` with
+`snap.json` pairs under `<gate-dir>/baseline/...` + `<gate-dir>/candidate/...` (historical gates: `v131/` + `v14/`) with
 `python3 tools/gate_rule_delta.py <gate-dir> [per_unit_out.json]` (Counter
 on `findings[].rule_id` both sides; global + per-unit nets). Same-rule-id
 paired disappeared+new_unknown with equal counts = demote-with-rewrite
@@ -2772,16 +2783,16 @@ gate CLEAN + SHIPPED".
 
 ### 26h. Prune adjudicated gate outputs (disk hygiene)
 
-Each gate dir keeps two full per-SHA output trees (`<gate-dir>/v131/` +
-`<gate-dir>/v14/`, ~27G each on full corpus) that dominate its footprint.
+Each gate dir keeps two full per-SHA output trees (`<gate-dir>/baseline/` +
+`<gate-dir>/candidate/`, ~27G each on full corpus) that dominate its footprint.
 Once the gate is adjudicated AND the verdict is recorded (status.md /
 shared LOG / memory), delete both trees:
 
 ```bash
-rm -rf results/<label>_gate/v131 results/<label>_gate/v14
+rm -rf results/<label>_gate/baseline results/<label>_gate/candidate
 ```
 
-**Keep** `diff/`, the rollup JSON/CSVs, and any adjudication files
+**Never delete** `manifest.json`, `units.jsonl`, `diff/`, `rollup_*`; keep the rollup JSON/CSVs, and any adjudication files
 (`adjudication_*.txt`, `affected_repos.txt`) — ~900M total, and the only
 artifacts the §26g adjudication recipe and `--gate-rollup` consume after
 the fact.

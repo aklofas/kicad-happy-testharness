@@ -55,7 +55,7 @@ HARNESS_ROOT = Path(__file__).resolve().parent.parent
 if str(HARNESS_ROOT) not in sys.path:
     sys.path.insert(0, str(HARNESS_ROOT))
 
-from regression.run_v14_gate import _compute_pass_criteria, _print_summary  # noqa: E402
+from regression.run_corpus_gate import _compute_pass_criteria, _print_summary  # noqa: E402
 
 
 def _totals(*, pass_=0, warn=0, fail=0, skip=0, disappeared=0, downgrades=0,
