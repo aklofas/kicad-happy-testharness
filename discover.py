@@ -41,14 +41,14 @@ def _is_kicad_legacy_sch(path):
 def discover_in(scan_dir):
     """Discover KiCad files under a directory. Returns dict of file lists."""
     # Schematics: .kicad_sch and .sch (filtered to KiCad format only)
-    kicad_sch_files = sorted(str(p) for p in scan_dir.rglob("*.kicad_sch"))
-    legacy_sch_candidates = sorted(str(p) for p in scan_dir.rglob("*.sch"))
+    kicad_sch_files = sorted(str(p) for p in scan_dir.rglob("*.kicad_sch") if p.is_file())
+    legacy_sch_candidates = sorted(str(p) for p in scan_dir.rglob("*.sch") if p.is_file())
     legacy_sch_files = [s for s in legacy_sch_candidates if _is_kicad_legacy_sch(s)]
     skipped = len(legacy_sch_candidates) - len(legacy_sch_files)
     schematics = sorted(kicad_sch_files + legacy_sch_files)
 
     # PCBs: .kicad_pcb
-    pcbs = sorted(str(p) for p in scan_dir.rglob("*.kicad_pcb"))
+    pcbs = sorted(str(p) for p in scan_dir.rglob("*.kicad_pcb") if p.is_file())  # TH-069
 
     # Gerber directories — single traversal, case-insensitive
     gerber_exts_lower = {e.lower() for e in GERBER_EXTENSIONS}
@@ -59,7 +59,7 @@ def discover_in(scan_dir):
     gerber_dirs = sorted(gerber_dirs)
 
     # Project files: .kicad_pro
-    projects = sorted(str(p) for p in scan_dir.rglob("*.kicad_pro"))
+    projects = sorted(str(p) for p in scan_dir.rglob("*.kicad_pro") if p.is_file())
 
     return {
         "schematics": schematics,
