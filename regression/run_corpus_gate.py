@@ -41,6 +41,7 @@ Usage:
     python3 regression/run_corpus_gate.py ... --profile long-tail --repo-list results/timeouts.txt
     python3 regression/run_corpus_gate.py ... --all --jobs 32          # full corpus (explicit)
     python3 regression/run_corpus_gate.py ... --resume                 # identity-matched resume
+    python3 regression/run_corpus_gate.py --recheck GATE_DIR [--ledger FILE]   # re-evaluate gate_pass only
 
 A non-empty --gate-dir without --resume is an error (exit 2). With --resume the
 previous manifest.json/units.jsonl are archived as manifest.<run_id>.json /
@@ -756,7 +757,60 @@ def apply_modes(report, modes, kind="structural", budget_sha256=None):
     return report
 
 
+def recheck_gate_pass(gate_dir, ledger=None, use_default_ledger=True):
+    """Re-evaluate gate_pass of a finished gate dir from its units.jsonl + rollup (no analyzer
+    runs): records re-aggregated (last record per analyzer/unit wins), census expectation,
+    findings criteria and comparator modes taken from the rollup, skips judged by the ledger."""
+    root = Path(gate_dir)
+    rollups = sorted(root.glob("rollup_*.json"))
+    if len(rollups) != 1:
+        raise ValueError(f"{root}: expected exactly one rollup_*.json, found {len(rollups)}")
+    report = json.loads(rollups[0].read_text(encoding="utf-8"))
+    last = {}
+    for line in (root / "units.jsonl").read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            r = json.loads(line)
+            last[(r["analyzer"], r["unit_id"])] = r
+    records = list(last.values())
+    agg = aggregate(records)
+    baseline_sha = (report.get("identity") or {}).get("baseline_sha")
+    ledger_path = resolve_ledger(ledger, baseline_sha) if (ledger or use_default_ledger) else None
+    ledger_doc = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path else None
+    gp = compute_gate_pass(report["pass_criteria"], agg["skip_breakdown"],
+                           report["gate_pass"]["expected_census"], agg["executed_census"],
+                           skip_records=records, ledger=ledger_doc)
+    kind = read_manifest(root).get("kind") or "structural"
+    kind = "structural" if kind == "gate" else kind
+    modes = report.get("modes") or {}
+    out = apply_modes({"gate_pass": gp, "modes": {}, "identity": {}}, modes, kind=kind,
+                      budget_sha256=(modes.get("budgeted") or {}).get("budget_sha256"))
+    return {"gate_pass": out["gate_pass"], **ledger_identity(ledger_path)}
+
+
+def _recheck_main(argv):
+    ap = argparse.ArgumentParser(prog="run_corpus_gate.py --recheck")
+    ap.add_argument("--recheck", required=True, metavar="GATE_DIR")
+    ap.add_argument("--ledger", default=None, metavar="FILE")
+    args = ap.parse_args(argv)
+    try:
+        res = recheck_gate_pass(args.recheck, ledger=args.ledger)
+    except (OSError, ValueError, KeyError) as e:
+        print(f"Error: --recheck {args.recheck}: {e}", file=sys.stderr)
+        sys.exit(2)
+    gp = res["gate_pass"]
+    print(f"recheck {args.recheck}: GATE {'PASS' if gp['pass'] else 'FAIL'}  kind={gp['kind']}  "
+          f"strict_clean={gp['strict_clean']} strict_field_clean={gp['strict_field_clean']} "
+          f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']}")
+    print(f"  ledger: {res['ledger']}  sha256 {(res['ledger_sha256'] or '-')[:12]}  "
+          f"ledgered_skips={gp['ledgered_skips']}  unledgered_skips={len(gp['unledgered_skips'])}")
+    for u in gp["unledgered_skips"]:
+        print(f"  unledgered: {u}")
+    sys.exit(0 if gp["pass"] else 1)
+
+
 def main(argv=None):
+    if "--recheck" in (sys.argv[1:] if argv is None else argv):
+        _recheck_main(sys.argv[1:] if argv is None else argv)
     args = build_arg_parser().parse_args(argv)
     args.kind = resolve_kind(args.kind)
 

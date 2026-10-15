@@ -2883,7 +2883,7 @@ For the output-changing kinds the findings-level `strict_clean` stays in `gate_p
 information only. `gate_pass` records the resolved `kind` and its `criterion`; the budget
 file's sha256 lands in `modes.budgeted.budget_sha256`, `identity.budget_sha256` and the
 finished manifest (null without a budget).
-`skips_ok` consults the baseline-debts ledger (`--ledger FILE`, default `reference/baseline_debts/<baseline sha7>.json` when present): a both_failed / dependency_missing SKIP fails it only when `tools/baseline_ledger_check.skip_is_ledgered` does not cover it (the ledger holds timeouts only, so a both-side crash is never covered); see `gate_pass.ledgered_skips` / `unledgered_skips`.
+`skips_ok` consults the baseline-debts ledger (`--ledger FILE`, default `reference/baseline_debts/<baseline sha7>.json` when present): a both_failed / dependency_missing SKIP fails it only when `tools/baseline_ledger_check.skip_is_ledgered` does not cover it (the ledger holds timeouts only, so a both-side crash is never covered); see `gate_pass.ledgered_skips` / `unledgered_skips`. `run_corpus_gate.py --recheck GATE_DIR [--ledger FILE]` re-evaluates a finished gate's `gate_pass` from its `units.jsonl` + rollup without re-running analyzers (exit 0/1).
 
 CLI exit codes: 0 clean, 1 deltas/residuals, 2 error. The CLI takes `--jobs` (default
 cpu_count); reports are byte-identical for any `--jobs`. Reports are complete (every delta

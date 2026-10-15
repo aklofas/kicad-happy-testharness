@@ -290,3 +290,48 @@ def test_round2_real_skips_against_real_ledger():
     gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=ledger)
     assert gp["ledgered_skips"] == 4
     assert gp["unledgered_skips"] == sorted(f"both_failed pcb {u}" for u in crashes)
+
+
+# ---- --recheck: re-evaluate gate_pass from a finished gate dir with a ledger -------
+
+import shutil  # noqa: E402
+
+R2_FIX = Path(__file__).resolve().parent.joinpath("fixtures", "h0", "round2")
+RECHECK = R2_FIX / "recheck_gate"
+LEDGER_FIX = R2_FIX / "ledger_6a91aaa_timeouts.json"
+CRASHES = sorted(["BrettHallen/Conversion_Boards/TFC_10-pin_TFC_10-pin 2.kicad_pcb",
+                  "hackclub/OnBoard/projects_holy60-3d_src_holy60-3d.kicad_pcb",
+                  "hackclub/OnBoard/projects_tofyKeeb_src_tofyKeeb.kicad_pcb"])
+
+
+def test_recheck_round2_records_ledger_covers_timeout_not_crashes():
+    out = gate.recheck_gate_pass(RECHECK, ledger=str(LEDGER_FIX))
+    gp = out["gate_pass"]
+    assert gp["census_ok"] is True and gp["strict_clean"] is True and gp["strict_field_clean"] is True
+    assert gp["ledgered_skips"] == 4
+    assert gp["unledgered_skips"] == [f"both_failed pcb {u}" for u in CRASHES]
+    assert gp["pass"] is False and gp["kind"] == "structural"
+    assert out["ledger"] == str(LEDGER_FIX)
+    assert out["ledger_sha256"] == hashlib.sha256(LEDGER_FIX.read_bytes()).hexdigest()
+
+
+def test_recheck_passes_when_every_bad_skip_is_ledgered(tmp_path):
+    d = tmp_path / "g"
+    shutil.copytree(RECHECK, d)
+    recs = [json.loads(ln) for ln in (d / "units.jsonl").read_text().splitlines()]
+    recs = [r for r in recs if r["analyzer"] != "pcb"]
+    (d / "units.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
+    roll = json.loads((d / "rollup_round2_quick200.json").read_text())
+    roll["gate_pass"]["expected_census"] = {"schematic": 3}
+    (d / "rollup_round2_quick200.json").write_text(json.dumps(roll))
+    gp = gate.recheck_gate_pass(d, ledger=str(LEDGER_FIX))["gate_pass"]
+    assert gp["pass"] is True and gp["ledgered_skips"] == 4 and gp["unledgered_skips"] == []
+    assert gate.recheck_gate_pass(d, ledger=None, use_default_ledger=False)["gate_pass"]["pass"] is False
+
+
+def test_recheck_cli_exit_code_and_summary(capsys):
+    with pytest.raises(SystemExit) as ex:
+        gate.main(["--recheck", str(RECHECK), "--ledger", str(LEDGER_FIX)])
+    assert ex.value.code == 1
+    out = capsys.readouterr().out
+    assert "ledgered_skips=4" in out and f"unledgered: both_failed pcb {CRASHES[0]}" in out
