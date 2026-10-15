@@ -16,11 +16,18 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
   * after phase B the comparator modes run (raw + strict, budgeted with
     --budget; spec §3.5) and land under rollup["modes"]. With --budget,
     strict_field_clean is the budgeted verdict == clean.
-  * spec §2.4 read literally: gate_pass also requires the FINDINGS-level
-    strict_clean (zero WARN/Disappeared/Downgrades/NewUnknown/FAIL). An
-    output-changing round therefore exits 1 BY DESIGN even when its budget is
-    clean; read that round's verdict from modes.budgeted.verdict plus the
-    census/skip fields of gate_pass, not from the exit code.
+  * gate_pass per --kind (maintainer ruling I9; overrides spec §2.4 read
+    literally for the output-changing kinds):
+      kind             --budget    gate_pass.pass
+      structural       forbidden   findings strict_clean AND strict_field_clean
+                                   AND census_ok AND skips_ok
+      aa, baseline     forbidden   same as structural
+      output-changing  required    census_ok AND skips_ok AND budgeted verdict clean
+      relock           required    same as output-changing
+    For the output-changing kinds the findings strict_clean stays in gate_pass
+    as information only. `--kind gate` is a deprecated alias for structural.
+    gate_pass records the resolved `kind` and its `criterion`; the sha256 of
+    the budget file is recorded as budget_sha256 (null without a budget).
   * per-unit diff records keep complete lists (no top-five truncation)
 
 Usage:
@@ -39,6 +46,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 import platform
@@ -293,10 +301,17 @@ def _print_summary(report):
     if gp is not None:
         print(f"  => GATE {'PASS' if gp['pass'] else 'FAIL'}: strict_clean={gp['strict_clean']} "
               f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']}")
+        if "kind" in gp:
+            print(f"     kind: {gp['kind']}   criterion: {gp['criterion']}")
     m = report.get("modes", {})
     if "raw" in m:
         print(f"modes: raw={m['raw']['verdict']} strict={m['strict']['verdict']} "
               f"budgeted={m['budgeted']['verdict']} -> strict_field_clean={report['gate_pass']['strict_field_clean']}")
+    b = m.get("budgeted") or {}
+    if b.get("budget_id"):
+        print(f"budget: {b['budget_id']}  sha256 {(b.get('budget_sha256') or '?')[:12]}")
+        if b.get("over_budget"):
+            print(f"  over_budget: {', '.join(b['over_budget'])}")
     if report["fail_repo_count"]:
         print(f"\nFAIL repos ({report['fail_repo_count']}):")
         for fr in report["fail_repos"][:30]:
@@ -612,7 +627,8 @@ def build_arg_parser():
     ap.add_argument("--candidate-dir", required=True, help="candidate kicad-happy worktree")
     ap.add_argument("--gate-dir", required=True, help="evidence tree root (results/<label>_gate)")
     ap.add_argument("--profile", default="standard", choices=sorted(PROFILES))
-    ap.add_argument("--kind", default="gate", choices=("gate", "aa", "baseline"))
+    ap.add_argument("--kind", default="structural", choices=KIND_CHOICES,
+                    help="round kind (ruling I9); 'gate' is a deprecated alias for structural")
     ap.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS)
     ap.add_argument("--label", default=None, help="rollup filename label (default: section)")
     ap.add_argument("--resume", action="store_true",
@@ -622,17 +638,62 @@ def build_arg_parser():
     return ap
 
 
-def apply_modes(report, modes):
-    """Merge run_modes() output into the rollup and AND strict_field_clean into gate_pass."""
+KIND_CHOICES = ("structural", "output-changing", "relock", "aa", "baseline", "gate")
+BUDGETED_KINDS = ("output-changing", "relock")
+CRITERIA = {
+    "structural": "structural: findings strict_clean AND strict_field_clean AND census_ok AND skips_ok",
+    **{k: f"{k}: census_ok AND skips_ok AND budgeted verdict clean" for k in BUDGETED_KINDS},
+}
+
+
+def resolve_kind(kind):
+    """Resolve the deprecated `gate` alias; the resolved kind is what manifest and rollup record."""
+    if kind == "gate":
+        print("note: --kind gate is an alias for structural", file=sys.stderr)
+        return "structural"
+    return kind
+
+
+def kind_budget_error(kind, budget):
+    """Ruling I9 request check: the error message, or None when kind and --budget agree."""
+    if budget and kind not in BUDGETED_KINDS:
+        return (f"Error: --budget is not allowed for kind={kind}: a structural round's budget "
+                f"MUST be empty (ruling I9, spec §2.4)")
+    if not budget and kind in BUDGETED_KINDS:
+        return f"Error: kind={kind} requires --budget (ruling I9)"
+    return None
+
+
+def budget_file_sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest() if path else None
+
+
+def apply_modes(report, modes, kind="structural", budget_sha256=None):
+    """Merge run_modes() output into the rollup and set gate_pass per kind (ruling I9).
+
+    structural/aa/baseline: findings strict_clean AND strict_field_clean AND census_ok
+    AND skips_ok. output-changing/relock: census_ok AND skips_ok AND budgeted verdict
+    clean (findings strict_clean kept as information)."""
     report["modes"] = {**report.get("modes", {}), **modes}
+    budgeted = report["modes"].get("budgeted")
+    if isinstance(budgeted, dict):
+        report["modes"]["budgeted"] = {**budgeted, "budget_sha256": budget_sha256}
+    report.setdefault("identity", {})["budget_sha256"] = budget_sha256
     gp = report.setdefault("gate_pass", {})
     gp["strict_field_clean"] = bool(modes.get("strict_field_clean"))
-    gp["pass"] = bool(gp.get("pass")) and gp["strict_field_clean"]
+    if kind in BUDGETED_KINDS:
+        gp["pass"] = (bool(gp.get("census_ok")) and bool(gp.get("skips_ok"))
+                      and (modes.get("budgeted") or {}).get("verdict") == "clean")
+    else:
+        gp["pass"] = bool(gp.get("pass")) and gp["strict_field_clean"]
+    gp["kind"] = kind
+    gp["criterion"] = CRITERIA.get(kind, CRITERIA["structural"])
     return report
 
 
 def main(argv=None):
     args = build_arg_parser().parse_args(argv)
+    args.kind = resolve_kind(args.kind)
 
     profile = PROFILES[args.profile]
     for d in (args.baseline_dir, args.candidate_dir):
@@ -647,6 +708,11 @@ def main(argv=None):
         except BudgetError as e:
             print(f"Error: --budget {args.budget}: {e}", file=sys.stderr)
             sys.exit(2)
+    kind_err = kind_budget_error(args.kind, args.budget)
+    if kind_err:
+        print(kind_err, file=sys.stderr)
+        sys.exit(2)
+    budget_sha256 = budget_file_sha256(args.budget)
     base_ref, cand_ref = git_worktree_ref(Path(args.baseline_dir)), git_worktree_ref(Path(args.candidate_dir))
     if args.kind != "aa" and (base_ref.dirty or cand_ref.dirty):
         print("Error: product worktree is dirty; evidence runs need clean worktrees", file=sys.stderr)
@@ -763,11 +829,12 @@ def main(argv=None):
     except (FileNotFoundError, BudgetError) as e:
         print(f"Error: comparator modes could not run: {e}", file=sys.stderr)
         sys.exit(2)
-    report = apply_modes(report, modes)
+    report = apply_modes(report, modes, kind=args.kind, budget_sha256=budget_sha256)
     layout.rollup(section).write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     finish_manifest(layout.root, {**report["totals"], "skip_breakdown": agg["skip_breakdown"],
                                   "expected_census": manifest["expected_census"],
                                   "executed_census": agg["executed_census"],
+                                  "budget_sha256": budget_sha256,
                                   "modes": {k: v.get("verdict") for k, v in modes.items() if isinstance(v, dict)}})
     _print_summary(report)
     print(f"\nElapsed: {time.time()-t_start:.0f}s\nRollup JSON: {layout.rollup(section)}")

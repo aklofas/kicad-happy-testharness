@@ -2871,12 +2871,18 @@ Three verdicts, never conflated:
 result is stored under `rollup["modes"]`, and the gate exit requires
 `modes.strict_field_clean`. With `--budget`, that is the budgeted verdict == clean.
 
-**Exit code vs round verdict.** Spec §2.4 read literally: `gate_pass.pass` ALSO requires the
-findings-level `strict_clean` (zero WARN/Disappeared/Downgrades/NewUnknown/FAIL). An
-output-changing round therefore exits 1 BY DESIGN even when its budget is clean. For such a
-round, read the verdict from `modes.budgeted.verdict` plus the `census_ok`/`skips_ok` fields
-of `gate_pass`, not from the exit code. Whether a clean budget should replace findings
-`strict_clean` in `gate_pass.pass` for `--kind gate --budget` is an open maintainer question.
+**Exit code vs round verdict (maintainer ruling I9).** `gate_pass.pass` depends on `--kind`:
+
+| `--kind` | `--budget` | `gate_pass.pass` |
+|---|---|---|
+| `structural` (default; `gate` is a deprecated alias) | forbidden (exit 2) | findings `strict_clean` AND `strict_field_clean` AND `census_ok` AND `skips_ok` |
+| `aa`, `baseline` | forbidden (exit 2) | same as `structural` |
+| `output-changing`, `relock` | required (exit 2 without) | `census_ok` AND `skips_ok` AND `modes.budgeted.verdict == "clean"` |
+
+For the output-changing kinds the findings-level `strict_clean` stays in `gate_pass` as
+information only. `gate_pass` records the resolved `kind` and its `criterion`; the budget
+file's sha256 lands in `modes.budgeted.budget_sha256`, `identity.budget_sha256` and the
+finished manifest (null without a budget).
 
 CLI exit codes: 0 clean, 1 deltas/residuals, 2 error. The CLI takes `--jobs` (default
 cpu_count); reports are byte-identical for any `--jobs`. Reports are complete (every delta
