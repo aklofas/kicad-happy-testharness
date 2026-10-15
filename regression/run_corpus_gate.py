@@ -26,12 +26,14 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import platform
 import sys
 import time
 import uuid
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from dataclasses import asdict
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +44,8 @@ import regression_diff as rdiff  # noqa: E402
 from harnesslib.execution import run_once, build_env, recorded_env  # noqa: E402
 from harnesslib.identity import (RunSpec, git_worktree_ref, sha256_file, input_digest,  # noqa: E402
                                  write_manifest, finish_manifest, read_manifest,
-                                 manifests_match, UnitLog)
+                                 manifests_match, identity_key, unit_is_current,
+                                 MANIFEST_VERSION, UnitLog)
 from harnesslib.profiles import PROFILES  # noqa: E402
 from utils import (MANIFESTS_DIR, DEFAULT_JOBS, add_repo_filter_args,  # noqa: E402
                    resolve_repos_with_source, list_repos, filter_manifest_by_repo,
@@ -62,7 +65,9 @@ ALL_ANALYZERS = PHASE_A + PHASE_B
 MANIFEST_FILE = {"schematic": "all_schematics.txt", "pcb": "all_pcbs.txt",
                  "gerber": "all_gerbers.txt"}
 SLOTS = ("baseline", "candidate")
-SKIP_REASONS = ("not_applicable", "both_failed", "dependency_missing")
+SKIP_REASONS = ("not_applicable", "both_failed", "dependency_missing", "snapshot_read_error")
+BAD_SKIP_REASONS = ("both_failed", "dependency_missing", "snapshot_read_error")
+OK_STATUSES = ("ok", "ok_findings_exit")
 
 
 class GateLayout:
@@ -287,3 +292,392 @@ def _print_summary(report):
     if report["new_unknown_rule_distribution"]:
         print(f"NewUnknown rule_ids: {report['new_unknown_rule_distribution']}")
 
+
+
+# ---------------------------------------------------------------------------
+# Phase B -- chained analyzers, enumerated from the Phase A success records
+# ---------------------------------------------------------------------------
+
+def _skip_record(analyzer, repo, sch_key, reason):
+    unit_id = f"{repo}/{sch_key}"
+    return {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
+            "input_sha256": None, "baseline": {"status": "skipped"},
+            "candidate": {"status": "skipped"}, "verdict": "SKIP", "reason": reason}
+
+
+def _pcb_key_for(sch_key):
+    for old in (".kicad_sch", ".sch"):
+        if sch_key.endswith(old):
+            return sch_key[:-len(old)] + ".kicad_pcb"
+    return None
+
+
+def _both_ok(rec):
+    return (rec["baseline"]["status"] in OK_STATUSES
+            and rec["candidate"]["status"] in OK_STATUSES)
+
+
+def build_phase_b_jobs(a_records, layout, baseline_dir, candidate_dir, profile):
+    """Pair Phase A schematic records with PCB records. Returns (jobs, skip_records).
+
+    A schematic unit that did not succeed on BOTH sides yields a
+    dependency_missing SKIP for every Phase B analyzer. thermal without a PCB
+    pair is not_applicable; emc/cross_analysis treat the PCB as optional."""
+    ok_pcb = {r["unit_id"] for r in a_records if r["analyzer"] == "pcb" and _both_ok(r)}
+    jobs, skips = [], []
+    for r in a_records:
+        if r["analyzer"] != "schematic":
+            continue
+        repo, sch_key = r["repo"], r["unit_id"][len(r["repo"]) + 1:]
+        if not _both_ok(r):
+            skips.extend(_skip_record(a, repo, sch_key, "dependency_missing")
+                         for a in PHASE_B if a in profile.analyzers)
+            continue
+        pcb_key = _pcb_key_for(sch_key)
+        has_pcb = pcb_key is not None and f"{repo}/{pcb_key}" in ok_pcb
+        for analyzer in PHASE_B:
+            if analyzer not in profile.analyzers:
+                continue
+            if analyzer == "thermal" and not has_pcb:
+                skips.append(_skip_record(analyzer, repo, sch_key, "not_applicable"))
+                continue
+            jobs.append((analyzer, repo, sch_key, pcb_key if has_pcb else None,
+                         str(baseline_dir), str(candidate_dir), str(layout.root),
+                         profile.name, r["input_sha256"]))
+    return jobs, skips
+
+
+def phase_b_job(args):
+    (analyzer, repo, sch_key, pcb_key, baseline_dir, candidate_dir, gate_root,
+     profile_name, sch_input_sha) = args
+    profile = PROFILES[profile_name]
+    lay = GateLayout(gate_root)
+    env = build_env(offline=profile.offline)
+    sides = {}
+    for slot, kh_dir in (("baseline", baseline_dir), ("candidate", candidate_dir)):
+        sch = lay.snap(slot, "schematic", repo, sch_key)
+        pcb = lay.snap(slot, "pcb", repo, pcb_key) if pcb_key else None
+        out = lay.snap(slot, analyzer, repo, sch_key)
+        sides[slot] = run_once(lambda o, k=kh_dir, s=sch, p=pcb: chained_cmd(analyzer, k, s, p, o, profile),
+                               out, analyzer=analyzer, timeout=profile.timeout_s, env=env)
+    base, cand = sides["baseline"], sides["candidate"]
+    unit_id = f"{repo}/{sch_key}"
+    rec = {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
+           "input_sha256": sch_input_sha, "baseline": _side(base), "candidate": _side(cand)}
+    rec.update(diff_envelopes(lay.snap("baseline", analyzer, repo, sch_key),
+                              lay.snap("candidate", analyzer, repo, sch_key), _ok(base), _ok(cand)))
+    diff_out = lay.diff(analyzer, repo, sch_key)
+    diff_out.parent.mkdir(parents=True, exist_ok=True)
+    diff_out.write_text(json.dumps({"_record": rec}, indent=2), encoding="utf-8")
+    return rec
+
+
+# ---------------------------------------------------------------------------
+# resume, execution, aggregation, rollup
+# ---------------------------------------------------------------------------
+
+class _OneRecordLog:
+    """Adapter so harnesslib.identity.unit_is_current can judge one side of a record."""
+
+    def __init__(self, key, record):
+        self._m = {key: record}
+
+    def by_unit(self):
+        return self._m
+
+
+def _side_current(layout, slot, rec, input_sha):
+    side = rec.get(slot)
+    if not isinstance(side, dict):
+        return False
+    analyzer, unit_id, repo = rec["analyzer"], rec["unit_id"], rec["repo"]
+    view = {**rec, "status": side.get("status"), "output_sha256": side.get("output_sha256")}
+    snap = layout.snap(slot, analyzer, repo, unit_id[len(repo) + 1:])
+    return unit_is_current(_OneRecordLog(f"{analyzer}/{unit_id}", view), analyzer, unit_id,
+                           input_sha, snap)
+
+
+def resume_plan(layout, spec, input_shas=None):
+    """Return (reusable, reasons). reusable maps 'analyzer/unit_id' -> record.
+
+    Nothing is reusable unless the previous manifest's identity matches this
+    spec (clean worktrees, same SHAs/argv/selection/env). Per unit, both the
+    baseline and candidate snapshots must still hash to the logged output and
+    both sides must have succeeded; SKIP/FAIL/WARN records always rerun.
+    input_shas maps 'analyzer/unit_id' -> current input sha256 for Phase A
+    units (absent => not reusable). Phase B records are returned with their
+    logged input_sha256 for the caller to compare against the schematic
+    snapshot's input (they have no input file of their own). None skips the
+    input check entirely."""
+    if not layout.manifest.exists():
+        return {}, ["no previous manifest"]
+    prev = read_manifest(layout.root)
+    probe = {"manifest_version": MANIFEST_VERSION, "identity": identity_key(spec),
+             "harness": asdict(spec.harness),
+             "product": {"baseline": asdict(spec.baseline) if spec.baseline else None,
+                         "candidate": asdict(spec.candidate) if spec.candidate else None}}
+    ok, reasons = manifests_match(prev, probe)
+    if not ok:
+        return {}, reasons
+    reusable = {}
+    for key, rec in UnitLog(layout.root).by_unit().items():
+        if rec.get("verdict") == "SKIP" or not rec.get("repo") or not rec.get("unit_id"):
+            continue
+        if input_shas is None or rec["analyzer"] not in PHASE_A:
+            input_sha = rec.get("input_sha256")
+        elif key in input_shas:
+            input_sha = input_shas[key]
+        else:
+            continue
+        if all(_side_current(layout, slot, rec, input_sha) for slot in SLOTS):
+            reusable[key] = rec
+    return reusable, []
+
+
+def _run_jobs(jobs, worker, jobs_n, label):
+    if not jobs:
+        return []
+    print(f"  {label}: {len(jobs)} units, {jobs_n} workers")
+    results, t0, done = [], time.time(), 0
+    if jobs_n <= 1:
+        for job in jobs:
+            results.append(worker(job)); done += 1
+            if done % 200 == 0:
+                print(f"    {done}/{len(jobs)} ({time.time()-t0:.0f}s)")
+    else:
+        with ProcessPoolExecutor(max_workers=jobs_n) as pool:
+            futs = [pool.submit(worker, job) for job in jobs]
+            for fut in as_completed(futs):
+                results.append(fut.result()); done += 1
+                if done % 200 == 0:
+                    print(f"    {done}/{len(jobs)} ({time.time()-t0:.0f}s)")
+    print(f"  {label} done: {len(results)} units in {time.time()-t0:.0f}s")
+    return results
+
+
+def aggregate(records):
+    by_analyzer = {a: Counter() for a in ALL_ANALYZERS}
+    fail_repos = defaultdict(list)
+    new_known_rules, new_upgraded_rules, new_unknown_rules = Counter(), Counter(), Counter()
+    skip_breakdown = Counter({r: 0 for r in SKIP_REASONS})
+    executed = Counter()
+    for r in records:
+        c = by_analyzer[r["analyzer"]]
+        c[r["verdict"]] += 1
+        dep_missing = r["verdict"] == "SKIP" and r.get("reason") == "dependency_missing"
+        if r["verdict"] == "SKIP":
+            skip_breakdown[r.get("reason", "both_failed")] += 1
+        # dependency_missing units were never attempted and are not in the
+        # Phase B expectation; skips_ok already fails the gate on them
+        if not dep_missing:
+            executed[r["analyzer"]] += 1
+        c["disappeared"] += r.get("disappeared_count", 0)
+        c["downgrades"] += r.get("severity_downgrades", 0)
+        c["upgrades"] += r.get("severity_upgrades", 0)
+        c["new_known"] += r.get("new_known_count", 0)
+        c["new_upgraded"] += r.get("new_upgraded_count", 0)
+        c["new_unknown"] += r.get("new_unknown_count", 0)
+        for rid in r.get("new_known_rule_ids", []):
+            new_known_rules[rid] += 1
+        for rid in r.get("new_upgraded_rule_ids", []):
+            new_upgraded_rules[rid] += 1
+        for rid in r.get("new_unknown_rule_ids", []):
+            new_unknown_rules[rid] += 1
+        if r["verdict"] == "FAIL":
+            fail_repos[r["repo"]].append(r)
+    return {"by_analyzer": by_analyzer, "fail_repos": fail_repos,
+            "new_known_rules": new_known_rules, "new_upgraded_rules": new_upgraded_rules,
+            "new_unknown_rules": new_unknown_rules, "skip_breakdown": dict(skip_breakdown),
+            "executed_census": dict(executed)}
+
+
+def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census):
+    skips_ok = all(skip_breakdown.get(r, 0) == 0 for r in BAD_SKIP_REASONS)
+    census_ok = all(executed_census.get(a, 0) == n for a, n in expected_census.items())
+    strict = bool(criteria["strict_clean"])
+    return {"pass": strict and skips_ok and census_ok, "strict_clean": strict,
+            "census_ok": census_ok, "skips_ok": skips_ok,
+            "skip_breakdown": dict(skip_breakdown),
+            "expected_census": dict(expected_census), "executed_census": dict(executed_census)}
+
+
+def write_rollup(records, agg, section, layout, manifest):
+    rows = []
+    for a in ALL_ANALYZERS:
+        c = agg["by_analyzer"][a]
+        rows.append({"analyzer": a, "PASS": c.get("PASS", 0), "WARN": c.get("WARN", 0),
+                     "FAIL": c.get("FAIL", 0), "SKIP": c.get("SKIP", 0),
+                     "Disappeared": c.get("disappeared", 0), "Downgrades": c.get("downgrades", 0),
+                     "Upgrades": c.get("upgrades", 0), "NewKnown": c.get("new_known", 0),
+                     "NewUpgraded": c.get("new_upgraded", 0), "NewUnknown": c.get("new_unknown", 0)})
+    totals = {k: sum(row[k] for row in rows) for k in
+              ("PASS", "WARN", "FAIL", "SKIP", "Disappeared", "Downgrades", "Upgrades",
+               "NewKnown", "NewUpgraded", "NewUnknown")}
+    fail_list = [{"repo": repo, "analyzers": sorted({r["analyzer"] for r in recs}),
+                  "units": [{"analyzer": r["analyzer"], "identity": r["identity"],
+                             "reason": r.get("reason"), "disappeared": r.get("disappeared", []),
+                             "downgrades": r.get("downgrades", [])} for r in recs]}
+                 for repo, recs in sorted(agg["fail_repos"].items())]
+    criteria = _compute_pass_criteria(totals)
+    gate_pass = compute_gate_pass(criteria, agg["skip_breakdown"],
+                                  manifest.get("expected_census", {}), agg["executed_census"])
+    summary_mode = "strict_clean" if criteria["strict_clean"] else ("clean" if criteria["clean"] else "not_clean")
+    product = manifest.get("product") or {}
+    report = {
+        "section": section, "total_units": len(records), "rollup": rows, "totals": totals,
+        "fail_repo_count": len(agg["fail_repos"]), "fail_repos": fail_list,
+        "new_known_rule_distribution": dict(agg["new_known_rules"].most_common()),
+        "new_upgraded_rule_distribution": dict(agg["new_upgraded_rules"].most_common()),
+        "new_unknown_rule_distribution": dict(agg["new_unknown_rules"].most_common()),
+        "pass_criteria": criteria,
+        "gate_pass": gate_pass,
+        "modes": {"findings_summary": summary_mode},
+        "identity": {"run_id": manifest.get("run_id"), "profile": manifest.get("profile"),
+                     "harness_sha": (manifest.get("harness") or {}).get("sha"),
+                     "baseline_sha": (product.get("baseline") or {}).get("sha"),
+                     "candidate_sha": (product.get("candidate") or {}).get("sha"),
+                     "selection": manifest.get("selection"), "input_digest": manifest.get("input_digest"),
+                     "normalization_policy": manifest.get("normalization_policy")},
+    }
+    out_json = layout.rollup(section)
+    out_json.parent.mkdir(parents=True, exist_ok=True)
+    out_json.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
+    with out_json.with_suffix(".csv").open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        cols = ["Analyzer", "PASS", "WARN", "FAIL", "SKIP", "Disappeared", "Downgrades",
+                "Upgrades", "NewKnown", "NewUpgraded", "NewUnknown"]
+        w.writerow(cols)
+        for row in rows:
+            w.writerow([row["analyzer"]] + [row[c] for c in cols[1:]])
+        w.writerow(["TOTAL"] + [totals[c] for c in cols[1:]])
+    return report
+
+
+# ---------------------------------------------------------------------------
+# main
+# ---------------------------------------------------------------------------
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    add_repo_filter_args(ap)
+    ap.add_argument("--baseline-dir", required=True, help="baseline kicad-happy worktree")
+    ap.add_argument("--candidate-dir", required=True, help="candidate kicad-happy worktree")
+    ap.add_argument("--gate-dir", required=True, help="evidence tree root (results/<label>_gate)")
+    ap.add_argument("--profile", default="standard", choices=sorted(PROFILES))
+    ap.add_argument("--kind", default="gate", choices=("gate", "aa", "baseline"))
+    ap.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS)
+    ap.add_argument("--label", default=None, help="rollup filename label (default: section)")
+    ap.add_argument("--resume", action="store_true",
+                    help="reuse units from a previous run ONLY if its manifest identity matches")
+    args = ap.parse_args(argv)
+
+    profile = PROFILES[args.profile]
+    for d in (args.baseline_dir, args.candidate_dir):
+        if not Path(d).exists():
+            print(f"Error: worktree {d} does not exist", file=sys.stderr)
+            sys.exit(2)
+    base_ref, cand_ref = git_worktree_ref(Path(args.baseline_dir)), git_worktree_ref(Path(args.candidate_dir))
+    if args.kind != "aa" and (base_ref.dirty or cand_ref.dirty):
+        print("Error: product worktree is dirty; evidence runs need clean worktrees", file=sys.stderr)
+        sys.exit(2)
+    gd = Path(args.gate_dir)
+    layout = GateLayout(gd if gd.is_absolute() else HARNESS_DIR / gd)
+
+    repos, selection_source = resolve_repos_with_source(args, require_explicit_all=True)
+    section = (args.label or getattr(args, "cross_section", None)
+               or getattr(args, "repo", None) or "full").replace("/", "_")
+
+    a_jobs = build_phase_a_jobs(repos, layout, args.baseline_dir, args.candidate_dir, profile)
+    a_key = lambda j: f"{j[0]}/{j[2]}/{safe_name(j[1])}"  # noqa: E731
+    unit_ids = sorted(f"{j[2]}/{safe_name(j[1])}" for j in a_jobs)
+    env = build_env(offline=profile.offline)
+    spec = RunSpec(kind=args.kind, profile=profile.name, harness=git_worktree_ref(HARNESS_DIR),
+                   baseline=base_ref, candidate=cand_ref,
+                   argv=tuple(a for a in (argv if argv is not None else sys.argv[1:]) if a != "--resume"),
+                   selection_source=selection_source, unit_ids=tuple(unit_ids),
+                   normalization_policy="volatile-leaves-v1", env=recorded_env(env))
+
+    input_shas = {a_key(j): sha256_file(j[1]) for j in a_jobs}
+    reusable = {}
+    if args.resume:
+        reusable, reasons = resume_plan(layout, spec, input_shas=input_shas)
+        print(f"  resume: {len(reusable)} reusable units" + (f"; identity mismatch: {reasons}" if reasons else ""))
+
+    # rotate the previous unit log so this run's log is complete and self-contained
+    layout.root.mkdir(parents=True, exist_ok=True)
+    if layout.units.exists():
+        os.replace(layout.units, layout.root / "units.prev.jsonl")
+    write_manifest(layout.root, spec, run_id=str(uuid.uuid4()), expected_census=expected_census(a_jobs),
+                   input_digest=input_digest(sorted(input_shas_by_unit(a_jobs, input_shas))),
+                   runtime={"python": platform.python_version(), "platform": platform.platform()})
+    manifest = read_manifest(layout.root)
+    log = UnitLog(layout.root)
+    n_repos = len(repos) if repos is not None else len(list_repos())
+    print(f"=== Corpus regression gate ===\n  profile: {profile.name}   kind: {args.kind}\n"
+          f"  baseline:  {args.baseline_dir} @ {base_ref.sha[:12]}\n"
+          f"  candidate: {args.candidate_dir} @ {cand_ref.sha[:12]}\n"
+          f"  gate dir:  {layout.root}\n  repos: {n_repos}   jobs: {args.jobs}   section: {section}")
+    t_start = time.time()
+
+    def reuse(key):
+        rec = {**reusable[key], "reused": True}
+        log.append(rec)
+        return rec
+
+    print("\n[Phase A] " + " / ".join(a for a in PHASE_A if a in profile.analyzers))
+    a_keys = [a_key(j) for j in a_jobs]
+    a_results = [reuse(k) for k in a_keys if k in reusable]
+    for rec in _run_jobs([j for j in a_jobs if a_key(j) not in reusable], phase_a_job, args.jobs, "Phase A"):
+        log.append(rec); a_results.append(rec)
+    rerun_a = {k for k in a_keys if k not in reusable}
+
+    print("\n[Phase B] " + " / ".join(a for a in PHASE_B if a in profile.analyzers))
+    b_jobs, b_skips = build_phase_b_jobs(a_results, layout, args.baseline_dir, args.candidate_dir, profile)
+
+    def b_reusable(j):
+        # reusable only if the logged schematic input matches AND no Phase A input it consumed reran
+        analyzer, repo, sch_key, pcb_key = j[0], j[1], j[2], j[3]
+        rec = reusable.get(f"{analyzer}/{repo}/{sch_key}")
+        if rec is None or rec.get("input_sha256") != j[8]:
+            return False
+        deps = {f"schematic/{repo}/{sch_key}"}
+        if pcb_key:
+            deps.add(f"pcb/{repo}/{pcb_key}")
+        return not (deps & rerun_a)
+
+    b_results = []
+    for rec in b_skips:
+        log.append(rec); b_results.append(rec)
+    todo_b = []
+    for j in b_jobs:
+        if b_reusable(j):
+            b_results.append(reuse(f"{j[0]}/{j[1]}/{j[2]}"))
+        else:
+            todo_b.append(j)
+    for rec in _run_jobs(todo_b, phase_b_job, args.jobs, "Phase B"):
+        log.append(rec); b_results.append(rec)
+
+    # Phase B expectation: one unit per Phase A schematic success pair per analyzer
+    # (thermal's not_applicable units included so the census balances)
+    n_sch_ok = sum(1 for r in a_results if r["analyzer"] == "schematic" and _both_ok(r))
+    b_expected = {a: n_sch_ok for a in PHASE_B if a in profile.analyzers}
+    manifest = {**manifest, "expected_census": {**manifest.get("expected_census", {}), **b_expected}}
+
+    records = a_results + b_results
+    agg = aggregate(records)
+    report = write_rollup(records, agg, section, layout, manifest)
+    finish_manifest(layout.root, {**report["totals"], "skip_breakdown": agg["skip_breakdown"],
+                                  "expected_census": manifest["expected_census"],
+                                  "executed_census": agg["executed_census"]})
+    _print_summary(report)
+    print(f"\nElapsed: {time.time()-t_start:.0f}s\nRollup JSON: {layout.rollup(section)}")
+    sys.exit(0 if report["gate_pass"]["pass"] else 1)
+
+
+def input_shas_by_unit(a_jobs, input_shas):
+    return [(f"{j[2]}/{safe_name(j[1])}", input_shas[f"{j[0]}/{j[2]}/{safe_name(j[1])}"]) for j in a_jobs]
+
+
+if __name__ == "__main__":
+    main()
