@@ -17,7 +17,7 @@ sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets"))
 # ---------------------------------------------------------------------------
 
 def _make_ctx(source="test"):
-    """Minimal AnalysisContext with cache_dir and design_context attributes."""
+    """Minimal AnalysisContext with cache_dir attribute."""
     from kicad_types import AnalysisContext
     ctx = AnalysisContext(
         components=[],
@@ -27,7 +27,6 @@ def _make_ctx(source="test"):
         source=source,
     )
     setattr(ctx, "cache_dir", None)
-    setattr(ctx, "design_context", None)
     return ctx
 
 
@@ -63,13 +62,11 @@ def test_fs_001_impedance_too_low_heuristic(tmp_path):
     Parallel impedance of 10R || 10R = 5R < 1000R threshold → severity='info'.
     Confidence must remain 'heuristic' (no datasheet logic for this check).
     schema_era='v1.4' must be present on the finding.
-    design_context=None threads through without error.
     """
     import validation_detectors
 
     ctx = _make_ctx()
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     # 10R || 10R = 5R < 1000R (impedance too low)
     reg = _make_regulator(r_top_ohms=10, r_bottom_ohms=10, mpn="")
@@ -102,7 +99,6 @@ def test_fs_001_impedance_too_high_heuristic(tmp_path):
 
     ctx = _make_ctx()
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     # 3MR || 3MR = 1.5MR > 1000kR (impedance too high)
     reg = _make_regulator(r_top_ohms=3_000_000, r_bottom_ohms=3_000_000, mpn="")
@@ -146,7 +142,6 @@ def test_fs_001_probe_runs_but_confidence_stays_heuristic(tmp_path):
 
     ctx = _make_ctx()
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     # Low impedance (5R) so a finding fires.
     reg = _make_regulator(r_top_ohms=10, r_bottom_ohms=10, mpn="LM2596")

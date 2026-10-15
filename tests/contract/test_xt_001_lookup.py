@@ -27,7 +27,6 @@ def _make_ctx(source="test"):
         source=source,
     )
     setattr(ctx, "cache_dir", None)
-    setattr(ctx, "design_context", None)
     return ctx
 
 
@@ -247,7 +246,6 @@ def test_detect_crystal_circuits_probes_datasheet_for_target_load(tmp_path):
         source="test",
     )
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     with patch.object(signal_detectors, "get_facts", return_value=fake_facts):
         crystal_circuits = signal_detectors.detect_crystal_circuits(ctx)
@@ -320,7 +318,6 @@ def _build_crystal_ctx(tmp_path, xtal_value="XTAL-16M"):
         source="test",
     )
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
     return ctx
 
 

@@ -17,7 +17,7 @@ sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets"))
 # ---------------------------------------------------------------------------
 
 def _make_ctx(source="test"):
-    """Minimal AnalysisContext with cache_dir and design_context attributes."""
+    """Minimal AnalysisContext with cache_dir attribute."""
     from kicad_types import AnalysisContext
     ctx = AnalysisContext(
         components=[],
@@ -27,7 +27,6 @@ def _make_ctx(source="test"):
         source=source,
     )
     setattr(ctx, "cache_dir", None)
-    setattr(ctx, "design_context", None)
     return ctx
 
 
@@ -53,13 +52,11 @@ def test_vm_001_domain_crossing_emits_heuristic(tmp_path):
     - confidence='heuristic' preserved
     - evidence_source='topology' preserved
     - schema_era='v1.4' threaded through
-    - design_context=None accepted without error
     """
     import validation_detectors
 
     ctx = _make_ctx()
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     # Two ICs: U1 at 3.3V, U2 at 5V
     fake_ics = [
@@ -123,7 +120,6 @@ def test_vm_001_probe_wiring_get_facts_called(tmp_path):
 
     ctx = _make_ctx()
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     fake_ics = [
         {'reference': 'U1', 'mpn': 'LM358', 'value': 'LM358'},
@@ -163,7 +159,6 @@ def test_vm_001_facts_present_confidence_stays_heuristic(tmp_path):
 
     ctx = _make_ctx()
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     fake_ics = [
         {'reference': 'U1', 'mpn': 'STM32F103', 'value': 'STM32F103'},
@@ -205,59 +200,6 @@ def test_vm_001_facts_present_confidence_stays_heuristic(tmp_path):
     assert all(f.get('schema_era') == 'v1.4' for f in vm), (
         f"schema_era='v1.4' must be on all VM-001 findings: "
         f"{[f.get('schema_era') for f in vm]}"
-    )
-
-
-# ---------------------------------------------------------------------------
-# design_context threading — non-None value accepted
-# ---------------------------------------------------------------------------
-
-def test_vm_001_design_context_threading(tmp_path):
-    """Non-None design_context threads through make_finding without error."""
-    import validation_detectors
-
-    ctx = _make_ctx()
-    setattr(ctx, "cache_dir", tmp_path)
-    dc = {'board_class': 'consumer', 'risk_profile': 'low'}
-    setattr(ctx, "design_context", dc)
-
-    fake_ics = [
-        {'reference': 'U1', 'mpn': 'TLV1234', 'value': 'TLV1234'},
-        {'reference': 'U2', 'mpn': 'SN74HC', 'value': 'SN74HC'},
-    ]
-
-    def fake_voltage(ctx_arg, ref):
-        return {'U1': 3.3, 'U2': 5.0}.get(ref)
-
-    ctx.nets = {
-        'SIG2': {
-            'pins': [
-                {'component': 'U1', 'pin_number': '1', 'pin_name': 'OUT'},
-                {'component': 'U2', 'pin_number': '2', 'pin_name': 'IN'},
-            ]
-        }
-    }
-    ctx.comp_lookup = {
-        'U1': {'mpn': 'TLV1234', 'value': 'TLV1234', 'type': 'ic'},
-        'U2': {'mpn': 'SN74HC', 'value': 'SN74HC', 'type': 'ic'},
-    }
-    ctx.ref_pins = {
-        'U1': {'1': ('SIG2', None)},
-        'U2': {'2': ('SIG2', None)},
-    }
-
-    with patch.object(validation_detectors, 'get_unique_ics', return_value=fake_ics), \
-         patch.object(validation_detectors, '_estimate_rail_voltage_for_ic', side_effect=fake_voltage), \
-         patch.object(validation_detectors, 'get_facts', return_value=None), \
-         patch.object(validation_detectors, 'get_regulator_features', return_value=None):
-        findings = validation_detectors.validate_voltage_levels(ctx)
-
-    vm = [f for f in findings if f.get('rule_id') == 'VM-001']
-    assert vm, "Expected VM-001 finding with non-None design_context accepted by make_finding"
-    # design_context is consumed by make_finding for severity tuning (not stored in output).
-    # Verify schema_era is present, confirming the threaded emit site was reached.
-    assert vm[0].get('schema_era') == 'v1.4', (
-        f"Expected schema_era='v1.4', got {vm[0].get('schema_era')!r}"
     )
 
 

@@ -17,7 +17,6 @@ def _make_ctx(components, nets, pin_net, known_power_rails, tmp_path):
         pin_net=pin_net, known_power_rails=known_power_rails, source="test",
     )
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
     return ctx
 
 

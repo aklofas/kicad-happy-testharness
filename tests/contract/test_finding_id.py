@@ -102,24 +102,6 @@ def test_make_finding_populates_finding_id_from_summary_hash():
     assert len(locator) == 12
 
 
-def test_make_finding_passes_design_context_to_tuning_stub():
-    """AM-001 has no 'medical' when-clause in severity_tuning.json; tuning algorithm passes severity through unchanged."""
-    f = make_finding(
-        source="sch",
-        detector="test_detector",
-        rule_id="AM-001",
-        category="test",
-        severity="warning",
-        confidence="heuristic",
-        evidence_source="topology",
-        summary="Test",
-        description="Test description",
-        components=["U1"],
-        design_context={"environment": "medical"},
-    )
-    assert f["severity"] == "warning"
-
-
 def test_make_finding_uses_detection_id_from_extra():
     """Detection_id passed via **extra must propagate into finding_id."""
     f = make_finding(

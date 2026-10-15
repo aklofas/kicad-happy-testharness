@@ -68,7 +68,6 @@ def test_pu_001_datasheet_branch_fires_when_facts_has_pullup_range(tmp_path):
         source="test",
     )
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     with patch.object(validation_detectors, "get_facts", return_value=fake_facts):
         findings = validation_detectors.validate_pullups(ctx)

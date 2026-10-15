@@ -9,7 +9,7 @@ batch covering 11 detectors:
 Asks (a)/(b)/(c) covered here. Path A scope per harness 2026-05-03 reply:
 ask (d) — datasheet-branch activation gated on AnalysisContext.cache_dir
 wiring — defers to a follow-up file once Phase 4d-active lands the
-cache_dir + design_context fields on the AnalysisContext dataclass. Per-rule
+cache_dir field on the AnalysisContext dataclass. Per-rule
 fire-shape fixtures (AM-001 known-violation board, etc.) defer with (d) —
 they require real cache wiring to fire.
 
@@ -273,7 +273,7 @@ def _make_xc(status, *, target_load_source="datasheet", reference="Y1"):
 
 def _make_ctx():
     """Minimal duck-typed AnalysisContext stand-in. XT-001 reads only
-    ctx.source and getattr(ctx, 'design_context', None)."""
+    ctx.source."""
     return SimpleNamespace(source="schematic")
 
 

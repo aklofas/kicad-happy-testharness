@@ -41,21 +41,6 @@ def test_get_facts_returns_object_for_extant_mpn(tmp_path):
     assert facts.source.mpn == "LM2596-ADJ"
 
 
-def test_read_design_context_returns_none_when_absent(tmp_path):
-    from lookup_helpers import read_design_context
-    assert read_design_context(tmp_path) is None
-
-
-def test_read_design_context_returns_dict_when_present(tmp_path):
-    from lookup_helpers import read_design_context
-    dc = {"design_category": "power_supply", "environment": "industrial",
-           "compliance_targets": [], "user_declared_intent": None,
-           "confidence": "high", "evidence": "test", "resolution": "inferred_only"}
-    (tmp_path / "design_context.json").write_text(json.dumps(dc))
-    result = read_design_context(tmp_path)
-    assert result == dc
-
-
 def test_lookup_helpers_exports_has_data():
     """has_data re-exported from lookup_helpers resolves to real datasheet_types impl."""
     from lookup_helpers import has_data

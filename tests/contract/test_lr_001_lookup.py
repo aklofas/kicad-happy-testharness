@@ -47,7 +47,6 @@ def test_lr_001_falls_back_to_heuristic_when_no_facts(tmp_path):
         source="test",
     )
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     with patch.object(validation_detectors, "get_facts", return_value=None):
         findings = validation_detectors.validate_led_resistors(ctx)
@@ -126,7 +125,6 @@ def test_lr_001_datasheet_branch_fires_when_facts_has_vf(tmp_path):
     # Wire parsed_values so the resistor has 50 ohms.
     ctx.parsed_values = {res_ref: 50.0}
     setattr(ctx, "cache_dir", tmp_path)
-    setattr(ctx, "design_context", None)
 
     with patch.object(validation_detectors, "get_facts", return_value=fake_facts):
         findings = validation_detectors.validate_led_resistors(ctx)
