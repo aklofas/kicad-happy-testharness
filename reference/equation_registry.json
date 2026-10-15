@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "last_scan": "2026-04-17T20:14:15.347769+00:00",
+  "last_scan": "2026-10-15T11:34:37.786299+00:00",
   "equations": [
     {
       "id": "EQ-001",
       "formula": "E = K \u00d7 f\u00b2 \u00d7 A \u00d7 I / r (differential-mode loop radiation)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 123,
       "function": "dm_radiation_v_m",
       "sources": [
@@ -17,12 +17,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "MSU EMC Lab Module 9 p.9-16: |E|=1.317e-14\u00d7f\u00b2\u00d7A\u00d7I/r (matches code 1.316e-14). Derived from Paul 'Introduction to EMC' (Wiley, 1992). URL: https://www.egr.msu.edu/emrg/sites/default/files/content/module9_radiated_emissions.pdf [Re-confirmed 2026-04-16 post-P12-refactor: formula E=K\u00d7f\u00b2\u00d7A\u00d7I/r with K=1.316e-14 (free-space) or 2.632e-14 (with ground plane image) is unchanged; hash drift from type-hint additions and code-comment cleanup only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-002",
       "formula": "dB\u00b5V/m = 20 \u00d7 log\u2081\u2080(E \u00d7 10\u2076)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 138,
       "function": "dm_radiation_dbuv_m",
       "sources": [],
@@ -31,12 +32,13 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Standard dB conversion: dBuV/m = 20\u00d7log10(V/m \u00d7 1e6). Self-evident from dB definition. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-003",
       "formula": "E = 1.257e-6 \u00d7 f \u00d7 L \u00d7 I_CM / r (common-mode cable radiation)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 183,
       "function": "cm_radiation_v_m",
       "sources": [
@@ -48,12 +50,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "MSU EMC Lab Module 9 p.9-20: |E|=1.257e-6\u00d7f\u00d7L\u00d7I_C/r. Derived from Paul 'Introduction to EMC' (Wiley, 1992) p.415. URL: https://www.egr.msu.edu/emrg/sites/default/files/content/module9_radiated_emissions.pdf [Re-confirmed 2026-04-16 post-P12-refactor: formula E=1.257e-6\u00d7f\u00d7L\u00d7I_CM/r unchanged; coefficient 1.257e-6=\u00b5\u2080 includes \u00d72 ground-plane image factor; hash drift from type-hint additions only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-004",
       "formula": "A_n = |a\u2080 \u00d7 sinc(n\u03c0\u03c4/T) \u00d7 sinc(n\u03c0t_r/T)| (trapezoidal harmonic)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 253,
       "function": "trapezoidal_harmonic_amplitude",
       "sources": [
@@ -64,12 +67,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "LearnEMC trapezoid harmonics calculator confirms sinc\u00d7sinc envelope structure. URL: https://learnemc.com/ext/calculators/trapezoid_harmonics/index.html. Also MSU Module 9 p.9-17 Figure 7. [Re-confirmed 2026-04-16 post-P12-refactor: formula A_n=|a\u2080\u00d7sinc(n\u03c0\u03c4/T)\u00d7sinc(n\u03c0t_r/T)| unchanged; a\u2080=2\u00d7V_peak\u00d7\u03c4/T; hash drift from type-hint additions and docstring expansion only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-005",
       "formula": "f\u2081 = 1/(\u03c0\u03c4), f\u2082 = 1/(\u03c0t_r) (trapezoidal envelope corners)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 269,
       "function": "trapezoidal_corner_frequencies",
       "sources": [
@@ -80,12 +84,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "MSU Module 9 p.9-17: corner frequencies at 1/(\u03c0\u03c4) and 1/(\u03c0\u03c4_r) confirmed in emission spectrum plot. URL: https://www.egr.msu.edu/emrg/sites/default/files/content/module9_radiated_emissions.pdf [Re-confirmed 2026-04-16 post-P12-refactor: formula f\u2081=1/(\u03c0\u03c4), f\u2082=1/(\u03c0t_r) unchanged; hash drift from type-hint additions and Tuple return annotation only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-006",
       "formula": "f_mn = (c/2\u221a\u03b5r) \u00d7 \u221a((m/L)\u00b2 + (n/W)\u00b2) (PCB cavity resonance)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 347,
       "function": "cavity_resonance_hz",
       "sources": [
@@ -96,12 +101,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "LearnEMC cavity resonance calculator: f_mn = c/(2\u221a\u03b5r)\u00d7\u221a((m/a)\u00b2+(n/b)\u00b2). URL: https://learnemc.com/ext/calculators/cavity_resonance/pcb-res.html. Standard rectangular waveguide cavity formula. [Re-confirmed 2026-04-16 post-P12-refactor: formula f_mn=(c/2\u221a\u03b5r)\u00d7\u221a((m/L)\u00b2+(n/W)\u00b2) unchanged; uses C_0 constant and math.sqrt; hash drift from type-hint additions and docstring update only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-007",
       "formula": "BW = 0.35/t_r (3dB bandwidth from 10-90% rise time)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 396,
       "function": "bandwidth_from_rise_time",
       "sources": [
@@ -112,12 +118,13 @@
       "category": "signal_integrity",
       "impact": "medium",
       "verification_source": "Bogatin Rules of Thumb #1: BW=0.35/RT. URL: https://www.edn.com/rule-of-thumb-1-bandwidth-of-a-signal-from-its-rise-time/. Also Signal Integrity Journal: https://www.signalintegrityjournal.com/blogs/12-fundamentals/post/853-back-to-basics-bandwidth-and-rise-time [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-008",
       "formula": "f_knee = 0.5/t_r (EMC spectral content upper bound)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 411,
       "function": "knee_frequency",
       "sources": [
@@ -128,12 +135,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "Paul 'Introduction to EMC' Ch. 7: f_knee=0.5/t_r (more conservative than BW=0.35/t_r). Widely cited in EMC literature. [Re-confirmed 2026-04-16 post-P12-refactor: formula f_knee=0.5/rise_time_s unchanged; hash drift from type-hint addition (rise_time_s: float -> float) only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-009",
       "formula": "\u03bb = c/(f \u00d7 \u221a\u03b5r) (wavelength in PCB dielectric)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 426,
       "function": "wavelength_in_pcb",
       "sources": [],
@@ -142,12 +150,13 @@
       "category": "signal_integrity",
       "impact": "medium",
       "verification_source": "Standard EM wave propagation: \u03bb=c/(f\u221a\u03b5r). Self-evident from Maxwell equations. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-010",
       "formula": "L = 0.2h(ln(4h/d)+1) nH (via self-inductance)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 495,
       "function": "via_inductance_nh",
       "sources": [
@@ -158,12 +167,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Goldfarb & Pucel, IEEE MGWL Vol.1 No.6, June 1991, pp.135-137. Semantic Scholar: https://www.semanticscholar.org/paper/Modeling-via-hole-grounds-in-microstrip-Goldfarb-Pucel/a3f4614877b750e7b7eec1dfa5924d5ce8b99301. Formula: L\u22480.2h(ln(4h/d)+1) nH. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-011",
       "formula": "C = \u03b5\u2080\u03b5r/d (interplane capacitance per unit area)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 521,
       "function": "interplane_capacitance_pf_per_cm2",
       "sources": [],
@@ -172,12 +182,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Parallel-plate capacitor: C=\u03b5\u2080\u03b5r/d. Self-evident from Gauss law. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-012",
       "formula": "f_SRF = 1/(2\u03c0\u221a(LC)) (capacitor self-resonant frequency)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 544,
       "function": "cap_self_resonant_freq",
       "sources": [],
@@ -186,12 +197,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "Series LC resonance: f=1/(2\u03c0\u221a(LC)). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-P12-refactor: formula f_SRF=1/(2\u03c0\u221a(ESL\u00d7C)) unchanged; implementation uses 2*math.pi*math.sqrt(esl_h*capacitance_f); hash drift from type-hint additions and guard-clause reorder only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-013",
       "formula": "|Z| = \u221a(ESR\u00b2 + (\u03c9L - 1/\u03c9C)\u00b2) (series RLC impedance)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 596,
       "function": "cap_impedance_at_freq",
       "sources": [],
@@ -200,12 +212,13 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Series RLC impedance: |Z|=\u221a(R\u00b2+(XL-XC)\u00b2). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-016",
       "formula": "R = \u03c1L/(WT) (DC trace resistance)",
-      "file": "extract_parasitics.py",
+      "file": "skills/spice/scripts/extract_parasitics.py",
       "line": 49,
       "function": "trace_resistance",
       "sources": [],
@@ -214,12 +227,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Conductor resistance: R=\u03c1L/(W\u00d7T). Self-evident from Ohm law + conductor geometry. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "extract_parasitics.py"
     },
     {
       "id": "EQ-017",
       "formula": "R = \u03c1H/(\u03c0(r\u00b2outer-r\u00b2inner)) (via barrel resistance)",
-      "file": "extract_parasitics.py",
+      "file": "skills/spice/scripts/extract_parasitics.py",
       "line": 74,
       "function": "via_resistance",
       "sources": [],
@@ -228,12 +242,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Annular ring resistance from via plating geometry. Derived from R=\u03c1H/A where A=\u03c0(r\u00b2outer-r\u00b2inner). [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "extract_parasitics.py"
     },
     {
       "id": "EQ-018",
       "formula": "L = (\u00b5\u2080H/2\u03c0)ln(2H/D) (via self-inductance)",
-      "file": "extract_parasitics.py",
+      "file": "skills/spice/scripts/extract_parasitics.py",
       "line": 100,
       "function": "via_inductance",
       "sources": [
@@ -244,12 +259,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Goldfarb & Pucel, IEEE MGWL Vol.1 No.6, 1991. Same as EQ-010. URL: https://www.semanticscholar.org/paper/Modeling-via-hole-grounds-in-microstrip-Goldfarb-Pucel/a3f4614877b750e7b7eec1dfa5924d5ce8b99301 [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "extract_parasitics.py"
     },
     {
       "id": "EQ-019",
       "formula": "C = \u03b5\u2080\u03b5rLT/S (inter-trace coupling capacitance, parallel-plate approx)",
-      "file": "extract_parasitics.py",
+      "file": "skills/spice/scripts/extract_parasitics.py",
       "line": 129,
       "function": "coupling_capacitance",
       "sources": [],
@@ -258,17 +274,18 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Parallel-plate capacitor approximation for coupling. Marked as rough estimate in source code. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "extract_parasitics.py"
     },
     {
       "id": "EQ-020",
       "formula": "f_c = 1/(2\u03c0RC) (RC filter cutoff frequency)",
-      "file": "signal_detectors.py",
-      "line": 604,
+      "file": "skills/kicad/scripts/signal_detectors.py",
+      "line": 629,
       "function": "detect_rc_filters",
       "sources": [],
-      "content_hash": "sha256:242b731ac4df5cfa",
-      "status": "verified",
+      "content_hash": "sha256:fa1ddd300349127a",
+      "status": "stale",
       "category": "filter_design",
       "impact": "high",
       "verification_source": "RC filter cutoff: f_c=1/(2\u03c0RC). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -277,8 +294,8 @@
     {
       "id": "EQ-021",
       "formula": "f\u2080 = 1/(2\u03c0\u221a(LC)) (LC resonant frequency)",
-      "file": "signal_detectors.py",
-      "line": 759,
+      "file": "skills/kicad/scripts/signal_detectors.py",
+      "line": 784,
       "function": "detect_lc_filters",
       "sources": [],
       "content_hash": "sha256:53a25d0751f0ebf1",
@@ -286,13 +303,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "LC resonance: f\u2080=1/(2\u03c0\u221a(LC)). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "signal_detectors.py"
     },
     {
       "id": "EQ-022",
       "formula": "Z\u2080 = \u221a(L/C) (LC characteristic impedance)",
-      "file": "signal_detectors.py",
-      "line": 761,
+      "file": "skills/kicad/scripts/signal_detectors.py",
+      "line": 786,
       "function": "detect_lc_filters",
       "sources": [],
       "content_hash": "sha256:53a25d0751f0ebf1",
@@ -300,13 +318,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "LC characteristic impedance: Z\u2080=\u221a(L/C). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "signal_detectors.py"
     },
     {
       "id": "EQ-023",
       "formula": "Z\u2080 = (60/\u221a\u03b5r)ln(8h/w+w/4h) (Wheeler narrow microstrip)",
-      "file": "analyze_pcb.py",
-      "line": 2022,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2351,
       "function": "_microstrip_impedance",
       "sources": [],
       "content_hash": "sha256:d78baeda2bf920ee",
@@ -314,13 +333,14 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Wheeler narrow microstrip: Z\u2080=(60/\u221a\u03b5r)ln(8h/w+w/4h) for w/h<1. Confirmed at: https://f4inx.github.io/posts/microstrip-formulas-comparison.html. IPC-2141 standard. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-024",
       "formula": "Z\u2080 = 120\u03c0/(\u221a\u03b5r(w/h+1.393+0.667ln(w/h+1.444))) (Wheeler wide)",
-      "file": "analyze_pcb.py",
-      "line": 2025,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2354,
       "function": "_microstrip_impedance",
       "sources": [],
       "content_hash": "sha256:d78baeda2bf920ee",
@@ -328,12 +348,13 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Wheeler wide microstrip: Z\u2080=120\u03c0/(\u221a\u03b5r(w/h+1.393+0.667ln(w/h+1.444))) for w/h\u22651. Confirmed at: https://f4inx.github.io/posts/microstrip-formulas-comparison.html. IPC-2141 standard. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-025",
       "formula": "I_max = E_limit \u00d7 r / (\u00b5\u2080 \u00d7 f \u00d7 L) (max CM current)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 208,
       "function": "cm_max_current_a",
       "sources": [],
@@ -342,12 +363,13 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Inverse of EQ-003 solved for I. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-026",
       "formula": "dB\u00b5V/m = 20 \u00d7 log\u2081\u2080(E \u00d7 10\u2076) (CM radiation in dBuV/m)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 194,
       "function": "cm_radiation_dbuv_m",
       "sources": [],
@@ -356,12 +378,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "Same as EQ-002 applied to CM. Derived. [Re-confirmed 2026-04-16 post-P12-refactor: formula dB\u00b5V/m=20\u00d7log\u2081\u2080(E\u00d710\u2076) unchanged; calls cm_radiation_v_m then applies 20*math.log10(e*1e6); hash drift from type-hint additions only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-027",
       "formula": "A = E_limit \u00d7 r / (K \u00d7 f\u00b2 \u00d7 I) (max allowable loop area)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 155,
       "function": "dm_max_loop_area_m2",
       "sources": [],
@@ -370,12 +393,13 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Inverse of EQ-001 solved for A. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-028",
       "formula": "Full harmonic spectrum using EQ-004 per harmonic",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 305,
       "function": "harmonic_spectrum",
       "sources": [],
@@ -384,12 +408,13 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "Applies EQ-004 per harmonic number. Derived. [Re-confirmed 2026-04-16 post-P12-refactor: formula iterates n=1,2,...,max calling trapezoidal_harmonic_amplitude(n,...) per harmonic unchanged; output format extended with amplitude_dbuv field but core formula loop is identical; hash drift from output dict expansion and type-hint additions only.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-029",
       "formula": "1/Z_total = \u03a3(1/Z_i) (parallel impedance combination)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 660,
       "function": "parallel_cap_impedance",
       "sources": [],
@@ -398,12 +423,13 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Parallel impedance: 1/Z=\u03a3(1/Zi). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-030",
       "formula": "Z(f) = parallel cap impedance swept over log frequency",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 697,
       "function": "pdn_impedance_sweep",
       "sources": [],
@@ -412,12 +438,13 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Applies EQ-029 over log-spaced frequencies. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-031",
       "formula": "d = perpendicular distance from point to line segment",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 878,
       "function": "point_to_segment_distance",
       "sources": [],
@@ -426,12 +453,13 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Perpendicular distance from point to line segment. Standard computational geometry. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-032",
       "formula": "delay = \u221a((\u03b5r+1)/2)/c (microstrip propagation delay)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 808,
       "function": "propagation_delay_ps_per_mm",
       "sources": [],
@@ -440,12 +468,13 @@
       "category": "signal_integrity",
       "impact": "medium",
       "verification_source": "Microstrip propagation delay: \u03b5eff=(\u03b5r+1)/2 then delay=\u221a\u03b5eff/c. Bogatin \"Signal Integrity\" Ch.12. URL: https://www.colorado.edu/faculty/bogatin/rules-thumb [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-033",
       "formula": "L/mm = Z\u2080/v_phase (Wheeler microstrip inductance per mm)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 461,
       "function": "trace_inductance_nh_per_mm",
       "sources": [],
@@ -454,13 +483,14 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Wheeler microstrip Z\u2080\u2192inductance: L=Z\u2080/v_phase. Bogatin Rule of Thumb #6. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-034",
       "formula": "Via density in connector proximity region",
-      "file": "emc_rules.py",
-      "line": 2355,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 2547,
       "function": "check_connector_area_stitching",
       "sources": [],
       "content_hash": "sha256:3b8462f13e779460",
@@ -468,17 +498,18 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-035",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (filter-to-connector distance)",
-      "file": "emc_rules.py",
-      "line": 653,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 782,
       "function": "check_connector_filtering",
       "sources": [],
-      "content_hash": "sha256:a679391f0f93ce77",
-      "status": "verified",
+      "content_hash": "sha256:82e4e6612f3c521b",
+      "status": "stale",
       "category": "filter_design",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -487,12 +518,12 @@
     {
       "id": "EQ-036",
       "formula": "E_cm from V_cm and cable length using EQ-003",
-      "file": "emc_rules.py",
-      "line": 1931,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 2104,
       "function": "check_diff_pair_cm_radiation",
       "sources": [],
-      "content_hash": "sha256:daf1bb688b9cbe05",
-      "status": "verified",
+      "content_hash": "sha256:247ee996f9ff2760",
+      "status": "stale",
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Applies EQ-003 with CM voltage from diff pair skew. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -501,8 +532,8 @@
     {
       "id": "EQ-037",
       "formula": "ratio = f_sw/f_cutoff; ratio >= 5 for adequate EMI filter",
-      "file": "emc_rules.py",
-      "line": 2601,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 2793,
       "function": "check_emi_filter_effectiveness",
       "sources": [],
       "content_hash": "sha256:4acf4368e98dc696",
@@ -510,13 +541,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-038",
       "formula": "V_overshoot = L \u00d7 dI/dt; dI/dt = 37.5 GA/s for 8kV ESD",
-      "file": "emc_rules.py",
-      "line": 2708,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 2900,
       "function": "check_esd_protection_path",
       "sources": [],
       "content_hash": "sha256:154d3110a565e6ab",
@@ -524,13 +556,14 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "ESD overshoot: V=L\u00d7dI/dt. TI SLVA680 \"ESD Protection Layout Guide\". URL: https://www.ti.com/lit/pdf/slva680 [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-039",
       "formula": "Edge coverage from GND zone bounding box sampling",
-      "file": "emc_rules.py",
-      "line": 2272,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 2464,
       "function": "check_ground_pour_ring",
       "sources": [],
       "content_hash": "sha256:ef8b800fee1bd647",
@@ -538,17 +571,18 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Edge sampling heuristic. Engineering metric, not a physics formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-040",
       "formula": "Via distance from layer transition vias",
-      "file": "emc_rules.py",
-      "line": 3519,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 3830,
       "function": "check_layer_transition_stitching",
       "sources": [],
-      "content_hash": "sha256:d46b8356c0d60e2e",
-      "status": "verified",
+      "content_hash": "sha256:717206de034dcdf3",
+      "status": "stale",
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Euclidean distance to nearest via. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -557,12 +591,12 @@
     {
       "id": "EQ-041",
       "formula": "Z_pdn(f) vs Z_target = V\u00d7ripple%/(0.5\u00d7I_transient)",
-      "file": "emc_rules.py",
-      "line": 3120,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 3352,
       "function": "check_pdn_impedance",
       "sources": [],
-      "content_hash": "sha256:71e0cfba980cb6a9",
-      "status": "verified",
+      "content_hash": "sha256:b5ed353aa6266773",
+      "status": "stale",
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -571,11 +605,11 @@
     {
       "id": "EQ-042",
       "formula": "DC bias derating lookup + ferrite \u00b5 thermal degradation",
-      "file": "emc_rules.py",
-      "line": 2868,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 3060,
       "function": "check_thermal_emc",
       "sources": [],
-      "content_hash": "sha256:dc73f5938b937585",
+      "content_hash": "sha256:3ef0d3d40b96e1c7",
       "status": "verified",
       "category": "thermal",
       "impact": "medium",
@@ -585,11 +619,11 @@
     {
       "id": "EQ-042",
       "formula": "DC bias derating lookup + ferrite \u00b5 thermal degradation",
-      "file": "emc_rules.py",
-      "line": 2868,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 3060,
       "function": "check_thermal_emc",
       "sources": [],
-      "content_hash": "sha256:dc73f5938b937585",
+      "content_hash": "sha256:3ef0d3d40b96e1c7",
       "status": "verified",
       "category": "thermal",
       "impact": "medium",
@@ -599,8 +633,8 @@
     {
       "id": "EQ-043",
       "formula": "spacing = \u221a(area/count) vs \u03bb/20 (via stitching check)",
-      "file": "emc_rules.py",
-      "line": 1184,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 1348,
       "function": "check_via_stitching",
       "sources": [],
       "content_hash": "sha256:65187eb66b349cb0",
@@ -608,13 +642,14 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-044",
       "formula": "arc = R \u00d7 \u03b8 from circumcircle (3-point arc length)",
-      "file": "analyze_pcb.py",
-      "line": 352,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 489,
       "function": "_arc_length_3pt",
       "sources": [],
       "content_hash": "sha256:a502eb62ade7aef0",
@@ -622,13 +657,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Arc from circumcircle: R\u00d7\u03b8. Standard computational geometry. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-045",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (routing graph edge weight)",
-      "file": "analyze_pcb.py",
-      "line": 1485,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 1746,
       "function": "_build_routing_graph",
       "sources": [],
       "content_hash": "sha256:70dec2451d2b6809",
@@ -636,13 +672,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-046",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (grid cell marking)",
-      "file": "analyze_pcb.py",
-      "line": 2296,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2626,
       "function": "_mark",
       "sources": [],
       "content_hash": "sha256:45994e598d8287e1",
@@ -650,13 +687,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-047",
       "formula": "Angle normalization to [0, 2\u03c0)",
-      "file": "analyze_pcb.py",
-      "line": 371,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 508,
       "function": "_norm",
       "sources": [],
       "content_hash": "sha256:9ba6303cc273ea26",
@@ -664,17 +702,18 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Angle normalization to [0,2\u03c0). Standard math. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-048",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (cap-to-IC distance)",
-      "file": "analyze_pcb.py",
-      "line": 1852,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2184,
       "function": "analyze_decoupling_placement",
       "sources": [],
-      "content_hash": "sha256:173ebfc53f40df9f",
-      "status": "verified",
+      "content_hash": "sha256:38adb94b86b46888",
+      "status": "stale",
       "category": "geometry",
       "impact": "low",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -683,14 +722,14 @@
     {
       "id": "EQ-049",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (DFM clearance measurement)",
-      "file": "analyze_pcb.py",
-      "line": 3836,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 4397,
       "function": "analyze_dfm",
       "sources": [
         "JLCPCB capabilities page, verified 2025-01."
       ],
-      "content_hash": "sha256:faee9b43e8ba8c54",
-      "status": "verified",
+      "content_hash": "sha256:4077f8a4c512a532",
+      "status": "stale",
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -699,8 +738,8 @@
     {
       "id": "EQ-050",
       "formula": "L = \u221a(\u0394x\u00b2+\u0394y\u00b2) (track segment length)",
-      "file": "analyze_pcb.py",
-      "line": 2088,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2417,
       "function": "analyze_net_lengths",
       "sources": [],
       "content_hash": "sha256:d76948d573999111",
@@ -708,13 +747,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-051",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (pad-to-pad distance)",
-      "file": "analyze_pcb.py",
-      "line": 1617,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 1878,
       "function": "analyze_pad_to_pad_distances",
       "sources": [],
       "content_hash": "sha256:b767f902530fbac8",
@@ -722,17 +762,18 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-052",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (Euclidean distance)",
-      "file": "analyze_pcb.py",
-      "line": 1436,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 1697,
       "function": "analyze_power_nets",
       "sources": [],
-      "content_hash": "sha256:7bced81334c50b51",
-      "status": "verified",
+      "content_hash": "sha256:c21a486e234486b6",
+      "status": "stale",
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -741,12 +782,12 @@
     {
       "id": "EQ-053",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (trace-to-plane gap detection)",
-      "file": "analyze_pcb.py",
-      "line": 1710,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 1986,
       "function": "analyze_return_path_continuity",
       "sources": [],
-      "content_hash": "sha256:9575dbb5f8e86eab",
-      "status": "verified",
+      "content_hash": "sha256:165f834d2ca82b7b",
+      "status": "stale",
       "category": "geometry",
       "impact": "low",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -755,12 +796,12 @@
     {
       "id": "EQ-054",
       "formula": "effective = \u03a3(drill/0.3)\u00b2 (drill-weighted via count)",
-      "file": "analyze_pcb.py",
-      "line": 4808,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 5415,
       "function": "analyze_thermal_pad_vias",
       "sources": [],
-      "content_hash": "sha256:4a28dc8cfc374fac",
-      "status": "verified",
+      "content_hash": "sha256:668165ed760b2126",
+      "status": "stale",
       "category": "thermal",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -769,8 +810,8 @@
     {
       "id": "EQ-055",
       "formula": "density = count / area_cm\u00b2 (thermal via density)",
-      "file": "analyze_pcb.py",
-      "line": 2601,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2932,
       "function": "analyze_thermal_vias",
       "sources": [],
       "content_hash": "sha256:b1370096f55dbc33",
@@ -778,13 +819,14 @@
       "category": "thermal",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-056",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (pad center asymmetry)",
-      "file": "analyze_pcb.py",
-      "line": 4585,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 5192,
       "function": "analyze_tombstoning_risk",
       "sources": [],
       "content_hash": "sha256:a36c74bc4c5d6b55",
@@ -792,17 +834,18 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-057",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (grid-based proximity scan)",
-      "file": "analyze_pcb.py",
-      "line": 2291,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2621,
       "function": "analyze_trace_proximity",
       "sources": [],
-      "content_hash": "sha256:339026570ed76b84",
-      "status": "verified",
+      "content_hash": "sha256:62036d1d86fab2a0",
+      "status": "stale",
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -811,12 +854,12 @@
     {
       "id": "EQ-058",
       "formula": "area = \u03c0(d/2)\u00b2 (via annular ring)",
-      "file": "analyze_pcb.py",
-      "line": 2785,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 3116,
       "function": "analyze_vias",
       "sources": [],
-      "content_hash": "sha256:554118f27a049f79",
-      "status": "verified",
+      "content_hash": "sha256:f9c06d304864cddc",
+      "status": "stale",
       "category": "geometry",
       "impact": "low",
       "verification_source": "Circle area: \u03c0(d/2)\u00b2. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -825,8 +868,8 @@
     {
       "id": "EQ-059",
       "formula": "d = \u221a(w\u00b2+h\u00b2) (board diagonal)",
-      "file": "analyze_pcb.py",
-      "line": 3599,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 4061,
       "function": "compute_statistics",
       "sources": [],
       "content_hash": "sha256:85525f941e5555d9",
@@ -834,17 +877,18 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-060",
       "formula": "x'=x\u00b7cos\u03b8-y\u00b7sin\u03b8, y'=x\u00b7sin\u03b8+y\u00b7cos\u03b8 (2D rotation)",
-      "file": "analyze_pcb.py",
-      "line": 571,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 708,
       "function": "extract_footprints",
       "sources": [],
-      "content_hash": "sha256:e23dc1ee605c6e5a",
-      "status": "verified",
+      "content_hash": "sha256:6dae124b0d565ca9",
+      "status": "stale",
       "category": "geometry",
       "impact": "low",
       "verification_source": "Standard 2D rotation matrix x' = x\u00b7cos\u03b8 \u2212 y\u00b7sin\u03b8, y' = x\u00b7sin\u03b8 + y\u00b7cos\u03b8; textbook formula, no external spec needed; hash refresh after type hints/docstring drift",
@@ -853,8 +897,8 @@
     {
       "id": "EQ-061",
       "formula": "|Z| = \u221a(ESR\u00b2+(2\u03c0fL-1/(2\u03c0fC))\u00b2) at given frequency",
-      "file": "analyze_schematic.py",
-      "line": 5898,
+      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "line": 6432,
       "function": "_cap_impedance",
       "sources": [],
       "content_hash": "sha256:f37b8b80c886a871",
@@ -862,13 +906,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "Same as EQ-013. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_schematic.py"
     },
     {
       "id": "EQ-062",
       "formula": "|Z| = \u221a(ESR\u00b2+(\u03c9L-1/\u03c9C)\u00b2) swept over frequency",
-      "file": "analyze_schematic.py",
-      "line": 5857,
+      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "line": 6391,
       "function": "analyze_pdn_impedance",
       "sources": [],
       "content_hash": "sha256:3d6720301149488f",
@@ -876,17 +921,18 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_schematic.py"
     },
     {
       "id": "EQ-063",
       "formula": "t_rise = 0.8473 \u00d7 R \u00d7 C (I2C rise time estimation)",
-      "file": "analyze_schematic.py",
-      "line": 6667,
+      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "line": 7359,
       "function": "analyze_protocol_compliance",
       "sources": [],
-      "content_hash": "sha256:16c4b792642e1a51",
-      "status": "verified",
+      "content_hash": "sha256:da534f3da773e9c2",
+      "status": "stale",
       "category": "filter_design",
       "impact": "high",
       "verification_source": "I2C rise time: t_r=0.8473\u00d7R\u00d7C. I2C spec UM10204 Rev.7.0 \u00a77.2. 0.8473 = ln(0.7/0.3) for 30%-70% thresholds. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -895,8 +941,8 @@
     {
       "id": "EQ-064",
       "formula": "L = \u221a(\u0394x\u00b2+\u0394y\u00b2) (wire segment length)",
-      "file": "analyze_schematic.py",
-      "line": 5456,
+      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "line": 5976,
       "function": "analyze_wire_geometry",
       "sources": [],
       "content_hash": "sha256:8bfd134d982b3cf6",
@@ -904,13 +950,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_schematic.py"
     },
     {
       "id": "EQ-065",
       "formula": "x'=x\u00b7cos\u03b8-y\u00b7sin\u03b8, y'=x\u00b7sin\u03b8+y\u00b7cos\u03b8 (2D rotation)",
-      "file": "analyze_schematic.py",
-      "line": 310,
+      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "line": 353,
       "function": "apply_rotation",
       "sources": [],
       "content_hash": "sha256:322086bd9a875eb5",
@@ -918,13 +965,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "2D rotation matrix. Same as EQ-060. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_schematic.py"
     },
     {
       "id": "EQ-066",
       "formula": "ESL estimate from package size (empirical table)",
-      "file": "kicad_utils.py",
-      "line": 1207,
+      "file": "skills/kicad/scripts/kicad_utils.py",
+      "line": 1421,
       "function": "estimate_cap_esl",
       "sources": [],
       "content_hash": "sha256:b2dafc92fbf9aca7",
@@ -932,13 +980,14 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "ESL empirical lookup table. Verified via constants audit (CONST-261). [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "kicad_utils.py"
     },
     {
       "id": "EQ-067",
       "formula": "ESR estimate from package size + capacitance (empirical)",
-      "file": "kicad_utils.py",
-      "line": 1179,
+      "file": "skills/kicad/scripts/kicad_utils.py",
+      "line": 1393,
       "function": "estimate_cap_esr",
       "sources": [],
       "content_hash": "sha256:dbe10e4448f21926",
@@ -946,13 +995,14 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "ESR empirical lookup table. Verified via constants audit (CONST-262). [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "kicad_utils.py"
     },
     {
       "id": "EQ-068",
       "formula": "SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6",
-      "file": "kicad_utils.py",
-      "line": 263,
+      "file": "skills/kicad/scripts/kicad_utils.py",
+      "line": 374,
       "function": "parse_value",
       "sources": [],
       "content_hash": "sha256:1aa185df2b657c39",
@@ -960,13 +1010,14 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "SI prefix table. Self-evident international standard. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "kicad_utils.py"
     },
     {
       "id": "EQ-069",
       "formula": "f_SRF = 1/(2\u03c0\u221a(ESL\u00d7C)) (decoupling SRF)",
-      "file": "signal_detectors.py",
-      "line": 1174,
+      "file": "skills/kicad/scripts/signal_detectors.py",
+      "line": 1211,
       "function": "detect_decoupling",
       "sources": [],
       "content_hash": "sha256:e3b7944a53c60f0a",
@@ -974,17 +1025,18 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "Same as EQ-012 with ESL estimate. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "signal_detectors.py"
     },
     {
       "id": "EQ-070",
       "formula": "Threshold comparisons for design quality metrics",
-      "file": "signal_detectors.py",
-      "line": 3409,
+      "file": "skills/kicad/scripts/signal_detectors.py",
+      "line": 3464,
       "function": "detect_design_observations",
       "sources": [],
-      "content_hash": "sha256:2afe05411940845c",
-      "status": "verified",
+      "content_hash": "sha256:1ef99b9ca1d4db68",
+      "status": "stale",
       "category": "filter_design",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -993,12 +1045,12 @@
     {
       "id": "EQ-071",
       "formula": "G = 1+Rf/Ri or -Rf/Ri; G_dB = 20log\u2081\u2080|G| (opamp gain)",
-      "file": "signal_detectors.py",
-      "line": 2470,
+      "file": "skills/kicad/scripts/signal_detectors.py",
+      "line": 2520,
       "function": "detect_opamp_circuits",
       "sources": [],
-      "content_hash": "sha256:5f016c7de21ce9d9",
-      "status": "verified",
+      "content_hash": "sha256:8458e305389732e5",
+      "status": "stale",
       "category": "opamp",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -1007,7 +1059,7 @@
     {
       "id": "EQ-072",
       "formula": "Orchestrates EQ-016..019 per net from PCB data",
-      "file": "extract_parasitics.py",
+      "file": "skills/spice/scripts/extract_parasitics.py",
       "line": 143,
       "function": "extract_parasitics",
       "sources": [],
@@ -1016,12 +1068,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Orchestrator for EQ-016..019. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "extract_parasitics.py"
     },
     {
       "id": "EQ-073",
       "formula": "V_out = Aol \u00d7 (V+ - V-) clamped (comparator model)",
-      "file": "spice_model_generator.py",
+      "file": "skills/spice/scripts/spice_model_generator.py",
       "line": 164,
       "function": "generate_comparator_model",
       "sources": [],
@@ -1030,12 +1083,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Comparator model: Aol\u00d7(V+-V-) clamped. Standard SPICE behavioral model. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_model_generator.py"
     },
     {
       "id": "EQ-074",
       "formula": "GBW = Aol \u00d7 f_pole (opamp behavioral SPICE model)",
-      "file": "spice_model_generator.py",
+      "file": "skills/spice/scripts/spice_model_generator.py",
       "line": 44,
       "function": "generate_opamp_model",
       "sources": [],
@@ -1044,12 +1098,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Opamp GBW=Aol\u00d7f_pole. Standard single-pole model. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_model_generator.py"
     },
     {
       "id": "EQ-075",
       "formula": "SI engineering notation formatting",
-      "file": "spice_models.py",
+      "file": "skills/spice/scripts/spice_models.py",
       "line": 179,
       "function": "_format_eng",
       "sources": [],
@@ -1058,12 +1113,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "SI engineering notation formatting. Not a formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_models.py"
     },
     {
       "id": "EQ-076",
       "formula": "Gate sweep Vgs threshold detection",
-      "file": "spice_results.py",
+      "file": "skills/spice/scripts/spice_results.py",
       "line": 825,
       "function": "evaluate_bridge_circuit",
       "sources": [],
@@ -1072,12 +1128,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "DC sweep threshold detection. Measurement algorithm, not a formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_results.py"
     },
     {
       "id": "EQ-077",
       "formula": "f_damp from AC impedance minimum detection",
-      "file": "spice_results.py",
+      "file": "skills/spice/scripts/spice_results.py",
       "line": 977,
       "function": "evaluate_snubber",
       "sources": [],
@@ -1086,12 +1143,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "AC impedance minimum. Measurement algorithm, not a formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_results.py"
     },
     {
       "id": "EQ-078",
       "formula": "Vth from DC sweep (transistor threshold detection)",
-      "file": "spice_results.py",
+      "file": "skills/spice/scripts/spice_results.py",
       "line": 478,
       "function": "evaluate_transistor_circuit",
       "sources": [],
@@ -1100,12 +1158,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "DC sweep threshold detection. Measurement algorithm, not a formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_results.py"
     },
     {
       "id": "EQ-079",
       "formula": "R_trace + L_via parasitic element injection",
-      "file": "spice_templates.py",
+      "file": "skills/spice/scripts/spice_templates.py",
       "line": 102,
       "function": "_get_parasitic_lines",
       "sources": [],
@@ -1114,12 +1173,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Parasitic R+L injection. Applies EQ-016 and EQ-018. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_templates.py"
     },
     {
       "id": "EQ-080",
       "formula": "C_L = 1/(1/C\u2081+1/C\u2082) + C_stray (crystal load cap)",
-      "file": "spice_templates.py",
+      "file": "skills/spice/scripts/spice_templates.py",
       "line": 609,
       "function": "generate_crystal_circuit",
       "sources": [],
@@ -1128,12 +1188,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Crystal load cap: C_L=1/(1/C1+1/C2)+C_stray. Standard crystal circuit formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_templates.py"
     },
     {
       "id": "EQ-081",
       "formula": "|Z| at target freq from ESR+ESL cap model",
-      "file": "spice_templates.py",
+      "file": "skills/spice/scripts/spice_templates.py",
       "line": 1189,
       "function": "generate_decoupling",
       "sources": [],
@@ -1142,12 +1203,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Cap impedance at frequency. Same as EQ-013. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_templates.py"
     },
     {
       "id": "EQ-082",
       "formula": "I_peak = V/R at t=0 (startup inrush current)",
-      "file": "spice_templates.py",
+      "file": "skills/spice/scripts/spice_templates.py",
       "line": 1421,
       "function": "generate_inrush",
       "sources": [],
@@ -1156,12 +1218,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Inrush: I=V/R at t=0. Ohm law. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_templates.py"
     },
     {
       "id": "EQ-083",
       "formula": "f\u2080 = 1/(2\u03c0\u221a(LC)) testbench (validates EQ-021)",
-      "file": "spice_templates.py",
+      "file": "skills/spice/scripts/spice_templates.py",
       "line": 250,
       "function": "generate_lc_filter",
       "sources": [],
@@ -1170,12 +1233,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Same as EQ-021 in SPICE testbench. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_templates.py"
     },
     {
       "id": "EQ-084",
       "formula": "G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071)",
-      "file": "spice_templates.py",
+      "file": "skills/spice/scripts/spice_templates.py",
       "line": 370,
       "function": "generate_opamp_circuit",
       "sources": [],
@@ -1184,12 +1248,13 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_templates.py"
     },
     {
       "id": "EQ-085",
       "formula": "f_damp = 1/(2\u03c0RC) (snubber damping frequency)",
-      "file": "spice_templates.py",
+      "file": "skills/spice/scripts/spice_templates.py",
       "line": 1621,
       "function": "generate_snubber",
       "sources": [],
@@ -1198,17 +1263,18 @@
       "category": "spice_model",
       "impact": "medium",
       "verification_source": "Snubber: f_damp=1/(2\u03c0RC). Same form as EQ-020. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "spice_templates.py"
     },
     {
       "id": "EQ-086",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (cap-to-via distance for connection inductance)",
-      "file": "emc_rules.py",
-      "line": 590,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 675,
       "function": "check_decoupling_via_distance",
       "sources": [],
-      "content_hash": "sha256:d00f56c9e68a7671",
-      "status": "verified",
+      "content_hash": "sha256:42bfe686246337b7",
+      "status": "stale",
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
@@ -1217,8 +1283,8 @@
     {
       "id": "EQ-087",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (clock trace midpoint to connector distance)",
-      "file": "emc_rules.py",
-      "line": 1042,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 1206,
       "function": "check_clock_near_connector",
       "sources": [],
       "content_hash": "sha256:8ce4b80aa20fd383",
@@ -1226,13 +1292,14 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-088",
       "formula": "A = polygon_area(cap, IC, inductor) (hot loop area estimation)",
-      "file": "emc_rules.py",
-      "line": 1633,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 1806,
       "function": "check_input_cap_loop_area",
       "sources": [],
       "content_hash": "sha256:dca439f577689d59",
@@ -1240,12 +1307,13 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-089",
       "formula": "C = 1 / (4\u03c0\u00b2 \u00d7 f_SRF\u00b2 \u00d7 ESL) (inverse SRF for cap selection)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 551,
       "function": "cap_value_for_srf",
       "sources": [
@@ -1256,12 +1324,13 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Inverse of standard LC resonance f=1/(2pi*sqrt(LC)); Cadence PCB blog: capacitor self-resonant frequency [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-090",
       "formula": "E12 decade normalization via log10 (standard component value selection)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 574,
       "function": "round_to_e12",
       "sources": [
@@ -1272,12 +1341,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "IEC 60063:2015 E-series standard values [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-091",
       "formula": "L = Z\u2080/v_phase \u00d7 length (Wheeler microstrip inductance)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 963,
       "function": "trace_inductance_h",
       "sources": [
@@ -1289,12 +1359,13 @@
       "category": "parasitic",
       "impact": "high",
       "verification_source": "Wheeler 1977 microstrip formulas; telegrapher eqns L=Z0/vp; Bogatin Rule of Thumb #6 (0.33 nH/mm for 50ohm FR4) [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-092",
       "formula": "Z_IC = Z_local || (Z_reg + Z_trace) (distributed PDN impedance)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 1191,
       "function": "distributed_pdn_impedance_sweep",
       "sources": [
@@ -1305,13 +1376,14 @@
       "category": "impedance",
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": "Source corrected: originally cited 'Power Distribution Network Design Methodologies' which is by Nov\u00e1k (IPC, 2008), not Smith. Smith's PDN work is in 'Principles of Power Integrity for PDN Design' (Prentice Hall, 2017) with Bogatin."
+      "notes": "Source corrected: originally cited 'Power Distribution Network Design Methodologies' which is by Nov\u00e1k (IPC, 2008), not Smith. Smith's PDN work is in 'Principles of Power Integrity for PDN Design' (Prentice Hall, 2017) with Bogatin.",
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-093",
       "formula": "C_suggest = 1/(4\u03c0\u00b2f\u00b2ESL) then round to E12 (PDN cap selection)",
-      "file": "emc_rules.py",
-      "line": 175,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 228,
       "function": "_suggest_pdn_cap",
       "sources": [
         "Derived from EQ-089 (inverse SRF) + EQ-090 (E12 rounding)"
@@ -1321,13 +1393,14 @@
       "category": "impedance",
       "impact": "medium",
       "verification_source": "Derived from EQ-089 (inverse SRF) + EQ-090 (E12 rounding); standard PDN cap selection practice [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-094",
       "formula": "V_n = V_peak \u00d7 2/(n\u03c0) \u00d7 sin(n\u03c0D) (trapezoidal harmonic envelope)",
-      "file": "emc_rules.py",
-      "line": 1443,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 1616,
       "function": "estimate_switching_emissions",
       "sources": [
         "Ott \"EMC Engineering\" (Wiley, 2009) Section 7.3"
@@ -1337,13 +1410,14 @@
       "category": "emc_radiation",
       "impact": "critical",
       "verification_source": "Ott 'EMC Engineering' (Wiley, 2009) Section 7.3; LearnEMC trapezoid harmonics calculator [Re-confirmed 2026-04-16 post-P12-refactor: function estimate_switching_emissions uses trapezoidal_corner_frequencies (EQ-005) and trapezoidal_harmonic_amplitude (EQ-004) for envelope calculation; the docstring simplified rectangular form V_n=V_peak\u00d72/(n\u03c0)\u00d7sin(n\u03c0D) is the theoretical basis, actual computation delegates to EQ-004/005; SPICE FFT branch added but analytical path unchanged; hash drift from SPICE backend integration and output dict expansion only.]",
-      "notes": "This is the simplified rectangular (zero rise-time) form used as the harmonic envelope. The full trapezoidal form with rise/fall time is EQ-004 which uses sinc\u00d7sinc."
+      "notes": "This is the simplified rectangular (zero rise-time) form used as the harmonic envelope. The full trapezoidal form with rise/fall time is EQ-004 which uses sinc\u00d7sinc.",
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-095",
       "formula": "A_track = \u03a3(width_mm \u00d7 length_mm) (switching node copper area)",
-      "file": "emc_rules.py",
-      "line": 1526,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 1699,
       "function": "check_switching_node_area",
       "sources": [
         "Engineering heuristic \u2014 switching node area directly"
@@ -1353,13 +1427,14 @@
       "category": "emc_radiation",
       "impact": "medium",
       "verification_source": "TI AN-2155 (SNVA638A): minimize SW node copper area; ADI AN-139: switching node antenna effect [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": "Not a physics equation per se \u2014 it is a geometric area calculation used as a proxy for antenna radiation potential. The underlying principle (larger copper area at high dV/dt = more radiation) is well-established in industry app notes."
+      "notes": "Not a physics equation per se \u2014 it is a geometric area calculation used as a proxy for antenna radiation potential. The underlying principle (larger copper area at high dV/dt = more radiation) is well-established in industry app notes.",
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-096",
       "formula": "I_reflected = P_downstream / V_upstream (reflected transient current)",
-      "file": "emc_rules.py",
-      "line": 3282,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 3593,
       "function": "check_pdn_distributed",
       "sources": [
         "Novak \"Power Distribution Network Design Methodologies\" (IPC, 2008) Ch. 6"
@@ -1369,13 +1444,14 @@
       "category": "impedance",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": "Source corrected: originally cited 'Power Distribution Network Design Methodologies Ch. 6' which is by Nov\u00e1k. The actual implementation is more sophisticated than simple P/V \u2014 it models topology-dependent AC current components (buck: I_peak*(1-D), boost: 30% of I_in_avg)."
+      "notes": "Source corrected: originally cited 'Power Distribution Network Design Methodologies Ch. 6' which is by Nov\u00e1k. The actual implementation is more sophisticated than simple P/V \u2014 it models topology-dependent AC current components (buck: I_peak*(1-D), boost: 30% of I_in_avg).",
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-097",
       "formula": "t_r = 0.8473 * R_pullup * C_bus (RC time constant to 70% VDD)",
-      "file": "analyze_schematic.py",
-      "line": 3920,
+      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "line": 4305,
       "function": "_detect_i2c_buses",
       "sources": [],
       "content_hash": "sha256:c14614adda9f1669",
@@ -1383,13 +1459,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "I2C rise time: t_r = 0.8473 * R * C (ln(0.7^-1) * RC = 0.3567*RC to 70% VDD threshold); NXP I2C-bus spec \u00a73.1; confirmed correct coefficient [Re-confirmed 2026-04-16 post-analyzer-refactor; renumbered from collision with EQ-089 in emc_formulas.py]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_schematic.py"
     },
     {
       "id": "EQ-098",
       "formula": "d = min(||P - (A + t(B-A))||) with t clamped to [0,1]",
-      "file": "analyze_pcb.py",
-      "line": 171,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 308,
       "function": "_dist_point_to_segment",
       "sources": [
         "Self-evident \u2014 2D point-to-segment distance (project, clamp, Euclidean)."
@@ -1399,13 +1476,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": null,
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-099",
       "formula": "Perimeter sample at (x + r\u00b7cos(i\u03c0/4), y + r\u00b7sin(i\u03c0/4)) for i=0..7",
-      "file": "analyze_pcb.py",
-      "line": 221,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 358,
       "function": null,
       "sources": [
         "Self-evident \u2014 8-point circle sampling at 45\u00b0 intervals."
@@ -1420,13 +1498,13 @@
     {
       "id": "EQ-100",
       "formula": "Arc bounding box \u2014 3-point circumscribed circle via",
-      "file": "analyze_pcb.py",
-      "line": 1271,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 1526,
       "function": "extract_board_outline",
       "sources": [
         "Standard computational geometry. Circumscribed circle"
       ],
-      "content_hash": "sha256:0e6763297369652a",
+      "content_hash": "sha256:96858a8ac8d5240d",
       "status": "unverified",
       "category": "geometry",
       "impact": "low",
@@ -1436,8 +1514,8 @@
     {
       "id": "EQ-101",
       "formula": "d = \u221a((x1-x2)\u00b2 + (y1-y2)\u00b2) over all pad pairs; return minimum.",
-      "file": "analyze_pcb.py",
-      "line": 1803,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 2113,
       "function": "_min_power_pad_distance",
       "sources": [
         "Self-evident \u2014 2D Euclidean distance."
@@ -1447,18 +1525,19 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": null,
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-102",
       "formula": "d = \u221a((px-zx)\u00b2 + (py-zy)\u00b2) for point-to-zone-pour proximity.",
-      "file": "analyze_pcb.py",
-      "line": 5317,
-      "function": "analyze_copper_presence",
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 5829,
+      "function": "_nearest_zone_copper_distance",
       "sources": [
         "Self-evident \u2014 2D Euclidean distance to the nearest"
       ],
-      "content_hash": "sha256:01d93b9e149c4e4b",
+      "content_hash": "sha256:fa455c8169a945e0",
       "status": "unverified",
       "category": "geometry",
       "impact": "low",
@@ -1468,8 +1547,8 @@
     {
       "id": "EQ-103",
       "formula": "d = min distance from via center to any Edge.Cuts line segment.",
-      "file": "analyze_pcb.py",
-      "line": 5778,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 6573,
       "function": "analyze_board_edge_via_clearance",
       "sources": [
         "Self-evident \u2014 2D point-to-segment distance (see EQ-098)."
@@ -1479,13 +1558,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": null,
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-104",
       "formula": "Helper \u2014 same 2D point-to-segment distance as EQ-098.",
-      "file": "analyze_pcb.py",
-      "line": 5788,
+      "file": "skills/kicad/scripts/analyze_pcb.py",
+      "line": 6583,
       "function": "_pt_seg_dist",
       "sources": [
         "Self-evident \u2014 kept as a local helper to avoid import cycles."
@@ -1495,12 +1575,13 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": null,
-      "notes": null
+      "notes": null,
+      "relocated_from": "analyze_pcb.py"
     },
     {
       "id": "EQ-105",
       "formula": "H = (m \u00b7 sin \u03b8) / (4\u03c0 \u00b7 r\u00b3), with m = N \u00b7 I \u00b7 A (magnetic moment)",
-      "file": "emc_formulas.py",
+      "file": "skills/emc/scripts/emc_formulas.py",
       "line": 1383,
       "function": "estimate_inductor_h_field",
       "sources": [
@@ -1511,13 +1592,14 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Jackson Classical Electrodynamics 3rd ed. \u00a75.6; Ott EMC Engineering Ch. 11; Paul Introduction to EMC \u2014 standard magnetic dipole near-field H = m sin(\u03b8) / (4\u03c0 r\u00b3); implementation matches textbook",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_formulas.py"
     },
     {
       "id": "EQ-106",
       "formula": "Proximity gate \u2014 emit ML-001 when d_mm < 15mm AND",
-      "file": "emc_rules.py",
-      "line": 4080,
+      "file": "skills/emc/scripts/emc_rules.py",
+      "line": 4404,
       "function": "check_inductor_leakage",
       "sources": [
         "Threshold from Ott, \"EMC Engineering\" Ch. 11"
@@ -1527,13 +1609,14 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "Derived gate from EQ-105 + Euclidean distance formula; threshold from Ott EMC Engineering Ch. 11 rule-of-thumb for unshielded switching inductor coupling to high-impedance analog nodes (15mm proximity, 8mm high-severity tier)",
-      "notes": null
+      "notes": null,
+      "relocated_from": "emc_rules.py"
     },
     {
       "id": "EQ-107",
       "formula": "Log-decade snapping \u2014 normalize v into [1, 10) via",
-      "file": "kicad_utils.py",
-      "line": 412,
+      "file": "skills/kicad/scripts/kicad_utils.py",
+      "line": 523,
       "function": "snap_to_e_series",
       "sources": [
         "Self-evident \u2014 standard E-series (IEC 60063) value selection."
@@ -1543,7 +1626,8 @@
       "category": "unknown",
       "impact": "medium",
       "verification_source": "IEC 60063 (standard defining E6/E12/E24/E48/E96/E192 preferred-number series); implementation is self-evident log-decade nearest-neighbour snap",
-      "notes": null
+      "notes": null,
+      "relocated_from": "kicad_utils.py"
     }
   ]
 }

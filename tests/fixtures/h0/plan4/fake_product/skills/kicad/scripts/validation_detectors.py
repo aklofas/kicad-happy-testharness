@@ -1,9 +1,9 @@
 """Top-level detector module: literal sites, a wrapper, an enum site, a loop site."""
 from finding_schema import make_finding, Det
 
-# EQ-901: ratio = r_bottom / (r_top + r_bottom)
-# Source: Ohm's law
 def divider_ratio(r_top, r_bottom):
+    # EQ-901: ratio = r_bottom / (r_top + r_bottom)
+    # Source: Ohm's law
     return r_bottom / (r_top + r_bottom)
 
 PULLUP_MIN_OHMS = 1000

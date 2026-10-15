@@ -43,28 +43,9 @@ from utils import DATA_DIR, resolve_kicad_happy_dir
 REGISTRY_PATH = DATA_DIR / "equation_registry.json"
 MARKDOWN_PATH = DATA_DIR / "equation_registry.md"
 
-# Source files to scan (relative to skills/ subdirectory)
-SCAN_FILES = {
-    "kicad/scripts": [
-        "analyze_schematic.py",
-        "analyze_pcb.py",
-        "signal_detectors.py",
-        "kicad_utils.py",
-    ],
-    "spice/scripts": [
-        "extract_parasitics.py",
-        "spice_templates.py",
-        "spice_models.py",
-        "spice_model_generator.py",
-        "spice_results.py",
-        "spice_part_library.py",
-    ],
-    "emc/scripts": [
-        "emc_formulas.py",
-        "emc_rules.py",
-        "analyze_emc.py",
-    ],
-}
+# Skill script trees scanned recursively (report A2). Root-relative paths are
+# the location identity; EQ-NNN ids are the equation identity.
+SCAN_ROOTS = ("skills/kicad/scripts", "skills/spice/scripts", "skills/emc/scripts")
 
 # Heuristic indicators that a function contains engineering math
 MATH_INDICATORS = frozenset({
@@ -115,7 +96,7 @@ def _find_enclosing_function(tree, line):
     return best
 
 
-def scan_file(filepath, source_text=None):
+def scan_file(filepath, source_text=None, product_root=None):
     """Scan a file for EQ-NNN tags and extract equation metadata.
 
     Returns list of equation info dicts.
@@ -130,7 +111,8 @@ def scan_file(filepath, source_text=None):
         return []
 
     equations = []
-    filename = filepath.name
+    filename = (Path(filepath).resolve().relative_to(Path(product_root).resolve()).as_posix()
+                if product_root else filepath.name)
 
     for i, line in enumerate(lines):
         m = EQ_TAG_RE.search(line)
@@ -169,7 +151,7 @@ def scan_file(filepath, source_text=None):
     return equations
 
 
-def find_untagged(filepath, source_text=None):
+def find_untagged(filepath, source_text=None, product_root=None):
     """Find functions with math operations but no EQ-NNN tag.
 
     Returns list of (function_name, line, math_op_count, indicators_found).
@@ -215,7 +197,8 @@ def find_untagged(filepath, source_text=None):
         if len(indicators) >= 1:
             untagged.append({
                 "function": node.name,
-                "file": filepath.name,
+                "file": (Path(filepath).resolve().relative_to(Path(product_root).resolve()).as_posix()
+                         if product_root else filepath.name),
                 "line": node.lineno,
                 "math_ops": len(indicators),
                 "indicators": indicators,
@@ -224,33 +207,43 @@ def find_untagged(filepath, source_text=None):
     return untagged
 
 
+def iter_source_files(product_root):
+    root = Path(product_root)
+    files = []
+    for sub in SCAN_ROOTS:
+        base = root / sub
+        if base.is_dir():
+            files.extend(p for p in base.rglob("*.py") if "__pycache__" not in p.parts)
+    return sorted(files, key=lambda p: p.resolve().relative_to(root.resolve()).as_posix())
+
+
+def scan_all_tagged(product_root):
+    """Tagged equations across SCAN_ROOTS (quiet; used by tests and source_scan)."""
+    tagged = []
+    for fpath in iter_source_files(product_root):
+        source = fpath.read_text(encoding="utf-8")
+        tagged.extend(scan_file(fpath, source, product_root=product_root))
+    return tagged
+
+
+def iter_equations(product_root):
+    """Plain-dict projection for other tools: eq_id, file, line, function."""
+    return [{"eq_id": e["id"], "file": e["file"], "line": e["line"], "function": e["function"]}
+            for e in scan_all_tagged(product_root)]
+
+
 def scan_all():
     """Scan all configured source files. Returns (tagged, untagged)."""
     kicad_happy = resolve_kicad_happy_dir()
-    skills_dir = kicad_happy / "skills"
-
-    all_tagged = []
-    all_untagged = []
-
-    for subdir, filenames in SCAN_FILES.items():
-        base = skills_dir / subdir
-        if not base.exists():
-            continue
-        for fname in filenames:
-            fpath = base / fname
-            if not fpath.exists():
-                print(f"  Skipping {subdir}/{fname} (not found)", file=sys.stderr)
-                continue
-            source = fpath.read_text(encoding="utf-8")
-            tagged = scan_file(fpath, source)
-            untagged = find_untagged(fpath, source)
-            all_tagged.extend(tagged)
-            all_untagged.extend(untagged)
-            tag_count = len(tagged)
-            untag_count = len(untagged)
-            label = f"{subdir.split('/')[0]}/{fname}"
-            print(f"  {label}: {tag_count} tagged, {untag_count} untagged")
-
+    all_tagged, all_untagged = [], []
+    for fpath in iter_source_files(kicad_happy):
+        source = fpath.read_text(encoding="utf-8")
+        tagged = scan_file(fpath, source, product_root=kicad_happy)
+        untagged = find_untagged(fpath, source, product_root=kicad_happy)
+        all_tagged.extend(tagged)
+        all_untagged.extend(untagged)
+        label = fpath.resolve().relative_to(Path(kicad_happy).resolve()).as_posix()
+        print(f"  {label}: {len(tagged)} tagged, {len(untagged)} untagged")
     return all_tagged, all_untagged
 
 
@@ -272,13 +265,14 @@ def save_registry(registry):
 
 
 def update_registry(registry, scanned):
-    """Update registry with scanned equations. Returns (added, updated, removed)."""
+    """Update registry with scanned equations. Returns (added, updated, removed, relocated)."""
     old_by_id = {eq["id"]: eq for eq in registry["equations"]}
     new_by_id = {eq["id"]: eq for eq in scanned}
 
     added = 0
     updated = 0
     removed = 0
+    relocated = 0
 
     # Update existing and add new
     merged = []
@@ -286,12 +280,16 @@ def update_registry(registry, scanned):
         eid = eq["id"]
         if eid in old_by_id:
             old = old_by_id[eid]
-            # Check if function body changed
-            if eq.get("content_hash") and old.get("content_hash"):
-                if eq["content_hash"] != old["content_hash"]:
-                    if old.get("status") == "verified":
-                        old["status"] = "stale"
-                    updated += 1
+            same_hash = (eq.get("content_hash") and old.get("content_hash")
+                         and eq["content_hash"] == old["content_hash"])
+            if old.get("file") != eq["file"] and same_hash:
+                old["relocated_from"] = old.get("file")
+                relocated += 1
+            elif eq.get("content_hash") and old.get("content_hash") \
+                    and eq["content_hash"] != old["content_hash"]:
+                if old.get("status") == "verified":
+                    old["status"] = "stale"
+                updated += 1
             # Update location info
             old["file"] = eq["file"]
             old["line"] = eq["line"]
@@ -329,7 +327,7 @@ def update_registry(registry, scanned):
 
     registry["equations"] = sorted(merged, key=lambda e: e["id"])
     registry["last_scan"] = datetime.now(timezone.utc).isoformat()
-    return added, updated, removed
+    return added, updated, removed, relocated
 
 
 def _classify_category(eq):
@@ -391,10 +389,11 @@ def cmd_scan(args):
 
     registry = load_registry()
     old_count = len(registry["equations"])
-    added, updated, removed = update_registry(registry, tagged)
+    added, updated, removed, relocated = update_registry(registry, tagged)
     save_registry(registry)
 
-    print(f"\nRegistry updated: {added} added, {updated} updated, {removed} removed",
+    print(f"\nRegistry updated: {added} added, {updated} updated, "
+          f"{removed} removed, {relocated} relocated",
           file=sys.stderr)
     print(f"Total tagged equations: {len(tagged)}", file=sys.stderr)
     print(f"Untagged math functions: {len(untagged)}", file=sys.stderr)
@@ -407,6 +406,11 @@ def cmd_scan(args):
             if eq["id"] not in {e["id"] for e in load_registry()["equations"]
                                  if e.get("content_hash") == eq.get("content_hash")}:
                 print(f"  + {eq['file']}:{eq['function']} ({eq['id']})", file=sys.stderr)
+
+
+def _tail(text, width):
+    """Truncate keeping the path tail."""
+    return text if len(text) <= width else "..." + text[-(width - 3):]
 
 
 def cmd_list(args):
@@ -425,11 +429,11 @@ def cmd_list(args):
         print("No matching equations.")
         return
 
-    print(f"{'ID':<8s} {'File':<25s} {'Function':<35s} {'Category':<20s} "
+    print(f"{'ID':<8s} {'File':<45s} {'Function':<35s} {'Category':<20s} "
           f"{'Impact':<10s} {'Status':<12s}")
-    print("-" * 110)
+    print("-" * 130)
     for eq in equations:
-        print(f"{eq['id']:<8s} {eq.get('file',''):<25s} "
+        print(f"{eq['id']:<8s} {_tail(eq.get('file',''), 45):<45s} "
               f"{(eq.get('function') or '?'):<35s} "
               f"{eq.get('category','?'):<20s} "
               f"{eq.get('impact','?'):<10s} {eq.get('status','?'):<12s}")
@@ -552,11 +556,11 @@ def cmd_untagged(args):
         print("\nNo untagged math functions found.")
         return
 
-    print(f"\n{'File':<30s} {'Function':<40s} {'Line':>6s} {'Math ops':>8s}")
-    print("-" * 90)
+    print(f"\n{'File':<55s} {'Function':<40s} {'Line':>6s} {'Math ops':>8s}")
+    print("-" * 115)
     for u in sorted(untagged, key=lambda x: (x["file"], x["line"])):
         indicators = ", ".join(u["indicators"][:3])
-        print(f"{u['file']:<30s} {u['function']:<40s} {u['line']:>6d} "
+        print(f"{_tail(u['file'], 55):<55s} {u['function']:<40s} {u['line']:>6d} "
               f"{u['math_ops']:>8d}  ({indicators})")
     print(f"\n{len(untagged)} untagged functions")
 
