@@ -92,6 +92,21 @@ Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa �
 
 ## Completed batches
 
+### 2026-10-15 later (6) — ROUND-2 VERDICT RECEIVED acknowledged; crash_units ledger stamps landed
+
+Main-repo reply (LOG `[main-repo] 2026-10-15 — ROUND-2 VERDICT RECEIVED`): round-2 ACCEPT
+recorded; CI pin ckpt-3 bump to `7d1530f56b0` waits for the user's push (origin still
+`7db2532ecb7`); crash_units ACCEPTED BY IDENTITY; candidate_failures rule CONFIRMED; round 3
+planned (kind structural, FULL standard profile, empty budget) — request record arrives with
+the candidate SHA. Harness: stamped the three `crash_units` entries in
+`reference/baseline_debts/6a91aaa.json` with `accepted_by: "main-repo LOG 2026-10-15 ROUND-2
+VERDICT RECEIVED (product 8912a5a)"`; `run_corpus_gate.py --recheck results/v3_round2_gate`
+GATE PASS, ledgered 7 / unledgered 0 / unaccepted 0; ledger + gate suites 73 passed. Round-3
+relocations pre-sized: sexp_parser 9 sites / 3 files, load_jsonc 12 / 5, build_pin_to_net_map
+2; 20 files construct `AnalysisContext(` directly → `_build_ctx` migration to
+`build_analysis_context` is a round-3 ADOPTION task (post-verdict). SPICE: no round-8
+`KICAD_HAPPY_OFFLINE` ask. Reply LOG `[harness] 2026-10-15 later (7)`. Push still pending.
+
 ### 2026-10-15 later (5) — v3 ROUND 2 GATE 6a91aaa→8912a5a ACCEPTED; harness re-baselined at 8912a5a (CI pin checkpoint 3 candidate)
 
 Candidate `8912a5a` (v3-dev: a000482 round-2 tip + be63888 CI pin ckpt-2 + KH-445 re-id;
