@@ -18,6 +18,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -32,6 +33,8 @@ _INDEX = re.compile(r"/\d+(?=/|$)")
 
 
 def generalize_pointer(path: str) -> str:
+    # Limitation: any all-digit segment is treated as a list index, so a dict key that is
+    # purely digits (e.g. a numeric id used as a key) is also generalized to "*".
     return _INDEX.sub("/*", path)
 
 
@@ -83,9 +86,19 @@ def summarize_strict_report(report: dict) -> dict:
     }
 
 
-_SHAPE_RULE = {"uuid": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-               "iso8601": "iso8601", "number": "number", "abs_path": "strip_root_prefix",
-               "string": "string", "mixed": "mixed"}
+_UUID_RX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+_METADATA_ROOTS = ("/inputs/", "/capability_mode_ref/", "/elapsed_s")
+_OUTSIDE_REVIEW = ("pointer is outside metadata roots; a differing finding or component value "
+                   "is a determinism bug \u2014 never auto-mask")
+
+
+def _shape_for(glob: str, shape: str) -> str | None:
+    """Shape vocabulary of regression/field_compare (run_id/number/iso8601/regex); None = omit."""
+    if shape == "uuid":
+        return "run_id" if glob.endswith("run_id") else _UUID_RX
+    if shape in ("iso8601", "number"):
+        return shape
+    return None  # abs_path uses rewrite; string/mixed have no valid shape
 
 
 def propose_policy(aa_report: dict, policy: dict) -> dict:
@@ -99,21 +112,24 @@ def propose_policy(aa_report: dict, policy: dict) -> dict:
         glob = leaf["pointer_glob"]
         if glob in known:
             continue
-        entry = {("pointer_glob" if "*" in glob else "pointer"): glob,
-                 "shape": _SHAPE_RULE[leaf["shape"]],
-                 "observed_units": leaf["unit_count"], "observed_deltas": leaf["delta_count"]}
+        entry = {("pointer_glob" if "*" in glob else "pointer"): glob}
+        shape = _shape_for(glob, leaf["shape"])
+        if shape:
+            entry["shape"] = shape
         if leaf["shape"] == "abs_path":
             entry["rewrite"] = "strip_root_prefix"
-        if glob.startswith(("/findings/", "/assessments/")):
-            entry["review"] = ("findings leaf \u2014 never auto-mask; file a determinism KH "
-                               "unless it is an identifier")
+        entry["observed_units"] = leaf["unit_count"]
+        entry["observed_deltas"] = leaf["delta_count"]
+        inside = glob.startswith(_METADATA_ROOTS)
+        if not inside:
+            entry["review"] = _OUTSIDE_REVIEW
         elif leaf["shape"] == "number" and leaf["unit_count"] == 1:
-            entry["review"] = "singleton numeric leaf — likely a determinism bug, not a volatile leaf"
-        elif leaf["shape"] == "number" and not glob.startswith("/inputs/"):
+            entry["review"] = "singleton numeric leaf \u2014 likely a determinism bug, not a volatile leaf"
+        elif leaf["shape"] == "number":
             entry["review"] = ("numeric drift across units \u2014 determinism bug or real change; "
                                "never auto-mask")
         elif leaf["shape"] in ("string", "mixed"):
-            entry["review"] = "non-volatile-looking shape — confirm before accepting"
+            entry["review"] = "non-volatile-looking shape \u2014 confirm before accepting"
         added.append(entry)
     return {"name": f"{policy['name']}-proposed", "added": added,
             "existing": sorted(known), "note": "review each 'added' entry; never auto-accept"}
@@ -149,20 +165,28 @@ def main(argv=None) -> int:
                  ["--repo-list", args.repo_list])
     gate_cmd, cmp_cmd = build_commands(product_dir=Path(args.product).resolve(), gate_dir=gate_dir,
                                        selection=selection, jobs=args.jobs, profile=args.profile)
+    strict = gate_dir / "field_report_strict.json"
     if not args.skip_run:
         gate_dir.mkdir(parents=True, exist_ok=True)
+        started = time.time()
         r = subprocess.run(gate_cmd)
-        if r.returncode == 2:
-            print("gate usage/identity error", file=sys.stderr)
+        if r.returncode not in (0, 1):
+            print(f"gate failed with exit code {r.returncode}", file=sys.stderr)
             return 2
-    strict = gate_dir / "field_report_strict.json"
-    if strict.exists():
+        fresh = strict.exists() and strict.stat().st_mtime >= started
+        if fresh:
+            shutil.copyfile(strict, gate_dir / "field_report.json")
+        else:
+            r = subprocess.run(cmp_cmd)
+            if r.returncode == 2:
+                print("compare error", file=sys.stderr)
+                return 2
+    elif strict.exists():
         shutil.copyfile(strict, gate_dir / "field_report.json")
-    elif not args.skip_run:
-        r = subprocess.run(cmp_cmd)
-        if r.returncode == 2:
-            print("compare error", file=sys.stderr)
-            return 2
+    elif not (gate_dir / "field_report.json").exists():
+        print(f"--skip-run: no field_report.json or field_report_strict.json in {gate_dir}",
+              file=sys.stderr)
+        return 2
     report = json.loads((gate_dir / "field_report.json").read_text(encoding="utf-8"))
     aa = summarize_strict_report(report)
     (gate_dir / "aa_report.json").write_text(json.dumps(aa, indent=2) + "\n", encoding="utf-8")

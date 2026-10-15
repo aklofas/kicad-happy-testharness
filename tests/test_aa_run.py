@@ -64,7 +64,7 @@ def test_propose_policy_adds_only_new_leaves_and_never_writes_policy():
     assert "/inputs/run_id" not in added
     assert {"/inputs/generated_at", "/findings/*/evidence/score", "/inputs/files/*/path"} <= added
     numeric = [a for a in prop["added"] if a.get("pointer_glob") == "/findings/*/evidence/score"][0]
-    assert numeric["review"].startswith("findings leaf")
+    assert numeric["review"].startswith("pointer is outside metadata roots")
     rid = [a for a in prop["added"] if a.get("pointer") == "/inputs/generated_at"][0]
     assert "review" not in rid
     assert policy["leaves"] == [{"pointer": "/inputs/run_id", "shape": "^[0-9a-f-]{36}$"}]
@@ -93,16 +93,37 @@ def _leaf(glob, shape, units, examples=()):
             "shape": shape, "examples": list(examples)}
 
 
-def test_propose_policy_flags_findings_and_numeric_drift():
+def test_propose_policy_flags_outside_metadata_roots_and_vocabulary():
     rep = {"leaves": [_leaf("/findings/*/evidence/score", "number", 5),
                       _leaf("/findings/*/id", "uuid", 3),
                       _leaf("/assessments/*/t", "iso8601", 2),
-                      _leaf("/summary/score", "number", 4),
                       _leaf("/inputs/run_id", "uuid", 9),
-                      _leaf("/inputs/n", "number", 9)]}
+                      _leaf("/inputs/generated_at", "iso8601", 9),
+                      _leaf("/inputs/n", "number", 9),
+                      _leaf("/inputs/files/*/path", "abs_path", 2),
+                      _leaf("/inputs/label", "string", 2)]}
     prop = aa_run.propose_policy(rep, {"name": "p", "leaves": []})
     by = {a.get("pointer_glob") or a["pointer"]: a for a in prop["added"]}
     for k in ("/findings/*/evidence/score", "/findings/*/id", "/assessments/*/t"):
-        assert by[k]["review"].startswith("findings leaf")
-    assert by["/summary/score"]["review"].startswith("numeric drift across units")
-    assert "review" not in by["/inputs/run_id"] and "review" not in by["/inputs/n"]
+        assert by[k]["review"].startswith("pointer is outside metadata roots")
+    assert "review" not in by["/inputs/run_id"] and "review" not in by["/inputs/generated_at"]
+    assert by["/inputs/run_id"]["shape"] == "run_id"
+    assert by["/inputs/generated_at"]["shape"] == "iso8601"
+    assert by["/inputs/n"]["review"].startswith("numeric drift across units")
+    assert by["/inputs/files/*/path"]["rewrite"] == "strip_root_prefix"
+    assert "shape" not in by["/inputs/files/*/path"]
+    assert "shape" not in by["/inputs/label"] and "review" in by["/inputs/label"]
+
+
+def test_skip_run_without_reports_returns_2(tmp_path):
+    assert aa_run.main(["--product", str(tmp_path), "--gate-dir", str(tmp_path / "g"),
+                        "--cross-section", "smoke", "--skip-run"]) == 2
+
+
+def test_skip_run_uses_strict_report(tmp_path):
+    g = tmp_path / "g"
+    g.mkdir()
+    (g / "field_report_strict.json").write_text(json.dumps(REPORT))
+    rc = aa_run.main(["--product", str(tmp_path), "--gate-dir", str(g),
+                      "--cross-section", "smoke", "--skip-run"])
+    assert rc == 1 and (g / "aa_report.json").exists() and (g / "field_report.json").exists()
