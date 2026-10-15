@@ -192,11 +192,17 @@ def has_main_block(path):
         return False
 
 
+def _tail(text, n=3):
+    """Last ``n`` non-empty lines of ``text``, joined with newlines."""
+    return "\n".join(l for l in (text or "").splitlines()[-n:] if l.strip())
+
+
 def run_test_file(path, timeout):
     """Run one stdlib test file as a subprocess and return a result dict.
 
     status: pass | fail | timeout | no_runner | unparsed. Only ``pass`` with
     ``failed == 0`` counts toward a green run (TH-052: no phantom passes).
+    Every non-pass status carries ``failed >= 1`` so totals cannot understate.
     """
     path = Path(path)
     try:
@@ -205,29 +211,36 @@ def run_test_file(path, timeout):
         rel = str(path)
     base = {"file": rel, "passed": 0, "failed": 0, "skipped": 0, "detail": ""}
     if not has_main_block(path):
-        return {**base, "status": "no_runner",
+        return {**base, "status": "no_runner", "failed": 1,
                 "detail": "no __main__ runner block (TH-052)"}
     try:
         result = subprocess.run([sys.executable, str(path)],
                                 capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
-        return {**base, "status": "timeout", "detail": f"timed out after {timeout}s"}
+        return {**base, "status": "timeout", "failed": 1,
+                "detail": f"timed out after {timeout}s"}
     lines = result.stdout.strip().split("\n")
     summary = lines[-1] if lines else ""
+    err_tail = _tail(result.stderr)
     m = _SUMMARY_RE.search(summary)
     if m is None:
-        tail = "\n".join(l for l in lines[-3:] if l.strip())
+        parts = [_tail(result.stdout), err_tail]
+        tail = "\n".join(x for x in parts if x)
         if result.returncode != 0:
             return {**base, "status": "fail", "failed": 1,
-                    "detail": f"exit {result.returncode}\n{tail}"}
-        return {**base, "status": "unparsed",
-                "detail": f"unparsed summary: {summary!r}"}
+                    "detail": f"exit {result.returncode}\n{tail}".rstrip()}
+        return {**base, "status": "unparsed", "failed": 1,
+                "detail": "\n".join(x for x in
+                                    [f"unparsed summary: {summary!r}", err_tail] if x)}
     p, f = int(m.group(1)), int(m.group(2))
     ms = _SKIPPED_RE.search(summary)
     s = int(ms.group(1)) if ms else 0
-    status = "pass" if (result.returncode == 0 and f == 0) else "fail"
-    return {**base, "status": status, "passed": p, "failed": f, "skipped": s,
-            "detail": "" if status == "pass" else f"exit {result.returncode}"}
+    if result.returncode == 0 and f == 0:
+        return {**base, "status": "pass", "passed": p, "failed": 0, "skipped": s}
+    # Non-zero exit with a parsed summary: count at least one failure.
+    detail = f"exit {result.returncode}" + (f"\n{err_tail}" if err_tail else "")
+    return {**base, "status": "fail", "passed": p, "failed": max(f, 1),
+            "skipped": s, "detail": detail}
 
 
 def exit_code(results):

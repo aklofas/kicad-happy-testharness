@@ -37,6 +37,7 @@ def test_missing_runner_is_no_runner_status(tmp_path):
     r = run_tests.run_test_file(f, timeout=30)
     assert r["status"] == "no_runner"
     assert r["passed"] == 0
+    assert r["failed"] == 1
 
 
 def test_unparsed_summary_is_failure(tmp_path):
@@ -47,6 +48,7 @@ def test_unparsed_summary_is_failure(tmp_path):
     r = run_tests.run_test_file(f, timeout=30)
     assert r["status"] == "unparsed"
     assert r["passed"] == 0
+    assert r["failed"] == 1
 
 
 def test_parsed_summary_counts(tmp_path):
@@ -79,6 +81,7 @@ def test_timeout_is_failure(tmp_path):
     ''')
     r = run_tests.run_test_file(f, timeout=1)
     assert r["status"] == "timeout"
+    assert r["failed"] == 1
 
 
 def test_exit_code_rules():
@@ -98,3 +101,15 @@ def test_has_main_block_ignores_marker_text_in_strings(tmp_path):
             assert True
     ''')
     assert run_tests.has_main_block(f) is False
+
+
+def test_import_error_reports_fail_with_stderr_detail(tmp_path):
+    f = _write(tmp_path, "test_broken.py", '''
+        import nonexistent_module_for_th052
+        if __name__ == "__main__":
+            print("1 passed, 0 failed (1 total)")
+    ''')
+    r = run_tests.run_test_file(f, timeout=30)
+    assert r["status"] == "fail"
+    assert r["failed"] == 1
+    assert "ModuleNotFoundError" in r["detail"]
