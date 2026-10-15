@@ -9,9 +9,8 @@ diff used by `check`. Never imports or evals product code: ast only.
 from __future__ import annotations
 
 import ast
+from dataclasses import dataclass, asdict
 from pathlib import Path
-
-SCRIPT_GLOB = "skills/*/scripts"
 
 
 def iter_product_sources(product_root: Path) -> list[Path]:
@@ -22,7 +21,7 @@ def iter_product_sources(product_root: Path) -> list[Path]:
         if not scripts_dir.is_dir():
             continue
         for p in scripts_dir.rglob("*.py"):
-            if "__pycache__" in p.parts:
+            if not p.is_file() or "__pycache__" in p.relative_to(root).parts:
                 continue
             out.append(p)
     return sorted(set(out), key=lambda p: rel(root, p))
@@ -36,3 +35,130 @@ def rel(product_root: Path, path: Path) -> str:
 def parse_source(path: Path) -> ast.Module:
     """Parse honouring PEP 263 coding cookies / BOM: feed bytes, not text."""
     return ast.parse(Path(path).read_bytes(), filename=str(path))
+
+
+FACTORY_NAMES = ("make_finding", "_make_finding")
+TAG_KEYWORDS = ("detector", "rule_id", "schema_era")
+DET_ENUM_FILE = "skills/kicad/scripts/finding_schema.py"
+
+
+@dataclass(frozen=True)
+class EmitSite:
+    file: str
+    line: int
+    callee: str
+    detector: str | None
+    rule_id: str | None
+    schema_era: str | None
+    resolved: bool
+    reason: str
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+def _callee_name(call: ast.Call) -> str | None:
+    f = call.func
+    if isinstance(f, ast.Name):
+        return f.id
+    if isinstance(f, ast.Attribute):
+        return f.attr
+    return None
+
+
+def _str_literal(node: ast.AST | None) -> str | None:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    return None
+
+
+def resolve_det_enum(product_root: Path) -> dict[str, str]:
+    """Literal `NAME = 'value'` members of class Det in finding_schema.py. No import."""
+    path = Path(product_root) / DET_ENUM_FILE
+    if not path.exists():
+        return {}
+    tree = parse_source(path)
+    out: dict[str, str] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef) and node.name == "Det":
+            for stmt in node.body:
+                if (isinstance(stmt, ast.Assign) and len(stmt.targets) == 1
+                        and isinstance(stmt.targets[0], ast.Name)):
+                    val = _str_literal(stmt.value)
+                    if val is not None:
+                        out[stmt.targets[0].id] = val
+    return out
+
+
+def _is_emit_call(call: ast.Call, callee: str | None) -> bool:
+    if callee in FACTORY_NAMES:
+        return True
+    kws = {k.arg for k in call.keywords if k.arg}
+    return all(k in kws for k in TAG_KEYWORDS)
+
+
+def emit_sites(product_root: Path, path: Path,
+               det_enum: dict[str, str] | None = None) -> list[EmitSite]:
+    """Every finding emit site in `path` under the literal-tag policy."""
+    file_rel = rel(product_root, path)
+    tree = parse_source(path)
+    sites: list[EmitSite] = []
+    for call in ast.walk(tree):
+        if not isinstance(call, ast.Call):
+            continue
+        callee = _callee_name(call)
+        if not _is_emit_call(call, callee):
+            continue
+        kws = {k.arg: k.value for k in call.keywords if k.arg}
+        reasons: list[str] = []
+        detector = rule_id = era = None
+
+        if "detector" not in kws and "rule_id" not in kws and callee == "_make_finding" \
+                and len(call.args) >= 3:
+            cat = _str_literal(call.args[0])
+            rid = _str_literal(call.args[2])
+            detector = f"emc_{cat}" if cat is not None else None
+            rule_id = rid
+            sites.append(EmitSite(file_rel, call.lineno, callee, detector, rule_id, None,
+                                  False, "positional-emc"))
+            continue
+        if callee == "_make_finding" and call.args and ("detector" in kws or "rule_id" in kws):
+            sites.append(EmitSite(file_rel, call.lineno, callee, None, _str_literal(kws.get("rule_id")),
+                                  _str_literal(kws.get("schema_era")), False,
+                                  "positional-emc:mixed-shape"))
+            continue
+
+        dnode = kws.get("detector")
+        if dnode is None:
+            reasons.append("detector:absent")
+        elif _str_literal(dnode) is not None:
+            detector = _str_literal(dnode)
+        elif isinstance(dnode, ast.Attribute) and isinstance(dnode.value, ast.Name) \
+                and dnode.value.id == "Det":
+            if det_enum and dnode.attr in det_enum:
+                detector = det_enum[dnode.attr]
+                reasons.append("detector:enum-attribute-resolved")
+            else:
+                reasons.append("detector:enum-attribute")
+        else:
+            reasons.append("detector:nonliteral")
+
+        rnode = kws.get("rule_id")
+        if rnode is None:
+            reasons.append("rule_id:absent")
+        elif _str_literal(rnode) is not None:
+            rule_id = _str_literal(rnode)
+        else:
+            reasons.append("rule_id:nonliteral")
+
+        enode = kws.get("schema_era")
+        if enode is not None:
+            era = _str_literal(enode)
+            if era is None:
+                reasons.append("schema_era:nonliteral")
+
+        hard = [r for r in reasons if r != "detector:enum-attribute-resolved"]
+        resolved = detector is not None and rule_id is not None and not hard
+        sites.append(EmitSite(file_rel, call.lineno, callee or "<expr>", detector, rule_id,
+                              era, resolved, ";".join(reasons)))
+    return sites

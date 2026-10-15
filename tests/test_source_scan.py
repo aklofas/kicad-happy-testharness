@@ -39,3 +39,81 @@ def test_rel_is_posix_root_relative():
     p = FAKE / "skills" / "kicad" / "scripts" / "pcb" / "reader.py"
     assert source_scan.rel(FAKE, p) == "skills/kicad/scripts/pcb/reader.py"
     assert "\\" not in source_scan.rel(FAKE, p)
+
+
+def test_iter_product_sources_pycache_above_root_not_skipped(tmp_path):
+    root = tmp_path / "__pycache__" / "prod"
+    f = root / "skills" / "kicad" / "scripts" / "mod.py"
+    f.parent.mkdir(parents=True)
+    f.write_text("X = 1\n")
+    assert [source_scan.rel(root, p) for p in source_scan.iter_product_sources(root)] == [
+        "skills/kicad/scripts/mod.py"]
+
+
+def _sites(relpath, enum=None):
+    return source_scan.emit_sites(FAKE, FAKE / relpath, det_enum=enum)
+
+
+def test_literal_sites_resolved_with_era():
+    sites = _sites("skills/kicad/scripts/validation_detectors.py")
+    pu = [s for s in sites if s.rule_id == "PU-001"]
+    assert len(pu) == 1
+    s = pu[0]
+    assert s.file == "skills/kicad/scripts/validation_detectors.py"
+    assert s.callee == "make_finding"
+    assert s.detector == "validate_pullups" and s.schema_era == "v1.4"
+    assert s.resolved and s.reason == ""
+
+
+def test_nested_package_site_found():
+    sites = _sites("skills/kicad/scripts/schematic/reader.py")
+    assert [(s.detector, s.rule_id, s.schema_era) for s in sites] == [
+        ("detect_nested", "NX-001", "v3.0")]
+
+
+def test_enum_attribute_unresolved_without_map_and_resolved_with_map():
+    sites = _sites("skills/kicad/scripts/validation_detectors.py")
+    sp = [s for s in sites if s.rule_id == "SP-001"][0]
+    assert not sp.resolved and sp.reason == "detector:enum-attribute" and sp.detector is None
+    enum = source_scan.resolve_det_enum(FAKE)
+    assert enum["SHORTED_TWO_PIN"] == "detect_shorted_two_pin_components"
+    sp2 = [s for s in _sites("skills/kicad/scripts/validation_detectors.py", enum)
+           if s.rule_id == "SP-001"][0]
+    assert sp2.resolved and sp2.detector == "detect_shorted_two_pin_components"
+    assert sp2.reason == "detector:enum-attribute-resolved"
+
+
+def test_nonliteral_rule_id_unresolved():
+    sites = _sites("skills/kicad/scripts/validation_detectors.py")
+    uc = [s for s in sites if s.detector == "analyze_usb_compliance"][0]
+    assert not uc.resolved and uc.rule_id is None
+    assert uc.reason == "rule_id:nonliteral"
+
+
+def test_positional_emc_shape_derives_detector():
+    sites = _sites("skills/emc/scripts/emc_rules.py")
+    gp = [s for s in sites if s.rule_id == "GP-001"][0]
+    assert gp.callee == "_make_finding"
+    assert gp.detector == "emc_ground_plane"
+    assert not gp.resolved and gp.reason == "positional-emc"
+    assert gp.schema_era is None
+
+
+def test_mixed_positional_keyword_is_unresolved():
+    sites = _sites("skills/emc/scripts/emc_rules.py")
+    sh = [s for s in sites if s.rule_id == "SH-009"]
+    assert len(sh) == 1
+    assert not sh[0].resolved and sh[0].reason == "positional-emc:mixed-shape"
+    assert sh[0].detector is None
+
+
+def test_emit_sites_latin1_cookie(tmp_path):
+    src = (b"# -*- coding: latin-1 -*-\n"
+           b"def make_finding(**kw): return kw\n"
+           b"X = make_finding(detector='d\xe9tecteur', rule_id='LA-001', schema_era='v1.4')\n")
+    root = tmp_path / "prod"
+    f = root / "skills" / "kicad" / "scripts" / "mod.py"
+    f.parent.mkdir(parents=True)
+    f.write_bytes(src)
+    sites = source_scan.emit_sites(root, f)
+    assert len(sites) == 1 and sites[0].detector == "détecteur" and sites[0].resolved
