@@ -1,6 +1,6 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,822 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 2.1M+ machine-checkable assertions, 424 unit tests across 23 test files, 42 auto-discovered signal detectors, 145,000+ SPICE simulations across 17 subcircuit types, and 192,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,822 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 2.1M+ machine-checkable assertions, 1,774 unit tests, 42 auto-discovered signal detectors, 145,000+ SPICE simulations across 17 subcircuit types, and 192,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
 
 **The system primarily tests consistency, not correctness.** A 100% assertion pass rate means outputs haven't drifted since they were last seeded — it does not mean the analyzers are right. See [philosophy.md](philosophy.md) for the distinction and [methodology.md](methodology.md) § "Weaknesses and limitations" for the full accounting of what this harness cannot verify.
 
@@ -496,7 +496,7 @@ validate/                   # Output quality + constants audit
   audit_constants.py        #   AST-based constant registry + verification (335 constants)
   audit_equations.py        #   EQ-tag equation tracking + verification (86 equations)
 
-tests/                      # Unit tests (424 tests across 23 files, TIER="unit")
+tests/                      # Tests (1,774 passed + 1 xfailed under -m unit; pytest collection, see pytest.ini)
   test_analysis_cache.py    #   Analysis cache correctness (26 tests)
   test_batch_review.py      #   Batch review prefix extraction
   test_checks.py            #   Assertion evaluation engine (43 tests)
