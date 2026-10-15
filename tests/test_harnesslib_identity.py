@@ -161,3 +161,20 @@ def test_manifests_match_refuses_dirty_and_malformed(tmp_path):
     v = copy.deepcopy(m)
     v["manifest_version"] = 2
     assert ident.manifests_match(m, v) == (False, ["manifest_version mismatch"])
+
+
+def test_append_after_torn_tail_truncates_fragment(tmp_path, capsys):
+    p = tmp_path / "units.jsonl"
+    p.write_text('{"analyzer":"a","unit_id":"1"}\n{"analyzer":"a","unit_id":"2"}\n{"analyzer":"a","un')
+    log = ident.UnitLog(tmp_path)
+    log.append({"analyzer": "a", "unit_id": "3"})
+    assert [r["unit_id"] for r in ident.UnitLog(tmp_path)] == ["1", "2", "3"]
+    assert capsys.readouterr().err.count("ignoring torn trailing line") == 1
+
+
+def test_append_validates_keys_before_writing(tmp_path):
+    import pytest
+    log = ident.UnitLog(tmp_path)
+    with pytest.raises(KeyError):
+        log.append({"analyzer": "a"})
+    assert not (tmp_path / "units.jsonl").exists()

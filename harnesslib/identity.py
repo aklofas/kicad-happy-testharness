@@ -181,11 +181,23 @@ class UnitLog:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._latest: dict[str, dict] | None = None
 
+    def _truncate_torn_tail(self) -> None:
+        if not self.path.exists() or self.path.stat().st_size == 0:
+            return
+        with open(self.path, "rb+") as fh:
+            data = fh.read()
+            if data.endswith(b"\n"):
+                return
+            fh.truncate(data.rfind(b"\n") + 1)
+        print("units.jsonl: ignoring torn trailing line", file=sys.stderr)
+
     def append(self, record: dict) -> None:
+        key = f"{record['analyzer']}/{record['unit_id']}"
+        self._truncate_torn_tail()
         with open(self.path, "a", encoding="utf-8") as fh:
             fh.write(json.dumps(record, sort_keys=True) + "\n")
         if self._latest is not None:
-            self._latest[f"{record['analyzer']}/{record['unit_id']}"] = record
+            self._latest[key] = record
 
     def __iter__(self) -> Iterator[dict]:
         if not self.path.exists():
