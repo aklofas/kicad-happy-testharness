@@ -16,6 +16,8 @@ import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path, PurePosixPath
 
+from harnesslib.profiles import PROFILES as _PROFILES
+
 HARNESS_DIR = Path(__file__).resolve().parent
 REPOS_DIR = HARNESS_DIR / "repos"
 _data_override = os.environ.get("KICAD_HAPPY_TESTHARNESS_DATA_DIR")
@@ -27,7 +29,6 @@ MISC_CATEGORY = "Miscellaneous KiCad projects"
 
 # Timeout constants (seconds). ANALYZER_TIMEOUT is the standard profile's cap;
 # runners take an explicit --timeout and pass it down (TH-055).
-from harnesslib.profiles import PROFILES as _PROFILES
 ANALYZER_TIMEOUT = _PROFILES["standard"].timeout_s
 GIT_TIMEOUT = 60
 TEST_TIMEOUT = 120

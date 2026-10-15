@@ -34,3 +34,14 @@ def test_long_tail_and_full_chain_differ_only_where_declared():
 def test_utils_timeout_comes_from_profile():
     import utils
     assert utils.ANALYZER_TIMEOUT == PROFILES["standard"].timeout_s
+
+
+def test_run_one_explicit_timeout_cap(tmp_path):
+    import utils
+    script = tmp_path / "slow.py"
+    script.write_text("import time; time.sleep(5)\n")
+    outfile, errfile = tmp_path / "o.json", tmp_path / "e.txt"
+    result = utils._run_one(script, "unused_input", outfile, errfile, timeout=1)
+    assert result[0] is None
+    assert "Timed out after 1s" in errfile.read_text()
+    assert result[2] < 3
