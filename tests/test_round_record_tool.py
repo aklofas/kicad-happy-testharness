@@ -248,13 +248,27 @@ def test_import_relocation_map_product_extras():
     assert len(extra["relocations"]) == 3
     assert extra["known_defects_deferred"] == [{"file": "skills/kicad/scripts/capability_mode.py", "line": 97,
                                                 "summary": "relative schema path + read_text() without utf-8",
-                                                "fix_round": None}]
+                                                "fix_round": None, "decision": "deferred; see notes"}]
     pe = extra["product_evidence"]
     assert pe["quick_json"].startswith("OK x6") and pe["schema_identical"] is True
-    assert pe["pinned_harness"].startswith("2934 passed")
+    assert pe["pinned_harness"].startswith("7db2532ecb7: 2934 passed")
     assert "removed" not in extra
     data = {"relocations": [], "removed": [{"symbol": "diff_analysis._SCHEMAS", "harness_refs": []}]}
     assert round_record.import_relocation_map(data, _inv())["removed"] == data["removed"]
+
+
+def test_runtime_accepts_optional_decision():
+    req = json.loads((R2 / "round_request_full.json").read_text())
+    req["known_defects_deferred"][0]["decision"] = "deferred"
+    jsonschema.validate(req, SCHEMA)
+    assert round_record.validate_record(req) == "request"
+
+
+def test_import_defect_without_decision_omits_it():
+    data = {"relocations": [], "known_defects_deferred": [
+        {"file": "skills/kicad/scripts/x.py", "line": 1, "issue": "i", "fix_round": "r03"}]}
+    assert round_record.import_relocation_map(data, _inv())["known_defects_deferred"] == [
+        {"file": "skills/kicad/scripts/x.py", "line": 1, "summary": "i", "fix_round": "r03"}]
 
 
 def test_cli_new_request_with_relocation_map(tmp_path):

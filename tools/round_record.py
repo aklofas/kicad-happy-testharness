@@ -74,16 +74,17 @@ def _counts(v, name, probs):
         probs.append(f"{name} must be an object of non-negative integers")
 
 
-def _items(doc, key, keys, probs):
-    """Yield (tag, item) for each object in optional list doc[key] whose key set is exactly `keys`."""
+def _items(doc, key, keys, probs, optional=()):
+    """Yield (tag, item) for each object in optional list doc[key] that has every key in `keys`
+    and nothing outside `keys` + `optional`."""
     v = doc[key]
     if not isinstance(v, list):
         probs.append(f"{key} must be a list")
         return
     for i, it in enumerate(v):
         tag = f"{key}[{i}]"
-        if not isinstance(it, dict) or set(it) != set(keys):
-            probs.append(f"{tag} must be an object with exactly keys {keys}")
+        if not isinstance(it, dict) or not set(keys) <= set(it) <= set(keys) | set(optional):
+            probs.append(f"{tag} must be an object with keys {keys} (optional {optional})")
             continue
         yield tag, it
 
@@ -96,7 +97,10 @@ def _request_additions(doc, probs):
             if not isinstance(it["harness_refs"], list) or any(not isinstance(x, str) for x in it["harness_refs"]):
                 probs.append(f"{tag}.harness_refs must be a list of strings")
     if "known_defects_deferred" in doc:
-        for tag, it in _items(doc, "known_defects_deferred", ("file", "line", "summary", "fix_round"), probs):
+        for tag, it in _items(doc, "known_defects_deferred", ("file", "line", "summary", "fix_round"), probs,
+                              optional=("decision",)):
+            if "decision" in it and not isinstance(it["decision"], str):
+                probs.append(f"{tag}.decision must be a string")
             if not (isinstance(it["file"], str) and _SKILL_PATH.match(it["file"])):
                 probs.append(f"{tag}.file must be a skills/ .py path")
             if not _is_int(it["line"]) or it["line"] < 1:
@@ -351,13 +355,16 @@ def import_relocation_map(data: dict, inventory: dict) -> dict:
     if "known_defects_deferred" in data:
         extra["known_defects_deferred"] = [
             {"file": d["file"], "line": d["line"], "summary": d.get("summary", d.get("issue", "")),
-             "fix_round": d.get("fix_round")} for d in data["known_defects_deferred"]]
+             "fix_round": d.get("fix_round"), **({"decision": d["decision"]} if "decision" in d else {})}
+            for d in data["known_defects_deferred"]]
     tip = data.get("product_evidence_tip")
     if isinstance(tip, dict):
-        pinned = [v for k, v in sorted(tip.items()) if k.startswith("harness_live_")]
+        # keep the SHA that only the key carries: "<sha>: <value>"
+        pinned = [f"{k[len('harness_live_'):]}: {v}" for k, v in sorted(tip.items())
+                  if k.startswith("harness_live_")]
         extra["product_evidence"] = {"quick_json": str(tip.get("quick", "")),
                                      "schema_identical": "identical" in str(tip.get("schema", "")),
-                                     "pinned_harness": str(pinned[0]) if pinned else ""}
+                                     "pinned_harness": pinned[0] if pinned else ""}
     return extra
 
 

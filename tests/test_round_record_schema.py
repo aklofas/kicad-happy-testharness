@@ -96,6 +96,8 @@ def test_new_fields_optional_and_nullables():
     req = json.loads((R2 / "round_request_full.json").read_text())
     req["known_defects_deferred"][0]["fix_round"] = "r03"
     _validator("request").validate(req)
+    req["known_defects_deferred"][0]["decision"] = "deferred; see notes"
+    _validator("request").validate(req)
 
 
 REQ_BAD = {
@@ -104,7 +106,8 @@ REQ_BAD = {
     "defect_line_zero": lambda d: d["known_defects_deferred"][0].update(line=0),
     "defect_file_not_skill": lambda d: d["known_defects_deferred"][0].update(file="tools/x.py"),
     "defect_bad_fix_round": lambda d: d["known_defects_deferred"][0].update(fix_round="later"),
-    "defect_unknown_key": lambda d: d["known_defects_deferred"][0].update(decision="deferred"),
+    "defect_unknown_key": lambda d: d["known_defects_deferred"][0].update(bogus="x"),
+    "defect_decision_not_string": lambda d: d["known_defects_deferred"][0].update(decision=3),
     "sidecar_leaf_no_slash": lambda d: d["expected_sidecar_changes"][0].update(leaf="schema_versions"),
     "evidence_missing_pinned": lambda d: d["product_evidence"].pop("pinned_harness"),
     "evidence_schema_not_bool": lambda d: d["product_evidence"].update(schema_identical="yes"),

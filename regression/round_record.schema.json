@@ -43,7 +43,8 @@
           "properties": {"file": {"$ref": "#/$defs/skill_path"},
                          "line": {"type": "integer", "minimum": 1},
                          "summary": {"type": "string"},
-                         "fix_round": {"type": ["string", "null"], "pattern": "^r[0-9]{2,3}(-[a-z0-9-]+)?$"}}}},
+                         "fix_round": {"type": ["string", "null"], "pattern": "^r[0-9]{2,3}(-[a-z0-9-]+)?$"},
+                         "decision": {"type": "string"}}}},
         "expected_sidecar_changes": {"type": "array", "items": {
           "type": "object", "additionalProperties": false, "required": ["file", "leaf", "reason"],
           "properties": {"file": {"type": "string"}, "leaf": {"type": "string", "pattern": "^/"},
