@@ -22,7 +22,7 @@ sys.exit(1)
 """
 WRITING_RC1 = """import sys, json
 out = sys.argv[sys.argv.index('--output') + 1]
-json.dump({"summary": {"total_findings": 3, "critical": 1}}, open(out, 'w'))
+json.dump({"analyzer_type": "emc", "summary": {"total_findings": 3, "critical": 1}}, open(out, 'w'))
 sys.exit(1)  # exit 1 = critical findings, still valid output
 """
 

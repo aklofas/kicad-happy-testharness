@@ -9,7 +9,7 @@ A pair is matched by project prefix: schematic ``Foo.kicad_sch.json`` pairs
 with PCB ``Foo.kicad_pcb.json`` in the same owner/repo.
 
 Usage:
-    python3 run/run_thermal.py
+    python3 run/run_thermal.py --all
     python3 run/run_thermal.py --repo Dylanfg123/Zebra-X
     python3 run/run_thermal.py --jobs 16
     python3 run/run_thermal.py --cross-section smoke --resume
@@ -25,16 +25,19 @@ Environment:
 import argparse
 import json
 import sys
-import subprocess
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import (OUTPUTS_DIR, ANALYZER_TIMEOUT, resolve_kicad_happy_dir,
+from harnesslib.profiles import PROFILES
+from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output, should_skip_resume,
-                   add_repo_filter_args, resolve_repos, DEFAULT_JOBS)
+                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS)
+
+# TH-055: the cap comes from the declared standard profile.
+ANALYZER_TIMEOUT = PROFILES["standard"].timeout_s
 
 
 def thermal_output_stem(name):
@@ -72,40 +75,31 @@ def find_thermal_pairs(repo_filter=None):
 
 
 def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
-                    timeout=ANALYZER_TIMEOUT):
+                    timeout=ANALYZER_TIMEOUT, env=None):
     """Run analyze_thermal.py on one schematic+PCB pair.
 
-    Returns:
-        (returncode, summary_dict_or_None, elapsed_s)
+    Returns (returncode, summary_dict_or_None, elapsed_s). Exits {0,1} with a
+    valid envelope are success and reported as 0 (harnesslib
+    ACCEPTED_EXITS["thermal"]); None means timeout.
     """
-    cmd = [sys.executable, str(analyzer_script),
-           "--schematic", str(schematic_json),
-           "--pcb", str(pcb_json),
-           "--output", str(output_json)]
+    from harnesslib.execution import run_once, build_env
 
-    t0 = time.time()
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True,
-                                timeout=timeout)
-        elapsed = time.time() - t0
-        if result.returncode == 0 and output_json.exists():
-            with open(output_json) as f:
-                data = json.load(f)
-            return 0, data.get("summary", {}), elapsed
-        else:
-            err_file = output_json.with_suffix(".err")
-            err_file.write_text(result.stderr or f"exit {result.returncode}", encoding="utf-8")
-            return result.returncode, None, elapsed
-    except subprocess.TimeoutExpired:
-        elapsed = time.time() - t0
-        err_file = output_json.with_suffix(".err")
-        err_file.write_text(f"Timed out after {timeout}s", encoding="utf-8")
-        return None, None, elapsed
-    except Exception as e:
-        elapsed = time.time() - t0
-        err_file = output_json.with_suffix(".err")
-        err_file.write_text(str(e), encoding="utf-8")
-        return -1, None, elapsed
+    def make_cmd(out_path):
+        return [sys.executable, str(analyzer_script),
+                "--schematic", str(schematic_json),
+                "--pcb", str(pcb_json),
+                "--output", str(out_path)]
+
+    output_json = Path(output_json)
+    res = run_once(make_cmd, output_json, analyzer="thermal", timeout=timeout,
+                   env=env or build_env(offline=True))
+    if res.status in ("ok", "ok_findings_exit"):
+        with open(output_json) as f:
+            data = json.load(f)
+        return 0, data.get("summary", {}), res.elapsed_s
+    output_json.with_suffix(".err").write_text(
+        f"{res.status}: {res.detail}\n{res.stderr_tail}", encoding="utf-8")
+    return res.exit_code, None, res.elapsed_s
 
 
 def _process_one_thermal(sch_json, pcb_json, thermal_out_dir, timeout,
@@ -149,8 +143,9 @@ def main():
         sys.exit(1)
 
     # Find matching pairs
-    repo_list = resolve_repos(args)
-    if repo_list:
+    repo_list, selection_source = resolve_repos_with_source(
+        args, require_explicit_all=True)
+    if repo_list is not None:
         pairs = []
         for rn in repo_list:
             pairs.extend(find_thermal_pairs(rn))
@@ -158,7 +153,7 @@ def main():
         pairs = find_thermal_pairs(None)
 
     if not pairs:
-        if repo_list:
+        if repo_list is not None:
             print("No matching schematic+PCB output pairs found for specified repos",
                   file=sys.stderr)
         else:

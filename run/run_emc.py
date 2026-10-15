@@ -6,7 +6,7 @@ analyze_emc.py on each schematic file, pairing it with its matching PCB output
 when available. It does NOT re-run the schematic or PCB analyzers.
 
 Usage:
-    python3 run/run_emc.py
+    python3 run/run_emc.py --all
     python3 run/run_emc.py --repo OpenMower
     python3 run/run_emc.py --jobs 8
     python3 run/run_emc.py --standard cispr-class-b
@@ -22,7 +22,6 @@ Environment:
 import argparse
 import json
 import sys
-import subprocess
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
@@ -31,58 +30,45 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output, should_skip_resume,
-                   add_repo_filter_args, resolve_repos, DEFAULT_JOBS)
+                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS)
 
 
 def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
                 standard="fcc-class-b", timeout=30, spice_enhanced=False,
-                compact=False):
+                compact=False, env=None):
     """Run analyze_emc.py on one schematic (+optional PCB) output.
 
-    Returns:
-        (returncode, summary_dict_or_None, elapsed_s)
+    Returns (returncode, summary_dict_or_None, elapsed_s). EMC exits 1 for
+    critical findings with a valid envelope; that is accepted
+    (harnesslib ACCEPTED_EXITS["emc"]) and reported as 0. Output is
+    temp-written and published atomically, so a stale previous output never
+    stands in for this run's result (TH-054/B12). None means timeout.
     """
-    cmd = [sys.executable, str(analyzer_script),
-           "--schematic", str(schematic_json),
-           "--output", str(output_json),
-           "--standard", standard]
-    if compact:
-        cmd.append("--compact")
-    if pcb_json:
-        cmd.extend(["--pcb", str(pcb_json)])
-    if spice_enhanced:
-        cmd.append("--spice-enhanced")
+    from harnesslib.execution import run_once, build_env
 
-    # A stale output from an earlier run must not stand in for this run's
-    # result: exit 1 means "critical findings" only if the analyzer actually
-    # (re)wrote the file (TH-054).
-    prev_mtime = output_json.stat().st_mtime_ns if output_json.exists() else None
-    t0 = time.time()
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True,
-                                timeout=timeout)
-        elapsed = time.time() - t0
-        # Exit code 0 = success, 1 = critical findings (still valid output)
-        rewritten = (output_json.exists()
-                     and output_json.stat().st_mtime_ns != prev_mtime)
-        if result.returncode in (0, 1) and rewritten:
-            with open(output_json) as f:
-                data = json.load(f)
-            return 0, data.get("summary", {}), elapsed
-        else:
-            err_file = output_json.with_suffix(".err")
-            err_file.write_text(result.stderr or f"exit {result.returncode}", encoding="utf-8")
-            return result.returncode, None, elapsed
-    except subprocess.TimeoutExpired:
-        elapsed = time.time() - t0
-        err_file = output_json.with_suffix(".err")
-        err_file.write_text(f"Timed out after {timeout}s", encoding="utf-8")
-        return None, None, elapsed
-    except Exception as e:
-        elapsed = time.time() - t0
-        err_file = output_json.with_suffix(".err")
-        err_file.write_text(str(e), encoding="utf-8")
-        return -1, None, elapsed
+    def make_cmd(out_path):
+        cmd = [sys.executable, str(analyzer_script),
+               "--schematic", str(schematic_json),
+               "--output", str(out_path),
+               "--standard", standard]
+        if compact:
+            cmd.append("--compact")
+        if pcb_json:
+            cmd.extend(["--pcb", str(pcb_json)])
+        if spice_enhanced:
+            cmd.append("--spice-enhanced")
+        return cmd
+
+    output_json = Path(output_json)
+    res = run_once(make_cmd, output_json, analyzer="emc", timeout=timeout,
+                   env=env or build_env(offline=True))
+    if res.status in ("ok", "ok_findings_exit"):
+        with open(output_json) as f:
+            data = json.load(f)
+        return 0, data.get("summary", {}), res.elapsed_s
+    output_json.with_suffix(".err").write_text(
+        f"{res.status}: {res.detail}\n{res.stderr_tail}", encoding="utf-8")
+    return res.exit_code, None, res.elapsed_s
 
 
 def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
@@ -140,15 +126,16 @@ def main():
         sys.exit(1)
 
     # Find schematic outputs
-    repo_list = resolve_repos(args)
-    if repo_list:
+    repo_list, selection_source = resolve_repos_with_source(
+        args, require_explicit_all=True)
+    if repo_list is not None:
         inputs = []
         for rn in repo_list:
             inputs.extend(find_schematic_outputs(rn))
     else:
         inputs = find_schematic_outputs(None)
     if not inputs:
-        if repo_list:
+        if repo_list is not None:
             print(f"No schematic outputs found for specified repos",
                   file=sys.stderr)
         else:
