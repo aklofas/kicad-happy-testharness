@@ -20,24 +20,54 @@ def new_identities(ledger: dict, *, units_lines: Iterable[str] | None = None,
         known = {e["identity"] for e in ledger.get("contract", [])}
         out["contract"] = sorted(e["identity"] for e in bl.contract_entries(junit_text) if e["identity"] not in known)
     if units_lines is not None:
-        known = {e["identity"] for e in ledger.get("timeout_units", [])}
+        known = ledgered_timeouts(ledger)
         found = []
         for line in units_lines:
             line = line.strip()
             if not line:
                 continue
-            rec = json.loads(line)
-            ident = f"{rec['analyzer']}/{rec['unit_id']}"
-            base_to = (rec.get("baseline") or {}).get("status") == "timeout"
-            cand_to = (rec.get("candidate") or {}).get("status") == "timeout"
-            # A candidate-only timeout is always new; a timeout on the baseline side (alone or
-            # on both sides, e.g. an A/A tree) is new only when the identity is not ledgered.
-            if cand_to and not base_to:
-                found.append(f"{ident} (candidate)")
-            elif base_to and ident not in known:
-                found.append(ident)
+            new = new_timeout(json.loads(line), known)
+            if new:
+                found.append(new)
         out["timeout_units"] = sorted(found)
     return out
+
+
+def ledgered_timeouts(ledger: dict) -> set[str]:
+    return {e["identity"] for e in ledger.get("timeout_units", [])}
+
+
+def _timeout_sides(rec: dict) -> tuple[str, bool, bool]:
+    return (f"{rec['analyzer']}/{rec['unit_id']}",
+            (rec.get("baseline") or {}).get("status") == "timeout",
+            (rec.get("candidate") or {}).get("status") == "timeout")
+
+
+def new_timeout(rec: dict, known: set[str]) -> str | None:
+    """The new-debt identity a unit record's timeout carries, or None."""
+    ident, base_to, cand_to = _timeout_sides(rec)
+    # A candidate-only timeout is always new; a timeout on the baseline side (alone or
+    # on both sides, e.g. an A/A tree) is new only when the identity is not ledgered.
+    if cand_to and not base_to:
+        return f"{ident} (candidate)"
+    if base_to and ident not in known:
+        return ident
+    return None
+
+
+def skip_is_ledgered(rec: dict, known: set[str], upstream: dict | None = None) -> bool:
+    """A gate SKIP is a known baseline debt iff it is a both_failed unit whose baseline-side
+    timeout is ledgered (new_timeout finds nothing new), or a dependency_missing unit whose
+    upstream schematic record is such a unit. Crashes and snapshot_read_error never are:
+    the ledger records timeouts only."""
+    reason = rec.get("reason")
+    if reason == "both_failed":
+        _, base_to, _ = _timeout_sides(rec)
+        return base_to and new_timeout(rec, known) is None
+    if reason == "dependency_missing":
+        return upstream is not None and upstream.get("reason") == "both_failed" \
+            and skip_is_ledgered(upstream, known)
+    return False
 
 
 def run_check(args) -> int:

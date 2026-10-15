@@ -91,3 +91,39 @@ def test_run_check_exit_codes(tmp_path, capsys):
     rc = bl.main(["check", "--ledger", str(led), "--units", str(units)])
     assert rc == 1
     assert "pcb/o/r7/new" in capsys.readouterr().out
+
+
+# ---- gate SKIP coverage (Task D): one identity rule shared with new_identities ----
+
+def _skip(analyzer, unit_id, reason, base="timeout", cand="timeout"):
+    return {"analyzer": analyzer, "unit_id": unit_id, "identity": unit_id, "verdict": "SKIP", "reason": reason,
+            "baseline": {"status": base}, "candidate": {"status": cand}}
+
+
+KNOWN_LEDGER = {"timeout_units": [{"identity": "schematic/o/r/a.kicad_sch"}]}
+
+
+def test_both_failed_timeout_covered_only_when_ledgered():
+    known = blc.ledgered_timeouts(KNOWN_LEDGER)
+    assert blc.skip_is_ledgered(_skip("schematic", "o/r/a.kicad_sch", "both_failed"), known) is True
+    assert blc.skip_is_ledgered(_skip("schematic", "o/r/b.kicad_sch", "both_failed"), known) is False
+
+
+def test_both_failed_crash_never_covered_by_a_timeout_ledger():
+    known = blc.ledgered_timeouts({"timeout_units": [{"identity": "pcb/o/r/a.kicad_pcb"}]})
+    assert blc.skip_is_ledgered(_skip("pcb", "o/r/a.kicad_pcb", "both_failed", "crash", "crash"), known) is False
+
+
+def test_dependency_missing_covered_through_its_ledgered_upstream():
+    known = blc.ledgered_timeouts(KNOWN_LEDGER)
+    up_ok = _skip("schematic", "o/r/a.kicad_sch", "both_failed")
+    up_new = _skip("schematic", "o/r/b.kicad_sch", "both_failed")
+    dep = _skip("emc", "o/r/a.kicad_sch", "dependency_missing", "skipped", "skipped")
+    assert blc.skip_is_ledgered(dep, known, upstream=up_ok) is True
+    assert blc.skip_is_ledgered(dict(dep, unit_id="o/r/b.kicad_sch"), known, upstream=up_new) is False
+    assert blc.skip_is_ledgered(dep, known, upstream=None) is False
+
+
+def test_snapshot_read_error_never_covered():
+    known = blc.ledgered_timeouts(KNOWN_LEDGER)
+    assert blc.skip_is_ledgered(_skip("schematic", "o/r/a.kicad_sch", "snapshot_read_error"), known) is False

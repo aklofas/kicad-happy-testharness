@@ -29,6 +29,11 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
     gate_pass records the resolved `kind` and its `criterion`; the sha256 of
     the budget file is recorded as budget_sha256 (null without a budget).
   * per-unit diff records keep complete lists (no top-five truncation)
+  * skips_ok consults the baseline-debts ledger (--ledger; default
+    reference/baseline_debts/<baseline sha7>.json when present): a both_failed /
+    dependency_missing SKIP is bad only when tools/baseline_ledger_check does not
+    cover its identity. gate_pass records ledgered_skips + unledgered_skips; the
+    ledger path + sha256 land in the rollup identity and the finished manifest.
 
 Usage:
     python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-base --candidate-dir /tmp/kh-cand \\
@@ -303,6 +308,11 @@ def _print_summary(report):
               f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']}")
         if "kind" in gp:
             print(f"     kind: {gp['kind']}   criterion: {gp['criterion']}")
+        if "ledgered_skips" in gp:
+            print(f"     ledger: {report.get('identity', {}).get('ledger')}   ledgered_skips={gp['ledgered_skips']}"
+                  f"   unledgered_skips={len(gp['unledgered_skips'])}")
+            for u in gp["unledgered_skips"][:30]:
+                print(f"       unledgered: {u}")
     m = report.get("modes", {})
     if "raw" in m:
         print(f"modes: raw={m['raw']['verdict']} strict={m['strict']['verdict']} "
@@ -553,17 +563,67 @@ def aggregate(records):
             "executed_census": dict(executed)}
 
 
-def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census):
-    skips_ok = all(skip_breakdown.get(r, 0) == 0 for r in BAD_SKIP_REASONS)
+def _ledger_check():
+    tools = str(HARNESS_DIR / "tools")
+    if tools not in sys.path:
+        sys.path.insert(0, tools)
+    import baseline_ledger_check  # noqa: E402  (sibling tool owns the identity rules)
+    return baseline_ledger_check
+
+
+def resolve_ledger(arg, baseline_sha):
+    """Explicit --ledger (must exist), else reference/baseline_debts/<sha7>.json when present, else None."""
+    if arg:
+        p = Path(arg)
+        p = p if p.is_absolute() or p.exists() else HARNESS_DIR / p
+        if not p.is_file():
+            raise FileNotFoundError(f"--ledger {arg} not found")
+        return p
+    default = HARNESS_DIR / "reference" / "baseline_debts" / f"{(baseline_sha or '')[:7]}.json"
+    return default if baseline_sha and default.is_file() else None
+
+
+def ledger_identity(path):
+    if path is None:
+        return {"ledger": None, "ledger_sha256": None}
+    return {"ledger": str(path), "ledger_sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}
+
+
+def split_bad_skips(records, ledger):
+    """(ledgered count, sorted "reason analyzer identity" list of bad SKIPs the ledger does not cover)."""
+    bad = [r for r in records if r.get("verdict") == "SKIP" and r.get("reason") in BAD_SKIP_REASONS]
+    if ledger is None:
+        return 0, sorted(f"{r['reason']} {r['analyzer']} {r['identity']}" for r in bad)
+    blc = _ledger_check()
+    known = blc.ledgered_timeouts(ledger)
+    upstream = {r["unit_id"]: r for r in records if r.get("analyzer") == "schematic"}
+    ledgered, unledgered = 0, []
+    for r in bad:
+        if blc.skip_is_ledgered(r, known, upstream=upstream.get(r["unit_id"])):
+            ledgered += 1
+        else:
+            unledgered.append(f"{r['reason']} {r['analyzer']} {r['identity']}")
+    return ledgered, sorted(unledgered)
+
+
+def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census,
+                      skip_records=None, ledger=None):
+    if skip_records is None:  # counts only: no identities to match against a ledger
+        ledgered = 0
+        unledgered = [f"{r} (count {skip_breakdown[r]})" for r in BAD_SKIP_REASONS if skip_breakdown.get(r, 0)]
+    else:
+        ledgered, unledgered = split_bad_skips(skip_records, ledger)
+    skips_ok = not unledgered
     census_ok = all(executed_census.get(a, 0) == n for a, n in expected_census.items())
     strict = bool(criteria["strict_clean"])
     return {"pass": strict and skips_ok and census_ok, "strict_clean": strict,
             "census_ok": census_ok, "skips_ok": skips_ok,
+            "ledgered_skips": ledgered, "unledgered_skips": unledgered,
             "skip_breakdown": dict(skip_breakdown),
             "expected_census": dict(expected_census), "executed_census": dict(executed_census)}
 
 
-def write_rollup(records, agg, section, layout, manifest):
+def write_rollup(records, agg, section, layout, manifest, ledger=None, ledger_path=None):
     rows = []
     for a in ALL_ANALYZERS:
         c = agg["by_analyzer"][a]
@@ -582,7 +642,8 @@ def write_rollup(records, agg, section, layout, manifest):
                  for repo, recs in sorted(agg["fail_repos"].items())]
     criteria = _compute_pass_criteria(totals)
     gate_pass = compute_gate_pass(criteria, agg["skip_breakdown"],
-                                  manifest.get("expected_census", {}), agg["executed_census"])
+                                  manifest.get("expected_census", {}), agg["executed_census"],
+                                  skip_records=records, ledger=ledger)
     summary_mode = "strict_clean" if criteria["strict_clean"] else ("clean" if criteria["clean"] else "not_clean")
     product = manifest.get("product") or {}
     report = {
@@ -599,7 +660,8 @@ def write_rollup(records, agg, section, layout, manifest):
                      "baseline_sha": (product.get("baseline") or {}).get("sha"),
                      "candidate_sha": (product.get("candidate") or {}).get("sha"),
                      "selection": manifest.get("selection"), "input_digest": manifest.get("input_digest"),
-                     "normalization_policy": manifest.get("normalization_policy")},
+                     "normalization_policy": manifest.get("normalization_policy"),
+                     **ledger_identity(ledger_path)},
     }
     out_json = layout.rollup(section)
     out_json.parent.mkdir(parents=True, exist_ok=True)
@@ -635,6 +697,9 @@ def build_arg_parser():
                     help="reuse units from a previous run ONLY if its manifest identity matches")
     ap.add_argument("--budget", default=None, metavar="FILE",
                     help="regression/budgets/<id>.json; enables the budgeted mode verdict")
+    ap.add_argument("--ledger", default=None, metavar="FILE",
+                    help="baseline-debts ledger for skips_ok (default: reference/baseline_debts/"
+                         "<baseline sha7>.json when present)")
     return ap
 
 
@@ -713,9 +778,21 @@ def main(argv=None):
         print(kind_err, file=sys.stderr)
         sys.exit(2)
     budget_sha256 = budget_file_sha256(args.budget)
+    if args.ledger:
+        try:
+            resolve_ledger(args.ledger, None)
+        except FileNotFoundError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(2)
     base_ref, cand_ref = git_worktree_ref(Path(args.baseline_dir)), git_worktree_ref(Path(args.candidate_dir))
     if args.kind != "aa" and (base_ref.dirty or cand_ref.dirty):
         print("Error: product worktree is dirty; evidence runs need clean worktrees", file=sys.stderr)
+        sys.exit(2)
+    ledger_path = resolve_ledger(args.ledger, base_ref.sha)
+    try:
+        ledger = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path else None
+    except (OSError, ValueError) as e:
+        print(f"Error: --ledger {ledger_path}: {e}", file=sys.stderr)
         sys.exit(2)
     gd = Path(args.gate_dir)
     layout = GateLayout(gd if gd.is_absolute() else HARNESS_DIR / gd)
@@ -821,7 +898,7 @@ def main(argv=None):
 
     records = a_results + b_results
     agg = aggregate(records)
-    report = write_rollup(records, agg, section, layout, manifest)
+    report = write_rollup(records, agg, section, layout, manifest, ledger=ledger, ledger_path=ledger_path)
     from regression.field_compare import BudgetError, run_modes  # local import keeps the gate importable standalone
     try:
         modes = run_modes(layout.root, budget_path=Path(args.budget) if args.budget else None,
@@ -835,6 +912,7 @@ def main(argv=None):
                                   "expected_census": manifest["expected_census"],
                                   "executed_census": agg["executed_census"],
                                   "budget_sha256": budget_sha256,
+                                  **ledger_identity(ledger_path),
                                   "modes": {k: v.get("verdict") for k, v in modes.items() if isinstance(v, dict)}})
     _print_summary(report)
     print(f"\nElapsed: {time.time()-t_start:.0f}s\nRollup JSON: {layout.rollup(section)}")

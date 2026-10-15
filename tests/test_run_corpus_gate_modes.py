@@ -192,3 +192,96 @@ def test_print_summary_shows_kind_criterion_and_budget(capsys):
     assert "output-changing: census_ok AND skips_ok AND budgeted verdict clean" in out
     assert "budget: t" in out and "abababababab" in out
     assert "over_budget: C1, C2" in out
+
+
+# ---- Task D: ledger-aware skips_ok ----------------------------------------------
+
+def _crit():
+    totals = {"PASS": 1, "WARN": 0, "FAIL": 0, "SKIP": 0, "Disappeared": 0, "Downgrades": 0,
+              "Upgrades": 0, "NewKnown": 0, "NewUpgraded": 0, "NewUnknown": 0}
+    return gate._compute_pass_criteria(totals)
+
+
+def _skiprec(analyzer, unit_id, reason, base, cand):
+    return {"analyzer": analyzer, "repo": unit_id.rsplit("/", 1)[0], "unit_id": unit_id, "identity": unit_id,
+            "verdict": "SKIP", "reason": reason, "baseline": {"status": base}, "candidate": {"status": cand}}
+
+
+SCH = "cristobalcuevas/Kicad/LT3514_LT3514.kicad_sch"
+PCB = "hackclub/OnBoard/projects_tofyKeeb_src_tofyKeeb.kicad_pcb"
+LEDGER_SCH = {"timeout_units": [{"identity": f"schematic/{SCH}"}]}
+
+
+def _skips(records):
+    bd = {"not_applicable": 0, "both_failed": 0, "dependency_missing": 0, "snapshot_read_error": 0}
+    for r in records:
+        bd[r["reason"]] += 1
+    return bd
+
+
+def _round2_like():
+    return [_skiprec("schematic", SCH, "both_failed", "timeout", "timeout"),
+            *(_skiprec(a, SCH, "dependency_missing", "skipped", "skipped") for a in ("thermal", "emc", "cross_analysis"))]
+
+
+def test_ledgered_both_failed_and_dependents_keep_skips_ok():
+    recs = _round2_like()
+    gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=LEDGER_SCH)
+    assert gp["skips_ok"] is True and gp["pass"] is True
+    assert gp["ledgered_skips"] == 4 and gp["unledgered_skips"] == []
+
+
+def test_unledgered_both_failed_fails_and_is_listed():
+    recs = _round2_like() + [_skiprec("pcb", PCB, "both_failed", "crash", "crash")]
+    gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=LEDGER_SCH)
+    assert gp["skips_ok"] is False and gp["pass"] is False
+    assert gp["ledgered_skips"] == 4
+    assert gp["unledgered_skips"] == [f"both_failed pcb {PCB}"]
+
+
+def test_no_ledger_is_todays_behaviour():
+    recs = _round2_like()
+    gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=None)
+    assert gp["skips_ok"] is False and gp["ledgered_skips"] == 0
+    assert gp["unledgered_skips"] == [f"both_failed schematic {SCH}"] + [
+        f"dependency_missing {a} {SCH}" for a in ("cross_analysis", "emc", "thermal")]
+    na = [_skiprec("thermal", SCH, "not_applicable", "skipped", "skipped")]
+    assert gate.compute_gate_pass(_crit(), _skips(na), {}, {}, skip_records=na)["skips_ok"] is True
+
+
+def test_resolve_ledger_default_explicit_and_none(tmp_path):
+    sha = "6a91aaaea124152b2923326c1cf77278e0999cd4"
+    default = gate.resolve_ledger(None, sha)
+    assert default == gate.HARNESS_DIR / "reference" / "baseline_debts" / "6a91aaa.json"
+    assert gate.resolve_ledger(None, "f" * 40) is None
+    explicit = tmp_path / "l.json"
+    explicit.write_text("{}")
+    assert gate.resolve_ledger(str(explicit), sha) == explicit
+    with pytest.raises(FileNotFoundError):
+        gate.resolve_ledger(str(tmp_path / "missing.json"), sha)
+
+
+def test_ledger_identity_recorded(tmp_path):
+    p = tmp_path / "l.json"
+    p.write_text(json.dumps(LEDGER_SCH))
+    info = gate.ledger_identity(p)
+    assert info == {"ledger": str(p), "ledger_sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
+    assert gate.ledger_identity(None) == {"ledger": None, "ledger_sha256": None}
+
+
+def test_explicit_missing_ledger_exits_2_before_phase_a(tmp_path, monkeypatch, capsys):
+    err = _run_main_expect_2(tmp_path, monkeypatch, capsys, ["--ledger", str(tmp_path / "nope.json")])
+    assert "Error: --ledger" in err and "not found" in err
+
+
+def test_round2_real_skips_against_real_ledger():
+    """The seven round-2 bad skips (6a91aaa->8912a5a) against reference/baseline_debts/6a91aaa.json:
+    the schematic timeout and its three dependents are ledgered; the three pcb crashes are not,
+    because the ledger records timeouts only."""
+    ledger = json.loads((gate.HARNESS_DIR / "reference" / "baseline_debts" / "6a91aaa.json").read_text())
+    crashes = ["BrettHallen/Conversion_Boards/TFC_10-pin_TFC_10-pin 2.kicad_pcb",
+               "hackclub/OnBoard/projects_holy60-3d_src_holy60-3d.kicad_pcb", PCB]
+    recs = _round2_like() + [_skiprec("pcb", u, "both_failed", "crash", "crash") for u in crashes]
+    gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=ledger)
+    assert gp["ledgered_skips"] == 4
+    assert gp["unledgered_skips"] == sorted(f"both_failed pcb {u}" for u in crashes)
