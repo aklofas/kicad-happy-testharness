@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-15 (H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files))
+Last updated: 2026-10-15 later (H0 plan 3: field-level comparator raw/strict/budgeted + volatile-leaves-v1 + budgets + gate --budget, comparator suite 176, unit tier 2,046 pass / 1 xfail; prior: H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files))
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,10 @@ Last updated: 2026-10-15 (H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,8
 ---
 
 ## Completed batches
+
+### 2026-10-15 later — H0 plan 3 landed (local, unpushed)
+
+Field-level comparator `regression/field_compare.py` with three verdicts never conflated (raw bytes + per-unit file set; strict exact-leaf masking under tracked `regression/normalization/volatile-leaves-v1.json`; budgeted via tracked `regression/budgets/<id>.json`, residual ⇒ not clean), CLI `regression/compare_snap_trees.py` (`--jobs`), gate hook `run_modes()` + `run_corpus_gate.py --budget` with `gate_pass.pass` ANDing `strict_field_clean`. Final whole-branch review caught C1: chained `source_hashes` values were unmasked (600/600 emc/thermal/cross units strict-dirty, A/A included) — fixed by verify-then-mask (value must equal the sha256 of the file its key names) and re-verified read-only over 89,007 retained chained units (0 `/inputs` deltas, 0 violations). Real fixtures from `results/v22x_pr44_gate` under `tests/fixtures/h0/plan3/real/`. RUNBOOK 26i. Comparator suite 176; unit tier 2,046 passed / 1 xfailed; smoke 997. Open question for the maintainer: whether a clean budget should replace findings `strict_clean` in the gate exit (literal spec §2.4 kept).
 
 ### 2026-10-15 — H0 plan 2 landed (local, unpushed)
 
