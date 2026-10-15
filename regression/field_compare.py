@@ -22,6 +22,7 @@ import copy
 import hashlib
 import json
 import re
+from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -383,3 +384,119 @@ def compare_strict(a: Any, b: Any, policy: Policy | None, *, unit: str, analyzer
         a, b = _apply_policy(a, b, policy, ctx, root_prefixes)
     _walk(a, b, "", ctx)
     return ctx.deltas, ctx.violations
+
+
+_NUM_TOKEN = re.compile(r"-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?")
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def compare_raw(a_path: Path, b_path: Path, *, unit: str, analyzer: str) -> list[Delta]:
+    """Byte identity. One ``bytes`` delta when the files differ; additionally one
+    ``lexical_numeric`` delta when the parsed JSON is equal but number spelling differs."""
+    ab, bb = Path(a_path).read_bytes(), Path(b_path).read_bytes()
+    if ab == bb:
+        return []
+    out = [Delta(unit, analyzer, "", "bytes", hashlib.sha256(ab).hexdigest(), hashlib.sha256(bb).hexdigest())]
+    try:
+        pa, pb = json.loads(ab), json.loads(bb)
+    except json.JSONDecodeError:
+        return out
+    if pa == pb:
+        ta, tb = _NUM_TOKEN.findall(ab.decode("utf-8", "replace")), _NUM_TOKEN.findall(bb.decode("utf-8", "replace"))
+        if ta != tb:
+            diff = [(x, y) for x, y in zip(ta, tb) if x != y][:50]
+            out.append(Delta(unit, analyzer, "", "lexical_numeric", [x for x, _ in diff], [y for _, y in diff]))
+    return out
+
+
+def iter_units(root: Path) -> list[tuple[str, str, Path]]:
+    """Every ``snap.json`` under root → (unit_id, analyzer, path). unit_id is the
+    parent directory relative to root with '/' separators; analyzer is its first segment."""
+    root = Path(root)
+    out = []
+    for p in sorted(root.rglob("snap.json")):
+        rel = p.parent.relative_to(root).as_posix()
+        out.append((rel, rel.split("/", 1)[0], p))
+    return out
+
+
+def _manifest_identity(root: Path) -> dict | None:
+    m = Path(root) / "manifest.json"
+    if not m.exists():
+        m = Path(root).parent / "manifest.json"   # gate dir holds the manifest beside the slot roots
+    if not m.exists():
+        return None
+    try:
+        data = json.loads(m.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError, UnicodeDecodeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    return {k: data.get(k) for k in ("profile", "harness", "product", "selection")}
+
+
+def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | None,
+                  key_order: bool = False,
+                  root_prefixes: tuple[str, str] | None = None) -> dict:
+    if mode not in ("raw", "strict", "budgeted"):
+        raise ValueError(f"mode must be raw|strict|budgeted, got {mode!r}")
+    a_root, b_root = Path(a_root).resolve(), Path(b_root).resolve()
+    prefixes = root_prefixes or (str(a_root), str(b_root))
+    a_units = {u: (an, p) for u, an, p in iter_units(a_root)}
+    b_units = {u: (an, p) for u, an, p in iter_units(b_root)}
+    units_out, deltas, violations = [], [], []
+    counts = Counter()
+    for unit in sorted(set(a_units) | set(b_units)):
+        analyzer = (a_units.get(unit) or b_units.get(unit))[0]
+        rec = {"unit": unit, "analyzer": analyzer,
+               "a": str(a_units[unit][1].relative_to(a_root)) if unit in a_units else None,
+               "b": str(b_units[unit][1].relative_to(b_root)) if unit in b_units else None,
+               "status": "compared", "delta_count": 0}
+        if unit not in a_units or unit not in b_units:
+            rec["status"] = "missing_a" if unit not in a_units else "missing_b"
+            counts["missing"] += 1
+            units_out.append(rec)
+            continue
+        pa, pb = a_units[unit][1], b_units[unit][1]
+        if mode == "raw":
+            ds = compare_raw(pa, pb, unit=unit, analyzer=analyzer)
+        else:
+            docs = []
+            for side, p in (("a", pa), ("b", pb)):
+                try:
+                    docs.append(json.loads(p.read_text(encoding="utf-8")))
+                except (json.JSONDecodeError, OSError, UnicodeDecodeError):
+                    rec["status"] = f"parse_error_{side}"
+                    break
+            if rec["status"] != "compared":
+                counts["parse_errors"] += 1
+                units_out.append(rec)
+                continue
+            ds, viol = compare_strict(docs[0], docs[1], policy, unit=unit, analyzer=analyzer,
+                                      key_order=key_order, root_prefixes=prefixes)
+            violations.extend(viol)
+        rec["delta_count"] = len(ds)
+        counts["compared"] += 1
+        counts["identical" if not ds else "with_deltas"] += 1
+        deltas.extend(ds)
+        units_out.append(rec)
+    by_op = Counter(d.op for d in deltas)
+    by_an = Counter(d.analyzer for d in deltas)
+    summary = {"units": len(units_out), "compared": counts["compared"], "identical": counts["identical"],
+               "with_deltas": counts["with_deltas"], "missing": counts["missing"],
+               "parse_errors": counts["parse_errors"], "deltas": len(deltas),
+               "by_op": dict(sorted(by_op.items())), "by_analyzer": dict(sorted(by_an.items()))}
+    if counts["missing"] or counts["parse_errors"] or violations:
+        verdict = "error"
+    elif deltas:
+        verdict = "deltas"
+    else:
+        verdict = "clean"
+    return {"report_version": 1, "mode": mode, "policy": policy.name if policy else None,
+            "key_order": key_order, "a_root": str(a_root), "b_root": str(b_root),
+            "identity": {"a": _manifest_identity(a_root), "b": _manifest_identity(b_root)},
+            "units": units_out, "deltas": [d.to_json() for d in deltas],
+            "policy_violations": violations, "summary": summary, "budget": None, "verdict": verdict}
