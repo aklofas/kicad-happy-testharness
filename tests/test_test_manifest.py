@@ -92,3 +92,11 @@ def test_file_absent_from_manifest_is_missing():
     manifest = {"tests/test_other.py::test_x": ["unit"]}
     rows = {r["file"]: r for r in compare_legacy(legacy, manifest, tier="unit")}
     assert rows["tests/test_gone.py"]["note"].startswith("MISSING")
+
+
+def test_no_legacy_row_in_other_tier_is_not_a_move():
+    manifest = {"tests/contract/test_new_contract.py::test_a": ["offline_contract"]}
+    rows = {r["file"]: r for r in compare_legacy({"files": []}, manifest, tier="unit")}
+    row = rows["tests/contract/test_new_contract.py"]
+    assert row["note"] == "not in legacy run (tiers: offline_contract)"
+    assert row["collected"] == 0

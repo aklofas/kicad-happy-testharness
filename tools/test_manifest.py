@@ -57,11 +57,12 @@ def compare_legacy(legacy: dict, manifest: dict, tier: str = "unit") -> list[dic
         c = len(in_tier)
         if not items:
             note = "MISSING under pytest — investigate"
-        elif c == 0:
+        elif c == 0 and lrow is not None:
             tiers = sorted({m for _, markers in others for m in markers})
             note = f"moved to tier(s) {' '.join(tiers)} ({len(others)})"
         elif lrow is None:
-            note = "not in legacy run"
+            tiers = sorted({m for _, markers in others for m in markers})
+            note = "not in legacy run" + (f" (tiers: {', '.join(tiers)})" if tiers else "")
         elif lrow.get("parsed") is False or lrow.get("status") in ("no_runner", "unparsed"):
             note = "legacy count was a phantom pass"
         else:
