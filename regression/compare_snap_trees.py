@@ -20,19 +20,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from regression.field_compare import (  # noqa: E402
-    BudgetError, Delta, PolicyError, compare_trees, evaluate_budget, load_budget, load_policy,
+    BudgetError, Delta, PolicyError, compare_trees, docs_for_report, evaluate_budget, load_budget, load_policy,
 )
-
-
-def _docs_for(report: dict) -> dict:
-    """Load (a_doc, b_doc) per compared unit so budget `where`/predicates can resolve findings."""
-    a_root, b_root = Path(report["a_root"]), Path(report["b_root"])
-    docs = {}
-    for u in report["units"]:
-        if u["status"] == "compared":
-            docs[u["unit"]] = (json.loads((a_root / u["a"]).read_text(encoding="utf-8")),
-                               json.loads((b_root / u["b"]).read_text(encoding="utf-8")))
-    return docs
 
 
 def main(argv=None) -> int:
@@ -80,7 +69,7 @@ def main(argv=None) -> int:
     if args.mode == "budgeted":
         deltas = [Delta(**d) for d in report["deltas"]]
         try:
-            report["budget"] = evaluate_budget(deltas, budget, docs=_docs_for(report),
+            report["budget"] = evaluate_budget(deltas, budget, docs=docs_for_report(report, a_root, b_root),
                                                missing_units=report["summary"]["missing"])
         except BudgetError as e:
             print(f"error: {e}", file=sys.stderr)

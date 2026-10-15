@@ -696,3 +696,65 @@ def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = No
             "claimed_counts": {c["id"]: len(claimed[i]) for i, c in enumerate(classes) if claimed[i]},
             "claimed_units": {c["id"]: len({d.unit for d in claimed[i]}) for i, c in enumerate(classes) if claimed[i]},
             "residuals": [d.to_json() for d in residuals], "violations": violations}
+
+
+def docs_for_report(report: dict, a_root: Path, b_root: Path) -> dict:
+    """Load (a_doc, b_doc) per compared unit so budget `where`/predicates can resolve findings."""
+    docs = {}
+    for u in report["units"]:
+        if u["status"] == "compared":
+            docs[u["unit"]] = (json.loads((Path(a_root) / u["a"]).read_text(encoding="utf-8")),
+                               json.loads((Path(b_root) / u["b"]).read_text(encoding="utf-8")))
+    return docs
+
+
+def _slots(gate_root: Path) -> tuple[Path, Path]:
+    g = Path(gate_root)
+    for a, b in (("baseline", "candidate"), ("v131", "v14")):
+        if (g / a).is_dir() and (g / b).is_dir():
+            return g / a, g / b
+    for a, b in (("baseline", "candidate"), ("v131", "v14")):
+        if (g / a).is_dir() and not (g / b).is_dir():
+            raise FileNotFoundError(f"gate {g}: slot {a!r} present but {b!r} missing")
+    raise FileNotFoundError(f"gate {g}: no baseline/candidate (or v131/v14) slot pair")
+
+
+def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bool = False,
+              policy_name: str = "volatile-leaves-v1", write_reports: bool = True) -> dict:
+    """Run raw + strict (+ budgeted) over a gate's two slots. Returns the dict the gate
+    stores under rollup['modes']; writes field_report_<mode>.json beside the slots."""
+    g = Path(gate_root)
+    a_root, b_root = _slots(g)
+    policy = load_policy(policy_name)
+    out: dict = {"policy": policy.name, "key_order": key_order}
+
+    raw = compare_trees(a_root, b_root, mode="raw", policy=None)
+    strict = compare_trees(a_root, b_root, mode="strict", policy=policy, key_order=key_order)
+    if write_reports:
+        (g / "field_report_raw.json").write_text(json.dumps(raw, indent=1), encoding="utf-8")
+        (g / "field_report_strict.json").write_text(json.dumps(strict, indent=1), encoding="utf-8")
+    out["raw"] = {"verdict": raw["verdict"], "report": "field_report_raw.json", "summary": raw["summary"]}
+    out["strict"] = {"verdict": strict["verdict"], "report": "field_report_strict.json",
+                     "summary": strict["summary"], "policy_violations": len(strict["policy_violations"])}
+
+    if budget_path is None:
+        out["budgeted"] = {"verdict": "n/a"}
+        out["strict_field_clean"] = strict["verdict"] == "clean"
+        return out
+
+    budget = load_budget(Path(budget_path))
+    deltas = [Delta(**d) for d in strict["deltas"]]
+    ev = evaluate_budget(deltas, budget, docs=docs_for_report(strict, a_root, b_root),
+                         missing_units=strict["summary"]["missing"])
+    missing_allowed = int(budget.get("unexplained_missing_units_allowed", 0))
+    hard_error = (strict["summary"]["missing"] > missing_allowed or strict["summary"]["parse_errors"] > 0
+                  or bool(strict["policy_violations"]))
+    verdict = "error" if hard_error else ("clean" if ev["clean"] else "residuals")
+    budgeted = dict(strict, mode="budgeted", budget=ev, verdict=verdict)
+    if write_reports:
+        (g / "field_report_budgeted.json").write_text(json.dumps(budgeted, indent=1), encoding="utf-8")
+    out["budgeted"] = {"verdict": verdict, "report": "field_report_budgeted.json", "budget_id": budget["budget_id"],
+                       "claimed_counts": ev["claimed_counts"], "residuals": len(ev["residuals"]),
+                       "violations": len(ev["violations"])}
+    out["strict_field_clean"] = verdict == "clean"
+    return out
