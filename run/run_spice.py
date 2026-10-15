@@ -6,7 +6,7 @@ and runs simulate_subcircuits.py on each one. It does NOT re-run the schematic
 analyzer — it consumes the outputs already in results/outputs/schematic/.
 
 Usage:
-    python3 run/run_spice.py
+    python3 run/run_spice.py --all
     python3 run/run_spice.py --repo OpenMower
     python3 run/run_spice.py --jobs 4
     python3 run/run_spice.py --timeout 10
@@ -31,9 +31,11 @@ from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib.execution import build_env
+from harnesslib.profiles import PROFILES
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output, should_skip_resume,
-                   add_repo_filter_args, resolve_repos, DEFAULT_JOBS)
+                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS)
 
 
 def run_extract_parasitics(extractor_script, pcb_json, parasitics_json):
@@ -54,51 +56,57 @@ def run_extract_parasitics(extractor_script, pcb_json, parasitics_json):
         return False
 
 
+def _err_first_line(err_file):
+    """First line of the .err file: the 'status: detail' summary."""
+    try:
+        lines = err_file.read_text(encoding="utf-8").strip().splitlines()
+        return lines[0] if lines else "unknown error"
+    except OSError:
+        return "unknown error"
+
+
 def run_one_spice(simulator_script, input_json, output_json, timeout=5,
-                  parasitics_json=None, extra_args=None):
+                  parasitics_json=None, extra_args=None, workdir=None, env=None,
+                  outer_timeout=60):
     """Run simulate_subcircuits.py on one schematic analysis JSON.
 
-    Returns:
-        (returncode, summary_dict_or_None, elapsed_s)
-    """
-    cmd = [sys.executable, str(simulator_script),
-           str(input_json),
-           "--output", str(output_json),
-           "--compact",
-           "--timeout", str(timeout)]
-    if parasitics_json and parasitics_json.exists():
-        cmd.extend(["--parasitics", str(parasitics_json)])
-    if extra_args:
-        import shlex
-        cmd.extend(shlex.split(extra_args))
+    `timeout` is the per-subcircuit cap passed to the simulator; `outer_timeout`
+    is this process's cap (TH-055 class). `workdir` is forwarded as --workdir so
+    simulation files never land in the corpus checkout (TH-059); `env` defaults
+    to the hermetic offline environment (credentials stripped).
 
-    t0 = time.time()
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True,
-                                timeout=60)
-        elapsed = time.time() - t0
-        if result.returncode == 0 and output_json.exists():
-            with open(output_json) as f:
-                data = json.load(f)
-            return 0, data.get("summary", {}), elapsed
-        else:
-            err_file = output_json.with_suffix(".err")
-            err_file.write_text(result.stderr or f"exit {result.returncode}", encoding="utf-8")
-            return result.returncode, None, elapsed
-    except subprocess.TimeoutExpired:
-        elapsed = time.time() - t0
-        err_file = output_json.with_suffix(".err")
-        err_file.write_text("Timed out after 60s", encoding="utf-8")
-        return None, None, elapsed
-    except Exception as e:
-        elapsed = time.time() - t0
-        err_file = output_json.with_suffix(".err")
-        err_file.write_text(str(e), encoding="utf-8")
-        return -1, None, elapsed
+    Returns (returncode, summary_dict_or_None, elapsed_s)."""
+    from harnesslib.execution import run_once, build_env
+
+    def make_cmd(out_path):
+        cmd = [sys.executable, str(simulator_script), str(input_json),
+               "--output", str(out_path), "--compact", "--timeout", str(timeout)]
+        if workdir is not None:
+            Path(workdir).mkdir(parents=True, exist_ok=True)
+            cmd.extend(["--workdir", str(workdir)])
+        if parasitics_json and Path(parasitics_json).exists():
+            cmd.extend(["--parasitics", str(parasitics_json)])
+        if extra_args:
+            import shlex
+            cmd.extend(shlex.split(extra_args))
+        return cmd
+
+    output_json = Path(output_json)
+    res = run_once(make_cmd, output_json, analyzer="spice", timeout=outer_timeout,
+                   env=env or build_env(offline=True))
+    if res.status == "ok":
+        output_json.with_suffix(".err").unlink(missing_ok=True)
+        with open(output_json) as f:
+            data = json.load(f)
+        return 0, data.get("summary", {}), res.elapsed_s
+    output_json.with_suffix(".err").write_text(
+        f"{res.status}: {res.detail}\n{res.stderr_tail}", encoding="utf-8")
+    return res.exit_code, None, res.elapsed_s
 
 
 def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
-                       extra_args, with_parasitics, extractor, resume):
+                       extra_args, with_parasitics, extractor, resume,
+                       workdir_root, env, outer_timeout):
     """Process one schematic JSON through SPICE simulation.
 
     Top-level function so it can be pickled by ProcessPoolExecutor.
@@ -131,6 +139,8 @@ def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
         simulator, input_json, output_json, timeout=timeout,
         parasitics_json=parasitics_json,
         extra_args=extra_args,
+        workdir=Path(workdir_root) / repo_name / input_json.stem,
+        env=env, outer_timeout=outer_timeout,
     )
     return input_json, returncode, summary, output_json, elapsed, did_extract_parasitics
 
@@ -153,7 +163,24 @@ def main():
                         "(e.g. '--monte-carlo 100 --mc-seed 42')")
     parser.add_argument("--resume", action="store_true",
                         help="Skip files that already have valid output JSON")
+    parser.add_argument("--workdir", default=None,
+                        help="Scratch root for simulation files (default: "
+                             "results/spice_work/<timestamp>); never inside repos/ (TH-059)")
+    parser.add_argument("--online", action="store_true",
+                        help="Keep distributor credentials in the simulator env "
+                             "(default: stripped, hermetic offline run)")
+    parser.add_argument("--outer-timeout", type=int,
+                        default=PROFILES["spice-offline"].timeout_s,
+                        help="Per-file process cap in seconds (default: "
+                             f"{PROFILES['spice-offline'].timeout_s})")
     args = parser.parse_args()
+
+    env = build_env(offline=not args.online)
+    workdir_root = Path(args.workdir) if args.workdir else \
+        OUTPUTS_DIR.parent / "spice_work" / time.strftime("%Y%m%dT%H%M%S")
+    if workdir_root.resolve().is_relative_to((OUTPUTS_DIR.parent.parent / "repos").resolve()):
+        print("Error: --workdir must not be inside repos/ (TH-059)", file=sys.stderr)
+        sys.exit(2)
 
     # Resolve paths
     kicad_happy = resolve_kicad_happy_dir()
@@ -180,15 +207,16 @@ def main():
         sys.exit(1)
 
     # Find schematic outputs
-    repo_list = resolve_repos(args)
-    if repo_list:
+    repo_list, selection_source = resolve_repos_with_source(
+        args, require_explicit_all=True)
+    if repo_list is not None:
         inputs = []
         for rn in repo_list:
             inputs.extend(find_schematic_outputs(rn))
     else:
         inputs = find_schematic_outputs(None)
     if not inputs:
-        if repo_list:
+        if repo_list is not None:
             print(f"No schematic outputs found for specified repos", file=sys.stderr)
         else:
             print("No schematic outputs found. Run run/run_schematic.py first.", file=sys.stderr)
@@ -210,6 +238,7 @@ def main():
     else:
         print(f"Inputs: {len(inputs)} schematic outputs")
     print(f"Jobs: {args.jobs}")
+    print(f"Workdir: {workdir_root}   offline: {not args.online}")
     print(f"Timeout: {args.timeout}s per subcircuit")
     if args.extra_args:
         print(f"Extra args: {args.extra_args}")
@@ -238,6 +267,9 @@ def main():
         with_parasitics=args.with_parasitics,
         extractor=extractor,
         resume=args.resume,
+        workdir_root=workdir_root,
+        env=env,
+        outer_timeout=args.outer_timeout,
     )
 
     results_list = []
@@ -271,7 +303,7 @@ def main():
         if returncode != 0 or summary is None:
             errors += 1
             err_file = output_json.with_suffix(".err")
-            err_msg = err_file.read_text(encoding="utf-8").strip().splitlines()[-1] if err_file.exists() else "unknown error"
+            err_msg = _err_first_line(err_file)
             print(f"FAIL [{i:4d}] {rel}")
             print(f"           {err_msg}")
             continue
