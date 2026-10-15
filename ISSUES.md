@@ -61,10 +61,10 @@ hash-order nondeterminism sources; KH-366 filed 2026-07-24, RC-DET
 nondeterminism found during v2.2 work; KH-357 filed 2026-07-24 from GitHub #31;
 KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 `docs/2026-07-24-kicad-parser-and-analysis-audit.md` — each entry cites its
-KHPA finding ID). Next TH number: **TH-063** (TH-062 filed 2026-10-14 — 58 print-and-return vacuous skip paths in required-tier smoke files; TH-061 filed 2026-10-14 — test_datasheet_db_cli.py fallback fixture writes under repos/; TH-060 filed 2026-10-14 — test_kh393_power_rails_threaded premise stale since PR #44, now strict xfail; TH-052/053/058 fixed 2026-10-14 (H0 plan 1, honest pytest collection), see FIXED.md; TH-059 filed 2026-10-06 at the v2.3.1 regen — batch SPICE side effects: spice/ dirs in repos/ + live DigiKey lookups; TH-058 filed 2026-10-06 — `test_kh420_zone_fill_segment_grid.py` wall-clock assertion (< 30 s on the NLoy corpus board) is load-sensitive: 8.5 s idle, 19.5 s with a 32-job gate running, so the pre-push hook can flake under load; TH-057 filed 2026-10-05 — generate_bugfix_assertions.py merges by assertion id and never updates a changed expected value, so a registry re-anchor silently does not land; TH-056 filed 2026-10-05 — KH-313 corpus-lock anchor lost: TERES never runs check_inductor_leakage's crash path (no PCB pairing, 0 rf_chains) and `categories_checked` semantics changed, lock re-anchored; TH-055 filed 2026-10-05 — the 198 pcb timeout-class units keep v1.3-era outputs (148 schema 1.3.0 / 29 pre-schema / 21 none) under a hard-coded 120 s `ANALYZER_TIMEOUT`, downstream emc/thermal stale too; TH-054 fixed-on-discovery 2026-10-05 at the v2.3.0 regen — run_emc masked analyzer crashes behind stale outputs, EMC corpus stale since 2026-08-20/2026-05-15, see FIXED.md; TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
+KHPA finding ID). Next TH number: **TH-064** (TH-063 filed 2026-10-14 — mutating runner launched against the live tree from a TDD RED step, 16,909 emc outputs rewritten, no measurable impact; TH-055 and TH-059 (harness half) fixed 2026-10-15 (H0 plan 2), see FIXED.md; TH-062 filed 2026-10-14 — 58 print-and-return vacuous skip paths in required-tier smoke files; TH-061 filed 2026-10-14 — test_datasheet_db_cli.py fallback fixture writes under repos/; TH-060 filed 2026-10-14 — test_kh393_power_rails_threaded premise stale since PR #44, now strict xfail; TH-052/053/058 fixed 2026-10-14 (H0 plan 1, honest pytest collection), see FIXED.md; TH-059 filed 2026-10-06 at the v2.3.1 regen — batch SPICE side effects: spice/ dirs in repos/ + live DigiKey lookups; TH-058 filed 2026-10-06 — `test_kh420_zone_fill_segment_grid.py` wall-clock assertion (< 30 s on the NLoy corpus board) is load-sensitive: 8.5 s idle, 19.5 s with a 32-job gate running, so the pre-push hook can flake under load; TH-057 filed 2026-10-05 — generate_bugfix_assertions.py merges by assertion id and never updates a changed expected value, so a registry re-anchor silently does not land; TH-056 filed 2026-10-05 — KH-313 corpus-lock anchor lost: TERES never runs check_inductor_leakage's crash path (no PCB pairing, 0 rf_chains) and `categories_checked` semantics changed, lock re-anchored; TH-055 filed 2026-10-05 — the 198 pcb timeout-class units keep v1.3-era outputs (148 schema 1.3.0 / 29 pre-schema / 21 none) under a hard-coded 120 s `ANALYZER_TIMEOUT`, downstream emc/thermal stale too; TH-054 fixed-on-discovery 2026-10-05 at the v2.3.0 regen — run_emc masked analyzer crashes behind stale outputs, EMC corpus stale since 2026-08-20/2026-05-15, see FIXED.md; TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 51 open issues (35 KH + 16 TH).
+> 50 open issues (35 KH + 15 TH).
 
 ---
 
@@ -726,31 +726,33 @@ noticed because the file had no `__main__` block (TH-052 phantom pass). Now
 **Fix direction:** split the test: keep the override assertions; pick a fixture
 net the heuristics do not match for the negative half; then drop the xfail.
 
-### TH-059: batch SPICE runs have side effects outside `results/` — the spice skill writes `spice/` model-cache dirs into the corpus checkouts (261 dirs, 82 MB under `repos/`) and makes live DigiKey lookups (creds in the harness env) — run-to-run drift of `summary.pass` locks
+### TH-063: mutating runner launched against the live tree from a TDD RED step — 16,909 `results/outputs/emc` files rewritten
 
-**Severity:** MEDIUM (reproducibility: the v2.3.1 regen moved 21 SPICE
-`summary.pass` locks on 12 repos with NO analyzer change — a part number that
-missed the model cache at the v2.3.0 regen resolved via `api:digikey` this
-time, swapped the ideal opamp for a behavioral model (KH-442) and flipped
-pass → warn; a fresh v2.3.0 run today reproduces today's result, not the
-2026-10-05 one)
-**File:** `run/run_spice.py` (no offline/cache-only flag passed),
-`skills/spice/scripts/spice_model_cache.py` (`resolve_cache_dir` →
-project-local `spice/models/`), `spice_spec_fetcher.py` (DIGIKEY_CLIENT_ID /
-ELEMENT14 / MOUSER env lookups)
-**Discovered:** 2026-10-06, v2.3.1 corpus regen
+**Severity:** LOW (no measurable impact; the standing rule below is the point)
+**File:** `tests/test_run_emc_*` (plan 2 Task 6 RED step), `run/run_emc.py`,
+`run/run_thermal.py`
+**Discovered:** 2026-10-14, H0 plan 2 Task 6
 
-**Symptom:** (1) `git status` in e.g. `repos/Bergi84/GrowOMatic` shows
-untracked `Hardware/.../spice/` dirs (pre-existing — 0 new this regen, so the
-cache was populated by earlier runs; the corpus trees are no longer pristine);
-(2) `model_note` carries `api:digikey` on sims first resolved during a batch
-run and `cache:<MPN>` afterwards — results depend on network + cache state.
+**Symptom:** on 2026-10-14 23:56:39-23:57:39 local, the Task 6 RED step spawned
+the then-ungated `run/run_emc.py` (and `run_thermal.py`) with no selector from a
+subprocess test. That started an unqualified full-corpus EMC run for about 60 s:
+16,909 EMC outputs rewritten (thermal 0).
 
-**Fix direction:** batch runner passes `--workdir`/`--analysis-dir` under
-`results/` and an offline/cache-only mode (or strips the API creds from the
-runner env) so corpus runs are hermetic; one-time cleanup of the 261 `spice/`
-dirs (or `git clean` scoped to them) with an inventory; RUNBOOK note that
-SPICE locks are environment-sensitive until then.
+**Impact:** none measurable. The EMC analyzer is identical between 0684046 and
+6a91aaa, run ids are sidecar-sourced and unchanged (e.g.
+20261005T071505Z-7e06ee), and `run_checks` afterwards passed 259/259 on an
+affected repo and 34,645/34,645 on the smoke cross-section. No quarantine
+needed; `elapsed_s` drift only.
+
+**Root cause:** the test spawned the real runner with the inherited environment,
+and the `--all` gate did not yet exist in that runner.
+
+**Fix direction / standing rule:** every subprocess test that spawns a mutating
+runner sets `KICAD_HAPPY_TESTHARNESS_DATA_DIR=<tmp_path>` (`utils.py` redirects
+`OUTPUTS_DIR` at import) and asserts the data dir stays empty. Done for the
+emc/thermal/spice/gate tests in plan 2. Remaining risk: any future test, or any
+runner not yet gated. Closes when the corpus-marker/hermeticity audit also checks
+for that env on runner subprocesses (H1 item).
 
 ### TH-057: `generate_bugfix_assertions.py --apply` merges by assertion id — a changed expected value in the registry never reaches the reference file
 
@@ -803,37 +805,6 @@ input shape (RF chain whose `components[]` holds a bare refdes string) so
 the crash path is pinned independent of the corpus; harness: audit other
 BUGFIX locks whose premise depends on an input pairing that the runner no
 longer produces.
-
-### TH-055: pcb timeout-class units keep v1.3-era outputs — 198 boards never re-analyzed since the 120 s cap was introduced; downstream emc/thermal stale too
-
-**Severity:** MEDIUM (corpus hygiene; every regen since v1.3 has carried these
-as "stale-but-consistent": v2.2.0 226, v2.2.1 211, v2.3.0 198 units)
-**File:** `utils.py` (`ANALYZER_TIMEOUT = 120`, module constant, no CLI/env
-override; `run/run_pcb.py` exposes no `--timeout` — only
-spice/emc/thermal runners do)
-**Discovered:** 2026-10-05, v2.3.0 corpus regen (chain-oracle check)
-
-**Symptom:** at the v2.3.0 regen 198 `.kicad_pcb` units hit the 120 s cap.
-Their `results/outputs/pcb/` files are whatever last completed: **148 at
-`schema_version` 1.3.0, 29 with no `schema_version` at all (pre-envelope),
-21 with no output ever**. The 8 of them that fall inside the v23 gate's
-300-project `--full` chain sample were the ONLY corpus units that differed
-from the chain's candidate tree (`results/v230_regen/chain_oracle_report.json`
-— e.g. acastles91/lifeSequencer emc GP-001 1 vs 77, RP-001 0 vs 22, DC-003
-0 vs 7, all because the corpus pcb input is a v1.3 file). The chain A/B
-completed every one of these boards with its own longer timeout, so they
-are slow, not broken. Their emc/thermal downstream outputs and every
-assertion seeded from them are v1.3-era as well.
-
-**Fix direction:** (1) make the cap overridable (`--timeout` on
-`run_pcb.py` / `run_schematic.py` / `run_gerbers.py`, or an env var read
-by `utils.ANALYZER_TIMEOUT`); (2) a dedicated long-timeout pass over the
-timeout-class list (`FAIL [...] *.kicad_pcb` lines in
-`results/v230_regen/regen_runners.log`) followed by emc + thermal for those
-repos and a reseed scoped to them — budgeted as its own class (v1.3 →
-v2.3.0 on 198 boards), NOT folded into a release regen; (3) consider
-writing the `.err` AND deleting the stale output on timeout so a v1.3 file
-cannot masquerade as current.
 
 ### TH-049: partial results/outputs contamination between regens — unidentified full-corpus sweep, killed mid-flight
 

@@ -11,6 +11,54 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-15 — H0 plan 2: run identity, fresh outputs, corpus gate (TH-055, TH-059)
+
+Harness-only. `harnesslib/{identity,execution,selection,profiles}.py` plus runners on
+`run_once` and a rebuilt `regression/run_corpus_gate.py`. Unit tier at HEAD:
+1,851 passed / 1 xfailed (`run_tests.py --unit`, 787 deselected).
+
+### TH-055 (MEDIUM) — pcb timeout-class units keep v1.3-era outputs; the cap was an import-time constant
+
+- **Root cause:** `utils.ANALYZER_TIMEOUT` was a hard-coded 120 s with no override, and a
+  timed-out run left whatever output was already at the destination, so a v1.3 file
+  could pass as current.
+- **Fix (harness):** the cap now comes from `harnesslib.profiles.PROFILES["standard"]`;
+  every `run_analyzer` runner takes `--timeout`; the gate takes `--profile long-tail`
+  (600 s). `harnesslib.execution.run_once` publishes temp-then-replace and quarantines
+  the previous output as `<out>.stale` on timeout. Commits: profiles/cap plumbing
+  02a89ce44b0, 1fba9f05c2d; execution 109f5f93bc0, b66db1835e1; `run_analyzer`
+  7f2bacfdbbc, 5138bd0e10e, ca2e0273903.
+- **Remaining (not this item):** the dedicated long-timeout pass over the 191 units and
+  its own budget class belong to plan 6 (baseline hygiene ledger).
+- **Verification:** `tests/test_harnesslib_profiles.py`,
+  `tests/test_harnesslib_execution.py` (`test_run_once_timeout_quarantines_and_cleans`),
+  `tests/test_run_analyzer_identity.py`; full unit tier 1,851 passed / 1 xfailed (`run_tests.py --unit`, 787 deselected).
+
+### TH-059 (MEDIUM) — batch SPICE runs not hermetic (live DigiKey, cache dirs written into repos/) — HARNESS HALF ONLY
+
+- **Fixed (harness half):** `run/run_spice.py` passes `--workdir` under scratch (refuses a
+  workdir inside `repos/`), strips distributor credentials from the simulator env unless
+  `--online`, records `offline`/`credentials_present` in the batch manifest, and runs
+  through `run_once` (`--outer-timeout`). `tools/inventory_spice_caches.py` hashes every
+  existing `repos/**/spice/` dir read-only (261 dirs / 1,225 files on this box) and
+  `--check` detects drift. Commits: 3e22d06f6e8, 10366df3e2e.
+- **NOT fixed (product half, main-repo agent's):** `simulate_subcircuits.py --model-cache-dir`
+  reaching `spice_model_cache.resolve_cache_dir(override_dir=...)`, plus an offline switch
+  honoured by `spice_spec_fetcher`. The ask is recorded in the shared LOG. Until it lands
+  the simulator can still write `<project>/spice/models/` beside corpus schematics, and the
+  inventory `--check` is how drift is detected, not prevented. No TH is left open for it.
+  SPICE lanes stay outside the required denominator.
+- **Verification:** `tests/test_run_spice_isolation.py`, `tests/test_inventory_spice_caches.py`.
+
+### Related plan 2 commits
+
+Identity: b56cad13e2f, 928c8d8a210, f557314d948, 953c51978af. Selection and seeder `--all`
+dedup: dea7741f0d6, 75a2df2b99d, aae408ee644. emc/thermal runners: ebcc88ad60c,
+b39edd8c627, da452c7d567. Gate: 103c5a9fa56, 0757897e57c, 1deddfa7410, 64acff3fa4a;
+`run_v14_gate.py` compatibility wrapper 346300bd99d. TH-063 filed from the Task 6 RED step.
+
+---
+
 ## 2026-10-14 — H0 plan 1: honest test collection (TH-052, TH-053, TH-058)
 
 Harness-only. Test collection is now pytest end to end; `run_tests.py` is a thin

@@ -34,6 +34,13 @@ GIT_TIMEOUT = 60
 TEST_TIMEOUT = 120
 INTEGRATION_TEST_TIMEOUT = 600
 
+# H0: shared mechanics live in harnesslib/; re-exported so existing importers keep working.
+from harnesslib.execution import (run_once, build_env, recorded_env,  # noqa: F401,E402
+                                  RunResult, STATUSES, ACCEPTED_EXITS)
+from harnesslib.identity import (RunSpec, WorktreeRef, git_worktree_ref,  # noqa: F401,E402
+                                 sha256_file, UnitLog, unit_is_current)
+from harnesslib.selection import EmptySelection, NoSelection, filter_units  # noqa: F401,E402
+
 # Default parallelism — use all available CPUs for max throughput
 DEFAULT_JOBS = os.cpu_count() or 4
 
