@@ -62,3 +62,83 @@ def test_shipped_inventory_and_dispositions_agree():
     for e in disp["entries"]:
         counts[e["disposition"]] = counts.get(e["disposition"], 0) + 1
     assert counts["retire"] >= 2 and counts["migrate"] >= 40 and counts["keep-contract"] >= 20
+
+
+import os
+import subprocess
+
+FAKE = HARNESS / "tests" / "fixtures" / "h0" / "plan4" / "fake_product"
+RELOC = HARNESS / "tests" / "fixtures" / "h0" / "plan4" / "relocation_sample.json"
+TOOL = HARNESS / "tools" / "api_migration.py"
+
+
+def test_plan_edits_lists_every_site_with_new_module():
+    edits = am.plan_edits(_mini_inventory(), json.loads(RELOC.read_text())["relocations"])
+    assert len(edits) == 3     # 2 sites for _point_in_pad + 1 patch site for extract_footprints
+    e = [x for x in edits if x["symbol"] == "_point_in_pad" and x["line"] == 12][0]
+    assert e["file"] == "tests/c.py" and e["kind"] == "import"
+    assert e["new_module"] == "pcb.reader" and e["new_name"] == "point_in_pad"
+    p = [x for x in edits if x["kind"] == "patch.object"][0]
+    assert p["symbol"] == "extract_footprints" and p["new_module"] == "pcb.reader"
+
+
+def test_scan_harness_imports_finds_import_patch_and_monkeypatch(tmp_path):
+    t = tmp_path / "tests"
+    t.mkdir()
+    (t / "test_x.py").write_text(
+        "from analyze_pcb import _point_in_pad\n"
+        "import kicad_utils\n"
+        "from unittest.mock import patch\n"
+        "def test_a(monkeypatch):\n"
+        "    with patch.object(kicad_utils, 'classify_component'):\n"
+        "        pass\n"
+        "    monkeypatch.setattr(kicad_utils, 'VALUE_RE', None)\n"
+        "    with patch('lifecycle_audit.audit_component'):\n"
+        "        pass\n", encoding="utf-8")
+    found = {(f["module"], f["symbol"]) for f in am.scan_harness_imports(tmp_path)}
+    assert ("analyze_pcb", "_point_in_pad") in found
+    assert ("kicad_utils", "classify_component") in found
+    assert ("kicad_utils", "VALUE_RE") in found
+    assert ("lifecycle_audit", "audit_component") in found
+
+
+def test_check_flags_done_entry_still_imported_from_old_owner_and_retire_sites():
+    disp = {"version": 1, "product_sha": "x", "entries": [
+        {"module": "analyze_pcb", "symbol": "_point_in_pad", "disposition": "migrate",
+         "new_owner": "skills/kicad/scripts/pcb/reader.py", "round": "r03", "status": "done", "sites": 1},
+        {"module": "finding_schema", "symbol": "normalize_severity", "disposition": "retire",
+         "new_owner": None, "round": None, "status": "open", "sites": 1}]}
+    imports = [{"file": "tests/c.py", "line": 12, "module": "analyze_pcb", "symbol": "_point_in_pad"},
+               {"file": "tests/d.py", "line": 5, "module": "finding_schema", "symbol": "normalize_severity"}]
+    v = am.check(disp, imports)
+    assert any("analyze_pcb._point_in_pad" in x and "old owner" in x for x in v)
+    assert any("normalize_severity" in x and "retire" in x for x in v)
+    imports2 = [{"file": "tests/c.py", "line": 12, "module": "pcb.reader", "symbol": "point_in_pad"}]
+    assert am.check(disp, imports2) == []
+
+
+def test_apply_map_missing_new_owner_exit_2(tmp_path):
+    bad = tmp_path / "reloc.json"
+    bad.write_text(json.dumps([{"symbol": "analyze_pcb._point_in_pad",
+                                "old_owner": "skills/kicad/scripts/analyze_pcb.py",
+                                "new_owner": "skills/kicad/scripts/pcb/nope.py",
+                                "new_name": "point_in_pad", "facade_until": None}]))
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(bad), "--product", str(FAKE)],
+                       capture_output=True, text=True)
+    assert r.returncode == 2 and "analyze_pcb._point_in_pad" in r.stderr and "nope.py" in r.stderr
+
+
+def test_apply_map_ok_on_fixture(tmp_path):
+    inv = tmp_path / "inv.json"      # live inventory has no _point_in_pad; use the mini one
+    inv.write_text(json.dumps(_mini_inventory()))
+    r = subprocess.run([sys.executable, str(TOOL), "apply-map", str(RELOC), "--inventory", str(inv),
+                        "--product", str(FAKE), "--json"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    edits = json.loads(r.stdout)
+    assert all(e["new_module"] == "pcb.reader" for e in edits)
+
+
+def test_status_cli_runs():
+    r = subprocess.run([sys.executable, str(TOOL), "status"], capture_output=True, text=True)
+    assert r.returncode == 0 and "undecided" in r.stdout and "308" in r.stdout
