@@ -238,14 +238,16 @@ def _walk(a: Any, b: Any, path: str, ctx: _Ctx) -> None:
         ctx.emit(path, "changed", a, b)
 
 
-def _all_pointers(doc: Any, path: str = "") -> set[str]:
-    out = {path}
+def _all_pointers(doc: Any, path: str = "", out: set[str] | None = None) -> set[str]:
+    if out is None:
+        out = set()
+    out.add(path)
     if isinstance(doc, dict):
         for k, v in doc.items():
-            out |= _all_pointers(v, join_pointer(path, k))
+            _all_pointers(v, join_pointer(path, k), out)
     elif isinstance(doc, list):
         for i, v in enumerate(doc):
-            out |= _all_pointers(v, join_pointer(path, i))
+            _all_pointers(v, join_pointer(path, i), out)
     return out
 
 
@@ -298,7 +300,10 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
         prefixes = ("", "")
         if policy.root_prefixes_from_manifest and rewrites:
             ctx.violations.append(f"{ctx.unit}: root prefixes required but not supplied")
-    pointers = _all_pointers(a) | _all_pointers(b)
+    pointers: set[str] = set()
+    if any("pointer_glob" in lf for lf in policy.leaves):
+        _all_pointers(a, "", pointers)
+        _all_pointers(b, "", pointers)
     for leaf in policy.leaves:
         targets = [leaf["pointer"]] if "pointer" in leaf else _expand_glob(leaf["pointer_glob"], pointers)
         for ptr in targets:
@@ -320,7 +325,15 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
                     if not isinstance(val, dict):
                         ctx.violations.append(f"{ctx.unit} {ptr}: strip_root_prefix_keys needs a dict")
                         continue
-                    _set_pointer(doc, ptr, {_strip(k, pre): v for k, v in val.items()})
+                    new: dict = {}
+                    for k, v in val.items():
+                        nk = _strip(k, pre)
+                        if nk in new:
+                            ctx.violations.append(
+                                f"{ctx.unit} {ptr}: strip_root_prefix_keys collision on {nk}")
+                        else:
+                            new[nk] = v
+                    _set_pointer(doc, ptr, new)
                 continue
             # masking leaves: refuse containers, require presence on both sides
             if (fa and _kind(va) in ("dict", "list")) or (fb and _kind(vb) in ("dict", "list")):

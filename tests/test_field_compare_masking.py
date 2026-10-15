@@ -206,3 +206,37 @@ def test_real_policy_on_real_envelope(tmp_path):
     b["capability_mode_ref"]["run_id"] = "20260101T000000Z-000000"
     deltas, viol = compare_strict(a, b, pol, root_prefixes=rp, unit="schematic/x", analyzer="schematic")
     assert any("equals /inputs/run_id" in v and "side b" in v for v in viol)
+
+
+def test_strip_keys_collision_is_violation_keeps_first():
+    pol = _policy([{"pointer": "/inputs/source_hashes", "rewrite": "strip_root_prefix_keys"}])
+    a, b = _doc(RUN_A), _doc(RUN_A)
+    a["inputs"]["source_hashes"] = {"/R/x": "1", "/x": "2"}
+    b["inputs"]["source_hashes"] = {"/x": "2"}
+    deltas, viol = compare_strict(a, b, pol, root_prefixes=("/R", "/R"), **U)
+    assert viol == [f"{U['unit']} /inputs/source_hashes: strip_root_prefix_keys collision on /x"]
+    assert [(d.op, d.path) for d in deltas] == [("changed", "/inputs/source_hashes/~1x")]
+
+
+def test_glob_landing_on_container_is_refused():
+    pol = _policy([{"pointer_glob": "/inputs/*"}])
+    deltas, viol = compare_strict(_doc(RUN_A), _doc(RUN_A), pol, **U)
+    assert any("/inputs/source_files" in v and "whole-block masking refused" in v for v in viol)
+    assert any("/inputs/source_hashes" in v for v in viol)
+
+
+def test_exact_policy_does_not_enumerate_pointers(monkeypatch):
+    import time
+    import regression.field_compare as fc
+
+    def boom(*a, **k):
+        raise AssertionError("_all_pointers called for exact-only policy")
+    monkeypatch.setattr(fc, "_all_pointers", boom)
+    pol = _policy([{"pointer": "/inputs/run_id", "shape": "run_id"}])
+    a, b = _doc(RUN_A), _doc(RUN_B)
+    a["findings"] = [{"i": i} for i in range(20000)]
+    b["findings"] = [{"i": i} for i in range(20000)]
+    t0 = time.perf_counter()
+    deltas, viol = compare_strict(a, b, pol, **U)
+    assert time.perf_counter() - t0 < 1.0
+    assert [d.path for d in deltas] == ["/capability_mode_ref/run_id"] and len(viol) == 0
