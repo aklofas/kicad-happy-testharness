@@ -34,22 +34,51 @@ grandfathered exceptions below.
 | det-enum-shorted-two-pin | `detector=Det.SHORTED_TWO_PIN` in `skills/kicad/scripts/signal_detectors.py`; resolved from the literal `Det` class body | 2 | first SP-001 touch |
 | usb-compliance-rule-id-loop | `rule_id=_rid` loop in `skills/kicad/scripts/analyze_schematic.py` | 1 | first UC-00x touch |
 
-Counts may only **shrink**. A count that grows fails the check. A shrink must be
-committed together with the product change that removed the sites.
+Counts may only **shrink**, and the file must always state the exact count. A count
+that grows fails the check; so does a ledger entry that now matches fewer sites than
+its recorded count (`shrank: matched n < recorded count`) or zero sites (stale entry).
+A shrink is therefore committed together with the product change that removed the
+sites, in the same commit.
 
 ## Legacy untagged sites
 
-89 of 108 emit sites at `6a91aaa` carry no `schema_era`. They are recorded in the
-coverage baseline and tolerated; a **new** emit site without `schema_era` is reported
-and must be either tagged or added to the changed-detector registry review.
+At `6a91aaa` the walker finds 108 emit sites; 89 of them carry no `schema_era`:
+
+- **35 resolved sites** (literal `detector` + `rule_id`, including the 2
+  `Det.SHORTED_TWO_PIN` enum sites) are tracked per `detector|rule_id` in the
+  baseline's `untagged_era_sites` map (`untagged_era_total` = 35).
+- **54 unresolved sites** (53 positional EMC + 1 UC loop) are absorbed by the
+  exception ledger above and tracked by its exact counts, not by the untagged map.
+
+They are tolerated. A **new** untagged site under a `detector|rule_id` whose untagged
+count grows fails the check (`new_untagged_era`), even when another rule's site gained
+a tag in the same round; it must be tagged or go through the changed-detector
+registry review.
 
 ## Coverage baseline
 
-`reference/scan_coverage_baseline.json` records, at a product SHA, every file
-scanned, every (detector, rule_id) emit-site count, every `EQ-nnn` id and every
-constant `(file, scope, name)`. `check` fails when any covered set shrinks (a lost
-file, site, equation or constant) unless the run is re-baselined with
-`--accept-baseline`, whose diff is the review artifact.
+`reference/scan_coverage_baseline.json` (snapshot_version 2) records, at a product
+SHA, every file scanned, every (detector, rule_id) emit-site count, the per-key
+untagged-era counts, every `EQ-nnn` id and every constant `(file, scope, name)`.
+`check` fails when any covered set shrinks (a lost file, site, equation or constant),
+an untagged count grows, or the constant/EQ roots change, unless the run is
+re-baselined with `--accept-baseline`, whose diff is the review artifact.
+
+**Ratchet on growth.** When coverage grows (new files, site keys, EQ ids or
+constants, or an untagged count drops), `check` stays CLEAN but prints
+`coverage grew: …`. Run `check --accept-baseline` and commit the rewritten baseline
+in the same round, so the next round cannot silently drop what this one added.
+
+**Constant / EQ roots are narrower than `files`.** `files` and `emit_sites` cover
+every `*.py` the walker finds (90 files at `6a91aaa`). `constants` and `eq_ids` come
+from `validate/audit_constants.py` and `validate/audit_equations.py`, which scan only
+their `SCAN_ROOTS`: `skills/kicad/scripts`, `skills/spice/scripts` and
+`skills/emc/scripts` (58 of the 90 files at `6a91aaa`). A constant or `EQ-nnn` tag in
+`kicad/review`, `datasheets`, `bom` or the distributor skills is invisible to both
+registries and to the baseline; moving one out of the three roots shows as a loss.
+The baseline records the roots as `constant_eq_roots`, so a roots change shows in
+the diff. Moving the audit tools onto the shared walker is tracked as TH-066; it
+rewrites the registries and needs its own reviewed churn commit.
 
 ## What is frozen regardless of policy
 

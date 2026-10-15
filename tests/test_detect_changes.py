@@ -266,3 +266,28 @@ def test_missing_product_dir_is_exit_2_with_scope(tmp_path):
                        env={**os.environ, "KICAD_HAPPY_DIR": str(tmp_path / "nope")})
     assert r.returncode == 2, r.stdout + r.stderr
     assert json.loads(r.stdout)["affected_types"] == sorted(dc.all_entry_point_types())
+
+
+if __name__ == "__main__":
+    import inspect
+    import shutil as _shutil
+    tests = [(name, obj) for name, obj in globals().items()
+             if name.startswith("test_") and callable(obj)]
+    passed = failed = 0
+    for name, fn in sorted(tests):
+        params = inspect.signature(fn).parameters
+        if set(params) - {"tmp_path"}:
+            print(f"  SKIP: {name} (needs pytest fixtures; run under pytest)")
+            continue
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            fn(tmp) if params else fn()
+            passed += 1
+            print(f"  PASS: {name}")
+        except AssertionError as e:
+            failed += 1
+            print(f"  FAIL: {name}: {e}")
+        finally:
+            _shutil.rmtree(tmp, ignore_errors=True)
+    print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
+    sys.exit(1 if failed else 0)

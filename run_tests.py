@@ -56,7 +56,7 @@ SMOKE_TESTS = [
     "tests/test_generate_analytics.py",  # 9 tests — analytics chart data collection
     "tests/test_reclassify_repos.py",  # 9 tests — repo classification scoring
     "tests/test_generate_catalog.py",  # 18 tests — catalog query + matching
-    "tests/test_detect_changes.py",  # 14 tests — upstream change detection mapping
+    "tests/test_detect_changes.py",  # 31 tests — upstream change detection mapping + import graph + CLI exit map
     "tests/test_add_repos.py",       # 6 tests — category insert point logic
     "tests/test_build_sch.py",       # 12 tests — KiCad schematic builder (P4)
     "tests/test_synthetic.py",       # 11 tests — synthetic detector fixtures (P4)

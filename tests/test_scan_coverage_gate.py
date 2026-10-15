@@ -2,7 +2,9 @@
 
 Fails when the product under KICAD_HAPPY_DIR lost emit sites / EQ ids /
 constants / files relative to reference/scan_coverage_baseline.json, when an
-emit site is unresolved and not ledgered, or when an exception grew.
+emit site is unresolved and not ledgered, when an exception count grew or
+shrank, when a per-rule untagged-era count grew, or when the constant/EQ roots
+changed (constants and EQ ids cover only those roots; tools/SCANNER_POLICY.md).
 Re-baseline with `python3 tools/source_scan.py check --product $KICAD_HAPPY_DIR --accept-baseline`.
 """
 from __future__ import annotations

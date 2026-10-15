@@ -11,8 +11,6 @@ Checked features:
   - stdlib-only: no third-party imports
 """
 
-TIER = "unit"
-
 import ast
 import json
 import glob
@@ -21,10 +19,14 @@ import re
 import sys
 from pathlib import Path
 
-KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR",
-    str(Path(__file__).resolve().parent.parent.parent / "kicad-happy"),
-)
+import pytest
+
+pytestmark = pytest.mark.offline_contract   # walks the real product tree
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
+
+KICAD_HAPPY = str(PRODUCT_ROOT)
 SKILLS_DIR = os.path.join(KICAD_HAPPY, "skills")
 MIN_PYTHON = (3, 10)
 

@@ -152,13 +152,24 @@ Record what was tested, pass rates, and any new findings.
 ### 1i. Scan coverage + API bindings (v3 arc)
 
 `python3 tools/source_scan.py check --product $KICAD_HAPPY_DIR` must print CLEAN (lost emit
-sites / EQ ids / constants / files, unresolved emit sites, or a grown exception count fail
-it; re-baseline only with `--accept-baseline` and commit the diff). The same check runs in
-the required offline tier as `tests/test_scan_coverage_gate.py`. When the round moved
-symbols: `python3 tools/api_migration.py apply-map <relocation.json> --product $KICAD_HAPPY_DIR`
-lists every harness site to edit; `python3 tools/api_migration.py check` must be CLEAN before
-the round's response record is written. Policy text for the product's CONTRIBUTING:
-`tools/SCANNER_POLICY.md`.
+sites / EQ ids / constants / files, a grown per-rule untagged-era count, unresolved emit
+sites, or an exception count that grew or shrank fail it; re-baseline only with
+`--accept-baseline` and commit the diff). An exception-ledger shrink is edited into
+`tools/scan_exceptions.json` in the same commit as the product change. When `check`
+prints `coverage grew: …`, ratchet the baseline in the round's commit:
+`python3 tools/source_scan.py check --product $KICAD_HAPPY_DIR --accept-baseline`. The same
+check runs in the required offline tier as `tests/test_scan_coverage_gate.py`. When the
+round moved symbols: `python3 tools/api_migration.py apply-map <relocation.json> --product
+$KICAD_HAPPY_DIR` lists every harness site to edit; `python3 tools/api_migration.py check`
+must then show no violation from this round before the round's response record is
+written. **Known FAIL until H1:** `check` reports `finding_schema.normalize_severity is
+retire but still bound at tests/contract/test_action_format_report_v14.py:430`; that
+binding is deleted in H1, and it is the only violation `check` may show until then. An
+`UNVERIFIABLE (dynamic binding; verify with apply-map)` line means a done/retire entry is
+on `reference/product_api/binding_blind_list.json` (shrink-only; pinned by
+`tests/test_api_migration.py`): verify its sites by hand with `apply-map` and teach the
+scanner the binding shape so the entry can leave the list. Policy text for the product's
+CONTRIBUTING: `tools/SCANNER_POLICY.md`.
 
 ---
 
