@@ -192,7 +192,6 @@ def main():
     parser = argparse.ArgumentParser(
         description="Promote improved results to reference")
     add_repo_filter_args(parser)
-    parser.add_argument("--all", action="store_true", help="Check/promote all repos")
     parser.add_argument("--apply", action="store_true",
                         help="Apply promotions (default: dry run)")
     parser.add_argument("--preview", action="store_true",
@@ -201,7 +200,7 @@ def main():
 
     repos = resolve_repos(args)
     if repos is None:
-        if args.all:
+        if args.all_repos:
             repos = list_repos()
         else:
             parser.print_help()

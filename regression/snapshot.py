@@ -168,7 +168,6 @@ def _snapshot_worker(repo_name):
 def main():
     parser = argparse.ArgumentParser(description="Manage per-project baseline snapshots")
     add_repo_filter_args(parser)
-    parser.add_argument("--all", action="store_true", help="Snapshot all repos with outputs")
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--list", action="store_true", help="List all baselines")
@@ -186,7 +185,7 @@ def main():
     resolved = resolve_repos(args)
     if resolved is not None:
         repos = resolved
-    elif args.all:
+    elif args.all_repos:
         repos = list_repos()
     else:
         parser.print_help()

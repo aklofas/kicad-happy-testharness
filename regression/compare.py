@@ -205,7 +205,6 @@ def _compare_repo_worker(repo, types, only_changes):
 def main():
     parser = argparse.ArgumentParser(description="Compare outputs against baselines")
     add_repo_filter_args(parser)
-    parser.add_argument("--all", action="store_true", help="Compare all repos with baselines")
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--type", choices=ANALYZER_TYPES, help="Only compare one analyzer type")
@@ -216,7 +215,7 @@ def main():
     resolved = resolve_repos(args)
     if resolved is not None:
         repos = resolved
-    elif args.all:
+    elif args.all_repos:
         if not DATA_DIR.exists():
             print("No data found.")
             sys.exit(1)

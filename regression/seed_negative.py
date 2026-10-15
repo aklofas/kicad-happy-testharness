@@ -158,7 +158,6 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate negative assertions from false-positive findings")
     add_repo_filter_args(parser)
-    parser.add_argument("--all", action="store_true", help="Process all repos")
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--dry-run", action="store_true",
@@ -177,7 +176,7 @@ def main():
     args = parser.parse_args()
 
     resolved = resolve_repos(args)
-    if resolved is None and not args.all:
+    if resolved is None and not args.all_repos:
         print("Specify --repo, --cross-section, --repo-list, or --all", file=sys.stderr)
         sys.exit(1)
 

@@ -556,8 +556,6 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate structural assertions from signal analysis")
     group = add_repo_filter_args(parser)
-    parser.add_argument("--all", action="store_true",
-                        help="Generate for all repos")
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--type", choices=ANALYZER_TYPES,
@@ -586,7 +584,7 @@ def main():
 
     repos = resolve_repos(args)
     if repos is None:
-        if args.all:
+        if args.all_repos:
             repos = list_repos()
         else:
             parser.print_help()
