@@ -355,6 +355,8 @@ oracle (`results/v230_regen/chain_oracle.py` pattern): the fresh corpus
 outputs for the gate's `--full` chain projects must equal the chain's
 candidate tree modulo inputs/capability_mode_ref/elapsed_s.
 
+**SPICE locks are environment-sensitive until TH-059 lands.** `run_spice.py` lets the spice skill resolve part numbers through live distributor APIs (DigiKey/Mouser/element14 credentials in the environment) and cache models under each corpus checkout's `spice/` dir, so a part that missed the cache last regen can resolve to a behavioral model this time and flip `summary.pass` locks with no analyzer change (v2.3.1 regen: 21 locks / 12 repos). Tell: a fresh run of the OLD analyzer reproduces the NEW value, and `model_note` names `api:<distributor>` or `cache:<MPN>`. Attribute such fails to TH-059, not to the release under test.
+
 ### 4c. Snapshot new baselines
 
 ```bash

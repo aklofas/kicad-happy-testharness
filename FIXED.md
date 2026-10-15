@@ -11,6 +11,33 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-14 — KH-444 (MEDIUM): AM-001 structurally silent on extractions keyed `<domain>_max` (GitHub PR #51, imrcly)
+
+Externally reported AND fixed in one motion (FIXED-direct; never open in
+ISSUES.md — number assigned at adoption, next KH → 445). Credit: imrcly.
+
+- **File:** `skills/kicad/scripts/lookup_detectors.py`
+  (`detect_absolute_max_violations`)
+- **Root cause:** the absolute-max lookup tried the bare domain key and the
+  `VDD_SYNONYMS` aliases only, never the `f"{domain}_max"` spelling that
+  `base.schema.json` prescribes for extraction caches (`VIN_max`), so AM-001
+  could not fire on any schema-conformant extraction. Same PR: `encoding="utf-8"`
+  at 23 text I/O sites in `skills/datasheets/scripts` (Windows cp1252 fix,
+  zero POSIX change).
+- **Fix (`6a91aaa`, squash of PR #51 on top of v2.3.1 `0684046`):** try
+  `f"{domain}_max"` first, then the bare domain + synonyms.
+- **Verification (main-repo, 2026-10-14):** LM2596-ADJ example extraction in a
+  temp cache, pin 1 on a 50 V rail → 0 findings at 0684046, 1 AM-001 at
+  6a91aaa; 12 V rail → 0 at both. Harness unit tree 1,551/0 (142 files) and
+  contract 707/8/3 against the PR head via a `KICAD_HAPPY_DIR` worktree. No
+  harness test adopted (no handoff test file); CI pin unchanged (fc7a074fc7e).
+- **Gate budget (for whatever range next covers 0684046..6a91aaa):** AM-001
+  appearances only, and only on repos carrying a `datasheets/extracted/*.json`
+  with a `<domain>_max` voltage key — 24 extraction files under `repos/`, none
+  has one, so expected corpus movement ≈ 0. Recorded in the v3 baseline ledger
+  as the analyzer delta between the stored references (0684046) and the arc
+  baseline (6a91aaa).
+
 ## 2026-10-06 — SacMap soak fixes: KH-419 + KH-424 + KH-425 FIXED on main-repo `main` @ `ef6d55c` (= 9fbbb26 + merge of `v2.3.x-dev` @ `e6c7ad3`, 3 commits; LOCAL, not pushed)
 
 Source: SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/
