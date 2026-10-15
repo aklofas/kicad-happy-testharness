@@ -125,3 +125,34 @@ def test_key_order_opt_in():
 
 def test_ops_vocabulary_is_closed():
     assert OPS == ("added", "removed", "changed", "type_changed", "key_order", "bytes", "lexical_numeric")
+
+
+def test_nan_equal_to_nan_but_not_to_number():
+    doc = json_copy({"x": float("nan")})
+    assert compare_strict(doc, json_copy(doc), None, **U)[0] == []
+    deltas, _ = compare_strict({"x": float("nan")}, {"x": 1.0}, None, **U)
+    assert [(d.op, d.path) for d in deltas] == [("changed", "/x")]
+
+
+def test_list_tail_honours_masked():
+    from regression.field_compare import _Ctx, _walk
+    ctx = _Ctx("u", "schematic", False)
+    ctx.masked.add("/l/1")
+    ctx.masked.add("/m/1")
+    _walk({"l": [1, 2, 3], "m": [1]}, {"l": [1], "m": [1, 9]}, "", ctx)
+    assert [d.path for d in ctx.deltas] == ["/l/2"]
+
+
+def test_resolve_pointer_rejects_nonconforming_indices():
+    doc = {"list": [1, 2]}
+    assert resolve_pointer(doc, "/list/01") == (False, None)
+    assert resolve_pointer(doc, "/list/²") == (False, None)
+    assert resolve_pointer(doc, "/list/0") == (True, 1)
+
+
+def test_key_order_nested_and_equal_order():
+    a = {"o": {"x": 1, "y": 2}}
+    b = {"o": {"y": 2, "x": 1}}
+    deltas, _ = compare_strict(a, b, None, key_order=True, **U)
+    assert [(d.op, d.path) for d in deltas] == [("key_order", "/o")]
+    assert compare_strict(a, json_copy(a), None, key_order=True, **U)[0] == []

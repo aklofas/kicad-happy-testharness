@@ -116,6 +116,7 @@ OPS = ("added", "removed", "changed", "type_changed", "key_order", "bytes", "lex
 
 @dataclass(frozen=True)
 class Delta:
+    """One field difference. Deltas with list/dict payloads are unhashable; do not put them in sets."""
     unit: str
     analyzer: str
     path: str
@@ -158,7 +159,8 @@ def resolve_pointer(doc: Any, pointer: str) -> tuple[bool, Any]:
                 return False, None
             cur = cur[tok]
         elif isinstance(cur, list):
-            if not tok.isdigit() or int(tok) >= len(cur):
+            if (not (tok.isascii() and tok.isdigit()) or (len(tok) > 1 and tok[0] == "0")
+                    or int(tok) >= len(cur)):
                 return False, None
             cur = cur[int(tok)]
         else:
@@ -222,11 +224,15 @@ def _walk(a: Any, b: Any, path: str, ctx: _Ctx) -> None:
         for i in range(n):
             _walk(a[i], b[i], join_pointer(path, i), ctx)
         for i in range(n, len(a)):
-            ctx.emit(join_pointer(path, i), "removed", a[i], None)
+            p = join_pointer(path, i)
+            if p not in ctx.masked:
+                ctx.emit(p, "removed", a[i], None)
         for i in range(n, len(b)):
-            ctx.emit(join_pointer(path, i), "added", None, b[i])
+            p = join_pointer(path, i)
+            if p not in ctx.masked:
+                ctx.emit(p, "added", None, b[i])
         return
-    if a != b:
+    if a != b and not (ka == "number" and a != a and b != b):   # NaN == NaN in strict mode
         ctx.emit(path, "changed", a, b)
 
 
@@ -239,7 +245,11 @@ def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx) -> tuple[Any, Any]:
 
 def compare_strict(a: Any, b: Any, policy: Policy | None, *, unit: str, analyzer: str,
                    key_order: bool = False) -> tuple[list[Delta], list[str]]:
-    """Recursive field comparison. Returns (deltas, policy_violations)."""
+    """Recursive field comparison. Returns (deltas, policy_violations).
+
+    Two NaNs compare equal. ``key_order=True`` emits a ``key_order`` delta for any
+    dict whose key sequence differs, including when the key sets differ.
+    """
     ctx = _Ctx(unit, analyzer, key_order)
     if policy is not None:
         a, b = _apply_policy(a, b, policy, ctx)
