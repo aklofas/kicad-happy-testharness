@@ -322,3 +322,52 @@ def test_write_atomic_cleans_tmp_on_failure(tmp_path, monkeypatch):
         gba.write_atomic(tmp_path / "x.json", {"a": 1})
     assert not list(tmp_path.glob("*.tmp-*"))
     assert not (tmp_path / "x.json").exists()
+
+
+def _ref_with_era(tmp_path: Path, era) -> Path:
+    """Copy the fixture reference and stamp ``era`` on the record that gets updated."""
+    ref = _copy_ref(tmp_path)
+    data = json.loads((ref / A_PATH).read_text(encoding="utf-8"))
+    for rec in data["assertions"]:
+        if rec["id"] == "BUGFIX-KH-900-01":
+            rec["schema_era"] = {"era": era, "tagged_by_rule": "XX-001",
+                                 "tagged_at": "2026-05-17T00:00:00Z",
+                                 "tagged_reason": "fixture"}
+    (ref / A_PATH).write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    return ref
+
+
+def test_update_keeping_old_schema_era_warns(tmp_path):
+    ref = _ref_with_era(tmp_path, "pre-v1.4")
+    lines: list[str] = []
+    totals = gba.reconcile(_load("registry_basic.json"), ref, issue_filter=None,
+                           apply=False, out=lines.append)
+    assert totals.updated == 1
+    want = (f"  ! BUGFIX-KH-900-01 keeps schema_era=pre-v1.4 (not current "
+            f"{gba.CURRENT_SCHEMA_ERA}) — default run_checks will skip it")
+    assert want in lines
+    # the warning sits under the record's '~' line
+    assert lines.index(want) > next(i for i, l in enumerate(lines) if "~ BUGFIX-KH-900-01" in l)
+    # preservation itself is unchanged (RF-1)
+    _, merged, _ = gba.reconcile_file(
+        json.loads((ref / A_PATH).read_text(encoding="utf-8")),
+        gba.desired_assertions(_load("registry_basic.json"), ref)[ref / A_PATH].assertions,
+        issue_filter=None, path=ref / A_PATH).updated[0]
+    assert merged["schema_era"]["era"] == "pre-v1.4"
+
+
+def test_update_keeping_current_schema_era_does_not_warn(tmp_path):
+    ref = _ref_with_era(tmp_path, gba.CURRENT_SCHEMA_ERA)
+    lines: list[str] = []
+    gba.reconcile(_load("registry_basic.json"), ref, issue_filter=None,
+                  apply=False, out=lines.append)
+    assert not any(l.startswith("  ! ") for l in lines)
+    assert gba.era_warning({"id": "BUGFIX-KH-1-01"}) is None
+
+
+def test_apply_prints_schema_era_warning(tmp_path):
+    ref = _ref_with_era(tmp_path, "pre-v1.4")
+    res = _cli("--registry", str(FIX / "registry_basic.json"), "--reference-dir", str(ref),
+               "--apply")
+    assert res.returncode == 0, res.stderr
+    assert "! BUGFIX-KH-900-01 keeps schema_era=pre-v1.4" in res.stdout

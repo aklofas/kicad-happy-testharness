@@ -37,6 +37,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import DATA_DIR, _truncate_with_hash  # noqa: E402
+from regression.schema_era import CURRENT_SCHEMA_ERA, era_of  # noqa: E402
 
 REGISTRY_FILE = Path(__file__).resolve().parent / "bugfix_registry.json"
 GENERATOR_MARKER = "generate_bugfix_assertions.py"
@@ -255,6 +256,19 @@ def write_atomic(path: Path, data: dict) -> None:
         raise
 
 
+def era_warning(record: dict) -> str | None:
+    """Warning line when an updated record keeps a non-current schema_era.
+
+    merge_record keeps ``schema_era`` verbatim, so a lock stamped with an old
+    era at the relock stays hidden from default run_checks after re-anchoring.
+    """
+    era = era_of(record)
+    if era is None or era == CURRENT_SCHEMA_ERA:
+        return None
+    return (f"  ! {record['id']} keeps schema_era={era} (not current "
+            f"{CURRENT_SCHEMA_ERA}) — default run_checks will skip it")
+
+
 def _print_diff(diff: FileDiff, reference_dir: Path, out) -> None:
     try:
         rel = diff.path.relative_to(reference_dir)
@@ -267,6 +281,9 @@ def _print_diff(diff: FileDiff, reference_dir: Path, out) -> None:
         out(f"  ~ {new['id']}  {new['description']}")
         for line in lines:
             out("  " + line)
+        warning = era_warning(new)
+        if warning:
+            out(warning)
     for a in diff.removed:
         out(f"  - {a['id']}  {a.get('description', '')}")
 

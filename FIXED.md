@@ -36,7 +36,7 @@ did not land; KH-313-02/03 removals survived). **Fixed:** 2026-10-15, H0 plan 5.
   knows `v3.0` and its helpers take `required=`; `tag_assertions.py` separates
   `--select-era` from `--stamp-era` and aborts on a missing registry instead of
   tagging nothing.
-- **Verification:** `tests/test_bugfix_reconcile.py` (26), `tests/test_schema_era_required.py` (6),
+- **Verification:** `tests/test_bugfix_reconcile.py` (29), `tests/test_schema_era_required.py` (6),
   `tests/test_tag_assertions_select_stamp.py` (6); existing `test_tag_assertions.py`,
   `test_schema_era_module.py`, `test_seed_schema_era_stamping.py`,
   `test_run_checks_era_filter.py` still green. The registry was back-synced

@@ -2952,6 +2952,12 @@ the v3.0-changed set, add:
 - `corrected_era: "v3.0"`
 - `migration_note: "<short rationale>"`
 
+When a BUGFIX lock that 27e stamped with the old era is later re-anchored to
+new-era output through the registry, `generate_bugfix_assertions.py` keeps the
+old `schema_era` on the updated record and prints `! <id> keeps schema_era=...`;
+re-stamp that record with `tag_assertions.py` or drop its `schema_era`,
+otherwise default `run_checks.py` keeps skipping the corrected lock.
+
 ### 27g. Verify regression baseline shift
 
 ```bash
