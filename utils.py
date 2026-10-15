@@ -25,8 +25,10 @@ MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "emc", "thermal", "datasheets"]
 MISC_CATEGORY = "Miscellaneous KiCad projects"
 
-# Timeout constants (seconds) — used across runners and validators
-ANALYZER_TIMEOUT = 120
+# Timeout constants (seconds). ANALYZER_TIMEOUT is the standard profile's cap;
+# runners take an explicit --timeout and pass it down (TH-055).
+from harnesslib.profiles import PROFILES as _PROFILES
+ANALYZER_TIMEOUT = _PROFILES["standard"].timeout_s
 GIT_TIMEOUT = 60
 TEST_TIMEOUT = 120
 INTEGRATION_TEST_TIMEOUT = 600
@@ -611,20 +613,23 @@ def validate_output(outfile, analyzer_type):
 # Shared analyzer runner
 # ---------------------------------------------------------------------------
 
-def _run_one(analyzer, file_path, outfile, errfile, extra_args=None):
-    """Run a single analyzer subprocess. Returns (returncode, outfile, elapsed_s)."""
+def _run_one(analyzer, file_path, outfile, errfile, extra_args=None, timeout=None):
+    """Run a single analyzer subprocess. Returns (returncode, outfile, elapsed_s).
+
+    `timeout` is the per-file cap in seconds (default: standard profile)."""
+    cap = ANALYZER_TIMEOUT if timeout is None else timeout
     cmd = [sys.executable, str(analyzer), file_path, "-o", str(outfile)]
     if extra_args:
         cmd.extend(extra_args)
     t0 = time.time()
     try:
         result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=ANALYZER_TIMEOUT,
+            cmd, capture_output=True, text=True, timeout=cap,
         )
         errfile.write_text(result.stderr, encoding="utf-8")
         return result.returncode, outfile, time.time() - t0
     except subprocess.TimeoutExpired:
-        errfile.write_text(f"Timed out after {ANALYZER_TIMEOUT}s", encoding="utf-8")
+        errfile.write_text(f"Timed out after {cap}s", encoding="utf-8")
         return None, outfile, time.time() - t0
 
 
@@ -683,6 +688,8 @@ def run_analyzer(config, args=None):
                             help="Print JSON summary line at end of output")
         parser.add_argument("--resume", action="store_true",
                             help="Skip files that already have valid output JSON")
+        parser.add_argument("--timeout", type=int, default=ANALYZER_TIMEOUT,
+                            help=f"Per-file analyzer cap in seconds (default {ANALYZER_TIMEOUT})")
         args = parser.parse_args()
 
     kicad_happy = resolve_kicad_happy_dir()
@@ -770,7 +777,8 @@ def run_analyzer(config, args=None):
             if should_skip_resume(outfile, do_resume):
                 skipped += 1
                 continue
-            returncode, _, elapsed = _run_one(analyzer, file_path, outfile, errfile, extra_args)
+            returncode, _, elapsed = _run_one(analyzer, file_path, outfile, errfile, extra_args,
+                                             timeout=getattr(args, "timeout", ANALYZER_TIMEOUT))
             timings.append((relpath, elapsed))
             ok, msg = _format_result(i, relpath, returncode, outfile)
             if ok:
@@ -787,7 +795,8 @@ def run_analyzer(config, args=None):
                 if should_skip_resume(outfile, do_resume):
                     skipped += 1
                     continue
-                future = pool.submit(_run_one, analyzer, file_path, outfile, errfile, extra_args)
+                future = pool.submit(_run_one, analyzer, file_path, outfile, errfile, extra_args,
+                                    getattr(args, "timeout", ANALYZER_TIMEOUT))
                 tasks[future] = (i, relpath, outfile)
             for future in as_completed(tasks):
                 i, relpath, outfile = tasks[future]
