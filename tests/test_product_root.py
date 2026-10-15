@@ -17,7 +17,9 @@ _MODS = ("tests.product_root", "tests.contract._paths")
 def _restore_modules():
     """Fake-env re-imports must not leak into the rest of the pytest process."""
     saved = {m: sys.modules.get(m) for m in _MODS}
+    saved_path = list(sys.path)
     yield
+    sys.path[:] = saved_path
     for m, mod in saved.items():
         if mod is None:
             sys.modules.pop(m, None)
@@ -104,10 +106,12 @@ def test_contract_paths_reexports(monkeypatch, tmp_path):
     assert paths.HARNESS_ROOT == pr.HARNESS_ROOT == HARNESS
 
 
-def test_isolation_after_fake_tests():
+def test_isolation_after_fake_tests(tmp_path_factory):
     real = os.environ.get("KICAD_HAPPY_DIR")
     if not real:
         pytest.skip("KICAD_HAPPY_DIR unset")
     mod = importlib.import_module("tests.product_root")
     assert mod.PRODUCT_ROOT == Path(real).resolve()
     assert mod.PRODUCT_ROOT.exists()
+    base = str(tmp_path_factory.getbasetemp())
+    assert not [p for p in sys.path if p.startswith(base) or "/pytest-of-" in p]
