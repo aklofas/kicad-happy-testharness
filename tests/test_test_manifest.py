@@ -100,3 +100,12 @@ def test_no_legacy_row_in_other_tier_is_not_a_move():
     row = rows["tests/contract/test_new_contract.py"]
     assert row["note"] == "not in legacy run (tiers: offline_contract)"
     assert row["collected"] == 0
+
+
+def test_partial_tier_move_is_annotated():
+    legacy = {"files": [{"file": "tests/test_p.py", "passed": 4, "failed": 0, "status": "pass"}]}
+    manifest = {"tests/test_p.py::a": ["unit"], "tests/test_p.py::b": ["unit"],
+                "tests/test_p.py::c": ["corpus"], "tests/test_p.py::d": ["corpus"]}
+    row = compare_legacy(legacy, manifest)[0]
+    assert row["delta"] == -2
+    assert row["note"] == "2 moved to tier(s) corpus"

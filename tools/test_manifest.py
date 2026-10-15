@@ -67,6 +67,12 @@ def compare_legacy(legacy: dict, manifest: dict, tier: str = "unit") -> list[dic
             note = "legacy count was a phantom pass"
         else:
             note = ""
+        if c and others and lrow is not None:
+            tiers = sorted({m for _, markers in others for m in markers})
+            moved = f"{len(others)} moved to tier(s) {' '.join(tiers)}"
+            note = f"{note}; {moved}" if note else moved
+        if c - lp < 0 and not note:
+            note = "fewer collected than legacy — investigate"
         rows.append({"file": f, "legacy_passed": lp, "collected": c, "delta": c - lp, "note": note})
     return rows
 

@@ -11,7 +11,7 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
-## 2026-10-15 — H0 plan 1: honest test collection (TH-052, TH-053, TH-058)
+## 2026-10-14 — H0 plan 1: honest test collection (TH-052, TH-053, TH-058)
 
 Harness-only. Test collection is now pytest end to end; `run_tests.py` is a thin
 alias. Legacy `run_tests.py --json` at `7abf547` reported 1,551 passes over 142
@@ -20,8 +20,8 @@ files 237, legacy passed 1551, pytest collected 1777, moved 1, **missing 0**).
 23 phantom rows (17 files with no `__main__` block = 190 tests never executed,
 plus 6 files whose non-standard summary line hid their counts) account for +224;
 `tests/test_kicad10_format.py` moved to the corpus tier (all 7 tests read `repos/`).
-Honest counts at HEAD: `run_tests.py --unit` 1774 passed, 760 deselected, 1 xfailed;
-bare `pytest -q` 2464 passed, 8 skipped, 69 deselected, 4 xfailed;
+Honest counts at HEAD: `run_tests.py --unit` 1744 passed, 791 deselected, 1 xfailed;
+bare `pytest -q` 2434 passed, 8 skipped, 100 deselected, 4 xfailed;
 `pytest tests/contract/` 690 passed, 8 skipped, 17 deselected, 3 xfailed
 (690 + 17 = 707, the historical contract count). Two pre-existing failures that
 honest collection surfaced are explicit xfails (a81858a): `test_kh393_power_rails_threaded`
@@ -38,7 +38,7 @@ honest collection surfaced are explicit xfails (a81858a): `test_kh393_power_rail
   became a thin pytest alias (`58022d8`). Product-root bridge `3115f96`, `702d9c9`,
   `0674009`; known-skips allowlist and corpus-marker audit `2cb4f6d`, `a81858a`.
 - **Verification:** `collection_compare.txt` shows the 17 phantom files now
-  collected with real counts and `missing 0`; unit tier `1774 passed, 760
+  collected with real counts and `missing 0`; unit tier `1744 passed, 791
   deselected, 1 xfailed`; pre-push hook rc=0.
 
 ### TH-053: pytest and `run_tests.py` disagreed on tiers — 17 tests failed under plain `pytest tests/`

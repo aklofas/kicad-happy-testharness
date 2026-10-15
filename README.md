@@ -1,6 +1,6 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,822 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 2.1M+ machine-checkable assertions, 1,774 unit tests, 42 auto-discovered signal detectors, 145,000+ SPICE simulations across 17 subcircuit types, and 192,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,822 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 2.1M+ machine-checkable assertions, 1,745 unit tests collected under -m unit (1,744 passed + 1 xfailed), 42 auto-discovered signal detectors, 145,000+ SPICE simulations across 17 subcircuit types, and 192,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
 
 **The system primarily tests consistency, not correctness.** A 100% assertion pass rate means outputs haven't drifted since they were last seeded — it does not mean the analyzers are right. See [philosophy.md](philosophy.md) for the distinction and [methodology.md](methodology.md) § "Weaknesses and limitations" for the full accounting of what this harness cannot verify.
 
@@ -378,7 +378,7 @@ python3 tools/generate_catalog.py --query "category=ESP32"    # query by categor
 python3 tools/generate_catalog.py --query "tags contains rf"  # query by tag
 
 # Testing
-python3 run_tests.py --unit                             # unit tests (1,774 pass + 1 xfail; thin alias over pytest, see pytest.ini)
+python3 run_tests.py --unit                             # unit tests (1,745 collected: 1,744 pass + 1 xfail; thin alias over pytest, see pytest.ini)
 python3 run_tests.py --tier unit                        # same as --unit (required tiers: unit / offline_contract)
 python3 run_tests.py --tier online                      # integration tests (need API keys)
 python3 run_tests.py --quick-sanity                     # assertions on smoke pack repos
@@ -496,7 +496,7 @@ validate/                   # Output quality + constants audit
   audit_constants.py        #   AST-based constant registry + verification (335 constants)
   audit_equations.py        #   EQ-tag equation tracking + verification (86 equations)
 
-tests/                      # Tests (1,774 passed + 1 xfailed under -m unit; pytest collection, see pytest.ini)
+tests/                      # Tests (1,744 passed + 1 xfailed under -m unit; pytest collection, see pytest.ini)
   test_analysis_cache.py    #   Analysis cache correctness (26 tests)
   test_batch_review.py      #   Batch review prefix extraction
   test_checks.py            #   Assertion evaluation engine (43 tests)
