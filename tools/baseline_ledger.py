@@ -3,9 +3,13 @@
 
   build --product-sha SHA --references-sha SHA --checks checks.json --junit contract.xml \
         --units results/.../units.jsonl --issues ISSUES.md --analyzer-diff TEXT \
-        --expected-movement TEXT -o reference/baseline_debts/<sha7>.json
+        --expected-movement TEXT [--carry-accepted-from OLD_LEDGER] -o reference/baseline_debts/<sha7>.json
   check --ledger FILE [--units units.jsonl] [--checks checks.json] [--junit contract.xml]
         exit 0 if every observed debt identity is in the ledger, 1 otherwise (prints the new ones)
+
+Groups: checks, contract, timeout_units, crash_units (both-sided crashes; additive in
+ledger_version 1 — a ledger without it reads as empty), nondeterminism.
+--carry-accepted-from copies `accepted_by` by identity from an existing ledger for every group.
 
 `checks.json` must carry a top-level "product_sha" (emitted by run_checks.py --json).
 """
@@ -77,6 +81,35 @@ def timeout_units(units_jsonl_lines: Iterable[str]) -> list[dict]:
     return sorted(out, key=lambda e: e["identity"])
 
 
+def crash_units(units_jsonl_lines: Iterable[str]) -> list[dict]:
+    """Units that crashed on BOTH sides (a one-sided crash is a round delta, not baseline debt)."""
+    out = []
+    for line in units_jsonl_lines:
+        line = line.strip()
+        if not line:
+            continue
+        rec = json.loads(line)
+        b, c = rec.get("baseline") or {}, rec.get("candidate") or {}
+        if b.get("status") == "crash" and c.get("status") == "crash":
+            out.append({"identity": f"{rec['analyzer']}/{rec['unit_id']}", "analyzer": rec["analyzer"],
+                        "unit_id": rec["unit_id"], "exit_code": b.get("exit_code"), "detail": b.get("detail"),
+                        "accepted_by": None})
+    return sorted(out, key=lambda e: e["identity"])
+
+
+LEDGER_GROUPS = ("checks", "contract", "timeout_units", "crash_units", "nondeterminism")
+
+
+def carry_accepted(ledger: dict, prior: dict) -> dict:
+    """Copy `accepted_by` by identity from `prior` into `ledger` for every group; new identities keep null."""
+    for g in LEDGER_GROUPS:
+        stamps = {e["identity"]: e.get("accepted_by") for e in prior.get(g, [])}
+        for e in ledger.get(g, []):
+            if e["identity"] in stamps:
+                e["accepted_by"] = stamps[e["identity"]]
+    return ledger
+
+
 def nondeterminism_entries(issues_text: str) -> list[dict]:
     out = []
     for line in issues_text.splitlines():
@@ -99,7 +132,8 @@ def build_ledger(*, product_sha: str, references_sha: str, checks: dict, junit_t
         "ledger_version": 1, "product_sha": product_sha, "references_target_sha": references_sha,
         "context": context, "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "checks": check_identities(checks), "contract": contract_entries(junit_text),
-        "timeout_units": timeout_units(units_lines), "nondeterminism": nondeterminism_entries(issues_text),
+        "timeout_units": timeout_units(units_lines), "crash_units": crash_units(units_lines),
+        "nondeterminism": nondeterminism_entries(issues_text),
     }
 
 
@@ -115,6 +149,8 @@ def main(argv=None) -> int:
     b.add_argument("--issues", default=str(Path(__file__).resolve().parents[1] / "ISSUES.md"))
     b.add_argument("--analyzer-diff", required=True)
     b.add_argument("--expected-movement", required=True)
+    b.add_argument("--carry-accepted-from", default=None, metavar="LEDGER",
+                   help="copy accepted_by by identity from this existing ledger")
     b.add_argument("-o", "--output", required=True)
     c = sub.add_parser("check")
     c.add_argument("--ledger", required=True)
@@ -134,11 +170,15 @@ def main(argv=None) -> int:
         )
         led["sources"] = {"checks": args.checks, "contract_junit": args.junit, "units": args.units,
                           "issues": args.issues}
+        if args.carry_accepted_from:
+            carry_accepted(led, json.loads(Path(args.carry_accepted_from).read_text(encoding="utf-8")))
+            led["sources"]["carry_accepted_from"] = args.carry_accepted_from
         out = Path(args.output)
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(led, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print(f"ledger: checks {len(led['checks'])} / contract {len(led['contract'])} / "
-              f"timeouts {len(led['timeout_units'])} / nondeterminism {len(led['nondeterminism'])} -> {out}")
+              f"timeouts {len(led['timeout_units'])} / crashes {len(led['crash_units'])} / "
+              f"nondeterminism {len(led['nondeterminism'])} -> {out}")
         return 0
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     try:

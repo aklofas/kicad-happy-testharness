@@ -280,8 +280,8 @@ def test_explicit_missing_ledger_exits_2_before_phase_a(tmp_path, monkeypatch, c
 
 def test_round2_real_skips_against_real_ledger():
     """The seven round-2 bad skips (6a91aaa->8912a5a) against the 6a91aaa ledger's timeout_units
-    (fixture copy): the schematic timeout and its three dependents are ledgered; the three pcb
-    crashes are not, because the ledger records timeouts only."""
+    (fixture copy, no crash_units group): the schematic timeout and its three dependents are
+    ledgered; the three both-sided pcb crashes are not."""
     ledger = json.loads(Path(__file__).resolve().parent.joinpath(
         "fixtures", "h0", "round2", "ledger_6a91aaa_timeouts.json").read_text())
     crashes = ["BrettHallen/Conversion_Boards/TFC_10-pin_TFC_10-pin 2.kicad_pcb",
@@ -335,3 +335,13 @@ def test_recheck_cli_exit_code_and_summary(capsys):
     assert ex.value.code == 1
     out = capsys.readouterr().out
     assert "ledgered_skips=4" in out and f"unledgered: both_failed pcb {CRASHES[0]}" in out
+
+
+def test_recheck_round2_passes_with_crash_units_ledgered(tmp_path):
+    led = json.loads(LEDGER_FIX.read_text())
+    led["crash_units"] = [{"identity": f"pcb/{u}", "analyzer": "pcb", "unit_id": u, "exit_code": 2,
+                           "detail": "no_output", "accepted_by": None} for u in CRASHES]
+    p = tmp_path / "ledger.json"
+    p.write_text(json.dumps(led))
+    gp = gate.recheck_gate_pass(RECHECK, ledger=str(p))["gate_pass"]
+    assert gp["pass"] is True and gp["ledgered_skips"] == 7 and gp["unledgered_skips"] == []

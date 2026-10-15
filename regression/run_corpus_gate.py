@@ -32,7 +32,7 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
   * skips_ok consults the baseline-debts ledger (--ledger; default
     reference/baseline_debts/<baseline sha7>.json when present): a both_failed /
     dependency_missing SKIP is bad only when tools/baseline_ledger_check does not
-    cover its identity. gate_pass records ledgered_skips + unledgered_skips; the
+    cover its identity (timeout_units, or crash_units for a both-sided crash). gate_pass records ledgered_skips + unledgered_skips; the
     ledger path + sha256 land in the rollup identity and the finished manifest.
 
 Usage:
@@ -596,11 +596,11 @@ def split_bad_skips(records, ledger):
     if ledger is None:
         return 0, sorted(f"{r['reason']} {r['analyzer']} {r['identity']}" for r in bad)
     blc = _ledger_check()
-    known = blc.ledgered_timeouts(ledger)
+    known, crashes = blc.ledgered_timeouts(ledger), blc.ledgered_crashes(ledger)
     upstream = {r["unit_id"]: r for r in records if r.get("analyzer") == "schematic"}
     ledgered, unledgered = 0, []
     for r in bad:
-        if blc.skip_is_ledgered(r, known, upstream=upstream.get(r["unit_id"])):
+        if blc.skip_is_ledgered(r, known, upstream=upstream.get(r["unit_id"]), crashes=crashes):
             ledgered += 1
         else:
             unledgered.append(f"{r['reason']} {r['analyzer']} {r['identity']}")

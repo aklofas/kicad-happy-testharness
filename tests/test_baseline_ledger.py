@@ -82,3 +82,67 @@ def test_check_identities_tolerates_parse_error_records():
     ents = bl.check_identities(checks)
     assert [e["identity"] for e in ents] == ["?::SEED-00000002", "broken.kicad_sch::SEED-00000001"]
     assert ents[1]["kind"] == "error" and ents[1]["repo"] is None
+
+
+# ---- Task E: crash_units group + --carry-accepted-from ---------------------------
+
+def _crash(unit_id, analyzer="pcb", base="crash", cand="crash", code=2):
+    side = lambda st: {"status": st, "exit_code": code if st == "crash" else 0,  # noqa: E731
+                       "detail": "no_output" if st == "crash" else None, "elapsed_s": 0.1, "output_sha256": None}
+    return json.dumps({"unit_id": unit_id, "analyzer": analyzer, "input_sha256": "cc", "baseline": side(base),
+                       "candidate": side(cand), "verdict": "SKIP" if cand == "crash" else "WARN",
+                       "reason": "both_failed"})
+
+
+CRASH_LINES = [_crash("o/r7/boom.kicad_pcb"), _crash("o/r8/one.kicad_pcb", cand="ok")]
+
+
+def test_crash_units_both_sided_only():
+    ents = bl.crash_units(UNITS + CRASH_LINES)
+    assert ents == [{"identity": "pcb/o/r7/boom.kicad_pcb", "analyzer": "pcb", "unit_id": "o/r7/boom.kicad_pcb",
+                     "exit_code": 2, "detail": "no_output", "accepted_by": None}]
+
+
+def test_build_ledger_emits_crash_units_group():
+    led = bl.build_ledger(product_sha=SHA, references_sha=REF, checks=CHECKS, junit_text=JUNIT,
+                          units_lines=UNITS + CRASH_LINES, issues_text=ISSUES, context={})
+    assert led["ledger_version"] == 1
+    assert [e["identity"] for e in led["crash_units"]] == ["pcb/o/r7/boom.kicad_pcb"]
+
+
+def test_carry_accepted_preserves_stamps_by_identity():
+    new = bl.build_ledger(product_sha=SHA, references_sha=REF, checks=CHECKS, junit_text=JUNIT,
+                          units_lines=UNITS + CRASH_LINES, issues_text=ISSUES, context={})
+    prior = json.loads(json.dumps(new))
+    prior["checks"][0]["accepted_by"] = "LOG later (4)"
+    prior["timeout_units"][0]["accepted_by"] = "LOG timeouts"
+    prior["contract"] = prior["contract"][1:]          # drop one: its rebuilt twin stays null
+    del prior["crash_units"]                           # an older ledger without the group
+    out = bl.carry_accepted(new, prior)
+    assert out["checks"][0]["accepted_by"] == "LOG later (4)"
+    assert out["timeout_units"][0]["accepted_by"] == "LOG timeouts"
+    assert out["contract"][0]["accepted_by"] is None
+    assert all(e["accepted_by"] is None for e in out["crash_units"])
+
+
+def test_build_cli_carry_accepted_from(tmp_path):
+    import subprocess
+    units = tmp_path / "units.jsonl"
+    units.write_text("\n".join(UNITS + CRASH_LINES) + "\n")
+    checks = tmp_path / "checks.json"
+    checks.write_text(json.dumps(CHECKS))
+    common = [sys.executable, str(ROOT / "tools" / "baseline_ledger.py"), "build", "--product-sha", SHA,
+              "--references-sha", REF, "--checks", str(checks), "--junit", str(FIX / "contract_junit.xml"),
+              "--units", str(units), "--issues", str(FIX / "issues_snippet.md"),
+              "--analyzer-diff", "d", "--expected-movement", "m"]
+    first = tmp_path / "a.json"
+    assert subprocess.run(common + ["-o", str(first)], capture_output=True).returncode == 0
+    led = json.loads(first.read_text())
+    led["crash_units"][0]["accepted_by"] = "maintainer LOG later (4)"
+    first.write_text(json.dumps(led))
+    second = tmp_path / "b.json"
+    r = subprocess.run(common + ["--carry-accepted-from", str(first), "-o", str(second)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "crashes 1" in r.stdout
+    assert json.loads(second.read_text())["crash_units"][0]["accepted_by"] == "maintainer LOG later (4)"

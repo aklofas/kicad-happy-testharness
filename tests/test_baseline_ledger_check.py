@@ -22,7 +22,7 @@ LEDGER = bl.build_ledger(product_sha=SHA, references_sha="0" * 40, checks=CHECKS
 
 def test_same_inputs_yield_no_new_identities():
     new = blc.new_identities(LEDGER, units_lines=UNITS, checks=CHECKS, junit_text=JUNIT)
-    assert new == {"checks": [], "contract": [], "timeout_units": []}
+    assert new == {"checks": [], "contract": [], "timeout_units": [], "crash_units": []}
 
 
 def test_new_failed_check_is_reported():
@@ -127,3 +127,54 @@ def test_dependency_missing_covered_through_its_ledgered_upstream():
 def test_snapshot_read_error_never_covered():
     known = blc.ledgered_timeouts(KNOWN_LEDGER)
     assert blc.skip_is_ledgered(_skip("schematic", "o/r/a.kicad_sch", "snapshot_read_error"), known) is False
+
+
+# ---- Task E: crash coverage --------------------------------------------------------
+
+CRASH_LEDGER = {"timeout_units": [{"identity": "schematic/o/r/a.kicad_sch"}],
+                "crash_units": [{"identity": "pcb/o/r/c.kicad_pcb"}]}
+
+
+def test_both_sided_crash_covered_iff_in_crash_units():
+    t, c = blc.ledgered_timeouts(CRASH_LEDGER), blc.ledgered_crashes(CRASH_LEDGER)
+    assert blc.skip_is_ledgered(_skip("pcb", "o/r/c.kicad_pcb", "both_failed", "crash", "crash"), t, crashes=c)
+    assert not blc.skip_is_ledgered(_skip("pcb", "o/r/d.kicad_pcb", "both_failed", "crash", "crash"), t, crashes=c)
+    # a ledger without the group reads as empty
+    assert blc.ledgered_crashes({"timeout_units": []}) == set()
+
+
+def test_one_sided_crash_never_covered():
+    """Even with the identity ledgered as BOTH a timeout and a crash, a crash on one side only is a
+    round delta, never covered."""
+    both = {"timeout_units": [{"identity": "pcb/o/r/c.kicad_pcb"}], "crash_units": [{"identity": "pcb/o/r/c.kicad_pcb"}]}
+    t, c = blc.ledgered_timeouts(both), blc.ledgered_crashes(both)
+    for base, cand in (("crash", "timeout"), ("timeout", "crash"), ("crash", "ok"), ("ok", "crash")):
+        rec = _skip("pcb", "o/r/c.kicad_pcb", "both_failed", base, cand)
+        assert blc.skip_is_ledgered(rec, t, crashes=c) is False, (base, cand)
+    assert blc.skip_is_ledgered(_skip("pcb", "o/r/c.kicad_pcb", "both_failed", "crash", "crash"), t, crashes=c)
+    assert blc.skip_is_ledgered(_skip("pcb", "o/r/c.kicad_pcb", "both_failed"), t, crashes=c)
+
+
+def test_dependency_missing_covered_by_upstream_crash():
+    t, c = blc.ledgered_timeouts(CRASH_LEDGER), blc.ledgered_crashes({"crash_units": [
+        {"identity": "schematic/o/r/z.kicad_sch"}]})
+    up = _skip("schematic", "o/r/z.kicad_sch", "both_failed", "crash", "crash")
+    dep = _skip("emc", "o/r/z.kicad_sch", "dependency_missing", "skipped", "skipped")
+    assert blc.skip_is_ledgered(dep, t, upstream=up, crashes=c) is True
+    assert blc.skip_is_ledgered(dep, t, upstream=up) is False
+
+
+def _unit(analyzer, uid, base, cand):
+    return json.dumps({"analyzer": analyzer, "unit_id": uid, "baseline": {"status": base},
+                       "candidate": {"status": cand}})
+
+
+def test_check_reports_uncovered_crashes_like_timeouts():
+    lines = [_unit("pcb", "o/r/c.kicad_pcb", "crash", "crash"),      # ledgered
+             _unit("pcb", "o/r/new.kicad_pcb", "crash", "crash"),    # new both-sided
+             _unit("pcb", "o/r/cand.kicad_pcb", "ok", "crash"),      # candidate-only
+             _unit("pcb", "o/r/base.kicad_pcb", "crash", "ok")]      # baseline-only
+    new = blc.new_identities(CRASH_LEDGER, units_lines=lines)
+    assert new["crash_units"] == ["pcb/o/r/base.kicad_pcb (baseline)", "pcb/o/r/cand.kicad_pcb (candidate)",
+                                  "pcb/o/r/new.kicad_pcb"]
+    assert new["timeout_units"] == []
