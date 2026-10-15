@@ -1,0 +1,35 @@
+[
+  {
+    "issue": "KH-900",
+    "type": "detection_fix",
+    "summary": "fixture issue 900",
+    "assertions": [
+      {"repo": "fake/repo1", "project": "proj", "source_file": "a.kicad_sch",
+       "check": {"path": "findings", "op": "min_count", "value": 6, "detector_filter": "detect_x"},
+       "description": "KH-900: six detect_x findings"},
+      {"repo": "fake/repo1", "project": "proj", "source_file": "a.kicad_sch",
+       "check": {"path": "summary", "op": "exists"},
+       "description": "KH-900: summary present"}
+    ]
+  },
+  {
+    "issue": "KH-901",
+    "type": "false_positive_fix",
+    "summary": "fixture issue 901",
+    "assertions": [
+      {"repo": "fake/repo1", "project": "proj", "source_file": "a.kicad_sch",
+       "id": "BUGFIX-KH-901-07",
+       "check": {"path": "findings", "op": "max_count", "value": 0, "detector_filter": "detect_y"},
+       "description": "KH-901: no detect_y findings (pinned id)"},
+      {"repo": "fake/repo2", "project": "board", "source_file": "hw/board.kicad_pcb",
+       "check": {"path": "findings", "op": "min_count", "value": 1},
+       "description": "KH-901: pcb has findings"}
+    ]
+  },
+  {
+    "issue": "KH-902",
+    "type": "crash_fix",
+    "summary": "entry with no assertions is skipped",
+    "assertions": []
+  }
+]
