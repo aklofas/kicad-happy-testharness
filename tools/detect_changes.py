@@ -12,6 +12,7 @@ Usage:
 
 import argparse
 import ast
+import hashlib
 import json
 import subprocess
 import sys
@@ -36,7 +37,7 @@ FILE_TO_TYPES = {
     "skills/kicad/scripts/kicad_types.py": {"schematic", "pcb"},
     "skills/kicad/scripts/diff_analysis.py": set(),  # standalone, no test impact
     "skills/kicad/scripts/what_if.py": set(),
-    "skills/kicad/scripts/analyze_thermal.py": set(),
+    "skills/kicad/scripts/analyze_thermal.py": {"thermal"},
 }
 
 # Glob patterns for broader matching
@@ -48,18 +49,22 @@ GLOB_PATTERNS = {
 
 
 def get_changed_files(kicad_happy_dir, since="HEAD~1"):
-    """Get list of changed files in kicad-happy repo."""
+    """Changed files in kicad-happy since `since`. Returns None when git fails
+    (not a repo, unknown ref, shallow clone) - callers must treat None as a
+    diagnostic failure, never as 'no changes' (report B12)."""
     try:
         result = subprocess.run(
             ["git", "diff", "--name-only", since],
-            capture_output=True, text=True, cwd=str(kicad_happy_dir),
-            timeout=10,
+            capture_output=True, text=True, cwd=str(kicad_happy_dir), timeout=10,
         )
-        if result.returncode != 0:
-            return []
-        return [f.strip() for f in result.stdout.splitlines() if f.strip()]
-    except Exception:
-        return []
+    except (OSError, subprocess.TimeoutExpired) as e:
+        print(f"error: git diff failed in {kicad_happy_dir}: {e}", file=sys.stderr)
+        return None
+    if result.returncode != 0:
+        print(f"error: git diff --name-only {since} failed in {kicad_happy_dir}: "
+              f"{result.stderr.strip()}", file=sys.stderr)
+        return None
+    return [f.strip() for f in result.stdout.splitlines() if f.strip()]
 
 
 def map_file_to_types(filepath):
@@ -101,6 +106,10 @@ def get_changed_functions(kicad_happy_dir, filepath, since="HEAD~1"):
 
     old_funcs = _extract_functions(old_source)
     new_funcs = _extract_functions(new_source)
+    if new_funcs is None:
+        return None
+    if old_funcs is None:
+        old_funcs = {}
 
     changed = []
     # New or modified functions
@@ -119,19 +128,17 @@ def get_changed_functions(kicad_happy_dir, filepath, since="HEAD~1"):
 
 
 def _extract_functions(source):
-    """Extract {function_name: body_hash} from Python source."""
+    """{function_name: body_hash}; {} for empty source; None on SyntaxError."""
     if not source.strip():
         return {}
     try:
         tree = ast.parse(source)
     except SyntaxError:
-        return {}
-
+        return None
     funcs = {}
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            body_str = ast.dump(node)
-            funcs[node.name] = hash(body_str)
+            funcs[node.name] = hashlib.sha256(ast.dump(node).encode()).hexdigest()[:16]
     return funcs
 
 
@@ -166,66 +173,110 @@ def recommend_actions(affected_types):
     return actions
 
 
-# Entry points: the analyzer scripts that the test harness invokes directly
+# Entry points the harness invokes directly, and the analyzer types each one
+# evidences. cross_analysis consumes schematic+pcb outputs; thermal was an
+# empty exact entry before (report A2); datasheets had none.
 ENTRY_POINTS = {
-    "skills/kicad/scripts/analyze_schematic.py": "schematic",
-    "skills/kicad/scripts/analyze_pcb.py": "pcb",
-    "skills/kicad/scripts/analyze_gerbers.py": "gerber",
-    "skills/emc/scripts/analyze_emc.py": "emc",
-    "skills/spice/scripts/simulate_subcircuits.py": "spice",
+    "skills/kicad/scripts/analyze_schematic.py": {"schematic"},
+    "skills/kicad/scripts/analyze_pcb.py": {"pcb"},
+    "skills/kicad/scripts/analyze_gerbers.py": {"gerber"},
+    "skills/kicad/scripts/analyze_thermal.py": {"thermal"},
+    "skills/kicad/scripts/cross_analysis.py": {"schematic", "pcb"},
+    "skills/emc/scripts/analyze_emc.py": {"emc"},
+    "skills/spice/scripts/simulate_subcircuits.py": {"spice"},
+    "skills/datasheets/scripts/datasheet_lookup.py": {"datasheets"},
+    "skills/digikey/scripts/sync_datasheets_digikey.py": {"datasheets"},
 }
 
 
-def _scan_imports(filepath):
-    """AST-parse a Python file and return set of local module names imported."""
-    try:
-        source = filepath.read_text(encoding="utf-8")
-        tree = ast.parse(source)
-    except (OSError, SyntaxError):
-        return set()
+def build_module_index(kicad_happy_dir):
+    """Dotted module name -> root-relative path, package-qualified (report A2).
 
-    imports = set()
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            for alias in node.names:
-                imports.add(alias.name.split(".")[0])
-        elif isinstance(node, ast.ImportFrom):
-            if node.module and node.level == 0:
-                imports.add(node.module.split(".")[0])
-    return imports
+    A file skills/<skill>/scripts/a/b.py is importable as 'a.b' from any script
+    in that skill (scripts/ is on sys.path), and 'a' maps to a/__init__.py.
+    Sibling packages beside scripts/ (skills/datasheets/datasheet_types) are
+    indexed by their package name too.
+    """
+    root = Path(kicad_happy_dir)
+    index = {}
+    for skill_dir in sorted((root / "skills").glob("*")):
+        if not skill_dir.is_dir():
+            continue
+        roots = [skill_dir / "scripts", skill_dir]
+        for base in roots:
+            if not base.is_dir():
+                continue
+            for py in sorted(base.rglob("*.py")):
+                if "__pycache__" in py.parts:
+                    continue
+                relp = py.relative_to(root).as_posix()
+                parts = py.relative_to(base).with_suffix("").parts
+                if parts[-1] == "__init__":
+                    parts = parts[:-1]
+                if not parts:
+                    continue
+                if base == skill_dir and parts[0] == "scripts":
+                    continue   # scripts/ files were indexed under the scripts base
+                index.setdefault(".".join(parts), relp)
+    return index
+
+
+def resolve_import(importer_rel, node, index):
+    """Root-relative paths an Import/ImportFrom node resolves to inside the tree."""
+    out = set()
+    if isinstance(node, ast.Import):
+        for alias in node.names:
+            name = alias.name
+            while name:
+                if name in index:
+                    out.add(index[name])
+                    break
+                name = name.rpartition(".")[0]
+        return out
+    if not isinstance(node, ast.ImportFrom):
+        return out
+    if node.level == 0:
+        base = node.module or ""
+    else:
+        pkg_parts = Path(importer_rel).with_suffix("").parts
+        # drop the file name, then (level-1) more packages
+        pkg_parts = pkg_parts[:-1]
+        if pkg_parts and pkg_parts[-1] == "__init__":
+            pkg_parts = pkg_parts[:-1]
+        cut = node.level - 1
+        pkg_parts = pkg_parts[:len(pkg_parts) - cut] if cut else pkg_parts
+        # strip the skills/<skill>/scripts prefix to get the dotted package
+        dotted = []
+        for p in reversed(pkg_parts):
+            if p == "scripts":
+                break
+            dotted.append(p)
+        dotted.reverse()
+        base = ".".join(dotted + ([node.module] if node.module else []))
+    candidates = [base] + [f"{base}.{a.name}" if base else a.name for a in node.names]
+    for cand in candidates:
+        if cand in index:
+            out.add(index[cand])
+    return out
 
 
 def _build_dependency_graph(kicad_happy_dir):
-    """Walk all .py files under skills/ and build {file_relpath: set(imported_relpaths)}.
-
-    Only resolves imports to files within the same skills/ tree.
-    """
-    skills_dir = Path(kicad_happy_dir) / "skills"
-    if not skills_dir.exists():
-        return {}
-
-    # Build module_name -> relpath mapping for all .py files
-    module_map = {}  # "analyze_schematic" -> "skills/kicad/scripts/analyze_schematic.py"
-    all_files = set()
-    for py in skills_dir.rglob("*.py"):
-        if py.name.startswith("__"):
+    """{file_relpath: set(imported_relpaths)} over the package-qualified index."""
+    root = Path(kicad_happy_dir)
+    index = build_module_index(root)
+    graph = {}
+    for relp in sorted(set(index.values())):
+        try:
+            tree = ast.parse((root / relp).read_bytes())
+        except (OSError, SyntaxError):
+            graph[relp] = set()
             continue
-        relpath = str(py.relative_to(kicad_happy_dir))
-        module_name = py.stem
-        module_map[module_name] = relpath
-        all_files.add(relpath)
-
-    # Build graph
-    graph = {}  # relpath -> set of relpaths it imports
-    for relpath in all_files:
-        full_path = Path(kicad_happy_dir) / relpath
-        imported_names = _scan_imports(full_path)
         deps = set()
-        for name in imported_names:
-            if name in module_map:
-                deps.add(module_map[name])
-        graph[relpath] = deps
-
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Import, ast.ImportFrom)):
+                deps |= resolve_import(relp, node, index)
+        deps.discard(relp)
+        graph[relp] = deps
     return graph
 
 
@@ -252,7 +303,7 @@ def _compute_impact_map(graph, entry_points):
                     queue.append(dep)
         # All visited files are affected by this analyzer type
         for f in visited:
-            impact.setdefault(f, set()).add(atype)
+            impact.setdefault(f, set()).update(atype if isinstance(atype, set) else {atype})
 
     return impact
 
@@ -284,7 +335,7 @@ def cmd_generate_map(args):
 
     if args.json:
         json.dump({
-            "entry_points": {k: v for k, v in ENTRY_POINTS.items()},
+            "entry_points": {k: sorted(v) for k, v in ENTRY_POINTS.items()},
             "total_files": len(all_files),
             "reachable_files": len(reachable),
             "unreachable_files": len(unreachable),
@@ -354,26 +405,38 @@ def main():
 
     if args.command == "generate-map":
         cmd_generate_map(args)
-        return
+        return 0
 
     kicad_happy = resolve_kicad_happy_dir()
 
     files = get_changed_files(kicad_happy, args.since)
+    if files is None:
+        return 2
     if not files:
         if args.json:
             json.dump({"changed_files": 0, "affected_types": [],
                        "actions": []}, sys.stdout, indent=2)
         else:
             print(f"No changes detected in {kicad_happy} since {args.since}")
-        return
+        return 0
+
+    graph = _build_dependency_graph(kicad_happy)
+    impact = _compute_impact_map(graph, ENTRY_POINTS)
 
     # Analyze changes
     affected_types = set()
     file_details = []
     for filepath in files:
-        types = map_file_to_types(filepath)
-        affected_types |= types
+        types = set(impact.get(filepath, set())) or set(map_file_to_types(filepath))
         funcs = get_changed_functions(kicad_happy, filepath, args.since)
+        parse_incomplete = funcs is None
+        if parse_incomplete:
+            parts = filepath.split("/")
+            same_skill = {t for ep, ts in ENTRY_POINTS.items()
+                          if ep.split("/")[1:2] == parts[1:2] for t in ts}
+            types = same_skill or types
+            funcs = []
+        affected_types |= types
         detectors = map_functions_to_detectors(filepath, funcs)
 
         file_details.append({
@@ -381,6 +444,7 @@ def main():
             "affected_types": sorted(types),
             "functions_changed": funcs[:20],
             "detectors": detectors,
+            "parse_incomplete": parse_incomplete,
         })
 
     actions = recommend_actions(affected_types)
@@ -394,7 +458,7 @@ def main():
             "actions": actions,
         }, sys.stdout, indent=2)
         print()
-        return
+        return 0
 
     # Text output
     print(f"kicad-happy changes since {args.since}:")
@@ -412,12 +476,15 @@ def main():
                 print(f"    ... and {len(fd['functions_changed']) - 5} more")
         if fd["detectors"]:
             print(f"    Detectors: {', '.join(fd['detectors'])}")
+        if fd["parse_incomplete"]:
+            print("    (parse incomplete: SyntaxError; types widened to the whole skill)")
 
     if actions:
         print(f"\nRecommended actions:")
         for a in actions:
             print(f"  $ {a}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
