@@ -1,0 +1,76 @@
+"""Root pytest configuration: tier markers, default selection, product-root header.
+
+Marker derivation (review B9, TH-053): explicit markers win; else module
+``TIER == "online"`` → online; else ``tests/contract/`` → offline_contract;
+``integration/`` → online; everything else → unit. Default selection with no
+``-m`` is ``unit or offline_contract``; pass ``--all-tiers`` or an explicit
+``-m`` expression to change it.
+"""
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+
+import pytest
+
+HARNESS_ROOT = Path(__file__).resolve().parent
+TIER_MARKERS = ("unit", "offline_contract", "corpus", "online", "perf")
+DEFAULT_EXPR = "unit or offline_contract"
+
+
+def pytest_addoption(parser):
+    parser.addoption("--all-tiers", action="store_true", default=False,
+                     help="collect every tier (disables the default "
+                          f"'{DEFAULT_EXPR}' selection)")
+    parser.addoption("--manifest-out", default=None, metavar="PATH",
+                     help="write {node_id: [markers]} for the collected items")
+
+
+def _derived_tier(item) -> str:
+    module = getattr(item, "module", None)
+    tier_attr = getattr(module, "TIER", None) if module is not None else None
+    if tier_attr == "online":
+        return "online"
+    parts = Path(str(item.fspath)).resolve().parts
+    if "integration" in parts:
+        return "online"
+    if "contract" in parts and "tests" in parts:
+        return "offline_contract"
+    return "unit"
+
+
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        if not any(item.get_closest_marker(m) for m in TIER_MARKERS):
+            item.add_marker(getattr(pytest.mark, _derived_tier(item)))
+
+    manifest_out = config.getoption("--manifest-out")
+    if manifest_out:
+        data = {item.nodeid: sorted(m.name for m in item.iter_markers()
+                                    if m.name in TIER_MARKERS) for item in items}
+        Path(manifest_out).write_text(json.dumps(data, indent=2, sort_keys=True) + "\n",
+                                      encoding="utf-8")
+
+    if config.getoption("-m") or config.getoption("--all-tiers"):
+        return
+    keep, drop = [], []
+    for item in items:
+        (keep if (item.get_closest_marker("unit") or item.get_closest_marker("offline_contract"))
+         else drop).append(item)
+    if drop:
+        config.hook.pytest_deselected(items=drop)
+        items[:] = keep
+
+
+def pytest_report_header(config):
+    lines = []
+    if not (config.getoption("-m") or config.getoption("--all-tiers")):
+        lines.append(f"default selection: {DEFAULT_EXPR} (use -m EXPR or --all-tiers)")
+    try:
+        from tests.product_root import PRODUCT_ROOT, product_sha, product_is_dirty
+        lines.append(f"product_root: {PRODUCT_ROOT} sha={product_sha()}"
+                     f"{' DIRTY' if product_is_dirty() else ''}")
+    except Exception as e:  # noqa: BLE001 — header must never hide the real error
+        lines.append(f"product_root: UNRESOLVED ({e})")
+    return lines
