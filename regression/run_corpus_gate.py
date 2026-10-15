@@ -630,6 +630,14 @@ def main(argv=None):
         if not Path(d).exists():
             print(f"Error: worktree {d} does not exist", file=sys.stderr)
             sys.exit(2)
+    if args.budget:
+        # validate up front: a malformed budget must not surface after an hour of phase A/B
+        from regression.field_compare import BudgetError, load_budget
+        try:
+            load_budget(Path(args.budget))
+        except BudgetError as e:
+            print(f"Error: --budget {args.budget}: {e}", file=sys.stderr)
+            sys.exit(2)
     base_ref, cand_ref = git_worktree_ref(Path(args.baseline_dir)), git_worktree_ref(Path(args.candidate_dir))
     if args.kind != "aa" and (base_ref.dirty or cand_ref.dirty):
         print("Error: product worktree is dirty; evidence runs need clean worktrees", file=sys.stderr)
@@ -739,10 +747,10 @@ def main(argv=None):
     records = a_results + b_results
     agg = aggregate(records)
     report = write_rollup(records, agg, section, layout, manifest)
-    from regression.field_compare import run_modes  # local import keeps the gate importable standalone
+    from regression.field_compare import BudgetError, run_modes  # local import keeps the gate importable standalone
     try:
         modes = run_modes(layout.root, budget_path=Path(args.budget) if args.budget else None)
-    except FileNotFoundError as e:
+    except (FileNotFoundError, BudgetError) as e:
         print(f"Error: comparator modes could not run: {e}", file=sys.stderr)
         sys.exit(2)
     report = apply_modes(report, modes)

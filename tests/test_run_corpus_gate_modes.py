@@ -37,3 +37,18 @@ def test_main_accepts_budget_flag(tmp_path):
     ns = ap.parse_args(["--baseline-dir", "a", "--candidate-dir", "b", "--gate-dir", str(tmp_path),
                         "--repo", "x", "--budget", "regression/budgets/example.json"])
     assert ns.budget == "regression/budgets/example.json"
+
+
+def test_main_rejects_malformed_budget_before_running(tmp_path, monkeypatch, capsys):
+    """A bad --budget fails at argument validation (exit 2), not after phase A/B."""
+    import pytest
+    monkeypatch.setenv("KICAD_HAPPY_TESTHARNESS_DATA_DIR", str(tmp_path / "data"))
+    bad = tmp_path / "bad.json"
+    bad.write_text("{\"budget_id\": \"x\"}", encoding="utf-8")
+    wt = tmp_path / "wt"
+    wt.mkdir()
+    with pytest.raises(SystemExit) as ex:
+        gate.main(["--baseline-dir", str(wt), "--candidate-dir", str(wt), "--gate-dir", str(tmp_path / "g"),
+                   "--repo", "x", "--budget", str(bad)])
+    assert ex.value.code == 2
+    assert "--budget" in capsys.readouterr().err
