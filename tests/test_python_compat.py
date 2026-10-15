@@ -14,6 +14,7 @@ Checked features:
 TIER = "unit"
 
 import ast
+import json
 import glob
 import os
 import re
@@ -167,46 +168,92 @@ def test_no_type_alias_statement():
     )
 
 
-def _core_analyzer_files():
-    """Python files in the core analyzer skills (must be pure-stdlib)."""
-    core_skills = ["kicad", "emc", "spice"]
-    files = []
-    for skill in core_skills:
-        pattern = os.path.join(SKILLS_DIR, skill, "scripts", "*.py")
-        files.extend(glob.glob(pattern))
-    return sorted(files)
+POLICY_PATH = Path(__file__).resolve().parent / "python_compat_policy.json"
 
 
-def test_no_third_party_imports_in_core():
-    """Core analyzer scripts must be pure-stdlib — no third-party deps."""
-    third_party = {
-        "numpy", "scipy", "pandas", "requests", "yaml", "pyyaml",
-        "toml", "click", "rich", "attrs", "pydantic", "httpx",
-        "aiohttp", "flask", "django", "fastapi", "sqlalchemy",
-        "matplotlib", "pillow", "PIL", "cv2", "sklearn",
-    }
-    violations = []
-    for path in _core_analyzer_files():
-        with open(path) as f:
-            try:
-                tree = ast.parse(f.read(), filename=path)
-            except SyntaxError:
+def _policy():
+    return json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+
+
+def _local_module_names():
+    """Module/package names importable from any skill's scripts dir or skill root."""
+    names = set()
+    for py in Path(SKILLS_DIR).rglob("*.py"):
+        if "__pycache__" in py.parts:
+            continue
+        names.add(py.stem)
+        names.add(py.parent.name)
+    return names
+
+
+def _third_party_imports(path, local_names):
+    """[(lineno, module, guarded)] for imports that are neither stdlib nor local."""
+    try:
+        tree = ast.parse(Path(path).read_bytes(), filename=str(path))
+    except SyntaxError:
+        return []
+    parents = {}
+    for node in ast.walk(tree):
+        for child in ast.iter_child_nodes(node):
+            parents[child] = node
+    out = []
+    for node in ast.walk(tree):
+        mods = []
+        if isinstance(node, ast.Import):
+            mods = [a.name.split(".")[0] for a in node.names]
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            mods = [node.module.split(".")[0]]
+        for mod in mods:
+            if mod in sys.stdlib_module_names or mod in local_names:
                 continue
-        rel = os.path.relpath(path, SKILLS_DIR)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                for alias in node.names:
-                    mod = alias.name.split(".")[0]
-                    if mod in third_party:
-                        violations.append(f"{rel}:{node.lineno}: import {alias.name}")
-            elif isinstance(node, ast.ImportFrom) and node.module:
-                mod = node.module.split(".")[0]
-                if mod in third_party:
-                    violations.append(f"{rel}:{node.lineno}: from {node.module}")
-    assert not violations, (
-        "Third-party imports in core analyzers:\n"
-        + "\n".join(f"  {v}" for v in violations)
-    )
+            guarded = False
+            q = node
+            while q in parents:
+                q = parents[q]
+                if isinstance(q, ast.Try):
+                    guarded = True
+                    break
+            out.append((node.lineno, mod, guarded))
+    return out
+
+
+def test_third_party_import_policy_recursive():
+    """Core skills: stdlib + local only unless declared per file. Optional skills:
+    third-party only inside try/except or declared. Recursive over every skill
+    (report A2: the old scan globbed three immediate dirs and used a denylist)."""
+    policy = _policy()
+    local_names = _local_module_names()
+    violations = []
+    for py in sorted(Path(SKILLS_DIR).rglob("*.py")):
+        if "__pycache__" in py.parts:
+            continue
+        rel = py.relative_to(Path(KICAD_HAPPY)).as_posix()
+        skill = rel.split("/")[1]
+        declared = set(policy["declared"].get(rel, []))
+        for lineno, mod, guarded in _third_party_imports(py, local_names):
+            if mod in declared:
+                continue
+            if skill in policy["core_skills"]:
+                violations.append(f"{rel}:{lineno}: core skill imports {mod}")
+            elif not guarded:
+                violations.append(f"{rel}:{lineno}: optional skill imports {mod} unguarded")
+    assert not violations, "Third-party import policy violations:\n" + \
+        "\n".join(f"  {v}" for v in violations)
+
+
+def test_declared_allowances_are_still_used():
+    """Every declared allowance must match a live import — stale entries must be
+    removed so the list only shrinks."""
+    policy = _policy()
+    local_names = _local_module_names()
+    stale = []
+    for rel, mods in policy["declared"].items():
+        path = Path(KICAD_HAPPY) / rel
+        live = {m for _, m, _ in _third_party_imports(path, local_names)} if path.exists() else set()
+        for m in mods:
+            if m not in live:
+                stale.append(f"{rel}: {m}")
+    assert not stale, "Stale declared allowances:\n" + "\n".join(f"  {s}" for s in stale)
 
 
 # === Runner ===
