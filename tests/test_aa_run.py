@@ -64,7 +64,9 @@ def test_propose_policy_adds_only_new_leaves_and_never_writes_policy():
     assert "/inputs/run_id" not in added
     assert {"/inputs/generated_at", "/findings/*/evidence/score", "/inputs/files/*/path"} <= added
     numeric = [a for a in prop["added"] if a.get("pointer_glob") == "/findings/*/evidence/score"][0]
-    assert numeric["review"] == "singleton numeric leaf — likely a determinism bug, not a volatile leaf"
+    assert numeric["review"].startswith("findings leaf")
+    rid = [a for a in prop["added"] if a.get("pointer") == "/inputs/generated_at"][0]
+    assert "review" not in rid
     assert policy["leaves"] == [{"pointer": "/inputs/run_id", "shape": "^[0-9a-f-]{36}$"}]
 
 
@@ -84,3 +86,23 @@ def test_build_commands_use_same_sha_both_slots(tmp_path):
     assert "--kind" in gate and gate[gate.index("--kind") + 1] == "aa"
     assert gate[gate.index("--baseline-dir") + 1] == gate[gate.index("--candidate-dir") + 1]
     assert cmp[-1].endswith("field_report.json") and "--mode" in cmp and cmp[cmp.index("--mode") + 1] == "strict"
+
+
+def _leaf(glob, shape, units, examples=()):
+    return {"pointer_glob": glob, "unit_count": units, "delta_count": units, "ops": {},
+            "shape": shape, "examples": list(examples)}
+
+
+def test_propose_policy_flags_findings_and_numeric_drift():
+    rep = {"leaves": [_leaf("/findings/*/evidence/score", "number", 5),
+                      _leaf("/findings/*/id", "uuid", 3),
+                      _leaf("/assessments/*/t", "iso8601", 2),
+                      _leaf("/summary/score", "number", 4),
+                      _leaf("/inputs/run_id", "uuid", 9),
+                      _leaf("/inputs/n", "number", 9)]}
+    prop = aa_run.propose_policy(rep, {"name": "p", "leaves": []})
+    by = {a.get("pointer_glob") or a["pointer"]: a for a in prop["added"]}
+    for k in ("/findings/*/evidence/score", "/findings/*/id", "/assessments/*/t"):
+        assert by[k]["review"].startswith("findings leaf")
+    assert by["/summary/score"]["review"].startswith("numeric drift across units")
+    assert "review" not in by["/inputs/run_id"] and "review" not in by["/inputs/n"]

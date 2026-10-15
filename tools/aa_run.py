@@ -104,8 +104,14 @@ def propose_policy(aa_report: dict, policy: dict) -> dict:
                  "observed_units": leaf["unit_count"], "observed_deltas": leaf["delta_count"]}
         if leaf["shape"] == "abs_path":
             entry["rewrite"] = "strip_root_prefix"
-        if leaf["shape"] == "number" and leaf["unit_count"] == 1:
+        if glob.startswith(("/findings/", "/assessments/")):
+            entry["review"] = ("findings leaf \u2014 never auto-mask; file a determinism KH "
+                               "unless it is an identifier")
+        elif leaf["shape"] == "number" and leaf["unit_count"] == 1:
             entry["review"] = "singleton numeric leaf — likely a determinism bug, not a volatile leaf"
+        elif leaf["shape"] == "number" and not glob.startswith("/inputs/"):
+            entry["review"] = ("numeric drift across units \u2014 determinism bug or real change; "
+                               "never auto-mask")
         elif leaf["shape"] in ("string", "mixed"):
             entry["review"] = "non-volatile-looking shape — confirm before accepting"
         added.append(entry)
