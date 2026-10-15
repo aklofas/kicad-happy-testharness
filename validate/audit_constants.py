@@ -991,7 +991,7 @@ def cmd_list(args):
         if len(name) > 29:
             name = name[:26] + "..."
         if len(fname) > 24:
-            fname = fname[:21] + "..."
+            fname = "..." + fname[-21:]   # keep the tail: paths are root-relative now
 
         print(f"{cid:<10} {fname:<25} {name:<30} {cat:<22} {count:<4} {status:<10} {cscore:<9.1f} {oscore:<9.1f} {risk:<9} ({rscore:.1f})")
 
