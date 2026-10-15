@@ -49,3 +49,17 @@ def test_update_registry_hash_change_goes_stale():
     added, updated, removed, relocated = ae.update_registry(reg, scanned)
     e = [x for x in reg["equations"] if x["id"] == "EQ-901"][0]
     assert updated == 1 and relocated == 0 and e["status"] == "stale"
+
+
+def test_update_registry_moved_and_changed_keeps_provenance_and_goes_stale():
+    scanned = ae.scan_all_tagged(FAKE)
+    reg = {"version": 1, "last_scan": None, "equations": [{
+        "id": "EQ-901", "formula": "x", "file": "old/place.py", "line": 1,
+        "function": "divider_ratio", "sources": [], "content_hash": "sha256:deadbeef",
+        "status": "verified", "category": "filter_design", "impact": "high",
+        "verification_source": "textbook", "notes": None}]}
+    added, updated, removed, relocated = ae.update_registry(reg, scanned)
+    e = [x for x in reg["equations"] if x["id"] == "EQ-901"][0]
+    assert updated == 1 and relocated == 0 and e["status"] == "stale"
+    assert e["file"] == "skills/kicad/scripts/validation_detectors.py"
+    assert e["relocated_from"] == "old/place.py"

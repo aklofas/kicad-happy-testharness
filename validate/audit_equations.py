@@ -282,8 +282,9 @@ def update_registry(registry, scanned):
             old = old_by_id[eid]
             same_hash = (eq.get("content_hash") and old.get("content_hash")
                          and eq["content_hash"] == old["content_hash"])
+            if old.get("file") != eq["file"] and old.get("file"):
+                old["relocated_from"] = old.get("file")   # provenance kept even when the hash moved too
             if old.get("file") != eq["file"] and same_hash:
-                old["relocated_from"] = old.get("file")
                 relocated += 1
             elif eq.get("content_hash") and old.get("content_hash") \
                     and eq["content_hash"] != old["content_hash"]:
