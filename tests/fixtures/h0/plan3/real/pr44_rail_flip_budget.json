@@ -1,0 +1,26 @@
+{
+  "budget_id": "pr44-rail-flip-fixture",
+  "baseline_sha": "3cf837b",
+  "candidate_sha": "788649f",
+  "harness_sha": "7abf547b4a682e61ccdaa2ba9f195e73d11295b1",
+  "profile": "standard",
+  "normalization_policy": "volatile-leaves-v1",
+  "classes": [
+    {"id": "rail-flip-finding", "analyzer": "schematic", "path_glob": "/findings/**",
+     "where": {"rule_id": ["LB-001", "RS-001"]},
+     "evidence": "results/v22x_pr44_gate/adjudication_pr44.md — is_power_net_name reclassifies 12V as a rail; LB-001 alias info becomes RS-001 no-source warning on the same net"},
+    {"id": "rail-flip-net-classification", "analyzer": "schematic", "path_glob": "/design_analysis/net_classification/*", "op": ["changed"],
+     "evidence": "same class: signal→power"},
+    {"id": "rail-flip-statistics", "analyzer": "schematic", "path_glob": "/statistics/power_rails/**", "op": ["added"],
+     "evidence": "same class: the new rail enters statistics.power_rails"},
+    {"id": "rail-flip-summaries", "analyzer": "schematic", "path_glob": "/summary/by_severity/*", "op": ["changed"],
+     "evidence": "same class: severity counts follow the finding"},
+    {"id": "rail-flip-audience", "analyzer": "schematic", "path_glob": "/audience_summary/**",
+     "evidence": "same class: audience views are derived from findings"},
+    {"id": "rail-flip-test-coverage", "analyzer": "schematic", "path_glob": "/test_coverage/**", "op": ["added"],
+     "evidence": "same class: power_rail enters uncovered_key_nets"}
+  ],
+  "unexplained_deltas_allowed": 0,
+  "unexplained_missing_units_allowed": 0,
+  "relock": false
+}

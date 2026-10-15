@@ -1,0 +1,388 @@
+{
+  "analyzer_type": "schematic",
+  "schema_version": "1.4.0",
+  "summary": {
+    "total_findings": 2,
+    "by_severity": {
+      "error": 0,
+      "warning": 1,
+      "info": 1
+    }
+  },
+  "trust_summary": {
+    "total_findings": 2,
+    "trust_level": "high",
+    "by_confidence": {
+      "deterministic": 2,
+      "heuristic": 0,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 2,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 50.0
+  },
+  "kicad_version": "unknown",
+  "file_version": "20230121",
+  "title_block": {},
+  "statistics": {
+    "total_components": 0,
+    "unique_parts": 0,
+    "dnp_parts": 0,
+    "total_nets": 1,
+    "total_wires": 1,
+    "total_no_connects": 0,
+    "component_types": {},
+    "power_rails": [
+      {
+        "name": "12V",
+        "voltage": 12.0
+      }
+    ],
+    "missing_mpn": [],
+    "missing_footprint": []
+  },
+  "findings": [
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "12V has no declared source",
+      "description": "Net 12V carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "12V"
+      ],
+      "pins": [],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:RS-001:12v"
+    },
+    {
+      "detector": "audit_lifecycle_skipped",
+      "rule_id": "LC-007",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "lifecycle",
+      "summary": "Lifecycle audit not run \u2014 --lifecycle flag not passed",
+      "description": "Component lifecycle / obsolescence audit was not run this session. Reason: --lifecycle flag not passed (run with --lifecycle to query DigiKey / Mouser / LCSC / element14 for obsolescence + operating-temp coverage; requires network + API keys). The review cannot report active / NRND / EOL / obsolete status, last-time-buy windows, or operating-temperature coverage for any BOM part. Treat the lifecycle section of the report as 'not performed'.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "recommendation": "Run with --lifecycle (requires DIGIKEY_CLIENT_ID / MOUSER_SEARCH_API_KEY / ELEMENT14_API_KEY env vars; LCSC needs no auth) to populate this section. If intentionally skipped, note it explicitly in the report's 'Not Performed' section.",
+      "report_context": {
+        "section": "Component Lifecycle",
+        "impact": "No obsolescence / temperature-grade evidence available.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:LC-007:8ddf539c9727"
+    }
+  ],
+  "assessments": [],
+  "bom": [],
+  "components": [],
+  "nets": {
+    "12V": {
+      "name": "12V",
+      "pins": [],
+      "point_count": 2,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "12V",
+          "type": "hierarchical_label"
+        },
+        {
+          "name": "SalidaRegulada",
+          "type": "hierarchical_label"
+        }
+      ]
+    }
+  },
+  "subcircuits": [],
+  "ic_pin_analysis": [],
+  "transistor_pin_analysis": [],
+  "design_analysis": {
+    "net_classification": {
+      "12V": "power"
+    },
+    "power_domains": {
+      "ic_power_rails": {},
+      "domain_groups": {}
+    },
+    "cross_domain_signals": [],
+    "bus_analysis": {
+      "i2c": [],
+      "spi": [],
+      "uart": [],
+      "can": []
+    },
+    "differential_pairs": [],
+    "erc_warnings": [],
+    "passive_warnings": []
+  },
+  "connectivity_issues": {
+    "unconnected_pins": [],
+    "single_pin_nets": [],
+    "single_pin_net_findings": [],
+    "multi_driver_nets": [],
+    "power_net_summary": {}
+  },
+  "labels": [
+    {
+      "name": "12V",
+      "type": "hierarchical_label",
+      "x": 100.33,
+      "y": 68.58,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "SalidaRegulada",
+      "type": "hierarchical_label",
+      "x": 110.49,
+      "y": 68.58,
+      "angle": 0.0,
+      "shape": "input",
+      "_sheet": 0
+    }
+  ],
+  "no_connects": [],
+  "power_symbols": [],
+  "annotation_issues": {},
+  "label_shape_warnings": [
+    {
+      "type": "undriven_input_label",
+      "net": "12V",
+      "message": "Net '12V' has input-shaped label(s) but no driver pins on the net"
+    }
+  ],
+  "pwr_flag_warnings": [],
+  "footprint_filter_warnings": [],
+  "sourcing_audit": {
+    "total_bom_components": 0,
+    "mpn_coverage": "0/0"
+  },
+  "ground_domains": {
+    "ground_nets": {},
+    "multiple_domains": false
+  },
+  "bus_topology": {
+    "bus_wire_count": 0,
+    "bus_entry_count": 0,
+    "unresolved": []
+  },
+  "wire_geometry": {
+    "total_wires": 1,
+    "total_length_mm": 10.2,
+    "avg_length_mm": 10.2
+  },
+  "simulation_readiness": {
+    "total_components": 0,
+    "likely_simulatable": 0,
+    "needs_model": 0
+  },
+  "property_issues": {},
+  "placement_analysis": {
+    "clusters": []
+  },
+  "hierarchical_labels": {
+    "hierarchical_label_count": 2,
+    "global_label_count": 0,
+    "unconnected_hierarchical": [
+      "SalidaRegulada"
+    ]
+  },
+  "rail_voltages": {
+    "12V": 12.0
+  },
+  "power_sequencing_validation": {
+    "power_tree": [],
+    "provenance": {
+      "evidence": "pseq_enable_chain",
+      "confidence": "heuristic",
+      "claimed_components": [],
+      "excluded_by": [],
+      "suppressed_candidates": []
+    }
+  },
+  "test_coverage": {
+    "test_points": [],
+    "test_point_count": 0,
+    "covered_nets": [],
+    "uncovered_key_nets": [
+      {
+        "net": "12V",
+        "category": "power_rail"
+      }
+    ],
+    "observations": [
+      "No test points found in design",
+      "No debug connectors (SWD/JTAG/UART) identified",
+      "Key nets without test points: 1 power_rail"
+    ]
+  },
+  "hierarchy_warning": "File appears to be a sub-sheet but hierarchy discovery is disabled (--no-hierarchy). Component references may be incomplete.",
+  "bom_lock": {
+    "total_bom_components": 0,
+    "components_with_mpn": 0,
+    "missing_mpn": [],
+    "missing_mpn_count": 0,
+    "generic_values": [],
+    "lock_pct": 100,
+    "status": "pass"
+  },
+  "inputs": {
+    "source_files": [
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/chapahrroh/LabPowerSupply/PowerStation/regulador1.kicad_sch"
+    ],
+    "source_hashes": {
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/chapahrroh/LabPowerSupply/PowerStation/regulador1.kicad_sch": "95931712874b43b700f3bd441a1479e861b2576851006feea72b74c3844b1495"
+    },
+    "run_id": "20260913T072222Z-a539e4",
+    "config_hash": null,
+    "upstream_artifacts": {}
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "design_intent": {
+    "product_class": "prototype",
+    "ipc_class": 2,
+    "target_market": "hobby",
+    "expected_lifetime_years": 5,
+    "operating_temp_range": [
+      -10,
+      70
+    ],
+    "preferred_passive_size": "0603",
+    "test_coverage_target": 0.85,
+    "approved_manufacturers": [],
+    "confidence": 0.3,
+    "detection_signals": [],
+    "source": {
+      "ipc_class": "auto",
+      "product_class": "auto",
+      "target_market": "auto",
+      "expected_lifetime_years": "auto",
+      "operating_temp_range": "auto",
+      "preferred_passive_size": "auto",
+      "test_coverage_target": "auto",
+      "approved_manufacturers": "auto"
+    }
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 2,
+      "by_severity": {
+        "error": 0,
+        "warning": 1,
+        "info": 1
+      },
+      "by_category": {
+        "power": 1,
+        "lifecycle": 1
+      },
+      "top_issues": [
+        {
+          "detector": "audit_rail_sources",
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "power",
+          "summary": "12V has no declared source",
+          "description": "Net 12V carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+          "components": [],
+          "nets": [
+            "12V"
+          ],
+          "pins": [],
+          "source_path": "none",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "report_context": {
+            "section": "Power \u2014 Rail Sources",
+            "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "rs_rail_audit",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "",
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:RS-001:12v"
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 1,
+      "by_category": {
+        "power": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "12V has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "low",
+      "blocker_count": 0,
+      "warning_count": 1,
+      "stage_readiness": {
+        "schematic": "needs_review",
+        "layout": "pass",
+        "pre_fab": "pass",
+        "bring_up": "pass"
+      },
+      "one_liner": "1 warning across 1 category."
+    }
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20260913T072222Z-a539e4"
+  }
+}

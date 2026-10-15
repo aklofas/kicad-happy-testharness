@@ -1,0 +1,204 @@
+{
+  "analyzer_type": "schematic",
+  "schema_version": "1.4.0",
+  "summary": {
+    "total_findings": 1,
+    "by_severity": {
+      "error": 0,
+      "warning": 0,
+      "info": 1
+    }
+  },
+  "trust_summary": {
+    "total_findings": 1,
+    "trust_level": "high",
+    "by_confidence": {
+      "deterministic": 1,
+      "heuristic": 0,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 1,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 0.0
+  },
+  "kicad_version": "5 (legacy)",
+  "file_version": "4",
+  "title_block": {},
+  "sheets_parsed": 1,
+  "sheet_files": [
+    "/home/aklofas/Projects/kicad-happy-testharness/repos/glocklueng/BMS/design/MCU.sch"
+  ],
+  "statistics": {
+    "total_components": 0,
+    "unique_parts": 0,
+    "dnp_parts": 0,
+    "total_nets": 0,
+    "total_wires": 0,
+    "total_no_connects": 0,
+    "component_types": {},
+    "power_rails": [],
+    "missing_mpn": [],
+    "missing_footprint": []
+  },
+  "bom": [],
+  "components": [],
+  "nets": {},
+  "subcircuits": [],
+  "findings": [
+    {
+      "detector": "audit_lifecycle_skipped",
+      "rule_id": "LC-007",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "lifecycle",
+      "summary": "Lifecycle audit not run \u2014 --lifecycle flag not passed",
+      "description": "Component lifecycle / obsolescence audit was not run this session. Reason: --lifecycle flag not passed (run with --lifecycle to query DigiKey / Mouser / LCSC / element14 for obsolescence + operating-temp coverage; requires network + API keys). The review cannot report active / NRND / EOL / obsolete status, last-time-buy windows, or operating-temperature coverage for any BOM part. Treat the lifecycle section of the report as 'not performed'.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "recommendation": "Run with --lifecycle (requires DIGIKEY_CLIENT_ID / MOUSER_SEARCH_API_KEY / ELEMENT14_API_KEY env vars; LCSC needs no auth) to populate this section. If intentionally skipped, note it explicitly in the report's 'Not Performed' section.",
+      "report_context": {
+        "section": "Component Lifecycle",
+        "impact": "No obsolescence / temperature-grade evidence available.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:LC-007:8ddf539c9727"
+    }
+  ],
+  "assessments": [],
+  "design_analysis": {
+    "net_classification": {},
+    "power_domains": {
+      "ic_power_rails": {},
+      "domain_groups": {}
+    },
+    "cross_domain_signals": [],
+    "bus_analysis": {
+      "i2c": [],
+      "spi": [],
+      "uart": [],
+      "can": []
+    },
+    "differential_pairs": [],
+    "erc_warnings": [],
+    "passive_warnings": []
+  },
+  "labels": [],
+  "no_connects": [],
+  "power_symbols": [],
+  "annotation_issues": {},
+  "legacy_analysis_quality": {
+    "is_legacy_schematic": true,
+    "library_resolution": {
+      "cache_lib_found": false,
+      "sym_lib_table_used": false,
+      "libs_directive_used": true,
+      "builtin_fallback_count": 107,
+      "parsed_lib_count": 0
+    },
+    "pin_source_coverage": {
+      "parsed_lib": 0,
+      "suffix_match": 0,
+      "snapped_to_wire": 0,
+      "unresolved": 0
+    }
+  },
+  "rail_voltages": {},
+  "power_sequencing_validation": {
+    "power_tree": [],
+    "provenance": {
+      "evidence": "pseq_enable_chain",
+      "confidence": "heuristic",
+      "claimed_components": [],
+      "excluded_by": [],
+      "suppressed_candidates": []
+    }
+  },
+  "inputs": {
+    "source_files": [
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/glocklueng/BMS/design/MCU.sch"
+    ],
+    "source_hashes": {
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/glocklueng/BMS/design/MCU.sch": "e7dd3756399ef4d97dabec5b7abb4ef7bcfafd1a0c032d7a885a5a92df39ead8"
+    },
+    "run_id": "20260913T072438Z-aefff9",
+    "config_hash": null,
+    "upstream_artifacts": {}
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "design_intent": {
+    "product_class": "prototype",
+    "ipc_class": 2,
+    "target_market": "hobby",
+    "expected_lifetime_years": 5,
+    "operating_temp_range": [
+      -10,
+      70
+    ],
+    "preferred_passive_size": "0603",
+    "test_coverage_target": 0.85,
+    "approved_manufacturers": [],
+    "confidence": 0.3,
+    "detection_signals": [],
+    "source": {
+      "ipc_class": "auto",
+      "product_class": "auto",
+      "target_market": "auto",
+      "expected_lifetime_years": "auto",
+      "operating_temp_range": "auto",
+      "preferred_passive_size": "auto",
+      "test_coverage_target": "auto",
+      "approved_manufacturers": "auto"
+    }
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 1,
+      "by_severity": {
+        "error": 0,
+        "warning": 0,
+        "info": 1
+      },
+      "by_category": {
+        "lifecycle": 1
+      },
+      "top_issues": []
+    },
+    "reviewer": {
+      "total_findings": 0,
+      "by_category": {},
+      "top_issues": []
+    },
+    "manager": {
+      "risk_level": "none",
+      "blocker_count": 0,
+      "warning_count": 0,
+      "stage_readiness": {
+        "schematic": "pass",
+        "layout": "pass",
+        "pre_fab": "pass",
+        "bring_up": "pass"
+      },
+      "one_liner": "No errors or warnings \u2014 all stages ready."
+    }
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20260913T072438Z-aefff9"
+  }
+}
