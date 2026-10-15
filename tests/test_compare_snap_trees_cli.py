@@ -83,3 +83,37 @@ def test_policy_none_disables_masking(tmp_path):
     rc = cli.main([str(tmp_path / "a"), str(tmp_path / "b"), "--mode", "strict", "--policy", "none", "-o", str(out)])
     assert rc == 1
     assert {d["path"] for d in json.loads(out.read_text())["deltas"]} == {"/inputs/run_id", "/capability_mode_ref/run_id"}
+
+
+def _pair(tmp_path, sa="warning", sb="info"):
+    _tree(tmp_path / "a", "schematic/u", _env(RUN_A, sa)); _tree(tmp_path / "b", "schematic/u", _env(RUN_B, sb))
+    return str(tmp_path / "a"), str(tmp_path / "b")
+
+
+def test_unloadable_predicate_exits_2(tmp_path):
+    a, b = _pair(tmp_path)
+    bud = json.loads((FIX / "rs001_only.json").read_text())
+    bud["classes"][0]["predicate"] = "nomod:nofn"
+    bp = tmp_path / "bud.json"; bp.write_text(json.dumps(bud))
+    assert cli.main([a, b, "--mode", "budgeted", "--budget", str(bp), "-o", str(tmp_path / "r.json")]) == 2
+
+
+@pytest.mark.parametrize("mode", ["raw", "strict"])
+def test_budget_outside_budgeted_mode_exits_2(tmp_path, mode):
+    a, b = _pair(tmp_path)
+    assert cli.main([a, b, "--mode", mode, "--budget", str(FIX / "rs001_only.json"),
+                     "-o", str(tmp_path / "r.json")]) == 2
+
+
+def test_budgeted_policy_none_writes_null_policy(tmp_path):
+    a, b = _pair(tmp_path)
+    out = tmp_path / "r.json"
+    rc = cli.main([a, b, "--mode", "budgeted", "--policy", "none", "--budget", str(FIX / "rs001_only.json"),
+                   "-o", str(out)])
+    assert rc in (0, 1)
+    assert json.loads(out.read_text())["policy"] is None
+
+
+def test_unknown_policy_exits_2(tmp_path):
+    a, b = _pair(tmp_path)
+    assert cli.main([a, b, "--mode", "strict", "--policy", "bogus", "-o", str(tmp_path / "r.json")]) == 2

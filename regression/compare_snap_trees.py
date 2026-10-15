@@ -52,6 +52,9 @@ def main(argv=None) -> int:
     if args.mode == "budgeted" and not args.budget:
         print("error: --mode budgeted requires --budget", file=sys.stderr)
         return 2
+    if args.budget and args.mode != "budgeted":
+        print("error: --budget requires --mode budgeted", file=sys.stderr)
+        return 2
     policy = None
     if args.mode != "raw" and args.policy != "none":
         try:
@@ -76,8 +79,12 @@ def main(argv=None) -> int:
 
     if args.mode == "budgeted":
         deltas = [Delta(**d) for d in report["deltas"]]
-        report["budget"] = evaluate_budget(deltas, budget, docs=_docs_for(report),
-                                           missing_units=report["summary"]["missing"])
+        try:
+            report["budget"] = evaluate_budget(deltas, budget, docs=_docs_for(report),
+                                               missing_units=report["summary"]["missing"])
+        except BudgetError as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
         report["verdict"] = "error" if hard_error else ("clean" if report["budget"]["clean"] else "residuals")
     else:
         report["verdict"] = "error" if hard_error else ("deltas" if report["summary"]["deltas"] else "clean")
