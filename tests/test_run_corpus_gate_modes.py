@@ -249,10 +249,14 @@ def test_no_ledger_is_todays_behaviour():
     assert gate.compute_gate_pass(_crit(), _skips(na), {}, {}, skip_records=na)["skips_ok"] is True
 
 
-def test_resolve_ledger_default_explicit_and_none(tmp_path):
+def test_resolve_ledger_default_explicit_and_none(tmp_path, monkeypatch):
     sha = "6a91aaaea124152b2923326c1cf77278e0999cd4"
-    default = gate.resolve_ledger(None, sha)
-    assert default == gate.HARNESS_DIR / "reference" / "baseline_debts" / "6a91aaa.json"
+    monkeypatch.setattr(gate, "HARNESS_DIR", tmp_path)
+    assert gate.resolve_ledger(None, sha) is None
+    want = tmp_path.joinpath("reference", "baseline_debts", "6a91aaa.json")
+    want.parent.mkdir(parents=True)
+    want.write_text("{}")
+    assert gate.resolve_ledger(None, sha) == want
     assert gate.resolve_ledger(None, "f" * 40) is None
     explicit = tmp_path / "l.json"
     explicit.write_text("{}")
@@ -275,10 +279,11 @@ def test_explicit_missing_ledger_exits_2_before_phase_a(tmp_path, monkeypatch, c
 
 
 def test_round2_real_skips_against_real_ledger():
-    """The seven round-2 bad skips (6a91aaa->8912a5a) against reference/baseline_debts/6a91aaa.json:
-    the schematic timeout and its three dependents are ledgered; the three pcb crashes are not,
-    because the ledger records timeouts only."""
-    ledger = json.loads((gate.HARNESS_DIR / "reference" / "baseline_debts" / "6a91aaa.json").read_text())
+    """The seven round-2 bad skips (6a91aaa->8912a5a) against the 6a91aaa ledger's timeout_units
+    (fixture copy): the schematic timeout and its three dependents are ledgered; the three pcb
+    crashes are not, because the ledger records timeouts only."""
+    ledger = json.loads(Path(__file__).resolve().parent.joinpath(
+        "fixtures", "h0", "round2", "ledger_6a91aaa_timeouts.json").read_text())
     crashes = ["BrettHallen/Conversion_Boards/TFC_10-pin_TFC_10-pin 2.kicad_pcb",
                "hackclub/OnBoard/projects_holy60-3d_src_holy60-3d.kicad_pcb", PCB]
     recs = _round2_like() + [_skiprec("pcb", u, "both_failed", "crash", "crash") for u in crashes]
