@@ -17,6 +17,8 @@ import tempfile
 import time
 from pathlib import Path
 
+import pytest
+
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = Path(os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy")))
 sys.path.insert(0, str(_KH / "skills" / "kicad" / "scripts"))
@@ -80,6 +82,8 @@ def test_kh413_fixture_output_unchanged():
     assert len(f) == 1 and abs(f[0]["gnd_clearance_mm"] - 0.5) < 0.05, f
 
 
+@pytest.mark.perf
+@pytest.mark.corpus
 def test_nloy_touch_keyboard_only_deterministic_under_30s():
     """Uses --only-deterministic, not --full: KH-420's regression and its
     "10 s -> 110 s" symptom (ISSUES.md) are both measured in this mode.
@@ -90,8 +94,7 @@ def test_nloy_touch_keyboard_only_deterministic_under_30s():
     regression.
     """
     if not NLOY.exists():
-        print("  SKIP: NLoy corpus board absent")
-        return
+        pytest.skip("NLoy corpus board absent (corpus tier)")
     # Use a writable scratch path rather than os.devnull: analyze_pcb.py's
     # main() derives its capability-mode sidecar directory from --output's
     # parent, and /dev is root-owned (0755) on a non-root box — an

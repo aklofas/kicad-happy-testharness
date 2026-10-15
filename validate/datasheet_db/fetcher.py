@@ -50,8 +50,10 @@ class DomainRateLimiter:
     simplicity (see spec §4.5).
     """
 
-    def __init__(self, interval_seconds: float = 1.0):
+    def __init__(self, interval_seconds: float = 1.0, *, clock=time.monotonic, sleep=time.sleep):
         self.interval = interval_seconds
+        self._clock = clock
+        self._sleep = sleep
         self._locks = {}  # domain -> Lock
         self._last_seen = {}  # domain -> monotonic timestamp
         self._master = threading.Lock()
@@ -66,12 +68,12 @@ class DomainRateLimiter:
         """Block until it's OK to make a new request to `domain`."""
         lock = self._lock_for(domain)
         with lock:
-            now = time.monotonic()
+            now = self._clock()
             last = self._last_seen.get(domain, 0)
             wait_needed = (last + self.interval) - now
             if wait_needed > 0:
-                time.sleep(wait_needed)
-            self._last_seen[domain] = time.monotonic()
+                self._sleep(wait_needed)
+            self._last_seen[domain] = self._clock()
 
     def wait_for_url(self, url: str) -> None:
         """Extract domain from `url` and wait. Includes subdomain."""

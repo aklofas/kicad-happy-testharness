@@ -44,52 +44,65 @@ def test_sanitize_url_only_bad_params_drops_query():
     assert sanitize_url("https://x.com/p.pdf?sig=a&token=b") == "https://x.com/p.pdf"
 
 
+class _FakeClock:
+    def __init__(self):
+        self.now = 1000.0
+        self.slept = []
+
+    def monotonic(self):
+        return self.now
+
+    def sleep(self, s):
+        self.slept.append(s)
+        self.now += s
+
+
+def _limiter(interval):
+    clk = _FakeClock()
+    return DomainRateLimiter(interval_seconds=interval, clock=clk.monotonic, sleep=clk.sleep), clk
+
+
 def test_rate_limiter_no_wait_on_first_call():
-    import time
-    rl = DomainRateLimiter(interval_seconds=1.0)
-    t0 = time.monotonic()
+    rl, clk = _limiter(1.0)
     rl.wait("example.com")
-    elapsed = time.monotonic() - t0
-    assert elapsed < 0.1, f"first call should not wait, waited {elapsed}"
+    assert clk.slept == []
 
 
 def test_rate_limiter_waits_on_second_call_same_domain():
-    import time
-    rl = DomainRateLimiter(interval_seconds=0.2)
+    rl, clk = _limiter(0.2)
     rl.wait("example.com")
-    t0 = time.monotonic()
+    clk.now += 0.05
     rl.wait("example.com")
-    elapsed = time.monotonic() - t0
-    assert 0.15 <= elapsed <= 0.35
+    assert len(clk.slept) == 1 and abs(clk.slept[0] - 0.15) < 1e-9
 
 
 def test_rate_limiter_no_wait_for_different_domain():
-    import time
-    rl = DomainRateLimiter(interval_seconds=1.0)
+    rl, clk = _limiter(1.0)
     rl.wait("a.example.com")
-    t0 = time.monotonic()
     rl.wait("b.example.com")
-    elapsed = time.monotonic() - t0
-    assert elapsed < 0.1
+    assert clk.slept == []
 
 
 def test_rate_limiter_treats_subdomains_distinctly():
-    import time
-    rl = DomainRateLimiter(interval_seconds=1.0)
+    rl, clk = _limiter(1.0)
     rl.wait("www.example.com")
-    t0 = time.monotonic()
     rl.wait("api.example.com")
-    elapsed = time.monotonic() - t0
-    assert elapsed < 0.1
+    assert clk.slept == []
 
 
 def test_rate_limiter_extracts_domain_from_url():
-    import time
-    rl = DomainRateLimiter(interval_seconds=0.2)
+    rl, clk = _limiter(0.2)
     rl.wait_for_url("https://example.com/a.pdf")
-    t0 = time.monotonic()
     rl.wait_for_url("https://example.com/b.pdf")
-    assert time.monotonic() - t0 >= 0.15
+    assert len(clk.slept) == 1 and abs(clk.slept[0] - 0.2) < 1e-9
+
+
+def test_rate_limiter_no_sleep_after_interval_elapsed():
+    rl, clk = _limiter(0.2)
+    rl.wait("example.com")
+    clk.now += 0.5
+    rl.wait("example.com")
+    assert clk.slept == []
 
 
 def _mock_response(body: bytes, status: int = 200, content_type: str = "application/pdf"):
