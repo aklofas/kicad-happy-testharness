@@ -264,7 +264,7 @@ def test_live_blind_set_is_subset_of_tracked_blind_list():
     """Fail closed: a symbol the scanner cannot bind must be listed (shrink-only)."""
     disp = json.loads(DISP.read_text(encoding="utf-8"))
     live = am.blind_symbols(am.load_inventory(INV), am.scan_harness_imports(HARNESS),
-                            HARNESS, am.done_keys(disp))
+                            HARNESS, aliases=am.done_aliases(disp))
     tracked = am.load_blind_list(BLIND)
     new = sorted(tuple(k) for k in live if tuple(k) not in tracked)
     assert not new, f"scanner blind to {new}: fix the scanner or list them in {BLIND.name}"
@@ -281,6 +281,29 @@ def test_blind_symbols_per_file_and_gone_sites(tmp_path):
     imports = am.scan_harness_imports(tmp_path, inv)
     assert am.blind_symbols(inv, imports, tmp_path) == [["m", "sym"]]   # b.py masks nothing
     assert am.blind_symbols(inv, imports, tmp_path, skip={("m", "sym")}) == []
+
+
+def test_done_entry_is_covered_by_new_key_but_dynamic_old_binding_stays_blind(tmp_path):
+    """A done relocation is not flagged when its site file binds the NEW key, yet a
+    done entry whose old-owner site is still dynamically bound stays visible."""
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "a.py").write_text("from pcb.reader import point_in_pad\n# _point_in_pad\n")
+    (tmp_path / "tests" / "b.py").write_text("x = load()\nx._other(1)\n")       # dynamic, old owner
+    inv = {"product_head": "x", "modules": [{"module": "analyze_pcb", "product_paths": [], "symbols": [
+        {"symbol": "_point_in_pad", "sites": [{"file": "tests/a.py", "line": 1}]},
+        {"symbol": "_other", "sites": [{"file": "tests/b.py", "line": 2}]}]}]}
+    disp = {"version": 1, "product_sha": "x", "entries": [
+        {"module": "analyze_pcb", "symbol": "_point_in_pad", "disposition": "migrate",
+         "new_owner": "skills/kicad/scripts/pcb/reader.py", "new_name": "point_in_pad",
+         "round": "r03", "status": "done", "sites": 1},
+        {"module": "analyze_pcb", "symbol": "_other", "disposition": "migrate",
+         "new_owner": "skills/kicad/scripts/pcb/reader.py", "round": "r03", "status": "done", "sites": 1}]}
+    imports = am.scan_harness_imports(tmp_path, inv)
+    assert am.done_aliases(disp) == {("analyze_pcb", "_point_in_pad"): ("pcb.reader", "point_in_pad"),
+                                     ("analyze_pcb", "_other"): ("pcb.reader", "_other")}
+    assert am.blind_symbols(inv, imports, tmp_path, aliases=am.done_aliases(disp)) == [["analyze_pcb", "_other"]]
+    # the old skip-everything-done behaviour would have hidden _other entirely
+    assert am.blind_symbols(inv, imports, tmp_path, skip=am.done_keys(disp)) == []
 
 
 def test_check_done_or_retire_on_blind_list_is_unverifiable():

@@ -399,23 +399,31 @@ def _still_referenced(harness_root: Path, module: str, symbol: str, files: list[
 
 
 def blind_symbols(inventory: dict, harness_imports: list[dict],
-                  harness_root: Path = HARNESS_ROOT, skip: set | None = None) -> list[list[str]]:
+                  harness_root: Path = HARNESS_ROOT, skip: set | None = None,
+                  aliases: dict | None = None) -> list[list[str]]:
     """Inventory (module, symbol) pairs the scanner cannot fully see: some
     inventory site file still mentions the symbol but holds zero scanner
     bindings of it. Per file, so one visible site cannot mask a dynamic one.
-    `skip` holds keys to ignore (entries already migrated: their old-owner
-    sites are expected to have no bindings)."""
+    `skip` holds keys to ignore outright. `aliases` maps an old key to the
+    (new_module, new_name) a `done` relocation moved it to: a site file that
+    binds the NEW key counts as covered, so migrated entries are not flagged,
+    while a done entry whose old-owner site is still dynamically bound stays
+    visible (it would otherwise pass `check` as CLEAN — the F2 failure mode)."""
     bound: dict[tuple, set] = {}
     for h in harness_imports:
         bound.setdefault((h["module"], h["symbol"]), set()).add(h["file"])
     skip = skip or set()
+    aliases = aliases or {}
     out = []
     for m in inventory["modules"]:
         for s in m["symbols"]:
             key = (m["module"], s["symbol"])
             if not s.get("sites") or key in skip:
                 continue
-            files = sorted({x["file"] for x in s["sites"]} - bound.get(key, set()))
+            covered = set(bound.get(key, set()))
+            if key in aliases:
+                covered |= bound.get(tuple(aliases[key]), set())
+            files = sorted({x["file"] for x in s["sites"]} - covered)
             if any(_still_referenced(harness_root, *key, [f]) for f in files):
                 out.append(list(key))
     return sorted(out)
@@ -423,6 +431,16 @@ def blind_symbols(inventory: dict, harness_imports: list[dict],
 
 def done_keys(dispositions: dict) -> set:
     return {(e["module"], e["symbol"]) for e in dispositions["entries"] if e["status"] == "done"}
+
+
+def done_aliases(dispositions: dict) -> dict:
+    """{(module, symbol): (new_module, new_name)} for every `done` entry with a new_owner."""
+    out = {}
+    for e in dispositions["entries"]:
+        if e.get("status") == "done" and e.get("new_owner"):
+            out[(e["module"], e["symbol"])] = (_dotted_from_owner(e["new_owner"]),
+                                               e.get("new_name") or e["symbol"])
+    return out
 
 
 def load_blind_list(path: Path = BLIND_LIST_PATH) -> set:
@@ -500,7 +518,7 @@ def cmd_apply_map(args) -> int:
 def cmd_check(args) -> int:
     d = json.loads(Path(args.dispositions).read_text(encoding="utf-8"))
     imports = scan_harness_imports(HARNESS_ROOT)
-    live = {tuple(k) for k in blind_symbols(load_inventory(), imports, HARNESS_ROOT, done_keys(d))}
+    live = {tuple(k) for k in blind_symbols(load_inventory(), imports, HARNESS_ROOT, aliases=done_aliases(d))}
     v = check(d, imports, load_blind_list(args.blind_list) | live)
     for line in v:
         print(f"  {line}")
