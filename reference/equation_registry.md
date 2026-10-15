@@ -2,16 +2,16 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-15T18:08:28.593587+00:00
+**Last scan:** 2026-10-15T22:59:56.112782+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
 | Total equations | 105 |
-| Verified | 80 |
+| Verified | 79 |
 | Unverified | 7 |
-| Stale | 18 |
+| Stale | 19 |
 | Critical impact | 11 |
 | High impact | 34 |
 | Medium impact | 38 |
@@ -179,5 +179,5 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-081 | `generate_decoupling` | \|Z\| at target freq from ESR+ESL cap model | spice_model | medium | **verified** |
 | EQ-082 | `generate_inrush` | I_peak = V/R at t=0 (startup inrush current) | spice_model | medium | **verified** |
 | EQ-083 | `generate_lc_filter` | f₀ = 1/(2π√(LC)) testbench (validates EQ-021) | spice_model | medium | **verified** |
-| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **verified** |
+| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **stale** |
 | EQ-085 | `generate_snubber` | f_damp = 1/(2πRC) (snubber damping frequency) | spice_model | medium | **verified** |

@@ -54,10 +54,10 @@ from utils import (OUTPUTS_DIR, MANIFESTS_DIR, REPOS_DIR, list_repos,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
                    _truncate_with_hash, resolve_kicad_happy_dir)
 
-# Import sexp_parser from kicad-happy (independent of analyzer helpers)
+# Import the s-expression parser from kicad-happy (independent of analyzer helpers)
 KICAD_HAPPY_DIR = resolve_kicad_happy_dir()
 sys.path.insert(0, str(Path(KICAD_HAPPY_DIR) / "skills" / "kicad" / "scripts"))
-from sexp_parser import parse_file, find_all, find_first, get_value, get_property
+from kicad_core.sexp import parse_file, find_all, find_first, get_value, get_property
 
 # Normalization rules for Sprint 1 — deliberately empty.
 # When a mismatch class shows up repeatedly across the corpus and the

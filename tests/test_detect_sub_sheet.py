@@ -11,7 +11,7 @@ import pytest
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
-from sexp_parser import parse_file
+from kicad_core.sexp import parse_file
 from analyze_schematic import detect_sub_sheet
 
 _REPOS = _HARNESS / "repos"

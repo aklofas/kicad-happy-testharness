@@ -13,7 +13,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from project_config import _strip_jsonc  # noqa: E402
+from kicad_core.project import _strip_jsonc  # noqa: E402
 
 
 def test_comma_inside_string_survives():

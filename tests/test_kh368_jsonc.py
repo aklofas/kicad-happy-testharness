@@ -7,25 +7,26 @@ JSON string literal. That corrupts config values containing `//` (URLs) or
 `/* ... */` (arbitrary text) — silently dropping or mangling whole config
 layers.
 
-No `load_jsonc_string` entry point exists in project_config.py (only
-`load_jsonc(path)` which reads a file, and the private `_strip_jsonc(text)`
-helper). Per the task brief's fallback, these tests exercise
+No `load_jsonc_string` entry point exists (only `load_jsonc(path)` which reads a
+file, and the private `_strip_jsonc(text)` helper; both live in `kicad_core.project`
+since v3 round 3, re-exported from the old config module as a facade). Per the task brief's fallback, these tests exercise
 `_strip_jsonc` + `json.loads` directly.
 """
 
-import importlib.util
 import json
 import os
+import sys
 from pathlib import Path
 
-spec = importlib.util.spec_from_file_location(
-    "project_config", Path(os.environ["KICAD_HAPPY_DIR"]) / "skills/kicad/scripts/project_config.py")
-pc = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(pc)
+_HARNESS = Path(__file__).resolve().parent.parent
+_KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
+sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
+
+from kicad_core.project import _strip_jsonc  # noqa: E402  (v3 round 3 relocation)
 
 
 def _load(s):
-    return json.loads(pc._strip_jsonc(s))
+    return json.loads(_strip_jsonc(s))
 
 
 def test_url_in_string_survives():
