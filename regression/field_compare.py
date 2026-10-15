@@ -18,6 +18,8 @@ Modes
 """
 from __future__ import annotations
 
+import copy
+import hashlib
 import json
 import re
 from dataclasses import dataclass, field
@@ -236,22 +238,135 @@ def _walk(a: Any, b: Any, path: str, ctx: _Ctx) -> None:
         ctx.emit(path, "changed", a, b)
 
 
-def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx) -> tuple[Any, Any]:
-    """Masking seam; Task 3 replaces this body. No-op while the policy has no leaves."""
-    if policy.leaves:
-        raise NotImplementedError("policy masking lands in Task 3")
+def _all_pointers(doc: Any, path: str = "") -> set[str]:
+    out = {path}
+    if isinstance(doc, dict):
+        for k, v in doc.items():
+            out |= _all_pointers(v, join_pointer(path, k))
+    elif isinstance(doc, list):
+        for i, v in enumerate(doc):
+            out |= _all_pointers(v, join_pointer(path, i))
+    return out
+
+
+def _expand_glob(glob: str, pointers: set[str]) -> list[str]:
+    """`*` matches exactly one segment: compare segment-wise, not fnmatch over '/'."""
+    want = split_pointer(glob)
+    hits = []
+    for p in pointers:
+        toks = split_pointer(p)
+        if len(toks) == len(want) and all(w == "*" or w == t for w, t in zip(want, toks)):
+            hits.append(p)
+    return sorted(hits)
+
+
+def _shape_ok(value: Any, shape: str) -> bool:
+    if shape == "number":
+        return _kind(value) == "number"
+    rx = NAMED_SHAPES.get(shape, shape)
+    return isinstance(value, (str, int, float)) and not isinstance(value, bool) \
+        and re.search(rx, str(value)) is not None
+
+
+def _set_pointer(doc: Any, pointer: str, value: Any) -> None:
+    toks = split_pointer(pointer)
+    cur = doc
+    for t in toks[:-1]:
+        cur = cur[int(t)] if isinstance(cur, list) else cur[t]
+    last = toks[-1]
+    if isinstance(cur, list):
+        cur[int(last)] = value
+    else:
+        cur[last] = value
+
+
+def _strip(s: Any, prefix: str) -> Any:
+    return s[len(prefix):] if prefix and isinstance(s, str) and s.startswith(prefix) else s
+
+
+def _apply_policy(a: Any, b: Any, policy: Policy, ctx: _Ctx,
+                  root_prefixes: tuple[str, str] | None = None) -> tuple[Any, Any]:
+    """Apply exact-leaf masking and rewrites on deep copies; record masks/violations in ctx."""
+    a = copy.deepcopy(a)
+    b = copy.deepcopy(b)
+    rewrites = any(lf.get("rewrite") for lf in policy.leaves)
+    if root_prefixes is not None:
+        prefixes = (root_prefixes[0], root_prefixes[1])
+    elif len(policy.root_prefixes) >= 2:
+        prefixes = (policy.root_prefixes[0], policy.root_prefixes[1])
+    else:
+        prefixes = ("", "")
+        if policy.root_prefixes_from_manifest and rewrites:
+            ctx.violations.append(f"{ctx.unit}: root prefixes required but not supplied")
+    pointers = _all_pointers(a) | _all_pointers(b)
+    for leaf in policy.leaves:
+        targets = [leaf["pointer"]] if "pointer" in leaf else _expand_glob(leaf["pointer_glob"], pointers)
+        for ptr in targets:
+            fa, va = resolve_pointer(a, ptr)
+            fb, vb = resolve_pointer(b, ptr)
+            if not fa and not fb:
+                continue
+            rewrite = leaf.get("rewrite")
+            if rewrite == "strip_root_prefix":
+                if fa and isinstance(va, str):
+                    _set_pointer(a, ptr, _strip(va, prefixes[0]))
+                if fb and isinstance(vb, str):
+                    _set_pointer(b, ptr, _strip(vb, prefixes[1]))
+                continue   # compared normally after rewrite
+            if rewrite == "strip_root_prefix_keys":
+                for doc, found, val, pre in ((a, fa, va, prefixes[0]), (b, fb, vb, prefixes[1])):
+                    if not found:
+                        continue
+                    if not isinstance(val, dict):
+                        ctx.violations.append(f"{ctx.unit} {ptr}: strip_root_prefix_keys needs a dict")
+                        continue
+                    _set_pointer(doc, ptr, {_strip(k, pre): v for k, v in val.items()})
+                continue
+            # masking leaves: refuse containers, require presence on both sides
+            if (fa and _kind(va) in ("dict", "list")) or (fb and _kind(vb) in ("dict", "list")):
+                ctx.violations.append(f"{ctx.unit} {ptr}: pointer lands on a container; whole-block masking refused")
+                continue
+            if not (fa and fb):
+                continue   # real added/removed; let the walk report it
+            ctx.masked.add(ptr)
+            shape = leaf.get("shape")
+            if shape is not None:
+                for side, v in (("a", va), ("b", vb)):
+                    if not _shape_ok(v, shape):
+                        ctx.violations.append(f"{ctx.unit} {ptr}: side {side} value {v!r} fails shape {shape}")
+            eq = leaf.get("equals")
+            if eq is not None:
+                for side, doc, v in (("a", a, va), ("b", b, vb)):
+                    found, other = resolve_pointer(doc, eq)
+                    if not found or other != v:
+                        ctx.violations.append(f"{ctx.unit} {ptr}: side {side} fails equals {eq} ({v!r} vs {other!r})")
+            sib = leaf.get("sha256_of")
+            if sib is not None:
+                parent = ptr.rsplit("/", 1)[0]
+                for side, doc, v, pre in (("a", a, va, prefixes[0]), ("b", b, vb, prefixes[1])):
+                    found, p = resolve_pointer(doc, join_pointer(parent, sib))
+                    # the sibling may already have been prefix-stripped; re-add the prefix for I/O
+                    cand = [p, pre + p] if found and isinstance(p, str) else []
+                    target = next((c for c in cand if c and Path(c).is_file()), None)
+                    if target is None:
+                        ctx.violations.append(f"{ctx.unit} {ptr}: sha256_of {sib}: linked file missing on side {side}")
+                        continue
+                    if hashlib.sha256(Path(target).read_bytes()).hexdigest() != v:
+                        ctx.violations.append(f"{ctx.unit} {ptr}: sha256_of {sib} mismatch on side {side}")
     return a, b
 
 
 def compare_strict(a: Any, b: Any, policy: Policy | None, *, unit: str, analyzer: str,
-                   key_order: bool = False) -> tuple[list[Delta], list[str]]:
+                   key_order: bool = False,
+                   root_prefixes: tuple[str, str] | None = None) -> tuple[list[Delta], list[str]]:
     """Recursive field comparison. Returns (deltas, policy_violations).
 
     Two NaNs compare equal. ``key_order=True`` emits a ``key_order`` delta for any
     dict whose key sequence differs, including when the key sets differ.
+    ``root_prefixes`` = (a_root, b_root) overrides ``policy.root_prefixes``.
     """
     ctx = _Ctx(unit, analyzer, key_order)
     if policy is not None:
-        a, b = _apply_policy(a, b, policy, ctx)
+        a, b = _apply_policy(a, b, policy, ctx, root_prefixes)
     _walk(a, b, "", ctx)
     return ctx.deltas, ctx.violations
