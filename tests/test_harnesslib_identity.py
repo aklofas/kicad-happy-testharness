@@ -178,3 +178,23 @@ def test_append_validates_keys_before_writing(tmp_path):
     with pytest.raises(KeyError):
         log.append({"analyzer": "a"})
     assert not (tmp_path / "units.jsonl").exists()
+
+
+def test_valid_json_without_newline_is_torn(tmp_path, capsys):
+    p = tmp_path / "units.jsonl"
+    p.write_text('{"analyzer":"a","unit_id":"1"}\n{"analyzer":"a","unit_id":"2"}')
+    assert [r["unit_id"] for r in ident.UnitLog(tmp_path)] == ["1"]
+    assert "ignoring torn trailing line" in capsys.readouterr().err
+    log = ident.UnitLog(tmp_path)
+    log.append({"analyzer": "a", "unit_id": "3"})
+    assert [r["unit_id"] for r in ident.UnitLog(tmp_path)] == ["1", "3"]
+
+
+def test_append_is_tail_only_fast(tmp_path):
+    import time
+    log = ident.UnitLog(tmp_path)
+    t = time.monotonic()
+    for i in range(2000):
+        log.append({"analyzer": "a", "unit_id": str(i), "pad": "x" * 200})
+    assert time.monotonic() - t < 2
+    assert len(log.by_unit()) == 2000

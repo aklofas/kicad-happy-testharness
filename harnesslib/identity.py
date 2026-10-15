@@ -182,13 +182,27 @@ class UnitLog:
         self._latest: dict[str, dict] | None = None
 
     def _truncate_torn_tail(self) -> None:
-        if not self.path.exists() or self.path.stat().st_size == 0:
+        """Drop a final segment lacking a trailing newline (tail-only read)."""
+        if not self.path.exists():
             return
         with open(self.path, "rb+") as fh:
-            data = fh.read()
-            if data.endswith(b"\n"):
+            size = fh.seek(0, 2)
+            if size == 0:
                 return
-            fh.truncate(data.rfind(b"\n") + 1)
+            fh.seek(size - 1)
+            if fh.read(1) == b"\n":
+                return
+            end = size
+            cut = 0
+            while end > 0:
+                start = max(0, end - 4096)
+                fh.seek(start)
+                idx = fh.read(end - start).rfind(b"\n")
+                if idx != -1:
+                    cut = start + idx + 1
+                    break
+                end = start
+            fh.truncate(cut)
         print("units.jsonl: ignoring torn trailing line", file=sys.stderr)
 
     def append(self, record: dict) -> None:
@@ -202,17 +216,11 @@ class UnitLog:
     def __iter__(self) -> Iterator[dict]:
         if not self.path.exists():
             return iter(())
-        lines = [ln for ln in self.path.read_text(encoding="utf-8").splitlines()
-                 if ln.strip()]
-        recs = []
-        for i, line in enumerate(lines):
-            try:
-                recs.append(json.loads(line))
-            except json.JSONDecodeError:
-                if i != len(lines) - 1:
-                    raise
-                print("units.jsonl: ignoring torn trailing line", file=sys.stderr)
-        return iter(recs)
+        text = self.path.read_text(encoding="utf-8")
+        if text and not text.endswith("\n"):
+            text = text[:text.rfind("\n") + 1]
+            print("units.jsonl: ignoring torn trailing line", file=sys.stderr)
+        return iter([json.loads(ln) for ln in text.split("\n") if ln.strip()])
 
     def by_unit(self) -> dict[str, dict]:
         if self._latest is None:
