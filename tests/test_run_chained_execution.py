@@ -124,7 +124,7 @@ def test_unqualified_runs_exit_2_without_all(tmp_path):
                            capture_output=True, text=True, env=env, timeout=60)
         assert r.returncode == 2, (name, r.returncode, r.stderr)
         assert "--all" in r.stderr
-    assert not any((tmp_path / "outputs").rglob("*")) if (tmp_path / "outputs").exists() else True
+    assert list(tmp_path.rglob("*")) == []
 
 
 def test_success_removes_stale_err(tmp_path):
@@ -132,4 +132,12 @@ def test_success_removes_stale_err(tmp_path):
     out = tmp_path / "x_thermal.json"
     out.with_suffix(".err").write_text("old failure")
     rc, _, _ = run_one_thermal(_script(tmp_path, "ok", "thermal"), sch, pcb, out)
+    assert rc == 0 and not out.with_suffix(".err").exists()
+
+
+def test_emc_success_removes_stale_err(tmp_path):
+    sch, _ = _inputs(tmp_path)
+    out = tmp_path / "emc.json"
+    out.with_suffix(".err").write_text("old failure")
+    rc, _, _ = run_one_emc(_script(tmp_path, "ok", "emc"), sch, None, out)
     assert rc == 0 and not out.with_suffix(".err").exists()
