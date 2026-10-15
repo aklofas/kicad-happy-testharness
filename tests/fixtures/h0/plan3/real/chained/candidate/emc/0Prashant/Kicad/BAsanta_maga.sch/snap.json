@@ -1,0 +1,295 @@
+{
+  "analyzer_type": "emc",
+  "schema_version": "1.4.0",
+  "inputs": {
+    "source_files": [
+      "/home/aklofas/Projects/kicad-happy-testharness/results/v22x_pr44_gate/v14/schematic/0Prashant/Kicad/BAsanta_maga.sch/snap.json",
+      "/home/aklofas/Projects/kicad-happy-testharness/results/v22x_pr44_gate/v14/pcb/0Prashant/Kicad/BAsanta_maga.kicad_pcb/snap.json"
+    ],
+    "source_hashes": {
+      "/home/aklofas/Projects/kicad-happy-testharness/results/v22x_pr44_gate/v14/schematic/0Prashant/Kicad/BAsanta_maga.sch/snap.json": "a87f1b75b412d82f0c79e98afc7d6fad607016711c75d0811dde473f81d5a5e2",
+      "/home/aklofas/Projects/kicad-happy-testharness/results/v22x_pr44_gate/v14/pcb/0Prashant/Kicad/BAsanta_maga.kicad_pcb/snap.json": "87b4c2366f32d011cb18e17f6107a432dbfb4d1748f6ec65b63940365c0940c8"
+    },
+    "run_id": "20260913T071318Z-f9d114",
+    "config_hash": null,
+    "upstream_artifacts": {
+      "schematic": {
+        "path": "/home/aklofas/Projects/kicad-happy-testharness/results/v22x_pr44_gate/v14/schematic/0Prashant/Kicad/BAsanta_maga.sch/snap.json",
+        "sha256": "a87f1b75b412d82f0c79e98afc7d6fad607016711c75d0811dde473f81d5a5e2",
+        "schema_version": "1.4.0",
+        "run_id": "20260913T070713Z-a97222"
+      },
+      "pcb": {
+        "path": "/home/aklofas/Projects/kicad-happy-testharness/results/v22x_pr44_gate/v14/pcb/0Prashant/Kicad/BAsanta_maga.kicad_pcb/snap.json",
+        "sha256": "87b4c2366f32d011cb18e17f6107a432dbfb4d1748f6ec65b63940365c0940c8",
+        "schema_version": "1.4.0",
+        "run_id": "20260913T071001Z-4224f2"
+      }
+    }
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "summary": {
+    "total_findings": 2,
+    "categories_checked": 2,
+    "active": 2,
+    "suppressed": 0,
+    "by_severity": {
+      "error": 0,
+      "warning": 1,
+      "info": 1
+    },
+    "emc_risk_score": 98.5
+  },
+  "target_standard": "fcc-class-b",
+  "findings": [
+    {
+      "category": "ground_plane",
+      "severity": "info",
+      "rule_id": "GP-001",
+      "confidence": "deterministic",
+      "title": "Return path analysis data not available",
+      "description": "PCB analysis did not include return path continuity data. Run the PCB analyzer with --full flag to enable GP-001 reference plane coverage checking.",
+      "components": [],
+      "nets": [],
+      "recommendation": "Re-run PCB analysis with: python3 analyze_pcb.py <file> --full",
+      "detector": "emc_ground_plane",
+      "summary": "Return path analysis data not available",
+      "pins": [],
+      "evidence_source": "topology",
+      "report_context": {
+        "section": "Ground Plane",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "finding_id": "emc:GP-001:c6f889950823"
+    },
+    {
+      "category": "via_stitching",
+      "severity": "warning",
+      "rule_id": "VS-001",
+      "confidence": "heuristic",
+      "title": "Via stitching may be insufficient",
+      "description": "Board has 0 vias across 2500 mm\u00b2 (no vias detected). For the highest frequency on this board (150 MHz), \u03bb/20 stitching requires \u226448mm spacing.",
+      "components": [],
+      "nets": [],
+      "recommendation": "Add ground stitching vias at \u226448mm intervals, especially at board edges and near connectors.",
+      "detector": "emc_via_stitching",
+      "summary": "Via stitching may be insufficient",
+      "pins": [],
+      "evidence_source": "heuristic_rule",
+      "report_context": {
+        "section": "Via Stitching",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "suppressed": false,
+      "suppression_reason": "",
+      "stages": [
+        "layout"
+      ],
+      "finding_id": "emc:VS-001:85855106fcd4"
+    }
+  ],
+  "assessments": [],
+  "per_net_scores": [],
+  "test_plan": {
+    "frequency_bands": [
+      {
+        "band": "30-88 MHz",
+        "freq_min_hz": 30000000.0,
+        "freq_max_hz": 88000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      },
+      {
+        "band": "88-216 MHz",
+        "freq_min_hz": 88000000.0,
+        "freq_max_hz": 216000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      },
+      {
+        "band": "216-960 MHz",
+        "freq_min_hz": 216000000.0,
+        "freq_max_hz": 960000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      },
+      {
+        "band": "960-40000 MHz",
+        "freq_min_hz": 960000000.0,
+        "freq_max_hz": 40000000000.0,
+        "risk_level": "none",
+        "source_count": 0,
+        "sources": []
+      }
+    ],
+    "interface_risks": [],
+    "probe_points": []
+  },
+  "regulatory_coverage": {
+    "market": "us",
+    "applicable_standards": [
+      "FCC Part 15 Class B",
+      "FCC Part 15 Class B"
+    ],
+    "coverage_matrix": [
+      {
+        "standard": "FCC Part 15 Class B",
+        "test_type": "radiated",
+        "coverage": "minimal",
+        "checked_rules": [
+          "GP-001",
+          "VS-001"
+        ],
+        "total_applicable_rules": 23,
+        "note": "Design rule checks identify common radiation sources. Cannot predict absolute emission levels."
+      },
+      {
+        "standard": "FCC Part 15 Class B",
+        "test_type": "conducted",
+        "coverage": "indirect",
+        "checked_rules": [],
+        "total_applicable_rules": 4,
+        "note": "Switching harmonic analysis and decoupling checks. EMI filter verification not yet implemented."
+      }
+    ]
+  },
+  "category_summary": {
+    "ground_plane": {
+      "count": 1,
+      "max_severity": "info",
+      "severities": {
+        "error": 0,
+        "warning": 0,
+        "info": 1
+      },
+      "suppressed_count": 0
+    },
+    "via_stitching": {
+      "count": 1,
+      "max_severity": "warning",
+      "severities": {
+        "error": 0,
+        "warning": 1,
+        "info": 0
+      },
+      "suppressed_count": 0
+    }
+  },
+  "board_info": {
+    "board_width_mm": null,
+    "board_height_mm": null,
+    "layer_count": 0,
+    "footprint_count": 0,
+    "via_count": 0,
+    "has_stackup": false,
+    "total_components": 0,
+    "total_nets": 0
+  },
+  "elapsed_s": 0.0,
+  "audience_summary": {
+    "designer": {
+      "total_findings": 2,
+      "by_severity": {
+        "error": 0,
+        "warning": 1,
+        "info": 1
+      },
+      "by_category": {
+        "ground_plane": 1,
+        "via_stitching": 1
+      },
+      "top_issues": [
+        {
+          "category": "via_stitching",
+          "severity": "warning",
+          "rule_id": "VS-001",
+          "confidence": "heuristic",
+          "title": "Via stitching may be insufficient",
+          "description": "Board has 0 vias across 2500 mm\u00b2 (no vias detected). For the highest frequency on this board (150 MHz), \u03bb/20 stitching requires \u226448mm spacing.",
+          "components": [],
+          "nets": [],
+          "recommendation": "Add ground stitching vias at \u226448mm intervals, especially at board edges and near connectors.",
+          "detector": "emc_via_stitching",
+          "summary": "Via stitching may be insufficient",
+          "pins": [],
+          "evidence_source": "heuristic_rule",
+          "report_context": {
+            "section": "Via Stitching",
+            "impact": "",
+            "standard_ref": ""
+          },
+          "suppressed": false,
+          "suppression_reason": "",
+          "stages": [
+            "layout"
+          ],
+          "finding_id": "emc:VS-001:85855106fcd4"
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 1,
+      "by_category": {
+        "via_stitching": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "VS-001",
+          "severity": "warning",
+          "summary": "Via stitching may be insufficient",
+          "recommendation": "Add ground stitching vias at \u226448mm intervals, especially at board edges and near connectors.",
+          "category": "via_stitching"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "low",
+      "blocker_count": 0,
+      "warning_count": 1,
+      "stage_readiness": {
+        "schematic": "pass",
+        "layout": "needs_review",
+        "pre_fab": "pass",
+        "bring_up": "pass"
+      },
+      "one_liner": "1 warning across 1 category."
+    }
+  },
+  "trust_summary": {
+    "total_findings": 2,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 1,
+      "heuristic": 1,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 1,
+      "heuristic_rule": 1,
+      "symbol_footprint": 0,
+      "bom": 0,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 0.0
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20260913T071318Z-f9d114"
+  }
+}

@@ -86,15 +86,17 @@ SMOKE_TESTS = [
     "tests/test_b6_reviewer_output_invariants.py",    # 16 tests — reviewer-output replay + invariants (B6)
     "tests/test_top_level_sheets.py",                 # 3 tests — top_level_sheets merge + power_symbols refresh (PR #19)
     "tests/test_b9_review_metrics.py",                # 12 tests — review metrics runner + demo packet (B9)
-    "tests/test_field_compare_policy.py",             # 21 tests — normalization policy loader (H0 plan 3)
+    "tests/test_field_compare_policy.py",             # 22 tests — normalization policy loader (H0 plan 3)
     "tests/test_field_compare_strict.py",             # 21 tests — strict pointer comparison
-    "tests/test_field_compare_masking.py",            # 21 tests — exact-leaf masking + linkage
-    "tests/test_field_compare_trees.py",              # 12 tests — raw mode + field_report v1
-    "tests/test_field_compare_budget.py",             # 48 tests — budget records + evaluate_budget
+    "tests/test_field_compare_masking.py",            # 28 tests — exact-leaf masking + linkage
+    "tests/test_field_compare_trees.py",              # 20 tests — raw mode + field_report v1
+    "tests/test_field_compare_budget.py",             # 49 tests — budget records + evaluate_budget
     "tests/test_compare_snap_trees_cli.py",           # 12 tests — CLI exit codes
     "tests/test_field_compare_run_modes.py",          # 4 tests — gate hook
     "tests/test_run_corpus_gate_modes.py",            # 4 tests — gate wiring (apply_modes, --budget)
     "tests/test_field_compare_real_pr44.py",          # 4 tests — real PR #44 pairs
+    "tests/test_field_compare_real_chained.py",       # 5 tests — real chained pair (C1 source_hashes)
+    "tests/test_field_compare_budgeted_report.py",    # 7 tests — shared budgeted_report + identity
 ]
 
 
