@@ -2610,10 +2610,9 @@ surface that is missing from the set shows up as `new_unknown` (WARN).
 ### 26c. Run the gate, staged
 
 ```bash
-G="--baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14"
-python3 regression/run_corpus_gate.py $G --gate-dir results/<label>_gate --label <label> --cross-section smoke     --jobs 16
-python3 regression/run_corpus_gate.py $G --gate-dir results/<label>_gate --label <label> --cross-section quick_200 --jobs 16
-python3 regression/run_corpus_gate.py $G --gate-dir results/<label>_gate --label <label> --all                    --jobs 16   # full
+python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14 --gate-dir results/<label>_gate --label <label> --cross-section smoke --jobs 16
+python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14 --gate-dir results/<label>_gate --label <label> --cross-section quick_200 --jobs 16
+python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14 --gate-dir results/<label>_gate --label <label> --all --jobs 16   # full
 ```
 
 `regression/run_v14_gate.py` is now only a compatibility wrapper (kept one
@@ -2792,7 +2791,7 @@ shared LOG / memory), delete both trees:
 rm -rf results/<label>_gate/baseline results/<label>_gate/candidate
 ```
 
-**Never delete** `manifest.json`, `units.jsonl`, `diff/`, `rollup_*`; keep the rollup JSON/CSVs, and any adjudication files
+**Never delete** `manifest.json`, `units.jsonl`, `diff/` or `rollup_*`. Keep the rollup JSON/CSVs, and any adjudication files
 (`adjudication_*.txt`, `affected_repos.txt`) — ~900M total, and the only
 artifacts the §26g adjudication recipe and `--gate-rollup` consume after
 the fact.

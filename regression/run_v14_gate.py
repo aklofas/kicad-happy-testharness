@@ -27,6 +27,13 @@ def _note(msg):
     print(f"note: run_v14_gate.py: {msg}", file=sys.stderr)
 
 
+def _need(argv, i, flag):
+    if i >= len(argv):
+        print(f"error: missing value for {flag}", file=sys.stderr)
+        raise SystemExit(2)
+    return argv[i]
+
+
 def translate_argv(argv):
     out, i = [], 0
     while i < len(argv):
@@ -38,7 +45,7 @@ def translate_argv(argv):
         elif flag == "--timeout":
             if not eq:
                 i += 1
-                val = argv[i] if i < len(argv) else ""
+                val = _need(argv, i, flag)
             i += 1
             try:
                 long_tail = int(val) > 120
@@ -52,9 +59,13 @@ def translate_argv(argv):
         elif flag in _RENAME:
             if not eq:
                 i += 1
-                val = argv[i] if i < len(argv) else ""
+                val = _need(argv, i, flag)
             out += [_RENAME[flag], val]
             i += 1
+        elif flag in ("--baseline-dir", "--candidate-dir", "--gate-dir") and not eq:
+            _need(argv, i + 1, flag)
+            out += [a, argv[i + 1]]
+            i += 2
         else:
             out.append(a)
             i += 1

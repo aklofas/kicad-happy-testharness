@@ -45,3 +45,20 @@ def test_symmetric_note_and_equals_forms(capsys):
 def test_wrapper_reexports_criteria_helpers():
     assert wrapper._compute_pass_criteria is gate._compute_pass_criteria
     assert wrapper._print_summary is gate._print_summary
+
+
+def test_timeout_equals_form():
+    new = wrapper.translate_argv(["--all", "--timeout=600"])
+    assert new[new.index("--profile") + 1] == "long-tail" and "--timeout=600" not in new
+
+
+def test_unknown_flag_passes_through():
+    assert "--bogus" in wrapper.translate_argv(["--all", "--bogus"])
+
+
+def test_missing_value_exits_2():
+    import pytest
+    for flag in ("--v14-dir", "--timeout", "--baseline-dir", "--gate-dir"):
+        with pytest.raises(SystemExit) as e:
+            wrapper.translate_argv(["--all", flag])
+        assert e.value.code == 2
