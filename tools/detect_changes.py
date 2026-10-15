@@ -8,6 +8,14 @@ Usage:
     python3 detect_changes.py                    # Diff HEAD vs HEAD~1
     python3 detect_changes.py --since HEAD~5     # Diff against older commit
     python3 detect_changes.py --json
+
+Exit codes (change detection, the default command):
+    0  report complete
+    1  report emitted but parse incomplete: a changed .py file has a
+       SyntaxError, so its affected_types are widened to every ENTRY_POINTS
+       type (never narrower than the import-graph result)
+    2  usage or git failure (product dir missing, not a repo, bad ref); with
+       --json, stdout still carries {"error": ..., "affected_types": <all>}
 """
 
 import argparse
@@ -49,23 +57,34 @@ GLOB_PATTERNS = {
 }
 
 
-def get_changed_files(kicad_happy_dir, since="HEAD~1"):
-    """Changed files in kicad-happy since `since`. Returns None when git fails
-    (not a repo, unknown ref, shallow clone) - callers must treat None as a
-    diagnostic failure, never as 'no changes' (report B12)."""
+def _changed_files(kicad_happy_dir, since):
+    """(files, None) on success, (None, error message) when git fails."""
     try:
         result = subprocess.run(
             ["git", "diff", "--name-only", since],
             capture_output=True, text=True, cwd=str(kicad_happy_dir), timeout=10,
         )
     except (OSError, subprocess.TimeoutExpired) as e:
-        print(f"error: git diff failed in {kicad_happy_dir}: {e}", file=sys.stderr)
-        return None
+        return None, f"git diff failed in {kicad_happy_dir}: {e}"
     if result.returncode != 0:
-        print(f"error: git diff --name-only {since} failed in {kicad_happy_dir}: "
-              f"{result.stderr.strip()}", file=sys.stderr)
-        return None
-    return [f.strip() for f in result.stdout.splitlines() if f.strip()]
+        return None, (f"git diff --name-only {since} failed in {kicad_happy_dir}: "
+                      f"{result.stderr.strip()}")
+    return [f.strip() for f in result.stdout.splitlines() if f.strip()], None
+
+
+def get_changed_files(kicad_happy_dir, since="HEAD~1"):
+    """Changed files in kicad-happy since `since`. Returns None when git fails
+    (not a repo, unknown ref, shallow clone) - callers must treat None as a
+    diagnostic failure, never as 'no changes' (report B12)."""
+    files, err = _changed_files(kicad_happy_dir, since)
+    if err:
+        print(f"error: {err}", file=sys.stderr)
+    return files
+
+
+def all_entry_point_types():
+    """Every analyzer type any entry point evidences: the conservative scope."""
+    return {t for ts in ENTRY_POINTS.values() for t in ts}
 
 
 def map_file_to_types(filepath):
@@ -245,7 +264,12 @@ def build_module_index(kicad_happy_dir):
 
 
 def resolve_import(importer_rel, node, index):
-    """Root-relative paths an Import/ImportFrom node resolves to inside the tree."""
+    """Root-relative paths an Import/ImportFrom node resolves to inside the tree.
+
+    Importing `a.b.c` executes `a/__init__.py` and `a/b/__init__.py` first, so
+    every indexed ancestor package `__init__.py` of a resolved name is an edge
+    too (spec §4.2).
+    """
     out = set()
 
     def walk_up(name):
@@ -255,11 +279,19 @@ def resolve_import(importer_rel, node, index):
             name = name.rpartition(".")[0]
         return None
 
+    def ancestors(name):
+        parts = name.split(".")
+        for i in range(1, len(parts)):
+            hit = index.get(".".join(parts[:i]))
+            if hit and hit.endswith("/__init__.py"):
+                out.add(hit)
+
     if isinstance(node, ast.Import):
         for alias in node.names:
             hit = walk_up(alias.name)
             if hit:
                 out.add(hit)
+                ancestors(alias.name)
         return out
     if not isinstance(node, ast.ImportFrom):
         return out
@@ -281,6 +313,7 @@ def resolve_import(importer_rel, node, index):
     hit = walk_up(base)
     if hit:
         out.add(hit)
+        ancestors(base)
     return out
 
 
@@ -431,11 +464,22 @@ def main():
         cmd_generate_map(args)
         return 0
 
-    kicad_happy = resolve_kicad_happy_dir()
-
-    files = get_changed_files(kicad_happy, args.since)
-    if files is None:
+    def fail(msg):
+        print(f"error: {msg}", file=sys.stderr)
+        if args.json:
+            json.dump({"error": msg, "affected_types": sorted(all_entry_point_types())},
+                      sys.stdout, indent=2)
+            print()
         return 2
+
+    try:
+        kicad_happy = resolve_kicad_happy_dir()
+    except SystemExit:
+        return fail("cannot resolve the product dir (KICAD_HAPPY_DIR)")
+
+    files, err = _changed_files(kicad_happy, args.since)
+    if files is None:
+        return fail(err)
     if not files:
         if args.json:
             json.dump({"changed_files": 0, "affected_types": [],
@@ -455,10 +499,7 @@ def main():
         funcs = get_changed_functions(kicad_happy, filepath, args.since)
         parse_incomplete = funcs is None
         if parse_incomplete:
-            parts = filepath.split("/")
-            same_skill = {t for ep, ts in ENTRY_POINTS.items()
-                          if ep.split("/")[1:2] == parts[1:2] for t in ts}
-            types = same_skill or types
+            types = types | all_entry_point_types()   # conservative: all affected
             funcs = []
         affected_types |= types
         detectors = map_functions_to_detectors(filepath, funcs)
@@ -470,6 +511,8 @@ def main():
             "detectors": detectors,
             "parse_incomplete": parse_incomplete,
         })
+    any_incomplete = any(fd["parse_incomplete"] for fd in file_details)
+    rc = 1 if any_incomplete else 0
 
     actions = recommend_actions(affected_types)
 
@@ -480,9 +523,10 @@ def main():
             "affected_types": sorted(affected_types),
             "files": file_details,
             "actions": actions,
+            "parse_incomplete": any_incomplete,
         }, sys.stdout, indent=2)
         print()
-        return 0
+        return rc
 
     # Text output
     print(f"kicad-happy changes since {args.since}:")
@@ -501,13 +545,15 @@ def main():
         if fd["detectors"]:
             print(f"    Detectors: {', '.join(fd['detectors'])}")
         if fd["parse_incomplete"]:
-            print("    (parse incomplete: SyntaxError; types widened to the whole skill)")
+            print("    (parse incomplete: SyntaxError; types widened to every analyzer type)")
 
     if actions:
         print(f"\nRecommended actions:")
         for a in actions:
             print(f"  $ {a}")
-    return 0
+    if any_incomplete:
+        print("\nPARSE INCOMPLETE: exit 1 (scope widened to all affected)")
+    return rc
 
 
 if __name__ == "__main__":

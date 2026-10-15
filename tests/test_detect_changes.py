@@ -1,4 +1,4 @@
-"""Unit tests for tools/detect_changes.py — map_file_to_types."""
+"""Unit tests for tools/detect_changes.py — type mapping, import graph, CLI exit map."""
 
 TIER = "unit"
 
@@ -88,22 +88,6 @@ def test_unknown_file_returns_empty():
 def test_unknown_path_returns_empty():
     result = map_file_to_types("docs/some/doc.txt")
     assert result == set()
-
-
-if __name__ == "__main__":
-    tests = [(name, obj) for name, obj in globals().items()
-             if name.startswith("test_") and callable(obj)]
-    passed = failed = 0
-    for name, fn in sorted(tests):
-        try:
-            fn()
-            passed += 1
-            print(f"  PASS: {name}")
-        except AssertionError as e:
-            failed += 1
-            print(f"  FAIL: {name}: {e}")
-    print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
-    sys.exit(1 if failed else 0)
 
 
 import json
@@ -211,3 +195,74 @@ def test_from_import_walks_up_to_indexed_prefix():
     node = ast.parse("from schematic.nothing_here import y").body[0]
     assert dc.resolve_import("skills/kicad/scripts/analyze_schematic.py", node, idx) == \
         {"skills/kicad/scripts/schematic/__init__.py"}
+
+
+def test_submodule_import_edges_every_ancestor_package_init():
+    # from schematic.reader import x executes schematic/__init__.py first (spec 4.2)
+    g = dc._build_dependency_graph(FAKE)
+    deps = g["skills/kicad/scripts/analyze_schematic.py"]
+    assert "skills/kicad/scripts/schematic/reader.py" in deps
+    assert "skills/kicad/scripts/schematic/__init__.py" in deps
+
+
+def test_dotted_import_edges_nested_ancestor_inits(tmp_path):
+    scripts = tmp_path / "skills" / "kicad" / "scripts"
+    (scripts / "env" / "sch").mkdir(parents=True)
+    (scripts / "env" / "__init__.py").write_text("")
+    (scripts / "env" / "sch" / "__init__.py").write_text("")
+    (scripts / "env" / "sch" / "model.py").write_text("X = 1\n")
+    (scripts / "a.py").write_text("from env.sch.model import X\n")
+    (scripts / "b.py").write_text("import env.sch.model\n")
+    g = dc._build_dependency_graph(tmp_path)
+    want = {"skills/kicad/scripts/env/__init__.py", "skills/kicad/scripts/env/sch/__init__.py",
+            "skills/kicad/scripts/env/sch/model.py"}
+    assert g["skills/kicad/scripts/a.py"] == want
+    assert g["skills/kicad/scripts/b.py"] == want
+
+
+def _git(cwd, *args):
+    subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c",
+                    "commit.gpgsign=false", *args], cwd=str(cwd), check=True,
+                   capture_output=True, text=True)
+
+
+def test_syntax_error_cli_widens_to_all_types_and_exits_1(tmp_path):
+    prod = tmp_path / "prod"
+    f = prod / "skills" / "kicad" / "scripts" / "kicad_utils.py"
+    f.parent.mkdir(parents=True)
+    f.write_text("def ok():\n    return 1\n")
+    _git(prod, "init", "-q")
+    _git(prod, "add", "-A")
+    _git(prod, "commit", "-qm", "good")
+    f.write_text("def broken(:\n    return 1\n")
+    tool = Path(__file__).resolve().parent.parent / "tools" / "detect_changes.py"
+    r = subprocess.run([sys.executable, str(tool), "--json", "--since", "HEAD"],
+                       capture_output=True, text=True,
+                       env={**os.environ, "KICAD_HAPPY_DIR": str(prod)})
+    assert r.returncode == 1, r.stdout + r.stderr
+    out = json.loads(r.stdout)
+    every = sorted(dc.all_entry_point_types())
+    assert out["parse_incomplete"] is True
+    assert out["affected_types"] == every
+    assert out["files"][0]["affected_types"] == every
+    assert out["files"][0]["parse_incomplete"] is True
+
+
+def test_git_failure_json_emits_all_affected_scope(tmp_path):
+    (tmp_path / "skills").mkdir()
+    tool = Path(__file__).resolve().parent.parent / "tools" / "detect_changes.py"
+    r = subprocess.run([sys.executable, str(tool), "--json"], capture_output=True, text=True,
+                       env={**os.environ, "KICAD_HAPPY_DIR": str(tmp_path),
+                            "GIT_CEILING_DIRECTORIES": str(tmp_path.parent)})
+    assert r.returncode == 2, r.stdout + r.stderr
+    out = json.loads(r.stdout)
+    assert out["affected_types"] == sorted(dc.all_entry_point_types())
+    assert "git" in out["error"].lower()
+
+
+def test_missing_product_dir_is_exit_2_with_scope(tmp_path):
+    tool = Path(__file__).resolve().parent.parent / "tools" / "detect_changes.py"
+    r = subprocess.run([sys.executable, str(tool), "--json"], capture_output=True, text=True,
+                       env={**os.environ, "KICAD_HAPPY_DIR": str(tmp_path / "nope")})
+    assert r.returncode == 2, r.stdout + r.stderr
+    assert json.loads(r.stdout)["affected_types"] == sorted(dc.all_entry_point_types())
