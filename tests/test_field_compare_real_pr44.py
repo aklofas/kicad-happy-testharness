@@ -49,6 +49,10 @@ def test_rail_flip_pair_budget_claims_everything_with_zero_residuals():
     assert ev["clean"] is True
     assert set(ev["claimed_counts"]) == {"rail-flip-finding", "rail-flip-net-classification", "rail-flip-statistics",
                                          "rail-flip-summaries", "rail-flip-audience", "rail-flip-test-coverage"}
+    # sound only because the six classes' path domains are pairwise disjoint on this data;
+    # evaluate_budget allows multi-claiming, which would double-count in this sum
+    claimed_paths = [d["path"] for c in ev["claimed"].values() for d in c]
+    assert len(claimed_paths) == len(set(claimed_paths)), "a delta was claimed by two classes"
     assert sum(ev["claimed_counts"].values()) == rep["summary"]["deltas"]
 
 
