@@ -515,10 +515,20 @@ class BudgetError(ValueError):
     """Malformed budget record or unusable predicate."""
 
 
+def _split_predicate(spec: Any, cid: str) -> tuple[str, str]:
+    mod, sep, fn = spec.partition(":") if isinstance(spec, str) else ("", "", "")
+    if not (sep and mod.isidentifier() and fn.isidentifier()):
+        raise BudgetError(f"class {cid}: predicate must be 'module:function' with a bare module "
+                          f"name under regression.budgets, got {spec!r}")
+    return mod, fn
+
+
 def _validate_class(i: int, c: Any) -> None:
     if not isinstance(c, dict) or "id" not in c or "path_glob" not in c:
         raise BudgetError(f"class {i}: 'id' and 'path_glob' are required")
     cid = c["id"]
+    if not isinstance(cid, str) or not cid:
+        raise BudgetError(f"class {i}: id must be a non-empty string")
     unknown = set(c) - _CLASS_KEYS
     if unknown:
         raise BudgetError(f"class {cid}: unknown key(s) {sorted(unknown)}")
@@ -548,9 +558,7 @@ def _validate_class(i: int, c: Any) -> None:
         if not isinstance(ub, dict) or set(ub) != {"max_units"} or isinstance(mu, bool) or not isinstance(mu, int) or mu < 0:
             raise BudgetError(f"class {cid}: unit_bound must be {{\"max_units\": non-negative int}}")
     if "predicate" in c:
-        mod, _, fn = str(c["predicate"]).partition(":")
-        if not mod or not fn:
-            raise BudgetError(f"class {cid}: predicate must be 'module:function', got {c['predicate']!r}")
+        _split_predicate(c["predicate"], cid)
 
 
 def load_budget(path: Path) -> dict:
@@ -570,8 +578,12 @@ def load_budget(path: Path) -> dict:
         raise BudgetError("relock must be a boolean")
     if not isinstance(b["classes"], list):
         raise BudgetError("classes must be a list")
+    seen = set()
     for i, c in enumerate(b["classes"]):
         _validate_class(i, c)
+        if c["id"] in seen:
+            raise BudgetError(f"duplicate class id {c['id']!r}")
+        seen.add(c["id"])
     return b
 
 
@@ -624,16 +636,14 @@ def _direction_ok(cls: dict, delta: Delta) -> bool:
     return {"up": sa > sb, "down": sa < sb, "none": sa == sb}[d]
 
 
-def _load_predicate(spec: str):
-    mod, _, fn = spec.partition(":")
-    if not mod or not fn:
-        raise BudgetError(f"predicate must be 'module:function', got {spec!r}")
+def _load_predicate(spec: str, cid: str = "?"):
+    mod, fn = _split_predicate(spec, cid)
     try:
-        f = getattr(importlib.import_module(mod), fn)
+        f = getattr(importlib.import_module(f"regression.budgets.{mod}"), fn)
     except (ImportError, AttributeError) as e:
-        raise BudgetError(f"predicate {spec!r} cannot be loaded: {e}") from e
+        raise BudgetError(f"class {cid}: predicate {spec!r} cannot be loaded: {e}") from e
     if not callable(f):
-        raise BudgetError(f"predicate {spec!r} is not callable")
+        raise BudgetError(f"class {cid}: predicate {spec!r} is not callable")
     return f
 
 
@@ -659,22 +669,22 @@ def _class_claims(cls: dict, delta: Delta, docs, pred) -> bool:
 def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = None,
                     missing_units: int = 0) -> dict:
     """Classify deltas against budget classes. A delta is claimed iff ALL selectors of some class match."""
-    preds = {c["id"]: (_load_predicate(c["predicate"]) if c.get("predicate") else None)
-             for c in budget["classes"]}
-    claimed: dict[str, list[Delta]] = {c["id"]: [] for c in budget["classes"]}
+    classes = budget["classes"]
+    preds = [_load_predicate(c["predicate"], str(c.get("id"))) if c.get("predicate") else None for c in classes]
+    claimed: list[list[Delta]] = [[] for _ in classes]
     residuals: list[Delta] = []
     for d in deltas:
         hit = False
-        for c in budget["classes"]:
-            if _class_claims(c, d, docs, preds[c["id"]]):
-                claimed[c["id"]].append(d)
+        for i, c in enumerate(classes):
+            if _class_claims(c, d, docs, preds[i]):
+                claimed[i].append(d)
                 hit = True
         if not hit:
             residuals.append(d)
     violations = []
-    for c in budget["classes"]:
+    for i, c in enumerate(classes):
         bound = (c.get("unit_bound") or {}).get("max_units")
-        n_units = len({d.unit for d in claimed[c["id"]]})
+        n_units = len({d.unit for d in claimed[i]})
         if bound is not None and n_units > bound:
             violations.append(f"class {c['id']} claimed {n_units} units > max_units {bound}")
     allowed_missing = int(budget.get("unexplained_missing_units_allowed", 0))
@@ -682,7 +692,7 @@ def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = No
         violations.append(f"{missing_units} missing units > unexplained_missing_units_allowed {allowed_missing}")
     clean = len(residuals) <= int(budget.get("unexplained_deltas_allowed", 0)) and not violations
     return {"budget_id": budget["budget_id"], "clean": clean,
-            "claimed": {k: [d.to_json() for d in v] for k, v in claimed.items()},
-            "claimed_counts": {k: len(v) for k, v in claimed.items() if v},
-            "claimed_units": {k: len({d.unit for d in v}) for k, v in claimed.items() if v},
+            "claimed": {c["id"]: [d.to_json() for d in claimed[i]] for i, c in enumerate(classes)},
+            "claimed_counts": {c["id"]: len(claimed[i]) for i, c in enumerate(classes) if claimed[i]},
+            "claimed_units": {c["id"]: len({d.unit for d in claimed[i]}) for i, c in enumerate(classes) if claimed[i]},
             "residuals": [d.to_json() for d in residuals], "violations": violations}

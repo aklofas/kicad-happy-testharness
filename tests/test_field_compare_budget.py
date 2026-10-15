@@ -188,21 +188,58 @@ def test_unit_bound_counts_distinct_units_not_deltas():
     assert res["clean"] and res["claimed_counts"] == {"c": 3} and res["claimed_units"] == {"c": 1}
 
 
-def test_predicate_module_is_consulted():
+@pytest.fixture
+def pred_mod(monkeypatch):
+    import sys
+    from tests.fixtures.h0.plan3.budgets import pred_mod as m
+    monkeypatch.setitem(sys.modules, "regression.budgets.pred_mod", m)
+
+
+def test_predicate_module_is_consulted(pred_mod):
     b = load_budget(FIX / "rs001_only.json")
     b["classes"].append({"id": "pred-class", "path_glob": "/statistics/**",
-                         "predicate": "tests.fixtures.h0.plan3.budgets.pred_mod:nets_grew_by_one"})
+                         "predicate": "pred_mod:nets_grew_by_one"})
     ok = evaluate_budget([_d("/statistics/total_nets", before=3, after=4)], b, docs=_docs())
     bad = evaluate_budget([_d("/statistics/total_nets", before=3, after=9)], b, docs=_docs())
     assert ok["clean"] and not bad["clean"]
 
 
-@pytest.mark.parametrize("spec", ["no_such_pkg_xyz.mod:fn",
-                                  "tests.fixtures.h0.plan3.budgets.pred_mod:missing_fn"])
-def test_predicate_import_failure_is_budget_error(spec):
+@pytest.mark.parametrize("spec", ["no_such_mod_xyz:fn", "pred_mod:missing_fn"])
+def test_predicate_import_failure_is_budget_error(spec, pred_mod):
     b = _budget([{"id": "c", "path_glob": "/a", "predicate": spec}])
     with pytest.raises(BudgetError, match="predicate"):
         evaluate_budget([_d("/a")], b)
+
+
+@pytest.mark.parametrize("spec", ["os:getcwd", "os.path:join", "tests.fixtures.h0.plan3.budgets.pred_mod:nets_grew_by_one",
+                                  "regression.budgets.x:f", ":f", "pred_mod:", "pred_mod"])
+def test_predicate_scope_rejected(tmp_path, spec):
+    cls = {"id": "c", "path_glob": "/a", "predicate": spec}
+    if spec != "os:getcwd":     # bare names pass load; they fail on import under regression.budgets
+        with pytest.raises(BudgetError, match="class c"):
+            load_budget(_write(tmp_path, _budget([cls])))
+    with pytest.raises(BudgetError, match="class c"):
+        evaluate_budget([_d("/a")], _budget([cls]))
+
+
+def test_duplicate_or_bad_class_ids_rejected(tmp_path):
+    with pytest.raises(BudgetError, match="duplicate class id 'c'"):
+        load_budget(_write(tmp_path, _budget([{"id": "c", "path_glob": "/a"}, {"id": "c", "path_glob": "/b"}])))
+    for bad in ("", 3, None):
+        with pytest.raises(BudgetError, match="id"):
+            load_budget(_write(tmp_path, _budget([{"id": bad, "path_glob": "/a"}])))
+
+
+def test_evaluate_keeps_state_per_class_even_with_unvalidated_duplicate_ids(pred_mod):
+    b = _budget([{"id": "x", "path_glob": "/s/*", "predicate": "pred_mod:nets_grew_by_one"},
+                 {"id": "y", "path_glob": "/t/*", "unit_bound": {"max_units": 0}}])
+    res = evaluate_budget([_d("/s/a", before=1, after=9), _d("/t/a")], b)
+    assert [r["path"] for r in res["residuals"]] == ["/s/a"]
+    assert res["claimed_counts"] == {"y": 1} and len(res["violations"]) == 1
+    dup = _budget([{"id": "x", "path_glob": "/s/*", "predicate": "pred_mod:nets_grew_by_one"},
+                   {"id": "x", "path_glob": "/t/*"}])
+    res = evaluate_budget([_d("/s/a", before=1, after=9)], dup)
+    assert len(res["residuals"]) == 1     # first class's predicate not overwritten by second
 
 
 def test_double_star_glob_and_op_filter():
