@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-15 later (H0 plan 3: field-level comparator raw/strict/budgeted + volatile-leaves-v1 + budgets + gate --budget, comparator suite 176, unit tier 2,046 pass / 1 xfail; prior: H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files))
+Last updated: 2026-10-15 later (2) (H0 plan 4: package-aware scanners + literal-tag policy + coverage baseline @6a91aaa + API inventory adoption; unit tier 2,103 pass / 1 xfail; KH-445, TH-065, TH-066 filed; prior: H0 plan 3: field-level comparator raw/strict/budgeted + volatile-leaves-v1 + budgets + gate --budget, comparator suite 176, unit tier 2,046 pass / 1 xfail; prior: H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files))
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,28 @@ Last updated: 2026-10-15 later (H0 plan 3: field-level comparator raw/strict/bud
 ---
 
 ## Completed batches
+
+### 2026-10-15 later (2) — H0 plan 4 landed (local, unpushed)
+
+One shared AST walker (`tools/source_scan.py`: recursive `skills/*/scripts/**`, root-relative
+identity, emit-site extraction under the literal-tag policy, shrink-only exception ledger
+`tools/scan_exceptions.json` = 53 EMC positional + 2 `Det.SHORTED_TWO_PIN` + 1 `rule_id=_rid`
+UC loop, coverage snapshot/diff with `check --accept-baseline` ratchet) consumed by
+`discover_versioned_detectors`, the B5 invariants test (empty tree now FAILS), `detect_changes`
+(package-qualified import graph incl. relative/sibling-package imports, all nine entry points,
+exit 2 on git failure, exit 1 on parse failure widening to all types), `test_python_compat`
+(recursive policy with per-file declared allowances), and the audit tools (recursive roots,
+root-relative registries: constants 358→719 entries with 14 newly visible critical unverified,
+equations 106 with 17 verified→stale as genuine drift; `relocate --map` consumes the §9
+relocation shape). `tools/SCANNER_POLICY.md` published (→ product CONTRIBUTING ask).
+Baseline `reference/scan_coverage_baseline.json` @6a91aaa: 90 files / 108 sites / 105 EQ /
+719 constants; required offline gate `tests/test_scan_coverage_gate.py`; RUNBOOK 1i. API
+inventory frozen (`reference/product_api/inventory_6a91aaa.json`, 308 symbols) with
+dispositions 180 undecided / 78 keep-contract / 48 migrate / 2 retire; `tools/api_migration.py
+status|apply-map|check` (alias-aware binding census, shrink-only blind list, UNVERIFIABLE for
+blind done/retire entries; `check` legitimately FAILs on the one `normalize_severity` binding
+until H1). Filed KH-445 (`EQ-042` tags two equations), TH-065 (function-scope `name:line`
+churn), TH-066 (audit tools walk 58 of 90 walker files). Unit tier 2,103 passed / 1 xfailed.
 
 ### 2026-10-15 later — H0 plan 3 landed (local, unpushed)
 
