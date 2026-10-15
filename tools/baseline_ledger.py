@@ -30,9 +30,13 @@ def check_identities(checks: dict) -> list[dict]:
         if r.get("passed") or r.get("aspirational"):
             continue
         kind = "error" if r.get("error") else "fail"
+        repo, project, file = r.get("repo"), r.get("project"), r.get("file")
+        # run_checks parse-error records carry no repo/project: key them on the file alone
+        ident = (f"{repo}/{project}/{file}::{r['id']}" if repo and project
+                 else f"{file or '?'}::{r['id']}")
         out.append({
-            "identity": f"{r['repo']}/{r['project']}/{r['file']}::{r['id']}",
-            "id": r["id"], "repo": r["repo"], "project": r["project"], "file": r["file"],
+            "identity": ident,
+            "id": r["id"], "repo": repo, "project": project, "file": file,
             "kind": kind, "actual": r.get("actual"), "expected": r.get("expected"),
             "error": r.get("error"), "cause": "unreviewed", "accepted_by": None,
         })

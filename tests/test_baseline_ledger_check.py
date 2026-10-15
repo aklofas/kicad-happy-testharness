@@ -48,6 +48,34 @@ def test_ledgered_baseline_timeout_is_not_new():
     assert new["timeout_units"] == []
 
 
+def _timeout_side():
+    return {"exit_code": None, "status": "timeout", "output_sha256": None, "elapsed_s": 120.0}
+
+
+def test_ledgered_both_side_timeout_is_not_new():
+    # A/A self-check shape: the ledgered unit times out on BOTH sides
+    rec = json.loads(UNITS[1])
+    assert rec["baseline"]["status"] == rec["candidate"]["status"] == "timeout"
+    new = blc.new_identities(LEDGER, units_lines=[UNITS[1]])
+    assert new["timeout_units"] == []
+
+
+def test_unledgered_both_side_timeout_is_new():
+    rec = {"unit_id": "o/r8/x", "analyzer": "pcb", "input_sha256": "ee", "baseline": _timeout_side(),
+           "candidate": _timeout_side(), "verdict": "SKIP", "reason": "both_failed"}
+    new = blc.new_identities(LEDGER, units_lines=[json.dumps(rec)])
+    assert new["timeout_units"] == ["pcb/o/r8/x"]
+
+
+def test_candidate_only_timeout_on_ledgered_identity_is_new():
+    # ledgered as a baseline timeout, but this time only the candidate timed out
+    rec = json.loads(UNITS[1])
+    rec["baseline"] = {"exit_code": 0, "status": "ok", "output_sha256": "y", "elapsed_s": 90.0}
+    rec["verdict"], rec["reason"] = "FAIL", "candidate timeout"
+    new = blc.new_identities(LEDGER, units_lines=[json.dumps(rec)])
+    assert new["timeout_units"] == ["pcb/o/r5/slow (candidate)"]
+
+
 def test_run_check_exit_codes(tmp_path, capsys):
     led = tmp_path / "ledger.json"
     led.write_text(json.dumps(LEDGER))
@@ -58,7 +86,8 @@ def test_run_check_exit_codes(tmp_path, capsys):
     units.write_text("\n".join(UNITS) + "\n" + json.dumps({
         "unit_id": "o/r7/new", "analyzer": "pcb", "input_sha256": "dd",
         "baseline": {"exit_code": None, "status": "timeout", "output_sha256": None, "elapsed_s": 120.0},
-        "candidate": None, "verdict": "SKIP", "reason": "both_failed"}) + "\n")
+        "candidate": {"exit_code": None, "status": "timeout", "output_sha256": None, "elapsed_s": 120.0},
+        "verdict": "SKIP", "reason": "both_failed"}) + "\n")
     rc = bl.main(["check", "--ledger", str(led), "--units", str(units)])
     assert rc == 1
     assert "pcb/o/r7/new" in capsys.readouterr().out

@@ -72,3 +72,13 @@ def test_build_refuses_checks_without_sha():
     with pytest.raises(ValueError, match="product_sha"):
         bl.build_ledger(product_sha=SHA, references_sha=REF, checks=checks, junit_text=JUNIT,
                         units_lines=UNITS, issues_text=ISSUES, context={})
+
+
+def test_check_identities_tolerates_parse_error_records():
+    # run_checks.py JSON-parse-error branch: no repo/project keys
+    checks = {"results": [{"file": "broken.kicad_sch", "id": "SEED-00000001", "passed": False,
+                           "error": "JSON parse error: Expecting value", "aspirational": False},
+                          {"id": "SEED-00000002", "passed": False, "error": "x", "aspirational": False}]}
+    ents = bl.check_identities(checks)
+    assert [e["identity"] for e in ents] == ["?::SEED-00000002", "broken.kicad_sch::SEED-00000001"]
+    assert ents[1]["kind"] == "error" and ents[1]["repo"] is None

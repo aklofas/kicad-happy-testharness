@@ -28,12 +28,13 @@ def new_identities(ledger: dict, *, units_lines: Iterable[str] | None = None,
                 continue
             rec = json.loads(line)
             ident = f"{rec['analyzer']}/{rec['unit_id']}"
-            cand = rec.get("candidate")
-            if cand and cand.get("status") == "timeout":
+            base_to = (rec.get("baseline") or {}).get("status") == "timeout"
+            cand_to = (rec.get("candidate") or {}).get("status") == "timeout"
+            # A candidate-only timeout is always new; a timeout on the baseline side (alone or
+            # on both sides, e.g. an A/A tree) is new only when the identity is not ledgered.
+            if cand_to and not base_to:
                 found.append(f"{ident} (candidate)")
-                continue
-            base = rec.get("baseline")
-            if base and base.get("status") == "timeout" and ident not in known:
+            elif base_to and ident not in known:
                 found.append(ident)
         out["timeout_units"] = sorted(found)
     return out
