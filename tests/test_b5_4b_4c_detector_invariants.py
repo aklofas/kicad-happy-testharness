@@ -26,21 +26,23 @@ Tested here:
 """
 from __future__ import annotations
 
-TIER = "unit"
-
-import ast
-import os
 import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
+pytestmark = pytest.mark.offline_contract   # needs the real product (A2 ruling)
+
 HARNESS_DIR = Path(__file__).resolve().parent.parent
-KH_DIR = Path(os.environ.get(
-    "KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy")))
-KH_SCRIPTS = KH_DIR / "skills" / "kicad" / "scripts"
-KH_DS_SCRIPTS = KH_DIR / "skills" / "datasheets" / "scripts"
-VALIDATION_DETECTORS = KH_SCRIPTS / "validation_detectors.py"
-LOOKUP_DETECTORS = KH_SCRIPTS / "lookup_detectors.py"
+sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(HARNESS_DIR / "tools"))
+from tests.product_root import PRODUCT_ROOT, script_dir  # noqa: E402
+import source_scan  # noqa: E402
+
+KH_DIR = PRODUCT_ROOT
+KH_SCRIPTS = script_dir("kicad")
+KH_DS_SCRIPTS = script_dir("datasheets")
 
 # Map rule_id → owning detector function (for AST-walk scope context).
 # Helper functions (e.g., _make_ex_001 for EX-001) are reachable via the
@@ -50,7 +52,6 @@ _RULE_IDS = (
     "AM-001", "OV-001", "TJ-001", "FT-001", "PM-001", "EX-001",
 )
 
-_MISSING = object()
 
 
 def _import_make_finding():
@@ -68,7 +69,7 @@ def _import_make_finding():
 
 def _import_validate_crystal_load_caps():
     """Import validate_crystal_load_caps. Returns None if dep chain breaks."""
-    if not VALIDATION_DETECTORS.exists():
+    if not (KH_SCRIPTS / "validation_detectors.py").exists():
         return None
     if str(KH_SCRIPTS) not in sys.path:
         sys.path.insert(0, str(KH_SCRIPTS))
@@ -81,26 +82,11 @@ def _import_validate_crystal_load_caps():
         return None
 
 
-def _collect_make_finding_calls(path: Path) -> list[ast.Call]:
-    """Return every ast.Call node in `path` whose func is named 'make_finding'."""
-    tree = ast.parse(path.read_text())
-    calls = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            func = node.func
-            name = (func.attr if isinstance(func, ast.Attribute)
-                    else func.id if isinstance(func, ast.Name) else None)
-            if name == "make_finding":
-                calls.append(node)
-    return calls
-
-
-def _kwarg_constant(call: ast.Call, key: str):
-    """Return the constant value of kwarg `key`, or _MISSING sentinel."""
-    for kw in call.keywords:
-        if kw.arg == key and isinstance(kw.value, ast.Constant):
-            return kw.value.value
-    return _MISSING
+def _kicad_emit_sites():
+    enum = source_scan.resolve_det_enum(KH_DIR)
+    files = [p for p in source_scan.iter_product_sources(KH_DIR)
+             if source_scan.rel(KH_DIR, p).startswith("skills/kicad/scripts/")]
+    return [s for p in files for s in source_scan.emit_sites(KH_DIR, p, enum)]
 
 
 # ---------------------------------------------------------------------------
@@ -108,37 +94,26 @@ def _kwarg_constant(call: ast.Call, key: str):
 # ---------------------------------------------------------------------------
 
 def test_all_4b_4c_detectors_tag_schema_era_v14():
-    """Every make_finding call binding rule_id to one of the 11 4b/4c rules
-    must include schema_era='v1.4' as a constant kwarg.
-
-    AST-walks both validation_detectors.py and lookup_detectors.py, filters
-    calls whose rule_id constant matches, asserts schema_era is present and
-    equals 'v1.4'. Fails if a detector emit site forgets or downgrades the
-    tag.
-    """
-    if not VALIDATION_DETECTORS.exists() or not LOOKUP_DETECTORS.exists():
-        return  # silent skip — kicad-happy not present
-
-    calls = _collect_make_finding_calls(VALIDATION_DETECTORS) + \
-            _collect_make_finding_calls(LOOKUP_DETECTORS)
+    """Every resolved emit site for the 11 4b/4c rules, anywhere under
+    skills/kicad/scripts/ (recursive — report A2), carries schema_era='v1.4'.
+    Zero emit sites in the tree is a failure, not a skip."""
+    sites = _kicad_emit_sites()
+    assert sites, f"no finding emit sites found under {KH_SCRIPTS} — scanner or checkout broken"
 
     failures = []
     missing_rules = []
     for rule_id in _RULE_IDS:
-        matching = [c for c in calls if _kwarg_constant(c, "rule_id") == rule_id]
+        matching = [s for s in sites if s.rule_id == rule_id and s.resolved]
         if not matching:
             missing_rules.append(rule_id)
             continue
-        for call in matching:
-            era = _kwarg_constant(call, "schema_era")
-            if era != "v1.4":
-                failures.append(
-                    f"{rule_id} make_finding at line {call.lineno}: "
-                    f"schema_era={era!r} (expected 'v1.4')")
+        for s in matching:
+            if s.schema_era != "v1.4":
+                failures.append(f"{rule_id} {s.file}:{s.line}: schema_era={s.schema_era!r} (expected 'v1.4')")
 
     assert not missing_rules, (
-        f"No make_finding calls found for rules: {missing_rules}. "
-        f"Emit sites may have moved or been refactored away.")
+        f"No resolved emit sites found for rules: {missing_rules}. "
+        f"Emit sites may have moved to a non-literal shape or been deleted.")
     assert not failures, (
         "Detectors with missing/wrong schema_era tag (Phase 4 spec §3.4):\n"
         + "\n".join("  " + f for f in failures))
