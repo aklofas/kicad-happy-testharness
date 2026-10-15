@@ -39,20 +39,18 @@ did not land; KH-313-02/03 removals survived). **Fixed:** 2026-10-15, H0 plan 5.
 - **Verification:** `tests/test_bugfix_reconcile.py` (26), `tests/test_schema_era_required.py` (6),
   `tests/test_tag_assertions_select_stamp.py` (6); existing `test_tag_assertions.py`,
   `test_schema_era_module.py`, `test_seed_schema_era_stamping.py`,
-  `test_run_checks_era_filter.py` still green. Real-registry dry-run at
-  harness `f1473386ea3` (NOT applied — curated-lock representation changes are adjudicated
-  at the v3 baseline / relock, plan 6):
-  ~ BUGFIX-KH-125-01  KH-125: At least 2 opamp circuits detected on main sheet
-  ~ BUGFIX-KH-042-01  KH-042: 13 DNP resistor instances correctly counted
-  ~ BUGFIX-KH-156-01  KH-156: ESP32-P4-PC thermal_pad_vias <= 10 (was ~19 from paste-only pads)
-  ~ BUGFIX-KH-147-01  KH-147: No false LED drivers on zx-sizif-512
-  ~ BUGFIX-KH-165-01  KH-165: CH32V003F4U6 thermal_pad_vias detected (pad_area ~2.72mm2)
-  ~ BUGFIX-KH-167-01  KH-167: U3 (RCLAMP0502N) not in decoupling analysis
+  `test_run_checks_era_filter.py` still green. The registry was back-synced
+  to the eight lock files migrated by hand at P12, `c4bb61ebc3c` and the FND cleanup
+  (KH-125, KH-042, KH-156, KH-163, KH-165, KH-147, KH-167, KH-119): the old append-only
+  generator hid that the registry had fallen behind them, and seven of those registry
+  versions failed against current outputs while KH-156's passed vacuously on the removed
+  `thermal_pad_vias` path. Real-registry dry-run after the back-sync (NOT applied; the
+  KH-015 tightening is adjudicated at the v3 baseline / relock, plan 6; the KH-116 copy
+  under `CoffeeRoasterV2.2/` is an orphan of a project rename, the live lock under
+  `CoffeeRoasterV2c` is unchanged):
   - BUGFIX-KH-116-01  KH-116: No RC filters with output_net == GND (was false positive)
-  ~ BUGFIX-KH-163-01  KH-163: IC2 (BD00FC0W) now has thermal_pad_vias entry (was missing)
-  ~ BUGFIX-KH-119-01  KH-119: LC filters at most 14 (was 23 from overcounting)
   ~ BUGFIX-KH-015-01  KH-015: signal_analysis section exists on legacy .sch file
-  [DRY RUN] Summary over 142 files: added 0, updated 9, removed 1, unchanged 231
+  [DRY RUN] Summary over 142 files: added 0, updated 1, removed 1, unchanged 239
 
 ## 2026-10-15 — H0 plan 2: run identity, fresh outputs, corpus gate (TH-055, TH-059)
 

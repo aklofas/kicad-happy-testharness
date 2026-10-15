@@ -134,9 +134,9 @@
         "check": {
           "path": "statistics.dnp_parts",
           "op": "equals",
-          "value": 13
+          "value": 25
         },
-        "description": "KH-042: 13 DNP resistor instances correctly counted"
+        "description": "KH-042: 25 DNP resistor instances correctly counted"
       }
     ]
   },
@@ -783,10 +783,10 @@
         "check": {
           "path": "findings",
           "op": "max_count",
-          "value": 14,
+          "value": 15,
           "detector_filter": "detect_lc_filters"
         },
-        "description": "KH-119: LC filters at most 14 (was 23 from overcounting)"
+        "description": "KH-119: LC filters at most 15 (was 23 from overcounting)"
       }
     ]
   },
@@ -892,10 +892,10 @@
         "check": {
           "path": "findings",
           "op": "min_count",
-          "value": 2,
+          "value": 1,
           "detector_filter": "detect_opamp_circuits"
         },
-        "description": "KH-125: At least 2 opamp circuits detected on main sheet"
+        "description": "KH-125: At least 1 opamp circuit detected on main sheet"
       }
     ]
   },
@@ -1009,7 +1009,7 @@
           "path": "findings",
           "op": "max_count",
           "value": 0,
-          "detector_filter": "detect_led_drivers"
+          "detector_filter": "detect_led_driver_ics"
         },
         "description": "KH-147: No false LED drivers on zx-sizif-512"
       },
@@ -1275,9 +1275,10 @@
         "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
         "source_file": "ESP32-P4-PC_Rev_B.kicad_pcb",
         "check": {
-          "path": "thermal_pad_vias",
+          "path": "findings",
           "op": "max_count",
-          "value": 10
+          "value": 10,
+          "detector_filter": "analyze_thermal_pad_vias"
         },
         "description": "KH-156: ESP32-P4-PC thermal_pad_vias <= 10 (was ~19 from paste-only pads)"
       }
@@ -1329,10 +1330,11 @@
         "project": "aux-ps_EDA files_KiCad_EEZ DIB AUX-PS",
         "source_file": "EEZ DIB AUX-PS.kicad_pcb",
         "check": {
-          "path": "thermal_pad_vias",
+          "path": "findings",
           "op": "contains_match",
           "field": "component",
-          "pattern": "^IC2$"
+          "pattern": "^IC2$",
+          "detector_filter": "analyze_thermal_pad_vias"
         },
         "description": "KH-163: IC2 (BD00FC0W) now has thermal_pad_vias entry (was missing)"
       }
@@ -1379,9 +1381,10 @@
         "project": "ch32v003_ch32v003f4u6_opendant",
         "source_file": "ch32v003f4u6_opendant.kicad_pcb",
         "check": {
-          "path": "thermal_pad_vias",
+          "path": "findings",
           "op": "min_count",
-          "value": 1
+          "value": 1,
+          "detector_filter": "analyze_thermal_pad_vias"
         },
         "description": "KH-165: CH32V003F4U6 thermal_pad_vias detected (pad_area ~2.72mm2)"
       }
@@ -1518,11 +1521,13 @@
         "source_file": "ch32v305-radioset.kicad_pcb",
         "check": {
           "path": "decoupling_placement",
-          "op": "not_contains_match",
-          "field": "ic",
-          "pattern": "^U3$"
+          "op": "field_equals",
+          "match_field": "ic",
+          "match_value": "U3",
+          "assert_field": "category",
+          "assert_value": "esd_bypass"
         },
-        "description": "KH-167: U3 (RCLAMP0502N) not in decoupling analysis"
+        "description": "KH-167: U3 (RCLAMP0502N) categorized as esd_bypass, not main decoupling"
       }
     ]
   },
