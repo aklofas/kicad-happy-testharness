@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 import secrets
+import signal
 import subprocess
 import time
 from dataclasses import dataclass
@@ -60,8 +61,8 @@ def validate_output(path: Path, analyzer: str) -> tuple[bool, str]:
     if not path.exists() or path.stat().st_size == 0:
         return False, "no_output"
     try:
-        doc = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
+        doc = json.loads(path.read_bytes())
+    except (ValueError, RecursionError, OSError):
         return False, "invalid_output: not JSON"
     expected = EXPECTED_ANALYZER_TYPE.get(analyzer)
     if expected is not None:
@@ -97,37 +98,59 @@ def _cleanup(temp: Path) -> None:
             pass
 
 
+def _kill_group(proc: subprocess.Popen) -> None:
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        proc.kill()
+
+
 def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str,
              timeout: float, env: Mapping[str, str]) -> RunResult:
     dest = Path(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
     temp = dest.with_name(dest.name + f".tmp-{os.getpid()}-{secrets.token_hex(4)}")
-    cmd = make_cmd(temp)
     t0 = time.time()
+
+    def fail(status, code, tail, detail):
+        _cleanup(temp)
+        _quarantine(dest)
+        return RunResult(status, code, None, None, time.time() - t0, tail, detail)
+
     try:
-        proc = subprocess.run(cmd, capture_output=True, text=True,
-                              timeout=timeout, env=dict(env))
-    except subprocess.TimeoutExpired:
-        _cleanup(temp)
-        _quarantine(dest)
-        return RunResult("timeout", None, None, None, time.time() - t0, "",
-                         f"timeout after {timeout}s")
-    elapsed = time.time() - t0
-    tail = "\n".join((proc.stderr or "").strip().splitlines()[-5:])
-    ok, detail = validate_output(temp, analyzer)
-    if not ok:
-        _cleanup(temp)
-        _quarantine(dest)
-        status = "crash" if detail == "no_output" and proc.returncode != 0 else \
-            ("no_output" if detail == "no_output" else "invalid_output")
-        return RunResult(status, proc.returncode, None, None, elapsed, tail, detail)
-    accepted = ACCEPTED_EXITS.get(analyzer, frozenset({0}))
-    if proc.returncode not in accepted:
-        _cleanup(temp)
-        _quarantine(dest)
-        return RunResult("exit_unexpected", proc.returncode, None, None, elapsed, tail,
-                         f"exit {proc.returncode} not in {sorted(accepted)}")
-    os.replace(temp, dest)
-    _cleanup(temp)  # sidecars the analyzer may have written next to the temp name
-    status = "ok" if proc.returncode == 0 else "ok_findings_exit"
-    return RunResult(status, proc.returncode, dest, sha256_file(dest), elapsed, tail, "ok")
+        try:
+            cmd = make_cmd(temp)
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    env=dict(env), start_new_session=True)
+        except Exception as exc:  # make_cmd failure or spawn failure
+            return fail("crash", None, "", f"spawn failed: {exc!r}")
+        try:
+            _out, err = proc.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            _kill_group(proc)
+            proc.communicate()
+            return fail("timeout", None, "", f"timeout after {timeout}s")
+        except BaseException:
+            _kill_group(proc)
+            proc.communicate()
+            raise
+        elapsed = time.time() - t0
+        tail = "\n".join((err or b"").decode("utf-8", "replace").strip().splitlines()[-5:])
+        rc = proc.returncode
+        ok, detail = validate_output(temp, analyzer)
+        if not ok:
+            status = "crash" if detail == "no_output" and rc != 0 else \
+                ("no_output" if detail == "no_output" else "invalid_output")
+            return fail(status, rc, tail, detail)
+        accepted = ACCEPTED_EXITS.get(analyzer, frozenset({0}))
+        if rc not in accepted:
+            return fail("exit_unexpected", rc, tail,
+                        f"exit {rc} not in {sorted(accepted)}")
+        try:
+            os.replace(temp, dest)
+        except OSError as exc:
+            return fail("invalid_output", rc, tail, f"publish failed: {exc}")
+        status = "ok" if rc == 0 else "ok_findings_exit"
+        return RunResult(status, rc, dest, sha256_file(dest), elapsed, tail, "ok")
+    finally:
+        _cleanup(temp)  # temp and any sidecars; harmless after a successful publish

@@ -135,3 +135,60 @@ def test_run_once_failure_quarantines_previous_output(tmp_path):
 def test_statuses_vocabulary():
     assert ex.STATUSES == ("ok", "ok_findings_exit", "crash", "timeout", "no_output",
                            "invalid_output", "exit_unexpected")
+
+
+def _no_temp(tmp_path):
+    return not [p for p in tmp_path.iterdir() if ".tmp-" in p.name]
+
+
+def test_run_once_binary_output_is_invalid_output(tmp_path):
+    dest = tmp_path / "snap.json"
+    r = ex.run_once(_cmd("binary"), dest, analyzer="pcb", timeout=20, env=_env())
+    assert r.status == "invalid_output" and not dest.exists() and _no_temp(tmp_path)
+
+
+def test_run_once_non_utf8_stderr_is_decoded(tmp_path):
+    dest = tmp_path / "snap.json"
+    r = ex.run_once(_cmd("badstderr"), dest, analyzer="pcb", timeout=20, env=_env())
+    assert r.status == "ok" and "bad" in r.stderr_tail and dest.exists()
+
+
+def test_run_once_missing_executable_is_crash_and_quarantines(tmp_path):
+    dest = tmp_path / "snap.json"
+    dest.write_text('{"analyzer_type": "pcb"}')
+    r = ex.run_once(lambda out: [str(tmp_path / "no-such-exe"), str(out)], dest,
+                    analyzer="pcb", timeout=20, env=_env())
+    assert r.status == "crash" and r.exit_code is None
+    assert not dest.exists() and dest.with_name("snap.json.stale").exists()
+    assert _no_temp(tmp_path)
+
+
+def test_run_once_make_cmd_exception_is_crash(tmp_path):
+    def boom(out):
+        raise ValueError("bad cmd")
+    r = ex.run_once(boom, tmp_path / "snap.json", analyzer="pcb", timeout=5, env=_env())
+    assert r.status == "crash" and "bad cmd" in r.detail and _no_temp(tmp_path)
+
+
+def test_run_once_publish_failure_is_invalid_output(tmp_path, monkeypatch):
+    dest = tmp_path / "snap.json"
+    real = os.replace
+
+    def flaky(src, dst):
+        if str(dst) == str(dest):
+            raise OSError("disk full")
+        return real(src, dst)
+    monkeypatch.setattr(ex.os, "replace", flaky)
+    r = ex.run_once(_cmd("ok"), dest, analyzer="pcb", timeout=20, env=_env())
+    assert r.status == "invalid_output" and r.detail.startswith("publish failed")
+    assert not dest.exists() and _no_temp(tmp_path)
+
+
+def test_run_once_timeout_with_grandchild_returns_promptly(tmp_path):
+    import time
+    dest = tmp_path / "snap.json"
+    t0 = time.time()
+    r = ex.run_once(_cmd("sleep-grandchild"), dest, analyzer="pcb", timeout=1, env=_env())
+    assert r.status == "timeout"
+    assert time.time() - t0 < 6
+    assert _no_temp(tmp_path)
