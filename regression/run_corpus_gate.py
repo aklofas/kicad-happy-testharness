@@ -284,6 +284,10 @@ def _print_summary(report):
     if gp is not None:
         print(f"  => GATE {'PASS' if gp['pass'] else 'FAIL'}: strict_clean={gp['strict_clean']} "
               f"census_ok={gp['census_ok']} skips_ok={gp['skips_ok']}")
+    m = report.get("modes", {})
+    if "raw" in m:
+        print(f"modes: raw={m['raw']['verdict']} strict={m['strict']['verdict']} "
+              f"budgeted={m['budgeted']['verdict']} -> strict_field_clean={report['gate_pass']['strict_field_clean']}")
     if report["fail_repo_count"]:
         print(f"\nFAIL repos ({report['fail_repo_count']}):")
         for fr in report["fail_repos"][:30]:
@@ -591,7 +595,7 @@ def write_rollup(records, agg, section, layout, manifest):
 # main
 # ---------------------------------------------------------------------------
 
-def main(argv=None):
+def build_arg_parser():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     add_repo_filter_args(ap)
@@ -604,7 +608,22 @@ def main(argv=None):
     ap.add_argument("--label", default=None, help="rollup filename label (default: section)")
     ap.add_argument("--resume", action="store_true",
                     help="reuse units from a previous run ONLY if its manifest identity matches")
-    args = ap.parse_args(argv)
+    ap.add_argument("--budget", default=None, metavar="FILE",
+                    help="regression/budgets/<id>.json; enables the budgeted mode verdict")
+    return ap
+
+
+def apply_modes(report, modes):
+    """Merge run_modes() output into the rollup and AND strict_field_clean into gate_pass."""
+    report["modes"] = {**report.get("modes", {}), **modes}
+    gp = report.setdefault("gate_pass", {})
+    gp["strict_field_clean"] = bool(modes.get("strict_field_clean"))
+    gp["pass"] = bool(gp.get("pass")) and gp["strict_field_clean"]
+    return report
+
+
+def main(argv=None):
+    args = build_arg_parser().parse_args(argv)
 
     profile = PROFILES[args.profile]
     for d in (args.baseline_dir, args.candidate_dir):
@@ -720,9 +739,18 @@ def main(argv=None):
     records = a_results + b_results
     agg = aggregate(records)
     report = write_rollup(records, agg, section, layout, manifest)
+    from regression.field_compare import run_modes  # local import keeps the gate importable standalone
+    try:
+        modes = run_modes(layout.root, budget_path=Path(args.budget) if args.budget else None)
+    except FileNotFoundError as e:
+        print(f"Error: comparator modes could not run: {e}", file=sys.stderr)
+        sys.exit(2)
+    report = apply_modes(report, modes)
+    layout.rollup(section).write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     finish_manifest(layout.root, {**report["totals"], "skip_breakdown": agg["skip_breakdown"],
                                   "expected_census": manifest["expected_census"],
-                                  "executed_census": agg["executed_census"]})
+                                  "executed_census": agg["executed_census"],
+                                  "modes": {k: v.get("verdict") for k, v in modes.items() if isinstance(v, dict)}})
     _print_summary(report)
     print(f"\nElapsed: {time.time()-t_start:.0f}s\nRollup JSON: {layout.rollup(section)}")
     sys.exit(0 if report["gate_pass"]["pass"] else 1)
