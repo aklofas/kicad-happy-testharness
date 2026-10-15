@@ -15,14 +15,13 @@ Usage:
 
 import argparse
 import json
-import re
 import subprocess
 import sys
+import tempfile
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(HARNESS_DIR))
-from utils import TEST_TIMEOUT, INTEGRATION_TEST_TIMEOUT
 
 
 # Curated smoke subset for CI PR gates. Selection criteria:
@@ -90,44 +89,6 @@ SMOKE_TESTS = [
 ]
 
 
-def discover_tests(dirs, tier_filter=None):
-    """Find all test_*.py files in given directories, optionally filtered by TIER.
-
-    Each test file can declare TIER = "unit"|"online" at module level.
-    If tier_filter is set, only files matching that tier are returned.
-    Files without a TIER declaration default to "unit" for tests/ and "online"
-    for integration/.
-
-    tests/contract/ is excluded — it is a pytest-driven suite invoked separately
-    with KICAD_HAPPY_DIR set, not the custom-runner subprocess pattern.
-    """
-    tests = []
-    for d in dirs:
-        test_dir = HARNESS_DIR / d
-        if not test_dir.exists():
-            continue
-        default_tier = "online" if d == "integration" else "unit"
-        # rglob so subdirectories like tests/datasheets/ are discovered too.
-        for f in sorted(test_dir.rglob("test_*.py")):
-            # Skip pytest-driven sub-suites that don't fit the custom runner.
-            if "contract" in f.relative_to(HARNESS_DIR).parts:
-                continue
-            if tier_filter and tier_filter != "all":
-                # Read TIER from file
-                tier = default_tier
-                try:
-                    for line in f.read_text(encoding="utf-8").splitlines()[:30]:
-                        if line.startswith("TIER"):
-                            tier = line.split("=")[1].strip().strip("'\"")
-                            break
-                except OSError:
-                    pass
-                if tier != tier_filter:
-                    continue
-            tests.append(f)
-    return tests
-
-
 def _load_smoke_repos(count=5):
     """Load first N repos from smoke_pack.md for quick sanity checks."""
     smoke_file = HARNESS_DIR / "reference" / "smoke_pack.md"
@@ -179,167 +140,104 @@ def run_quick_sanity():
     return 1 if failed > 0 else 0
 
 
-_MAIN_RE = re.compile(r"^if __name__\s*==\s*['\"]__main__['\"]", re.MULTILINE)
-_SUMMARY_RE = re.compile(r"(\d+)\s+passed,\s+(\d+)\s+failed")
-_SKIPPED_RE = re.compile(r"(\d+)\s+skipped")
+
+def build_pytest_argv(args) -> list[str]:
+    """Translate the legacy flags into a pytest command line (B9 alias)."""
+    argv = [sys.executable, "-m", "pytest", "-q"]
+    paths = list(getattr(args, "paths", None) or [])
+    if args.smoke:
+        argv += ["-m", "unit"]
+        paths = paths or list(SMOKE_TESTS)
+    else:
+        tier = args.tier
+        if args.unit:
+            tier = "unit"
+        elif args.integration:
+            tier = "online"
+        if tier is None:
+            tier = "unit"
+        if tier == "all":
+            argv.append("--all-tiers")
+            paths = paths or ["tests", "integration"]
+        elif tier == "online":
+            argv += ["-m", "online"]
+            paths = paths or ["tests", "integration"]
+        else:
+            argv += ["-m", "unit"]
+            paths = paths or ["tests"]
+    return argv + paths
 
 
-def has_main_block(path):
-    """True iff the file contains an ``if __name__ == "__main__"`` runner."""
-    try:
-        return bool(_MAIN_RE.search(Path(path).read_text(encoding="utf-8")))
-    except OSError:
-        return False
-
-
-def _tail(text, n=3):
-    """Last ``n`` non-empty lines of ``text``, joined with newlines."""
-    return "\n".join(l for l in (text or "").splitlines()[-n:] if l.strip())
-
-
-def run_test_file(path, timeout):
-    """Run one stdlib test file as a subprocess and return a result dict.
-
-    status: pass | fail | timeout | no_runner | unparsed. Only ``pass`` with
-    ``failed == 0`` counts toward a green run (TH-052: no phantom passes).
-    Every non-pass status carries ``failed >= 1`` so totals cannot understate.
-    """
-    path = Path(path)
-    try:
-        rel = str(path.relative_to(HARNESS_DIR))
-    except ValueError:
-        rel = str(path)
-    base = {"file": rel, "passed": 0, "failed": 0, "skipped": 0, "detail": ""}
-    if not has_main_block(path):
-        return {**base, "status": "no_runner", "failed": 1,
-                "detail": "no __main__ runner block (TH-052)"}
-    try:
-        result = subprocess.run([sys.executable, str(path)],
-                                capture_output=True, text=True, timeout=timeout)
-    except subprocess.TimeoutExpired:
-        return {**base, "status": "timeout", "failed": 1,
-                "detail": f"timed out after {timeout}s"}
-    lines = result.stdout.strip().split("\n")
-    summary = lines[-1] if lines else ""
-    err_tail = _tail(result.stderr)
-    m = _SUMMARY_RE.search(summary)
-    if m is None:
-        parts = [_tail(result.stdout), err_tail]
-        tail = "\n".join(x for x in parts if x)
-        if result.returncode != 0:
-            return {**base, "status": "fail", "failed": 1,
-                    "detail": f"exit {result.returncode}\n{tail}".rstrip()}
-        return {**base, "status": "unparsed", "failed": 1,
-                "detail": "\n".join(x for x in
-                                    [f"unparsed summary: {summary!r}", err_tail] if x)}
-    p, f = int(m.group(1)), int(m.group(2))
-    ms = _SKIPPED_RE.search(summary)
-    s = int(ms.group(1)) if ms else 0
-    if result.returncode == 0 and f == 0:
-        return {**base, "status": "pass", "passed": p, "failed": 0, "skipped": s}
-    # Non-zero exit with a parsed summary: count at least one failure.
-    detail = f"exit {result.returncode}" + (f"\n{err_tail}" if err_tail else "")
-    return {**base, "status": "fail", "passed": p, "failed": max(f, 1),
-            "skipped": s, "detail": detail}
-
-
-def exit_code(results):
-    """0 iff every file passed with zero failures; 2 for an empty selection."""
-    if not results:
+def pytest_exit_to_rc(rc: int) -> int:
+    """pytest 0 -> 0; 5 (no tests collected) -> 2; anything else -> 1."""
+    if rc == 0:
+        return 0
+    if rc == 5:
         return 2
-    bad = [r for r in results if r["status"] != "pass" or r["failed"]]
-    return 1 if bad else 0
+    return 1
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Run all tests")
-    parser.add_argument("--unit", action="store_true", help="Unit tests only (alias for --tier unit)")
-    parser.add_argument("--integration", action="store_true",
-                        help="Integration tests only (alias for --tier online)")
-    parser.add_argument("--tier", choices=["unit", "online", "all"],
-                        help="Run tests matching this tier (unit, online, all)")
+def junit_to_legacy(xml_path: Path) -> dict:
+    """Render pytest's junit XML in the historical ``--json`` shape."""
+    root = ET.parse(xml_path).getroot()
+    per_file: dict[str, dict] = {}
+    for case in root.iter("testcase"):
+        f = case.get("file") or case.get("classname", "").replace(".", "/") + ".py"
+        row = per_file.setdefault(f, {"file": f, "passed": 0, "failed": 0, "skipped": 0})
+        if case.find("skipped") is not None:
+            row["skipped"] += 1
+        elif case.find("failure") is not None or case.find("error") is not None:
+            row["failed"] += 1
+        else:
+            row["passed"] += 1
+    files = []
+    for row in sorted(per_file.values(), key=lambda r: r["file"]):
+        row["status"] = "fail" if row["failed"] else "pass"
+        files.append(row)
+    return {"total_passed": sum(r["passed"] for r in files),
+            "total_failed": sum(r["failed"] for r in files),
+            "total_skipped": sum(r["skipped"] for r in files),
+            "files": files}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Run harness tests (thin alias over pytest)")
+    parser.add_argument("--unit", action="store_true", help="unit tier (default)")
+    parser.add_argument("--integration", action="store_true", help="online tier")
+    parser.add_argument("--tier", choices=["unit", "online", "all"])
     parser.add_argument("--smoke", action="store_true",
-                        help="Curated PR-gate subset — fast, no corpus deps. See SMOKE_TESTS.")
-    parser.add_argument("--list-smoke", action="store_true",
-                        help="Print smoke subset filenames, one per line, then exit")
+                        help="curated PR-gate subset (SMOKE_TESTS), unit tier")
+    parser.add_argument("--list-smoke", action="store_true")
     parser.add_argument("--quick-sanity", action="store_true",
-                        help="Run assertions on 5 repos as a quick sanity check")
-    parser.add_argument("--json", action="store_true", help="JSON output")
+                        help="run assertions on 5 smoke_pack repos")
+    parser.add_argument("--json", action="store_true", help="legacy JSON summary on stdout")
+    parser.add_argument("--paths", nargs="*", help="override the paths pytest collects")
     args = parser.parse_args()
 
     if args.list_smoke:
         for path in SMOKE_TESTS:
             print(path)
         return 0
-
     if args.quick_sanity:
-        sys.exit(run_quick_sanity())
+        return run_quick_sanity()
 
-    if args.smoke:
-        # Skip discovery — use the curated list. Verify each file exists
-        # so a typo or rename in SMOKE_TESTS surfaces immediately rather
-        # than silently shrinking the gate.
-        tests = []
-        missing = []
-        for rel in SMOKE_TESTS:
-            path = HARNESS_DIR / rel
-            if path.exists():
-                tests.append(path)
-            else:
-                missing.append(rel)
-        if missing:
-            print(f"ERROR: smoke set references missing files: {missing}")
-            return 2
-    else:
-        # Resolve tier filter from flags
-        tier_filter = args.tier
-        if args.unit:
-            tier_filter = "unit"
-        elif args.integration:
-            tier_filter = "online"
-        if tier_filter is None and not args.integration and not args.unit:
-            tier_filter = "unit"
-
-        # Determine which directories to scan
-        dirs = ["tests", "integration"]
-        if tier_filter == "unit":
-            dirs = ["tests"]
-        elif tier_filter == "online":
-            dirs = ["integration"]
-
-        tests = discover_tests(dirs, tier_filter=tier_filter)
-
-    if not tests:
-        print("No test files found.")
-        return 2
-
-    results = []
-    for test_file in tests:
-        timeout = INTEGRATION_TEST_TIMEOUT if "integration" in str(test_file) else TEST_TIMEOUT
-        r = run_test_file(test_file, timeout)
-        results.append(r)
-        if not args.json:
-            tag = "PASS" if r["status"] == "pass" else "FAIL"
-            counts = f"{r['passed']}p {r['failed']}f" + (f" {r['skipped']}s" if r["skipped"] else "")
-            detail = f"; {r['detail']}" if r["detail"] else ""
-            print(f"  {tag}  {r['file']} ({counts}{detail})")
-
-    total_passed = sum(r["passed"] for r in results)
-    total_failed = sum(r["failed"] for r in results)
-    total_skipped = sum(r["skipped"] for r in results)
-    failures = [r["file"] for r in results if r["status"] != "pass" or r["failed"]]
+    argv = build_pytest_argv(args)
     if args.json:
-        print(json.dumps({"total_passed": total_passed, "total_failed": total_failed,
-                          "total_skipped": total_skipped, "files": results}, indent=2))
-    else:
-        print()
-        print("=" * 50)
-        print(f"Results: {total_passed} passed, {total_failed} failed, {total_skipped} skipped")
-        print(f"Files:   {len(tests)} test files ({len(tests) - len(failures)} ok, {len(failures)} failed)")
-        print("=" * 50)
-        if failures:
-            print(f"\nFailed: {', '.join(failures)}")
-    return exit_code(results)
+        with tempfile.TemporaryDirectory() as td:
+            xml = Path(td) / "junit.xml"
+            proc = subprocess.run(argv + [f"--junitxml={xml}"], cwd=HARNESS_DIR,
+                                  capture_output=True, text=True)
+            rc = pytest_exit_to_rc(proc.returncode)
+            if xml.exists():
+                print(json.dumps(junit_to_legacy(xml), indent=2))
+            else:
+                sys.stderr.write(proc.stdout + proc.stderr)
+            return rc
+    proc = subprocess.run(argv, cwd=HARNESS_DIR)
+    rc = pytest_exit_to_rc(proc.returncode)
+    if rc == 2:
+        print("ERROR: no tests collected - empty selection is a failure (B9)", file=sys.stderr)
+    return rc
 
 
 if __name__ == "__main__":

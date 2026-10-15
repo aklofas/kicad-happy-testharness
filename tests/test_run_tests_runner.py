@@ -1,115 +1,96 @@
-"""run_tests.py must fail closed: no phantom passes, no silent timeouts."""
+"""run_tests.py is a thin alias over pytest (B9). It must never report success
+for an empty selection or a failed pytest run."""
+import json
+import os
+import subprocess
 import sys
 import textwrap
 from pathlib import Path
+
+import pytest
 
 HARNESS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS))
 import run_tests  # noqa: E402
 
-
-def _write(tmp_path, name, body):
-    p = tmp_path / name
-    p.write_text(textwrap.dedent(body), encoding="utf-8")
-    return p
+ENV = {**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
+    "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))}
 
 
-def test_has_main_block_detects_runner(tmp_path):
-    with_main = _write(tmp_path, "test_a.py", '''
-        def test_x():
-            assert True
-        if __name__ == "__main__":
-            print("1 passed, 0 failed (1 total)")
-    ''')
-    without = _write(tmp_path, "test_b.py", '''
-        def test_x():
-            assert True
-    ''')
-    assert run_tests.has_main_block(with_main) is True
-    assert run_tests.has_main_block(without) is False
+class _Args:
+    def __init__(self, **kw):
+        self.unit = kw.get("unit", False)
+        self.integration = kw.get("integration", False)
+        self.tier = kw.get("tier")
+        self.smoke = kw.get("smoke", False)
+        self.json = kw.get("json", False)
+        self.paths = kw.get("paths", [])
 
 
-def test_missing_runner_is_no_runner_status(tmp_path):
-    f = _write(tmp_path, "test_phantom.py", '''
-        def test_x():
-            assert True
-    ''')
-    r = run_tests.run_test_file(f, timeout=30)
-    assert r["status"] == "no_runner"
-    assert r["passed"] == 0
-    assert r["failed"] == 1
+def _argv(**kw):
+    """Alias argv minus the ``python -m pytest`` prefix (its own ``-m`` would confuse marker checks)."""
+    argv = run_tests.build_pytest_argv(_Args(**kw))
+    assert argv[1:3] == ["-m", "pytest"]
+    return argv[3:]
 
 
-def test_unparsed_summary_is_failure(tmp_path):
-    f = _write(tmp_path, "test_odd.py", '''
-        if __name__ == "__main__":
-            print("All tests passed!")
-    ''')
-    r = run_tests.run_test_file(f, timeout=30)
-    assert r["status"] == "unparsed"
-    assert r["passed"] == 0
-    assert r["failed"] == 1
+def test_argv_unit():
+    argv = _argv(unit=True)
+    assert "-m" in argv and argv[argv.index("-m") + 1] == "unit"
+    assert "tests" in argv and "integration" not in argv
 
 
-def test_parsed_summary_counts(tmp_path):
-    f = _write(tmp_path, "test_ok.py", '''
-        if __name__ == "__main__":
-            print("3 passed, 0 failed, 1 skipped (4 total)")
-    ''')
-    r = run_tests.run_test_file(f, timeout=30)
-    assert (r["status"], r["passed"], r["failed"], r["skipped"]) == ("pass", 3, 0, 1)
+def test_argv_online():
+    argv = _argv(tier="online")
+    assert argv[argv.index("-m") + 1] == "online"
+    assert "integration" in argv and "tests" in argv
 
 
-def test_nonzero_exit_is_failure_even_with_parsed_summary(tmp_path):
-    f = _write(tmp_path, "test_red.py", '''
-        import sys
-        if __name__ == "__main__":
-            print("2 passed, 1 failed (3 total)")
-            sys.exit(1)
-    ''')
-    r = run_tests.run_test_file(f, timeout=30)
-    assert r["status"] == "fail"
-    assert r["failed"] == 1
+def test_argv_all_tiers():
+    argv = _argv(tier="all")
+    assert "--all-tiers" in argv and "-m" not in argv
 
 
-def test_timeout_is_failure(tmp_path):
-    f = _write(tmp_path, "test_slow.py", '''
-        import time
-        if __name__ == "__main__":
-            time.sleep(5)
-            print("1 passed, 0 failed (1 total)")
-    ''')
-    r = run_tests.run_test_file(f, timeout=1)
-    assert r["status"] == "timeout"
-    assert r["failed"] == 1
+def test_argv_smoke_uses_curated_files():
+    argv = _argv(smoke=True)
+    assert argv[argv.index("-m") + 1] == "unit"
+    assert all(p in argv for p in run_tests.SMOKE_TESTS)
 
 
-def test_exit_code_rules():
-    ok = {"status": "pass", "passed": 1, "failed": 0, "skipped": 0}
-    assert run_tests.exit_code([ok]) == 0
-    assert run_tests.exit_code([ok, {**ok, "status": "no_runner"}]) == 1
-    assert run_tests.exit_code([ok, {**ok, "status": "unparsed"}]) == 1
-    assert run_tests.exit_code([ok, {**ok, "status": "timeout"}]) == 1
-    assert run_tests.exit_code([{**ok, "failed": 2}]) == 1
-    assert run_tests.exit_code([]) == 2
+def test_exit_mapping():
+    assert run_tests.pytest_exit_to_rc(0) == 0
+    assert run_tests.pytest_exit_to_rc(5) == 2
+    assert run_tests.pytest_exit_to_rc(1) == 1
+    assert run_tests.pytest_exit_to_rc(2) == 1
 
 
-def test_has_main_block_ignores_marker_text_in_strings(tmp_path):
-    f = _write(tmp_path, "test_meta.py", '''
-        SAMPLE = 'if __name__ == "__main__":'
-        def test_x():
-            assert True
-    ''')
-    assert run_tests.has_main_block(f) is False
+def test_junit_to_legacy(tmp_path):
+    xml = tmp_path / "j.xml"
+    xml.write_text(textwrap.dedent('''\
+        <testsuites><testsuite name="pytest" tests="3" failures="1" skipped="1">
+          <testcase classname="tests.test_a" name="test_ok" file="tests/test_a.py"/>
+          <testcase classname="tests.test_a" name="test_bad" file="tests/test_a.py"><failure message="x"/></testcase>
+          <testcase classname="tests.test_b" name="test_skip" file="tests/test_b.py"><skipped message="y"/></testcase>
+        </testsuite></testsuites>'''))
+    d = run_tests.junit_to_legacy(xml)
+    assert (d["total_passed"], d["total_failed"], d["total_skipped"]) == (1, 1, 1)
+    files = {f["file"]: f for f in d["files"]}
+    assert files["tests/test_a.py"]["status"] == "fail"
+    assert files["tests/test_b.py"]["status"] == "pass"
 
 
-def test_import_error_reports_fail_with_stderr_detail(tmp_path):
-    f = _write(tmp_path, "test_broken.py", '''
-        import nonexistent_module_for_th052
-        if __name__ == "__main__":
-            print("1 passed, 0 failed (1 total)")
-    ''')
-    r = run_tests.run_test_file(f, timeout=30)
-    assert r["status"] == "fail"
-    assert r["failed"] == 1
-    assert "ModuleNotFoundError" in r["detail"]
+def test_alias_zero_selection_is_failure(tmp_path):
+    empty = tmp_path / "nothing"
+    empty.mkdir()
+    proc = subprocess.run([sys.executable, "run_tests.py", "--unit", "--paths", str(empty)],
+                          capture_output=True, text=True, cwd=HARNESS, env=ENV)
+    assert proc.returncode == 2, proc.stdout + proc.stderr
+
+
+@pytest.mark.perf
+def test_alias_smoke_runs_green():
+    proc = subprocess.run([sys.executable, "run_tests.py", "--smoke", "--json"],
+                          capture_output=True, text=True, cwd=HARNESS, env=ENV, timeout=900)
+    assert proc.returncode == 0, proc.stdout[-3000:] + proc.stderr[-3000:]
+    data = json.loads(proc.stdout[proc.stdout.index("{"):])
+    assert data["total_failed"] == 0 and data["total_passed"] > 500
