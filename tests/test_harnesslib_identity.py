@@ -115,3 +115,49 @@ def test_unit_is_current_requires_status_input_and_output_hash(tmp_path):
     assert ident.unit_is_current(log, "pcb", "u", "in1", out) is False
     log.append(dict(rec, status="crash"))
     assert ident.unit_is_current(log, "pcb", "u", "in1", out) is False
+
+
+def test_by_unit_is_cached_and_updated_on_append(tmp_path, monkeypatch):
+    log = ident.UnitLog(tmp_path)
+    log.append({"analyzer": "pcb", "unit_id": "u", "status": "ok"})
+    calls = []
+    orig = Path.read_text
+
+    def counting(self, *a, **k):
+        calls.append(self)
+        return orig(self, *a, **k)
+
+    monkeypatch.setattr(Path, "read_text", counting)
+    assert log.by_unit()["pcb/u"]["status"] == "ok"
+    log.by_unit()
+    log.append({"analyzer": "pcb", "unit_id": "u", "status": "crash"})
+    assert log.by_unit()["pcb/u"]["status"] == "crash"
+    assert len(calls) == 1
+
+
+def test_unit_log_tolerates_torn_last_line_only(tmp_path, capsys):
+    p = tmp_path / "units.jsonl"
+    p.write_text('{"analyzer":"a","unit_id":"1"}\n{"analyzer":"a","unit_id":"2"}\n{"analyzer":"a","un')
+    assert len(list(ident.UnitLog(tmp_path))) == 2
+    assert "units.jsonl: ignoring torn trailing line" in capsys.readouterr().err
+    p.write_text('{"analyzer":"a"\n{"analyzer":"a","unit_id":"2"}\n')
+    import pytest
+    with pytest.raises(json.JSONDecodeError):
+        list(ident.UnitLog(tmp_path))
+
+
+def test_manifests_match_refuses_dirty_and_malformed(tmp_path):
+    import copy
+    repo = _git_repo(tmp_path)
+    ident.write_manifest(tmp_path / "g", _spec(repo), run_id="r", expected_census={},
+                         input_digest="x", runtime={})
+    m = ident.read_manifest(tmp_path / "g")
+    d = copy.deepcopy(m)
+    d["product"]["candidate"]["dirty"] = True
+    assert ident.manifests_match(m, d) == (False, ["dirty worktree: candidate"])
+    n = copy.deepcopy(m)
+    del n["identity"]
+    assert ident.manifests_match(m, n) == (False, ["missing identity block"])
+    v = copy.deepcopy(m)
+    v["manifest_version"] = 2
+    assert ident.manifests_match(m, v) == (False, ["manifest_version mismatch"])

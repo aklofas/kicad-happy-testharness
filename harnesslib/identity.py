@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -141,7 +142,27 @@ def finish_manifest(root: Path, totals: dict) -> None:
 
 
 def manifests_match(a: dict, b: dict) -> tuple[bool, list[str]]:
-    ka, kb = a.get("identity", {}), b.get("identity", {})
+    """Identity comparison for resume/gate reuse.
+
+    input_digest is deliberately NOT part of identity: the per-unit
+    input_sha256 check in unit_is_current covers input changes and allows
+    partial reuse. Dirty worktrees never match (resume would mix code states).
+    """
+    for m in (a, b):
+        if m.get("manifest_version") != MANIFEST_VERSION:
+            return False, ["manifest_version mismatch"]
+    if not a.get("identity") or not b.get("identity"):
+        return False, ["missing identity block"]
+    dirty = []
+    for m in (a, b):
+        for which, ref in (("harness", m.get("harness")),
+                           ("baseline", (m.get("product") or {}).get("baseline")),
+                           ("candidate", (m.get("product") or {}).get("candidate"))):
+            if ref and ref.get("dirty") and which not in dirty:
+                dirty.append(which)
+    if dirty:
+        return False, [f"dirty worktree: {w}" for w in dirty]
+    ka, kb = a["identity"], b["identity"]
     reasons = []
     for field in sorted(set(ka) | set(kb)):
         if ka.get(field) != kb.get(field):
@@ -152,27 +173,42 @@ def manifests_match(a: dict, b: dict) -> tuple[bool, list[str]]:
 class UnitLog:
     """Append-only JSONL of per-unit records at root/units.jsonl.
 
-    Only the orchestrating process appends (workers return records)."""
+    Only the orchestrating process appends (workers return records). The
+    latest-per-unit map is cached for the lifetime of the object."""
 
     def __init__(self, root: Path):
         self.path = Path(root) / UNITS_NAME
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._latest: dict[str, dict] | None = None
 
     def append(self, record: dict) -> None:
         with open(self.path, "a", encoding="utf-8") as fh:
             fh.write(json.dumps(record, sort_keys=True) + "\n")
+        if self._latest is not None:
+            self._latest[f"{record['analyzer']}/{record['unit_id']}"] = record
 
     def __iter__(self) -> Iterator[dict]:
         if not self.path.exists():
             return iter(())
-        return iter([json.loads(line) for line in
-                     self.path.read_text(encoding="utf-8").splitlines() if line.strip()])
+        lines = [ln for ln in self.path.read_text(encoding="utf-8").splitlines()
+                 if ln.strip()]
+        recs = []
+        for i, line in enumerate(lines):
+            try:
+                recs.append(json.loads(line))
+            except json.JSONDecodeError:
+                if i != len(lines) - 1:
+                    raise
+                print("units.jsonl: ignoring torn trailing line", file=sys.stderr)
+        return iter(recs)
 
     def by_unit(self) -> dict[str, dict]:
-        latest: dict[str, dict] = {}
-        for rec in self:
-            latest[f"{rec['analyzer']}/{rec['unit_id']}"] = rec
-        return latest
+        if self._latest is None:
+            latest: dict[str, dict] = {}
+            for rec in self:
+                latest[f"{rec['analyzer']}/{rec['unit_id']}"] = rec
+            self._latest = latest
+        return self._latest
 
 
 def unit_is_current(log: UnitLog, analyzer: str, unit_id: str,
