@@ -93,3 +93,83 @@ def test_cli_new_request_and_summarize(tmp_path):
     r = subprocess.run([sys.executable, TOOL, "summarize", str(FIX / "round_response_ok.json")],
                        capture_output=True, text=True)
     assert r.returncode == 0 and r.stdout.startswith("- **r03-")
+
+
+# ---- parity: runtime checker vs the JSON Schema (jsonschema is test-only) ----
+jsonschema = pytest.importorskip("jsonschema")
+SCHEMA = json.loads((ROOT / "regression" / "round_record.schema.json").read_text())
+
+
+def _load(name):
+    return json.loads((FIX / name).read_text())
+
+
+def _mut(name, fn):
+    d = _load(name)
+    fn(d)
+    return d
+
+
+MUTATIONS = {
+    "bad_filing": ("round_response_ok.json", lambda d: d.update(filings=["KH-1"])),
+    "empty_run_ids": ("round_response_ok.json", lambda d: d.update(run_ids=[])),
+    "short_run_id": ("round_response_ok.json", lambda d: d.update(run_ids=["abc"])),
+    "bad_policy": ("round_response_ok.json", lambda d: d.update(normalization_policy="loose")),
+    "unknown_key_resp": ("round_response_ok.json", lambda d: d.update(extra=1)),
+    "unknown_key_req": ("round_request_ok.json", lambda d: d.update(extra=1)),
+    "bad_facade_until": ("round_request_ok.json",
+                         lambda d: d["relocations"][0].update(facade_until="later")),
+    "empty_symbol": ("round_request_ok.json", lambda d: d["relocations"][0].update(symbol="")),
+    "bad_kind": ("round_request_ok.json", lambda d: d.update(kind="cosmetic")),
+    "bad_sha": ("round_request_ok.json", lambda d: d.update(baseline_sha="6a91aaa")),
+    "residuals_null_report": ("round_response_ok.json",
+                              lambda d: d["deltas"].update(residuals=3, complete_report=None)),
+    "missing_evidence_rollup": ("round_response_ok.json", lambda d: d["evidence"].pop("rollup")),
+    "census_missing_key": ("round_response_ok.json", lambda d: d["census"].pop("skip_reasons")),
+    "bad_verdict_word": ("round_response_ok.json", lambda d: d["verdicts"].update(raw="fail")),
+}
+
+
+@pytest.mark.parametrize("name", ["round_request_ok.json", "round_response_ok.json"])
+def test_parity_fixtures_pass_both(name):
+    doc = _load(name)
+    jsonschema.validate(doc, SCHEMA)
+    round_record.validate_record(doc)
+
+
+def test_parity_new_request_passes_both():
+    doc = round_record.new_request("r01-x", SHA_A, SHA_B, "structural", ["standard"])
+    jsonschema.validate(doc, SCHEMA)
+    round_record.validate_record(doc)
+
+
+@pytest.mark.parametrize("case", sorted(MUTATIONS))
+def test_parity_mutations_rejected_by_both(case):
+    fixture, fn = MUTATIONS[case]
+    doc = _mut(fixture, fn)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(doc, SCHEMA)
+    with pytest.raises(ValueError):
+        round_record.validate_record(doc)
+
+
+@pytest.mark.parametrize("bad", [
+    {"record_version": 1, "round_id": "r01-x", "baseline_sha": SHA_A, "candidate_sha": SHA_B,
+     "kind": "structural", "relocations": "nope", "profiles": ["standard"], "budget": None,
+     "old_artifact_checks": [], "relock": False},
+    {"record_version": 1, "round_id": "r01-x", "baseline_sha": SHA_A, "candidate_sha": SHA_B,
+     "kind": "structural", "relocations": [5], "profiles": "standard", "budget": None,
+     "old_artifact_checks": [], "relock": False},
+])
+def test_malformed_shapes_raise_valueerror(bad):
+    with pytest.raises(ValueError):
+        round_record.validate_record(bad)
+
+
+def test_malformed_response_shapes_raise_valueerror():
+    for key, val in [("verdicts", "x"), ("executed", []), ("census", 3), ("deltas", None),
+                     ("evidence", "x"), ("relocation_status", 1), ("filings", "KH-001")]:
+        resp = _load("round_response_ok.json")
+        resp[key] = val
+        with pytest.raises(ValueError, match=key):
+            round_record.validate_record(resp)

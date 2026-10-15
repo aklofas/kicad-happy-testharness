@@ -37,52 +37,165 @@ RESPONSE_KEYS = ("record_version", "round_id", "harness_sha", "run_ids", "normal
                  "ledger_hits", "filings", "evidence", "verdict")
 
 
+_POLICY = re.compile(r"^volatile-leaves-v[0-9]+$")
+_FILING = re.compile(r"^(KH|TH)-[0-9]{3}$")
+REQUEST_OPTIONAL = ("expected",)
+RELOCATION_KEYS = ("symbol", "old_owner", "new_owner", "new_name", "facade_until")
+
+
+def _is_int(x) -> bool:
+    return isinstance(x, int) and not isinstance(x, bool)
+
+
+def _obj(doc, key, probs, required=(), exact=False):
+    """Return doc[key] if it is an object with the required keys, else record problems and return None."""
+    v = doc.get(key)
+    if not isinstance(v, dict):
+        probs.append(f"{key} must be an object")
+        return None
+    for k in required:
+        if k not in v:
+            probs.append(f"{key} missing key {k}")
+    if exact:
+        for k in v:
+            if k not in required:
+                probs.append(f"{key} has unknown key {k}")
+    return v
+
+
+def _counts(v, name, probs):
+    if not isinstance(v, dict) or any(not _is_int(n) or n < 0 for n in v.values()):
+        probs.append(f"{name} must be an object of non-negative integers")
+
+
+def _request_problems(doc, probs):
+    for k in ("baseline_sha", "candidate_sha"):
+        if not _SHA.match(str(doc[k])):
+            probs.append(f"{k} must be a full 40-hex sha")
+    if doc["kind"] not in KINDS:
+        probs.append(f"kind must be one of {KINDS}")
+    profiles = doc["profiles"]
+    if (not isinstance(profiles, list) or not profiles
+            or any(not isinstance(p, str) or p not in PROFILES for p in profiles)
+            or len(set(profiles)) != len(profiles)):
+        probs.append(f"profiles must be a non-empty unique subset of {PROFILES}")
+    if doc["budget"] is not None and not (isinstance(doc["budget"], str) and _BUDGET.match(doc["budget"])):
+        probs.append("budget must be null or regression/budgets/<name>.json")
+    if not isinstance(doc["old_artifact_checks"], list) or any(
+            not isinstance(x, str) for x in doc["old_artifact_checks"]):
+        probs.append("old_artifact_checks must be a list of strings")
+    if not isinstance(doc["relock"], bool):
+        probs.append("relock must be a boolean")
+    if "expected" in doc and not isinstance(doc["expected"], dict):
+        probs.append("expected must be an object")
+    rels = doc["relocations"]
+    if not isinstance(rels, list):
+        probs.append("relocations must be a list")
+        return
+    for i, r in enumerate(rels):
+        tag = f"relocations[{i}]"
+        if not isinstance(r, dict):
+            probs.append(f"{tag} must be an object")
+            continue
+        for k in RELOCATION_KEYS:
+            if k not in r:
+                probs.append(f"{tag} missing key {k}")
+        for k in r:
+            if k not in RELOCATION_KEYS:
+                probs.append(f"{tag} has unknown key {k}")
+        for k in ("symbol", "new_name"):
+            if k in r and not (isinstance(r[k], str) and r[k]):
+                probs.append(f"{tag}.{k} must be a non-empty string")
+        for k in ("old_owner", "new_owner"):
+            if k in r and not (isinstance(r[k], str) and _SKILL_PATH.match(r[k])):
+                probs.append(f"{tag}.{k} must be a skills/ .py path")
+        fu = r.get("facade_until")
+        if "facade_until" in r and fu is not None and not (isinstance(fu, str) and _FACADE_UNTIL.match(fu)):
+            probs.append(f"{tag}.facade_until must be null or a round id")
+
+
+def _response_problems(doc, probs):
+    if not _SHA.match(str(doc["harness_sha"])):
+        probs.append("harness_sha must be a full 40-hex sha")
+    ids = doc["run_ids"]
+    if not isinstance(ids, list) or not ids or any(not isinstance(x, str) or len(x) < 8 for x in ids):
+        probs.append("run_ids must be a non-empty list of strings of length >= 8")
+    if not (isinstance(doc["normalization_policy"], str) and _POLICY.match(doc["normalization_policy"])):
+        probs.append("normalization_policy must match ^volatile-leaves-v[0-9]+$")
+    ex = _obj(doc, "executed", probs, ("units", "pairs_by_analyzer", "checks", "tests"), exact=True)
+    if ex is not None:
+        for k in ("units", "checks"):
+            if k in ex and (not _is_int(ex[k]) or ex[k] < 0):
+                probs.append(f"executed.{k} must be a non-negative integer")
+        if "pairs_by_analyzer" in ex:
+            _counts(ex["pairs_by_analyzer"], "executed.pairs_by_analyzer", probs)
+        if "tests" in ex:
+            t = ex["tests"]
+            keys = ("collected", "passed", "skipped", "errors")
+            if (not isinstance(t, dict) or set(t) != set(keys)
+                    or any(not _is_int(t[k]) for k in keys)):
+                probs.append("executed.tests must be an object of integers collected/passed/skipped/errors")
+    ce = _obj(doc, "census", probs, ("expected", "executed", "skip_reasons"), exact=True)
+    if ce is not None:
+        for k in ("expected", "executed", "skip_reasons"):
+            if k in ce:
+                _counts(ce[k], f"census.{k}", probs)
+    v = _obj(doc, "verdicts", probs, tuple(VERDICT_WORDS), exact=True)
+    if v is not None:
+        for k, words in VERDICT_WORDS.items():
+            if k in v and v[k] not in words:
+                probs.append(f"verdicts.{k} must be one of {words}")
+    if doc["verdict"] not in FINAL_VERDICTS:
+        probs.append(f"verdict must be one of {FINAL_VERDICTS}")
+    d = _obj(doc, "deltas", probs, ("complete_report", "by_class", "residuals"), exact=True)
+    if d is not None:
+        res = d.get("residuals")
+        if "residuals" in d and (not _is_int(res) or res < 0):
+            probs.append("deltas.residuals must be a non-negative integer")
+        rep = d.get("complete_report")
+        if "complete_report" in d and rep is not None and not isinstance(rep, str):
+            probs.append("deltas.complete_report must be a string or null")
+        if "by_class" in d and not isinstance(d["by_class"], dict):
+            probs.append("deltas.by_class must be an object")
+        if _is_int(res) and res > 0 and not (isinstance(rep, str) and rep):
+            probs.append("deltas.complete_report required when residuals > 0")
+    rs = _obj(doc, "relocation_status", probs, ("migrated", "pending", "facade_still_used"), exact=True)
+    if rs is not None:
+        for k in ("migrated", "pending"):
+            if k in rs and not _is_int(rs[k]):
+                probs.append(f"relocation_status.{k} must be an integer")
+        f = rs.get("facade_still_used")
+        if "facade_still_used" in rs and (not isinstance(f, list) or any(not isinstance(x, str) for x in f)):
+            probs.append("relocation_status.facade_still_used must be a list of strings")
+    lh = doc["ledger_hits"]
+    if not isinstance(lh, list) or any(not isinstance(x, str) for x in lh):
+        probs.append("ledger_hits must be a list of strings")
+    fl = doc["filings"]
+    if not isinstance(fl, list) or any(not (isinstance(x, str) and _FILING.match(x)) for x in fl):
+        probs.append("filings must be a list of KH-NNN / TH-NNN ids")
+    ev = _obj(doc, "evidence", probs, ("manifest", "rollup"))
+    if ev is not None:
+        for k in ("manifest", "rollup"):
+            if k in ev and not isinstance(ev[k], str):
+                probs.append(f"evidence.{k} must be a string")
+        if "adjudication" in ev and ev["adjudication"] is not None and not isinstance(ev["adjudication"], str):
+            probs.append("evidence.adjudication must be a string or null")
+
+
 def _problems(doc) -> tuple[str | None, list[str]]:
     if not isinstance(doc, dict):
         return None, ["record is not an object"]
-    if doc.get("record_version") != 1:
+    if doc.get("record_version") != 1 or isinstance(doc.get("record_version"), bool):
         return None, ["record_version must be 1"]
     kind, keys = ("response", RESPONSE_KEYS) if "harness_sha" in doc else ("request", REQUEST_KEYS)
     probs = [f"missing key {k}" for k in keys if k not in doc]
+    allowed = keys + (REQUEST_OPTIONAL if kind == "request" else ())
+    probs += [f"unknown key {k}" for k in doc if k not in allowed]
     if probs:
         return kind, probs
-    if not _ROUND_ID.match(str(doc["round_id"])):
+    if not (isinstance(doc["round_id"], str) and _ROUND_ID.match(doc["round_id"])):
         probs.append("round_id must match ^r[0-9]{2,3}-[a-z0-9-]+$")
-    if kind == "request":
-        for k in ("baseline_sha", "candidate_sha"):
-            if not _SHA.match(str(doc[k])):
-                probs.append(f"{k} must be a full 40-hex sha")
-        if doc["kind"] not in KINDS:
-            probs.append(f"kind must be one of {KINDS}")
-        profiles = doc["profiles"]
-        if (not isinstance(profiles, list) or not profiles or len(set(profiles)) != len(profiles)
-                or any(p not in PROFILES for p in profiles)):
-            probs.append(f"profiles must be a non-empty unique subset of {PROFILES}")
-        if doc["budget"] is not None and not _BUDGET.match(str(doc["budget"])):
-            probs.append("budget must be null or regression/budgets/<name>.json")
-        if not isinstance(doc["relock"], bool):
-            probs.append("relock must be a boolean")
-        for r in doc["relocations"]:
-            for k in ("symbol", "old_owner", "new_owner", "new_name", "facade_until"):
-                if k not in r:
-                    probs.append(f"relocation {r.get('symbol')}: missing key {k}")
-            for k in ("old_owner", "new_owner"):
-                if k in r and not _SKILL_PATH.match(str(r[k])):
-                    probs.append(f"relocation {r.get('symbol')}: {k} must be a skills/ .py path")
-            fu = r.get("facade_until")
-            if "facade_until" in r and fu is not None and not _FACADE_UNTIL.match(str(fu)):
-                probs.append(f"relocation {r.get('symbol')}: facade_until must be null or a round id")
-    else:
-        if not _SHA.match(str(doc["harness_sha"])):
-            probs.append("harness_sha must be a full 40-hex sha")
-        for k, words in VERDICT_WORDS.items():
-            if doc["verdicts"].get(k) not in words:
-                probs.append(f"verdicts.{k} must be one of {words}")
-        if doc["verdict"] not in FINAL_VERDICTS:
-            probs.append(f"verdict must be one of {FINAL_VERDICTS}")
-        d = doc["deltas"]
-        if d.get("residuals", 0) > 0 and not d.get("complete_report"):
-            probs.append("deltas.complete_report required when residuals > 0")
+    (_request_problems if kind == "request" else _response_problems)(doc, probs)
     return kind, probs
 
 
