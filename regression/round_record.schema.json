@@ -52,7 +52,15 @@
         "product_evidence": {"type": "object", "additionalProperties": false,
           "required": ["quick_json", "schema_identical", "pinned_harness"],
           "properties": {"quick_json": {"type": "string"}, "schema_identical": {"type": "boolean"},
-                         "pinned_harness": {"type": "string"}}}
+                         "pinned_harness": {"type": "string"}}},
+        "moved_modules": {"type": "object", "additionalProperties": {"type": "string"}},
+        "emit_site_moves": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["rule_or_callee", "function", "count", "from", "to", "shape"],
+          "properties": {"rule_or_callee": {"type": "string"}, "function": {"type": "string"},
+                         "count": {"type": "integer", "minimum": 1},
+                         "from": {"$ref": "#/$defs/skill_path"}, "to": {"$ref": "#/$defs/skill_path"},
+                         "shape": {"type": "string"}}}}
       }
     },
     "side_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},

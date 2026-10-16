@@ -366,3 +366,27 @@ def test_import_relocation_map_record_shape_sidecar_and_evidence():
     extra = round_record.import_relocation_map(data, _inv())
     assert extra["expected_sidecar_changes"] == data["expected_sidecar_changes"]
     assert extra["product_evidence"] == data["product_evidence"]
+
+
+def test_import_relocation_map_carries_moved_modules_and_emit_site_moves():
+    # round-4 product map: TH-070 keying input travels with the request record
+    data = {"relocations": [],
+            "moved_modules": {"skills/kicad/scripts/schematic/reader.py": ".kicad_sch extraction verbatim"},
+            "emit_site_moves": [{"rule_or_callee": "make_finding", "function": "analyze_voltage_derating",
+                                 "count": 6, "from": "skills/kicad/scripts/analyze_schematic.py",
+                                 "to": "skills/kicad/scripts/schematic/system_analyses.py",
+                                 "shape": "missing schema_era"}]}
+    extra = round_record.import_relocation_map(data, _inv())
+    assert extra["moved_modules"] == data["moved_modules"]
+    assert extra["emit_site_moves"] == data["emit_site_moves"]
+    doc = _load("round_request_ok.json")
+    doc.update({k: data[k] for k in ("moved_modules", "emit_site_moves")})
+    jsonschema.validate(doc, SCHEMA)
+    assert round_record.validate_record(doc) == "request"
+    bad = json.loads(json.dumps(doc))
+    bad["emit_site_moves"][0]["count"] = 0
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(bad, SCHEMA)
+    with pytest.raises(ValueError):
+        round_record.validate_record(bad)
+

@@ -355,9 +355,17 @@ def scan_harness_imports(harness_root: Path, inventory: dict | None = None) -> l
                 raw = _raw_dotted(node)
                 head, _, rest = (raw or "").partition(".")
                 if head in aliases:
-                    for dotted in _chain(node, aliases):
+                    for m in sorted(aliases[head]):
+                        dotted = m + ("." + rest if rest else "")
+                        seen = set()
                         for mod, sym in _split_module(dotted, modules):
+                            seen.add((mod, sym))
                             emit(node.lineno, mod, sym)
+                        # the alias's own module boundary: a dotted module the inventory
+                        # does not list (a v3 package such as schematic.pipeline) still
+                        # binds (module, attr) exactly as `from m import attr` would
+                        if rest and (m, rest) not in seen:
+                            emit(node.lineno, m, rest)
                 for mod, name in sorted(sym_aliases.get(head, ())):
                     emit(node.lineno, mod, f"{name}.{rest}")
             if not isinstance(node, ast.Call):

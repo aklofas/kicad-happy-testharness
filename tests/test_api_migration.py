@@ -404,3 +404,21 @@ def test_apply_map_mixed_map_skips_product_entries_errors_record_entries(tmp_pat
     assert r.returncode == 2
     assert "error: kicad_utils.typo_b not in inventory" in r.stderr
     assert "note: 1 relocations name symbols the harness never bound (skipped)" in r.stderr
+
+
+def test_scan_alias_to_dotted_module_absent_from_inventory(tmp_path):
+    # v3 packages (schematic.pipeline, kicad_core.*) are not inventory modules at
+    # 6a91aaa; `import pkg.mod as a` + `a.sym` must still bind (pkg.mod, sym), the
+    # same reading `from pkg.mod import sym` gets, so a done relocation alias can
+    # cover the site instead of leaving the old symbol on the blind list.
+    t = tmp_path / "tests"
+    t.mkdir()
+    (t / "test_z.py").write_text(
+        "import schematic.pipeline as asch\n"
+        "def test_a():\n"
+        "    asch.analyze_schematic('x', no_hierarchy=True)\n", encoding="utf-8")
+    found = {(f["module"], f["symbol"]) for f in am.scan_harness_imports(tmp_path)}
+    assert ("schematic.pipeline", "<module>") in found
+    assert ("schematic.pipeline", "analyze_schematic") in found
+    assert ("schematic", "pipeline.analyze_schematic") in found    # the root reading is kept
+

@@ -41,7 +41,7 @@ RESPONSE_KEYS = ("record_version", "round_id", "harness_sha", "run_ids", "normal
 _POLICY = re.compile(r"^volatile-leaves-v[0-9]+$")
 _FILING = re.compile(r"^(KH|TH)-[0-9]{3}$")
 REQUEST_OPTIONAL = ("expected", "removed", "known_defects_deferred", "expected_sidecar_changes",
-                    "product_evidence")
+                    "product_evidence", "moved_modules", "emit_site_moves")
 RESPONSE_OPTIONAL = ("apply_map_result", "accept_baseline_diff", "scan_coverage_verdict", "budget_sha256")
 RELOCATION_KEYS = ("symbol", "old_owner", "new_owner", "new_name", "facade_until")
 SCAN_VERDICTS = ("pass", "fail", "not_run")
@@ -116,6 +116,21 @@ def _request_additions(doc, probs):
                 probs.append(f"{tag} fields must be strings")
             elif not it["leaf"].startswith("/"):
                 probs.append(f"{tag}.leaf must start with /")
+    if "moved_modules" in doc:
+        mm = doc["moved_modules"]
+        if not isinstance(mm, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in mm.items()):
+            probs.append("moved_modules must be an object of string -> string")
+    if "emit_site_moves" in doc:
+        for tag, it in _items(doc, "emit_site_moves",
+                              ("rule_or_callee", "function", "count", "from", "to", "shape"), probs):
+            for k in ("rule_or_callee", "function", "shape"):
+                if not isinstance(it[k], str):
+                    probs.append(f"{tag}.{k} must be a string")
+            if not _is_int(it["count"]) or it["count"] < 1:
+                probs.append(f"{tag}.count must be an integer >= 1")
+            for k in ("from", "to"):
+                if not (isinstance(it[k], str) and _SKILL_PATH.fullmatch(it[k])):
+                    probs.append(f"{tag}.{k} must be a skills/ .py path")
     if "product_evidence" in doc:
         pe = _obj(doc, "product_evidence", probs, ("quick_json", "schema_identical", "pinned_harness"), exact=True)
         if pe is not None:
@@ -371,7 +386,8 @@ def schema_identical(text) -> bool:
 def import_relocation_map(data: dict, inventory: dict) -> dict:
     """Request fields carried by a product relocation map; unknown top-level keys are ignored.
 
-    `product_evidence` / `expected_sidecar_changes` in the record shape are carried verbatim;
+    `product_evidence` / `expected_sidecar_changes` / `moved_modules` / `emit_site_moves` in the
+    record shape are carried verbatim;
     the older `product_evidence_tip` {quick, schema, harness_live_<sha>} shape is converted."""
     extra = {"relocations": normalize_relocations(data.get("relocations", []), inventory)}
     if "removed" in data:
@@ -383,6 +399,10 @@ def import_relocation_map(data: dict, inventory: dict) -> dict:
             for d in data["known_defects_deferred"]]
     if "expected_sidecar_changes" in data:
         extra["expected_sidecar_changes"] = data["expected_sidecar_changes"]
+    # TH-070 keying input (round-4 maps): carried verbatim
+    for key in ("moved_modules", "emit_site_moves"):
+        if key in data:
+            extra[key] = data[key]
     tip = data.get("product_evidence_tip")
     if isinstance(data.get("product_evidence"), dict):
         # record shape carried verbatim (round-3 maps); validate_record checks it
