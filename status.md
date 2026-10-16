@@ -92,6 +92,84 @@ Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa �
 
 ## Completed batches
 
+### 2026-10-16 — v3 ROUND 4 GATE 6a91aaa→9465206 ACCEPTED (FULL standard + hierarchy profiles, strict-field 0 deltas on both); harness re-baselined at 9465206 (CI pin checkpoint 5 candidate); KH-448 / TH-071 filed
+
+Candidate `9465206` (v3-dev: 16 commits over 3d4a420 — `analyze_schematic.py` split into the
+`schematic/` package by verbatim block moves, pipeline phases, `project_config.resolve_config`
+→ `ResolvedConfig`, `output_io.write_primary_run`, 118 facaded relocations retiring r09;
+budget EMPTY; `expected_sidecar_changes []`). Both product trees were clean clones
+(`results/v3_baseline/product_6a91aaa`, new `results/v3_baseline/product_9465206`; the v3-dev
+worktree is left for the maintainer's round-5 work).
+
+**Standard profile** `run_corpus_gate.py --all --kind structural --profile standard --ledger
+reference/baseline_debts/6a91aaa.json --jobs 32` (run_id `7460f65c…`, 60,627 inputs / 170,022
+unit records — one fewer than round 3, the TH-069 directory): **149,629 PASS / 0 WARN / 0 FAIL
+/ 20,393 SKIP** (20,379 thermal not_applicable + 5 both_failed + 9 dependency_missing = the 14
+ledgered identities: KH-447 timeouts discrete-nes ram/row_group + LT3514 with their 9 emc/
+thermal/cross dependents, KH-446 crashes holy60-3d/tofyKeeb exit 1; identical exit codes both
+sides); findings STRICT-CLEAN; **census exact with pcb 18,660** (sch 36,465 / gerber 5,502 /
+emc+thermal+cross 36,462); **strict-field 0 deltas over 149,629 compared units, 0 policy
+violations**; raw = the two run-id leaves only (299,258 byte deltas, run_id_differs 149,629);
+candidate_failures 0; GATE PASS exit 0 first evaluation (ledgered 14 / unledgered 0 /
+unaccepted 0). Wall 8,106 s including a ~50 min SIGSTOP pause at the user's request (no unit
+timed out because of it: the 3 timeouts are the ledgered KH-447 units). `--schema` ×6
+byte-identical both sides and == the round-2/3 captures. Sidecar diff
+(`_aux/sidecar_diff.json`): 149,634 pairs, 0 one-sided, differing leaves `run_id` + the
+round-3 `/schema_versions` only — no new leaf, as declared.
+
+**Hierarchy profile** (schematic only, default hierarchy mode, 300 s cap): the
+`hierarchical` cross-section still reads 0 (TH-044), so the selection is the 300 repos with
+the most schematic files in one directory (`_aux/hierarchy_repos.txt`, built by
+`hier_select.py`: 2,436 multi-sheet repos ranked by max files per dir, cap 300 → 9,848
+schematic units, 90 repos with legacy multi-sheet `.sch`, smallest selected max-per-dir 11;
+BerkeleyLab/Marble, aswinvenu/beaglev, discrete-nes… included). `--repo-list … --profile
+hierarchy --kind structural --ledger … --jobs 10` (run_id `c46ee754…`): **9,848 PASS / 0 SKIP /
+0 timeouts (max unit 11.1 s)**; strict-field 9,848 identical / 0 deltas; raw = run_id only;
+GATE PASS. Attempt 1 at `--jobs 32` was killed at 3,691 units: 32 Marble sub-sheet units in
+flight at ~2.2 GB RSS each took the box to 60 of 62 GB and the kernel OOM killer fired
+(evidence `_aux/hier_attempt1_jobs32/`). Isolated A/B of one Marble sub-sheet: 6a91aaa
+3,077 MB / 10.3 s vs 9465206 3,050 MB / 11.1 s, outputs byte-identical → pre-existing
+footprint, **KH-448** (LOW) filed; gate job sizing → **TH-071** (LOW) filed + RUNBOOK preflight
+note. The three-board `run_hierarchy_regression_gate.py` contract gate also 3/3 PASS at
+9465206 (`_aux/hierarchy_3board_9465206.log`).
+
+**Verdict: ACCEPT.** Evidence `results/v3_round4_gate/` (rollup, units.jsonl, manifest, field
+reports, request/response records, map) + `results/v3_round4_gate_hier/` (same; its 181 G
+baseline/candidate snap trees PRUNED the same day — every sub-sheet unit carries the full
+project output, `diff/` + reports + manifest kept) + `results/v3_round4_gate_aux/` (schema ×6,
+scan check/re-key/accept, registry relocate + scans, sidecar diff, Marble measurement, tier
+logs, the maintainer's handoff files, round-4 review report). Round-3 snap trees pruned
+(records kept); round-4 standard trees (55 G) kept until round 5 is accepted.
+
+Re-baseline at 9465206: scan exception `usb-compliance-rule-id-loop` re-keyed to
+`schematic/system_analyses.py` (site unchanged, :2465) → `source_scan.py check` then showed
+only the 127 TH-070 lost_constants (119 analyze_schematic + 4 bus_resolver module moves, 2
+project_config + 2 signal_detectors line shifts) and the file-keyed lost_sites of that same
+exception → `--accept-baseline` (`_aux/scan_accept_9465206.txt`; pre-accept copy
+`scan_coverage_baseline.3d4a420.json`): constants 720 → 719 (the one true removal =
+`main|config`, the dict literal of the deleted `except ImportError` fallback), files 105 → 118,
+emit_sites 37 / untagged 24 / eq_ids 105 unchanged; post-accept check CLEAN. Constants
+registry via `audit_constants.py relocate --map round4-request.json` (121 entries) then `scan`:
+38 added / 110 updated / 39 removed (anonymous `func:line` keys + the split-function locals
+`_IC_TYPES`/`sev_counts`/`_sev_counts`/`ps` + `main|config`), 719 total, **verified 183 → 183**
+(one carried by hand: `parse_legacy_schematic|ps` → `analyze_legacy_schematic|ps`, scope
+renamed, not in the map); 18 hash-changed = per-function result-dict literals, 11 AST-identical
+across the trees by direct check, 7 dict literals built in loop bodies that the checker did not
+resolve (files are verbatim moves per the reviewer; gate strict-clean). Equations: 105, 0
+added/updated/removed, 5 relocated (EQ-061/062/063/064/097, statuses kept). apply-map: 183
+sites / 13 files = the 13 `analyze_schematic` imports + 3 `bus_resolver` names + `import
+analyze_schematic as asch` → migrated to `schematic.{connectivity,audits,net_analysis,reader,
+system_analyses,pipeline}` (18 import edits, 99 tests green); dispositions r04 done for 16
+symbols + `analyze_schematic.<module>` (24 migrate-done total); `api_migration check` = the one
+expected `normalize_severity` violation. Two harness fixes on the way: `round_record.py`
+importer now carries `moved_modules` / `emit_site_moves` (schema + validator + test; the
+round-4 request re-imported); `api_migration.py` scanner now binds `alias.attr` through
+`import pkg.mod as alias` for dotted modules absent from the 6a91aaa inventory (was leaving
+`analyze_schematic.<module>` on the live blind list; test added). Tiers vs 9465206 before:
+3,074 passed / 1 failed (scan coverage, as the maintainer measured) / 8 skipped / 4 xfailed;
+**after: 3,077 passed / 0 failed / 8 skipped / 4 xfailed** (3,089 collected). Reply LOG
+`[harness] 2026-10-16 later`. Push pending (checkpoint-5 candidate; `e274d031768` rides with it).
+
 ### 2026-10-15 later (7) — v3 ROUND 3 GATE 6a91aaa→3d4a420 ACCEPTED (FULL standard profile, strict-field 0 deltas); harness re-baselined at 3d4a420 (CI pin checkpoint 4 candidate)
 
 Candidate `3d4a420` (v3-dev: 10 commits over 8912a5a — kicad_core/model.py typed records,
