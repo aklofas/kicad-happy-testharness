@@ -35,7 +35,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from analyze_schematic import build_net_map
+from schematic.connectivity import build_net_map
 
 
 def _comp(ref, x, y, sheet=0, pin="1"):

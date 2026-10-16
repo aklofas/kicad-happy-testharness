@@ -7,7 +7,7 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
-from analyze_schematic import analyze_sleep_current
+from schematic.system_analyses import analyze_sleep_current
 from kicad_types import build_analysis_context
 
 

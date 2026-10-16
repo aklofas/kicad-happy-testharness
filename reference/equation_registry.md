@@ -2,7 +2,7 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-15T22:59:56.112782+00:00
+**Last scan:** 2026-10-16T05:50:42.605657+00:00
 
 ## Summary
 
@@ -104,16 +104,6 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from via center to any Edge.Cuts line segment. | geometry | low | **unverified** |
 | EQ-104 | `_pt_seg_dist` | Helper — same 2D point-to-segment distance as EQ-098. | geometry | low | **unverified** |
 
-## skills/kicad/scripts/analyze_schematic.py
-
-| ID | Function | Formula | Category | Impact | Status |
-|---|---|---|---|---|---|
-| EQ-061 | `_cap_impedance` | \|Z\| = √(ESR²+(2πfL-1/(2πfC))²) at given frequency | filter_design | high | **verified** |
-| EQ-062 | `analyze_pdn_impedance` | \|Z\| = √(ESR²+(ωL-1/ωC)²) swept over frequency | impedance | high | **verified** |
-| EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **stale** |
-| EQ-064 | `analyze_wire_geometry` | L = √(Δx²+Δy²) (wire segment length) | filter_design | high | **verified** |
-| EQ-097 | `_detect_i2c_buses` | t_r = 0.8473 * R_pullup * C_bus (RC time constant to 70% VDD) | filter_design | high | **verified** |
-
 ## skills/kicad/scripts/kicad_core/passives.py
 
 | ID | Function | Formula | Category | Impact | Status |
@@ -127,6 +117,26 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 |---|---|---|---|---|---|
 | EQ-068 | `parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **verified** |
 | EQ-107 | `snap_to_e_series` | Log-decade snapping — normalize v into [1, 10) via | unknown | medium | **verified** |
+
+## skills/kicad/scripts/schematic/audits.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-064 | `analyze_wire_geometry` | L = √(Δx²+Δy²) (wire segment length) | filter_design | high | **verified** |
+
+## skills/kicad/scripts/schematic/net_analysis.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-097 | `_detect_i2c_buses` | t_r = 0.8473 * R_pullup * C_bus (RC time constant to 70% VDD) | filter_design | high | **verified** |
+
+## skills/kicad/scripts/schematic/system_analyses.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-061 | `_cap_impedance` | \|Z\| = √(ESR²+(2πfL-1/(2πfC))²) at given frequency | filter_design | high | **verified** |
+| EQ-062 | `analyze_pdn_impedance` | \|Z\| = √(ESR²+(ωL-1/ωC)²) swept over frequency | impedance | high | **verified** |
+| EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **stale** |
 
 ## skills/kicad/scripts/signal_detectors.py
 

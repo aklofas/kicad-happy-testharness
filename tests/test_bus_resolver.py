@@ -10,7 +10,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from bus_resolver import expand_bus_name, BusGraph, match_ports
+from schematic.connectivity import expand_bus_name, BusGraph, match_ports
 
 
 def test_vector_ascending_descending_and_singleton():

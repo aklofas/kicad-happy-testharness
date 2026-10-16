@@ -142,7 +142,7 @@ def test_ds003_ss002_share_unique_bom_line_denominator(tmp_path):
     """
     if _skip_if_no_kh():
         return
-    from analyze_schematic import audit_datasheet_coverage, audit_sourcing_gate
+    from schematic.audits import audit_datasheet_coverage, audit_sourcing_gate
 
     components = [
         _bom_component("R1", "10k", "Resistor_SMD:R_0402_1005Metric",

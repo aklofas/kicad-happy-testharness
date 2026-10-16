@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_scan": "2026-10-15T22:59:56.112782+00:00",
+  "last_scan": "2026-10-16T05:50:42.605657+00:00",
   "equations": [
     {
       "id": "EQ-001",
@@ -883,8 +883,8 @@
     {
       "id": "EQ-061",
       "formula": "|Z| = \u221a(ESR\u00b2+(2\u03c0fL-1/(2\u03c0fC))\u00b2) at given frequency",
-      "file": "skills/kicad/scripts/analyze_schematic.py",
-      "line": 6398,
+      "file": "skills/kicad/scripts/schematic/system_analyses.py",
+      "line": 83,
       "function": "_cap_impedance",
       "sources": [],
       "content_hash": "sha256:f37b8b80c886a871",
@@ -893,13 +893,13 @@
       "impact": "high",
       "verification_source": "Same as EQ-013. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_schematic.py"
+      "relocated_from": "skills/kicad/scripts/analyze_schematic.py"
     },
     {
       "id": "EQ-062",
       "formula": "|Z| = \u221a(ESR\u00b2+(\u03c9L-1/\u03c9C)\u00b2) swept over frequency",
-      "file": "skills/kicad/scripts/analyze_schematic.py",
-      "line": 6357,
+      "file": "skills/kicad/scripts/schematic/system_analyses.py",
+      "line": 42,
       "function": "analyze_pdn_impedance",
       "sources": [],
       "content_hash": "sha256:3d6720301149488f",
@@ -908,13 +908,13 @@
       "impact": "high",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_schematic.py"
+      "relocated_from": "skills/kicad/scripts/analyze_schematic.py"
     },
     {
       "id": "EQ-063",
       "formula": "t_rise = 0.8473 \u00d7 R \u00d7 C (I2C rise time estimation)",
-      "file": "skills/kicad/scripts/analyze_schematic.py",
-      "line": 7325,
+      "file": "skills/kicad/scripts/schematic/system_analyses.py",
+      "line": 1010,
       "function": "analyze_protocol_compliance",
       "sources": [],
       "content_hash": "sha256:da534f3da773e9c2",
@@ -922,13 +922,14 @@
       "category": "filter_design",
       "impact": "high",
       "verification_source": "I2C rise time: t_r=0.8473\u00d7R\u00d7C. I2C spec UM10204 Rev.7.0 \u00a77.2. 0.8473 = ln(0.7/0.3) for 30%-70% thresholds. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_schematic.py"
     },
     {
       "id": "EQ-064",
       "formula": "L = \u221a(\u0394x\u00b2+\u0394y\u00b2) (wire segment length)",
-      "file": "skills/kicad/scripts/analyze_schematic.py",
-      "line": 5942,
+      "file": "skills/kicad/scripts/schematic/audits.py",
+      "line": 959,
       "function": "analyze_wire_geometry",
       "sources": [],
       "content_hash": "sha256:8bfd134d982b3cf6",
@@ -937,7 +938,7 @@
       "impact": "high",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_schematic.py"
+      "relocated_from": "skills/kicad/scripts/analyze_schematic.py"
     },
     {
       "id": "EQ-066",
@@ -1003,7 +1004,7 @@
       "id": "EQ-070",
       "formula": "Threshold comparisons for design quality metrics",
       "file": "skills/kicad/scripts/signal_detectors.py",
-      "line": 3466,
+      "line": 3472,
       "function": "detect_design_observations",
       "sources": [],
       "content_hash": "sha256:1ef99b9ca1d4db68",
@@ -1421,8 +1422,8 @@
     {
       "id": "EQ-097",
       "formula": "t_r = 0.8473 * R_pullup * C_bus (RC time constant to 70% VDD)",
-      "file": "skills/kicad/scripts/analyze_schematic.py",
-      "line": 4271,
+      "file": "skills/kicad/scripts/schematic/net_analysis.py",
+      "line": 674,
       "function": "_detect_i2c_buses",
       "sources": [],
       "content_hash": "sha256:c14614adda9f1669",
@@ -1431,7 +1432,7 @@
       "impact": "high",
       "verification_source": "I2C rise time: t_r = 0.8473 * R * C (ln(0.7^-1) * RC = 0.3567*RC to 70% VDD threshold); NXP I2C-bus spec \u00a73.1; confirmed correct coefficient [Re-confirmed 2026-04-16 post-analyzer-refactor; renumbered from collision with EQ-089 in emc_formulas.py]",
       "notes": null,
-      "relocated_from": "analyze_schematic.py"
+      "relocated_from": "skills/kicad/scripts/analyze_schematic.py"
     },
     {
       "id": "EQ-098",

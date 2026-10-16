@@ -48,7 +48,7 @@ _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 from kicad_types import build_analysis_context  # noqa: E402
-from analyze_schematic import analyze_power_budget  # noqa: E402
+from schematic.system_analyses import analyze_power_budget  # noqa: E402
 
 
 def _pin(ref, num, ptype="passive", name="~"):

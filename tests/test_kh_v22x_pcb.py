@@ -17,7 +17,7 @@ _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 import analyze_pcb as ap
-import analyze_schematic as asch
+import schematic.pipeline as asch
 
 _SIMPLE_SCH_FIXTURE = _HARNESS / "tests" / "fixtures" / "simple-project" / "simple.kicad_sch"
 

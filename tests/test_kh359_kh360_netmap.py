@@ -11,7 +11,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from analyze_schematic import build_net_map
+from schematic.connectivity import build_net_map
 
 
 def _comp(ref, x, y, sheet=0, pin="1"):
@@ -107,7 +107,7 @@ def test_bus_alias_members_resolve_against_qualified_keys():
     # local-labelled wire "D0" -> qualified keys /top/D0, /sub/D0. The
     # member-resolution check in analyze_bus_topology must match the bare
     # member name against display_name, not just the raw net key.
-    from analyze_schematic import analyze_bus_topology
+    from schematic.audits import analyze_bus_topology
 
     wires = [{"x1": 0, "y1": 0, "x2": 10, "y2": 0, "_sheet": s} for s in (0, 1)]
     labels = [_label("D0", 5, 0, sheet=s) for s in (0, 1)]
@@ -127,7 +127,7 @@ def test_diffpair_detection_pairs_within_sheet_not_across():
     # Two sheets each carry a local USB_P/USB_N pair -> qualified keys.
     # _detect_differential_pairs must find both same-sheet pairs and must
     # NOT cross-pair /s1/USB_P with /s2/USB_N (or vice versa).
-    from analyze_schematic import _detect_differential_pairs
+    from schematic.net_analysis import _detect_differential_pairs
     from kicad_types import build_analysis_context
 
     wires = []
@@ -157,7 +157,7 @@ def test_diffpair_detection_pairs_within_sheet_not_across():
 def test_diffpair_unqualified_board_unchanged():
     # No collisions -> bare keys, empty prefix; end-to-end pairing behavior
     # matches the pre-Task-4 single-map lookup.
-    from analyze_schematic import _detect_differential_pairs
+    from schematic.net_analysis import _detect_differential_pairs
     from kicad_types import build_analysis_context
 
     wires = [
@@ -184,7 +184,7 @@ def test_diffpair_case_collision_matches_old_last_wins_semantics():
     # first-wins (setdefault). Computes the old-semantics reference
     # inline from the literal old algorithm so this locks in the *true*
     # old behavior, not an assumed one.
-    from analyze_schematic import _detect_differential_pairs
+    from schematic.net_analysis import _detect_differential_pairs
     from kicad_types import build_analysis_context
 
     nets = {
@@ -486,7 +486,7 @@ def test_validate_hierarchical_labels_bus_filter_excludes_bus_names_only():
     # be excluded from unconnected_hierarchical. A markup label like ~{OE}
     # is NOT a bus name (expand_bus_name returns None for it) and must stay
     # subject to the check.
-    from analyze_schematic import validate_hierarchical_labels
+    from schematic.audits import validate_hierarchical_labels
 
     labels = [
         _label("In[0..7]", 0, 0, ltype="hierarchical_label"),

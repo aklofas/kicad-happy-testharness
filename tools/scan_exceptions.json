@@ -10,7 +10,7 @@
       "reason": "positional-emc",
       "count": 53,
       "detector_derivation": "emc_<category> from positional arg 0; rule_id from positional arg 2 (both literal strings today)",
-      "retire_by": "v3.0 output-changing round that reshapes EMC findings (spec §4.1); emitted detector strings stay frozen"
+      "retire_by": "v3.0 output-changing round that reshapes EMC findings (spec \u00a74.1); emitted detector strings stay frozen"
     },
     {
       "id": "det-enum-shorted-two-pin",
@@ -23,11 +23,11 @@
     },
     {
       "id": "usb-compliance-rule-id-loop",
-      "file": "skills/kicad/scripts/analyze_schematic.py",
+      "file": "skills/kicad/scripts/schematic/system_analyses.py",
       "callee": "make_finding",
       "reason": "rule_id:nonliteral",
       "count": 1,
-      "note": "rule_id=_rid iterates the UC-001..UC-004 spec dict; the four rule IDs are literal keys of that dict",
+      "note": "rule_id=_rid iterates the UC-001..UC-004 spec dict; the four rule IDs are literal keys of that dict; site moved analyze_schematic.py -> schematic/system_analyses.py:2465 at v3 round 4 (9465206), re-keyed per TH-070",
       "retire_by": "any product round touching analyze_usb_compliance; unroll or pass literals"
     }
   ]

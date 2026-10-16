@@ -6,7 +6,7 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
-from analyze_schematic import _estimate_rail_voltage
+from schematic.net_analysis import _estimate_rail_voltage
 from signal_detectors import _infer_rail_voltage
 
 

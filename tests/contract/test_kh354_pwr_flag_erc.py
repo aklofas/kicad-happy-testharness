@@ -8,7 +8,8 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
-from analyze_schematic import build_net_map, audit_pwr_flags
+from schematic.connectivity import build_net_map
+from schematic.audits import audit_pwr_flags
 
 
 def _components(with_flag):
