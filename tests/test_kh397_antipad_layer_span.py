@@ -17,7 +17,9 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-import analyze_pcb  # noqa: E402
+import pcb.reader as pcb_reader  # noqa: E402
+import pcb.routing as pcb_routing  # noqa: E402
+from kicad_core.sexp import parse_file  # noqa: E402
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures/kh392-antipad/board.kicad_pcb"
 
@@ -25,7 +27,7 @@ ORDER = ["F.Cu", "In1.Cu", "In2.Cu", "B.Cu"]
 
 
 def test_via_span():
-    f = analyze_pcb._via_spans_layer
+    f = pcb_routing._via_spans_layer
     assert f(["F.Cu", "In1.Cu"], "In2.Cu", ORDER) is False
     assert f(["F.Cu", "B.Cu"], "In2.Cu", ORDER) is True
     assert f(["In1.Cu", "B.Cu"], "In1.Cu", ORDER) is True
@@ -37,17 +39,17 @@ def test_via_span():
 def test_copper_order():
     st = [{"type": "copper", "name": "F.Cu"}, {"type": "core"}, {"type": "copper", "name": "In1.Cu"},
           {"type": "prepreg"}, {"type": "copper", "name": "B.Cu"}]
-    assert analyze_pcb._copper_order_from_stackup(st) == ["F.Cu", "In1.Cu", "B.Cu"]
-    assert analyze_pcb._copper_order_from_stackup([]) == ["F.Cu", "B.Cu"]
+    assert pcb_routing._copper_order_from_stackup(st) == ["F.Cu", "In1.Cu", "B.Cu"]
+    assert pcb_routing._copper_order_from_stackup([]) == ["F.Cu", "B.Cu"]
 
 
 def _load_fixture():
-    root = analyze_pcb.parse_file(str(FIXTURE))
-    net_names = analyze_pcb.extract_nets(root)
-    footprints = analyze_pcb.extract_footprints(root)
-    tracks = analyze_pcb.extract_tracks(root)
-    vias_extracted = analyze_pcb.extract_vias(root)
-    zones, zone_fills = analyze_pcb.extract_zones(root)
+    root = parse_file(str(FIXTURE))
+    net_names = pcb_reader.extract_nets(root)
+    footprints = pcb_reader.extract_footprints(root)
+    tracks = pcb_reader.extract_tracks(root)
+    vias_extracted = pcb_reader.extract_vias(root)
+    zones, zone_fills = pcb_reader.extract_zones(root)
     return net_names, footprints, tracks, vias_extracted, zones, zone_fills
 
 
@@ -69,7 +71,7 @@ def test_kh397_blind_via_denied_layer_credit_through_via_still_credited():
         vias["vias"].append(v)
 
     debug_samples = []
-    analyze_pcb.analyze_return_path_continuity(
+    pcb_routing.analyze_return_path_continuity(
         tracks, net_names, zones, zone_fills,
         signal_nets={"SENSE1", "SENSE2"},
         ref_layer_map={"F.Cu": "In2.Cu"},

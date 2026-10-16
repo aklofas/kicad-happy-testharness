@@ -130,19 +130,19 @@
     {
       "identity": "tests/contract/test_noise_budget.py::test_error_findings_have_provenance[ascii_display_module]",
       "kind": "xfailed",
-      "reason": "LOG 14: DS-001 + SS-001 currently fire as severity=error without provenance blocks, signalling 'no datasheets present' as a hard error on every hobbyist board. v1.5 fix: either reclassify these to severity=warning, or attach provenance describing the BOM/datasheet inputs that drove the determination. When the fix lands this XPASSES → remove xfail to convert into a positive lock.",
+      "reason": "LOG 14: DS-001 + SS-001 currently fire as severity=error without provenance blocks, signalling 'no datasheets present' as a hard error on every hobbyist board. v1.5 fix: either reclassify these to severity=warning, or attach provenance describing the BOM/datasheet inputs that drove the determination. When the fix lands this XPASSES \u2192 remove xfail to convert into a positive lock.",
       "accepted_by": "main-repo LOG 2026-10-15 ROUND-2 REPLY (product 8912a5a)"
     },
     {
       "identity": "tests/contract/test_noise_budget.py::test_error_findings_have_provenance[ir_uart]",
       "kind": "xfailed",
-      "reason": "LOG 14: DS-001 + SS-001 currently fire as severity=error without provenance blocks, signalling 'no datasheets present' as a hard error on every hobbyist board. v1.5 fix: either reclassify these to severity=warning, or attach provenance describing the BOM/datasheet inputs that drove the determination. When the fix lands this XPASSES → remove xfail to convert into a positive lock.",
+      "reason": "LOG 14: DS-001 + SS-001 currently fire as severity=error without provenance blocks, signalling 'no datasheets present' as a hard error on every hobbyist board. v1.5 fix: either reclassify these to severity=warning, or attach provenance describing the BOM/datasheet inputs that drove the determination. When the fix lands this XPASSES \u2192 remove xfail to convert into a positive lock.",
       "accepted_by": "main-repo LOG 2026-10-15 ROUND-2 REPLY (product 8912a5a)"
     },
     {
       "identity": "tests/contract/test_noise_budget.py::test_error_findings_have_provenance[macropad]",
       "kind": "xfailed",
-      "reason": "LOG 14: DS-001 + SS-001 currently fire as severity=error without provenance blocks, signalling 'no datasheets present' as a hard error on every hobbyist board. v1.5 fix: either reclassify these to severity=warning, or attach provenance describing the BOM/datasheet inputs that drove the determination. When the fix lands this XPASSES → remove xfail to convert into a positive lock.",
+      "reason": "LOG 14: DS-001 + SS-001 currently fire as severity=error without provenance blocks, signalling 'no datasheets present' as a hard error on every hobbyist board. v1.5 fix: either reclassify these to severity=warning, or attach provenance describing the BOM/datasheet inputs that drove the determination. When the fix lands this XPASSES \u2192 remove xfail to convert into a positive lock.",
       "accepted_by": "main-repo LOG 2026-10-15 ROUND-2 REPLY (product 8912a5a)"
     },
     {
@@ -218,6 +218,16 @@
       "side": "baseline",
       "elapsed_s": 121.574,
       "accepted_by": "main-repo LOG 2026-10-15 ROUND-2 REPLY (product 8912a5a)"
+    },
+    {
+      "identity": "pcb/azonenberg/starshipraider/boards_MAXWELL_maxwell-main_maxwell-main.kicad_pcb",
+      "analyzer": "pcb",
+      "unit_id": "azonenberg/starshipraider/boards_MAXWELL_maxwell-main_maxwell-main.kicad_pcb",
+      "side": "baseline",
+      "elapsed_s": 600.181,
+      "accepted_by": null,
+      "profile": "full-chain",
+      "note": "pcb --full exceeds the 600 s full-chain cap on both sides (v3 round-5 gate 2026-10-16, run f6784ec3); not in the H0 seed-23 sample; the standard profile (no --full) completes"
     }
   ],
   "crash_units": [
@@ -244,13 +254,23 @@
       "exit_code": 1,
       "detail": "no_output",
       "accepted_by": "main-repo LOG 2026-10-15 ROUND-2 VERDICT RECEIVED (product 8912a5a)"
+    },
+    {
+      "identity": "schematic/cristobalcuevas/Kicad/LT3514_LT3514.kicad_sch",
+      "analyzer": "schematic",
+      "unit_id": "cristobalcuevas/Kicad/LT3514_LT3514.kicad_sch",
+      "exit_code": -9,
+      "detail": "no_output",
+      "accepted_by": null,
+      "profile": "full-chain",
+      "note": "SIGKILL by the host OOM killer at ~400 s on both sides under the 600 s cap (v3 round-5 gate 2026-10-16, run f6784ec3): the KH-447 unit is a memory blow-up in parse_all_sheets (>= 19.5 GB at 77 s under a 20 GB rlimit); the standard profile's 120 s cap records the same unit as the ledgered timeout"
     }
   ],
   "nondeterminism": [
     {
       "identity": "KH-421",
       "repo": "BerkeleyLab/Marble",
-      "summary": "hash-seed nondeterminism on BerkeleyLab/Marble U54 (STM32F207) — PS-001 and a DO-DET \"Regulator U54 missing capacitors\" vary with PYTHONHASHSEED (539/538/537 findings at seeds 0/1/3)",
+      "summary": "hash-seed nondeterminism on BerkeleyLab/Marble U54 (STM32F207) \u2014 PS-001 and a DO-DET \"Regulator U54 missing capacitors\" vary with PYTHONHASHSEED (539/538/537 findings at seeds 0/1/3)",
       "accepted_by": "main-repo LOG 2026-10-15 ROUND-2 REPLY (product 8912a5a)"
     }
   ],

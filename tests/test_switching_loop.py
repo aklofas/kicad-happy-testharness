@@ -23,7 +23,7 @@ _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 sys.path.insert(0, os.path.join(_KH, "skills", "emc", "scripts"))
 
-from analyze_pcb import _compute_switching_loop_areas
+from pcb.assembly import _compute_switching_loop_areas
 from emc_rules import check_input_cap_loop_area
 
 _RESULTS = _HARNESS / "results" / "outputs"

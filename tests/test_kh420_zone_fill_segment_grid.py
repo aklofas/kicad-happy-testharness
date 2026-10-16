@@ -23,8 +23,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = Path(os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy")))
 sys.path.insert(0, str(_KH / "skills" / "kicad" / "scripts"))
 
-import analyze_pcb
-from analyze_pcb import ZoneFills, _dist_point_to_segment
+from pcb.geometry import ZoneFills, _dist_point_to_segment
 
 NLOY = _HARNESS / "repos/NLoy/Touch_Keyboard_10x12_KiCAD/Touch_Keyboard_10x12_Matrix.kicad_pcb"
 KH413 = _HARNESS / "tests/fixtures/kh413/tht_touch_pad.kicad_pcb"

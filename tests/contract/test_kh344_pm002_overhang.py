@@ -7,7 +7,7 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
-from analyze_pcb import analyze_placement
+from pcb.assembly import analyze_placement
 
 
 def test_negative_clearance_reframed_as_overhang():

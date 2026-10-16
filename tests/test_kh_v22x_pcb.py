@@ -16,8 +16,13 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-import analyze_pcb as ap
+import pcb.pipeline as ap
 import schematic.pipeline as asch
+# round-5 patch targets: read_board calls reader.extract_footprints through the
+# module attribute and presentation.assemble_result binds build_connectivity_graph
+# by name, so patches must land on the owning modules (spec §13).
+import pcb.reader as pcb_reader
+import pcb.presentation as pcb_presentation
 
 _SIMPLE_SCH_FIXTURE = _HARNESS / "tests" / "fixtures" / "simple-project" / "simple.kicad_sch"
 
@@ -129,14 +134,14 @@ def test_net_id_map_reset_before_footprint_extraction(tmp_path):
     board_b.write_text(_kicad10_pad_board([("U1", "1", "AAA"), ("U2", "1", "COMMON")]))
 
     captured = []
-    real_extract = ap.extract_footprints
+    real_extract = pcb_reader.extract_footprints
 
     def spy(root):
         fps = real_extract(root)
         captured.append(fps)
         return fps
 
-    with patch.object(ap, "extract_footprints", side_effect=spy):
+    with patch.object(pcb_reader, "extract_footprints", side_effect=spy):
         ap.analyze_pcb(str(board_a))
         ap.analyze_pcb(str(board_b))
         ap.analyze_pcb(str(board_a))
@@ -159,7 +164,7 @@ def test_connectivity_graph_failure_surfaces_error_note(tmp_path):
     pcb = tmp_path / "vp001.kicad_pcb"
     pcb.write_text(_vp001_board())
 
-    with patch.object(ap, "build_connectivity_graph",
+    with patch.object(pcb_presentation, "build_connectivity_graph",
                        side_effect=RuntimeError("boom")):
         result = ap.analyze_pcb(str(pcb), include_trace_segments=True)
 

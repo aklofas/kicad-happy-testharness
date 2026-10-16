@@ -22,7 +22,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-import analyze_pcb  # noqa: E402
+import pcb.assembly as pcb_assembly  # noqa: E402
 
 
 def _fp(ref, value, x, pads):
@@ -33,7 +33,7 @@ def _fp(ref, value, x, pads):
 
 def test_ground_only_cap_is_not_associated():
     fps = [_fp("U1", "MCU", 0.0, ["+3V3", "GND"]), _fp("C1", "100n", 2.0, ["GND", "SIG_X"]), _fp("C2", "100n", 7.0, ["+3V3", "GND"])]
-    out = analyze_pcb.analyze_decoupling_placement(fps)
+    out = pcb_assembly.analyze_decoupling_placement(fps)
     assert len(out) == 1 and out[0]["ic"] == "U1"
     assert [c["cap"] for c in out[0]["nearby_caps"]] == ["C2"]
     # Note: 6.5mm, not the naive pin-1-to-pin-1 reading of 7.0mm -- U1's GND
@@ -47,12 +47,12 @@ def test_ground_only_cap_is_not_associated():
 
 def test_no_shared_power_net_means_no_entry():
     fps = [_fp("U1", "MCU", 0.0, ["+3V3", "GND"]), _fp("C1", "100n", 2.0, ["GND", "SIG_X"])]
-    assert analyze_pcb.analyze_decoupling_placement(fps) == []
+    assert pcb_assembly.analyze_decoupling_placement(fps) == []
 
 
 def test_esd_only_board_gets_esd_bypass_entry():
     fps = [_fp("U9", "USBLC6-2SC6", 0.0, ["VBUS", "GND"]), _fp("C3", "100n", 1.0, ["VBUS", "GND"])]
-    out = analyze_pcb.analyze_decoupling_placement(fps)
+    out = pcb_assembly.analyze_decoupling_placement(fps)
     assert out and out[0]["category"] == "esd_bypass" and out[0]["ic"] == "U9"
 
 

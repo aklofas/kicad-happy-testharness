@@ -60,7 +60,7 @@ def _via_in_pad(fixture):
 
 
 def test_outline_points_circle():
-    from analyze_pcb import _pad_outline_points
+    from pcb.geometry import _pad_outline_points
     pts = _pad_outline_points("circle", 7.5, 7.5)
     assert len(pts) == 8, pts
     for x, y in pts:
@@ -71,7 +71,7 @@ def test_outline_points_circle():
 
 
 def test_outline_points_oval():
-    from analyze_pcb import _pad_outline_points
+    from pcb.geometry import _pad_outline_points
     pts = _pad_outline_points("oval", 5.0, 2.0)
     for x, y in pts:
         val = max(abs(x) - 3.0, 0) ** 2 + y ** 2
@@ -90,7 +90,7 @@ def test_outline_points_oval():
 
 
 def test_outline_points_rect_unchanged():
-    from analyze_pcb import _pad_outline_points
+    from pcb.geometry import _pad_outline_points
     expected = [(-1, -2), (0, -2), (1, -2), (1, 0), (1, 2), (0, 2), (-1, 2), (-1, 0)]
     assert _pad_outline_points("rect", 1, 2) == expected
     assert _pad_outline_points("roundrect", 1, 2) == expected

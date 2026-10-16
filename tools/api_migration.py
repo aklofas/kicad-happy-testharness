@@ -15,6 +15,7 @@ import argparse
 import ast
 import fnmatch
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -390,7 +391,10 @@ def scan_harness_imports(harness_root: Path, inventory: dict | None = None) -> l
             if target and isinstance(target[1], str):
                 for dotted in _chain(target[0], aliases):
                     emit(node.lineno, dotted.rsplit(".", 1)[-1], target[1])
-                    if "." in dotted and dotted in modules:
+                    # a dotted module absent from the inventory (a v3 package such as
+                    # pcb.presentation) binds the patch target exactly as the attribute
+                    # branch reads `alias.attr` (round-5 patch_targets)
+                    if "." in dotted:
                         emit(node.lineno, dotted, target[1])
     return out
 
@@ -401,11 +405,19 @@ def _still_referenced(harness_root: Path, module: str, symbol: str, files: list[
     The inventory is frozen; a round that deletes every site of a symbol (a
     retired consumer) leaves inventory sites behind that no longer exist.
     Those are gone, not blind."""
-    token = module.rsplit(".", 1)[-1] if symbol == "<module>" else symbol.split(".")[0]
+    if symbol == "<module>":
+        # `analyze_pcb.py` in a subprocess path or a docstring names the file, not the
+        # module: only `analyze_pcb` followed by anything but `.py` is a reference
+        token = module.rsplit(".", 1)[-1]
+        pat = re.compile(r"\b" + re.escape(token) + r"\b(?!\.py\b)")
+        hit = pat.search
+    else:
+        token = symbol.split(".")[0]
+        hit = lambda text: token in text  # noqa: E731
     for f in files:
         p = Path(harness_root) / f
         try:
-            if token in p.read_text(encoding="utf-8", errors="replace"):
+            if hit(p.read_text(encoding="utf-8", errors="replace")):
                 return True
         except OSError:
             continue

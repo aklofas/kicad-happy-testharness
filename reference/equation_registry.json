@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_scan": "2026-10-16T05:50:42.605657+00:00",
+  "last_scan": "2026-10-16T22:49:26.708025+00:00",
   "equations": [
     {
       "id": "EQ-001",
@@ -324,8 +324,8 @@
     {
       "id": "EQ-023",
       "formula": "Z\u2080 = (60/\u221a\u03b5r)ln(8h/w+w/4h) (Wheeler narrow microstrip)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2351,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 610,
       "function": "_microstrip_impedance",
       "sources": [],
       "content_hash": "sha256:d78baeda2bf920ee",
@@ -334,13 +334,13 @@
       "impact": "high",
       "verification_source": "Wheeler narrow microstrip: Z\u2080=(60/\u221a\u03b5r)ln(8h/w+w/4h) for w/h<1. Confirmed at: https://f4inx.github.io/posts/microstrip-formulas-comparison.html. IPC-2141 standard. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-024",
       "formula": "Z\u2080 = 120\u03c0/(\u221a\u03b5r(w/h+1.393+0.667ln(w/h+1.444))) (Wheeler wide)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2354,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 613,
       "function": "_microstrip_impedance",
       "sources": [],
       "content_hash": "sha256:d78baeda2bf920ee",
@@ -349,7 +349,7 @@
       "impact": "high",
       "verification_source": "Wheeler wide microstrip: Z\u2080=120\u03c0/(\u221a\u03b5r(w/h+1.393+0.667ln(w/h+1.444))) for w/h\u22651. Confirmed at: https://f4inx.github.io/posts/microstrip-formulas-comparison.html. IPC-2141 standard. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-025",
@@ -634,8 +634,8 @@
     {
       "id": "EQ-044",
       "formula": "arc = R \u00d7 \u03b8 from circumcircle (3-point arc length)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 489,
+      "file": "skills/kicad/scripts/pcb/geometry.py",
+      "line": 451,
       "function": "_arc_length_3pt",
       "sources": [],
       "content_hash": "sha256:a502eb62ade7aef0",
@@ -644,13 +644,13 @@
       "impact": "low",
       "verification_source": "Arc from circumcircle: R\u00d7\u03b8. Standard computational geometry. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-045",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (routing graph edge weight)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1746,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 131,
       "function": "_build_routing_graph",
       "sources": [],
       "content_hash": "sha256:70dec2451d2b6809",
@@ -659,13 +659,13 @@
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-046",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (grid cell marking)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2626,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 885,
       "function": "_mark",
       "sources": [],
       "content_hash": "sha256:45994e598d8287e1",
@@ -674,13 +674,13 @@
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-047",
       "formula": "Angle normalization to [0, 2\u03c0)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 508,
+      "file": "skills/kicad/scripts/pcb/geometry.py",
+      "line": 470,
       "function": "_norm",
       "sources": [],
       "content_hash": "sha256:9ba6303cc273ea26",
@@ -689,13 +689,13 @@
       "impact": "low",
       "verification_source": "Angle normalization to [0,2\u03c0). Standard math. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-048",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (cap-to-IC distance)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2184,
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 94,
       "function": "analyze_decoupling_placement",
       "sources": [],
       "content_hash": "sha256:38adb94b86b46888",
@@ -703,13 +703,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-049",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (DFM clearance measurement)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4397,
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 127,
       "function": "analyze_dfm",
       "sources": [
         "JLCPCB capabilities page, verified 2025-01."
@@ -719,13 +720,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-050",
       "formula": "L = \u221a(\u0394x\u00b2+\u0394y\u00b2) (track segment length)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2417,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 676,
       "function": "analyze_net_lengths",
       "sources": [],
       "content_hash": "sha256:d76948d573999111",
@@ -734,13 +736,13 @@
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-051",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (pad-to-pad distance)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1878,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 263,
       "function": "analyze_pad_to_pad_distances",
       "sources": [],
       "content_hash": "sha256:b767f902530fbac8",
@@ -749,13 +751,13 @@
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-052",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (Euclidean distance)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1697,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 86,
       "function": "analyze_power_nets",
       "sources": [],
       "content_hash": "sha256:c21a486e234486b6",
@@ -763,13 +765,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-053",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (trace-to-plane gap detection)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1986,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 371,
       "function": "analyze_return_path_continuity",
       "sources": [],
       "content_hash": "sha256:460c933eb8f65522",
@@ -777,13 +780,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-054",
       "formula": "effective = \u03a3(drill/0.3)\u00b2 (drill-weighted via count)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 5415,
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 589,
       "function": "analyze_thermal_pad_vias",
       "sources": [],
       "content_hash": "sha256:668165ed760b2126",
@@ -791,13 +795,14 @@
       "category": "thermal",
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-055",
       "formula": "density = count / area_cm\u00b2 (thermal via density)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2932,
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 102,
       "function": "analyze_thermal_vias",
       "sources": [],
       "content_hash": "sha256:b1370096f55dbc33",
@@ -806,13 +811,13 @@
       "impact": "medium",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-056",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (pad center asymmetry)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 5192,
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 460,
       "function": "analyze_tombstoning_risk",
       "sources": [],
       "content_hash": "sha256:a36c74bc4c5d6b55",
@@ -821,13 +826,13 @@
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-057",
       "formula": "d = \u221a(\u0394x\u00b2+\u0394y\u00b2) (grid-based proximity scan)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2621,
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 880,
       "function": "analyze_trace_proximity",
       "sources": [],
       "content_hash": "sha256:62036d1d86fab2a0",
@@ -835,13 +840,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-058",
       "formula": "area = \u03c0(d/2)\u00b2 (via annular ring)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3116,
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 286,
       "function": "analyze_vias",
       "sources": [],
       "content_hash": "sha256:f9c06d304864cddc",
@@ -849,13 +855,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Circle area: \u03c0(d/2)\u00b2. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-059",
       "formula": "d = \u221a(w\u00b2+h\u00b2) (board diagonal)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4061,
+      "file": "skills/kicad/scripts/pcb/presentation.py",
+      "line": 48,
       "function": "compute_statistics",
       "sources": [],
       "content_hash": "sha256:85525f941e5555d9",
@@ -864,13 +871,13 @@
       "impact": "low",
       "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-060",
       "formula": "x'=x\u00b7cos\u03b8-y\u00b7sin\u03b8, y'=x\u00b7sin\u03b8+y\u00b7cos\u03b8 (2D rotation)",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 708,
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 200,
       "function": "extract_footprints",
       "sources": [],
       "content_hash": "sha256:6dae124b0d565ca9",
@@ -878,7 +885,8 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": "Standard 2D rotation matrix x' = x\u00b7cos\u03b8 \u2212 y\u00b7sin\u03b8, y' = x\u00b7sin\u03b8 + y\u00b7cos\u03b8; textbook formula, no external spec needed; hash refresh after type hints/docstring drift",
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-061",
@@ -1437,8 +1445,8 @@
     {
       "id": "EQ-098",
       "formula": "d = min(||P - (A + t(B-A))||) with t clamped to [0,1]",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 308,
+      "file": "skills/kicad/scripts/pcb/geometry.py",
+      "line": 270,
       "function": "_dist_point_to_segment",
       "sources": [
         "Self-evident \u2014 2D point-to-segment distance (project, clamp, Euclidean)."
@@ -1449,13 +1457,13 @@
       "impact": "low",
       "verification_source": null,
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-099",
       "formula": "Perimeter sample at (x + r\u00b7cos(i\u03c0/4), y + r\u00b7sin(i\u03c0/4)) for i=0..7",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 358,
+      "file": "skills/kicad/scripts/pcb/geometry.py",
+      "line": 320,
       "function": null,
       "sources": [
         "Self-evident \u2014 8-point circle sampling at 45\u00b0 intervals."
@@ -1465,13 +1473,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": null,
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-100",
       "formula": "Arc bounding box \u2014 3-point circumscribed circle via",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1526,
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 948,
       "function": "extract_board_outline",
       "sources": [
         "Standard computational geometry. Circumscribed circle"
@@ -1481,13 +1490,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": null,
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-101",
       "formula": "d = \u221a((x1-x2)\u00b2 + (y1-y2)\u00b2) over all pad pairs; return minimum.",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2113,
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 23,
       "function": "_min_power_pad_distance",
       "sources": [
         "Self-evident \u2014 2D Euclidean distance."
@@ -1498,13 +1508,13 @@
       "impact": "low",
       "verification_source": null,
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-102",
       "formula": "d = \u221a((px-zx)\u00b2 + (py-zy)\u00b2) for point-to-zone-pour proximity.",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 5829,
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 930,
       "function": "_nearest_zone_copper_distance",
       "sources": [
         "Self-evident \u2014 2D Euclidean distance to the nearest"
@@ -1514,13 +1524,14 @@
       "category": "geometry",
       "impact": "low",
       "verification_source": null,
-      "notes": null
+      "notes": null,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-103",
       "formula": "d = min distance from via center to any Edge.Cuts line segment.",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 6573,
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 1280,
       "function": "analyze_board_edge_via_clearance",
       "sources": [
         "Self-evident \u2014 2D point-to-segment distance (see EQ-098)."
@@ -1531,13 +1542,13 @@
       "impact": "low",
       "verification_source": null,
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-104",
       "formula": "Helper \u2014 same 2D point-to-segment distance as EQ-098.",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 6583,
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 1290,
       "function": "_pt_seg_dist",
       "sources": [
         "Self-evident \u2014 kept as a local helper to avoid import cycles."
@@ -1548,7 +1559,7 @@
       "impact": "low",
       "verification_source": null,
       "notes": null,
-      "relocated_from": "analyze_pcb.py"
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
     {
       "id": "EQ-105",

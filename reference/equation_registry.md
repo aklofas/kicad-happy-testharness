@@ -2,7 +2,7 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-16T05:50:42.605657+00:00
+**Last scan:** 2026-10-16T22:49:26.708025+00:00
 
 ## Summary
 
@@ -73,37 +73,6 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-096 | `check_pdn_distributed` | I_reflected = P_downstream / V_upstream (reflected transient current) | impedance | medium | **verified** |
 | EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **stale** |
 
-## skills/kicad/scripts/analyze_pcb.py
-
-| ID | Function | Formula | Category | Impact | Status |
-|---|---|---|---|---|---|
-| EQ-023 | `_microstrip_impedance` | Z₀ = (60/√εr)ln(8h/w+w/4h) (Wheeler narrow microstrip) | impedance | high | **verified** |
-| EQ-024 | `_microstrip_impedance` | Z₀ = 120π/(√εr(w/h+1.393+0.667ln(w/h+1.444))) (Wheeler wide) | impedance | high | **verified** |
-| EQ-044 | `_arc_length_3pt` | arc = R × θ from circumcircle (3-point arc length) | geometry | low | **verified** |
-| EQ-045 | `_build_routing_graph` | d = √(Δx²+Δy²) (routing graph edge weight) | geometry | low | **verified** |
-| EQ-046 | `_mark` | d = √(Δx²+Δy²) (grid cell marking) | geometry | low | **verified** |
-| EQ-047 | `_norm` | Angle normalization to [0, 2π) | geometry | low | **verified** |
-| EQ-048 | `analyze_decoupling_placement` | d = √(Δx²+Δy²) (cap-to-IC distance) | geometry | low | **stale** |
-| EQ-049 | `analyze_dfm` | d = √(Δx²+Δy²) (DFM clearance measurement) | geometry | low | **stale** |
-| EQ-050 | `analyze_net_lengths` | L = √(Δx²+Δy²) (track segment length) | geometry | low | **verified** |
-| EQ-051 | `analyze_pad_to_pad_distances` | d = √(Δx²+Δy²) (pad-to-pad distance) | geometry | low | **verified** |
-| EQ-052 | `analyze_power_nets` | d = √(Δx²+Δy²) (Euclidean distance) | geometry | low | **stale** |
-| EQ-053 | `analyze_return_path_continuity` | d = √(Δx²+Δy²) (trace-to-plane gap detection) | geometry | low | **stale** |
-| EQ-054 | `analyze_thermal_pad_vias` | effective = Σ(drill/0.3)² (drill-weighted via count) | thermal | medium | **stale** |
-| EQ-055 | `analyze_thermal_vias` | density = count / area_cm² (thermal via density) | thermal | medium | **verified** |
-| EQ-056 | `analyze_tombstoning_risk` | d = √(Δx²+Δy²) (pad center asymmetry) | geometry | low | **verified** |
-| EQ-057 | `analyze_trace_proximity` | d = √(Δx²+Δy²) (grid-based proximity scan) | geometry | low | **stale** |
-| EQ-058 | `analyze_vias` | area = π(d/2)² (via annular ring) | geometry | low | **stale** |
-| EQ-059 | `compute_statistics` | d = √(w²+h²) (board diagonal) | geometry | low | **verified** |
-| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **stale** |
-| EQ-098 | `_dist_point_to_segment` | d = min(\|\|P - (A + t(B-A))\|\|) with t clamped to [0,1] | geometry | low | **unverified** |
-| EQ-099 | `None` | Perimeter sample at (x + r·cos(iπ/4), y + r·sin(iπ/4)) for i=0..7 | geometry | low | **unverified** |
-| EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **unverified** |
-| EQ-101 | `_min_power_pad_distance` | d = √((x1-x2)² + (y1-y2)²) over all pad pairs; return minimum. | geometry | low | **unverified** |
-| EQ-102 | `_nearest_zone_copper_distance` | d = √((px-zx)² + (py-zy)²) for point-to-zone-pour proximity. | geometry | low | **unverified** |
-| EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from via center to any Edge.Cuts line segment. | geometry | low | **unverified** |
-| EQ-104 | `_pt_seg_dist` | Helper — same 2D point-to-segment distance as EQ-098. | geometry | low | **unverified** |
-
 ## skills/kicad/scripts/kicad_core/passives.py
 
 | ID | Function | Formula | Category | Impact | Status |
@@ -117,6 +86,67 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 |---|---|---|---|---|---|
 | EQ-068 | `parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **verified** |
 | EQ-107 | `snap_to_e_series` | Log-decade snapping — normalize v into [1, 10) via | unknown | medium | **verified** |
+
+## skills/kicad/scripts/pcb/assembly.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-048 | `analyze_decoupling_placement` | d = √(Δx²+Δy²) (cap-to-IC distance) | geometry | low | **stale** |
+| EQ-056 | `analyze_tombstoning_risk` | d = √(Δx²+Δy²) (pad center asymmetry) | geometry | low | **verified** |
+| EQ-101 | `_min_power_pad_distance` | d = √((x1-x2)² + (y1-y2)²) over all pad pairs; return minimum. | geometry | low | **unverified** |
+
+## skills/kicad/scripts/pcb/copper.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-054 | `analyze_thermal_pad_vias` | effective = Σ(drill/0.3)² (drill-weighted via count) | thermal | medium | **stale** |
+| EQ-055 | `analyze_thermal_vias` | density = count / area_cm² (thermal via density) | thermal | medium | **verified** |
+| EQ-058 | `analyze_vias` | area = π(d/2)² (via annular ring) | geometry | low | **stale** |
+| EQ-102 | `_nearest_zone_copper_distance` | d = √((px-zx)² + (py-zy)²) for point-to-zone-pour proximity. | geometry | low | **unverified** |
+| EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from via center to any Edge.Cuts line segment. | geometry | low | **unverified** |
+| EQ-104 | `_pt_seg_dist` | Helper — same 2D point-to-segment distance as EQ-098. | geometry | low | **unverified** |
+
+## skills/kicad/scripts/pcb/dfm.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-049 | `analyze_dfm` | d = √(Δx²+Δy²) (DFM clearance measurement) | geometry | low | **stale** |
+
+## skills/kicad/scripts/pcb/geometry.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-044 | `_arc_length_3pt` | arc = R × θ from circumcircle (3-point arc length) | geometry | low | **verified** |
+| EQ-047 | `_norm` | Angle normalization to [0, 2π) | geometry | low | **verified** |
+| EQ-098 | `_dist_point_to_segment` | d = min(\|\|P - (A + t(B-A))\|\|) with t clamped to [0,1] | geometry | low | **unverified** |
+| EQ-099 | `None` | Perimeter sample at (x + r·cos(iπ/4), y + r·sin(iπ/4)) for i=0..7 | geometry | low | **unverified** |
+
+## skills/kicad/scripts/pcb/presentation.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-059 | `compute_statistics` | d = √(w²+h²) (board diagonal) | geometry | low | **verified** |
+
+## skills/kicad/scripts/pcb/reader.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **stale** |
+| EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **unverified** |
+
+## skills/kicad/scripts/pcb/routing.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-023 | `_microstrip_impedance` | Z₀ = (60/√εr)ln(8h/w+w/4h) (Wheeler narrow microstrip) | impedance | high | **verified** |
+| EQ-024 | `_microstrip_impedance` | Z₀ = 120π/(√εr(w/h+1.393+0.667ln(w/h+1.444))) (Wheeler wide) | impedance | high | **verified** |
+| EQ-045 | `_build_routing_graph` | d = √(Δx²+Δy²) (routing graph edge weight) | geometry | low | **verified** |
+| EQ-046 | `_mark` | d = √(Δx²+Δy²) (grid cell marking) | geometry | low | **verified** |
+| EQ-050 | `analyze_net_lengths` | L = √(Δx²+Δy²) (track segment length) | geometry | low | **verified** |
+| EQ-051 | `analyze_pad_to_pad_distances` | d = √(Δx²+Δy²) (pad-to-pad distance) | geometry | low | **verified** |
+| EQ-052 | `analyze_power_nets` | d = √(Δx²+Δy²) (Euclidean distance) | geometry | low | **stale** |
+| EQ-053 | `analyze_return_path_continuity` | d = √(Δx²+Δy²) (trace-to-plane gap detection) | geometry | low | **stale** |
+| EQ-057 | `analyze_trace_proximity` | d = √(Δx²+Δy²) (grid-based proximity scan) | geometry | low | **stale** |
 
 ## skills/kicad/scripts/schematic/audits.py
 

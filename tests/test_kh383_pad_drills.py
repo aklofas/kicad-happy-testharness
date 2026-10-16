@@ -27,7 +27,8 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-import analyze_pcb  # noqa: E402
+import pcb.copper as pcb_copper  # noqa: E402
+import pcb.dfm as pcb_dfm  # noqa: E402
 
 
 VIAS = [{"size": 0.6, "drill": 0.3, "x": 0, "y": 0, "type": "through"}]
@@ -42,7 +43,7 @@ PROJECT = {"design_rules": {"min_through_hole_diameter": 0.3}}
 
 
 def test_design_rule_sees_pad_drills():
-    res = analyze_pcb.analyze_design_rule_compliance(
+    res = pcb_dfm.analyze_design_rule_compliance(
         {"segments": [], "arcs": []}, {"vias": VIAS}, PROJECT, footprints=[U1])
     v = [x for x in res["violations"] if x["rule"] == "min_via_drill"]
     assert len(v) == 1 and v[0]["actual_mm"] == 0.2
@@ -50,7 +51,7 @@ def test_design_rule_sees_pad_drills():
 
 
 def test_dfm_min_drill_includes_pads():
-    res = analyze_pcb.analyze_dfm(
+    res = pcb_dfm.analyze_dfm(
         [U1], {"segments": [], "arcs": []}, {"vias": VIAS},
         {"edges": [], "bounding_box": None})
     assert res["metrics"]["min_drill_mm"] == 0.2
@@ -60,7 +61,7 @@ def test_design_rule_compliance_unaffected_when_no_footprints():
     # Backward compatibility: footprints defaults to None (call site omits
     # it entirely), via-only behavior is unchanged.
     project = {"design_rules": {"min_through_hole_diameter": 0.35}}
-    res = analyze_pcb.analyze_design_rule_compliance(
+    res = pcb_dfm.analyze_design_rule_compliance(
         {"segments": [], "arcs": []}, {"vias": VIAS}, project)
     v = [x for x in res["violations"] if x["rule"] == "min_via_drill"]
     assert len(v) == 1 and v[0]["actual_mm"] == 0.3
@@ -69,13 +70,13 @@ def test_design_rule_compliance_unaffected_when_no_footprints():
 
 def test_via_facts_report_min_pad_drill():
     fps = [U1]
-    res = analyze_pcb.analyze_vias({"vias": VIAS}, fps, {})
+    res = pcb_copper.analyze_vias({"vias": VIAS}, fps, {})
     assert res["current_capacity"]["min_pad_drill_mm"] == 0.2
 
 
 def test_dfm_prefers_via_drill_when_smaller_than_pads():
     small_via = [{"size": 0.35, "drill": 0.1, "x": 0, "y": 0}]
-    res = analyze_pcb.analyze_dfm(
+    res = pcb_dfm.analyze_dfm(
         [U1], {"segments": [], "arcs": []}, {"vias": small_via},
         {"edges": [], "bounding_box": None})
     assert res["metrics"]["min_drill_mm"] == 0.1
@@ -85,7 +86,7 @@ def test_dfm_prefers_via_drill_when_smaller_than_pads():
 
 def test_dfm_ignores_smd_pad_drills():
     smd = {"reference": "R1", "pads": [{"type": "smd", "drill": 0.0}]}
-    res = analyze_pcb.analyze_dfm(
+    res = pcb_dfm.analyze_dfm(
         [smd], {"segments": [], "arcs": []}, {"vias": VIAS},
         {"edges": [], "bounding_box": None})
     assert res["metrics"]["min_drill_mm"] == 0.3
@@ -102,7 +103,7 @@ def test_design_rule_oval_pad_uses_smaller_dimension():
     u2 = {"reference": "U2", "pads": [
         {"type": "thru_hole", "drill": 0.6, "drill_h": 0.25,
          "abs_x": 0.0, "abs_y": 0.0}]}
-    res = analyze_pcb.analyze_design_rule_compliance(
+    res = pcb_dfm.analyze_design_rule_compliance(
         {"segments": [], "arcs": []}, {"vias": []}, PROJECT, footprints=[u2])
     v = [x for x in res["violations"] if x["rule"] == "min_via_drill"]
     assert len(v) == 1 and v[0]["actual_mm"] == 0.25
@@ -113,7 +114,7 @@ def test_design_rule_oval_pad_dimension_order_independent():
     u3 = {"reference": "U3", "pads": [
         {"type": "thru_hole", "drill": 0.25, "drill_h": 0.6,
          "abs_x": 0.0, "abs_y": 0.0}]}
-    res = analyze_pcb.analyze_design_rule_compliance(
+    res = pcb_dfm.analyze_design_rule_compliance(
         {"segments": [], "arcs": []}, {"vias": []}, PROJECT, footprints=[u3])
     v = [x for x in res["violations"] if x["rule"] == "min_via_drill"]
     assert len(v) == 1 and v[0]["actual_mm"] == 0.25
@@ -134,7 +135,7 @@ def test_custom_hole_size_rule_sees_pad_drills():
             {"name": "holes", "constraints": [{"type": "hole_size", "min": 0.3}]},
         ],
     }
-    res = analyze_pcb.analyze_design_rule_compliance(
+    res = pcb_dfm.analyze_design_rule_compliance(
         {"segments": [], "arcs": []}, {"vias": []}, project, footprints=[U1])
     v = [x for x in res["violations"] if x.get("constraint_type") == "hole_size"]
     assert len(v) == 1

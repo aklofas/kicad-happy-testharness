@@ -422,3 +422,31 @@ def test_scan_alias_to_dotted_module_absent_from_inventory(tmp_path):
     assert ("schematic.pipeline", "analyze_schematic") in found
     assert ("schematic", "pipeline.analyze_schematic") in found    # the root reading is kept
 
+
+def test_scan_patch_object_on_alias_of_dotted_module_absent_from_inventory(tmp_path):
+    # round-5 patch_targets: `import pcb.presentation as pp` + patch.object(pp, "sym")
+    # binds (pcb.presentation, sym) like the attribute branch does for `pp.sym`.
+    t = tmp_path / "tests"
+    t.mkdir()
+    (t / "test_z.py").write_text(
+        "import pcb.presentation as pp\n"
+        "from unittest.mock import patch\n"
+        "def test_a():\n"
+        "    with patch.object(pp, 'build_connectivity_graph', side_effect=RuntimeError('x')):\n"
+        "        pass\n", encoding="utf-8")
+    found = {(f["module"], f["symbol"]) for f in am.scan_harness_imports(tmp_path)}
+    assert ("pcb.presentation", "build_connectivity_graph") in found
+    assert ("presentation", "build_connectivity_graph") in found      # the leaf reading is kept
+
+
+def test_module_site_mentioning_only_the_script_file_is_gone_not_blind(tmp_path):
+    # A retired `import analyze_pcb` leaves `analyze_pcb.py` behind in subprocess
+    # paths and docstrings; that names the file, not the module, so the
+    # inventory `<module>` site is gone rather than blind.
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "a.py").write_text(
+        '"""runs analyze_pcb.py"""\nimport subprocess\n'
+        'subprocess.run(["python3", "skills/kicad/scripts/analyze_pcb.py"])\n', encoding="utf-8")
+    (tmp_path / "tests" / "b.py").write_text("import analyze_pcb\n", encoding="utf-8")
+    assert am._still_referenced(tmp_path, "analyze_pcb", "<module>", ["tests/a.py"]) is False
+    assert am._still_referenced(tmp_path, "analyze_pcb", "<module>", ["tests/b.py"]) is True

@@ -37,7 +37,7 @@ def test_tht_touch_pad_measured_from_outline():
 
 
 def test_pad_on_layer_wildcards():
-    from analyze_pcb import _pad_on_layer
+    from pcb.geometry import _pad_on_layer
     assert _pad_on_layer({"layers": ["*.Cu", "*.Mask"]}, "F.Cu", "F.Cu")
     assert _pad_on_layer({"layers": ["*.Cu", "*.Mask"]}, "In1.Cu", "F.Cu")
     assert _pad_on_layer({"layers": ["F&B.Cu"]}, "B.Cu", "F.Cu")
@@ -46,7 +46,7 @@ def test_pad_on_layer_wildcards():
 
 
 def test_pad_on_layer_explicit_list():
-    from analyze_pcb import _pad_on_layer
+    from pcb.geometry import _pad_on_layer
     assert _pad_on_layer({"layers": ["F.Cu", "B.Cu"]}, "F.Cu", "F.Cu")
     assert _pad_on_layer({"layers": ["F.Cu", "B.Cu"]}, "B.Cu", "F.Cu")
     # No layers key at all: falls back to the footprint's layer.

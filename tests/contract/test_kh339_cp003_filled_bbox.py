@@ -13,7 +13,7 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
-from analyze_pcb import _nearest_zone_copper_distance
+from pcb.copper import _nearest_zone_copper_distance
 
 
 def _fp(x, y):

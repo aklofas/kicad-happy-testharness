@@ -102,7 +102,7 @@ def test_design_rule_violation_attributes_pad():
 
 
 def test_floor_boundary_0p05_is_real():
-    from analyze_pcb import MIN_REAL_DRILL_MM, _pad_drills
+    from pcb.dfm import MIN_REAL_DRILL_MM, _pad_drills
     assert MIN_REAL_DRILL_MM == 0.05
     fps = [{"reference": "X1", "pads": [
         {"type": "thru_hole", "number": "1", "drill": 0.05},
@@ -113,7 +113,7 @@ def test_floor_boundary_0p05_is_real():
 
 
 def test_degenerate_helper_sorted_and_typed():
-    from analyze_pcb import _degenerate_drills
+    from pcb.dfm import _degenerate_drills
     fps = [{"reference": "B2", "pads": [{"type": "thru_hole", "number": "9", "drill": 0.01}]},
            {"reference": "A1", "pads": [{"type": "np_thru_hole", "number": "1", "drill": 0.02}]}]
     vias = [{"x": 1, "y": 2, "drill": 0.001}]
@@ -140,7 +140,7 @@ def test_degenerate_via_excluded_from_current_capacity_min_and_ratings():
     # degenerate via drills (filter was `d > 0`, not the MIN_REAL_DRILL_MM
     # floor) -- a degenerate via showed up both in degenerate_drills AND
     # as the board's "minimum drill" with an IPC ampacity rating.
-    from analyze_pcb import analyze_vias
+    from pcb.copper import analyze_vias
     vias = {"vias": [
         {"type": "through", "size": 0.6, "drill": 0.3, "x": 1, "y": 1, "net": 1},
         {"type": "through", "size": 0.1, "drill": 0.001, "x": 2, "y": 2, "net": 1},

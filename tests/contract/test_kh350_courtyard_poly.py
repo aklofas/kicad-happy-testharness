@@ -9,7 +9,8 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
-from analyze_pcb import analyze_placement, _chain_segments
+from pcb.assembly import analyze_placement
+from pcb.geometry import _chain_segments
 
 ANALYZE_PCB = MAIN_REPO_ROOT / "skills" / "kicad" / "scripts" / "analyze_pcb.py"
 

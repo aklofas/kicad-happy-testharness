@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "last_scan": "2026-10-16T05:51:47.774927+00:00",
+  "last_scan": "2026-10-16T22:49:24.896733+00:00",
   "constants": [
     {
       "name": "SEVERITY_WEIGHTS",
@@ -32,7 +32,7 @@
       "category": "datasheet_lookup",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Engineering heuristic \u2014 EMC risk scoring weights (CRITICAL=15, HIGH=8, MEDIUM=3, LOW=1, INFO=0). Design choice, not datasheet value.",
+      "source": "Engineering heuristic — EMC risk scoring weights (CRITICAL=15, HIGH=8, MEDIUM=3, LOW=1, INFO=0). Design choice, not datasheet value.",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -55,7 +55,7 @@
         "deterministic": {
           "value": 1.0,
           "status": "verified",
-          "source": "Self-evident: full weight for deterministic (rule-output) confidence values \u2014 same confidence as datasheet-backed because rules encode deterministic logic over sourced data."
+          "source": "Self-evident: full weight for deterministic (rule-output) confidence values — same confidence as datasheet-backed because rules encode deterministic logic over sourced data."
         },
         "datasheet-backed": {
           "value": 1.0,
@@ -65,7 +65,7 @@
         "heuristic": {
           "value": 0.5,
           "status": "verified",
-          "source": "Self-evident: half weight for heuristic (pattern-match / guess) confidence. Standard practice in EMC confidence aggregation; see Ott EMC Engineering (Wiley 2009) \u00a71.3 on source-hierarchy weighting."
+          "source": "Self-evident: half weight for heuristic (pattern-match / guess) confidence. Standard practice in EMC confidence aggregation; see Ott EMC Engineering (Wiley 2009) §1.3 on source-hierarchy weighting."
         }
       },
       "id": "CONST-463",
@@ -734,7 +734,7 @@
       "category": "physics",
       "status": "verified",
       "verified_entries": 0,
-      "source": "CRC Handbook of Chemistry and Physics - copper resistivity 1.68e-5 ohm\u00b7mm at 20\u00b0C",
+      "source": "CRC Handbook of Chemistry and Physics - copper resistivity 1.68e-5 ohm·mm at 20°C",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -980,7 +980,7 @@
       "status": "verified",
       "verified_entries": 5,
       "source": "DigiKey parametric data, TI/ADI/Microchip datasheets. Verified 2026-04-02.",
-      "notes": "Conservative low-end defaults intentional for EMC harmonic analysis \u2014 underestimating frequency could miss harmonic reach into regulated bands.",
+      "notes": "Conservative low-end defaults intentional for EMC harmonic analysis — underestimating frequency could miss harmonic reach into regulated bands.",
       "overfit_score": 0.0,
       "overfit_flags": [],
       "impact_score": 0.7,
@@ -1344,7 +1344,7 @@
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Internal mapping of EMC rule categories to regulatory test types (radiated\u2192GP/SW/CK, conducted\u2192DC/IO, esd\u2192ES)",
+      "source": "Internal mapping of EMC rule categories to regulatory test types (radiated→GP/SW/CK, conducted→DC/IO, esd→ES)",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1684,1475 +1684,6 @@
         "standard_format"
       ],
       "risk_score": 0.1
-    },
-    {
-      "name": "MAX_TESTED_FORMAT_VERSION",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 50,
-      "end_line": 50,
-      "scope": "module",
-      "type": "threshold",
-      "entry_count": 1,
-      "content_hash": "sha256:8c4f03dcf30da3c5",
-      "id": "CONST-314",
-      "category": "heuristic_threshold",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.1,
-      "overfit_flags": [
-        "empirical_threshold"
-      ],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "_NUMERIC_STACKUP_KEYS",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 563,
-      "end_line": 563,
-      "scope": "extract_setup",
-      "type": "keyword_set",
-      "entry_count": 3,
-      "content_hash": "sha256:fb8ade433a988216",
-      "function": "extract_setup",
-      "id": "CONST-322",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
-      "notes": null,
-      "overfit_score": 0.1,
-      "overfit_flags": [
-        "small_local_list"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.1
-    },
-    {
-      "name": "_float_keys",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 579,
-      "end_line": 582,
-      "scope": "extract_setup",
-      "type": "keyword_list",
-      "entry_count": 3,
-      "content_hash": "sha256:4a92e1a52d6b9ec9",
-      "function": "extract_setup",
-      "id": "CONST-079",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.1,
-      "overfit_flags": [
-        "small_local_list"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.1
-    },
-    {
-      "name": "pad_info",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 796,
-      "end_line": 800,
-      "scope": "extract_footprints",
-      "type": "lookup_table",
-      "entry_count": 3,
-      "content_hash": "sha256:ast_796",
-      "function": "extract_footprints",
-      "id": "CONST-080",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "fp_entry",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 954,
-      "end_line": 966,
-      "scope": "extract_footprints",
-      "type": "lookup_table",
-      "entry_count": 11,
-      "content_hash": "sha256:ast_954",
-      "function": "extract_footprints",
-      "id": "CONST-081",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "seg_info",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1101,
-      "end_line": 1107,
-      "scope": "extract_tracks",
-      "type": "lookup_table",
-      "entry_count": 7,
-      "content_hash": "sha256:ast_1101",
-      "function": "extract_tracks",
-      "id": "CONST-101",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "arc_info",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1123,
-      "end_line": 1130,
-      "scope": "extract_tracks",
-      "type": "lookup_table",
-      "entry_count": 6,
-      "content_hash": "sha256:ast_1123",
-      "function": "extract_tracks",
-      "id": "CONST-102",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "via_info",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1189,
-      "end_line": 1196,
-      "scope": "extract_vias",
-      "type": "lookup_table",
-      "entry_count": 6,
-      "content_hash": "sha256:ast_1189",
-      "function": "extract_vias",
-      "id": "CONST-082",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "zone_info",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1360,
-      "end_line": 1371,
-      "scope": "extract_zones",
-      "type": "lookup_table",
-      "entry_count": 10,
-      "content_hash": "sha256:ast_1360",
-      "function": "extract_zones",
-      "id": "CONST-083",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "bbox",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1587,
-      "end_line": 1594,
-      "scope": "extract_board_outline",
-      "type": "lookup_table",
-      "entry_count": 6,
-      "content_hash": "sha256:ast_1587",
-      "function": "extract_board_outline",
-      "id": "CONST-084",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "_ESD_TVS_PREFIXES",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1733,
-      "end_line": 1734,
-      "scope": "module",
-      "type": "keyword_list",
-      "entry_count": 11,
-      "content_hash": "sha256:e04e1c5db9830383",
-      "id": "CONST-211",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "SNAP",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 1747,
-      "end_line": 1747,
-      "scope": "_build_routing_graph",
-      "type": "threshold",
-      "entry_count": 1,
-      "content_hash": "sha256:9fca51987c96ba92",
-      "function": "_build_routing_graph",
-      "id": "CONST-213",
-      "category": "heuristic_threshold",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.1,
-      "overfit_flags": [
-        "empirical_threshold"
-      ],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.1
-    },
-    {
-      "name": "SAMPLE_INTERVAL",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2011,
-      "end_line": 2011,
-      "scope": "analyze_return_path_continuity",
-      "type": "threshold",
-      "entry_count": 1,
-      "content_hash": "sha256:d84bdb34d4eeef40",
-      "function": "analyze_return_path_continuity",
-      "id": "CONST-215",
-      "category": "heuristic_threshold",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.1,
-      "overfit_flags": [
-        "empirical_threshold"
-      ],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.1
-    },
-    {
-      "name": "ANTIPAD_CLEARANCE",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2018,
-      "end_line": 2018,
-      "scope": "analyze_return_path_continuity",
-      "type": "threshold",
-      "entry_count": 1,
-      "content_hash": "sha256:44896b09365746b5",
-      "function": "analyze_return_path_continuity",
-      "id": "CONST-315",
-      "category": "heuristic_threshold",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.1,
-      "overfit_flags": [
-        "empirical_threshold"
-      ],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "ANTIPAD_GRID",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2019,
-      "end_line": 2019,
-      "scope": "analyze_return_path_continuity",
-      "type": "threshold",
-      "entry_count": 1,
-      "content_hash": "sha256:d84bdb34d4eeef40",
-      "function": "analyze_return_path_continuity",
-      "id": "CONST-316",
-      "category": "heuristic_threshold",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.1,
-      "overfit_flags": [
-        "empirical_threshold"
-      ],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "sample",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2077,
-      "end_line": 2081,
-      "scope": "analyze_return_path_continuity",
-      "type": "lookup_table",
-      "entry_count": 5,
-      "content_hash": "sha256:ast_2077",
-      "function": "analyze_return_path_continuity",
-      "id": "CONST-317",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "seg_entry",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2441,
-      "end_line": 2445,
-      "scope": "analyze_net_lengths",
-      "type": "lookup_table",
-      "entry_count": 3,
-      "content_hash": "sha256:ast_2441",
-      "function": "analyze_net_lengths",
-      "id": "CONST-089",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "analyze_ground_domains:2557",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 2557,
-      "end_line": 2557,
-      "scope": "analyze_ground_domains",
-      "type": "inline_keywords",
-      "entry_count": 3,
-      "content_hash": "sha256:b3f8357c6802e93d",
-      "function": "analyze_ground_domains",
-      "id": "CONST-318",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "type_counts",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3133,
-      "end_line": 3133,
-      "scope": "analyze_vias",
-      "type": "lookup_table",
-      "entry_count": 4,
-      "content_hash": "sha256:ca1b5d84cf4a15ad",
-      "function": "analyze_vias",
-      "entries": {
-        "through": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        },
-        "blind": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        },
-        "buried": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        },
-        "micro": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        }
-      },
-      "id": "CONST-086",
-      "category": "standard",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.1,
-      "impact_flags": [
-        "standard_format"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "type_sizes",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3134,
-      "end_line": 3136,
-      "scope": "analyze_vias",
-      "type": "lookup_table",
-      "entry_count": 4,
-      "content_hash": "sha256:4cff2b70502fe631",
-      "function": "analyze_vias",
-      "id": "CONST-087",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "annular_ring",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3168,
-      "end_line": 3172,
-      "scope": "analyze_vias",
-      "type": "lookup_table",
-      "entry_count": 3,
-      "content_hash": "sha256:ast_3168",
-      "function": "analyze_vias",
-      "id": "CONST-088",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "analyze_vias:3242",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3242,
-      "end_line": 3244,
-      "scope": "analyze_vias",
-      "type": "inline_keywords",
-      "entry_count": 10,
-      "content_hash": "sha256:a7d3cecc1c61b987",
-      "function": "analyze_vias",
-      "id": "CONST-319",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "current_facts",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3309,
-      "end_line": 3315,
-      "scope": "analyze_vias",
-      "type": "lookup_table",
-      "entry_count": 4,
-      "content_hash": "sha256:ast_3309",
-      "function": "analyze_vias",
-      "id": "CONST-090",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "rev_pattern",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3538,
-      "end_line": 3538,
-      "scope": "extract_silkscreen",
-      "type": "regex_pattern",
-      "entry_count": 1,
-      "content_hash": "sha256:0b22f0f261fa9ce0",
-      "function": "extract_silkscreen",
-      "id": "CONST-214",
-      "category": "standard",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.1,
-      "impact_flags": [
-        "standard_format"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "extract_silkscreen:3591",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3591,
-      "end_line": 3591,
-      "scope": "extract_silkscreen",
-      "type": "inline_keywords",
-      "entry_count": 4,
-      "content_hash": "sha256:20306210eafcf04d",
-      "function": "extract_silkscreen",
-      "id": "CONST-323",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "extract_silkscreen:3593",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3593,
-      "end_line": 3593,
-      "scope": "extract_silkscreen",
-      "type": "inline_keywords",
-      "entry_count": 3,
-      "content_hash": "sha256:40dc8c5e6cbe6387",
-      "function": "extract_silkscreen",
-      "id": "CONST-324",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "extract_silkscreen:3601",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3601,
-      "end_line": 3602,
-      "scope": "extract_silkscreen",
-      "type": "inline_keywords",
-      "entry_count": 11,
-      "content_hash": "sha256:379e42b62a277d2b",
-      "function": "extract_silkscreen",
-      "id": "CONST-325",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "_fab_notes_checklist",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3669,
-      "end_line": 3680,
-      "scope": "extract_silkscreen",
-      "type": "lookup_table",
-      "entry_count": 6,
-      "content_hash": "sha256:ast_3669",
-      "function": "extract_silkscreen",
-      "id": "CONST-195",
-      "category": "heuristic_threshold",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "extract_silkscreen:3671",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3671,
-      "end_line": 3672,
-      "scope": "extract_silkscreen",
-      "type": "inline_keywords",
-      "entry_count": 5,
-      "content_hash": "sha256:f237624ccd8e8d5b",
-      "function": "extract_silkscreen",
-      "id": "CONST-326",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "extract_silkscreen:3674",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3674,
-      "end_line": 3675,
-      "scope": "extract_silkscreen",
-      "type": "inline_keywords",
-      "entry_count": 7,
-      "content_hash": "sha256:4d65d9558135d3ba",
-      "function": "extract_silkscreen",
-      "id": "CONST-327",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "extract_silkscreen:3676",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3676,
-      "end_line": 3677,
-      "scope": "extract_silkscreen",
-      "type": "inline_keywords",
-      "entry_count": 7,
-      "content_hash": "sha256:943dc0a8db042bff",
-      "function": "extract_silkscreen",
-      "id": "CONST-328",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "extract_silkscreen:3678",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3678,
-      "end_line": 3679,
-      "scope": "extract_silkscreen",
-      "type": "inline_keywords",
-      "entry_count": 5,
-      "content_hash": "sha256:dbbd552610f8f098",
-      "function": "extract_silkscreen",
-      "id": "CONST-329",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "_silk_checks",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3691,
-      "end_line": 3699,
-      "scope": "extract_silkscreen",
-      "type": "lookup_table",
-      "entry_count": 5,
-      "content_hash": "sha256:ast_3691",
-      "function": "extract_silkscreen",
-      "id": "CONST-221",
-      "category": "heuristic_threshold",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "_RF_MODULE_KEYWORDS",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3711,
-      "end_line": 3715,
-      "scope": "module",
-      "type": "keyword_list",
-      "entry_count": 20,
-      "content_hash": "sha256:ac1b6385b5df48f6",
-      "id": "CONST-320",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "classification_keywords",
-        "large_keyword_set"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "_RF_LIB_KEYWORDS",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3716,
-      "end_line": 3716,
-      "scope": "module",
-      "type": "keyword_list",
-      "entry_count": 4,
-      "content_hash": "sha256:1d9b32b6f554edf6",
-      "id": "CONST-321",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "_EDGE_MOUNT_LIBRARY_KEYWORDS",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 3735,
-      "end_line": 3747,
-      "scope": "module",
-      "type": "keyword_list",
-      "entry_count": 16,
-      "content_hash": "sha256:a20fdf1693db99c9",
-      "id": "CONST-330",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "classification_keywords",
-        "large_keyword_set"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "MIN_REAL_DRILL_MM",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4281,
-      "end_line": 4281,
-      "scope": "module",
-      "type": "threshold",
-      "entry_count": 1,
-      "content_hash": "sha256:0602d7c813c1f6e7",
-      "id": "CONST-331",
-      "category": "physics",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.1,
-      "impact_flags": [
-        "physics_constant"
-      ],
-      "risk_score": 0.1
-    },
-    {
-      "name": "LIMITS_STD",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4401,
-      "end_line": 4409,
-      "scope": "analyze_dfm",
-      "type": "lookup_table",
-      "entry_count": 7,
-      "content_hash": "sha256:b31fc7fa79ada1c5",
-      "function": "analyze_dfm",
-      "entries": {
-        "min_track_width": {
-          "value": 0.127,
-          "status": "unverified",
-          "source": null
-        },
-        "min_track_spacing": {
-          "value": 0.127,
-          "status": "unverified",
-          "source": null
-        },
-        "min_drill": {
-          "value": 0.2,
-          "status": "unverified",
-          "source": null
-        },
-        "min_annular_ring": {
-          "value": 0.125,
-          "status": "unverified",
-          "source": null
-        },
-        "max_board_width": {
-          "value": 100.0,
-          "status": "unverified",
-          "source": null
-        },
-        "max_board_height": {
-          "value": 100.0,
-          "status": "unverified",
-          "source": null
-        },
-        "min_board_dim": {
-          "value": 10.0,
-          "status": "unverified",
-          "source": null
-        }
-      },
-      "id": "CONST-095",
-      "category": "standard",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.26,
-      "overfit_flags": [
-        "specific_keys:6/7"
-      ],
-      "impact_score": 0.1,
-      "impact_flags": [
-        "standard_format"
-      ],
-      "risk_score": 0.26
-    },
-    {
-      "name": "LIMITS_ADV",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4411,
-      "end_line": 4416,
-      "scope": "analyze_dfm",
-      "type": "lookup_table",
-      "entry_count": 4,
-      "content_hash": "sha256:31abbfd927a362b9",
-      "function": "analyze_dfm",
-      "entries": {
-        "min_track_width": {
-          "value": 0.1,
-          "status": "unverified",
-          "source": null
-        },
-        "min_track_spacing": {
-          "value": 0.1,
-          "status": "unverified",
-          "source": null
-        },
-        "min_drill": {
-          "value": 0.15,
-          "status": "unverified",
-          "source": null
-        },
-        "min_annular_ring": {
-          "value": 0.1,
-          "status": "unverified",
-          "source": null
-        }
-      },
-      "id": "CONST-096",
-      "category": "standard",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.22,
-      "overfit_flags": [
-        "specific_keys:3/4"
-      ],
-      "impact_score": 0.1,
-      "impact_flags": [
-        "standard_format"
-      ],
-      "risk_score": 0.22
-    },
-    {
-      "name": "IPC_CLASS_LIMITS",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4420,
-      "end_line": 4437,
-      "scope": "analyze_dfm",
-      "type": "lookup_table",
-      "entry_count": 3,
-      "content_hash": "sha256:51d5e86403475b99",
-      "function": "analyze_dfm",
-      "id": "CONST-266",
-      "category": "standard",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.1,
-      "impact_flags": [
-        "standard_format"
-      ],
-      "risk_score": 0.1
-    },
-    {
-      "name": "constraints",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4452,
-      "end_line": 4458,
-      "scope": "analyze_dfm",
-      "type": "lookup_table",
-      "entry_count": 5,
-      "content_hash": "sha256:ast_4452",
-      "function": "analyze_dfm",
-      "id": "CONST-298",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "checks",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4965,
-      "end_line": 4971,
-      "scope": "analyze_design_rule_compliance",
-      "type": "tuple_table",
-      "entry_count": 3,
-      "content_hash": "sha256:ast_4965",
-      "function": "analyze_design_rule_compliance",
-      "id": "CONST-299",
-      "category": "unknown",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.0,
-      "impact_flags": [],
-      "risk_score": 0.0
-    },
-    {
-      "name": "v",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 4983,
-      "end_line": 4992,
-      "scope": "analyze_design_rule_compliance",
-      "type": "lookup_table",
-      "entry_count": 6,
-      "content_hash": "sha256:ast_4983",
-      "function": "analyze_design_rule_compliance",
-      "id": "CONST-332",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "risk_order",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 5350,
-      "end_line": 5350,
-      "scope": "analyze_tombstoning_risk",
-      "type": "lookup_table",
-      "entry_count": 3,
-      "content_hash": "sha256:8abfb0e97bd48ded",
-      "function": "analyze_tombstoning_risk",
-      "entries": {
-        "high": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        },
-        "medium": {
-          "value": 1,
-          "status": "unverified",
-          "source": null
-        },
-        "low": {
-          "value": 2,
-          "status": "unverified",
-          "source": null
-        }
-      },
-      "id": "CONST-097",
-      "category": "heuristic_threshold",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "adequacy_order",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 5708,
-      "end_line": 5708,
-      "scope": "analyze_thermal_pad_vias",
-      "type": "lookup_table",
-      "entry_count": 4,
-      "content_hash": "sha256:4cc36f091d84b7f3",
-      "function": "analyze_thermal_pad_vias",
-      "entries": {
-        "none": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        },
-        "insufficient": {
-          "value": 1,
-          "status": "unverified",
-          "source": null
-        },
-        "adequate": {
-          "value": 2,
-          "status": "unverified",
-          "source": null
-        },
-        "good": {
-          "value": 3,
-          "status": "unverified",
-          "source": null
-        }
-      },
-      "id": "CONST-098",
-      "category": "heuristic_threshold",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.07,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.07
-    },
-    {
-      "name": "_PASSIVE_REF_RE",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 5720,
-      "end_line": 5720,
-      "scope": "module",
-      "type": "regex_pattern",
-      "entry_count": 1,
-      "content_hash": "sha256:7c04ebd45c5b0214",
-      "id": "CONST-333",
-      "category": "standard",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.1,
-      "impact_flags": [
-        "standard_format"
-      ],
-      "risk_score": 0.1
-    },
-    {
-      "name": "_gnd_keywords",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 6040,
-      "end_line": 6040,
-      "scope": "analyze_copper_presence",
-      "type": "keyword_list",
-      "entry_count": 6,
-      "content_hash": "sha256:b02778c3e16f0e02",
-      "function": "analyze_copper_presence",
-      "id": "CONST-300",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "analyze_copper_presence:6059",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 6059,
-      "end_line": 6059,
-      "scope": "analyze_copper_presence",
-      "type": "inline_keywords",
-      "entry_count": 4,
-      "content_hash": "sha256:bcc7ecf78c9bacba",
-      "function": "analyze_copper_presence",
-      "id": "CONST-334",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "analyze_copper_presence:6060",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 6060,
-      "end_line": 6060,
-      "scope": "analyze_copper_presence",
-      "type": "inline_keywords",
-      "entry_count": 4,
-      "content_hash": "sha256:bcc7ecf78c9bacba",
-      "function": "analyze_copper_presence",
-      "id": "CONST-335",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "analyze_fiducials:6239",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 6239,
-      "end_line": 6239,
-      "scope": "analyze_fiducials",
-      "type": "inline_keywords",
-      "entry_count": 3,
-      "content_hash": "sha256:3a45a05490f63c3a",
-      "function": "analyze_fiducials",
-      "id": "CONST-336",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "finding",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 6322,
-      "end_line": 6340,
-      "scope": "analyze_test_point_coverage",
-      "type": "lookup_table",
-      "entry_count": 17,
-      "content_hash": "sha256:ast_6322",
-      "function": "analyze_test_point_coverage",
-      "id": "CONST-344",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "classification_keywords",
-        "large_keyword_set"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "_FINDING_LIST_KEYS",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 7174,
-      "end_line": 7178,
-      "scope": "analyze_pcb",
-      "type": "keyword_list",
-      "entry_count": 7,
-      "content_hash": "sha256:a84803259b930d68",
-      "function": "analyze_pcb",
-      "id": "CONST-345",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "sev_counts",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 7275,
-      "end_line": 7275,
-      "scope": "analyze_pcb",
-      "type": "lookup_table",
-      "entry_count": 3,
-      "content_hash": "sha256:5212e3a96599e678",
-      "function": "analyze_pcb",
-      "entries": {
-        "error": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        },
-        "warning": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        },
-        "info": {
-          "value": 0,
-          "status": "unverified",
-          "source": null
-        }
-      },
-      "id": "CONST-346",
-      "category": "heuristic_threshold",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.4,
-      "impact_flags": [
-        "empirical_cutoff"
-      ],
-      "risk_score": 0.4
-    },
-    {
-      "name": "config",
-      "file": "skills/kicad/scripts/analyze_pcb.py",
-      "line": 7353,
-      "end_line": 7353,
-      "scope": "main",
-      "type": "lookup_table",
-      "entry_count": 3,
-      "content_hash": "sha256:580190ad4f1ec4be",
-      "function": "main",
-      "id": "CONST-302",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
     },
     {
       "name": "DEFAULT_AMBIENT_C",
@@ -12127,7 +10658,7 @@
           "status": "unverified",
           "source": null
         },
-        "\u00b5": {
+        "µ": {
           "value": 1e-06,
           "status": "unverified",
           "source": null
@@ -12772,8 +11303,200 @@
       "risk_score": 0.3
     },
     {
+      "name": "_ESD_TVS_PREFIXES",
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 12,
+      "end_line": 13,
+      "scope": "module",
+      "type": "keyword_list",
+      "entry_count": 11,
+      "content_hash": "sha256:e04e1c5db9830383",
+      "id": "CONST-211",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "_RF_MODULE_KEYWORDS",
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 142,
+      "end_line": 146,
+      "scope": "module",
+      "type": "keyword_list",
+      "entry_count": 20,
+      "content_hash": "sha256:ac1b6385b5df48f6",
+      "id": "CONST-320",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "classification_keywords",
+        "large_keyword_set"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "_RF_LIB_KEYWORDS",
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 149,
+      "end_line": 149,
+      "scope": "module",
+      "type": "keyword_list",
+      "entry_count": 4,
+      "content_hash": "sha256:1d9b32b6f554edf6",
+      "id": "CONST-321",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "_EDGE_MOUNT_LIBRARY_KEYWORDS",
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 168,
+      "end_line": 180,
+      "scope": "module",
+      "type": "keyword_list",
+      "entry_count": 16,
+      "content_hash": "sha256:a20fdf1693db99c9",
+      "id": "CONST-330",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "classification_keywords",
+        "large_keyword_set"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "risk_order",
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 618,
+      "end_line": 618,
+      "scope": "analyze_tombstoning_risk",
+      "type": "lookup_table",
+      "entry_count": 3,
+      "content_hash": "sha256:8abfb0e97bd48ded",
+      "function": "analyze_tombstoning_risk",
+      "entries": {
+        "high": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        },
+        "medium": {
+          "value": 1,
+          "status": "unverified",
+          "source": null
+        },
+        "low": {
+          "value": 2,
+          "status": "unverified",
+          "source": null
+        }
+      },
+      "id": "CONST-097",
+      "category": "heuristic_threshold",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "analyze_fiducials:745",
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 745,
+      "end_line": 745,
+      "scope": "analyze_fiducials",
+      "type": "inline_keywords",
+      "entry_count": 3,
+      "content_hash": "sha256:3a45a05490f63c3a",
+      "function": "analyze_fiducials",
+      "id": "CONST-014",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "finding",
+      "file": "skills/kicad/scripts/pcb/assembly.py",
+      "line": 828,
+      "end_line": 846,
+      "scope": "analyze_test_point_coverage",
+      "type": "lookup_table",
+      "entry_count": 17,
+      "content_hash": "sha256:ast_828",
+      "function": "analyze_test_point_coverage",
+      "id": "CONST-344",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "classification_keywords",
+        "large_keyword_set"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
       "name": "node_a",
-      "file": "skills/kicad/scripts/pcb_connectivity.py",
+      "file": "skills/kicad/scripts/pcb/connectivity.py",
       "line": 291,
       "end_line": 298,
       "scope": "build_connectivity_graph",
@@ -12793,11 +11516,12 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.3,
+      "relocated_from": "skills/kicad/scripts/pcb_connectivity.py"
     },
     {
       "name": "node_b",
-      "file": "skills/kicad/scripts/pcb_connectivity.py",
+      "file": "skills/kicad/scripts/pcb/connectivity.py",
       "line": 299,
       "end_line": 306,
       "scope": "build_connectivity_graph",
@@ -12813,6 +11537,1299 @@
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3,
+      "relocated_from": "skills/kicad/scripts/pcb_connectivity.py"
+    },
+    {
+      "name": "type_counts",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 303,
+      "end_line": 303,
+      "scope": "analyze_vias",
+      "type": "lookup_table",
+      "entry_count": 4,
+      "content_hash": "sha256:ca1b5d84cf4a15ad",
+      "function": "analyze_vias",
+      "entries": {
+        "through": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        },
+        "blind": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        },
+        "buried": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        },
+        "micro": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        }
+      },
+      "id": "CONST-086",
+      "category": "standard",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.1,
+      "impact_flags": [
+        "standard_format"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "type_sizes",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 304,
+      "end_line": 306,
+      "scope": "analyze_vias",
+      "type": "lookup_table",
+      "entry_count": 4,
+      "content_hash": "sha256:4cff2b70502fe631",
+      "function": "analyze_vias",
+      "id": "CONST-087",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "annular_ring",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 338,
+      "end_line": 342,
+      "scope": "analyze_vias",
+      "type": "lookup_table",
+      "entry_count": 3,
+      "content_hash": "sha256:ast_338",
+      "function": "analyze_vias",
+      "id": "CONST-088",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "analyze_vias:412",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 412,
+      "end_line": 414,
+      "scope": "analyze_vias",
+      "type": "inline_keywords",
+      "entry_count": 10,
+      "content_hash": "sha256:a7d3cecc1c61b987",
+      "function": "analyze_vias",
+      "id": "CONST-022",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "current_facts",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 479,
+      "end_line": 485,
+      "scope": "analyze_vias",
+      "type": "lookup_table",
+      "entry_count": 4,
+      "content_hash": "sha256:ast_479",
+      "function": "analyze_vias",
+      "id": "CONST-090",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "adequacy_order",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 882,
+      "end_line": 882,
+      "scope": "analyze_thermal_pad_vias",
+      "type": "lookup_table",
+      "entry_count": 4,
+      "content_hash": "sha256:4cc36f091d84b7f3",
+      "function": "analyze_thermal_pad_vias",
+      "entries": {
+        "none": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        },
+        "insufficient": {
+          "value": 1,
+          "status": "unverified",
+          "source": null
+        },
+        "adequate": {
+          "value": 2,
+          "status": "unverified",
+          "source": null
+        },
+        "good": {
+          "value": 3,
+          "status": "unverified",
+          "source": null
+        }
+      },
+      "id": "CONST-098",
+      "category": "heuristic_threshold",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.07,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.07,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "_PASSIVE_REF_RE",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 894,
+      "end_line": 894,
+      "scope": "module",
+      "type": "regex_pattern",
+      "entry_count": 1,
+      "content_hash": "sha256:7c04ebd45c5b0214",
+      "id": "CONST-333",
+      "category": "standard",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.1,
+      "impact_flags": [
+        "standard_format"
+      ],
+      "risk_score": 0.1,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "_gnd_keywords",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 1141,
+      "end_line": 1141,
+      "scope": "analyze_copper_presence",
+      "type": "keyword_list",
+      "entry_count": 6,
+      "content_hash": "sha256:b02778c3e16f0e02",
+      "function": "analyze_copper_presence",
+      "id": "CONST-300",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "analyze_copper_presence:1160",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 1160,
+      "end_line": 1160,
+      "scope": "analyze_copper_presence",
+      "type": "inline_keywords",
+      "entry_count": 4,
+      "content_hash": "sha256:bcc7ecf78c9bacba",
+      "function": "analyze_copper_presence",
+      "id": "CONST-023",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "analyze_copper_presence:1161",
+      "file": "skills/kicad/scripts/pcb/copper.py",
+      "line": 1161,
+      "end_line": 1161,
+      "scope": "analyze_copper_presence",
+      "type": "inline_keywords",
+      "entry_count": 4,
+      "content_hash": "sha256:bcc7ecf78c9bacba",
+      "function": "analyze_copper_presence",
+      "id": "CONST-104",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "MIN_REAL_DRILL_MM",
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 11,
+      "end_line": 11,
+      "scope": "module",
+      "type": "threshold",
+      "entry_count": 1,
+      "content_hash": "sha256:0602d7c813c1f6e7",
+      "id": "CONST-331",
+      "category": "physics",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.1,
+      "impact_flags": [
+        "physics_constant"
+      ],
+      "risk_score": 0.1,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "LIMITS_STD",
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 131,
+      "end_line": 139,
+      "scope": "analyze_dfm",
+      "type": "lookup_table",
+      "entry_count": 7,
+      "content_hash": "sha256:b31fc7fa79ada1c5",
+      "function": "analyze_dfm",
+      "entries": {
+        "min_track_width": {
+          "value": 0.127,
+          "status": "unverified",
+          "source": null
+        },
+        "min_track_spacing": {
+          "value": 0.127,
+          "status": "unverified",
+          "source": null
+        },
+        "min_drill": {
+          "value": 0.2,
+          "status": "unverified",
+          "source": null
+        },
+        "min_annular_ring": {
+          "value": 0.125,
+          "status": "unverified",
+          "source": null
+        },
+        "max_board_width": {
+          "value": 100.0,
+          "status": "unverified",
+          "source": null
+        },
+        "max_board_height": {
+          "value": 100.0,
+          "status": "unverified",
+          "source": null
+        },
+        "min_board_dim": {
+          "value": 10.0,
+          "status": "unverified",
+          "source": null
+        }
+      },
+      "id": "CONST-095",
+      "category": "standard",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.26,
+      "overfit_flags": [
+        "specific_keys:6/7"
+      ],
+      "impact_score": 0.1,
+      "impact_flags": [
+        "standard_format"
+      ],
+      "risk_score": 0.26,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "LIMITS_ADV",
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 141,
+      "end_line": 146,
+      "scope": "analyze_dfm",
+      "type": "lookup_table",
+      "entry_count": 4,
+      "content_hash": "sha256:31abbfd927a362b9",
+      "function": "analyze_dfm",
+      "entries": {
+        "min_track_width": {
+          "value": 0.1,
+          "status": "unverified",
+          "source": null
+        },
+        "min_track_spacing": {
+          "value": 0.1,
+          "status": "unverified",
+          "source": null
+        },
+        "min_drill": {
+          "value": 0.15,
+          "status": "unverified",
+          "source": null
+        },
+        "min_annular_ring": {
+          "value": 0.1,
+          "status": "unverified",
+          "source": null
+        }
+      },
+      "id": "CONST-096",
+      "category": "standard",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.22,
+      "overfit_flags": [
+        "specific_keys:3/4"
+      ],
+      "impact_score": 0.1,
+      "impact_flags": [
+        "standard_format"
+      ],
+      "risk_score": 0.22,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "IPC_CLASS_LIMITS",
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 150,
+      "end_line": 167,
+      "scope": "analyze_dfm",
+      "type": "lookup_table",
+      "entry_count": 3,
+      "content_hash": "sha256:51d5e86403475b99",
+      "function": "analyze_dfm",
+      "id": "CONST-266",
+      "category": "standard",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.1,
+      "impact_flags": [
+        "standard_format"
+      ],
+      "risk_score": 0.1,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "constraints",
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 182,
+      "end_line": 188,
+      "scope": "analyze_dfm",
+      "type": "lookup_table",
+      "entry_count": 5,
+      "content_hash": "sha256:ast_182",
+      "function": "analyze_dfm",
+      "id": "CONST-298",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "checks",
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 695,
+      "end_line": 701,
+      "scope": "analyze_design_rule_compliance",
+      "type": "tuple_table",
+      "entry_count": 3,
+      "content_hash": "sha256:ast_695",
+      "function": "analyze_design_rule_compliance",
+      "id": "CONST-299",
+      "category": "unknown",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.0,
+      "impact_flags": [],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "v",
+      "file": "skills/kicad/scripts/pcb/dfm.py",
+      "line": 713,
+      "end_line": 722,
+      "scope": "analyze_design_rule_compliance",
+      "type": "lookup_table",
+      "entry_count": 6,
+      "content_hash": "sha256:ast_713",
+      "function": "analyze_design_rule_compliance",
+      "id": "CONST-332",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "MAX_TESTED_FORMAT_VERSION",
+      "file": "skills/kicad/scripts/pcb/pipeline.py",
+      "line": 68,
+      "end_line": 68,
+      "scope": "module",
+      "type": "threshold",
+      "entry_count": 1,
+      "content_hash": "sha256:8c4f03dcf30da3c5",
+      "id": "CONST-314",
+      "category": "heuristic_threshold",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "empirical_threshold"
+      ],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "_FINDING_LIST_KEYS",
+      "file": "skills/kicad/scripts/pcb/presentation.py",
+      "line": 359,
+      "end_line": 363,
+      "scope": "assemble_result",
+      "type": "keyword_list",
+      "entry_count": 7,
+      "content_hash": "sha256:a84803259b930d68",
+      "function": "assemble_result",
+      "id": "CONST-105",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "sev_counts",
+      "file": "skills/kicad/scripts/pcb/presentation.py",
+      "line": 460,
+      "end_line": 460,
+      "scope": "assemble_result",
+      "type": "lookup_table",
+      "entry_count": 3,
+      "content_hash": "sha256:5212e3a96599e678",
+      "function": "assemble_result",
+      "entries": {
+        "error": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        },
+        "warning": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        },
+        "info": {
+          "value": 0,
+          "status": "unverified",
+          "source": null
+        }
+      },
+      "id": "CONST-106",
+      "category": "heuristic_threshold",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.4
+    },
+    {
+      "name": "_NUMERIC_STACKUP_KEYS",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 58,
+      "end_line": 58,
+      "scope": "extract_setup",
+      "type": "keyword_set",
+      "entry_count": 3,
+      "content_hash": "sha256:fb8ade433a988216",
+      "function": "extract_setup",
+      "id": "CONST-322",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "small_local_list"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.1,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "_float_keys",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 74,
+      "end_line": 77,
+      "scope": "extract_setup",
+      "type": "keyword_list",
+      "entry_count": 3,
+      "content_hash": "sha256:4a92e1a52d6b9ec9",
+      "function": "extract_setup",
+      "id": "CONST-079",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "small_local_list"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.1,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "pad_info",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 288,
+      "end_line": 292,
+      "scope": "extract_footprints",
+      "type": "lookup_table",
+      "entry_count": 3,
+      "content_hash": "sha256:ast_288",
+      "function": "extract_footprints",
+      "id": "CONST-080",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "fp_entry",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 446,
+      "end_line": 458,
+      "scope": "extract_footprints",
+      "type": "lookup_table",
+      "entry_count": 11,
+      "content_hash": "sha256:ast_446",
+      "function": "extract_footprints",
+      "id": "CONST-081",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "seg_info",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 523,
+      "end_line": 529,
+      "scope": "extract_tracks",
+      "type": "lookup_table",
+      "entry_count": 7,
+      "content_hash": "sha256:ast_523",
+      "function": "extract_tracks",
+      "id": "CONST-101",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "arc_info",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 545,
+      "end_line": 552,
+      "scope": "extract_tracks",
+      "type": "lookup_table",
+      "entry_count": 6,
+      "content_hash": "sha256:ast_545",
+      "function": "extract_tracks",
+      "id": "CONST-102",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "via_info",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 611,
+      "end_line": 618,
+      "scope": "extract_vias",
+      "type": "lookup_table",
+      "entry_count": 6,
+      "content_hash": "sha256:ast_611",
+      "function": "extract_vias",
+      "id": "CONST-082",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "zone_info",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 782,
+      "end_line": 793,
+      "scope": "extract_zones",
+      "type": "lookup_table",
+      "entry_count": 10,
+      "content_hash": "sha256:ast_782",
+      "function": "extract_zones",
+      "id": "CONST-083",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "bbox",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1009,
+      "end_line": 1016,
+      "scope": "extract_board_outline",
+      "type": "lookup_table",
+      "entry_count": 6,
+      "content_hash": "sha256:ast_1009",
+      "function": "extract_board_outline",
+      "id": "CONST-084",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "rev_pattern",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1208,
+      "end_line": 1208,
+      "scope": "extract_silkscreen",
+      "type": "regex_pattern",
+      "entry_count": 1,
+      "content_hash": "sha256:0b22f0f261fa9ce0",
+      "function": "extract_silkscreen",
+      "id": "CONST-214",
+      "category": "standard",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.1,
+      "impact_flags": [
+        "standard_format"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "extract_silkscreen:1261",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1261,
+      "end_line": 1261,
+      "scope": "extract_silkscreen",
+      "type": "inline_keywords",
+      "entry_count": 4,
+      "content_hash": "sha256:20306210eafcf04d",
+      "function": "extract_silkscreen",
+      "id": "CONST-107",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "extract_silkscreen:1263",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1263,
+      "end_line": 1263,
+      "scope": "extract_silkscreen",
+      "type": "inline_keywords",
+      "entry_count": 3,
+      "content_hash": "sha256:40dc8c5e6cbe6387",
+      "function": "extract_silkscreen",
+      "id": "CONST-108",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "extract_silkscreen:1271",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1271,
+      "end_line": 1272,
+      "scope": "extract_silkscreen",
+      "type": "inline_keywords",
+      "entry_count": 11,
+      "content_hash": "sha256:379e42b62a277d2b",
+      "function": "extract_silkscreen",
+      "id": "CONST-109",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "_fab_notes_checklist",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1339,
+      "end_line": 1350,
+      "scope": "extract_silkscreen",
+      "type": "lookup_table",
+      "entry_count": 6,
+      "content_hash": "sha256:ast_1339",
+      "function": "extract_silkscreen",
+      "id": "CONST-195",
+      "category": "heuristic_threshold",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "extract_silkscreen:1341",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1341,
+      "end_line": 1342,
+      "scope": "extract_silkscreen",
+      "type": "inline_keywords",
+      "entry_count": 5,
+      "content_hash": "sha256:f237624ccd8e8d5b",
+      "function": "extract_silkscreen",
+      "id": "CONST-110",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "extract_silkscreen:1344",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1344,
+      "end_line": 1345,
+      "scope": "extract_silkscreen",
+      "type": "inline_keywords",
+      "entry_count": 7,
+      "content_hash": "sha256:4d65d9558135d3ba",
+      "function": "extract_silkscreen",
+      "id": "CONST-121",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "extract_silkscreen:1346",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1346,
+      "end_line": 1347,
+      "scope": "extract_silkscreen",
+      "type": "inline_keywords",
+      "entry_count": 7,
+      "content_hash": "sha256:943dc0a8db042bff",
+      "function": "extract_silkscreen",
+      "id": "CONST-136",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "extract_silkscreen:1348",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1348,
+      "end_line": 1349,
+      "scope": "extract_silkscreen",
+      "type": "inline_keywords",
+      "entry_count": 5,
+      "content_hash": "sha256:dbbd552610f8f098",
+      "function": "extract_silkscreen",
+      "id": "CONST-149",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3
+    },
+    {
+      "name": "_silk_checks",
+      "file": "skills/kicad/scripts/pcb/reader.py",
+      "line": 1361,
+      "end_line": 1369,
+      "scope": "extract_silkscreen",
+      "type": "lookup_table",
+      "entry_count": 5,
+      "content_hash": "sha256:ast_1361",
+      "function": "extract_silkscreen",
+      "id": "CONST-221",
+      "category": "heuristic_threshold",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "SNAP",
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 132,
+      "end_line": 132,
+      "scope": "_build_routing_graph",
+      "type": "threshold",
+      "entry_count": 1,
+      "content_hash": "sha256:9fca51987c96ba92",
+      "function": "_build_routing_graph",
+      "id": "CONST-213",
+      "category": "heuristic_threshold",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "empirical_threshold"
+      ],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.1,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "SAMPLE_INTERVAL",
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 396,
+      "end_line": 396,
+      "scope": "analyze_return_path_continuity",
+      "type": "threshold",
+      "entry_count": 1,
+      "content_hash": "sha256:d84bdb34d4eeef40",
+      "function": "analyze_return_path_continuity",
+      "id": "CONST-215",
+      "category": "heuristic_threshold",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "empirical_threshold"
+      ],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.1,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "ANTIPAD_CLEARANCE",
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 403,
+      "end_line": 403,
+      "scope": "analyze_return_path_continuity",
+      "type": "threshold",
+      "entry_count": 1,
+      "content_hash": "sha256:44896b09365746b5",
+      "function": "analyze_return_path_continuity",
+      "id": "CONST-315",
+      "category": "heuristic_threshold",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "empirical_threshold"
+      ],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "ANTIPAD_GRID",
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 404,
+      "end_line": 404,
+      "scope": "analyze_return_path_continuity",
+      "type": "threshold",
+      "entry_count": 1,
+      "content_hash": "sha256:d84bdb34d4eeef40",
+      "function": "analyze_return_path_continuity",
+      "id": "CONST-316",
+      "category": "heuristic_threshold",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "empirical_threshold"
+      ],
+      "impact_score": 0.4,
+      "impact_flags": [
+        "empirical_cutoff"
+      ],
+      "risk_score": 0.4,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "sample",
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 462,
+      "end_line": 466,
+      "scope": "analyze_return_path_continuity",
+      "type": "lookup_table",
+      "entry_count": 5,
+      "content_hash": "sha256:ast_462",
+      "function": "analyze_return_path_continuity",
+      "id": "CONST-317",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.3,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "seg_entry",
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 700,
+      "end_line": 704,
+      "scope": "analyze_net_lengths",
+      "type": "lookup_table",
+      "entry_count": 3,
+      "content_hash": "sha256:ast_700",
+      "function": "analyze_net_lengths",
+      "id": "CONST-089",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Verified against KiCad .kicad_pcb format, IPC-2221 DFM standards, JLCPCB capabilities (2025-01). 2026-03-31. 0 errors.",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0,
+      "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
+    },
+    {
+      "name": "analyze_ground_domains:816",
+      "file": "skills/kicad/scripts/pcb/routing.py",
+      "line": 816,
+      "end_line": 816,
+      "scope": "analyze_ground_domains",
+      "type": "inline_keywords",
+      "entry_count": 3,
+      "content_hash": "sha256:b3f8357c6802e93d",
+      "function": "analyze_ground_domains",
+      "id": "CONST-184",
+      "category": "keyword_classification",
+      "status": "unverified",
+      "verified_entries": 0,
+      "source": null,
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
       "impact_score": 0.3,
       "impact_flags": [
         "classification_keywords"
@@ -15229,7 +15246,7 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3,
+      "risk_score": 0.0,
       "relocated_from": "skills/kicad/scripts/analyze_schematic.py"
     },
     {
@@ -16427,7 +16444,7 @@
       "category": "datasheet_lookup",
       "status": "verified",
       "verified_entries": 48,
-      "source": "9/48 key entries verified against datasheets, 2026-03-31. Power budget estimates, \u00b150% acceptable.",
+      "source": "9/48 key entries verified against datasheets, 2026-03-31. Power budget estimates, ±50% acceptable.",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -17096,12 +17113,12 @@
         "buck": {
           "value": 500000.0,
           "status": "verified",
-          "source": "Industry midpoint fallback: 500 kHz is the mode for general-purpose buck ICs in the 200 kHz\u20132 MHz range (e.g., TI TPS5430 500 kHz, TI LM2675 260 kHz, TI TPS54332 1 MHz). 500 kHz sits near the center for fallback use."
+          "source": "Industry midpoint fallback: 500 kHz is the mode for general-purpose buck ICs in the 200 kHz–2 MHz range (e.g., TI TPS5430 500 kHz, TI LM2675 260 kHz, TI TPS54332 1 MHz). 500 kHz sits near the center for fallback use."
         },
         "boost": {
           "value": 500000.0,
           "status": "verified",
-          "source": "Industry midpoint fallback: 500 kHz is the mode for general-purpose sync boost ICs in the 100 kHz\u20132 MHz range (e.g., TI LM5122 400 kHz default, Analog Devices LTC3787 500 kHz typical). Used when specific part MPN not found in _KNOWN_FREQS."
+          "source": "Industry midpoint fallback: 500 kHz is the mode for general-purpose sync boost ICs in the 100 kHz–2 MHz range (e.g., TI LM5122 400 kHz default, Analog Devices LTC3787 500 kHz typical). Used when specific part MPN not found in _KNOWN_FREQS."
         },
         "buck-boost": {
           "value": 300000.0,
@@ -17111,12 +17128,12 @@
         "inverting": {
           "value": 300000.0,
           "status": "verified",
-          "source": "Industry fallback: 300 kHz typical for inverting buck-boost topologies (e.g., LT3477 150 kHz\u20132.5 MHz programmable, MAX1771 300 kHz). Conservative midpoint."
+          "source": "Industry fallback: 300 kHz typical for inverting buck-boost topologies (e.g., LT3477 150 kHz–2.5 MHz programmable, MAX1771 300 kHz). Conservative midpoint."
         },
         "sepic": {
           "value": 300000.0,
           "status": "verified",
-          "source": "Industry fallback: 300 kHz typical for SEPIC topology \u2014 coupled-inductor losses favor lower frequency than buck/boost (e.g., LT8335 2 MHz, MIC2196 200 kHz, TPS61170 1.2 MHz). 300 kHz conservative fallback for unknown parts."
+          "source": "Industry fallback: 300 kHz typical for SEPIC topology — coupled-inductor losses favor lower frequency than buck/boost (e.g., LT8335 2 MHz, MIC2196 200 kHz, TPS61170 1.2 MHz). 300 kHz conservative fallback for unknown parts."
         }
       },
       "id": "CONST-365",
@@ -20041,7 +20058,7 @@
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Internal mapping \u2014 verified consistent with TEMPLATE_REGISTRY keys. 2026-03-31.",
+      "source": "Internal mapping — verified consistent with TEMPLATE_REGISTRY keys. 2026-03-31.",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -20064,7 +20081,7 @@
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Internal mapping \u2014 verified generator functions exist. 2026-03-31.",
+      "source": "Internal mapping — verified generator functions exist. 2026-03-31.",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -20134,7 +20151,7 @@
       "category": "unknown",
       "status": "verified",
       "verified_entries": 0,
-      "source": "SPICE engineering notation suffixes \u2014 matches ngspice standard. 2026-03-31.",
+      "source": "SPICE engineering notation suffixes — matches ngspice standard. 2026-03-31.",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -20345,7 +20362,7 @@
       "category": "heuristic_threshold",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Internal counter initialization \u2014 standard 4-status model. 2026-03-31.",
+      "source": "Internal counter initialization — standard 4-status model. 2026-03-31.",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],

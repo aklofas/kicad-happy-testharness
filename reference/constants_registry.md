@@ -2,15 +2,15 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-16T05:51:47.774927+00:00
+**Last scan:** 2026-10-16T22:49:24.896733+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 719 |
+| Total constants | 718 |
 | Verified | 183 |
-| Unverified | 536 |
+| Unverified | 535 |
 | Stale (changed since verification) | 0 |
 | Critical risk | 18 |
 | High risk | 8 |
@@ -97,65 +97,6 @@
 | CONST-103 | `_GERBER_EXTENSIONS` | standard | 17 | verified | 0.1 | 0.0 | **low** (0.0) |
 | CONST-347 | `required_layers` | keyword_classification | 3 | unverified | 0.3 | 0.1 | **medium** (0.3) |
 | CONST-313 | `_gerber_exts` | standard | 23 | unverified | 0.1 | 0.0 | **low** (0.1) |
-
-## skills/kicad/scripts/analyze_pcb.py
-
-| ID | Name | Category | # | Status | Impact | Overfit | Risk |
-|---|---|---|---|---|---|---|---|
-| CONST-314 | `MAX_TESTED_FORMAT_VERSION` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-322 | `_NUMERIC_STACKUP_KEYS` | keyword_classification | 3 | verified | 0.3 | 0.1 | **low** (0.1) |
-| CONST-079 | `_float_keys` | keyword_classification | 3 | verified | 0.3 | 0.1 | **low** (0.1) |
-| CONST-080 | `pad_info` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-081 | `fp_entry` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-101 | `seg_info` | keyword_classification | 7 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-102 | `arc_info` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-082 | `via_info` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-083 | `zone_info` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-084 | `bbox` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-211 | `_ESD_TVS_PREFIXES` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-213 | `SNAP` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
-| CONST-215 | `SAMPLE_INTERVAL` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
-| CONST-315 | `ANTIPAD_CLEARANCE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-316 | `ANTIPAD_GRID` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-317 | `sample` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-089 | `seg_entry` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-318 | `analyze_ground_domains:2557` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-086 | `type_counts` | standard | 4 | verified | 0.1 | 0.0 | **low** (0.0) |
-| CONST-087 | `type_sizes` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-088 | `annular_ring` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-319 | `analyze_vias:3242` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-090 | `current_facts` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-214 | `rev_pattern` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
-| CONST-323 | `extract_silkscreen:3591` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-324 | `extract_silkscreen:3593` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-325 | `extract_silkscreen:3601` | keyword_classification | 11 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-195 | `_fab_notes_checklist` | heuristic_threshold | 6 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-326 | `extract_silkscreen:3671` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-327 | `extract_silkscreen:3674` | keyword_classification | 7 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-328 | `extract_silkscreen:3676` | keyword_classification | 7 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-329 | `extract_silkscreen:3678` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-221 | `_silk_checks` | heuristic_threshold | 5 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-320 | `_RF_MODULE_KEYWORDS` | keyword_classification | 20 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-321 | `_RF_LIB_KEYWORDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-330 | `_EDGE_MOUNT_LIBRARY_KEYWORDS` | keyword_classification | 16 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-331 | `MIN_REAL_DRILL_MM` | physics | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-095 | `LIMITS_STD` | standard | 7 | verified | 0.1 | 0.3 | **low** (0.3) |
-| CONST-096 | `LIMITS_ADV` | standard | 4 | verified | 0.1 | 0.2 | **low** (0.2) |
-| CONST-266 | `IPC_CLASS_LIMITS` | standard | 3 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-298 | `constraints` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-299 | `checks` | unknown | 3 | unverified | 0.0 | 0.0 | **low** (0.0) |
-| CONST-332 | `v` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-097 | `risk_order` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
-| CONST-098 | `adequacy_order` | heuristic_threshold | 4 | verified | 0.4 | 0.1 | **low** (0.1) |
-| CONST-333 | `_PASSIVE_REF_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-300 | `_gnd_keywords` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-334 | `analyze_copper_presence:6059` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-335 | `analyze_copper_presence:6060` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-336 | `analyze_fiducials:6239` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-344 | `finding` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-345 | `_FINDING_LIST_KEYS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-346 | `sev_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-302 | `config` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/analyze_thermal.py
 
@@ -596,12 +537,100 @@
 | CONST-725 | `_STAGE_RULES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-726 | `lines` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
-## skills/kicad/scripts/pcb_connectivity.py
+## skills/kicad/scripts/pcb/assembly.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-211 | `_ESD_TVS_PREFIXES` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-320 | `_RF_MODULE_KEYWORDS` | keyword_classification | 20 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-321 | `_RF_LIB_KEYWORDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-330 | `_EDGE_MOUNT_LIBRARY_KEYWORDS` | keyword_classification | 16 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-097 | `risk_order` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
+| CONST-014 | `analyze_fiducials:745` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-344 | `finding` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+
+## skills/kicad/scripts/pcb/connectivity.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-727 | `node_a` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-728 | `node_b` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+
+## skills/kicad/scripts/pcb/copper.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-086 | `type_counts` | standard | 4 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-087 | `type_sizes` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-088 | `annular_ring` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-022 | `analyze_vias:412` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-090 | `current_facts` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-098 | `adequacy_order` | heuristic_threshold | 4 | verified | 0.4 | 0.1 | **low** (0.1) |
+| CONST-333 | `_PASSIVE_REF_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-300 | `_gnd_keywords` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-023 | `analyze_copper_presence:1160` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-104 | `analyze_copper_presence:1161` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+
+## skills/kicad/scripts/pcb/dfm.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-331 | `MIN_REAL_DRILL_MM` | physics | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-095 | `LIMITS_STD` | standard | 7 | verified | 0.1 | 0.3 | **low** (0.3) |
+| CONST-096 | `LIMITS_ADV` | standard | 4 | verified | 0.1 | 0.2 | **low** (0.2) |
+| CONST-266 | `IPC_CLASS_LIMITS` | standard | 3 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-298 | `constraints` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-299 | `checks` | unknown | 3 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-332 | `v` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+
+## skills/kicad/scripts/pcb/pipeline.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-314 | `MAX_TESTED_FORMAT_VERSION` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+
+## skills/kicad/scripts/pcb/presentation.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-105 | `_FINDING_LIST_KEYS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-106 | `sev_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+
+## skills/kicad/scripts/pcb/reader.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-322 | `_NUMERIC_STACKUP_KEYS` | keyword_classification | 3 | verified | 0.3 | 0.1 | **low** (0.1) |
+| CONST-079 | `_float_keys` | keyword_classification | 3 | verified | 0.3 | 0.1 | **low** (0.1) |
+| CONST-080 | `pad_info` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-081 | `fp_entry` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-101 | `seg_info` | keyword_classification | 7 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-102 | `arc_info` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-082 | `via_info` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-083 | `zone_info` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-084 | `bbox` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-214 | `rev_pattern` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-107 | `extract_silkscreen:1261` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-108 | `extract_silkscreen:1263` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-109 | `extract_silkscreen:1271` | keyword_classification | 11 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-195 | `_fab_notes_checklist` | heuristic_threshold | 6 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-110 | `extract_silkscreen:1341` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-121 | `extract_silkscreen:1344` | keyword_classification | 7 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-136 | `extract_silkscreen:1346` | keyword_classification | 7 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-149 | `extract_silkscreen:1348` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-221 | `_silk_checks` | heuristic_threshold | 5 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+
+## skills/kicad/scripts/pcb/routing.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-213 | `SNAP` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
+| CONST-215 | `SAMPLE_INTERVAL` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
+| CONST-315 | `ANTIPAD_CLEARANCE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-316 | `ANTIPAD_GRID` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-317 | `sample` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-089 | `seg_entry` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-184 | `analyze_ground_domains:816` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 
 ## skills/kicad/scripts/project_config.py
 
@@ -742,7 +771,7 @@
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-337 | `MAX_TESTED_FORMAT_VERSION` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-117 | `ps` | keyword_classification | 4 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-117 | `ps` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-118 | `_sev_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 
 ## skills/kicad/scripts/schematic/presentation.py

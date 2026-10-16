@@ -34,7 +34,8 @@ _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 from kicad_core.project import load_kicad_pro, load_kicad_dru  # noqa: E402
-from analyze_pcb import analyze_pcb, analyze_design_rule_compliance  # noqa: E402
+from pcb.pipeline import analyze_pcb  # noqa: E402
+from pcb.dfm import analyze_design_rule_compliance  # noqa: E402
 
 _FIXTURE_DIR = _HARNESS / "tests" / "fixtures" / "simple-project"
 

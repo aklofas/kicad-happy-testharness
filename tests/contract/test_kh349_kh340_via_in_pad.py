@@ -7,7 +7,7 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
-from analyze_pcb import analyze_via_in_pad
+from pcb.copper import analyze_via_in_pad
 
 
 def _pad(shape="rect", w=2.0, h=2.0, angle=0, x=0.0, y=0.0,
