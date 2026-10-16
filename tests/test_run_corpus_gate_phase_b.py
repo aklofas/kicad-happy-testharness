@@ -61,6 +61,19 @@ def test_phase_b_pcb_pair_requires_both_sides(tmp_path):
 ZERO = {"not_applicable": 0, "both_failed": 0, "dependency_missing": 0, "snapshot_read_error": 0}
 
 
+def test_phase_b_full_chain_profile_produces_chained_jobs(tmp_path):
+    # TH-072: the full-chain profile omitted schematic, so Phase A never ran it and
+    # build_phase_b_jobs (which pairs off schematic records) produced no chained unit.
+    prof = PROFILES["full-chain"]
+    assert "schematic" in prof.analyzers
+    lay = gate.GateLayout(tmp_path / "g")
+    a = [_rec("schematic", "o/r", "a.kicad_sch", "ok", "ok"),
+         _rec("pcb", "o/r", "a.kicad_pcb", "ok", "ok")]
+    jobs, skips = gate.build_phase_b_jobs(a, lay, "/b", "/c", prof)
+    assert sorted(j[0] for j in jobs) == ["cross_analysis", "emc", "thermal"]
+    assert all(j[3] == "a.kicad_pcb" for j in jobs) and skips == []
+
+
 def test_gate_pass_requires_strict_clean_census_and_no_bad_skips():
     totals = {"PASS": 10, "WARN": 0, "FAIL": 0, "SKIP": 1, "Disappeared": 0, "Downgrades": 0,
               "Upgrades": 0, "NewKnown": 0, "NewUpgraded": 0, "NewUnknown": 0}

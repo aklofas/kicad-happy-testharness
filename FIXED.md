@@ -11,6 +11,29 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-16 — TH-072: the `full-chain` gate profile declared no schematic analyzer, so Phase B never ran a chained unit
+
+**Severity:** MEDIUM (a requested profile would have reported a clean, census-complete gate over pcb `--full` only; emc/thermal/cross_analysis — the profile's reason to exist — would have been 0 units with no SKIP record).
+**File:** `harnesslib/profiles.py`
+**Discovered:** 2026-10-16, v3 round-5 gate preflight (first round to request the profile; H0 measured the chain with `regression/full_chain_baseline.py`, never through `run_corpus_gate.py --profile full-chain`).
+**Fixed:** 2026-10-16, same session (commit with the round-5 tooling).
+
+- **Root cause:** `PROFILES["full-chain"].analyzers` was `("pcb", "emc", "thermal",
+  "cross_analysis")`. `build_phase_a_jobs` filters on `profile.analyzers`, and
+  `build_phase_b_jobs` enumerates the Phase A **schematic** success records to pair the
+  chained analyzers (a missing schematic is a `dependency_missing` SKIP only when a
+  schematic record exists at all). With no schematic in Phase A there were no records to
+  pair, no jobs and no skips: the gate would have finished `census_ok` on pcb alone.
+- **Fix:** the profile declares `("schematic", "pcb", "emc", "thermal", "cross_analysis")`
+  (schematic still `--no-hierarchy`, as declared; pcb `--full`; 600 s cap). RUNBOOK gate
+  preflight documents the selection (H0 seed-23 sample reduced to 260 repos via
+  `--repo-list`) and that `--analysis-dir` write paths are pinned by the fixture lane, not
+  by the gate.
+- **Verification:** `tests/test_harnesslib_profiles.py` (analyzer tuple locked) and
+  `tests/test_run_corpus_gate_phase_b.py::test_phase_b_full_chain_profile_produces_chained_jobs`
+  (RED on the old tuple: `jobs == []`; GREEN: thermal/emc/cross_analysis paired to the pcb);
+  the round-5 full-chain gate itself (`results/v3_round5_gate_fc/`) is the first real run.
+
 ## 2026-10-15 — TH-069: `discover.py` listed a directory named `*.kicad_pcb` as a pcb unit
 
 **Severity:** LOW (one unit; a ledger slot and a crash mis-attributed to the product).

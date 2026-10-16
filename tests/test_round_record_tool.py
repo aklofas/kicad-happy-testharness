@@ -390,3 +390,29 @@ def test_import_relocation_map_carries_moved_modules_and_emit_site_moves():
     with pytest.raises(ValueError):
         round_record.validate_record(bad)
 
+
+def test_import_relocation_map_carries_patch_targets_and_renamed():
+    # round-5 product map: patch.object sites whose binding moves + "<file>:<scope>" renames
+    data = {"relocations": [],
+            "patch_targets": [{"old": "analyze_pcb.extract_footprints", "new": "pcb.reader.extract_footprints",
+                               "harness_site": "tests/test_kh_v22x_pcb.py::test_net_id_map_reset",
+                               "note": "read_board calls reader.extract_footprints through the module attribute"}],
+            "renamed": [{"from": "skills/kicad/scripts/analyze_pcb.py:_build_net_mapping",
+                         "to": "skills/kicad/scripts/pcb/reader.py:_build_net_mapping"}]}
+    extra = round_record.import_relocation_map(data, _inv())
+    assert extra["patch_targets"] == data["patch_targets"]
+    assert extra["renamed"] == data["renamed"]
+    doc = _load("round_request_ok.json")
+    doc.update({k: data[k] for k in ("patch_targets", "renamed")})
+    jsonschema.validate(doc, SCHEMA)
+    assert round_record.validate_record(doc) == "request"
+    bad = json.loads(json.dumps(doc))
+    bad["renamed"][0]["to"] = "pcb/reader.py"  # no scope
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(bad, SCHEMA)
+    with pytest.raises(ValueError):
+        round_record.validate_record(bad)
+    bad = json.loads(json.dumps(doc))
+    bad["patch_targets"][0]["extra"] = 1
+    with pytest.raises(ValueError):
+        round_record.validate_record(bad)

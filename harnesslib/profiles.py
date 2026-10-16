@@ -21,7 +21,9 @@ class Profile:
 
 PROFILES: dict[str, Profile] = {
     "standard": Profile("standard", SIX, 120, False, True, True, True),
-    "full-chain": Profile("full-chain", ("pcb", "emc", "thermal", "cross_analysis"),
+    # schematic is declared so Phase B (paired off schematic records) runs the
+    # chained analyzers at all (TH-072)
+    "full-chain": Profile("full-chain", ("schematic", "pcb", "emc", "thermal", "cross_analysis"),
                           600, True, True, True, True),
     "hierarchy": Profile("hierarchy", ("schematic",), 300, False, False, True, True),
     "spice-offline": Profile("spice-offline", ("spice",), 60, False, True, True, True),

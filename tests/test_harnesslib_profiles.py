@@ -27,6 +27,8 @@ def test_long_tail_and_full_chain_differ_only_where_declared():
     assert PROFILES["long-tail"].timeout_s == 600
     assert PROFILES["long-tail"].analyzers == PROFILES["standard"].analyzers
     assert PROFILES["full-chain"].pcb_full is True
+    # TH-072: Phase B pairs off schematic records, so the chained profile must run schematic
+    assert PROFILES["full-chain"].analyzers == ("schematic", "pcb", "emc", "thermal", "cross_analysis")
     assert PROFILES["spice-offline"].analyzers == ("spice",)
     assert PROFILES["hierarchy"].schematic_no_hierarchy is False
 

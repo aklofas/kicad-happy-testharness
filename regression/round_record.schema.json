@@ -60,7 +60,17 @@
           "properties": {"rule_or_callee": {"type": "string"}, "function": {"type": "string"},
                          "count": {"type": "integer", "minimum": 1},
                          "from": {"$ref": "#/$defs/skill_path"}, "to": {"$ref": "#/$defs/skill_path"},
-                         "shape": {"type": "string"}}}}
+                         "shape": {"type": "string"}}}},
+        "patch_targets": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["old", "new"],
+          "properties": {"old": {"type": "string"}, "new": {"type": "string"},
+                         "harness_site": {"type": "string"}, "note": {"type": "string"}}}},
+        "renamed": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["from", "to"],
+          "properties": {"from": {"type": "string", "pattern": "^[^\\s:]+\\.py:\\S+$"},
+                         "to": {"type": "string", "pattern": "^[^\\s:]+\\.py:\\S+$"}}}}
       }
     },
     "side_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},

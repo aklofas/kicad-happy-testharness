@@ -21,6 +21,7 @@ _SHA = re.compile(r"^[0-9a-f]{40}$")
 _ROUND_ID = re.compile(r"^r[0-9]{2,3}-[a-z0-9-]+$")
 _FACADE_UNTIL = re.compile(r"^r[0-9]{2,3}(-[a-z0-9-]+)?$")
 _SKILL_PATH = re.compile(r"^skills/[A-Za-z0-9_./-]+\.py$")
+_FILE_SCOPE = re.compile(r"^[^\s:]+\.py:\S+$")  # renamed[].from/to: "<file>:<scope>"
 _BUDGET = re.compile(r"^regression/budgets/[a-z0-9-]+\.json$")
 KINDS = ("structural", "output-changing", "relock")
 PROFILES = ("standard", "full-chain", "hierarchy", "spice-offline", "long-tail")
@@ -41,7 +42,7 @@ RESPONSE_KEYS = ("record_version", "round_id", "harness_sha", "run_ids", "normal
 _POLICY = re.compile(r"^volatile-leaves-v[0-9]+$")
 _FILING = re.compile(r"^(KH|TH)-[0-9]{3}$")
 REQUEST_OPTIONAL = ("expected", "removed", "known_defects_deferred", "expected_sidecar_changes",
-                    "product_evidence", "moved_modules", "emit_site_moves")
+                    "product_evidence", "moved_modules", "emit_site_moves", "patch_targets", "renamed")
 RESPONSE_OPTIONAL = ("apply_map_result", "accept_baseline_diff", "scan_coverage_verdict", "budget_sha256")
 RELOCATION_KEYS = ("symbol", "old_owner", "new_owner", "new_name", "facade_until")
 SCAN_VERDICTS = ("pass", "fail", "not_run")
@@ -131,6 +132,18 @@ def _request_additions(doc, probs):
             for k in ("from", "to"):
                 if not (isinstance(it[k], str) and _SKILL_PATH.fullmatch(it[k])):
                     probs.append(f"{tag}.{k} must be a skills/ .py path")
+    if "patch_targets" in doc:
+        # round-5 maps: harness patch.object sites whose binding moves (spec §13)
+        for tag, it in _items(doc, "patch_targets", ("old", "new"), probs, optional=("harness_site", "note")):
+            for k in ("old", "new", "harness_site", "note"):
+                if k in it and not isinstance(it[k], str):
+                    probs.append(f"{tag}.{k} must be a string")
+    if "renamed" in doc:
+        # round-5 maps: scope renames as "<file>:<scope>" pairs (TH-070 keying input)
+        for tag, it in _items(doc, "renamed", ("from", "to"), probs):
+            for k in ("from", "to"):
+                if not (isinstance(it[k], str) and _FILE_SCOPE.fullmatch(it[k])):
+                    probs.append(f"{tag}.{k} must be '<file>:<scope>'")
     if "product_evidence" in doc:
         pe = _obj(doc, "product_evidence", probs, ("quick_json", "schema_identical", "pinned_harness"), exact=True)
         if pe is not None:
@@ -386,8 +399,8 @@ def schema_identical(text) -> bool:
 def import_relocation_map(data: dict, inventory: dict) -> dict:
     """Request fields carried by a product relocation map; unknown top-level keys are ignored.
 
-    `product_evidence` / `expected_sidecar_changes` / `moved_modules` / `emit_site_moves` in the
-    record shape are carried verbatim;
+    `product_evidence` / `expected_sidecar_changes` / `moved_modules` / `emit_site_moves` /
+    `patch_targets` / `renamed` in the record shape are carried verbatim;
     the older `product_evidence_tip` {quick, schema, harness_live_<sha>} shape is converted."""
     extra = {"relocations": normalize_relocations(data.get("relocations", []), inventory)}
     if "removed" in data:
@@ -399,8 +412,8 @@ def import_relocation_map(data: dict, inventory: dict) -> dict:
             for d in data["known_defects_deferred"]]
     if "expected_sidecar_changes" in data:
         extra["expected_sidecar_changes"] = data["expected_sidecar_changes"]
-    # TH-070 keying input (round-4 maps): carried verbatim
-    for key in ("moved_modules", "emit_site_moves"):
+    # TH-070 keying input (round-4 maps) + patch_targets / renamed (round-5 maps): carried verbatim
+    for key in ("moved_modules", "emit_site_moves", "patch_targets", "renamed"):
         if key in data:
             extra[key] = data[key]
     tip = data.get("product_evidence_tip")
