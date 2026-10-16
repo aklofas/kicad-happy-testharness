@@ -31,7 +31,7 @@ def test_pu_001_datasheet_branch_fires_when_facts_has_pullup_range(tmp_path):
     validate_pullups() emits findings with confidence='datasheet-backed' and
     evidence_source='datasheet' rather than the heuristic defaults."""
     from datasheet_types import SpecValue, Evidence
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
     import validation_detectors
 
     # Build a SpecValue that represents a 1k–10k pull-up range.
@@ -58,12 +58,11 @@ def test_pu_001_datasheet_branch_fires_when_facts_has_pullup_range(tmp_path):
         "properties": {},
         "pins": [{"number": "1", "name": "RESET_N"}],
     }
-    ctx = AnalysisContext(
+    ctx = build_analysis_context(
         components=[ic],
         nets={net_name: {"pins": [{"component": ref, "pin_number": "1",
                                     "pin_name": "RESET_N", "x": 0, "y": 0}]}},
         lib_symbols={},
-        pin_net={(ref, "1"): (net_name, None)},
         known_power_rails=set(),
         source="test",
     )

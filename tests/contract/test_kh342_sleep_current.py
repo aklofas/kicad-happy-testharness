@@ -8,16 +8,11 @@ from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
 from analyze_schematic import analyze_sleep_current
-from kicad_types import AnalysisContext
+from kicad_types import build_analysis_context
 
 
 def _mk_ctx(components, nets):
-    pin_net = {}
-    for net_name, info in nets.items():
-        for p in info["pins"]:
-            pin_net[(p["component"], p["pin_number"])] = (net_name, p.get("pin_name"))
-    return AnalysisContext(components=components, nets=nets,
-                           lib_symbols={}, pin_net=pin_net)
+    return build_analysis_context(components, nets, {})
 
 
 def _r(ref, value):

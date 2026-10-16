@@ -128,7 +128,7 @@ def test_diffpair_detection_pairs_within_sheet_not_across():
     # _detect_differential_pairs must find both same-sheet pairs and must
     # NOT cross-pair /s1/USB_P with /s2/USB_N (or vice versa).
     from analyze_schematic import _detect_differential_pairs
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
 
     wires = []
     labels = []
@@ -148,7 +148,7 @@ def test_diffpair_detection_pairs_within_sheet_not_across():
                          sheet_names=["s1", "s2"])
     assert set(nets) == {"/s1/USB_P", "/s1/USB_N", "/s2/USB_P", "/s2/USB_N"}
 
-    ctx = AnalysisContext(components=comps, nets=nets, lib_symbols={}, pin_net={})
+    ctx = build_analysis_context(comps, nets, {})
     pairs = _detect_differential_pairs(ctx)
     found = {(p["positive"], p["negative"]) for p in pairs}
     assert found == {("/s1/USB_P", "/s1/USB_N"), ("/s2/USB_P", "/s2/USB_N")}
@@ -158,7 +158,7 @@ def test_diffpair_unqualified_board_unchanged():
     # No collisions -> bare keys, empty prefix; end-to-end pairing behavior
     # matches the pre-Task-4 single-map lookup.
     from analyze_schematic import _detect_differential_pairs
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
 
     wires = [
         {"x1": 0, "y1": 0, "x2": 10, "y2": 0},
@@ -170,7 +170,7 @@ def test_diffpair_unqualified_board_unchanged():
     assert set(nets) == {"USB_P", "USB_N"}
     assert "display_name" not in nets["USB_P"]
 
-    ctx = AnalysisContext(components=comps, nets=nets, lib_symbols={}, pin_net={})
+    ctx = build_analysis_context(comps, nets, {})
     pairs = _detect_differential_pairs(ctx)
     found = {(p["positive"], p["negative"]) for p in pairs}
     assert found == {("USB_P", "USB_N")}
@@ -185,7 +185,7 @@ def test_diffpair_case_collision_matches_old_last_wins_semantics():
     # inline from the literal old algorithm so this locks in the *true*
     # old behavior, not an assumed one.
     from analyze_schematic import _detect_differential_pairs
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
 
     nets = {
         "usb_p": {"pins": []},
@@ -200,7 +200,7 @@ def test_diffpair_case_collision_matches_old_last_wins_semantics():
     assert (expected_pos, expected_neg) == ("USB_P", "usb_n"), (
         "sanity check on the reference algorithm itself")
 
-    ctx = AnalysisContext(components=[], nets=nets, lib_symbols={}, pin_net={})
+    ctx = build_analysis_context([], nets, {})
     pairs = _detect_differential_pairs(ctx)
     assert len(pairs) == 1
     assert (pairs[0]["positive"], pairs[0]["negative"]) == (expected_pos, expected_neg)

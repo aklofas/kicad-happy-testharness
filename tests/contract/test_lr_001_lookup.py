@@ -20,7 +20,7 @@ def test_lr_001_helper_smoke_missing_mpn(tmp_path):
 
 def test_lr_001_falls_back_to_heuristic_when_no_facts(tmp_path):
     """When get_facts returns None (cache miss), detector emits with confidence='heuristic'."""
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
     import validation_detectors
 
     # Minimal LED: no series resistor, no transistor/IC driver.
@@ -35,14 +35,13 @@ def test_lr_001_falls_back_to_heuristic_when_no_facts(tmp_path):
         "footprint": "",
         "properties": {},
     }
-    ctx = AnalysisContext(
+    ctx = build_analysis_context(
         components=[led],
         nets={
             "VCC_3V3": {"pins": [{"component": ref, "pin_number": "A", "pin_name": "A", "x": 0, "y": 0}]},
             "LED_NET": {"pins": [{"component": ref, "pin_number": "K", "pin_name": "K", "x": 0, "y": 0}]},
         },
         lib_symbols={},
-        pin_net={(ref, "A"): ("VCC_3V3", None), (ref, "K"): ("LED_NET", None)},
         known_power_rails={"VCC_3V3"},
         source="test",
     )
@@ -66,7 +65,7 @@ def test_lr_001_datasheet_branch_fires_when_facts_has_vf(tmp_path):
     """When get_facts() returns facts with .diode.vf populated, validate_led_resistors()
     emits findings with confidence='datasheet-backed' and evidence_source='datasheet'."""
     from datasheet_types import SpecValue, Evidence
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
     import validation_detectors
 
     # Build a SpecValue for Vf = 2.0V (typ). Schema fields store list[SpecValue].
@@ -102,7 +101,7 @@ def test_lr_001_datasheet_branch_fires_when_facts_has_vf(tmp_path):
         "footprint": "",
         "properties": {},
     }
-    ctx = AnalysisContext(
+    ctx = build_analysis_context(
         components=[led, resistor],
         nets={
             "VCC_5V": {"pins": [{"component": res_ref, "pin_number": "1", "pin_name": "1", "x": 0, "y": 0}]},
@@ -113,12 +112,6 @@ def test_lr_001_datasheet_branch_fires_when_facts_has_vf(tmp_path):
             "GND": {"pins": [{"component": led_ref, "pin_number": "K", "pin_name": "K", "x": 0, "y": 0}]},
         },
         lib_symbols={},
-        pin_net={
-            (res_ref, "1"): ("VCC_5V", None),
-            (res_ref, "2"): ("LED_A", None),
-            (led_ref, "A"): ("LED_A", None),
-            (led_ref, "K"): ("GND", None),
-        },
         known_power_rails={"VCC_5V", "GND"},
         source="test",
     )

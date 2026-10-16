@@ -11,16 +11,12 @@ sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets"))
 
 
 def _make_ctx(components, nets, pin_net, known_power_rails, tmp_path):
-    from kicad_types import AnalysisContext
-    ctx = AnalysisContext(
-        components=components,
-        nets=nets,
-        lib_symbols={},
-        pin_net=pin_net,
-        known_power_rails=known_power_rails,
-        source="test",
-    )
-    setattr(ctx, "cache_dir", tmp_path)
+    # v3 round 3: the product's one construction point derives pin_net from nets;
+    # the hand-written pin_net stays as the expectation it must agree with.
+    from kicad_types import build_analysis_context
+    ctx = build_analysis_context(components, nets, {}, known_power_rails=known_power_rails,
+                                 source="test", cache_dir=tmp_path)
+    assert {k: v[0] for k, v in ctx.pin_net.items()} == {k: v[0] for k, v in pin_net.items()}
     return ctx
 
 

@@ -47,7 +47,7 @@ sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 sys.path.insert(0, os.path.join(_KH, "skills", "datasheets", "scripts"))
 sys.path.insert(0, os.path.join(_KH, "skills", "emc", "scripts"))
 
-from kicad_types import AnalysisContext
+from kicad_types import build_analysis_context
 from datasheet_features import get_regulator_features
 from validation_detectors import validate_power_sequencing
 import emc_rules
@@ -94,12 +94,7 @@ def _ctx(project_dir):
          "pin_type": "power_in", "x": 0.0, "y": 0.0},
     ]}
     nets = {"+3V3": net_info}
-    pin_net = {
-        ("U1", "5"): ("+3V3", net_info),
-        ("U2", "1"): ("+3V3", net_info),
-    }
-    return AnalysisContext(components=[u1, u2], nets=nets, lib_symbols={},
-                           pin_net=pin_net, project_dir=project_dir)
+    return build_analysis_context([u1, u2], nets, {}, project_dir=project_dir)
 
 
 def test_sanity_get_regulator_features_reads_fixture():

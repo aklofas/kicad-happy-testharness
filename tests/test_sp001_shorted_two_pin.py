@@ -30,7 +30,7 @@ Fixtures hand-build an `AnalysisContext` mirroring the real producer shapes:
 `components[]` dicts carry `reference / value / type / lib_id / dnp`
 (analyze_schematic.py parse_symbol_instances), `pin_net` is
 `{(ref, pin_number): (net_name, net_info)}` (build_pin_to_net_map), and
-`ref_pins` / `parsed_values` are derived in `AnalysisContext.__post_init__`
+`ref_pins` / `parsed_values` / `pin_net` are derived by `kicad_types.build_analysis_context`
 exactly as in production.
 """
 
@@ -44,7 +44,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from kicad_types import AnalysisContext
+from kicad_types import build_analysis_context
 from signal_detectors import detect_shorted_two_pin_components
 
 
@@ -54,19 +54,14 @@ def _comp(ref, value, ctype, lib_id="Device:R", dnp=False):
 
 
 def _ctx(components, pins):
-    """pins: {ref: {pin_number: net_name}} -> real pin_net / nets shapes."""
+    """pins: {ref: {pin_number: net_name}} -> real nets shape; pin_net derived by the builder."""
     nets = {}
     for ref, pinmap in pins.items():
         for num, net in pinmap.items():
             nets.setdefault(net, {"pins": []})["pins"].append(
                 {"component": ref, "pin_number": num, "pin_name": "~",
                  "pin_type": "passive", "x": 0.0, "y": 0.0})
-    pin_net = {}
-    for net, info in nets.items():
-        for p in info["pins"]:
-            pin_net[(p["component"], p["pin_number"])] = (net, info)
-    return AnalysisContext(components=components, nets=nets,
-                           lib_symbols={}, pin_net=pin_net)
+    return build_analysis_context(components, nets, {})
 
 
 def _sp001(ctx):

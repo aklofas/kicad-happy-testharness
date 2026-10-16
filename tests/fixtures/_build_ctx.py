@@ -24,7 +24,7 @@ import os
 import sys
 from pathlib import Path
 
-# Add kicad-happy scripts dir so `from kicad_types import AnalysisContext` works.
+# Add kicad-happy scripts dir so `from kicad_types import build_analysis_context` works.
 _KICAD_HAPPY = os.environ.get(
     "KICAD_HAPPY_DIR",
     str(Path(__file__).resolve().parent.parent.parent.parent / "kicad-happy"),
@@ -33,7 +33,7 @@ _SCRIPTS = Path(_KICAD_HAPPY) / "skills" / "kicad" / "scripts"
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
-from kicad_types import AnalysisContext  # noqa: E402
+from kicad_types import build_analysis_context  # noqa: E402
 
 
 def ic(ref: str, value: str, pins: list[tuple[str, str]],
@@ -109,27 +109,27 @@ def build_ctx(components: list[dict],
               nets: dict[str, list[tuple[str, str]]],
               known_power_rails: set[str] | None = None,
               lib_symbols: dict | None = None,
-              generator_version: str = "9.0.1") -> AnalysisContext:
+              generator_version: str = "9.0.1"):
     """Construct a minimal AnalysisContext.
 
     components: list of component dicts (use ic(), resistor(), etc.)
     nets: {net_name: [(ref, pin_number), ...]} — pin_name is looked up from
           the component's pins list.
-    known_power_rails: explicit set of power net names. Defaults to empty
-          set; `AnalysisContext.__post_init__` then auto-detects power nets
-          from any pin whose component ref starts with '#PWR' or '#FLG'.
+    known_power_rails: explicit set of power net names. Defaults to None;
+          `build_analysis_context` then scans the nets for any pin whose
+          component ref starts with '#PWR' or '#FLG'.
           Pass a set explicitly when your fixtures don't use power symbols.
 
-    __post_init__ builds comp_lookup, parsed_values, ref_pins from inputs.
+    `kicad_types.build_analysis_context` (the product's one construction point
+    since v3 round 3) derives pin_net, comp_lookup, parsed_values, ref_pins and
+    known_power_rails from the inputs and installs NetlistQueries; pin_net /
+    ref_pins values are `(net_name, net_record)`.
     """
-    if known_power_rails is None:
-        known_power_rails = set()
     if lib_symbols is None:
         lib_symbols = {}
 
     # Build nets dict in AnalysisContext shape: {name: {"pins": [...]}}
     nets_full: dict[str, dict] = {}
-    pin_net: dict[tuple[str, str], tuple[str | None, str | None]] = {}
     comp_by_ref = {c["reference"]: c for c in components}
 
     for net_name, pin_refs in nets.items():
@@ -146,14 +146,10 @@ def build_ctx(components: list[dict],
                 "component": ref, "pin_number": pnum,
                 "pin_name": pname, "x": 0.0, "y": 0.0,
             })
-            pin_net[(ref, pnum)] = (net_name, pname)
         nets_full[net_name] = {"pins": pin_entries}
 
-    return AnalysisContext(
-        components=components,
-        nets=nets_full,
-        lib_symbols=lib_symbols,
-        pin_net=pin_net,
+    return build_analysis_context(
+        components, nets_full, lib_symbols,
         known_power_rails=known_power_rails,
         generator_version=generator_version,
     )
@@ -170,6 +166,8 @@ if __name__ == "__main__":
     )
     assert ctx.comp_lookup["U1"]["value"] == "MCU"
     assert ctx.parsed_values["R1"] == 10_000.0
-    assert ctx.ref_pins["U1"]["1"] == ("+3V3", "VDD")
+    assert ctx.ref_pins["U1"]["1"] == ("+3V3", ctx.nets["+3V3"])
+    assert ctx.pin_net[("R1", "2")] == ("GND", ctx.nets["GND"])
+    assert ctx.nq is not None
     assert ctx.is_power_net("+3V3")
     print("build_ctx self-test: PASS")

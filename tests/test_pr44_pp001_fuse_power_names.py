@@ -34,7 +34,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from kicad_types import AnalysisContext  # noqa: E402
+from kicad_types import build_analysis_context  # noqa: E402
 from kicad_core.netnames import is_power_net_name, is_ground_name  # noqa: E402
 from signal_detectors import audit_power_pin_dc_paths  # noqa: E402
 
@@ -45,12 +45,7 @@ def _pin(ref, num, ptype="passive", name=""):
 
 
 def _ctx(components, nets):
-    pin_net = {}
-    for net_name, info in nets.items():
-        for p in info["pins"]:
-            pin_net[(p["component"], p["pin_number"])] = (net_name, p["pin_type"])
-    return AnalysisContext(components=components, nets=nets, lib_symbols={},
-                           pin_net=pin_net)
+    return build_analysis_context(components, nets, {})
 
 
 def _fused_board(bridge_type="fuse", far_net="__unnamed_9", with_connector=True):

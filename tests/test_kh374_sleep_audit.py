@@ -59,7 +59,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from kicad_types import AnalysisContext  # noqa: E402
+from kicad_types import build_analysis_context  # noqa: E402
 from analyze_schematic import analyze_sleep_current  # noqa: E402
 
 
@@ -69,12 +69,7 @@ def _pin(ref, num, ptype="passive", name="~"):
 
 
 def _ctx(components, nets):
-    pin_net = {}
-    for net, info in nets.items():
-        for p in info["pins"]:
-            pin_net[(p["component"], p["pin_number"])] = (net, info)
-    return AnalysisContext(components=components, nets=nets,
-                           lib_symbols={}, pin_net=pin_net)
+    return build_analysis_context(components, nets, {})
 
 
 # --- (a)/(b): divider on a regulator's output rail, gated by en_source ---

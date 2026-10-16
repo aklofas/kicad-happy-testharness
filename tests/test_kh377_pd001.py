@@ -40,7 +40,7 @@ _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 sys.path.insert(0, os.path.join(_KH, "skills", "emc", "scripts"))
 
-from kicad_types import AnalysisContext
+from kicad_types import build_analysis_context
 from signal_detectors import detect_power_regulators
 
 import emc_rules
@@ -56,19 +56,14 @@ def _comp(ref, value, ctype, lib_id="Device:R"):
 
 
 def _reg_ctx(components, pins):
-    """pins: {ref: {pin_number: (net_name, pin_name)}} -> real nets/pin_net shapes."""
+    """pins: {ref: {pin_number: (net_name, pin_name)}} -> real nets shape; pin_net derived by the builder."""
     nets = {}
     for ref, pinmap in pins.items():
         for num, (net, pname) in pinmap.items():
             nets.setdefault(net, {"pins": []})["pins"].append(
                 {"component": ref, "pin_number": num, "pin_name": pname,
                  "pin_type": "passive", "x": 0.0, "y": 0.0})
-    pin_net = {}
-    for net, info in nets.items():
-        for p in info["pins"]:
-            pin_net[(p["component"], p["pin_number"])] = (net, info)
-    return AnalysisContext(components=components, nets=nets,
-                           lib_symbols={}, pin_net=pin_net)
+    return build_analysis_context(components, nets, {})
 
 
 def _ldo_with_feedforward_cap():

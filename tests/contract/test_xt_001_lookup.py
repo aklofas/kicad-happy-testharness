@@ -18,16 +18,8 @@ sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets"))
 
 def _make_ctx(source="test"):
     """Minimal AnalysisContext for validate_crystal_load_caps (needs only source + attrs)."""
-    from kicad_types import AnalysisContext
-    ctx = AnalysisContext(
-        components=[],
-        nets={},
-        lib_symbols={},
-        pin_net={},
-        source=source,
-    )
-    setattr(ctx, "cache_dir", None)
-    return ctx
+    from kicad_types import build_analysis_context
+    return build_analysis_context([], {}, {}, source=source, cache_dir=None)
 
 
 def _make_xtal_entry(
@@ -189,7 +181,7 @@ def test_detect_crystal_circuits_probes_datasheet_for_target_load(tmp_path):
     """
     from datasheet_types import SpecValue, Evidence
     import signal_detectors
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
 
     # Mock: facts.crystal.load_capacitance → [SpecValue(typ=1.8e-11)] = 18 pF
     ev = Evidence(page=1, confidence="medium", method="table")
@@ -217,7 +209,7 @@ def test_detect_crystal_circuits_probes_datasheet_for_target_load(tmp_path):
           "lib_id": "Device:C", "footprint": "", "properties": {}}
     c2 = {"reference": c2_ref, "value": "22p", "type": "capacitor",
           "lib_id": "Device:C", "footprint": "", "properties": {}}
-    ctx = AnalysisContext(
+    ctx = build_analysis_context(
         components=[xtal, c1, c2],
         nets={
             "XTAL1": {"pins": [
@@ -234,14 +226,6 @@ def test_detect_crystal_circuits_probes_datasheet_for_target_load(tmp_path):
             ]},
         },
         lib_symbols={},
-        pin_net={
-            (xtal_ref, "1"): ("XTAL1", None),
-            (xtal_ref, "2"): ("XTAL2", None),
-            (c1_ref, "1"): ("XTAL1", None),
-            (c1_ref, "2"): ("GND", None),
-            (c2_ref, "1"): ("XTAL2", None),
-            (c2_ref, "2"): ("GND", None),
-        },
         known_power_rails={"GND"},
         source="test",
     )
@@ -272,7 +256,7 @@ def _build_crystal_ctx(tmp_path, xtal_value="XTAL-16M"):
     two 22pF load caps. Effective CL ≈ 14pF (with 3pF stray) → out-of-spec
     vs 18pF target. Mirrors the construction in
     test_detect_crystal_circuits_probes_datasheet_for_target_load."""
-    from kicad_types import AnalysisContext
+    from kicad_types import build_analysis_context
 
     xtal_ref = "Y1"
     c1_ref = "C1"
@@ -289,7 +273,7 @@ def _build_crystal_ctx(tmp_path, xtal_value="XTAL-16M"):
           "lib_id": "Device:C", "footprint": "", "properties": {}}
     c2 = {"reference": c2_ref, "value": "22p", "type": "capacitor",
           "lib_id": "Device:C", "footprint": "", "properties": {}}
-    ctx = AnalysisContext(
+    ctx = build_analysis_context(
         components=[xtal, c1, c2],
         nets={
             "XTAL1": {"pins": [
@@ -306,14 +290,6 @@ def _build_crystal_ctx(tmp_path, xtal_value="XTAL-16M"):
             ]},
         },
         lib_symbols={},
-        pin_net={
-            (xtal_ref, "1"): ("XTAL1", None),
-            (xtal_ref, "2"): ("XTAL2", None),
-            (c1_ref, "1"): ("XTAL1", None),
-            (c1_ref, "2"): ("GND", None),
-            (c2_ref, "1"): ("XTAL2", None),
-            (c2_ref, "2"): ("GND", None),
-        },
         known_power_rails={"GND"},
         source="test",
     )

@@ -18,16 +18,8 @@ sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets"))
 
 def _make_ctx(source="test"):
     """Minimal AnalysisContext with cache_dir attribute."""
-    from kicad_types import AnalysisContext
-    ctx = AnalysisContext(
-        components=[],
-        nets={},
-        lib_symbols={},
-        pin_net={},
-        source=source,
-    )
-    setattr(ctx, "cache_dir", None)
-    return ctx
+    from kicad_types import build_analysis_context
+    return build_analysis_context([], {}, {}, source=source, cache_dir=None)
 
 
 def _make_regulator(ref="U1", r_top_ohms=10000, r_bottom_ohms=3300, mpn=""):
