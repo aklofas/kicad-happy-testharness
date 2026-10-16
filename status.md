@@ -92,6 +92,66 @@ Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa �
 
 ## Completed batches
 
+### 2026-10-16 later — v3 ROUND 5 GATE 6a91aaa→d55c851 ACCEPTED (FULL standard + full-chain profiles, strict-field 0 deltas on both); harness re-baselined at d55c851 (CI pin checkpoint 6 candidate); KH-449 filed, KH-447/TH-071 memory addenda, TH-072 fixed-on-discovery
+
+Candidate `d55c851` (v3-dev: 13 commits over 9465206 — `analyze_pcb.py` split into the `pcb/`
+package by verbatim block moves (geometry/connectivity/reader/dfm/copper/routing/assembly/
+presentation/pipeline), `PcbReaderState` replaces the `_net_name_to_id` module global,
+`output_io.write_derived_output` for gerber/thermal/cross, 103 facaded relocations retiring
+r09; budget EMPTY; `expected_sidecar_changes []`). Both product trees clean clones
+(`results/v3_baseline/product_6a91aaa`, new `results/v3_baseline/product_d55c851`).
+
+**Standard profile, FULL corpus** (`results/v3_round5_gate/`, run `b57e63af`, harness
+`e734aea269b` clean, 32 jobs, 38 min): 149,629 PASS / 0 WARN / 0 FAIL / 0 Disappeared / 0
+NewUnknown; census exact (sch 36,465 / pcb 18,660 / gerber 5,502 / emc+thermal+cross 36,462);
+20,393 SKIP = 20,379 not_applicable + 14 ledgered (same identities as round 4); modes raw =
+deltas (run ids only), strict = clean, `strict_field_clean` True; **GATE PASS**.
+**Full-chain profile** (`results/v3_round5_gate_fc/`, run `f6784ec3`, harness `045a9d09a5a`
+clean, 260 repos = the H0 seed-23 300-project sample reduced to repos, pcb `--full`, 600 s
+cap, 30 min): 21,405 PASS / 0 deltas of any kind, strict 21,405/21,405 identical, 0
+candidate failures; census sch 5,156 / pcb 3,015 / emc+cross 5,155 / thermal 5,155; 2,234
+SKIP = 2,227 not_applicable + 7 both_failed/dependency_missing, of which 2 were ledgered and
+**5 were new both-sided baseline debts under this profile**: `azonenberg/starshipraider`
+MAXWELL `maxwell-main.kicad_pcb` `--full` timeout at 600 s on both sides (KH-449) and
+`cristobalcuevas/Kicad` LT3514 (KH-447) SIGKILLed by the host OOM killer at ~400 s on both
+sides (+3 dependents) — a standalone run under a 20 GB rlimit dies with `MemoryError` at
+77 s / 19.5 GB in `parse_all_sheets`. Both added to `reference/baseline_debts/6a91aaa.json`
+(`timeout_units` + `crash_units`, `profile: full-chain`, `accepted_by: null` for the
+maintainer per ruling Q3); `--recheck` → **GATE PASS** (`results/v3_round5_gate_aux/
+recheck_fc.txt`; the standard gate rechecks PASS under the extended ledger too).
+**`--schema` ×6** byte-identical both sides and == the round-4 capture. **Sidecars:** only
+`run_id` + the round-3 `schema_versions` population on both trees (`sidecar_diff*.json`).
+**`--analysis-dir` write paths** (the round's moved CLI code): the gate profiles pass
+explicit `-o/--schematic/--pcb` paths and never touch the cache, so the pinning evidence is
+the fixture lane (`tools/aa_run.py --fixture-trees`, 28 contract tests × both products):
+12/21 envelopes strictly identical, the 9 chained envelopes differ only in `/inputs` path
+leaves that embed the minute-stamped run dir (TH-068 class; `fixture_lane/aa/`).
+**TH-072 (fixed-on-discovery):** the `full-chain` profile declared no schematic analyzer,
+so Phase B (paired off schematic records) would have run zero chained units with no SKIP
+record; fixed in `harnesslib/profiles.py` + 2 tests before the run. **Product hygiene note
+for the maintainer:** commit `27b412b` adds a stray `skills/kicad/scripts/analysis/
+capability_mode.json` sidecar (a CLI run with the scripts dir as cwd).
+
+**Re-baseline at d55c851:** scan coverage accepted (files 118→128, constants 719→718;
+56 module/line-keyed losses = the TH-070 class, matches the maintainer's check);
+constants `relocate --map` 55 + scan 14 added / 39 updated / 15 removed, 718 total,
+verified 183 preserved; equations 25 relocated, statuses unchanged (79 verified / 19
+stale / 7 unverified); **all `analyze_pcb` bindings migrated: 214 sites / 15 test files**
+(the 2 patch sites → `pcb.reader` / `pcb.presentation` as the map's `patch_targets` said;
+15 from-import lines; the five attribute-access files re-aliased per module) — the
+`analyze_pcb` facade is no longer imported anywhere in the harness; dispositions 30
+`analyze_pcb.*` entries → migrate/done r05 (`<module>` → pipeline, `parse_file` →
+`kicad_core.sexp`); `api_migration check` = only the pre-H1 `normalize_severity`
+violation; `api_migration.py` scanner: patch targets on a non-inventory dotted module
+alias now bind, `<module>` sites that only mention `<name>.py` are gone-not-blind (2
+tests); `round_record.py` carries `patch_targets` / `renamed`. **Tiers at d55c851 (unit +
+offline_contract): 3,081 passed / 0 failed / 8 skipped / 4 xfailed** (pre-acceptance: the
+scan-coverage lock + the binding blind list, both cleared by the re-baseline). Records
+`results/v3_round5_gate/round5_{request,response}.json`; evidence `results/v3_round5_gate*/`.
+Harness commits: `045a9d09a5a` (TH-072 + record tool), `6e319b12325` (re-baseline),
+trackers = CI pin checkpoint 6 candidate, UNPUSHED. Round-6 (distributor_core + provider
+adapters, offline fixtures + manifest bytes) planned by the maintainer after this verdict.
+
 ### 2026-10-16 — v3 ROUND 4 GATE 6a91aaa→9465206 ACCEPTED (FULL standard + hierarchy profiles, strict-field 0 deltas on both); harness re-baselined at 9465206 (CI pin checkpoint 5 candidate); KH-448 / TH-071 filed
 
 Candidate `9465206` (v3-dev: 16 commits over 3d4a420 — `analyze_schematic.py` split into the
