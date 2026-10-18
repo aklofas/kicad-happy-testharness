@@ -2898,6 +2898,38 @@ absolute paths, so prefix stripping and the sha256 linkage checks fail.
 
 ---
 
+### 26j. distributor-offline profile (product oracle, v3 round 6)
+
+The distributor layer (`skills/{digikey,mouser,lcsc,element14}` sync/fetch CLIs over
+`skills/datasheets/distributor_core/`) emits no analyzer output, so the corpus gate is blind
+to it. Its evidence is the product's offline oracle `tools/distributor_offline.py` over
+`tools/tests/fixtures/distributor/` (41 in-process sync/fetch runs with the clock frozen,
+network and PDF seams replaced by recorded responses; five artefacts per run — manifest bytes,
+stdout, stderr, summary, files listing — byte-compared with an expected set frozen at the
+pre-round tip). `harnesslib.profiles` declares it as `distributor-offline` (cap 120 s for the
+whole oracle; `run_corpus_gate.py` REFUSES the profile, exit 2, because it runs no corpus
+analyzer — the same guard covers `spice-offline`). Run it both ways from clean clones:
+
+```bash
+python3 regression/run_distributor_offline_gate.py \
+    --baseline-dir results/v3_baseline/product_<base> --candidate-dir results/v3_baseline/product_<cand> \
+    --runner-rev <pre-move oracle rev> --gate-dir results/<label>_gate_do --label <label>
+```
+
+Direction 1 runs the candidate's own oracle against its frozen set (`--expected`, must exit 0);
+direction 2 overlays the oracle + fixtures at `--runner-rev` on a `git archive` export of the
+baseline and `--write-expected`s there, then byte-compares with the frozen set. `--runner-rev`
+is the candidate-repo revision whose PATCH_TARGETS match the BASELINE module layout (the runner
+is re-targeted when the moved names move again, so the tip's runner does not patch the old
+tree). Both trees are exported, never written to, so the clones stay clean for a concurrent
+corpus gate. The record is `<gate-dir>/distributor_offline.json` (`gate_pass.pass`, `diffs`,
+per-direction exit codes/summary lines, runner sha); keep it with the round's evidence and
+name the profile in the round record (`round_record.py --profile distributor-offline`). Exit
+0 pass / 1 fail / 2 usage. Limits (handoff §10): the oracle stubs `download_pdf`, search and
+scrape whole, so URL normalisation, the `%PDF` sniff, the transport cascade and `pdftotext`
+are covered only by the product's unit tests; `--parallel > 1` is completion-order
+nondeterministic and not part of the oracle.
+
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 
 When the analyzer ships a new era with material detector behavior changes

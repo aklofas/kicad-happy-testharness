@@ -10,8 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.profiles import PROFILES, Profile  # noqa: E402
 
 
-def test_five_profiles_declared():
-    assert set(PROFILES) == {"standard", "full-chain", "hierarchy", "spice-offline", "long-tail"}
+def test_declared_profiles():
+    assert set(PROFILES) == {"standard", "full-chain", "hierarchy", "spice-offline", "long-tail",
+                             "distributor-offline"}
     for name, p in PROFILES.items():
         assert isinstance(p, Profile) and p.name == name
 
@@ -30,6 +31,8 @@ def test_long_tail_and_full_chain_differ_only_where_declared():
     # TH-072: Phase B pairs off schematic records, so the chained profile must run schematic
     assert PROFILES["full-chain"].analyzers == ("schematic", "pcb", "emc", "thermal", "cross_analysis")
     assert PROFILES["spice-offline"].analyzers == ("spice",)
+    assert PROFILES["distributor-offline"].analyzers == ("distributor",)
+    assert PROFILES["distributor-offline"].timeout_s == 120 and PROFILES["distributor-offline"].offline
     assert PROFILES["hierarchy"].schematic_no_hierarchy is False
 
 

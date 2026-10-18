@@ -28,4 +28,7 @@ PROFILES: dict[str, Profile] = {
     "hierarchy": Profile("hierarchy", ("schematic",), 300, False, False, True, True),
     "spice-offline": Profile("spice-offline", ("spice",), 60, False, True, True, True),
     "long-tail": Profile("long-tail", SIX, 600, False, True, True, True),
+    # product oracle, not a corpus profile: tools/distributor_offline.py (v3 round 6) run
+    # both ways by regression/run_distributor_offline_gate.py; run_corpus_gate refuses it
+    "distributor-offline": Profile("distributor-offline", ("distributor",), 120, False, True, True, True),
 }

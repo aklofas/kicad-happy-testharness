@@ -24,7 +24,7 @@ _SKILL_PATH = re.compile(r"^skills/[A-Za-z0-9_./-]+\.py$")
 _FILE_SCOPE = re.compile(r"^[^\s:]+\.py:\S+$")  # renamed[].from/to: "<file>:<scope>"
 _BUDGET = re.compile(r"^regression/budgets/[a-z0-9-]+\.json$")
 KINDS = ("structural", "output-changing", "relock")
-PROFILES = ("standard", "full-chain", "hierarchy", "spice-offline", "long-tail")
+PROFILES = ("standard", "full-chain", "hierarchy", "spice-offline", "long-tail", "distributor-offline")
 VERDICT_WORDS = {
     "raw": ("clean", "deltas", "error"),
     "strict": ("clean", "deltas", "error"),

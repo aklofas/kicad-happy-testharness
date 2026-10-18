@@ -863,6 +863,13 @@ def main(argv=None):
     args.kind = resolve_kind(args.kind)
 
     profile = PROFILES[args.profile]
+    if not any(a in PHASE_A for a in profile.analyzers):
+        # spice-offline / distributor-offline are declared here for their caps and flags but
+        # run through their own runners; a corpus gate over them would record zero units
+        print(f"Error: profile {profile.name} runs no corpus analyzer ({'/'.join(PHASE_A)}); "
+              "use its own runner (run/run_spice.py, regression/run_distributor_offline_gate.py)",
+              file=sys.stderr)
+        sys.exit(2)
     for d in (args.baseline_dir, args.candidate_dir):
         if not Path(d).exists():
             print(f"Error: worktree {d} does not exist", file=sys.stderr)
