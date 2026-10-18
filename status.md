@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa — A/A strict-clean on smoke/quick_200/full corpus, policy v1 confirmed as-is, trees + ledger + round-record schema; unit tier 2,229 pass / 1 xfail; TH-068 filed; prior: H0 plan 5: grouped two-phase BUGFIX reconciliation closes TH-057, registry back-synced for 8 hand-migrated locks, schema_era v3.0 + --select-era/--stamp-era; unit tier 2,144 pass / 1 xfail; prior: H0 plan 4: package-aware scanners + literal-tag policy + coverage baseline @6a91aaa + API inventory adoption; unit tier 2,103 pass / 1 xfail; KH-445, TH-065, TH-066 filed; prior: H0 plan 3: field-level comparator raw/strict/budgeted + volatile-leaves-v1 + budgets + gate --budget, comparator suite 176, unit tier 2,046 pass / 1 xfail; prior: H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files))
+Last updated: 2026-10-17 (v3 ROUND 6 GATE 6a91aaa→30cbfcb ACCEPTED — full standard strict-field 0 deltas + distributor-offline oracle clean both ways; re-baselined at 30cbfcb; tiers 3,090/0/8/4; TH-073 fixed-on-discovery; prior: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa — A/A strict-clean on smoke/quick_200/full corpus, policy v1 confirmed as-is, trees + ledger + round-record schema; unit tier 2,229 pass / 1 xfail; TH-068 filed; prior: H0 plan 5: grouped two-phase BUGFIX reconciliation closes TH-057, registry back-synced for 8 hand-migrated locks, schema_era v3.0 + --select-era/--stamp-era; unit tier 2,144 pass / 1 xfail; prior: H0 plan 4: package-aware scanners + literal-tag policy + coverage baseline @6a91aaa + API inventory adoption; unit tier 2,103 pass / 1 xfail; KH-445, TH-065, TH-066 filed; prior: H0 plan 3: field-level comparator raw/strict/budgeted + volatile-leaves-v1 + budgets + gate --budget, comparator suite 176, unit tier 2,046 pass / 1 xfail; prior: H0 plan 2: harnesslib + run_corpus_gate, unit tier 1,851 pass / 1 xfail, TH-055/059 (harness half) fixed, TH-063 filed; prior: 2026-10-14 H0 plan 1: honest pytest collection, unit tier 1,744 pass / 1 xfail, TH-052/053/058 fixed, TH-060/061 filed; prior: 2026-10-06 later (v2.3.1 corpus regen 78b8f02→0684046 CLEAN, 2,716,679 assertions / 100.0%, unit 1,551/0; prior: SacMap soak-fix gate 9fbbb26→ef6d55c CLEAN, pre-tag at ef6d55c, unit 1,551/0, KH-426..441 filed; prior: KH-418/420 follow-up gate b008afa→9fbbb26 CLEAN, pre-tag at 9fbbb26, unit 1,537/0; prior: v2.3.1 gate a01e9ca→b008afa CLEAN with KH-418/KH-420 filed back; unit 1,519/0; prior: v2.3.0 corpus regen d5fd7da→78b8f02 CLEAN; TH-054 EMC stale-corpus fix; 2,716,980 assertions / 100.0%; unit 1,462/0; prior: v2.3.0 correctness batch gate 788649f→b54b5c4 CLEAN; 18 KH fixed + KH-395 refuted; KH-408..413 + TH-053 filed; pre-tag at b54b5c4; unit tree 1,453 / 0 over 124 files)))
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,62 @@ Last updated: 2026-10-15 later (4) (H0 plan 6: v3 BASELINE ACQUIRED at 6a91aaa �
 ---
 
 ## Completed batches
+
+### 2026-10-17 — v3 ROUND 6 GATE 6a91aaa→30cbfcb ACCEPTED (FULL standard profile strict-field 0 deltas + distributor-offline oracle clean both ways at two baselines); harness re-baselined at 30cbfcb (CI pin checkpoint 7 candidate); `distributor-offline` profile + runner added; TH-073 fixed-on-discovery
+
+Candidate `30cbfcb` (v3-dev: 12 commits over 935b429 — `tools/distributor_offline.py` oracle +
+`tools/tests/fixtures/distributor/` (41 runs frozen at 935b429), `skills/datasheets/distributor_core/
+{inputs,manifest,download,verify,sync}.py` (shared helpers verbatim, four declared seams, ONE sync
+driver = DigiKey's body with thirteen knob substitutions), `provider_<p>.py` ×4, the eight sync/fetch
+CLIs = `main()` + facades (retire r09), `datasheet_types/cache_reader.py` absorbs
+`datasheet_lookup.py` (facade); 141 facaded relocations; budget EMPTY; `expected_sidecar_changes
+[]`). Both product trees clean clones (`results/v3_baseline/product_6a91aaa`, new
+`results/v3_baseline/product_30cbfcb`).
+
+**Standard profile, FULL corpus** (`results/v3_round6_gate/`, run `eb584974`, harness `d78027a0082`
+clean, 32 jobs, 2,363 s = 39 min): 170,022 unit records = **149,629 PASS / 0 WARN / 0 FAIL / 0
+Disappeared / 0 NewKnown / 0 NewUnknown / 20,393 SKIP** (20,379 not_applicable + 14 ledgered = the
+same KH-446/KH-447 identities as rounds 2–5; unledgered 0, unaccepted 0); census exact (sch 36,465 /
+pcb 18,660 / gerber 5,502 / emc+thermal+cross 36,462); modes raw = deltas (the two run-id leaves
+only, 299,258 byte deltas over 149,629 units), **strict = clean (0 deltas, 0 policy violations)**,
+budgeted n/a, findings strict_clean; candidate_failures 0; **GATE PASS, exit 0, first evaluation**.
+**`--schema` ×6** byte-identical both sides and == the round-5 capture (`_aux/schema/`).
+**Sidecars:** 149,634 pairs, 0 one-sided, differing leaves `run_id` + the round-3 `schema_versions`
+population only (`_aux/sidecar_diff.json`) — `expected_sidecar_changes []` holds.
+
+**distributor-offline profile (NEW, `harnesslib.profiles` + `regression/run_distributor_offline_gate.py`,
+RUNBOOK 26j; `run_corpus_gate.py` now refuses analyzer-less profiles — TH-073 fixed-on-discovery):**
+the product oracle run both ways from `git archive` exports of the clones, harness fixtures as `$FX`.
+Candidate `30cbfcb`: `sync-offline: OK (41 runs)` exit 0. Baseline = the 19327c9 runner overlaid on
+**6a91aaa** (the gate range) → `--write-expected` 184 artefacts, **0 differing** vs the frozen set
+(`results/v3_round6_gate_do/`, GATE PASS); the same on a **935b429** export (the round base, the
+maintainer's recipe) → **0 differing** (`results/v3_round6_gate_do_935b429/`, GATE PASS). The
+hand-run recipe (`_aux/oracle/`: candidate `--expected` OK, 935b429 clone + `diff -r`) agrees.
+
+**Re-baseline at 30cbfcb:** scan coverage accepted (files 128→136; sites / EQ / constants /
+exceptions unchanged; no lost_constants — the distributor constants are not keyed; post-accept
+CLEAN); constants `relocate --map` 0 / scan 0 added / 0 updated / 0 removed (718), equations 105
+unchanged (registries not touched — timestamp-only); **every harness binding of the
+`datasheet_lookup` and `fetch_datasheet_lcsc` facades migrated: 210 inventory sites / 7 files** —
+the two `patch_targets` landed as specified (`mock.patch.object(provider_lcsc, "search_lcsc_direct")`
+×4 incl. the line-38 site, `monkeypatch.setattr(datasheet_types.cache_reader, "_UNSAFE_CHAR")`), the
+`from datasheet_lookup import` lines → `datasheet_types.cache_reader` (test_a3_lookup_path 17,
+test_a3_trust_gates_deny 13, contract/test_datasheet_lookup 20, test_a3_compat_path 1,
+fixtures/pdf.py 1), test_kh405 → `import provider_lcsc as prov`, the round-trip test's module
+fixture → a static `import datasheet_types.cache_reader as lookup_mod` so the API scanner binds it
+(the fixture form left 4 symbols UNVERIFIABLE on the blind list); dispositions 12 entries
+(`datasheet_lookup.*` 7, `fetch_datasheet_lcsc.*` 5) → migrate/done r06; `api_migration check` =
+only the pre-H1 `normalize_severity` item; `tests/python_compat_policy.json` gains the R5
+`distributor_core/download.py: [requests, playwright]` declaration (maintainer-edited, adopted).
+**Tiers at 30cbfcb (unit + offline_contract): pre-migration 3,077 passed / 4 failed (exactly the
+maintainer's four) / 8 skipped / 4 xfailed → final 3,090 passed / 0 failed / 8 skipped / 4 xfailed.**
+Records `results/v3_round6_gate/round6_{request,response}.json` (request re-imported from
+`relocation-map-round6.record.json` with both profiles); evidence `results/v3_round6_gate*/`.
+Harness commits: `323c23af458` (profile + runner + guard + RUNBOOK 26j), `9fbbff05718`
+(re-baseline + migration + R5), trackers = CI pin checkpoint 7 candidate, UNPUSHED. Round-5 snap
+trees PRUNED (67 G; `diff/` + records kept); round-6 standard trees (55 G) kept until round 7 is
+accepted. Round 7 (regulator phase split, DFM split, shared tables, render/argparse helpers, docs)
+planned by the maintainer after this verdict.
 
 ### 2026-10-16 later — v3 ROUND 5 GATE 6a91aaa→d55c851 ACCEPTED (FULL standard + full-chain profiles, strict-field 0 deltas on both); harness re-baselined at d55c851 (CI pin checkpoint 6 candidate); KH-449 filed, KH-447/TH-071 memory addenda, TH-072 fixed-on-discovery
 

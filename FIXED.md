@@ -11,6 +11,28 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-17 — TH-073: `run_corpus_gate.py` accepted profiles that run no corpus analyzer, so a `--profile spice-offline` gate would have recorded zero units
+
+**Severity:** LOW (latent; no such gate was ever requested. The TH-072 class: a declared profile whose analyzers never reach Phase A yields an empty census with no SKIP record).
+**File:** `regression/run_corpus_gate.py`
+**Discovered:** 2026-10-17, v3 round-6 gate preflight, while declaring the `distributor-offline` profile (a second profile of this shape beside `spice-offline`).
+**Fixed:** 2026-10-17, same session (commit with the round-6 tooling).
+
+- **Root cause:** `harnesslib.profiles.PROFILES` carries every declared profile, including
+  ones executed by their own runners (`spice-offline` → `run/run_spice.py`; now
+  `distributor-offline` → `regression/run_distributor_offline_gate.py`), and the gate's
+  `--profile` choices are `sorted(PROFILES)`. `build_phase_a_jobs` filters on
+  `profile.analyzers`, so a profile with no `schematic`/`pcb`/`gerber` analyzer built zero
+  Phase A jobs, zero Phase B pairs and zero skips — the run would have finished with an
+  empty census rather than refusing.
+- **Fix:** right after the profile is resolved, the gate exits 2 with
+  `profile <name> runs no corpus analyzer (schematic/pcb/gerber); use its own runner …`
+  when no declared analyzer is a Phase A analyzer. The product-oracle profile and its
+  runner are documented in RUNBOOK 26j.
+- **Verification:** `tests/test_run_distributor_offline_gate.py::test_corpus_gate_refuses_profiles_without_corpus_analyzers`
+  (parametrized over `distributor-offline` and `spice-offline`: exit 2 before any worktree
+  is touched, no gate dir created).
+
 ## 2026-10-16 — TH-072: the `full-chain` gate profile declared no schematic analyzer, so Phase B never ran a chained unit
 
 **Severity:** MEDIUM (a requested profile would have reported a clean, census-complete gate over pcb `--full` only; emc/thermal/cross_analysis — the profile's reason to exist — would have been 0 units with no SKIP record).
