@@ -41,7 +41,7 @@ from tests.datasheets.fixtures.pdf import write_cache_with_pdf
 
 def test_lookup_returns_facts_for_present_mpn():
     """lookup() returns a populated DatasheetFacts for a cached MPN."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(Path(tmp))
@@ -55,7 +55,7 @@ def test_lookup_returns_facts_for_present_mpn():
 
 def test_lookup_returns_none_for_missing_mpn():
     """lookup() returns None for an MPN not in the cache."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(Path(tmp))
@@ -64,7 +64,7 @@ def test_lookup_returns_none_for_missing_mpn():
 
 def test_lookup_returns_none_for_malformed_cache():
     """lookup() returns None when the cache file exists but is invalid JSON."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir = Path(tmp) / "extracted"
@@ -76,7 +76,7 @@ def test_lookup_returns_none_for_malformed_cache():
 def test_best_returns_highest_trust_entry():
     """best() returns the first SpecValue at or above the gate, preserving
     extractor order (first-match-wins per Track 2.4 design)."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -93,7 +93,7 @@ def test_best_returns_highest_trust_entry():
 
 def test_trusted_filters_to_min_confidence():
     """trusted() returns all SpecValue entries at or above the gate."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import trusted
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -112,7 +112,7 @@ def test_trusted_filters_to_min_confidence():
 
 def test_has_data_true_for_non_empty_specs():
     """has_data() returns True for any non-empty list, regardless of confidence."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import has_data
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -132,7 +132,7 @@ def test_has_data_false_for_empty_or_none():
 
 def test_tristate_field_missing_has_data_false():
     """Tri-state case 1: field was not extracted (None) → has_data=False."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import has_data, trusted
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -151,7 +151,7 @@ def test_tristate_field_missing_has_data_false():
 
 def test_stale_flag_false_when_pdf_sha_matches_cache():
     """facts.stale is False when PDF on disk hashes to the cached source.sha256."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(Path(tmp))
@@ -162,7 +162,7 @@ def test_stale_flag_false_when_pdf_sha_matches_cache():
 
 def test_stale_flag_true_when_pdf_sha_mismatch():
     """facts.stale is True when PDF on disk hashes differently."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(
@@ -176,7 +176,7 @@ def test_stale_reason_is_STALE_PDF_HASH_MISMATCH_constant():
     """Stale-reason on hash mismatch uses the public STALE_PDF_HASH_MISMATCH
     constant — detectors that want to branch on reason shouldn't string-
     compare arbitrary values."""
-    from datasheet_lookup import lookup, STALE_PDF_HASH_MISMATCH
+    from datasheet_types.cache_reader import lookup, STALE_PDF_HASH_MISMATCH
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(
@@ -190,7 +190,7 @@ def test_stale_reason_is_STALE_PDF_HASH_MISMATCH_constant():
 
 def test_stale_flag_true_when_pdf_missing():
     """facts.stale is True when the referenced PDF doesn't exist on disk."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, pdf_path = write_cache_with_pdf(Path(tmp), write_pdf=False)
@@ -202,7 +202,7 @@ def test_stale_flag_true_when_pdf_missing():
 
 def test_stale_reason_is_STALE_PDF_MISSING_constant():
     """Stale-reason on missing PDF uses the public STALE_PDF_MISSING constant."""
-    from datasheet_lookup import lookup, STALE_PDF_MISSING
+    from datasheet_types.cache_reader import lookup, STALE_PDF_MISSING
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(Path(tmp), write_pdf=False)
@@ -218,7 +218,7 @@ def test_stale_flag_survives_facts_round_trip_through_helpers():
     round-trip ignores it. This test locks that the helper layer also doesn't
     accidentally strip it via intermediate dataclass reconstruction.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best, trusted, has_data
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -243,7 +243,7 @@ def test_stale_flag_survives_facts_round_trip_through_helpers():
 
 def test_lookup_makes_no_network_calls():
     """lookup() never triggers network I/O — monkey-patched for proof."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     calls = []
 
@@ -268,7 +268,7 @@ def test_lookup_makes_no_network_calls():
 
 def test_lookup_triggers_no_subprocess():
     """lookup() never spawns subprocesses — monkey-patched for proof."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     calls = []
 
@@ -299,7 +299,7 @@ def test_lookup_writes_no_files_in_cache_dir():
     (the fixture itself writes into tmp_path), so we assert on outcome:
     cache file identity/content is unchanged pre/post-lookup.
     """
-    from datasheet_lookup import lookup, sanitize_mpn
+    from datasheet_types.cache_reader import lookup, sanitize_mpn
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(Path(tmp))
@@ -325,7 +325,7 @@ def test_lookup_ignores_families_subdirectory():
     _families/ subdir, lookup() returns the right record and doesn't walk
     into _families/.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(Path(tmp))

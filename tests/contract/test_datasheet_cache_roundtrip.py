@@ -18,7 +18,7 @@ Tests:
 3. Real cached extraction resolution — ``lookup()`` returns a non-None
    DatasheetFacts for ``ABM8G-106-12.000MHZ-T`` from the harness fixtures
    directory.
-4. RED-GREEN regression-prove — temporarily revert ``datasheet_lookup.py:53``
+4. RED-GREEN regression-prove — temporarily revert the ``cache_reader._UNSAFE_CHAR``
    regex to the old narrower form and confirm the round-trip breaks for
    dot-containing MPNs; restore.
 """
@@ -38,12 +38,14 @@ DATASHEETS_SCRIPTS = MAIN_REPO_ROOT / "skills" / "datasheets" / "scripts"
 CACHE_FIXTURES = HARNESS_ROOT / "tests" / "fixtures" / "datasheets-extracted"
 
 sys.path.insert(0, str(DATASHEETS_SCRIPTS))
+sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets"))
 
 
-@pytest.fixture(scope="module")
-def lookup_mod():
-    import datasheet_lookup
-    return datasheet_lookup
+# v3 round 6: the reader lives in datasheet_types.cache_reader; sanitize_mpn
+# resolves _UNSAFE_CHAR in that module's globals, so the monkeypatch below must
+# target it (datasheet_lookup is a re-export facade until round 9). A static
+# module alias, not a fixture, so the API-migration scanner can bind the sites.
+import datasheet_types.cache_reader as lookup_mod  # noqa: E402
 
 
 @pytest.fixture(scope="module")
@@ -75,7 +77,7 @@ SAFE_MPNS = [
 
 
 @pytest.mark.parametrize("mpn", SAFE_MPNS)
-def test_safe_mpn_filename_matches_across_helpers(lookup_mod, verify_mod, mpn, tmp_path):
+def test_safe_mpn_filename_matches_across_helpers(verify_mod, mpn, tmp_path):
     """For MPNs containing only [A-Za-z0-9_.-], all three derivations must
     produce the same filename:
         - lookup_mod.cache_path_for(...).name
@@ -107,7 +109,7 @@ UNSAFE_MPNS = [
 
 
 @pytest.mark.parametrize("mpn", UNSAFE_MPNS)
-def test_unsafe_mpn_sanitization_agrees_between_helpers(lookup_mod, verify_mod, mpn, tmp_path):
+def test_unsafe_mpn_sanitization_agrees_between_helpers(verify_mod, mpn, tmp_path):
     """For MPNs with chars outside [A-Za-z0-9_.-], both helpers must produce
     the same sanitized name — divergence here means lookup-side cache files
     won't resolve from the verify-side."""
@@ -123,7 +125,7 @@ def test_unsafe_mpn_sanitization_agrees_between_helpers(lookup_mod, verify_mod, 
 # Real cached extraction resolution (the actual end-to-end signal)
 # ---------------------------------------------------------------------------
 
-def test_real_abm8g_extraction_resolves_via_lookup(lookup_mod):
+def test_real_abm8g_extraction_resolves_via_lookup():
     """Phase 3b crystal cache must resolve to a real DatasheetFacts. The
     fixtures live at tests/fixtures/datasheets-extracted/ABM8G-106-12.000MHZ-T.json
     — pre-fix this returned None because the old narrower regex (no ``.``)
@@ -144,7 +146,7 @@ def test_real_abm8g_extraction_resolves_via_lookup(lookup_mod):
 # RED-GREEN: confirm a regex revert breaks the round-trip
 # ---------------------------------------------------------------------------
 
-def test_red_green_narrow_regex_breaks_dot_lookup(lookup_mod, monkeypatch, tmp_path):
+def test_red_green_narrow_regex_breaks_dot_lookup(monkeypatch, tmp_path):
     """Monkey-patch the lookup module's sanitize regex to the old narrower
     form (strips dots) and confirm cache resolution silently fails for
     dot-containing MPNs. This proves the new dot-preserving regex is

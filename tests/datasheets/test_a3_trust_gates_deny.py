@@ -47,7 +47,7 @@ from tests.datasheets.fixtures.liars import (
 
 def test_lie_wrong_vref_low_conf_best_at_high_is_none():
     """Wrong value at low confidence → gate at "high" denies."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -61,7 +61,7 @@ def test_lie_wrong_vref_low_conf_best_at_high_is_none():
 
 def test_lie_wrong_vref_low_conf_trusted_at_high_is_empty():
     """Wrong value at low confidence → trusted() at "high" returns []."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import trusted
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -79,7 +79,7 @@ def test_lie_wrong_vref_low_conf_trusted_at_high_is_empty():
 
 def test_lie_wrong_vref_medium_conf_best_at_high_is_none():
     """Medium-confidence wrong value → gate at "high" denies."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -99,7 +99,7 @@ def test_lie_wrong_vref_medium_conf_best_at_medium_admits_wrong_value():
     can't know the value is wrong — it trusts the extractor's confidence
     label. Content correctness is out of gate scope (Phase 4 reviewer).
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -114,7 +114,7 @@ def test_lie_wrong_vref_medium_conf_best_at_medium_admits_wrong_value():
 
 def test_lie_wrong_vref_medium_conf_trusted_at_high_is_empty():
     """trusted() parallel of the best() high-gate denial."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import trusted
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -138,7 +138,7 @@ def test_lie_correct_vref_low_conf_best_at_high_is_none_despite_correct_value():
     means "I'm not sure this is right" — which is valid epistemics, and
     the gate respects it even when the value happens to be correct.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -154,7 +154,7 @@ def test_lie_correct_vref_low_conf_best_at_high_is_none_despite_correct_value():
 
 def test_lie_correct_vref_low_conf_best_at_low_admits_correct_value():
     """Sanity: low gate admits low-confidence entry with correct value."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -175,7 +175,7 @@ def test_lie_correct_vref_low_conf_has_data_true():
     presence separately from gate admission so detectors can emit
     low-confidence findings rather than skipping silently.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import has_data, trusted
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -210,7 +210,7 @@ def test_lie_wrong_vref_high_conf_best_at_high_admits_wrong_value_phase4_territo
     read the r3 revision log of the joint test plan — the gate is
     working correctly.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -230,7 +230,7 @@ def test_lie_wrong_vref_high_conf_best_at_high_admits_wrong_value_phase4_territo
 
 def test_lie_wrong_vref_high_conf_trusted_at_high_admits_wrong_value_phase4_territory():
     """trusted() parallel of the best() high-confidence admission case."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import trusted
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -367,7 +367,7 @@ def test_best_ignores_stale_flag_on_high_conf_value():
     r3 refinement: asserts both the stale flag AND the gate return
     side-by-side, making the orthogonality explicit.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -397,7 +397,7 @@ def test_trusted_ignores_stale_flag():
     decoupling: trusted() filters on confidence, not on cache freshness.
     r3 refinement: side-by-side assertion on stale flag + gate output.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import trusted
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -423,7 +423,7 @@ def test_advisory_pattern_detector_can_filter_manually():
     The test simulates minimal detector logic: gate-pass gives the value,
     then the detector decides what to do based on staleness.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types import best
 
     with tempfile.TemporaryDirectory() as tmp:

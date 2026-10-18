@@ -69,6 +69,6 @@ def write_cache_with_pdf(
         mutate(fixture)
 
     # sanitize_mpn convention: [A-Za-z0-9_-] kept, else → _
-    from datasheet_lookup import sanitize_mpn
+    from datasheet_types.cache_reader import sanitize_mpn
     (cache_dir / f"{sanitize_mpn(mpn)}.json").write_text(json.dumps(fixture))
     return cache_dir, pdf_path

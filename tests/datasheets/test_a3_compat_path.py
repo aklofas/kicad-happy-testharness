@@ -208,7 +208,7 @@ def test_compat_wrapper_matches_direct_derivation_on_v14_cache():
         get_regulator_features,
         _derive_regulator_features_v14,
     )
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     with tempfile.TemporaryDirectory() as tmp:
         cache_dir, _ = write_cache_with_pdf(Path(tmp))

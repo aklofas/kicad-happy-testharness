@@ -1,4 +1,4 @@
-"""Contract tests for datasheet_lookup — the consumer API entry point.
+"""Contract tests for datasheet_types.cache_reader (formerly datasheet_lookup) — the consumer API entry point.
 
 Track 2.3 of the v1.4 datasheet extraction work. Tests the lookup()
 facade, MPN sanitization, cache-path resolution, and PDF staleness
@@ -35,7 +35,7 @@ def _load_json(path: Path) -> dict:
 
 def test_sanitize_mpn_clean_passthrough() -> None:
     """Already-clean MPNs pass through unchanged."""
-    from datasheet_lookup import sanitize_mpn
+    from datasheet_types.cache_reader import sanitize_mpn
 
     assert sanitize_mpn("LM2596-ADJ") == "LM2596-ADJ"
     assert sanitize_mpn("STM32F103C8T6") == "STM32F103C8T6"
@@ -47,7 +47,7 @@ def test_sanitize_mpn_replaces_unsafe_chars() -> None:
     preserved per the audit C1 fix — Phase 3b crystals like
     ``ABM8G-106-12.000MHZ-T`` have load-bearing dots that previously caused
     silent cache misses when sanitization stripped them."""
-    from datasheet_lookup import sanitize_mpn
+    from datasheet_types.cache_reader import sanitize_mpn
 
     assert sanitize_mpn("STM32/F103") == "STM32_F103"
     assert sanitize_mpn("ACME 1234") == "ACME_1234"
@@ -56,7 +56,7 @@ def test_sanitize_mpn_replaces_unsafe_chars() -> None:
 
 def test_sanitize_mpn_strips_whitespace() -> None:
     """Leading/trailing whitespace is stripped before sanitization."""
-    from datasheet_lookup import sanitize_mpn
+    from datasheet_types.cache_reader import sanitize_mpn
 
     assert sanitize_mpn("  LM2596-ADJ  ") == "LM2596-ADJ"
     assert sanitize_mpn("\tLM2596-ADJ\n") == "LM2596-ADJ"
@@ -67,7 +67,7 @@ def test_sanitize_mpn_preserves_underscore_hyphen_and_dot() -> None:
     required for Phase 3b crystals and any MPN that encodes a decimal value
     in the part number (audit C1, LOG entry 63). The planner/merger write
     literal MPN-named files, so the sanitizer MUST match what they write."""
-    from datasheet_lookup import sanitize_mpn
+    from datasheet_types.cache_reader import sanitize_mpn
 
     assert sanitize_mpn("LM_2596-ADJ") == "LM_2596-ADJ"
     assert sanitize_mpn("LM2596.ADJ") == "LM2596.ADJ"
@@ -80,7 +80,7 @@ def test_sanitize_mpn_preserves_underscore_hyphen_and_dot() -> None:
 
 def test_cache_path_for_composes_sanitized_filename() -> None:
     """cache_path_for returns <cache_dir>/<sanitized_mpn>.json."""
-    from datasheet_lookup import cache_path_for
+    from datasheet_types.cache_reader import cache_path_for
 
     cache_dir = Path("/tmp/test-cache")
     assert cache_path_for("LM2596-ADJ", cache_dir) == cache_dir / "LM2596-ADJ.json"
@@ -93,7 +93,7 @@ def test_cache_path_for_composes_sanitized_filename() -> None:
 
 def test_lookup_returns_none_when_cache_dir_missing(tmp_path: Path) -> None:
     """lookup returns None when the cache directory doesn't exist."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     missing_cache_dir = tmp_path / "does-not-exist"
     assert lookup("LM2596-ADJ", cache_dir=missing_cache_dir) is None
@@ -101,7 +101,7 @@ def test_lookup_returns_none_when_cache_dir_missing(tmp_path: Path) -> None:
 
 def test_lookup_returns_none_when_cache_file_missing(tmp_path: Path) -> None:
     """lookup returns None when the cache file for the MPN doesn't exist."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir = tmp_path / "extracted"
     cache_dir.mkdir()
@@ -110,7 +110,7 @@ def test_lookup_returns_none_when_cache_file_missing(tmp_path: Path) -> None:
 
 def test_lookup_returns_none_when_cache_json_malformed(tmp_path: Path) -> None:
     """lookup returns None when the cache file contains malformed JSON."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir = tmp_path / "extracted"
     cache_dir.mkdir()
@@ -123,7 +123,7 @@ def test_lookup_returns_none_when_cache_file_binary_corrupt(tmp_path: Path) -> N
     non-UTF-8 binary garbage — guards against read_text raising
     UnicodeDecodeError that would otherwise propagate to the caller.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir = tmp_path / "extracted"
     cache_dir.mkdir()
@@ -135,7 +135,7 @@ def test_lookup_returns_none_when_cache_file_binary_corrupt(tmp_path: Path) -> N
 def test_lookup_returns_none_when_cache_violates_shape(tmp_path: Path) -> None:
     """lookup returns None when the cache file parses as JSON but is
     missing required DatasheetFacts fields."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir = tmp_path / "extracted"
     cache_dir.mkdir()
@@ -146,7 +146,7 @@ def test_lookup_returns_none_when_cache_violates_shape(tmp_path: Path) -> None:
 
 def test_lookup_returns_datasheet_facts_for_valid_cache(tmp_path: Path) -> None:
     """lookup returns a populated DatasheetFacts when the cache is valid."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
     from datasheet_types.extraction import DatasheetFacts
 
     cache_dir = tmp_path / "extracted"
@@ -166,7 +166,7 @@ def test_lookup_returns_datasheet_facts_for_valid_cache(tmp_path: Path) -> None:
 
 def test_lookup_attaches_cache_path_to_returned_facts(tmp_path: Path) -> None:
     """lookup attaches the cache path so ds.cache_path returns it."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir = tmp_path / "extracted"
     cache_dir.mkdir()
@@ -181,7 +181,7 @@ def test_lookup_attaches_cache_path_to_returned_facts(tmp_path: Path) -> None:
 
 def test_lookup_quality_passthrough(tmp_path: Path) -> None:
     """lookup-returned facts expose quality via the Task 1 property."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir = tmp_path / "extracted"
     cache_dir.mkdir()
@@ -235,7 +235,7 @@ def _write_cache_with_pdf(
 
 def test_lookup_stale_false_when_pdf_hash_matches(tmp_path: Path) -> None:
     """lookup returns facts.stale=False when PDF hash matches cached sha256."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir, _ = _write_cache_with_pdf(tmp_path)
     facts = lookup("LM2596-ADJ", cache_dir=cache_dir)
@@ -245,7 +245,7 @@ def test_lookup_stale_false_when_pdf_hash_matches(tmp_path: Path) -> None:
 
 def test_lookup_stale_true_when_pdf_hash_mismatch(tmp_path: Path) -> None:
     """lookup returns facts.stale=True when PDF on disk differs from cache."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     # Override with a bogus cached hash so it doesn't match the real PDF.
     bogus_sha = "0" * 64
@@ -261,7 +261,7 @@ def test_lookup_stale_true_when_pdf_hash_mismatch(tmp_path: Path) -> None:
 
 def test_lookup_stale_true_when_pdf_missing(tmp_path: Path) -> None:
     """lookup returns facts.stale=True when source.local_path doesn't exist."""
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir, pdf_path = _write_cache_with_pdf(tmp_path)
     # Delete the PDF after cache setup to simulate a missing-file staleness.
@@ -280,7 +280,7 @@ def test_lookup_stale_true_when_source_local_path_is_none(tmp_path: Path) -> Non
     Without a local_path we can't verify freshness, so the safe default
     is to mark the cache stale (consumer triggers re-extraction).
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir, _ = _write_cache_with_pdf(tmp_path)
     # Mutate the cached fixture to null out local_path.
@@ -307,7 +307,7 @@ def test_lookup_ignores_families_subdirectory_coexisting_with_cache_files(tmp_pa
     MPN doesn't exist) nor spurious False-positive (lookup returning
     the directory as a cache file).
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir, _ = _write_cache_with_pdf(tmp_path)
 
@@ -341,7 +341,7 @@ def test_lookup_full_happy_path_fresh_cache_with_matching_pdf(tmp_path: Path) ->
     state). Exercises: stale=False, quality passthrough, cache_path attach,
     typed access across base.pinout and the regulator category extension.
     """
-    from datasheet_lookup import lookup
+    from datasheet_types.cache_reader import lookup
 
     cache_dir, pdf_path = _write_cache_with_pdf(tmp_path)
     facts = lookup("LM2596-ADJ", cache_dir=cache_dir)
@@ -367,13 +367,13 @@ def test_lookup_full_happy_path_fresh_cache_with_matching_pdf(tmp_path: Path) ->
 
 def test_lookup_is_reexported_from_datasheet_types() -> None:
     """Spec §11 consumer pattern: `from datasheet_types import lookup`
-    should resolve to the same callable as datasheet_lookup.lookup."""
+    should resolve to the same callable as datasheet_types.cache_reader.lookup."""
     import datasheet_types
 
     assert hasattr(datasheet_types, "lookup"), (
         "datasheet_types must re-export lookup for the spec §11 consumer pattern"
     )
-    from datasheet_lookup import lookup as lookup_direct
+    from datasheet_types.cache_reader import lookup as lookup_direct
     assert datasheet_types.lookup is lookup_direct
     # __all__ should include it too for `from datasheet_types import *`.
     assert "lookup" in datasheet_types.__all__

@@ -13,7 +13,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "lcsc", "scripts"))
 
-import fetch_datasheet_lcsc as fdl  # noqa: E402
+import provider_lcsc as prov  # noqa: E402
 
 HIT = {"lcsc": 318884, "mfr": "TS-1187A-B-A-B", "package": "SMD-4P", "is_basic": True,
        "description": "Tactile Switch", "stock": 1683297, "price": 0.0197}
@@ -25,18 +25,18 @@ WMSC = {"mfr": "TS-1187A-B-A-B", "datasheet": "https://datasheet.lcsc.com/x.pdf?
 
 
 def test_hit_without_datasheet_is_enriched():
-    with mock.patch.object(fdl, "search_lcsc_direct", return_value=WMSC) as m:
-        out = fdl.enrich_with_wmsc(dict(HIT))
+    with mock.patch.object(prov, "search_lcsc_direct", return_value=WMSC) as m:
+        out = prov.enrich_with_wmsc(dict(HIT))
     m.assert_called_once_with("C318884")
-    assert fdl._get_datasheet_url(out).endswith("productCode=C318884")
-    assert fdl._get_manufacturer(out) == "XKB Connection"
+    assert prov._get_datasheet_url(out).endswith("productCode=C318884")
+    assert prov._get_manufacturer(out) == "XKB Connection"
     assert out["stock"] == 1683297  # jlcsearch figure kept
 
 
 def test_hit_with_datasheet_is_left_alone():
     hit = dict(HIT, extra={"datasheet": {"pdf": "https://a/b.pdf"}})
-    with mock.patch.object(fdl, "search_lcsc_direct") as m:
-        assert fdl.enrich_with_wmsc(hit) is hit
+    with mock.patch.object(prov, "search_lcsc_direct") as m:
+        assert prov.enrich_with_wmsc(hit) is hit
     m.assert_not_called()
 
 
@@ -50,17 +50,17 @@ def test_empty_extra_datasheet_block_falls_through_to_wmsc():
     got nothing. wmsc's datasheet block must win whenever the hit's own has
     no pdf URL."""
     hit = dict(HIT, extra={"datasheet": {}})
-    with mock.patch.object(fdl, "search_lcsc_direct", return_value=WMSC) as m:
-        out = fdl.enrich_with_wmsc(hit)
+    with mock.patch.object(prov, "search_lcsc_direct", return_value=WMSC) as m:
+        out = prov.enrich_with_wmsc(hit)
     m.assert_called_once_with("C318884")
-    assert fdl._get_datasheet_url(out).endswith("productCode=C318884")
+    assert prov._get_datasheet_url(out).endswith("productCode=C318884")
     assert out["extra"]["datasheet"].get("pdf", "").endswith("productCode=C318884")
 
 
 def test_wmsc_miss_returns_original():
-    with mock.patch.object(fdl, "search_lcsc_direct", return_value=None):
-        out = fdl.enrich_with_wmsc(dict(HIT))
-    assert fdl._get_datasheet_url(out) == ""
+    with mock.patch.object(prov, "search_lcsc_direct", return_value=None):
+        out = prov.enrich_with_wmsc(dict(HIT))
+    assert prov._get_datasheet_url(out) == ""
 
 
 if __name__ == "__main__":
