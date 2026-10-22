@@ -1,0 +1,3966 @@
+{
+  "analyzer_type": "schematic",
+  "schema_version": "1.4.0",
+  "summary": {
+    "total_findings": 15,
+    "by_severity": {
+      "error": 2,
+      "warning": 3,
+      "info": 10
+    }
+  },
+  "trust_summary": {
+    "total_findings": 15,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 10,
+      "heuristic": 5,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 13,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 2,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 66.7,
+    "bom_coverage": {
+      "total_components": 9,
+      "with_mpn": 0,
+      "with_datasheet": 2,
+      "mpn_pct": 0.0,
+      "datasheet_pct": 22.2
+    }
+  },
+  "kicad_version": "9.0",
+  "file_version": "20250114",
+  "title_block": {},
+  "statistics": {
+    "total_components": 13,
+    "unique_parts": 9,
+    "dnp_parts": 0,
+    "total_nets": 11,
+    "total_wires": 15,
+    "total_no_connects": 0,
+    "component_types": {
+      "capacitor": 7,
+      "resistor": 3,
+      "ic": 1,
+      "inductor": 1,
+      "led": 1
+    },
+    "power_rails": [
+      {
+        "name": "GND",
+        "voltage": null
+      },
+      {
+        "name": "Vin",
+        "voltage": null
+      },
+      {
+        "name": "Vout",
+        "voltage": null
+      }
+    ],
+    "missing_mpn": [
+      "C40",
+      "C43",
+      "C41",
+      "C44",
+      "C45",
+      "R52",
+      "R56",
+      "U12",
+      "R53",
+      "C39",
+      "C47",
+      "L3",
+      "D12"
+    ],
+    "missing_footprint": []
+  },
+  "findings": [
+    {
+      "rail": "Vin",
+      "capacitors": [
+        {
+          "ref": "C40",
+          "value": "10uF",
+          "farads": 9.999999999999999e-06,
+          "self_resonant_hz": 1591549.0,
+          "package": "0603",
+          "esr_ohm": 0.1,
+          "dielectric": "X7R"
+        },
+        {
+          "ref": "C41",
+          "value": "10uF",
+          "farads": 9.999999999999999e-06,
+          "self_resonant_hz": 1591549.0,
+          "package": "0603",
+          "esr_ohm": 0.1,
+          "dielectric": "X7R"
+        },
+        {
+          "ref": "C39",
+          "value": "100nF",
+          "farads": 1.0000000000000001e-07,
+          "self_resonant_hz": 15915494.0,
+          "package": "0603",
+          "esr_ohm": 0.15,
+          "dielectric": "X7R"
+        }
+      ],
+      "total_capacitance_uF": 20.1,
+      "cap_count": 3,
+      "detector": "detect_decoupling",
+      "rule_id": "DC-DET",
+      "category": "decoupling",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Decoupling on Vin",
+      "description": "Decoupling capacitors on power rail Vin",
+      "components": [
+        "C39",
+        "C40",
+        "C41"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Decoupling",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "decoup_cap_near_ic",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "C40",
+          "C41",
+          "C39"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "decoupling_analysis:9a1adf60f6b2",
+      "stages": [
+        "schematic",
+        "layout"
+      ],
+      "finding_id": "schematic:decoupling_analysis-9a1adf60f6b2"
+    },
+    {
+      "rail": "Vout",
+      "capacitors": [
+        {
+          "ref": "C45",
+          "value": "22uF",
+          "farads": 2.2e-05,
+          "self_resonant_hz": 1073022.0,
+          "package": "0603",
+          "esr_ohm": 0.1,
+          "dielectric": "X7R"
+        },
+        {
+          "ref": "C47",
+          "value": "22uF",
+          "farads": 2.2e-05,
+          "self_resonant_hz": 1073022.0,
+          "package": "0603",
+          "esr_ohm": 0.1,
+          "dielectric": "X7R"
+        }
+      ],
+      "total_capacitance_uF": 44.0,
+      "cap_count": 2,
+      "detector": "detect_decoupling",
+      "rule_id": "DC-DET",
+      "category": "decoupling",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Decoupling on Vout",
+      "description": "Decoupling capacitors on power rail Vout",
+      "components": [
+        "C45",
+        "C47"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Decoupling",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "decoup_cap_near_ic",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "C45",
+          "C47"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "decoupling_analysis:9a1adf60f6b2",
+      "stages": [
+        "schematic",
+        "layout"
+      ],
+      "finding_id": "schematic:decoupling_analysis-9a1adf60f6b2#1"
+    },
+    {
+      "category": "decoupling_coverage",
+      "rail": "Vin",
+      "cap_count": 3,
+      "total_uF": 20.1,
+      "has_bulk": true,
+      "has_bypass": true,
+      "has_high_freq": false,
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Decoupling coverage on Vin",
+      "description": "Decoupling frequency coverage for rail Vin",
+      "components": [
+        "C39",
+        "C40",
+        "C41"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "C40",
+          "C41",
+          "C39"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-c39"
+    },
+    {
+      "category": "decoupling_coverage",
+      "rail": "Vout",
+      "cap_count": 2,
+      "total_uF": 44.0,
+      "has_bulk": true,
+      "has_bypass": false,
+      "has_high_freq": false,
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Decoupling coverage on Vout",
+      "description": "Decoupling frequency coverage for rail Vout",
+      "components": [
+        "C45",
+        "C47"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "C45",
+          "C47"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-c45"
+    },
+    {
+      "category": "single_pin_nets",
+      "count": 1,
+      "nets": [],
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Single-pin nets (1 nets)",
+      "description": "Signal nets connected to only one pin",
+      "components": [
+        "U12"
+      ],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U12"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u12"
+    },
+    {
+      "category": "switching_regulator",
+      "component": "U12",
+      "value": "MP2338GTL-Z",
+      "inductor": "L3",
+      "has_bootstrap": true,
+      "input_rail": "Vin",
+      "output_rail": "Vout",
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Switching regulator U12",
+      "description": "Switching regulator with inductor L3",
+      "components": [
+        "U12"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U12"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u12#1"
+    },
+    {
+      "detector": "audit_datasheet_coverage",
+      "rule_id": "DS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "verification",
+      "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "datasheets_dir": null,
+      "datasheet_file_count": 0,
+      "bom_size": 13,
+      "mpn_coverage_percent": 0.0,
+      "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+      "report_context": {
+        "section": "Datasheet Coverage",
+        "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DS-001:9820bbea68d9"
+    },
+    {
+      "ref": "D12",
+      "value": "BLUE",
+      "type": "indicator_led",
+      "drive_method": "resistor_limited",
+      "detector": "audit_led_circuits",
+      "rule_id": "LA-AUD",
+      "category": "led_control",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "LED D12 (BLUE) [resistor_limited]",
+      "description": "LED audit: D12 using resistor_limited drive method.",
+      "components": [
+        "D12",
+        "R56"
+      ],
+      "nets": [
+        "Vout"
+      ],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "LED Audit",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "series_resistor": {
+        "ref": "R56",
+        "ohms": 470.0
+      },
+      "supply_net": "Vout",
+      "provenance": {
+        "evidence": "led_audit",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "D12"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:LA-AUD-d12"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: FB only connects to R53.2 (~) (passive)",
+      "description": "Net 'FB' has exactly one pin: R53.2 (~), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "R53"
+      ],
+      "nets": [
+        "FB"
+      ],
+      "pins": [
+        "R53.2"
+      ],
+      "net_display_name": "FB",
+      "pin_type": "passive",
+      "pin_name": "~",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Passive or unclassified pin lonely on its own net.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:r53"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: EN only connects to U12.6 (EN) (input)",
+      "description": "Net 'EN' has exactly one pin: U12.6 (EN), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U12"
+      ],
+      "nets": [
+        "EN"
+      ],
+      "pins": [
+        "U12.6"
+      ],
+      "net_display_name": "EN",
+      "pin_type": "input",
+      "pin_name": "EN",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u12"
+    },
+    {
+      "ref": "U12",
+      "value": "MP2338GTL-Z",
+      "lib_id": "UCIRP-KiCAD-Lib:MP2338GTL-Z",
+      "topology": "switching",
+      "inductor": "L3",
+      "sw_net": "__unnamed_1",
+      "has_bootstrap": true,
+      "output_rail": "Vout",
+      "input_rail": "Vin",
+      "fb_net": "__unnamed_5",
+      "switching_frequency_hz": 500000.0,
+      "freq_source": "topology_default",
+      "detector": "detect_power_regulators",
+      "rule_id": "PR-DET",
+      "category": "power_management",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Regulator U12 switching",
+      "description": "Power regulator (switching) detected",
+      "components": [
+        "U12"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Power Management",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "reg_sw_pin_inductor",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "U12"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "output_capacitors": [
+        {
+          "ref": "C45",
+          "value": "22uF",
+          "farads": 2.2e-05,
+          "package": "0603",
+          "dielectric": "X7R"
+        },
+        {
+          "ref": "C47",
+          "value": "22uF",
+          "farads": 2.2e-05,
+          "package": "0603",
+          "dielectric": "X7R"
+        }
+      ],
+      "input_capacitors": [
+        {
+          "ref": "C40",
+          "value": "10uF",
+          "farads": 9.999999999999999e-06,
+          "package": "0603",
+          "dielectric": "X7R"
+        },
+        {
+          "ref": "C41",
+          "value": "10uF",
+          "farads": 9.999999999999999e-06,
+          "package": "0603",
+          "dielectric": "X7R"
+        },
+        {
+          "ref": "C39",
+          "value": "100nF",
+          "farads": 1.0000000000000001e-07,
+          "package": "0603",
+          "dielectric": "X7R"
+        }
+      ],
+      "detection_id": "power_regulators:4bdf4a60c3f7",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:power_regulators-4bdf4a60c3f7"
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U12 pin EN (EN) missing pull-up resistor",
+      "description": "Pin EN on U12 (MP2338GTL-Z) is connected to net EN but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+      "components": [
+        "U12"
+      ],
+      "nets": [
+        "EN"
+      ],
+      "pins": [
+        {
+          "ref": "U12",
+          "pin": "EN",
+          "function": "open_drain_or_input"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 4.7k-10k pull-up resistor from EN to the appropriate power rail.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "EN",
+            "net_to": "<power_rail>"
+          }
+        ],
+        "basis": "Pin EN is open-drain/input type requiring pull-up"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin may float or bus may not function without pull-up",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "schema_era": "v1.4",
+      "finding_id": "schematic:validation_findings-4a2e988ea9fd",
+      "detection_id": "validation_findings:4a2e988ea9fd",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "Vin has no declared source",
+      "description": "Net Vin carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "Vin"
+      ],
+      "pins": [
+        "U12.2"
+      ],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:RS-001:vin"
+    },
+    {
+      "detector": "audit_sourcing_gate",
+      "rule_id": "SS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "sourcing",
+      "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/9 unique parts). Board is not pre-fab ready.",
+      "description": "Sourcing audit: 0 of 9 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+      "components": [
+        "C39",
+        "C40",
+        "C41",
+        "C43",
+        "C44",
+        "C45",
+        "C47",
+        "D12",
+        "L3",
+        "R52",
+        "R53",
+        "R56",
+        "U12"
+      ],
+      "nets": [],
+      "pins": [],
+      "mpn_coverage_percent": 0.0,
+      "missing_mpn_lines": 9,
+      "missing_mpn_refs": 13,
+      "total_bom_lines": 9,
+      "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+      "report_context": {
+        "section": "Sourcing",
+        "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ],
+      "finding_id": "schematic:SS-001:c39"
+    },
+    {
+      "detector": "audit_lifecycle_skipped",
+      "rule_id": "LC-007",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "lifecycle",
+      "summary": "Lifecycle audit not run \u2014 --lifecycle flag not passed",
+      "description": "Component lifecycle / obsolescence audit was not run this session. Reason: --lifecycle flag not passed (run with --lifecycle to query DigiKey / Mouser / LCSC / element14 for obsolescence + operating-temp coverage; requires network + API keys). The review cannot report active / NRND / EOL / obsolete status, last-time-buy windows, or operating-temperature coverage for any BOM part. Treat the lifecycle section of the report as 'not performed'.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "recommendation": "Run with --lifecycle (requires DIGIKEY_CLIENT_ID / MOUSER_SEARCH_API_KEY / ELEMENT14_API_KEY env vars; LCSC needs no auth) to populate this section. If intentionally skipped, note it explicitly in the report's 'Not Performed' section.",
+      "report_context": {
+        "section": "Component Lifecycle",
+        "impact": "No obsolescence / temperature-grade evidence available.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:LC-007:8ddf539c9727"
+    }
+  ],
+  "assessments": [],
+  "bom": [
+    {
+      "value": "10uF",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "",
+      "references": [
+        "C40",
+        "C41"
+      ],
+      "quantity": 2,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "100nF",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "",
+      "references": [
+        "C43",
+        "C44",
+        "C39"
+      ],
+      "quantity": 3,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "22uF",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "",
+      "description": "",
+      "references": [
+        "C45",
+        "C47"
+      ],
+      "quantity": 2,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "BLUE",
+      "footprint": "Diode_SMD:D_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "",
+      "references": [
+        "D12"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "led"
+    },
+    {
+      "value": "6.8uH",
+      "footprint": "UCIRP-KiCAD-Lib:IND_VLS6045EX-6R8M",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.digikey.com/en/products/detail/tdk-corporation/VLS6045EX-6R8M/5287380",
+      "description": "Inductor, small symbol",
+      "references": [
+        "L3"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "inductor"
+    },
+    {
+      "value": "100k",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Resistor, small US symbol",
+      "references": [
+        "R52"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "10k",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "Resistor, small US symbol",
+      "references": [
+        "R53"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "470",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "~",
+      "description": "",
+      "references": [
+        "R56"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "MP2338GTL-Z",
+      "footprint": "SOT583_MP2338_MNP",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.monolithicpower.com/en/documentview/productdocument/index/version/2/document_type/Datasheet/lang/en/sku/MP2338GTL",
+      "description": "",
+      "references": [
+        "U12"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "ic"
+    }
+  ],
+  "components": [
+    {
+      "reference": "C40",
+      "value": "10uF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 48.26,
+      "y": 50.8,
+      "angle": 0.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "096c557b-f5be-45b6-a1af-ea55df5d4bb4",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "4555cb4e-b1d5-479b-9035-0854920ba48d",
+        "2": "eb2a5de5-241a-4bde-a4e8-3c131e7f2196"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 9.999999999999999e-06,
+      "pin_nets": {
+        "1": "GND",
+        "2": "Vin"
+      }
+    },
+    {
+      "reference": "C43",
+      "value": "100nF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 74.93,
+      "y": 63.5,
+      "angle": 0.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "15eb29d8-5f1a-4344-9c67-6a85ce1cdf52",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "be059bdc-e4bb-426c-9c88-22cab17aaa4b",
+        "2": "ca4f39b6-1970-4145-a14b-67503d0b497f"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1.0000000000000001e-07,
+      "pin_nets": {
+        "1": "GND",
+        "2": "__unnamed_0"
+      }
+    },
+    {
+      "reference": "C41",
+      "value": "10uF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 57.15,
+      "y": 50.8,
+      "angle": 0.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "19b64f22-866f-42e9-b127-31b43e162322",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "2c86a7a6-a41b-4db3-8791-e73932052e4e",
+        "2": "de73b684-d2e3-4dca-a487-13bd1a63e499"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 9.999999999999999e-06,
+      "pin_nets": {
+        "1": "GND",
+        "2": "Vin"
+      }
+    },
+    {
+      "reference": "C44",
+      "value": "100nF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 115.57,
+      "y": 50.8,
+      "angle": 0.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "4bbfd2cc-ea94-4fbe-8451-1db1fd80a446",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "f2ea7e40-e2b0-467a-bd15-a49334e31dd5",
+        "2": "2abaf3de-4cae-408f-af83-e6a0fb604a8c"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1.0000000000000001e-07,
+      "pin_nets": {
+        "1": "__unnamed_1",
+        "2": "__unnamed_2"
+      }
+    },
+    {
+      "reference": "C45",
+      "value": "22uF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 135.89,
+      "y": 55.88,
+      "angle": 0.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "592d848b-f89a-48f0-a1a3-4e7c1dec84de",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "1401f0a0-ad81-405f-88bd-74a4dbb14c61",
+        "2": "1f001ec1-39d6-4a43-8d41-3392e33aeea3"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 2.2e-05,
+      "pin_nets": {
+        "1": "GND",
+        "2": "Vout"
+      }
+    },
+    {
+      "reference": "R52",
+      "value": "100k",
+      "lib_id": "Device:R_Small_US",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "~",
+      "description": "Resistor, small US symbol",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 121.92,
+      "y": 58.42,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "5b5fb436-462b-474a-a097-a14235267a41",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "49c67871-6823-4474-8e5e-180f44c1fd61",
+        "2": "bda39b81-0dd9-45f7-9322-9772036eaf5d"
+      },
+      "type": "resistor",
+      "keywords": "r resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 100000.0,
+      "pin_nets": {
+        "2": "Vout",
+        "1": "__unnamed_3"
+      }
+    },
+    {
+      "reference": "R56",
+      "value": "470",
+      "lib_id": "Device:R_Small_US",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "~",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 157.48,
+      "y": 55.88,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "7551e425-d776-4b09-8eaa-1bad70c06c64",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "85c17010-fe77-416c-9743-0a3a588ec314",
+        "2": "40743672-6a98-48a9-812b-1e14bdc0b998"
+      },
+      "type": "resistor",
+      "keywords": "r resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 470.0,
+      "pin_nets": {
+        "1": "Vout",
+        "2": "__unnamed_4"
+      }
+    },
+    {
+      "reference": "U12",
+      "value": "MP2338GTL-Z",
+      "lib_id": "UCIRP-KiCAD-Lib:MP2338GTL-Z",
+      "lib_name": "",
+      "footprint": "SOT583_MP2338_MNP",
+      "datasheet": "https://www.monolithicpower.com/en/documentview/productdocument/index/version/2/document_type/Datasheet/lang/en/sku/MP2338GTL",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 74.93,
+      "y": 50.8,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "7e484cc0-f4b4-4707-9326-6622210fa151",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "8": "92901954-71ff-4d67-86b9-cd37eb494424",
+        "6": "7acdc080-2200-4c27-8b60-0f2193cb8ab9",
+        "3": "375e9947-1d13-431c-8139-103a78e8be7d",
+        "5": "51e67fce-11e1-4c98-b317-c26a4762ab98",
+        "4": "48617404-8745-4f4d-a34f-f8c48dfc8772",
+        "1": "96807308-7983-4831-b4b3-ce519e67ac16",
+        "2": "0a63bd8e-f9be-4189-98e1-88a7f64d67d8",
+        "7": "6afeacc3-9532-488b-ba6f-50e352f7f8f7"
+      },
+      "type": "ic",
+      "keywords": "MP2338GTL-Z",
+      "functional_class": "other_ic",
+      "_sheet": 0,
+      "category": "ic",
+      "pin_nets": {
+        "4": "GND",
+        "2": "Vin",
+        "7": "__unnamed_0",
+        "3": "__unnamed_1",
+        "5": "__unnamed_2",
+        "1": "__unnamed_3",
+        "6": "EN",
+        "8": "__unnamed_5"
+      }
+    },
+    {
+      "reference": "R53",
+      "value": "10k",
+      "lib_id": "Device:R_Small_US",
+      "lib_name": "",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "datasheet": "~",
+      "description": "Resistor, small US symbol",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 118.11,
+      "y": 68.58,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "a2ce0d4d-cdca-4706-83cc-d2160fb5c6c6",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "70c29f08-dbee-43ad-b067-025e54db41ee",
+        "2": "5c55bd53-b0c8-46b3-a093-9d0526061e2a"
+      },
+      "type": "resistor",
+      "keywords": "r resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 10000.0,
+      "pin_nets": {
+        "1": "__unnamed_5",
+        "2": "FB"
+      }
+    },
+    {
+      "reference": "C39",
+      "value": "100nF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 39.37,
+      "y": 50.8,
+      "angle": 0.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "a39b6afe-2916-407f-bfb6-5dbcd77de853",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "b8b571ca-713a-45ff-a07a-f4a1590dd133",
+        "2": "d2a23ffb-b0ce-4a6b-8a5a-957552e7e9cd"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1.0000000000000001e-07,
+      "pin_nets": {
+        "1": "GND",
+        "2": "Vin"
+      }
+    },
+    {
+      "reference": "C47",
+      "value": "22uF",
+      "lib_id": "Device:C_Small",
+      "lib_name": "",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "datasheet": "",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 146.05,
+      "y": 55.88,
+      "angle": 0.0,
+      "mirror_x": true,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "a6b675ad-2e30-40a1-8074-65268f15d265",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "6754cc99-1a2a-494a-aefd-4c93fc38deb5",
+        "2": "3bd51d8b-fbfa-4802-8fd9-af968725c84d"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 2.2e-05,
+      "pin_nets": {
+        "1": "GND",
+        "2": "Vout"
+      }
+    },
+    {
+      "reference": "L3",
+      "value": "6.8uH",
+      "lib_id": "Device:L_Small",
+      "lib_name": "",
+      "footprint": "UCIRP-KiCAD-Lib:IND_VLS6045EX-6R8M",
+      "datasheet": "https://www.digikey.com/en/products/detail/tdk-corporation/VLS6045EX-6R8M/5287380",
+      "description": "Inductor, small symbol",
+      "mpn": "",
+      "manufacturer": "",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 127.0,
+      "y": 53.34,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "ac9f7423-75f2-4623-b02d-3bca98f16e55",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "f7c7f1fd-72cb-4b74-b91c-3c43d6165b00",
+        "1": "3351fe6f-4edb-47a0-9409-cd8035cdc3e9"
+      },
+      "type": "inductor",
+      "keywords": "inductor choke coil reactor magnetic",
+      "_sheet": 0,
+      "category": "inductor",
+      "parsed_value": 6.799999999999999e-06,
+      "pin_nets": {
+        "1": "__unnamed_1",
+        "2": "Vout"
+      }
+    },
+    {
+      "reference": "D12",
+      "value": "BLUE",
+      "lib_id": "Device:LED",
+      "lib_name": "",
+      "footprint": "Diode_SMD:D_0603_1608Metric",
+      "datasheet": "~",
+      "description": "",
+      "mpn": "",
+      "manufacturer": "Generic",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 157.48,
+      "y": 62.23,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "f355a493-a3ea-4093-98ac-1722d96f034a",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "90ca5f12-90d2-42a5-929c-862c2cf224d3",
+        "2": "a40a8e47-0c16-4aa4-ac13-b780a3e1d899"
+      },
+      "type": "led",
+      "keywords": "LED diode",
+      "_sheet": 0,
+      "category": "led",
+      "pin_nets": {
+        "1": "GND",
+        "2": "__unnamed_4"
+      }
+    }
+  ],
+  "nets": {
+    "GND": {
+      "name": "GND",
+      "pins": [
+        {
+          "component": "C40",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR0137",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C43",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "C41",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR0138",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR0140",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U12",
+          "pin_number": "4",
+          "pin_name": "GND",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C45",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR0142",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR0147",
+          "pin_number": "1",
+          "pin_name": "GND",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "D12",
+          "pin_number": "1",
+          "pin_name": "K",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR0145",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C47",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR0136",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C39",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 8,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": []
+    },
+    "Vin": {
+      "name": "Vin",
+      "pins": [
+        {
+          "component": "C40",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "C41",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U12",
+          "pin_number": "2",
+          "pin_name": "VIN",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C39",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "Vin",
+          "type": "hierarchical_label"
+        }
+      ]
+    },
+    "__unnamed_0": {
+      "name": "__unnamed_0",
+      "pins": [
+        {
+          "component": "C43",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U12",
+          "pin_number": "7",
+          "pin_name": "SS",
+          "pin_type": "unspecified"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U12.SS"
+    },
+    "__unnamed_1": {
+      "name": "__unnamed_1",
+      "pins": [
+        {
+          "component": "C44",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U12",
+          "pin_number": "3",
+          "pin_name": "SW",
+          "pin_type": "output"
+        },
+        {
+          "component": "L3",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U12.SW"
+    },
+    "__unnamed_2": {
+      "name": "__unnamed_2",
+      "pins": [
+        {
+          "component": "C44",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U12",
+          "pin_number": "5",
+          "pin_name": "BST",
+          "pin_type": "power_in"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U12.BST"
+    },
+    "Vout": {
+      "name": "Vout",
+      "pins": [
+        {
+          "component": "C45",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R52",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R56",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "C47",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "L3",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 8,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "Vout",
+          "type": "hierarchical_label"
+        }
+      ]
+    },
+    "__unnamed_3": {
+      "name": "__unnamed_3",
+      "pins": [
+        {
+          "component": "R52",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U12",
+          "pin_number": "1",
+          "pin_name": "PG",
+          "pin_type": "output"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U12.PG"
+    },
+    "__unnamed_4": {
+      "name": "__unnamed_4",
+      "pins": [
+        {
+          "component": "R56",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "D12",
+          "pin_number": "2",
+          "pin_name": "A",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": []
+    },
+    "EN": {
+      "name": "EN",
+      "pins": [
+        {
+          "component": "U12",
+          "pin_number": "6",
+          "pin_name": "EN",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "EN",
+          "type": "hierarchical_label"
+        }
+      ]
+    },
+    "__unnamed_5": {
+      "name": "__unnamed_5",
+      "pins": [
+        {
+          "component": "U12",
+          "pin_number": "8",
+          "pin_name": "FB",
+          "pin_type": "output"
+        },
+        {
+          "component": "R53",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U12.FB"
+    },
+    "FB": {
+      "name": "FB",
+      "pins": [
+        {
+          "component": "R53",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "FB",
+          "type": "hierarchical_label"
+        }
+      ]
+    }
+  },
+  "subcircuits": [
+    {
+      "center_ic": "U12",
+      "ic_value": "MP2338GTL-Z",
+      "ic_mpn": "",
+      "ic_lib_id": "UCIRP-KiCAD-Lib:MP2338GTL-Z",
+      "neighbor_components": [
+        {
+          "ref": "C43",
+          "value": "100nF",
+          "type": "capacitor"
+        },
+        {
+          "ref": "C44",
+          "value": "100nF",
+          "type": "capacitor"
+        },
+        {
+          "ref": "L3",
+          "value": "6.8uH",
+          "type": "inductor"
+        },
+        {
+          "ref": "R52",
+          "value": "100k",
+          "type": "resistor"
+        },
+        {
+          "ref": "R53",
+          "value": "10k",
+          "type": "resistor"
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "ic_pin_analysis": [
+    {
+      "reference": "U12",
+      "value": "MP2338GTL-Z",
+      "type": "ic",
+      "lib_id": "UCIRP-KiCAD-Lib:MP2338GTL-Z",
+      "mpn": "",
+      "description": "",
+      "datasheet": "https://www.monolithicpower.com/en/documentview/productdocument/index/version/2/document_type/Datasheet/lang/en/sku/MP2338GTL",
+      "function": "",
+      "total_pins": 8,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "PG",
+          "pin_type": "output",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "R52",
+              "value": "100k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "VIN",
+          "pin_type": "power_in",
+          "net": "Vin",
+          "connected_to": [
+            {
+              "ref": "C40",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C41",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C39",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C40",
+              "value": "10uF"
+            },
+            {
+              "ref": "C41",
+              "value": "10uF"
+            },
+            {
+              "ref": "C39",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "SW",
+          "pin_type": "output",
+          "net": "__unnamed_1",
+          "connected_to": [
+            {
+              "ref": "C44",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "L3",
+              "value": "6.8uH",
+              "type": "inductor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "GND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C40",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C43",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C41",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C45",
+              "value": "22uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "D12",
+              "value": "BLUE",
+              "type": "led",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "C47",
+              "value": "22uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C39",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "BST",
+          "pin_type": "power_in",
+          "net": "__unnamed_2",
+          "connected_to": [
+            {
+              "ref": "C44",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C44",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "EN",
+          "pin_type": "input",
+          "net": "EN",
+          "connected_to": []
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "SS",
+          "pin_type": "unspecified",
+          "net": "__unnamed_0",
+          "connected_to": [
+            {
+              "ref": "C43",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "FB",
+          "pin_type": "output",
+          "net": "__unnamed_5",
+          "connected_to": [
+            {
+              "ref": "R53",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "2",
+          "pin_name": "VIN",
+          "pin_type": "power_in",
+          "net": "Vin",
+          "connected_to": [
+            {
+              "ref": "C40",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C41",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C39",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C40",
+              "value": "10uF"
+            },
+            {
+              "ref": "C41",
+              "value": "10uF"
+            },
+            {
+              "ref": "C39",
+              "value": "100nF"
+            }
+          ]
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "GND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "C40",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C43",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C41",
+              "value": "10uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C45",
+              "value": "22uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "D12",
+              "value": "BLUE",
+              "type": "led",
+              "pin": "1",
+              "pin_name": "K"
+            },
+            {
+              "ref": "C47",
+              "value": "22uF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C39",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "BST",
+          "pin_type": "power_in",
+          "net": "__unnamed_2",
+          "connected_to": [
+            {
+              "ref": "C44",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C44",
+              "value": "100nF"
+            }
+          ]
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "6",
+          "pin_name": "EN",
+          "pin_type": "input",
+          "net": "EN",
+          "connected_to": []
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "SS",
+          "pin_type": "unspecified",
+          "net": "__unnamed_0",
+          "connected_to": [
+            {
+              "ref": "C43",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "SW",
+          "pin_type": "output",
+          "net": "__unnamed_1",
+          "connected_to": [
+            {
+              "ref": "C44",
+              "value": "100nF",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "L3",
+              "value": "6.8uH",
+              "type": "inductor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "1",
+          "pin_name": "PG",
+          "pin_type": "output",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "R52",
+              "value": "100k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "FB",
+          "pin_type": "output",
+          "net": "__unnamed_5",
+          "connected_to": [
+            {
+              "ref": "R53",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        }
+      ],
+      "decoupling_caps_by_rail": {
+        "Vin": [
+          {
+            "ref": "C40",
+            "value": "10uF"
+          },
+          {
+            "ref": "C41",
+            "value": "10uF"
+          },
+          {
+            "ref": "C39",
+            "value": "100nF"
+          }
+        ],
+        "__unnamed_2": [
+          {
+            "ref": "C44",
+            "value": "100nF"
+          }
+        ]
+      }
+    }
+  ],
+  "transistor_pin_analysis": [],
+  "design_analysis": {
+    "net_classification": {
+      "GND": "ground",
+      "Vin": "power",
+      "__unnamed_0": "signal",
+      "__unnamed_1": "signal",
+      "__unnamed_2": "power_internal",
+      "Vout": "power",
+      "__unnamed_3": "signal",
+      "__unnamed_4": "signal",
+      "EN": "control",
+      "__unnamed_5": "signal",
+      "FB": "signal"
+    },
+    "power_domains": {
+      "ic_power_rails": {
+        "U12": {
+          "value": "MP2338GTL-Z",
+          "power_rails": [
+            "Vin"
+          ],
+          "io_rails": null
+        }
+      },
+      "domain_groups": {
+        "Vin": [
+          "U12"
+        ]
+      }
+    },
+    "cross_domain_signals": [],
+    "bus_analysis": {
+      "i2c": [],
+      "spi": [],
+      "uart": [],
+      "can": []
+    },
+    "differential_pairs": [],
+    "erc_warnings": [],
+    "passive_warnings": []
+  },
+  "connectivity_issues": {
+    "unconnected_pins": [],
+    "single_pin_nets": [
+      {
+        "net": "EN",
+        "pin": {
+          "component": "U12",
+          "pin_number": "6",
+          "pin_name": "EN",
+          "pin_type": "input"
+        }
+      },
+      {
+        "net": "FB",
+        "pin": {
+          "component": "R53",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      }
+    ],
+    "single_pin_net_findings": [
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: EN only connects to U12.6 (EN) (input)",
+        "description": "Net 'EN' has exactly one pin: U12.6 (EN), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U12"
+        ],
+        "nets": [
+          "EN"
+        ],
+        "pins": [
+          "U12.6"
+        ],
+        "net_display_name": "EN",
+        "pin_type": "input",
+        "pin_name": "EN",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u12"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "info",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: FB only connects to R53.2 (~) (passive)",
+        "description": "Net 'FB' has exactly one pin: R53.2 (~), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "R53"
+        ],
+        "nets": [
+          "FB"
+        ],
+        "pins": [
+          "R53.2"
+        ],
+        "net_display_name": "FB",
+        "pin_type": "passive",
+        "pin_name": "~",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Passive or unclassified pin lonely on its own net.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:r53"
+      }
+    ],
+    "multi_driver_nets": [],
+    "power_net_summary": {
+      "GND": {
+        "pin_count": 8,
+        "components": [
+          "C39",
+          "C40",
+          "C41",
+          "C43",
+          "C45",
+          "C47",
+          "D12",
+          "U12"
+        ]
+      },
+      "Vin": {
+        "pin_count": 4,
+        "components": [
+          "C39",
+          "C40",
+          "C41",
+          "U12"
+        ]
+      }
+    }
+  },
+  "labels": [
+    {
+      "name": "Vin",
+      "type": "hierarchical_label",
+      "x": 33.02,
+      "y": 48.26,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "FB",
+      "type": "hierarchical_label",
+      "x": 120.65,
+      "y": 68.58,
+      "angle": 0.0,
+      "shape": "output",
+      "_sheet": 0
+    },
+    {
+      "name": "EN",
+      "type": "hierarchical_label",
+      "x": 74.93,
+      "y": 53.34,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "Vout",
+      "type": "hierarchical_label",
+      "x": 163.83,
+      "y": 53.34,
+      "angle": 0.0,
+      "shape": "output",
+      "_sheet": 0
+    }
+  ],
+  "no_connects": [],
+  "power_symbols": [
+    {
+      "net_name": "GND",
+      "x": 74.93,
+      "y": 68.58,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 157.48,
+      "y": 66.04,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 146.05,
+      "y": 58.42,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 39.37,
+      "y": 53.34,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 48.26,
+      "y": 53.34,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 135.89,
+      "y": 58.42,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 57.15,
+      "y": 53.34,
+      "lib_id": "power:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    }
+  ],
+  "annotation_issues": {},
+  "label_shape_warnings": [
+    {
+      "type": "undriven_input_label",
+      "net": "Vin",
+      "message": "Net 'Vin' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "EN",
+      "message": "Net 'EN' has input-shaped label(s) but no driver pins on the net"
+    }
+  ],
+  "pwr_flag_warnings": [
+    {
+      "net": "GND",
+      "message": "Power rail 'GND' has power_in pins but no power_out or PWR_FLAG \u2014 ERC will flag this",
+      "pin_types": [
+        "passive",
+        "power_in"
+      ]
+    }
+  ],
+  "footprint_filter_warnings": [
+    {
+      "component": "L3",
+      "footprint": "UCIRP-KiCAD-Lib:IND_VLS6045EX-6R8M",
+      "filters": [
+        "Choke_*",
+        "*Coil*",
+        "Inductor_*",
+        "L_*"
+      ],
+      "custom_library": true,
+      "message": "L3: footprint 'IND_VLS6045EX-6R8M' doesn't match any filter pattern ['Choke_*', '*Coil*', 'Inductor_*', 'L_*']"
+    },
+    {
+      "component": "D12",
+      "footprint": "Diode_SMD:D_0603_1608Metric",
+      "filters": [
+        "LED*",
+        "LED_SMD:*",
+        "LED_THT:*"
+      ],
+      "custom_library": false,
+      "message": "D12: footprint 'D_0603_1608Metric' doesn't match any filter pattern ['LED*', 'LED_SMD:*', 'LED_THT:*']"
+    }
+  ],
+  "sourcing_audit": {
+    "total_bom_components": 13,
+    "mpn_coverage": "0/13",
+    "missing_mpn": [
+      "C39",
+      "C40",
+      "C41",
+      "C43",
+      "C44",
+      "C45",
+      "C47",
+      "D12",
+      "L3",
+      "R52",
+      "R53",
+      "R56",
+      "U12"
+    ],
+    "missing_digikey": [
+      "C39",
+      "C40",
+      "C41",
+      "C43",
+      "C44",
+      "C45",
+      "C47",
+      "D12",
+      "L3",
+      "R52",
+      "R53",
+      "R56",
+      "U12"
+    ],
+    "missing_lcsc": [
+      "C39",
+      "C40",
+      "C41",
+      "C43",
+      "C44",
+      "C45",
+      "C47",
+      "D12",
+      "L3",
+      "R52",
+      "R53",
+      "R56",
+      "U12"
+    ],
+    "mpn_percent": 0.0
+  },
+  "ground_domains": {
+    "ground_nets": {
+      "GND": {
+        "domain": "signal",
+        "connections": 8,
+        "components": [
+          "C39",
+          "C40",
+          "C41",
+          "C43",
+          "C45",
+          "C47",
+          "D12",
+          "U12"
+        ]
+      }
+    },
+    "multiple_domains": false
+  },
+  "bus_topology": {
+    "bus_wire_count": 0,
+    "bus_entry_count": 0,
+    "unresolved": []
+  },
+  "wire_geometry": {
+    "total_wires": 15,
+    "total_length_mm": 106.7,
+    "avg_length_mm": 7.1
+  },
+  "simulation_readiness": {
+    "total_components": 13,
+    "likely_simulatable": 12,
+    "needs_model": 1,
+    "components_without_model": [
+      "U12"
+    ],
+    "simulatable_percent": 92.3
+  },
+  "property_issues": {},
+  "placement_analysis": {
+    "bounding_box": {
+      "x_min": 39.4,
+      "y_min": 50.8,
+      "x_max": 157.5,
+      "y_max": 68.6,
+      "width_mm": 118.1,
+      "height_mm": 17.8
+    },
+    "clusters": [
+      {
+        "region": "row0_col0",
+        "component_count": 5,
+        "types": {
+          "capacitor": 4,
+          "ic": 1
+        },
+        "references": [
+          "C39",
+          "C40",
+          "C41",
+          "C43",
+          "U12"
+        ]
+      },
+      {
+        "region": "row0_col1",
+        "component_count": 8,
+        "types": {
+          "capacitor": 3,
+          "resistor": 3,
+          "inductor": 1,
+          "led": 1
+        },
+        "references": [
+          "C44",
+          "C45",
+          "C47",
+          "D12",
+          "L3",
+          "R52",
+          "R53",
+          "R56"
+        ]
+      }
+    ],
+    "grid_size": "1x2"
+  },
+  "hierarchical_labels": {
+    "hierarchical_label_count": 4,
+    "global_label_count": 0
+  },
+  "rail_voltages": {
+    "GND": 0
+  },
+  "power_sequencing_validation": {
+    "power_tree": [
+      {
+        "rail": "Vout",
+        "source": "U12",
+        "source_type": "regulator",
+        "enable_type": "floating"
+      }
+    ],
+    "provenance": {
+      "evidence": "pseq_enable_chain",
+      "confidence": "heuristic",
+      "claimed_components": [],
+      "excluded_by": [],
+      "suppressed_candidates": []
+    },
+    "issues": [
+      {
+        "type": "floating_enable",
+        "ref": "U12",
+        "rail": "Vout",
+        "en_net": "EN"
+      }
+    ]
+  },
+  "net_classifications": {
+    "__unnamed_1": {
+      "type": "switching_node",
+      "frequency_hz": 500000.0,
+      "source": "power_regulators"
+    },
+    "Vout": {
+      "type": "power_rail",
+      "source": "power_regulators"
+    }
+  },
+  "pdn_impedance": {
+    "rails": {
+      "Vin": {
+        "capacitors": [
+          {
+            "ref": "C40",
+            "value": "10uF",
+            "farads": 9.999999999999999e-06,
+            "package": "0603",
+            "esr_ohm": 0.0316,
+            "esl_nH": 0.7,
+            "srf_hz": 1902265,
+            "srf_formatted": "1.90 MHz",
+            "type": "MLCC"
+          },
+          {
+            "ref": "C41",
+            "value": "10uF",
+            "farads": 9.999999999999999e-06,
+            "package": "0603",
+            "esr_ohm": 0.0316,
+            "esl_nH": 0.7,
+            "srf_hz": 1902265,
+            "srf_formatted": "1.90 MHz",
+            "type": "MLCC"
+          },
+          {
+            "ref": "C39",
+            "value": "100nF",
+            "farads": 1.0000000000000001e-07,
+            "package": "0603",
+            "esr_ohm": 0.3162,
+            "esl_nH": 0.7,
+            "srf_hz": 19022654,
+            "srf_formatted": "19.02 MHz",
+            "type": "MLCC"
+          }
+        ],
+        "cap_count": 3,
+        "total_capacitance_uF": 20.1,
+        "impedance_profile": [
+          {
+            "freq_hz": 1000,
+            "freq_formatted": "1.00 kHz",
+            "impedance_ohm": 7.91817
+          },
+          {
+            "freq_hz": 1259,
+            "freq_formatted": "1.26 kHz",
+            "impedance_ohm": 6.289632
+          },
+          {
+            "freq_hz": 1585,
+            "freq_formatted": "1.58 kHz",
+            "impedance_ohm": 4.99604
+          },
+          {
+            "freq_hz": 1995,
+            "freq_formatted": "2.00 kHz",
+            "impedance_ohm": 3.968506
+          },
+          {
+            "freq_hz": 2512,
+            "freq_formatted": "2.51 kHz",
+            "impedance_ohm": 3.152308
+          },
+          {
+            "freq_hz": 3162,
+            "freq_formatted": "3.16 kHz",
+            "impedance_ohm": 2.503983
+          },
+          {
+            "freq_hz": 3981,
+            "freq_formatted": "3.98 kHz",
+            "impedance_ohm": 1.989004
+          },
+          {
+            "freq_hz": 5012,
+            "freq_formatted": "5.01 kHz",
+            "impedance_ohm": 1.579947
+          },
+          {
+            "freq_hz": 6310,
+            "freq_formatted": "6.31 kHz",
+            "impedance_ohm": 1.255027
+          },
+          {
+            "freq_hz": 7943,
+            "freq_formatted": "7.94 kHz",
+            "impedance_ohm": 0.996943
+          },
+          {
+            "freq_hz": 10000,
+            "freq_formatted": "10.00 kHz",
+            "impedance_ohm": 0.791949
+          },
+          {
+            "freq_hz": 12589,
+            "freq_formatted": "12.59 kHz",
+            "impedance_ohm": 0.62913
+          },
+          {
+            "freq_hz": 15849,
+            "freq_formatted": "15.85 kHz",
+            "impedance_ohm": 0.499813
+          },
+          {
+            "freq_hz": 19953,
+            "freq_formatted": "19.95 kHz",
+            "impedance_ohm": 0.397114
+          },
+          {
+            "freq_hz": 25119,
+            "freq_formatted": "25.12 kHz",
+            "impedance_ohm": 0.315563
+          },
+          {
+            "freq_hz": 31623,
+            "freq_formatted": "31.62 kHz",
+            "impedance_ohm": 0.250816
+          },
+          {
+            "freq_hz": 39811,
+            "freq_formatted": "39.81 kHz",
+            "impedance_ohm": 0.199426
+          },
+          {
+            "freq_hz": 50119,
+            "freq_formatted": "50.12 kHz",
+            "impedance_ohm": 0.158656
+          },
+          {
+            "freq_hz": 63096,
+            "freq_formatted": "63.10 kHz",
+            "impedance_ohm": 0.126334
+          },
+          {
+            "freq_hz": 79433,
+            "freq_formatted": "79.43 kHz",
+            "impedance_ohm": 0.100739
+          },
+          {
+            "freq_hz": 100000,
+            "freq_formatted": "100.00 kHz",
+            "impedance_ohm": 0.080506
+          },
+          {
+            "freq_hz": 125893,
+            "freq_formatted": "125.89 kHz",
+            "impedance_ohm": 0.064556
+          },
+          {
+            "freq_hz": 158489,
+            "freq_formatted": "158.49 kHz",
+            "impedance_ohm": 0.052034
+          },
+          {
+            "freq_hz": 199526,
+            "freq_formatted": "199.53 kHz",
+            "impedance_ohm": 0.042266
+          },
+          {
+            "freq_hz": 251189,
+            "freq_formatted": "251.19 kHz",
+            "impedance_ohm": 0.034717
+          },
+          {
+            "freq_hz": 316228,
+            "freq_formatted": "316.23 kHz",
+            "impedance_ohm": 0.02896
+          },
+          {
+            "freq_hz": 398107,
+            "freq_formatted": "398.11 kHz",
+            "impedance_ohm": 0.024646
+          },
+          {
+            "freq_hz": 501187,
+            "freq_formatted": "501.19 kHz",
+            "impedance_ohm": 0.021487
+          },
+          {
+            "freq_hz": 630957,
+            "freq_formatted": "630.96 kHz",
+            "impedance_ohm": 0.019234
+          },
+          {
+            "freq_hz": 794328,
+            "freq_formatted": "794.33 kHz",
+            "impedance_ohm": 0.017678
+          },
+          {
+            "freq_hz": 1000000,
+            "freq_formatted": "1.00 MHz",
+            "impedance_ohm": 0.016644
+          },
+          {
+            "freq_hz": 1258925,
+            "freq_formatted": "1.26 MHz",
+            "impedance_ohm": 0.015995
+          },
+          {
+            "freq_hz": 1584893,
+            "freq_formatted": "1.58 MHz",
+            "impedance_ohm": 0.015637
+          },
+          {
+            "freq_hz": 1995262,
+            "freq_formatted": "2.00 MHz",
+            "impedance_ohm": 0.015516
+          },
+          {
+            "freq_hz": 2511886,
+            "freq_formatted": "2.51 MHz",
+            "impedance_ohm": 0.015617
+          },
+          {
+            "freq_hz": 3162278,
+            "freq_formatted": "3.16 MHz",
+            "impedance_ohm": 0.015962
+          },
+          {
+            "freq_hz": 3981072,
+            "freq_formatted": "3.98 MHz",
+            "impedance_ohm": 0.016609
+          },
+          {
+            "freq_hz": 5011872,
+            "freq_formatted": "5.01 MHz",
+            "impedance_ohm": 0.017652
+          },
+          {
+            "freq_hz": 6309573,
+            "freq_formatted": "6.31 MHz",
+            "impedance_ohm": 0.019216
+          },
+          {
+            "freq_hz": 7943282,
+            "freq_formatted": "7.94 MHz",
+            "impedance_ohm": 0.021449
+          },
+          {
+            "freq_hz": 10000000,
+            "freq_formatted": "10.00 MHz",
+            "impedance_ohm": 0.024511
+          },
+          {
+            "freq_hz": 12589254,
+            "freq_formatted": "12.59 MHz",
+            "impedance_ohm": 0.028567
+          },
+          {
+            "freq_hz": 15848932,
+            "freq_formatted": "15.85 MHz",
+            "impedance_ohm": 0.033789
+          },
+          {
+            "freq_hz": 19952623,
+            "freq_formatted": "19.95 MHz",
+            "impedance_ohm": 0.040358
+          },
+          {
+            "freq_hz": 25118864,
+            "freq_formatted": "25.12 MHz",
+            "impedance_ohm": 0.048483
+          },
+          {
+            "freq_hz": 31622777,
+            "freq_formatted": "31.62 MHz",
+            "impedance_ohm": 0.058426
+          },
+          {
+            "freq_hz": 39810717,
+            "freq_formatted": "39.81 MHz",
+            "impedance_ohm": 0.070553
+          },
+          {
+            "freq_hz": 50118723,
+            "freq_formatted": "50.12 MHz",
+            "impedance_ohm": 0.085399
+          },
+          {
+            "freq_hz": 63095734,
+            "freq_formatted": "63.10 MHz",
+            "impedance_ohm": 0.103743
+          },
+          {
+            "freq_hz": 79432823,
+            "freq_formatted": "79.43 MHz",
+            "impedance_ohm": 0.126662
+          },
+          {
+            "freq_hz": 100000000,
+            "freq_formatted": "100.00 MHz",
+            "impedance_ohm": 0.155566
+          },
+          {
+            "freq_hz": 125892541,
+            "freq_formatted": "125.89 MHz",
+            "impedance_ohm": 0.192208
+          },
+          {
+            "freq_hz": 158489319,
+            "freq_formatted": "158.49 MHz",
+            "impedance_ohm": 0.23873
+          },
+          {
+            "freq_hz": 199526231,
+            "freq_formatted": "199.53 MHz",
+            "impedance_ohm": 0.297751
+          },
+          {
+            "freq_hz": 251188643,
+            "freq_formatted": "251.19 MHz",
+            "impedance_ohm": 0.372506
+          },
+          {
+            "freq_hz": 316227766,
+            "freq_formatted": "316.23 MHz",
+            "impedance_ohm": 0.467033
+          },
+          {
+            "freq_hz": 398107171,
+            "freq_formatted": "398.11 MHz",
+            "impedance_ohm": 0.586395
+          },
+          {
+            "freq_hz": 501187234,
+            "freq_formatted": "501.19 MHz",
+            "impedance_ohm": 0.736968
+          },
+          {
+            "freq_hz": 630957344,
+            "freq_formatted": "630.96 MHz",
+            "impedance_ohm": 0.926777
+          },
+          {
+            "freq_hz": 794328235,
+            "freq_formatted": "794.33 MHz",
+            "impedance_ohm": 1.165935
+          },
+          {
+            "freq_hz": 1000000000,
+            "freq_formatted": "1.00 GHz",
+            "impedance_ohm": 1.467182
+          }
+        ],
+        "min_impedance": {
+          "freq_formatted": "2.00 MHz",
+          "impedance_ohm": 0.015516
+        }
+      },
+      "Vout": {
+        "capacitors": [
+          {
+            "ref": "C45",
+            "value": "22uF",
+            "farads": 2.2e-05,
+            "package": "0603",
+            "esr_ohm": 0.0213,
+            "esl_nH": 0.7,
+            "srf_hz": 1282507,
+            "srf_formatted": "1.28 MHz",
+            "type": "MLCC"
+          },
+          {
+            "ref": "C47",
+            "value": "22uF",
+            "farads": 2.2e-05,
+            "package": "0603",
+            "esr_ohm": 0.0213,
+            "esl_nH": 0.7,
+            "srf_hz": 1282507,
+            "srf_formatted": "1.28 MHz",
+            "type": "MLCC"
+          }
+        ],
+        "cap_count": 2,
+        "total_capacitance_uF": 44.0,
+        "impedance_profile": [
+          {
+            "freq_hz": 1000,
+            "freq_formatted": "1.00 kHz",
+            "impedance_ohm": 0.09731
+          },
+          {
+            "freq_hz": 1259,
+            "freq_formatted": "1.26 kHz",
+            "impedance_ohm": 0.096637
+          },
+          {
+            "freq_hz": 1585,
+            "freq_formatted": "1.58 kHz",
+            "impedance_ohm": 0.095802
+          },
+          {
+            "freq_hz": 1995,
+            "freq_formatted": "2.00 kHz",
+            "impedance_ohm": 0.094772
+          },
+          {
+            "freq_hz": 2512,
+            "freq_formatted": "2.51 kHz",
+            "impedance_ohm": 0.093507
+          },
+          {
+            "freq_hz": 3162,
+            "freq_formatted": "3.16 kHz",
+            "impedance_ohm": 0.091961
+          },
+          {
+            "freq_hz": 3981,
+            "freq_formatted": "3.98 kHz",
+            "impedance_ohm": 0.090086
+          },
+          {
+            "freq_hz": 5012,
+            "freq_formatted": "5.01 kHz",
+            "impedance_ohm": 0.087831
+          },
+          {
+            "freq_hz": 6310,
+            "freq_formatted": "6.31 kHz",
+            "impedance_ohm": 0.085149
+          },
+          {
+            "freq_hz": 7943,
+            "freq_formatted": "7.94 kHz",
+            "impedance_ohm": 0.081998
+          },
+          {
+            "freq_hz": 10000,
+            "freq_formatted": "10.00 kHz",
+            "impedance_ohm": 0.078348
+          },
+          {
+            "freq_hz": 12589,
+            "freq_formatted": "12.59 kHz",
+            "impedance_ohm": 0.074193
+          },
+          {
+            "freq_hz": 15849,
+            "freq_formatted": "15.85 kHz",
+            "impedance_ohm": 0.069553
+          },
+          {
+            "freq_hz": 19953,
+            "freq_formatted": "19.95 kHz",
+            "impedance_ohm": 0.064483
+          },
+          {
+            "freq_hz": 25119,
+            "freq_formatted": "25.12 kHz",
+            "impedance_ohm": 0.059073
+          },
+          {
+            "freq_hz": 31623,
+            "freq_formatted": "31.62 kHz",
+            "impedance_ohm": 0.053447
+          },
+          {
+            "freq_hz": 39811,
+            "freq_formatted": "39.81 kHz",
+            "impedance_ohm": 0.047752
+          },
+          {
+            "freq_hz": 50119,
+            "freq_formatted": "50.12 kHz",
+            "impedance_ohm": 0.042187
+          },
+          {
+            "freq_hz": 63096,
+            "freq_formatted": "63.10 kHz",
+            "impedance_ohm": 0.039817
+          },
+          {
+            "freq_hz": 79433,
+            "freq_formatted": "79.43 kHz",
+            "impedance_ohm": 0.036029
+          },
+          {
+            "freq_hz": 100000,
+            "freq_formatted": "100.00 kHz",
+            "impedance_ohm": 0.031576
+          },
+          {
+            "freq_hz": 125893,
+            "freq_formatted": "125.89 kHz",
+            "impedance_ohm": 0.027111
+          },
+          {
+            "freq_hz": 158489,
+            "freq_formatted": "158.49 kHz",
+            "impedance_ohm": 0.023061
+          },
+          {
+            "freq_hz": 199526,
+            "freq_formatted": "199.53 kHz",
+            "impedance_ohm": 0.019633
+          },
+          {
+            "freq_hz": 251189,
+            "freq_formatted": "251.19 kHz",
+            "impedance_ohm": 0.016882
+          },
+          {
+            "freq_hz": 316228,
+            "freq_formatted": "316.23 kHz",
+            "impedance_ohm": 0.014774
+          },
+          {
+            "freq_hz": 398107,
+            "freq_formatted": "398.11 kHz",
+            "impedance_ohm": 0.013224
+          },
+          {
+            "freq_hz": 501187,
+            "freq_formatted": "501.19 kHz",
+            "impedance_ohm": 0.012132
+          },
+          {
+            "freq_hz": 630957,
+            "freq_formatted": "630.96 kHz",
+            "impedance_ohm": 0.011398
+          },
+          {
+            "freq_hz": 794328,
+            "freq_formatted": "794.33 kHz",
+            "impedance_ohm": 0.010938
+          },
+          {
+            "freq_hz": 1000000,
+            "freq_formatted": "1.00 MHz",
+            "impedance_ohm": 0.010687
+          },
+          {
+            "freq_hz": 1258925,
+            "freq_formatted": "1.26 MHz",
+            "impedance_ohm": 0.010606
+          },
+          {
+            "freq_hz": 1584893,
+            "freq_formatted": "1.58 MHz",
+            "impedance_ohm": 0.010682
+          },
+          {
+            "freq_hz": 1995262,
+            "freq_formatted": "2.00 MHz",
+            "impedance_ohm": 0.010927
+          },
+          {
+            "freq_hz": 2511886,
+            "freq_formatted": "2.51 MHz",
+            "impedance_ohm": 0.01138
+          },
+          {
+            "freq_hz": 3162278,
+            "freq_formatted": "3.16 MHz",
+            "impedance_ohm": 0.012109
+          },
+          {
+            "freq_hz": 3981072,
+            "freq_formatted": "3.98 MHz",
+            "impedance_ohm": 0.013206
+          },
+          {
+            "freq_hz": 5011872,
+            "freq_formatted": "5.01 MHz",
+            "impedance_ohm": 0.014794
+          },
+          {
+            "freq_hz": 6309573,
+            "freq_formatted": "6.31 MHz",
+            "impedance_ohm": 0.017017
+          },
+          {
+            "freq_hz": 7943282,
+            "freq_formatted": "7.94 MHz",
+            "impedance_ohm": 0.020046
+          },
+          {
+            "freq_hz": 10000000,
+            "freq_formatted": "10.00 MHz",
+            "impedance_ohm": 0.02408
+          },
+          {
+            "freq_hz": 12589254,
+            "freq_formatted": "12.59 MHz",
+            "impedance_ohm": 0.029361
+          },
+          {
+            "freq_hz": 15848932,
+            "freq_formatted": "15.85 MHz",
+            "impedance_ohm": 0.036185
+          },
+          {
+            "freq_hz": 19952623,
+            "freq_formatted": "19.95 MHz",
+            "impedance_ohm": 0.044925
+          },
+          {
+            "freq_hz": 25118864,
+            "freq_formatted": "25.12 MHz",
+            "impedance_ohm": 0.056053
+          },
+          {
+            "freq_hz": 31622777,
+            "freq_formatted": "31.62 MHz",
+            "impedance_ohm": 0.070162
+          },
+          {
+            "freq_hz": 39810717,
+            "freq_formatted": "39.81 MHz",
+            "impedance_ohm": 0.088006
+          },
+          {
+            "freq_hz": 50118723,
+            "freq_formatted": "50.12 MHz",
+            "impedance_ohm": 0.110536
+          },
+          {
+            "freq_hz": 63095734,
+            "freq_formatted": "63.10 MHz",
+            "impedance_ohm": 0.138953
+          },
+          {
+            "freq_hz": 79432823,
+            "freq_formatted": "79.43 MHz",
+            "impedance_ohm": 0.174768
+          },
+          {
+            "freq_hz": 100000000,
+            "freq_formatted": "100.00 MHz",
+            "impedance_ohm": 0.219891
+          },
+          {
+            "freq_hz": 125892541,
+            "freq_formatted": "125.89 MHz",
+            "impedance_ohm": 0.276724
+          },
+          {
+            "freq_hz": 158489319,
+            "freq_formatted": "158.49 MHz",
+            "impedance_ohm": 0.348293
+          },
+          {
+            "freq_hz": 199526231,
+            "freq_formatted": "199.53 MHz",
+            "impedance_ohm": 0.43841
+          },
+          {
+            "freq_hz": 251188643,
+            "freq_formatted": "251.19 MHz",
+            "impedance_ohm": 0.551874
+          },
+          {
+            "freq_hz": 316227766,
+            "freq_formatted": "316.23 MHz",
+            "impedance_ohm": 0.694727
+          },
+          {
+            "freq_hz": 398107171,
+            "freq_formatted": "398.11 MHz",
+            "impedance_ohm": 0.874577
+          },
+          {
+            "freq_hz": 501187234,
+            "freq_formatted": "501.19 MHz",
+            "impedance_ohm": 1.101002
+          },
+          {
+            "freq_hz": 630957344,
+            "freq_formatted": "630.96 MHz",
+            "impedance_ohm": 1.386059
+          },
+          {
+            "freq_hz": 794328235,
+            "freq_formatted": "794.33 MHz",
+            "impedance_ohm": 1.744928
+          },
+          {
+            "freq_hz": 1000000000,
+            "freq_formatted": "1.00 GHz",
+            "impedance_ohm": 2.196722
+          }
+        ],
+        "min_impedance": {
+          "freq_formatted": "1.26 MHz",
+          "impedance_ohm": 0.010606
+        }
+      }
+    },
+    "observations": [
+      "Vin: highest SRF is 19.02 MHz \u2014 consider adding small (100pF-1nF) MLCC for >100 MHz coverage",
+      "Vout: highest SRF is 1.28 MHz \u2014 consider adding small (100pF-1nF) MLCC for >100 MHz coverage"
+    ]
+  },
+  "sleep_current_audit": {
+    "rails": {
+      "Vout": {
+        "current_paths": [
+          {
+            "ref": "U12",
+            "value": "MP2338GTL-Z",
+            "type": "regulator_iq",
+            "current_uA": 50,
+            "has_enable_pin": true,
+            "note": "estimated Iq (can be disabled via EN)",
+            "likely_state": "always-on",
+            "realistic_uA": 50
+          }
+        ],
+        "total_uA": 50,
+        "always_on_uA": 50,
+        "conditional_uA": 0,
+        "realistic_uA": 50
+      }
+    },
+    "total_estimated_sleep_uA": 50.0,
+    "conditional_pull_up_uA": 0.0,
+    "realistic_total_uA": 50.0,
+    "observations": [
+      "Always-on current: 50.0 uA (0.05 mA)",
+      "Realistic sleep estimate: 50.0 uA (0.05 mA)"
+    ]
+  },
+  "power_budget": {
+    "rails": {
+      "Vin": {
+        "ic_count": 1,
+        "ics": [
+          {
+            "ref": "U12",
+            "value": "MP2338GTL-Z",
+            "estimated_mA": 10
+          }
+        ],
+        "estimated_load_mA": 10
+      },
+      "Vout": {
+        "ic_count": 0,
+        "ics": [],
+        "estimated_load_mA": 5,
+        "other_loads": [
+          {
+            "ref": "D12",
+            "type": "led",
+            "estimated_mA": 5,
+            "via": "R56"
+          }
+        ],
+        "regulator": {
+          "ref": "U12",
+          "value": "MP2338GTL-Z",
+          "topology": "switching"
+        }
+      }
+    }
+  },
+  "power_sequencing": {
+    "dependencies": [
+      {
+        "regulator": "U12",
+        "output_rail": "Vout",
+        "en_pin": "EN",
+        "en_net": "EN",
+        "en_source": "floating"
+      }
+    ],
+    "floating_en_warnings": [
+      {
+        "regulator": "U12",
+        "output_rail": "Vout",
+        "en_pin": "EN",
+        "warning": "U12 EN pin (EN) appears unconnected"
+      }
+    ],
+    "power_good_signals": [
+      {
+        "regulator": "U12",
+        "output_rail": "Vout",
+        "pg_pin": "PG",
+        "pg_net": "__unnamed_3",
+        "connected_to": [
+          "R52"
+        ]
+      }
+    ],
+    "observations": [
+      "1 regulator(s) with floating EN pin \u2014 may not start"
+    ]
+  },
+  "bom_optimization": {
+    "unique_value_counts": {
+      "resistor": 3,
+      "capacitor": 3
+    },
+    "total_unique_footprints": 5,
+    "single_use_passive_values": 4
+  },
+  "test_coverage": {
+    "test_points": [],
+    "test_point_count": 0,
+    "covered_nets": [],
+    "uncovered_key_nets": [
+      {
+        "net": "Vin",
+        "category": "power_rail"
+      },
+      {
+        "net": "Vout",
+        "category": "power_rail"
+      }
+    ],
+    "observations": [
+      "No test points found in design",
+      "No debug connectors (SWD/JTAG/UART) identified",
+      "Key nets without test points: 2 power_rail"
+    ]
+  },
+  "assembly_complexity": {
+    "total_components": 13,
+    "smd_count": 13,
+    "tht_count": 0,
+    "complexity_score": 40,
+    "difficulty_breakdown": {
+      "hard": 0,
+      "medium": 13,
+      "easy": 0
+    },
+    "package_breakdown": {
+      "0603": 11,
+      "other_SMD": 2
+    },
+    "unique_footprints": 2,
+    "observations": [
+      "Moderate assembly complexity (score 40/100)"
+    ]
+  },
+  "project_settings": {
+    "symbol_libs": [
+      {
+        "name": "UCIRP-KiCAD-Lib",
+        "type": "KiCad",
+        "uri": "${KIPRJMOD}/UCIRP-KiCAD-Lib/UCIRP-KiCAD-Lib.kicad_sym"
+      }
+    ]
+  },
+  "hierarchy_warning": "File appears to be a sub-sheet but hierarchy discovery is disabled (--no-hierarchy). Component references may be incomplete.",
+  "missing_info": {
+    "missing_mpn": [
+      "C40",
+      "C43",
+      "C41",
+      "C44",
+      "C45",
+      "R52",
+      "R56",
+      "U12",
+      "R53",
+      "C39",
+      "C47",
+      "L3",
+      "D12"
+    ]
+  },
+  "bom_lock": {
+    "total_bom_components": 13,
+    "components_with_mpn": 0,
+    "missing_mpn": [
+      "C40",
+      "C43",
+      "C41",
+      "C44",
+      "C45",
+      "R52",
+      "R56",
+      "U12",
+      "R53",
+      "C39",
+      "C47",
+      "L3",
+      "D12"
+    ],
+    "missing_mpn_count": 13,
+    "generic_values": [],
+    "lock_pct": 0,
+    "status": "fail"
+  },
+  "inputs": {
+    "source_files": [
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/Autonomous-OpenHD-OpenCV-RC-plane/Pi-Flight-Sensor-hat/KICAD PCB/5V_BUCK.kicad_sch"
+    ],
+    "source_hashes": {
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/Autonomous-OpenHD-OpenCV-RC-plane/Pi-Flight-Sensor-hat/KICAD PCB/5V_BUCK.kicad_sch": "1d8b155f58fc1bcbc1594ff303d71e7530804c8721dbe40a64895f4e6b85c294"
+    },
+    "run_id": "20261022T214523Z-0c1ed4",
+    "config_hash": null,
+    "upstream_artifacts": {}
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "design_intent": {
+    "product_class": "prototype",
+    "ipc_class": 2,
+    "target_market": "hobby",
+    "expected_lifetime_years": 5,
+    "operating_temp_range": [
+      -10,
+      70
+    ],
+    "preferred_passive_size": "0603",
+    "test_coverage_target": 0.85,
+    "approved_manufacturers": [],
+    "confidence": 0.3,
+    "detection_signals": [],
+    "source": {
+      "ipc_class": "auto",
+      "product_class": "auto",
+      "target_market": "auto",
+      "expected_lifetime_years": "auto",
+      "operating_temp_range": "auto",
+      "preferred_passive_size": "auto",
+      "test_coverage_target": "auto",
+      "approved_manufacturers": "auto"
+    }
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 15,
+      "by_severity": {
+        "error": 2,
+        "warning": 3,
+        "info": 10
+      },
+      "by_category": {
+        "decoupling": 2,
+        "decoupling_coverage": 2,
+        "single_pin_nets": 1,
+        "switching_regulator": 1,
+        "verification": 1,
+        "led_control": 1,
+        "connectivity": 2,
+        "power_management": 1,
+        "signal_integrity": 1,
+        "power": 1,
+        "sourcing": 1,
+        "lifecycle": 1
+      },
+      "top_issues": [
+        {
+          "detector": "audit_datasheet_coverage",
+          "rule_id": "DS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "verification",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "components": [],
+          "nets": [],
+          "pins": [],
+          "datasheets_dir": null,
+          "datasheet_file_count": 0,
+          "bom_size": 13,
+          "mpn_coverage_percent": 0.0,
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "report_context": {
+            "section": "Datasheet Coverage",
+            "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:DS-001:9820bbea68d9"
+        },
+        {
+          "detector": "audit_sourcing_gate",
+          "rule_id": "SS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "sourcing",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/9 unique parts). Board is not pre-fab ready.",
+          "description": "Sourcing audit: 0 of 9 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+          "components": [
+            "C39",
+            "C40",
+            "C41",
+            "C43",
+            "C44",
+            "C45",
+            "C47",
+            "D12",
+            "L3",
+            "R52",
+            "R53",
+            "R56",
+            "U12"
+          ],
+          "nets": [],
+          "pins": [],
+          "mpn_coverage_percent": 0.0,
+          "missing_mpn_lines": 9,
+          "missing_mpn_refs": 13,
+          "total_bom_lines": 9,
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "report_context": {
+            "section": "Sourcing",
+            "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "pre_fab"
+          ],
+          "finding_id": "schematic:SS-001:c39"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: EN only connects to U12.6 (EN) (input)",
+          "description": "Net 'EN' has exactly one pin: U12.6 (EN), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U12"
+          ],
+          "nets": [
+            "EN"
+          ],
+          "pins": [
+            "U12.6"
+          ],
+          "net_display_name": "EN",
+          "pin_type": "input",
+          "pin_name": "EN",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u12"
+        },
+        {
+          "detector": "validate_pullups",
+          "rule_id": "PU-001",
+          "category": "signal_integrity",
+          "summary": "U12 pin EN (EN) missing pull-up resistor",
+          "description": "Pin EN on U12 (MP2338GTL-Z) is connected to net EN but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+          "components": [
+            "U12"
+          ],
+          "nets": [
+            "EN"
+          ],
+          "pins": [
+            {
+              "ref": "U12",
+              "pin": "EN",
+              "function": "open_drain_or_input"
+            }
+          ],
+          "severity": "warning",
+          "confidence": "heuristic",
+          "evidence_source": "topology",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from EN to the appropriate power rail.",
+          "fix_params": {
+            "type": "add_component",
+            "components": [
+              {
+                "type": "resistor",
+                "value": "10k",
+                "net_from": "EN",
+                "net_to": "<power_rail>"
+              }
+            ],
+            "basis": "Pin EN is open-drain/input type requiring pull-up"
+          },
+          "report_context": {
+            "section": "Signal Integrity",
+            "impact": "Pin may float or bus may not function without pull-up",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "pu_missing_pullup",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "schema_era": "v1.4",
+          "finding_id": "schematic:validation_findings-4a2e988ea9fd",
+          "detection_id": "validation_findings:4a2e988ea9fd",
+          "stages": [
+            "schematic"
+          ]
+        },
+        {
+          "detector": "audit_rail_sources",
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "power",
+          "summary": "Vin has no declared source",
+          "description": "Net Vin carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+          "components": [],
+          "nets": [
+            "Vin"
+          ],
+          "pins": [
+            "U12.2"
+          ],
+          "source_path": "none",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "report_context": {
+            "section": "Power \u2014 Rail Sources",
+            "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "rs_rail_audit",
+            "confidence": "deterministic",
+            "claimed_components": [],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "",
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:RS-001:vin"
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 5,
+      "by_category": {
+        "verification": 1,
+        "connectivity": 1,
+        "signal_integrity": 1,
+        "power": 1,
+        "sourcing": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "DS-001",
+          "severity": "error",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "category": "verification"
+        },
+        {
+          "rule_id": "SS-001",
+          "severity": "error",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/9 unique parts). Board is not pre-fab ready.",
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "category": "sourcing"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: EN only connects to U12.6 (EN) (input)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U12 pin EN (EN) missing pull-up resistor",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from EN to the appropriate power rail.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "Vin has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "moderate",
+      "blocker_count": 2,
+      "warning_count": 3,
+      "stage_readiness": {
+        "schematic": "needs_work",
+        "layout": "pass",
+        "pre_fab": "needs_work",
+        "bring_up": "pass"
+      },
+      "one_liner": "2 errors, 3 warnings across 5 categories. Schematic, pre-fab stages have blockers."
+    }
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20261022T214523Z-0c1ed4"
+  }
+}

@@ -1,0 +1,5630 @@
+{
+  "analyzer_type": "schematic",
+  "schema_version": "1.4.0",
+  "summary": {
+    "total_findings": 31,
+    "by_severity": {
+      "error": 3,
+      "warning": 15,
+      "info": 13
+    }
+  },
+  "trust_summary": {
+    "total_findings": 31,
+    "trust_level": "mixed",
+    "by_confidence": {
+      "deterministic": 19,
+      "heuristic": 12,
+      "datasheet_backed": 0
+    },
+    "by_evidence_source": {
+      "datasheet": 0,
+      "topology": 29,
+      "heuristic_rule": 0,
+      "symbol_footprint": 0,
+      "bom": 2,
+      "geometry": 0,
+      "api_lookup": 0
+    },
+    "provenance_coverage_pct": 61.3,
+    "bom_coverage": {
+      "total_components": 8,
+      "with_mpn": 0,
+      "with_datasheet": 8,
+      "mpn_pct": 0.0,
+      "datasheet_pct": 100.0
+    }
+  },
+  "kicad_version": "9.0",
+  "file_version": "20250114",
+  "title_block": {},
+  "statistics": {
+    "total_components": 11,
+    "unique_parts": 8,
+    "dnp_parts": 0,
+    "total_nets": 23,
+    "total_wires": 49,
+    "total_no_connects": 4,
+    "component_types": {
+      "resistor": 5,
+      "capacitor": 3,
+      "ic": 2,
+      "net_tie": 1
+    },
+    "power_rails": [
+      {
+        "name": "3V3",
+        "voltage": 3.3
+      },
+      {
+        "name": "GND",
+        "voltage": null
+      },
+      {
+        "name": "PGND",
+        "voltage": null
+      },
+      {
+        "name": "VIN",
+        "voltage": null
+      },
+      {
+        "name": "VOUT",
+        "voltage": null
+      }
+    ],
+    "missing_mpn": [
+      "R1301",
+      "R1302",
+      "C1302",
+      "U1301",
+      "R1304",
+      "R1305",
+      "U1302",
+      "C1301",
+      "C1303",
+      "R1303"
+    ],
+    "missing_footprint": []
+  },
+  "findings": [
+    {
+      "category": "decoupling",
+      "component": "U1301",
+      "value": "LM5158QRTERQ1",
+      "rails_without_caps": [
+        "VIN"
+      ],
+      "rails_with_caps": [],
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "IC U1301 missing decoupling on VIN",
+      "description": "IC power pin(s) without decoupling capacitors",
+      "components": [
+        "U1301"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1301"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u1301"
+    },
+    {
+      "category": "regulator_voltage",
+      "component": "U1301",
+      "value": "LM5158QRTERQ1",
+      "topology": "switching",
+      "estimated_vout": 21.896,
+      "assumed_vref": 0.6,
+      "vref_source": "heuristic",
+      "feedback_divider": {
+        "r_top": {
+          "ref": "R1304",
+          "ohms": 115000.0,
+          "value": "115k"
+        },
+        "r_bottom": {
+          "ref": "R1303",
+          "ohms": 3240.0,
+          "value": "3k24"
+        },
+        "ratio": 0.027402
+      },
+      "input_rail": null,
+      "output_rail": null,
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Regulator U1301 estimated Vout=21.896V",
+      "description": "Regulator output voltage estimated from feedback divider",
+      "components": [
+        "U1301"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1301"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u1301#1"
+    },
+    {
+      "category": "i2c_bus",
+      "net": "I2C4.SCL",
+      "line": "SCL",
+      "devices": [
+        "U1302"
+      ],
+      "has_pullup": false,
+      "pullup_resistor": null,
+      "pullup_rail": null,
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "I2C SCL bus on I2C4.SCL",
+      "description": "I2C SCL bus detected with 1 device(s)",
+      "components": [
+        "U1302"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1302"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u1302"
+    },
+    {
+      "category": "i2c_bus",
+      "net": "I2C4.SDA",
+      "line": "SDA",
+      "devices": [
+        "U1302"
+      ],
+      "has_pullup": false,
+      "pullup_resistor": null,
+      "pullup_rail": null,
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "I2C SDA bus on I2C4.SDA",
+      "description": "I2C SDA bus detected with 1 device(s)",
+      "components": [
+        "U1302"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1302"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u1302#1"
+    },
+    {
+      "category": "decoupling",
+      "component": "U1302",
+      "value": "DAC53401DSGR",
+      "rails_without_caps": [
+        "3V3"
+      ],
+      "rails_with_caps": [],
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "IC U1302 missing decoupling on 3V3",
+      "description": "IC power pin(s) without decoupling capacitors",
+      "components": [
+        "U1302"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1302"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u1302#2"
+    },
+    {
+      "category": "regulator_caps",
+      "component": "U1302",
+      "value": "DAC53401DSGR",
+      "topology": "switching",
+      "missing_caps": {
+        "output": "__unnamed_13"
+      },
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Regulator U1302 missing capacitors",
+      "description": "Regulator missing input or output capacitors",
+      "components": [
+        "U1302"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1302"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u1302#3"
+    },
+    {
+      "category": "single_pin_nets",
+      "count": 2,
+      "nets": [],
+      "detector": "detect_design_observations",
+      "rule_id": "DO-DET",
+      "severity": "info",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "summary": "Single-pin nets (2 nets)",
+      "description": "Signal nets connected to only one pin",
+      "components": [
+        "U1302",
+        "U1302"
+      ],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Design Observations",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "obs_topology",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1302",
+          "U1302"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DO-DET-u1302#4"
+    },
+    {
+      "detector": "audit_datasheet_coverage",
+      "rule_id": "DS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "verification",
+      "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "datasheets_dir": null,
+      "datasheet_file_count": 0,
+      "bom_size": 10,
+      "mpn_coverage_percent": 0.0,
+      "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+      "report_context": {
+        "section": "Datasheet Coverage",
+        "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:DS-001:9820bbea68d9"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: R1304.~ only connects to R1304.1 (~) (passive)",
+      "description": "Net '__unnamed_12' has exactly one pin: R1304.1 (~), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "R1304"
+      ],
+      "nets": [
+        "__unnamed_12"
+      ],
+      "pins": [
+        "R1304.1"
+      ],
+      "net_display_name": "R1304.~",
+      "pin_type": "passive",
+      "pin_name": "~",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Passive or unclassified pin lonely on its own net.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:r1304"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: VIN only connects to U1301.3 (BIAS) (power_in)",
+      "description": "Net 'VIN' has exactly one pin: U1301.3 (BIAS), pin_type='power_in'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "VIN"
+      ],
+      "pins": [
+        "U1301.3"
+      ],
+      "net_display_name": "VIN",
+      "pin_type": "power_in",
+      "pin_name": "BIAS",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1301"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: U1301.MODE only connects to U1301.11 (MODE) (input)",
+      "description": "Net '__unnamed_11' has exactly one pin: U1301.11 (MODE), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "__unnamed_11"
+      ],
+      "pins": [
+        "U1301.11"
+      ],
+      "net_display_name": "U1301.MODE",
+      "pin_type": "input",
+      "pin_name": "MODE",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1301#1"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: U1301.SW only connects to U1301.14 (SW) (output)",
+      "description": "Net '__unnamed_6' has exactly one pin: U1301.14 (SW), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "__unnamed_6"
+      ],
+      "pins": [
+        "U1301.14"
+      ],
+      "net_display_name": "U1301.SW",
+      "pin_type": "output",
+      "pin_name": "SW",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1301#2"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: U1301.SW only connects to U1301.13 (SW) (output)",
+      "description": "Net '__unnamed_7' has exactly one pin: U1301.13 (SW), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "__unnamed_7"
+      ],
+      "pins": [
+        "U1301.13"
+      ],
+      "net_display_name": "U1301.SW",
+      "pin_type": "output",
+      "pin_name": "SW",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1301#3"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: U1301.COMP only connects to U1301.8 (COMP) (output)",
+      "description": "Net '__unnamed_9' has exactly one pin: U1301.8 (COMP), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "__unnamed_9"
+      ],
+      "pins": [
+        "U1301.8"
+      ],
+      "net_display_name": "U1301.COMP",
+      "pin_type": "output",
+      "pin_name": "COMP",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1301#4"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: 3V3 only connects to U1302.6 (VDD) (power_in)",
+      "description": "Net '3V3' has exactly one pin: U1302.6 (VDD), pin_type='power_in'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1302"
+      ],
+      "nets": [
+        "3V3"
+      ],
+      "pins": [
+        "U1302.6"
+      ],
+      "net_display_name": "3V3",
+      "pin_type": "power_in",
+      "pin_name": "VDD",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1302"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: I2C4.SCL only connects to U1302.2 (SCL) (input)",
+      "description": "Net 'I2C4.SCL' has exactly one pin: U1302.2 (SCL), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1302"
+      ],
+      "nets": [
+        "I2C4.SCL"
+      ],
+      "pins": [
+        "U1302.2"
+      ],
+      "net_display_name": "I2C4.SCL",
+      "pin_type": "input",
+      "pin_name": "SCL",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1302#1"
+    },
+    {
+      "detector": "analyze_connectivity",
+      "rule_id": "NT-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "connectivity",
+      "summary": "Single-pin net: I2C4.SDA only connects to U1302.3 (SDA) (bidirectional)",
+      "description": "Net 'I2C4.SDA' has exactly one pin: U1302.3 (SDA), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+      "components": [
+        "U1302"
+      ],
+      "nets": [
+        "I2C4.SDA"
+      ],
+      "pins": [
+        "U1302.3"
+      ],
+      "net_display_name": "I2C4.SDA",
+      "pin_type": "bidirectional",
+      "pin_name": "SDA",
+      "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+      "report_context": {
+        "section": "Connectivity",
+        "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:NT-001:u1302#2"
+    },
+    {
+      "detector": "audit_power_pin_dc_paths",
+      "rule_id": "PP-001",
+      "severity": "error",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "IC power pin U1301.2 (VCC) has no DC path to a power rail (net '__unnamed_2')",
+      "description": "Pin U1301.2 (VCC) is type=power_in on net '__unnamed_2'. Graph walk (\u22642 hops, rejecting capacitor edges, accepting resistors\u22641\u03a9, inductors, ferrite beads, bridged solder jumpers) did not reach a named power rail. The pin is likely AC-coupled to ground only \u2014 the IC will not power up reliably.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "__unnamed_2"
+      ],
+      "pins": [
+        "U1301.2 (VCC)"
+      ],
+      "start_net": "__unnamed_2",
+      "visited_nets": [
+        "__unnamed_2"
+      ],
+      "source_path": "none",
+      "recommendation": "Verify the schematic for this pin: the DC route must go through a conducting element (direct wire, 0\u03a9 resistor, inductor, ferrite bead, or bridged solder jumper) \u2014 not a capacitor. If the intent was to tie VCC through an LC filter, add the missing inductor or 0\u03a9 in series.",
+      "report_context": {
+        "section": "Power \u2014 DC Continuity",
+        "impact": "IC supply floats DC; board will not run.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pp_dc_path_audit",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "U1301"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:PP-001:u1301"
+    },
+    {
+      "ref": "U1301",
+      "value": "LM5158QRTERQ1",
+      "lib_id": "BR_IC_Regulators:LM5158QRTERQ1",
+      "topology": "switching",
+      "fb_net": "__unnamed_8",
+      "estimated_vout": 21.896,
+      "_estimated_vout_provenance": {
+        "source": "divider_plus_lookup",
+        "confidence": "heuristic"
+      },
+      "assumed_vref": 0.6,
+      "vref_source": "heuristic",
+      "feedback_divider": {
+        "r_top": {
+          "ref": "R1304",
+          "ohms": 115000.0,
+          "value": "115k"
+        },
+        "r_bottom": {
+          "ref": "R1303",
+          "ohms": 3240.0,
+          "value": "3k24"
+        },
+        "ratio": 0.027402
+      },
+      "switching_frequency_hz": 500000.0,
+      "freq_source": "topology_default",
+      "detector": "detect_power_regulators",
+      "rule_id": "PR-DET",
+      "category": "power_management",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Regulator U1301 switching",
+      "description": "Power regulator (switching) detected",
+      "components": [
+        "U1301"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Power Management",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "reg_sw_pin_only",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1301"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "power_regulators:21fb6b183e0e",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:power_regulators-21fb6b183e0e"
+    },
+    {
+      "ref": "U1302",
+      "value": "DAC53401DSGR",
+      "lib_id": "BR_IC:DAC53401DSGR",
+      "topology": "switching",
+      "output_rail": "__unnamed_13",
+      "fb_net": "__unnamed_14",
+      "switching_frequency_hz": 500000.0,
+      "freq_source": "topology_default",
+      "detector": "detect_power_regulators",
+      "rule_id": "PR-DET",
+      "category": "power_management",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Regulator U1302 switching",
+      "description": "Power regulator (switching) detected",
+      "components": [
+        "U1302"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Power Management",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "reg_keyword",
+        "confidence": "heuristic",
+        "claimed_components": [
+          "U1302"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "power_regulators:6c6d3bfe9f9c",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:power_regulators-6c6d3bfe9f9c"
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U1301 pin PGOOD (__unnamed_10) missing pull-up resistor",
+      "description": "Pin PGOOD on U1301 (LM5158QRTERQ1) is connected to net __unnamed_10 but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "__unnamed_10"
+      ],
+      "pins": [
+        {
+          "ref": "U1301",
+          "pin": "PGOOD",
+          "function": "open_drain_or_input"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_10 to the appropriate power rail.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "__unnamed_10",
+            "net_to": "<power_rail>"
+          }
+        ],
+        "basis": "Pin PGOOD is open-drain/input type requiring pull-up"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin may float or bus may not function without pull-up",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "schema_era": "v1.4",
+      "finding_id": "schematic:validation_findings-f5e17837f4c5",
+      "detection_id": "validation_findings:f5e17837f4c5",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U1301 pin MODE (__unnamed_11) missing pull-down resistor",
+      "description": "Pin MODE on U1301 (LM5158QRTERQ1) is connected to net __unnamed_11 but has no pull-down resistor. This pin requires a defined logic level at startup.",
+      "components": [
+        "U1301"
+      ],
+      "nets": [
+        "__unnamed_11"
+      ],
+      "pins": [
+        {
+          "ref": "U1301",
+          "pin": "MODE",
+          "function": "mode_select"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 10k pull-down resistor from __unnamed_11 to GND.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "__unnamed_11",
+            "net_to": "GND"
+          }
+        ],
+        "basis": "Pin MODE is a mode/boot selection pin"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin floats at startup, undefined behavior",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "schema_era": "v1.4",
+      "finding_id": "schematic:validation_findings-f5e17837f4c5#1",
+      "detection_id": "validation_findings:f5e17837f4c5",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U1302 pin SCL (I2C4.SCL) missing pull-up resistor",
+      "description": "Pin SCL on U1302 (DAC53401DSGR) is connected to net I2C4.SCL but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+      "components": [
+        "U1302"
+      ],
+      "nets": [
+        "I2C4.SCL"
+      ],
+      "pins": [
+        {
+          "ref": "U1302",
+          "pin": "SCL",
+          "function": "open_drain_or_input"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 4.7k-10k pull-up resistor from I2C4.SCL to the appropriate power rail.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "I2C4.SCL",
+            "net_to": "<power_rail>"
+          }
+        ],
+        "basis": "Pin SCL is open-drain/input type requiring pull-up"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin may float or bus may not function without pull-up",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "schema_era": "v1.4",
+      "finding_id": "schematic:validation_findings-cc98e36a55a0",
+      "detection_id": "validation_findings:cc98e36a55a0",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "validate_pullups",
+      "rule_id": "PU-001",
+      "category": "signal_integrity",
+      "summary": "U1302 pin SDA (I2C4.SDA) missing pull-up resistor",
+      "description": "Pin SDA on U1302 (DAC53401DSGR) is connected to net I2C4.SDA but has no pull-up resistor. This pin type typically requires an external pull-up to a power rail for correct operation.",
+      "components": [
+        "U1302"
+      ],
+      "nets": [
+        "I2C4.SDA"
+      ],
+      "pins": [
+        {
+          "ref": "U1302",
+          "pin": "SDA",
+          "function": "open_drain_or_input"
+        }
+      ],
+      "severity": "warning",
+      "confidence": "heuristic",
+      "evidence_source": "topology",
+      "recommendation": "Add a 4.7k-10k pull-up resistor from I2C4.SDA to the appropriate power rail.",
+      "fix_params": {
+        "type": "add_component",
+        "components": [
+          {
+            "type": "resistor",
+            "value": "10k",
+            "net_from": "I2C4.SDA",
+            "net_to": "<power_rail>"
+          }
+        ],
+        "basis": "Pin SDA is open-drain/input type requiring pull-up"
+      },
+      "report_context": {
+        "section": "Signal Integrity",
+        "impact": "Pin may float or bus may not function without pull-up",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "pu_missing_pullup",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "schema_era": "v1.4",
+      "finding_id": "schematic:validation_findings-cc98e36a55a0#1",
+      "detection_id": "validation_findings:cc98e36a55a0",
+      "stages": [
+        "schematic"
+      ]
+    },
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "3V3 has no declared source",
+      "description": "Net 3V3 carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "3V3"
+      ],
+      "pins": [
+        "U1302.6"
+      ],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:RS-001:3v3"
+    },
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "VIN has no declared source",
+      "description": "Net VIN carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "VIN"
+      ],
+      "pins": [
+        "U1301.3"
+      ],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:RS-001:vin"
+    },
+    {
+      "detector": "audit_rail_sources",
+      "rule_id": "RS-001",
+      "severity": "warning",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "power",
+      "summary": "VOUT has no declared source",
+      "description": "Net VOUT carries power_in pins but has no power_out pin, no PWR_FLAG, no regulator output mapping, and no bridged solder jumper path to a sourced net.",
+      "components": [],
+      "nets": [
+        "VOUT"
+      ],
+      "pins": [],
+      "source_path": "none",
+      "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+      "report_context": {
+        "section": "Power \u2014 Rail Sources",
+        "impact": "Rail has no source visible to the analyser; likely a wiring gap or missing PWR_FLAG.",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "rs_rail_audit",
+        "confidence": "deterministic",
+        "claimed_components": [],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "detection_id": "",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:RS-001:vout"
+    },
+    {
+      "detector": "audit_sourcing_gate",
+      "rule_id": "SS-001",
+      "severity": "error",
+      "confidence": "deterministic",
+      "evidence_source": "bom",
+      "category": "sourcing",
+      "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/8 unique parts). Board is not pre-fab ready.",
+      "description": "Sourcing audit: 0 of 8 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+      "components": [
+        "C1301",
+        "C1302",
+        "C1303",
+        "R1301",
+        "R1302",
+        "R1303",
+        "R1304",
+        "R1305",
+        "U1301",
+        "U1302"
+      ],
+      "nets": [],
+      "pins": [],
+      "mpn_coverage_percent": 0.0,
+      "missing_mpn_lines": 8,
+      "missing_mpn_refs": 10,
+      "total_bom_lines": 8,
+      "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+      "report_context": {
+        "section": "Sourcing",
+        "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "pre_fab"
+      ],
+      "finding_id": "schematic:SS-001:c1301"
+    },
+    {
+      "r_top": {
+        "ref": "R1304",
+        "value": "115k",
+        "ohms": 115000.0
+      },
+      "r_bottom": {
+        "ref": "R1303",
+        "value": "3k24",
+        "ohms": 3240.0
+      },
+      "top_net": "__unnamed_12",
+      "mid_net": "__unnamed_8",
+      "bottom_net": "GND",
+      "ratio": 0.027402,
+      "mid_point_connections": [
+        {
+          "component": "U1301",
+          "pin_number": "9",
+          "pin_name": "FB",
+          "pin_type": "input"
+        },
+        {
+          "component": "R1305",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "is_feedback": true,
+      "detector": "detect_voltage_dividers",
+      "rule_id": "VD-DET",
+      "category": "voltage_dividers",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Voltage divider R1304/R1303",
+      "description": "Resistive voltage divider detected",
+      "components": [
+        "R1303",
+        "R1304"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Voltage Dividers",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "vd_two_resistor",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "R1304",
+          "R1303"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "purpose": "feedback",
+      "detection_id": "feedback_networks:691309bce5c8",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:feedback_networks-691309bce5c8"
+    },
+    {
+      "r_top": {
+        "ref": "R1305",
+        "value": "10k",
+        "ohms": 10000.0
+      },
+      "r_bottom": {
+        "ref": "R1303",
+        "value": "3k24",
+        "ohms": 3240.0
+      },
+      "top_net": "__unnamed_13",
+      "mid_net": "__unnamed_8",
+      "bottom_net": "GND",
+      "ratio": 0.244713,
+      "mid_point_connections": [
+        {
+          "component": "U1301",
+          "pin_number": "9",
+          "pin_name": "FB",
+          "pin_type": "input"
+        },
+        {
+          "component": "R1304",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "is_feedback": true,
+      "detector": "detect_voltage_dividers",
+      "rule_id": "VD-DET",
+      "category": "voltage_dividers",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "summary": "Voltage divider R1305/R1303",
+      "description": "Resistive voltage divider detected",
+      "components": [
+        "R1303",
+        "R1305"
+      ],
+      "nets": [],
+      "pins": [],
+      "recommendation": "",
+      "report_context": {
+        "section": "Voltage Dividers",
+        "impact": "",
+        "standard_ref": ""
+      },
+      "provenance": {
+        "evidence": "vd_two_resistor",
+        "confidence": "deterministic",
+        "claimed_components": [
+          "R1305",
+          "R1303"
+        ],
+        "excluded_by": [],
+        "suppressed_candidates": []
+      },
+      "purpose": "feedback",
+      "detection_id": "feedback_networks:7a22dd484edd",
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:feedback_networks-7a22dd484edd"
+    },
+    {
+      "detector": "audit_lifecycle_skipped",
+      "rule_id": "LC-007",
+      "severity": "info",
+      "confidence": "deterministic",
+      "evidence_source": "topology",
+      "category": "lifecycle",
+      "summary": "Lifecycle audit not run \u2014 --lifecycle flag not passed",
+      "description": "Component lifecycle / obsolescence audit was not run this session. Reason: --lifecycle flag not passed (run with --lifecycle to query DigiKey / Mouser / LCSC / element14 for obsolescence + operating-temp coverage; requires network + API keys). The review cannot report active / NRND / EOL / obsolete status, last-time-buy windows, or operating-temperature coverage for any BOM part. Treat the lifecycle section of the report as 'not performed'.",
+      "components": [],
+      "nets": [],
+      "pins": [],
+      "recommendation": "Run with --lifecycle (requires DIGIKEY_CLIENT_ID / MOUSER_SEARCH_API_KEY / ELEMENT14_API_KEY env vars; LCSC needs no auth) to populate this section. If intentionally skipped, note it explicitly in the report's 'Not Performed' section.",
+      "report_context": {
+        "section": "Component Lifecycle",
+        "impact": "No obsolescence / temperature-grade evidence available.",
+        "standard_ref": ""
+      },
+      "stages": [
+        "schematic"
+      ],
+      "finding_id": "schematic:LC-007:8ddf539c9727"
+    }
+  ],
+  "assessments": [],
+  "bom": [
+    {
+      "value": "1uF 10V",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "mpn": "",
+      "manufacturer": "Murata Electronics",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155Z71A105KE01-01.pdf",
+      "description": "1uF 10V X7R 10% Ceramic Capacitor 0402",
+      "references": [
+        "C1301",
+        "C1303"
+      ],
+      "quantity": 2,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "4u7F 10V",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "mpn": "",
+      "manufacturer": "Murata Electronics",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155D71A475ME15-01A.pdf",
+      "description": "4.7uF 10V X7T 20% Ceramic Capacitor 0402",
+      "references": [
+        "C1302"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "capacitor"
+    },
+    {
+      "value": "10k",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-AC_51_RoHS_L_10.pdf",
+      "description": "10k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "references": [
+        "R1301",
+        "R1305"
+      ],
+      "quantity": 2,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "220k",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.yageo.com/upload/media/product/products/datasheet/rchip/PYu-RC_Group_51_RoHS_L_12.pdf",
+      "description": "220k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "references": [
+        "R1302"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "3k24",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.yageo.com/upload/media/product/products/datasheet/rchip/PYu-RC_Group_51_RoHS_L_12.pdf",
+      "description": "3.24k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "references": [
+        "R1303"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "115k",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.yageo.com/upload/media/product/products/datasheet/rchip/PYu-RC_Group_51_RoHS_L_12.pdf",
+      "description": "115k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "references": [
+        "R1304"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "resistor"
+    },
+    {
+      "value": "LM5158QRTERQ1",
+      "footprint": "BR_IC:WQFN-16-1EP_3x3mm_P0.5mm_EP1.68x1.68mm",
+      "mpn": "",
+      "manufacturer": "Texas Instruments",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/lm5158-q1.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1751665191243",
+      "description": "Boost Converter, 1.5V - 60V Input, 3A, 1.5V - 83V Output, 100kHz - 2.2MHz, WQFN-16 (3x3)",
+      "references": [
+        "U1301"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "ic"
+    },
+    {
+      "value": "DAC53401DSGR",
+      "footprint": "BR_SON:WSON-8-1EP_2x2mm_P0.5mm_EP0.9x1.6mm",
+      "mpn": "",
+      "manufacturer": "Texas Instruments",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "C1855756",
+      "element14": "",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/dac53401.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1751654153747&ref_url=https%253A%252F%252Fmatomo.sctykj.boats%252F",
+      "description": "10 Bit Digital to Analog Converter, I2C Interface, 8-WSON (2x2)",
+      "references": [
+        "U1302"
+      ],
+      "quantity": 1,
+      "dnp": false,
+      "type": "ic"
+    }
+  ],
+  "components": [
+    {
+      "reference": "R1301",
+      "value": "10k",
+      "lib_id": "BR_Resistors_0402:R_0402_10k",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-AC_51_RoHS_L_10.pdf",
+      "description": "10k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 78.74,
+      "y": 92.71,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "0009e9da-e6d4-4e15-b893-fc3f1f2a856e",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "2360f34f-0b57-4fd4-96c6-6054485f9c9f",
+        "1": "848ed1d3-5e34-43af-9667-7bb03f6aecf3"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 10000.0,
+      "pin_nets": {
+        "1": "EN",
+        "2": "GND"
+      }
+    },
+    {
+      "reference": "R1302",
+      "value": "220k",
+      "lib_id": "BR_Resistors_0402:R_0402_220k",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://www.yageo.com/upload/media/product/products/datasheet/rchip/PYu-RC_Group_51_RoHS_L_12.pdf",
+      "description": "220k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 105.41,
+      "y": 92.71,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "3e15bc9a-107f-4a2a-bba9-0e3d4b19a7fa",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "2": "4a01e3e0-2aa4-4472-848e-80cfc822d2c6",
+        "1": "3ffd5bf2-6322-492a-b9f5-a91e3f16641c"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 220000.0,
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_0"
+      }
+    },
+    {
+      "reference": "C1302",
+      "value": "4u7F 10V",
+      "lib_id": "BR_Capacitors_0402:C_0402_4u7F_10V_X7T_20%",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155D71A475ME15-01A.pdf",
+      "description": "4.7uF 10V X7T 20% Ceramic Capacitor 0402",
+      "mpn": "",
+      "manufacturer": "Murata Electronics",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 257.81,
+      "y": 88.9,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "51188692-8b50-4df4-abf4-50f54c13038e",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "18fc547b-cac1-402f-a741-3e454e90c5fb",
+        "2": "3a730785-7b97-486f-aef2-9096d8c32c09"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 4.7e-06,
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_1"
+      }
+    },
+    {
+      "reference": "U1301",
+      "value": "LM5158QRTERQ1",
+      "lib_id": "BR_IC_Regulators:LM5158QRTERQ1",
+      "lib_name": "",
+      "footprint": "BR_IC:WQFN-16-1EP_3x3mm_P0.5mm_EP1.68x1.68mm",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/lm5158-q1.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1751665191243",
+      "description": "Boost Converter, 1.5V - 60V Input, 3A, 1.5V - 83V Output, 100kHz - 2.2MHz, WQFN-16 (3x3)",
+      "mpn": "",
+      "manufacturer": "Texas Instruments",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 147.32,
+      "y": 82.55,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "6161915f-ed1e-4009-907b-76d5760aea91",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "ecebfbb1-0813-421f-ad88-0fd2744ab1d8",
+        "6": "b1ce56ca-ce93-460f-acee-40474dd69ea5",
+        "5": "8699f8fd-104e-45f4-935a-39a35af9de30",
+        "10": "96c69959-63a4-4431-bec5-75beb743b661",
+        "15": "d5fe16c3-ba9c-4df5-9026-6e64ba87d724",
+        "3": "c13de3c0-1a07-4f24-aca3-beae9a3d1a3f",
+        "9": "02255805-8887-46e8-b589-faed20c0f977",
+        "2": "9911e819-f21a-4b99-a561-4d0992202d7e",
+        "12": "964f50fe-57f2-47f9-821b-515b7493f3fb",
+        "13": "3d2bc00d-2a4e-4d6e-a200-18ce12bab3d7",
+        "14": "78ce8a6e-a186-42a0-b816-394db9659213",
+        "8": "f3eb2d09-455d-42bc-a44e-3f55a2beae7f",
+        "4": "2d92a41d-43dc-42c7-9e2e-94436692ee94",
+        "16": "4aef733c-d10d-4ccc-a756-465cb0305e75",
+        "17": "a8aa6129-8f3b-4271-9fcd-cbb64a9e1419",
+        "11": "7a9a012e-cc06-4278-aaf2-c63b677334d6",
+        "7": "18b46e43-d774-4597-b815-60bc5f612d40"
+      },
+      "type": "ic",
+      "keywords": "Buck DC Converter 5V",
+      "functional_class": "power_management",
+      "_sheet": 0,
+      "category": "ic",
+      "pin_nets": {
+        "6": "EN",
+        "7": "GND",
+        "5": "__unnamed_0",
+        "2": "__unnamed_2",
+        "10": "__unnamed_3",
+        "15": "__unnamed_4",
+        "3": "VIN",
+        "12": "__unnamed_5",
+        "1": "PGND",
+        "16": "PGND",
+        "17": "PGND",
+        "14": "__unnamed_6",
+        "13": "__unnamed_7",
+        "9": "__unnamed_8",
+        "8": "__unnamed_9",
+        "4": "__unnamed_10",
+        "11": "__unnamed_11"
+      }
+    },
+    {
+      "reference": "R1304",
+      "value": "115k",
+      "lib_id": "BR_Resistors_0402:R_0402_115k",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://www.yageo.com/upload/media/product/products/datasheet/rchip/PYu-RC_Group_51_RoHS_L_12.pdf",
+      "description": "115k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 199.39,
+      "y": 67.31,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "722ae5c6-cd3b-470a-ad66-a8198620e4cb",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "2cdcfb5e-f9bc-4ab3-b87a-3a1c739545ad",
+        "2": "1dc2a206-8c6e-4aaf-97ae-411ed4e712fd"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 115000.0,
+      "pin_nets": {
+        "2": "__unnamed_8",
+        "1": "__unnamed_12"
+      }
+    },
+    {
+      "reference": "R1305",
+      "value": "10k",
+      "lib_id": "BR_Resistors_0402:R_0402_10k",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-AC_51_RoHS_L_10.pdf",
+      "description": "10k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 217.17,
+      "y": 76.2,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "7828e1aa-ef1d-428e-8a1d-a2e3be81aa3b",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "f515af4c-4a25-486c-980e-7b48666181df",
+        "2": "7c172da0-b267-4f6b-a601-17c2e7314a5e"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 10000.0,
+      "pin_nets": {
+        "1": "__unnamed_8",
+        "2": "__unnamed_13"
+      }
+    },
+    {
+      "reference": "U1302",
+      "value": "DAC53401DSGR",
+      "lib_id": "BR_IC:DAC53401DSGR",
+      "lib_name": "",
+      "footprint": "BR_SON:WSON-8-1EP_2x2mm_P0.5mm_EP0.9x1.6mm",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/dac53401.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1751654153747&ref_url=https%253A%252F%252Fmatomo.sctykj.boats%252F",
+      "description": "10 Bit Digital to Analog Converter, I2C Interface, 8-WSON (2x2)",
+      "mpn": "",
+      "manufacturer": "Texas Instruments",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "C1855756",
+      "element14": "",
+      "x": 242.57,
+      "y": 78.74,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": true,
+      "unit": 1,
+      "uuid": "9e3f5903-b3ac-4282-b2fe-155f6aeb13bc",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "3": "bd37585d-ec47-422a-9de2-aea23e04b341",
+        "8": "b465a68c-1681-4d77-8f97-ec5cd4ef30d0",
+        "2": "759ae706-63e5-412f-950a-e46da872c1c4",
+        "5": "ec577dff-bddb-43d9-b949-f68bcb7ac6f3",
+        "7": "aa351b01-76cd-46e5-84b0-28b8b207649d",
+        "6": "1029076d-0e4b-4826-b8a3-0b777d829b94",
+        "9": "f795cb14-749e-4067-9aff-a56b2db92be1",
+        "1": "92ac9b69-393e-40cc-be60-b4727fc8f560",
+        "4": "e03cbccd-ca2e-422a-a8ce-73915ff8b99a"
+      },
+      "type": "ic",
+      "keywords": "",
+      "functional_class": "other_ic",
+      "_sheet": 0,
+      "category": "ic",
+      "pin_nets": {
+        "1": "GND",
+        "5": "GND",
+        "9": "GND",
+        "4": "__unnamed_1",
+        "8": "__unnamed_13",
+        "2": "I2C4.SCL",
+        "3": "I2C4.SDA",
+        "6": "3V3",
+        "7": "__unnamed_14"
+      }
+    },
+    {
+      "reference": "C1301",
+      "value": "1uF 10V",
+      "lib_id": "BR_Capacitors_0402:C_0402_1uF_10V_X7R_10%",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155Z71A105KE01-01.pdf",
+      "description": "1uF 10V X7R 10% Ceramic Capacitor 0402",
+      "mpn": "",
+      "manufacturer": "Murata Electronics",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 91.44,
+      "y": 92.71,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "aef8fe48-2220-4644-8dde-8e6d0be9451b",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "f1043725-6321-42a1-853e-754c7e9718bf",
+        "2": "c39cef2e-7505-4cb6-bfe4-961adf3a3570"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1e-06,
+      "pin_nets": {
+        "1": "__unnamed_2",
+        "2": "PGND"
+      }
+    },
+    {
+      "reference": "NT1301",
+      "value": "NetTie-2_0.18mm",
+      "lib_id": "BR_Virtual_Parts:NetTie-2_0.18mm_long",
+      "lib_name": "",
+      "footprint": "BR_Virtual_Parts:NetTie-2_SMD_Pad_0.18mm_wide_long",
+      "datasheet": "~",
+      "description": "Net Tie",
+      "mpn": "",
+      "manufacturer": "~",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 147.32,
+      "y": 130.81,
+      "angle": 90.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "c29f1288-9f26-49d9-bf9d-543b21bf9d23",
+      "in_bom": false,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "6b6c47c1-5668-4dc7-9a6a-b833c823556d",
+        "2": "affa202f-5bbb-4dab-9c70-949604b4ec56"
+      },
+      "type": "net_tie",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "net_tie",
+      "pin_nets": {
+        "2": "GND",
+        "1": "PGND"
+      }
+    },
+    {
+      "reference": "C1303",
+      "value": "1uF 10V",
+      "lib_id": "BR_Capacitors_0402:C_0402_1uF_10V_X7R_10%",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM155Z71A105KE01-01.pdf",
+      "description": "1uF 10V X7R 10% Ceramic Capacitor 0402",
+      "mpn": "",
+      "manufacturer": "Murata Electronics",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 119.38,
+      "y": 92.71,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "ccb16ca4-8ee6-413d-9ae6-6c1f5eb5fc28",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "b760988d-8df3-4511-8ac7-818c4263a70b",
+        "2": "0796c606-658c-4451-8327-92ea618decea"
+      },
+      "type": "capacitor",
+      "keywords": "capacitor cap",
+      "_sheet": 0,
+      "category": "capacitor",
+      "parsed_value": 1e-06,
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_3"
+      }
+    },
+    {
+      "reference": "R1303",
+      "value": "3k24",
+      "lib_id": "BR_Resistors_0402:R_0402_3k24",
+      "lib_name": "",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "datasheet": "https://www.yageo.com/upload/media/product/products/datasheet/rchip/PYu-RC_Group_51_RoHS_L_12.pdf",
+      "description": "3.24k 1% 100ppm 62.5mW Thick Film Resistor 0402",
+      "mpn": "",
+      "manufacturer": "YAGEO",
+      "digikey": "",
+      "mouser": "",
+      "lcsc": "",
+      "element14": "",
+      "x": 199.39,
+      "y": 85.09,
+      "angle": 0.0,
+      "mirror_x": false,
+      "mirror_y": false,
+      "unit": 1,
+      "uuid": "e82e3912-bc83-420e-9d75-b96b7b11ef13",
+      "in_bom": true,
+      "dnp": false,
+      "on_board": true,
+      "pin_uuids": {
+        "1": "4dcdea9b-82df-4f9b-8a7e-f61cdb901b44",
+        "2": "31fc6e18-5d61-4d10-8218-602d40706949"
+      },
+      "type": "resistor",
+      "keywords": "R res resistor",
+      "_sheet": 0,
+      "category": "resistor",
+      "parsed_value": 3240.0,
+      "pin_nets": {
+        "2": "GND",
+        "1": "__unnamed_8"
+      }
+    }
+  ],
+  "nets": {
+    "EN": {
+      "name": "EN",
+      "pins": [
+        {
+          "component": "R1301",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1301",
+          "pin_number": "6",
+          "pin_name": "EN/UVLO/SYNC",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "EN",
+          "type": "hierarchical_label"
+        }
+      ]
+    },
+    "GND": {
+      "name": "GND",
+      "pins": [
+        {
+          "component": "R1301",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR01303",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "R1302",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR01305",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C1302",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR01301",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR01302",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U1301",
+          "pin_number": "7",
+          "pin_name": "AGND",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U1302",
+          "pin_number": "1",
+          "pin_name": "A0",
+          "pin_type": "input"
+        },
+        {
+          "component": "U1302",
+          "pin_number": "5",
+          "pin_name": "AGND",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U1302",
+          "pin_number": "9",
+          "pin_name": "EP",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR01306",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR01304",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "NT1301",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR01307",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C1303",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "#PWR01309",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "#PWR01308",
+          "pin_number": "1",
+          "pin_name": "GNDREF",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "R1303",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 24,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": []
+    },
+    "__unnamed_0": {
+      "name": "__unnamed_0",
+      "pins": [
+        {
+          "component": "R1302",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1301",
+          "pin_number": "5",
+          "pin_name": "RT",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.RT"
+    },
+    "__unnamed_1": {
+      "name": "__unnamed_1",
+      "pins": [
+        {
+          "component": "C1302",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1302",
+          "pin_number": "4",
+          "pin_name": "CAP",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1302.CAP"
+    },
+    "__unnamed_2": {
+      "name": "__unnamed_2",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "2",
+          "pin_name": "VCC",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C1301",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.VCC"
+    },
+    "__unnamed_3": {
+      "name": "__unnamed_3",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "10",
+          "pin_name": "SS",
+          "pin_type": "input"
+        },
+        {
+          "component": "C1303",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.SS"
+    },
+    "__unnamed_4": {
+      "name": "__unnamed_4",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "15",
+          "pin_name": "NC",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "has_pwr_flag": false,
+      "labels": []
+    },
+    "VIN": {
+      "name": "VIN",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "3",
+          "pin_name": "BIAS",
+          "pin_type": "power_in"
+        }
+      ],
+      "point_count": 3,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "VIN",
+          "type": "hierarchical_label"
+        }
+      ]
+    },
+    "__unnamed_5": {
+      "name": "__unnamed_5",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "12",
+          "pin_name": "NC",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "has_pwr_flag": false,
+      "labels": []
+    },
+    "PGND": {
+      "name": "PGND",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "1",
+          "pin_name": "PGND",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U1301",
+          "pin_number": "16",
+          "pin_name": "PGND",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "U1301",
+          "pin_number": "17",
+          "pin_name": "EP",
+          "pin_type": "power_in"
+        },
+        {
+          "component": "C1301",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "NT1301",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 12,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "PGND",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_6": {
+      "name": "__unnamed_6",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "14",
+          "pin_name": "SW",
+          "pin_type": "output"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.SW"
+    },
+    "__unnamed_7": {
+      "name": "__unnamed_7",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "13",
+          "pin_name": "SW",
+          "pin_type": "output"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.SW"
+    },
+    "__unnamed_8": {
+      "name": "__unnamed_8",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "9",
+          "pin_name": "FB",
+          "pin_type": "input"
+        },
+        {
+          "component": "R1304",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R1305",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "R1303",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.FB"
+    },
+    "__unnamed_9": {
+      "name": "__unnamed_9",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "8",
+          "pin_name": "COMP",
+          "pin_type": "output"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.COMP"
+    },
+    "__unnamed_10": {
+      "name": "__unnamed_10",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "4",
+          "pin_name": "PGOOD",
+          "pin_type": "output"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.PGOOD"
+    },
+    "__unnamed_11": {
+      "name": "__unnamed_11",
+      "pins": [
+        {
+          "component": "U1301",
+          "pin_number": "11",
+          "pin_name": "MODE",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1301.MODE"
+    },
+    "__unnamed_12": {
+      "name": "__unnamed_12",
+      "pins": [
+        {
+          "component": "R1304",
+          "pin_number": "1",
+          "pin_name": "~",
+          "pin_type": "passive"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": []
+    },
+    "__unnamed_13": {
+      "name": "__unnamed_13",
+      "pins": [
+        {
+          "component": "R1305",
+          "pin_number": "2",
+          "pin_name": "~",
+          "pin_type": "passive"
+        },
+        {
+          "component": "U1302",
+          "pin_number": "8",
+          "pin_name": "OUT",
+          "pin_type": "output"
+        }
+      ],
+      "point_count": 2,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1302.OUT"
+    },
+    "I2C4.SCL": {
+      "name": "I2C4.SCL",
+      "pins": [
+        {
+          "component": "U1302",
+          "pin_number": "2",
+          "pin_name": "SCL",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "I2C4.SCL",
+          "type": "label"
+        }
+      ]
+    },
+    "I2C4.SDA": {
+      "name": "I2C4.SDA",
+      "pins": [
+        {
+          "component": "U1302",
+          "pin_number": "3",
+          "pin_name": "SDA",
+          "pin_type": "bidirectional"
+        }
+      ],
+      "point_count": 4,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "I2C4.SDA",
+          "type": "label"
+        }
+      ]
+    },
+    "3V3": {
+      "name": "3V3",
+      "pins": [
+        {
+          "component": "U1302",
+          "pin_number": "6",
+          "pin_name": "VDD",
+          "pin_type": "power_in"
+        }
+      ],
+      "point_count": 5,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "3V3",
+          "type": "hierarchical_label"
+        },
+        {
+          "name": "3V3",
+          "type": "label"
+        }
+      ]
+    },
+    "__unnamed_14": {
+      "name": "__unnamed_14",
+      "pins": [
+        {
+          "component": "U1302",
+          "pin_number": "7",
+          "pin_name": "FB",
+          "pin_type": "input"
+        }
+      ],
+      "point_count": 1,
+      "no_connect": true,
+      "has_pwr_flag": false,
+      "labels": [],
+      "display_name": "U1302.FB"
+    },
+    "VOUT": {
+      "name": "VOUT",
+      "pins": [],
+      "point_count": 1,
+      "no_connect": false,
+      "has_pwr_flag": false,
+      "labels": [
+        {
+          "name": "VOUT",
+          "type": "hierarchical_label"
+        }
+      ]
+    }
+  },
+  "subcircuits": [
+    {
+      "center_ic": "U1301",
+      "ic_value": "LM5158QRTERQ1",
+      "ic_mpn": "",
+      "ic_lib_id": "BR_IC_Regulators:LM5158QRTERQ1",
+      "neighbor_components": [
+        {
+          "ref": "C1301",
+          "value": "1uF 10V",
+          "type": "capacitor"
+        },
+        {
+          "ref": "C1303",
+          "value": "1uF 10V",
+          "type": "capacitor"
+        },
+        {
+          "ref": "R1301",
+          "value": "10k",
+          "type": "resistor"
+        },
+        {
+          "ref": "R1302",
+          "value": "220k",
+          "type": "resistor"
+        },
+        {
+          "ref": "R1303",
+          "value": "3k24",
+          "type": "resistor"
+        },
+        {
+          "ref": "R1304",
+          "value": "115k",
+          "type": "resistor"
+        },
+        {
+          "ref": "R1305",
+          "value": "10k",
+          "type": "resistor"
+        }
+      ],
+      "description": "Boost Converter, 1.5V - 60V Input, 3A, 1.5V - 83V Output, 100kHz - 2.2MHz, WQFN-16 (3x3)"
+    },
+    {
+      "center_ic": "U1302",
+      "ic_value": "DAC53401DSGR",
+      "ic_mpn": "",
+      "ic_lib_id": "BR_IC:DAC53401DSGR",
+      "neighbor_components": [
+        {
+          "ref": "C1302",
+          "value": "4u7F 10V",
+          "type": "capacitor"
+        },
+        {
+          "ref": "R1305",
+          "value": "10k",
+          "type": "resistor"
+        }
+      ],
+      "description": "10 Bit Digital to Analog Converter, I2C Interface, 8-WSON (2x2)"
+    }
+  ],
+  "ic_pin_analysis": [
+    {
+      "reference": "U1301",
+      "value": "LM5158QRTERQ1",
+      "type": "ic",
+      "lib_id": "BR_IC_Regulators:LM5158QRTERQ1",
+      "mpn": "",
+      "description": "Boost Converter, 1.5V - 60V Input, 3A, 1.5V - 83V Output, 100kHz - 2.2MHz, WQFN-16 (3x3)",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/lm5158-q1.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1751665191243",
+      "function": "switching regulator",
+      "total_pins": 17,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "PGND",
+          "pin_type": "power_in",
+          "net": "PGND",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "VCC",
+          "pin_type": "power_in",
+          "net": "__unnamed_2",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "BIAS",
+          "pin_type": "power_in",
+          "net": "VIN",
+          "connected_to": [],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "PGOOD",
+          "pin_type": "output",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "RT",
+          "pin_type": "input",
+          "net": "__unnamed_0",
+          "connected_to": [
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "EN/UVLO/SYNC",
+          "pin_type": "input",
+          "net": "EN",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "AGND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "type": "ic",
+              "pin": "1",
+              "pin_name": "A0"
+            },
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "type": "ic",
+              "pin": "9",
+              "pin_name": "EP"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "COMP",
+          "pin_type": "output",
+          "net": "__unnamed_9",
+          "connected_to": []
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "FB",
+          "pin_type": "input",
+          "net": "__unnamed_8",
+          "connected_to": [
+            {
+              "ref": "R1304",
+              "value": "115k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1305",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1304",
+              "value": "115k",
+              "direction": "series",
+              "to_net": "__unnamed_12"
+            },
+            {
+              "ref": "R1305",
+              "value": "10k",
+              "direction": "series",
+              "to_net": "__unnamed_13"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "10",
+          "pin_name": "SS",
+          "pin_type": "input",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "11",
+          "pin_name": "MODE",
+          "pin_type": "input",
+          "net": "__unnamed_11",
+          "connected_to": []
+        },
+        {
+          "pin_number": "12",
+          "pin_name": "NC",
+          "pin_type": "passive",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "13",
+          "pin_name": "SW",
+          "pin_type": "output",
+          "net": "__unnamed_7",
+          "connected_to": []
+        },
+        {
+          "pin_number": "14",
+          "pin_name": "SW",
+          "pin_type": "output",
+          "net": "__unnamed_6",
+          "connected_to": []
+        },
+        {
+          "pin_number": "15",
+          "pin_name": "NC",
+          "pin_type": "passive",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "16",
+          "pin_name": "PGND",
+          "pin_type": "power_in",
+          "net": "PGND",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "17",
+          "pin_name": "EP",
+          "pin_type": "power_in",
+          "net": "PGND",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "2",
+          "pin_name": "VCC",
+          "pin_type": "power_in",
+          "net": "__unnamed_2",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V"
+            }
+          ]
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "BIAS",
+          "pin_type": "power_in",
+          "net": "VIN",
+          "connected_to": [],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        },
+        {
+          "pin_number": "1",
+          "pin_name": "PGND",
+          "pin_type": "power_in",
+          "net": "PGND",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "16",
+          "pin_name": "PGND",
+          "pin_type": "power_in",
+          "net": "PGND",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "17",
+          "pin_name": "EP",
+          "pin_type": "power_in",
+          "net": "PGND",
+          "connected_to": [
+            {
+              "ref": "C1301",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "AGND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "type": "ic",
+              "pin": "1",
+              "pin_name": "A0"
+            },
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "type": "ic",
+              "pin": "5",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "type": "ic",
+              "pin": "9",
+              "pin_name": "EP"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "6",
+          "pin_name": "EN/UVLO/SYNC",
+          "pin_type": "input",
+          "net": "EN",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "RT",
+          "pin_type": "input",
+          "net": "__unnamed_0",
+          "connected_to": [
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "10",
+          "pin_name": "SS",
+          "pin_type": "input",
+          "net": "__unnamed_3",
+          "connected_to": [
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "15",
+          "pin_name": "NC",
+          "pin_type": "passive",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "12",
+          "pin_name": "NC",
+          "pin_type": "passive",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "14",
+          "pin_name": "SW",
+          "pin_type": "output",
+          "net": "__unnamed_6",
+          "connected_to": []
+        },
+        {
+          "pin_number": "13",
+          "pin_name": "SW",
+          "pin_type": "output",
+          "net": "__unnamed_7",
+          "connected_to": []
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "FB",
+          "pin_type": "input",
+          "net": "__unnamed_8",
+          "connected_to": [
+            {
+              "ref": "R1304",
+              "value": "115k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1305",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ],
+          "resistors": [
+            {
+              "ref": "R1304",
+              "value": "115k",
+              "direction": "series",
+              "to_net": "__unnamed_12"
+            },
+            {
+              "ref": "R1305",
+              "value": "10k",
+              "direction": "series",
+              "to_net": "__unnamed_13"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "direction": "pull-down",
+              "to_net": "GND"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "COMP",
+          "pin_type": "output",
+          "net": "__unnamed_9",
+          "connected_to": []
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "PGOOD",
+          "pin_type": "output",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "11",
+          "pin_name": "MODE",
+          "pin_type": "input",
+          "net": "__unnamed_11",
+          "connected_to": []
+        }
+      ],
+      "decoupling_caps_by_rail": {
+        "__unnamed_2": [
+          {
+            "ref": "C1301",
+            "value": "1uF 10V"
+          }
+        ]
+      }
+    },
+    {
+      "reference": "U1302",
+      "value": "DAC53401DSGR",
+      "type": "ic",
+      "lib_id": "BR_IC:DAC53401DSGR",
+      "mpn": "",
+      "description": "10 Bit Digital to Analog Converter, I2C Interface, 8-WSON (2x2)",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/dac53401.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1751654153747&ref_url=https%253A%252F%252Fmatomo.sctykj.boats%252F",
+      "function": "I2C interface",
+      "total_pins": 9,
+      "unconnected_pins": 0,
+      "pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "A0",
+          "pin_type": "input",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1301",
+              "value": "LM5158QRTERQ1",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "2",
+          "pin_name": "SCL",
+          "pin_type": "input",
+          "net": "I2C4.SCL",
+          "connected_to": []
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "SDA",
+          "pin_type": "bidirectional",
+          "net": "I2C4.SDA",
+          "connected_to": []
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "CAP",
+          "pin_type": "input",
+          "net": "__unnamed_1",
+          "connected_to": [
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "AGND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1301",
+              "value": "LM5158QRTERQ1",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "VDD",
+          "pin_type": "power_in",
+          "net": "3V3",
+          "connected_to": [],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "FB",
+          "pin_type": "input",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "OUT",
+          "pin_type": "output",
+          "net": "__unnamed_13",
+          "connected_to": [
+            {
+              "ref": "R1305",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "EP",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1301",
+              "value": "LM5158QRTERQ1",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "power_pins": [
+        {
+          "pin_number": "1",
+          "pin_name": "A0",
+          "pin_type": "input",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1301",
+              "value": "LM5158QRTERQ1",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "5",
+          "pin_name": "AGND",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1301",
+              "value": "LM5158QRTERQ1",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        },
+        {
+          "pin_number": "6",
+          "pin_name": "VDD",
+          "pin_type": "power_in",
+          "net": "3V3",
+          "connected_to": [],
+          "has_decoupling_cap": false,
+          "decoupling_caps": []
+        },
+        {
+          "pin_number": "9",
+          "pin_name": "EP",
+          "pin_type": "power_in",
+          "net": "GND",
+          "connected_to": [
+            {
+              "ref": "R1301",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1302",
+              "value": "220k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "U1301",
+              "value": "LM5158QRTERQ1",
+              "type": "ic",
+              "pin": "7",
+              "pin_name": "AGND"
+            },
+            {
+              "ref": "NT1301",
+              "value": "NetTie-2_0.18mm",
+              "type": "net_tie",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "C1303",
+              "value": "1uF 10V",
+              "type": "capacitor",
+              "pin": "2",
+              "pin_name": "~"
+            },
+            {
+              "ref": "R1303",
+              "value": "3k24",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ],
+          "has_decoupling_cap": true,
+          "decoupling_caps": [],
+          "note": "Ground net \u2014 decoupling caps listed on VCC/VDD pins"
+        }
+      ],
+      "signal_pins": [
+        {
+          "pin_number": "2",
+          "pin_name": "SCL",
+          "pin_type": "input",
+          "net": "I2C4.SCL",
+          "connected_to": []
+        },
+        {
+          "pin_number": "3",
+          "pin_name": "SDA",
+          "pin_type": "bidirectional",
+          "net": "I2C4.SDA",
+          "connected_to": []
+        },
+        {
+          "pin_number": "4",
+          "pin_name": "CAP",
+          "pin_type": "input",
+          "net": "__unnamed_1",
+          "connected_to": [
+            {
+              "ref": "C1302",
+              "value": "4u7F 10V",
+              "type": "capacitor",
+              "pin": "1",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "8",
+          "pin_name": "OUT",
+          "pin_type": "output",
+          "net": "__unnamed_13",
+          "connected_to": [
+            {
+              "ref": "R1305",
+              "value": "10k",
+              "type": "resistor",
+              "pin": "2",
+              "pin_name": "~"
+            }
+          ]
+        },
+        {
+          "pin_number": "7",
+          "pin_name": "FB",
+          "pin_type": "input",
+          "net": "NO_CONNECT",
+          "connected_to": []
+        }
+      ],
+      "decoupling_caps_by_rail": {}
+    }
+  ],
+  "transistor_pin_analysis": [],
+  "design_analysis": {
+    "net_classification": {
+      "EN": "control",
+      "GND": "ground",
+      "__unnamed_0": "signal",
+      "__unnamed_1": "signal",
+      "__unnamed_2": "power_internal",
+      "__unnamed_3": "signal",
+      "__unnamed_4": "signal",
+      "VIN": "power",
+      "__unnamed_5": "signal",
+      "PGND": "ground",
+      "__unnamed_6": "signal",
+      "__unnamed_7": "signal",
+      "__unnamed_8": "signal",
+      "__unnamed_9": "signal",
+      "__unnamed_10": "signal",
+      "__unnamed_11": "signal",
+      "__unnamed_12": "signal",
+      "__unnamed_13": "signal",
+      "I2C4.SCL": "clock",
+      "I2C4.SDA": "data",
+      "3V3": "power",
+      "__unnamed_14": "signal",
+      "VOUT": "power"
+    },
+    "power_domains": {
+      "ic_power_rails": {
+        "U1301": {
+          "value": "LM5158QRTERQ1",
+          "power_rails": [
+            "VIN",
+            "__unnamed_2"
+          ],
+          "io_rails": null
+        },
+        "U1302": {
+          "value": "DAC53401DSGR",
+          "power_rails": [
+            "3V3"
+          ],
+          "io_rails": null
+        }
+      },
+      "domain_groups": {
+        "VIN": [
+          "U1301"
+        ],
+        "__unnamed_2": [
+          "U1301"
+        ],
+        "3V3": [
+          "U1302"
+        ]
+      }
+    },
+    "cross_domain_signals": [],
+    "bus_analysis": {
+      "i2c": [
+        {
+          "net": "I2C4.SCL",
+          "line": "SCL",
+          "devices": [
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "lib_id": "BR_IC:DAC53401DSGR"
+            }
+          ],
+          "load_count": 1,
+          "estimated_bus_capacitance_pF": 5,
+          "pull_ups": [],
+          "has_pull_up": false,
+          "speed_mode": null,
+          "voltage_level_V": null,
+          "pull_up_ohms": null,
+          "controller": null
+        },
+        {
+          "net": "I2C4.SDA",
+          "line": "SDA",
+          "devices": [
+            {
+              "ref": "U1302",
+              "value": "DAC53401DSGR",
+              "lib_id": "BR_IC:DAC53401DSGR"
+            }
+          ],
+          "load_count": 1,
+          "estimated_bus_capacitance_pF": 5,
+          "pull_ups": [],
+          "has_pull_up": false,
+          "speed_mode": null,
+          "voltage_level_V": null,
+          "pull_up_ohms": null,
+          "controller": null
+        }
+      ],
+      "spi": [],
+      "uart": [],
+      "can": []
+    },
+    "differential_pairs": [],
+    "erc_warnings": [
+      {
+        "type": "no_driver",
+        "net": "EN",
+        "message": "Net 'EN' has input pins but no output driver",
+        "pins": [
+          {
+            "component": "R1301",
+            "pin_number": "1",
+            "pin_name": "~",
+            "pin_type": "passive"
+          },
+          {
+            "component": "U1301",
+            "pin_number": "6",
+            "pin_name": "EN/UVLO/SYNC",
+            "pin_type": "input"
+          }
+        ]
+      }
+    ],
+    "passive_warnings": []
+  },
+  "connectivity_issues": {
+    "unconnected_pins": [],
+    "single_pin_nets": [
+      {
+        "net": "VIN",
+        "pin": {
+          "component": "U1301",
+          "pin_number": "3",
+          "pin_name": "BIAS",
+          "pin_type": "power_in"
+        }
+      },
+      {
+        "net": "I2C4.SCL",
+        "pin": {
+          "component": "U1302",
+          "pin_number": "2",
+          "pin_name": "SCL",
+          "pin_type": "input"
+        }
+      },
+      {
+        "net": "I2C4.SDA",
+        "pin": {
+          "component": "U1302",
+          "pin_number": "3",
+          "pin_name": "SDA",
+          "pin_type": "bidirectional"
+        }
+      },
+      {
+        "net": "3V3",
+        "pin": {
+          "component": "U1302",
+          "pin_number": "6",
+          "pin_name": "VDD",
+          "pin_type": "power_in"
+        }
+      }
+    ],
+    "single_pin_net_findings": [
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: VIN only connects to U1301.3 (BIAS) (power_in)",
+        "description": "Net 'VIN' has exactly one pin: U1301.3 (BIAS), pin_type='power_in'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1301"
+        ],
+        "nets": [
+          "VIN"
+        ],
+        "pins": [
+          "U1301.3"
+        ],
+        "net_display_name": "VIN",
+        "pin_type": "power_in",
+        "pin_name": "BIAS",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1301"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: U1301.SW only connects to U1301.14 (SW) (output)",
+        "description": "Net '__unnamed_6' has exactly one pin: U1301.14 (SW), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1301"
+        ],
+        "nets": [
+          "__unnamed_6"
+        ],
+        "pins": [
+          "U1301.14"
+        ],
+        "net_display_name": "U1301.SW",
+        "pin_type": "output",
+        "pin_name": "SW",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1301#2"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: U1301.SW only connects to U1301.13 (SW) (output)",
+        "description": "Net '__unnamed_7' has exactly one pin: U1301.13 (SW), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1301"
+        ],
+        "nets": [
+          "__unnamed_7"
+        ],
+        "pins": [
+          "U1301.13"
+        ],
+        "net_display_name": "U1301.SW",
+        "pin_type": "output",
+        "pin_name": "SW",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1301#3"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: U1301.COMP only connects to U1301.8 (COMP) (output)",
+        "description": "Net '__unnamed_9' has exactly one pin: U1301.8 (COMP), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1301"
+        ],
+        "nets": [
+          "__unnamed_9"
+        ],
+        "pins": [
+          "U1301.8"
+        ],
+        "net_display_name": "U1301.COMP",
+        "pin_type": "output",
+        "pin_name": "COMP",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1301#4"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: U1301.MODE only connects to U1301.11 (MODE) (input)",
+        "description": "Net '__unnamed_11' has exactly one pin: U1301.11 (MODE), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1301"
+        ],
+        "nets": [
+          "__unnamed_11"
+        ],
+        "pins": [
+          "U1301.11"
+        ],
+        "net_display_name": "U1301.MODE",
+        "pin_type": "input",
+        "pin_name": "MODE",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1301#1"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "info",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: R1304.~ only connects to R1304.1 (~) (passive)",
+        "description": "Net '__unnamed_12' has exactly one pin: R1304.1 (~), pin_type='passive'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "R1304"
+        ],
+        "nets": [
+          "__unnamed_12"
+        ],
+        "pins": [
+          "R1304.1"
+        ],
+        "net_display_name": "R1304.~",
+        "pin_type": "passive",
+        "pin_name": "~",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Passive or unclassified pin lonely on its own net.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:r1304"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: I2C4.SCL only connects to U1302.2 (SCL) (input)",
+        "description": "Net 'I2C4.SCL' has exactly one pin: U1302.2 (SCL), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1302"
+        ],
+        "nets": [
+          "I2C4.SCL"
+        ],
+        "pins": [
+          "U1302.2"
+        ],
+        "net_display_name": "I2C4.SCL",
+        "pin_type": "input",
+        "pin_name": "SCL",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1302#1"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: I2C4.SDA only connects to U1302.3 (SDA) (bidirectional)",
+        "description": "Net 'I2C4.SDA' has exactly one pin: U1302.3 (SDA), pin_type='bidirectional'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1302"
+        ],
+        "nets": [
+          "I2C4.SDA"
+        ],
+        "pins": [
+          "U1302.3"
+        ],
+        "net_display_name": "I2C4.SDA",
+        "pin_type": "bidirectional",
+        "pin_name": "SDA",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1302#2"
+      },
+      {
+        "detector": "analyze_connectivity",
+        "rule_id": "NT-001",
+        "severity": "warning",
+        "confidence": "deterministic",
+        "evidence_source": "topology",
+        "category": "connectivity",
+        "summary": "Single-pin net: 3V3 only connects to U1302.6 (VDD) (power_in)",
+        "description": "Net '3V3' has exactly one pin: U1302.6 (VDD), pin_type='power_in'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+        "components": [
+          "U1302"
+        ],
+        "nets": [
+          "3V3"
+        ],
+        "pins": [
+          "U1302.6"
+        ],
+        "net_display_name": "3V3",
+        "pin_type": "power_in",
+        "pin_name": "VDD",
+        "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+        "report_context": {
+          "section": "Connectivity",
+          "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+          "standard_ref": ""
+        },
+        "stages": [
+          "schematic"
+        ],
+        "finding_id": "schematic:NT-001:u1302"
+      }
+    ],
+    "multi_driver_nets": [],
+    "power_net_summary": {
+      "GND": {
+        "pin_count": 10,
+        "components": [
+          "C1302",
+          "C1303",
+          "NT1301",
+          "R1301",
+          "R1302",
+          "R1303",
+          "U1301",
+          "U1302"
+        ]
+      },
+      "VIN": {
+        "pin_count": 1,
+        "components": [
+          "U1301"
+        ]
+      },
+      "PGND": {
+        "pin_count": 5,
+        "components": [
+          "C1301",
+          "NT1301",
+          "U1301"
+        ]
+      },
+      "3V3": {
+        "pin_count": 1,
+        "components": [
+          "U1302"
+        ]
+      }
+    }
+  },
+  "labels": [
+    {
+      "name": "I2C4.SDA",
+      "type": "label",
+      "x": 270.51,
+      "y": 80.01,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "PGND",
+      "type": "label",
+      "x": 147.32,
+      "y": 110.49,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "I2C4.SCL",
+      "type": "label",
+      "x": 62.23,
+      "y": 34.29,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "PGND",
+      "type": "label",
+      "x": 137.16,
+      "y": 137.16,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "I2C4.SDA",
+      "type": "label",
+      "x": 62.23,
+      "y": 36.83,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "PGND",
+      "type": "label",
+      "x": 91.44,
+      "y": 102.87,
+      "angle": 0.0,
+      "_sheet": 0
+    },
+    {
+      "name": "3V3",
+      "type": "label",
+      "x": 256.54,
+      "y": 62.23,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "3V3",
+      "type": "label",
+      "x": 44.45,
+      "y": 24.13,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "I2C4.SCL",
+      "type": "label",
+      "x": 270.51,
+      "y": 77.47,
+      "angle": 180.0,
+      "_sheet": 0
+    },
+    {
+      "name": "VIN",
+      "type": "hierarchical_label",
+      "x": 73.66,
+      "y": 60.96,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "EN",
+      "type": "hierarchical_label",
+      "x": 73.66,
+      "y": 76.2,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "I2C4{I2C}",
+      "type": "hierarchical_label",
+      "x": 30.48,
+      "y": 31.75,
+      "angle": 180.0,
+      "shape": "bidirectional",
+      "_sheet": 0
+    },
+    {
+      "name": "3V3",
+      "type": "hierarchical_label",
+      "x": 30.48,
+      "y": 24.13,
+      "angle": 180.0,
+      "shape": "input",
+      "_sheet": 0
+    },
+    {
+      "name": "VOUT",
+      "type": "hierarchical_label",
+      "x": 220.98,
+      "y": 58.42,
+      "angle": 0.0,
+      "shape": "output",
+      "_sheet": 0
+    }
+  ],
+  "no_connects": [
+    {
+      "x": 231.14,
+      "y": 81.28,
+      "_sheet": 0
+    },
+    {
+      "x": 137.16,
+      "y": 100.33,
+      "_sheet": 0
+    },
+    {
+      "x": 139.7,
+      "y": 100.33,
+      "_sheet": 0
+    },
+    {
+      "x": 167.64,
+      "y": 83.82,
+      "_sheet": 0
+    }
+  ],
+  "power_symbols": [
+    {
+      "net_name": "GND",
+      "x": 78.74,
+      "y": 100.33,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 242.57,
+      "y": 95.25,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 157.48,
+      "y": 135.89,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 154.94,
+      "y": 104.14,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 257.81,
+      "y": 95.25,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 105.41,
+      "y": 100.33,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 257.81,
+      "y": 73.66,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 119.38,
+      "y": 100.33,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    },
+    {
+      "net_name": "GND",
+      "x": 199.39,
+      "y": 95.25,
+      "lib_id": "BR_Virtual_Parts:GND",
+      "_sheet": 0,
+      "_power_scope": "global"
+    }
+  ],
+  "annotation_issues": {},
+  "label_shape_warnings": [
+    {
+      "type": "undriven_input_label",
+      "net": "VIN",
+      "message": "Net 'VIN' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "EN",
+      "message": "Net 'EN' has input-shaped label(s) but no driver pins on the net"
+    },
+    {
+      "type": "undriven_input_label",
+      "net": "3V3",
+      "message": "Net '3V3' has input-shaped label(s) but no driver pins on the net"
+    }
+  ],
+  "pwr_flag_warnings": [
+    {
+      "net": "GND",
+      "message": "Power rail 'GND' has power_in pins but no power_out or PWR_FLAG \u2014 ERC will flag this",
+      "pin_types": [
+        "input",
+        "passive",
+        "power_in"
+      ]
+    }
+  ],
+  "footprint_filter_warnings": [
+    {
+      "component": "R1301",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "filters": [
+        "R_*"
+      ],
+      "custom_library": true,
+      "message": "R1301: footprint 'C_0402_1005Metric-minimized' doesn't match any filter pattern ['R_*']"
+    },
+    {
+      "component": "R1302",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "filters": [
+        "R_*"
+      ],
+      "custom_library": true,
+      "message": "R1302: footprint 'C_0402_1005Metric-minimized' doesn't match any filter pattern ['R_*']"
+    },
+    {
+      "component": "R1304",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "filters": [
+        "R_*"
+      ],
+      "custom_library": true,
+      "message": "R1304: footprint 'C_0402_1005Metric-minimized' doesn't match any filter pattern ['R_*']"
+    },
+    {
+      "component": "R1305",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "filters": [
+        "R_*"
+      ],
+      "custom_library": true,
+      "message": "R1305: footprint 'C_0402_1005Metric-minimized' doesn't match any filter pattern ['R_*']"
+    },
+    {
+      "component": "NT1301",
+      "footprint": "BR_Virtual_Parts:NetTie-2_SMD_Pad_0.18mm_wide_long",
+      "filters": [
+        "R_*"
+      ],
+      "custom_library": true,
+      "message": "NT1301: footprint 'NetTie-2_SMD_Pad_0.18mm_wide_long' doesn't match any filter pattern ['R_*']"
+    },
+    {
+      "component": "R1303",
+      "footprint": "BR_Passives:C_0402_1005Metric-minimized",
+      "filters": [
+        "R_*"
+      ],
+      "custom_library": true,
+      "message": "R1303: footprint 'C_0402_1005Metric-minimized' doesn't match any filter pattern ['R_*']"
+    }
+  ],
+  "sourcing_audit": {
+    "total_bom_components": 10,
+    "mpn_coverage": "0/10",
+    "missing_mpn": [
+      "C1301",
+      "C1302",
+      "C1303",
+      "R1301",
+      "R1302",
+      "R1303",
+      "R1304",
+      "R1305",
+      "U1301",
+      "U1302"
+    ],
+    "missing_digikey": [
+      "C1301",
+      "C1302",
+      "C1303",
+      "R1301",
+      "R1302",
+      "R1303",
+      "R1304",
+      "R1305",
+      "U1301",
+      "U1302"
+    ],
+    "missing_lcsc": [
+      "C1301",
+      "C1302",
+      "C1303",
+      "R1301",
+      "R1302",
+      "R1303",
+      "R1304",
+      "R1305",
+      "U1301"
+    ],
+    "mpn_percent": 0.0
+  },
+  "ground_domains": {
+    "ground_nets": {
+      "GND": {
+        "domain": "signal",
+        "connections": 10,
+        "components": [
+          "C1302",
+          "C1303",
+          "NT1301",
+          "R1301",
+          "R1302",
+          "R1303",
+          "U1301",
+          "U1302"
+        ]
+      },
+      "PGND": {
+        "domain": "power",
+        "connections": 5,
+        "components": [
+          "C1301",
+          "NT1301",
+          "U1301"
+        ]
+      }
+    },
+    "multiple_domains": true,
+    "domains": {
+      "signal": [
+        "GND"
+      ],
+      "power": [
+        "PGND"
+      ]
+    },
+    "note": "Multiple ground domains detected \u2014 verify proper star/single-point connection between domains"
+  },
+  "bus_topology": {
+    "bus_wire_count": 2,
+    "bus_entry_count": 2,
+    "unresolved": [
+      {
+        "reason": "entry_tap_name_not_in_bus",
+        "name": "I2C4.SCL"
+      },
+      {
+        "reason": "entry_tap_name_not_in_bus",
+        "name": "I2C4.SDA"
+      },
+      {
+        "reason": "no_pin_counterpart_for_hier",
+        "name": "I2C4{I2C}"
+      }
+    ]
+  },
+  "wire_geometry": {
+    "total_wires": 49,
+    "total_length_mm": 483.9,
+    "avg_length_mm": 9.9
+  },
+  "simulation_readiness": {
+    "total_components": 11,
+    "likely_simulatable": 8,
+    "needs_model": 3,
+    "components_without_model": [
+      "NT1301",
+      "U1301",
+      "U1302"
+    ],
+    "simulatable_percent": 72.7
+  },
+  "property_issues": {},
+  "placement_analysis": {
+    "bounding_box": {
+      "x_min": 78.7,
+      "y_min": 67.3,
+      "x_max": 257.8,
+      "y_max": 130.8,
+      "width_mm": 179.1,
+      "height_mm": 63.5
+    },
+    "clusters": [
+      {
+        "region": "row0_col0",
+        "component_count": 4,
+        "types": {
+          "resistor": 2,
+          "capacitor": 2
+        },
+        "references": [
+          "C1301",
+          "C1303",
+          "R1301",
+          "R1302"
+        ]
+      },
+      {
+        "region": "row0_col1",
+        "component_count": 1,
+        "types": {
+          "ic": 1
+        },
+        "references": [
+          "U1301"
+        ]
+      },
+      {
+        "region": "row0_col2",
+        "component_count": 2,
+        "types": {
+          "resistor": 2
+        },
+        "references": [
+          "R1303",
+          "R1304"
+        ]
+      },
+      {
+        "region": "row0_col3",
+        "component_count": 3,
+        "types": {
+          "capacitor": 1,
+          "resistor": 1,
+          "ic": 1
+        },
+        "references": [
+          "C1302",
+          "R1305",
+          "U1302"
+        ]
+      },
+      {
+        "region": "row1_col1",
+        "component_count": 1,
+        "types": {
+          "net_tie": 1
+        },
+        "references": [
+          "NT1301"
+        ]
+      }
+    ],
+    "grid_size": "2x4"
+  },
+  "hierarchical_labels": {
+    "hierarchical_label_count": 5,
+    "global_label_count": 0
+  },
+  "rail_voltages": {
+    "GND": 0,
+    "3V3": 3.3
+  },
+  "power_sequencing_validation": {
+    "power_tree": [
+      {
+        "rail": null,
+        "source": "U1301",
+        "source_type": "regulator",
+        "voltage": 21.896,
+        "enable_type": "always_on",
+        "sequence_order": 0
+      },
+      {
+        "rail": "__unnamed_13",
+        "source": "U1302",
+        "source_type": "regulator",
+        "enable_type": "always_on",
+        "sequence_order": 0
+      }
+    ],
+    "provenance": {
+      "evidence": "pseq_enable_chain",
+      "confidence": "heuristic",
+      "claimed_components": [],
+      "excluded_by": [],
+      "suppressed_candidates": []
+    }
+  },
+  "net_classifications": {
+    "__unnamed_13": {
+      "type": "power_rail",
+      "source": "power_regulators"
+    }
+  },
+  "text_annotations": [
+    {
+      "type": "text",
+      "text": "Address: 0b000",
+      "x": 267.462,
+      "y": 72.898,
+      "angle": 0.0
+    }
+  ],
+  "sleep_current_audit": {
+    "rails": {
+      "__unnamed_13": {
+        "current_paths": [
+          {
+            "ref": "U1302",
+            "value": "DAC53401DSGR",
+            "type": "regulator_iq",
+            "current_uA": 50,
+            "has_enable_pin": false,
+            "note": "estimated Iq (always-on, no EN pin detected)",
+            "likely_state": "always-on",
+            "realistic_uA": 50
+          }
+        ],
+        "total_uA": 50,
+        "always_on_uA": 50,
+        "conditional_uA": 0,
+        "realistic_uA": 50
+      }
+    },
+    "total_estimated_sleep_uA": 50.0,
+    "conditional_pull_up_uA": 0.0,
+    "realistic_total_uA": 50.0,
+    "observations": [
+      "Always-on current: 50.0 uA (0.05 mA)",
+      "Realistic sleep estimate: 50.0 uA (0.05 mA)"
+    ]
+  },
+  "power_budget": {
+    "rails": {
+      "3V3": {
+        "ic_count": 1,
+        "ics": [
+          {
+            "ref": "U1302",
+            "value": "DAC53401DSGR",
+            "estimated_mA": 10
+          }
+        ],
+        "estimated_load_mA": 10
+      },
+      "VIN": {
+        "ic_count": 1,
+        "ics": [
+          {
+            "ref": "U1301",
+            "value": "LM5158QRTERQ1",
+            "estimated_mA": 10
+          }
+        ],
+        "estimated_load_mA": 10
+      },
+      "__unnamed_13": {
+        "ic_count": 0,
+        "ics": [],
+        "estimated_load_mA": 0,
+        "regulator": {
+          "ref": "U1302",
+          "value": "DAC53401DSGR",
+          "topology": "switching"
+        }
+      }
+    }
+  },
+  "power_sequencing": {
+    "power_good_signals": [
+      {
+        "regulator": "U1301",
+        "output_rail": "",
+        "pg_pin": "PGOOD",
+        "pg_net": "__unnamed_10"
+      }
+    ]
+  },
+  "bom_optimization": {
+    "unique_value_counts": {
+      "resistor": 4,
+      "capacitor": 2
+    },
+    "total_unique_footprints": 4,
+    "single_use_passive_values": 4
+  },
+  "test_coverage": {
+    "test_points": [],
+    "test_point_count": 0,
+    "covered_nets": [],
+    "uncovered_key_nets": [
+      {
+        "net": "VIN",
+        "category": "power_rail"
+      },
+      {
+        "net": "I2C4.SCL",
+        "category": "i2c"
+      },
+      {
+        "net": "I2C4.SDA",
+        "category": "i2c"
+      },
+      {
+        "net": "3V3",
+        "category": "power_rail"
+      },
+      {
+        "net": "VOUT",
+        "category": "power_rail"
+      }
+    ],
+    "observations": [
+      "No test points found in design",
+      "No debug connectors (SWD/JTAG/UART) identified",
+      "Key nets without test points: 2 i2c, 3 power_rail"
+    ]
+  },
+  "assembly_complexity": {
+    "total_components": 11,
+    "smd_count": 11,
+    "tht_count": 0,
+    "complexity_score": 76,
+    "difficulty_breakdown": {
+      "hard": 10,
+      "medium": 1,
+      "easy": 0
+    },
+    "package_breakdown": {
+      "0402": 8,
+      "QFN": 1,
+      "SON": 1,
+      "other_SMD": 1
+    },
+    "unique_footprints": 4,
+    "observations": [
+      "High assembly complexity (score 76/100) \u2014 professional assembly recommended",
+      "10 hard-to-solder component(s) (0201/0402/BGA/QFN)"
+    ]
+  },
+  "protocol_compliance": {
+    "protocols_checked": [
+      "i2c"
+    ],
+    "findings": [
+      {
+        "protocol": "i2c",
+        "sda_net": "I2C4.SDA",
+        "scl_net": "I2C4.SCL",
+        "devices": [
+          {
+            "ref": "U1302",
+            "value": "DAC53401DSGR",
+            "lib_id": "BR_IC:DAC53401DSGR"
+          }
+        ],
+        "checks": {
+          "pull_ups_present": {
+            "sda": false,
+            "scl": false,
+            "status": "fail"
+          }
+        },
+        "issues": [
+          "SDA line missing pull-up resistor",
+          "SCL line missing pull-up resistor"
+        ]
+      }
+    ],
+    "total_issues": 2
+  },
+  "project_settings": {
+    "text_variables": {
+      "PCBA_BR_REVISION": "D",
+      "PCBA_BR_TAB_NUMBER": "002",
+      "PCB_BR_BASE_NUMBER": "103907",
+      "PCB_BR_REVISION": "D",
+      "SCALE": "1"
+    }
+  },
+  "hierarchy_warning": "File appears to be a sub-sheet but hierarchy discovery is disabled (--no-hierarchy). Component references may be incomplete.",
+  "missing_info": {
+    "missing_mpn": [
+      "R1301",
+      "R1302",
+      "C1302",
+      "U1301",
+      "R1304",
+      "R1305",
+      "U1302",
+      "C1301",
+      "C1303",
+      "R1303"
+    ],
+    "heuristic_vref": [
+      "U1301"
+    ]
+  },
+  "bom_lock": {
+    "total_bom_components": 10,
+    "components_with_mpn": 0,
+    "missing_mpn": [
+      "R1301",
+      "R1302",
+      "C1302",
+      "U1301",
+      "R1304",
+      "R1305",
+      "U1302",
+      "C1301",
+      "C1303",
+      "R1303"
+    ],
+    "missing_mpn_count": 10,
+    "generic_values": [],
+    "lock_pct": 0,
+    "status": "fail"
+  },
+  "inputs": {
+    "source_files": [
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/bluerobotics/ping-dev-kit/48v_boost.kicad_sch"
+    ],
+    "source_hashes": {
+      "/home/aklofas/Projects/kicad-happy-testharness/repos/bluerobotics/ping-dev-kit/48v_boost.kicad_sch": "ee77c6552948f6a24a514134c440d7c1b8887c5d72a8a58069378c54f7241c93"
+    },
+    "run_id": "20261022T214205Z-f250e4",
+    "config_hash": null,
+    "upstream_artifacts": {}
+  },
+  "compat": {
+    "minimum_consumer_version": "1.4.0",
+    "deprecated_fields": [],
+    "experimental_fields": []
+  },
+  "design_intent": {
+    "product_class": "prototype",
+    "ipc_class": 2,
+    "target_market": "hobby",
+    "expected_lifetime_years": 5,
+    "operating_temp_range": [
+      -10,
+      70
+    ],
+    "preferred_passive_size": "0603",
+    "test_coverage_target": 0.85,
+    "approved_manufacturers": [],
+    "confidence": 0.3,
+    "detection_signals": [],
+    "source": {
+      "ipc_class": "auto",
+      "product_class": "auto",
+      "target_market": "auto",
+      "expected_lifetime_years": "auto",
+      "operating_temp_range": "auto",
+      "preferred_passive_size": "auto",
+      "test_coverage_target": "auto",
+      "approved_manufacturers": "auto"
+    }
+  },
+  "audience_summary": {
+    "designer": {
+      "total_findings": 31,
+      "by_severity": {
+        "error": 3,
+        "warning": 15,
+        "info": 13
+      },
+      "by_category": {
+        "decoupling": 2,
+        "regulator_voltage": 1,
+        "i2c_bus": 2,
+        "regulator_caps": 1,
+        "single_pin_nets": 1,
+        "verification": 1,
+        "connectivity": 9,
+        "power": 4,
+        "power_management": 2,
+        "signal_integrity": 4,
+        "sourcing": 1,
+        "voltage_dividers": 2,
+        "lifecycle": 1
+      },
+      "top_issues": [
+        {
+          "detector": "audit_datasheet_coverage",
+          "rule_id": "DS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "verification",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "components": [],
+          "nets": [],
+          "pins": [],
+          "datasheets_dir": null,
+          "datasheet_file_count": 0,
+          "bom_size": 10,
+          "mpn_coverage_percent": 0.0,
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "report_context": {
+            "section": "Datasheet Coverage",
+            "impact": "Report wording must avoid 'verified' / 'datasheet-confirmed' language for every BOM part \u2014 none have manufacturer evidence attached.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:DS-001:9820bbea68d9"
+        },
+        {
+          "detector": "audit_power_pin_dc_paths",
+          "rule_id": "PP-001",
+          "severity": "error",
+          "confidence": "heuristic",
+          "evidence_source": "topology",
+          "category": "power",
+          "summary": "IC power pin U1301.2 (VCC) has no DC path to a power rail (net '__unnamed_2')",
+          "description": "Pin U1301.2 (VCC) is type=power_in on net '__unnamed_2'. Graph walk (\u22642 hops, rejecting capacitor edges, accepting resistors\u22641\u03a9, inductors, ferrite beads, bridged solder jumpers) did not reach a named power rail. The pin is likely AC-coupled to ground only \u2014 the IC will not power up reliably.",
+          "components": [
+            "U1301"
+          ],
+          "nets": [
+            "__unnamed_2"
+          ],
+          "pins": [
+            "U1301.2 (VCC)"
+          ],
+          "start_net": "__unnamed_2",
+          "visited_nets": [
+            "__unnamed_2"
+          ],
+          "source_path": "none",
+          "recommendation": "Verify the schematic for this pin: the DC route must go through a conducting element (direct wire, 0\u03a9 resistor, inductor, ferrite bead, or bridged solder jumper) \u2014 not a capacitor. If the intent was to tie VCC through an LC filter, add the missing inductor or 0\u03a9 in series.",
+          "report_context": {
+            "section": "Power \u2014 DC Continuity",
+            "impact": "IC supply floats DC; board will not run.",
+            "standard_ref": ""
+          },
+          "provenance": {
+            "evidence": "pp_dc_path_audit",
+            "confidence": "deterministic",
+            "claimed_components": [
+              "U1301"
+            ],
+            "excluded_by": [],
+            "suppressed_candidates": []
+          },
+          "detection_id": "",
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:PP-001:u1301"
+        },
+        {
+          "detector": "audit_sourcing_gate",
+          "rule_id": "SS-001",
+          "severity": "error",
+          "confidence": "deterministic",
+          "evidence_source": "bom",
+          "category": "sourcing",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/8 unique parts). Board is not pre-fab ready.",
+          "description": "Sourcing audit: 0 of 8 unique BOM lines (grouped by value + footprint) carry a manufacturer part number (0.0%). Pre-fab readiness requires 100% coverage; production assembly requires all parts sourceable via one of the supported distributors.",
+          "components": [
+            "C1301",
+            "C1302",
+            "C1303",
+            "R1301",
+            "R1302",
+            "R1303",
+            "R1304",
+            "R1305",
+            "U1301",
+            "U1302"
+          ],
+          "nets": [],
+          "pins": [],
+          "mpn_coverage_percent": 0.0,
+          "missing_mpn_lines": 8,
+          "missing_mpn_refs": 10,
+          "total_bom_lines": 8,
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "report_context": {
+            "section": "Sourcing",
+            "impact": "Pre-fab gate: board cannot be ordered until MPN coverage reaches 100%.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "pre_fab"
+          ],
+          "finding_id": "schematic:SS-001:c1301"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: VIN only connects to U1301.3 (BIAS) (power_in)",
+          "description": "Net 'VIN' has exactly one pin: U1301.3 (BIAS), pin_type='power_in'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1301"
+          ],
+          "nets": [
+            "VIN"
+          ],
+          "pins": [
+            "U1301.3"
+          ],
+          "net_display_name": "VIN",
+          "pin_type": "power_in",
+          "pin_name": "BIAS",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u1301"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: U1301.MODE only connects to U1301.11 (MODE) (input)",
+          "description": "Net '__unnamed_11' has exactly one pin: U1301.11 (MODE), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1301"
+          ],
+          "nets": [
+            "__unnamed_11"
+          ],
+          "pins": [
+            "U1301.11"
+          ],
+          "net_display_name": "U1301.MODE",
+          "pin_type": "input",
+          "pin_name": "MODE",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u1301#1"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: U1301.SW only connects to U1301.14 (SW) (output)",
+          "description": "Net '__unnamed_6' has exactly one pin: U1301.14 (SW), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1301"
+          ],
+          "nets": [
+            "__unnamed_6"
+          ],
+          "pins": [
+            "U1301.14"
+          ],
+          "net_display_name": "U1301.SW",
+          "pin_type": "output",
+          "pin_name": "SW",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u1301#2"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: U1301.SW only connects to U1301.13 (SW) (output)",
+          "description": "Net '__unnamed_7' has exactly one pin: U1301.13 (SW), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1301"
+          ],
+          "nets": [
+            "__unnamed_7"
+          ],
+          "pins": [
+            "U1301.13"
+          ],
+          "net_display_name": "U1301.SW",
+          "pin_type": "output",
+          "pin_name": "SW",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u1301#3"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: U1301.COMP only connects to U1301.8 (COMP) (output)",
+          "description": "Net '__unnamed_9' has exactly one pin: U1301.8 (COMP), pin_type='output'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1301"
+          ],
+          "nets": [
+            "__unnamed_9"
+          ],
+          "pins": [
+            "U1301.8"
+          ],
+          "net_display_name": "U1301.COMP",
+          "pin_type": "output",
+          "pin_name": "COMP",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u1301#4"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: 3V3 only connects to U1302.6 (VDD) (power_in)",
+          "description": "Net '3V3' has exactly one pin: U1302.6 (VDD), pin_type='power_in'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1302"
+          ],
+          "nets": [
+            "3V3"
+          ],
+          "pins": [
+            "U1302.6"
+          ],
+          "net_display_name": "3V3",
+          "pin_type": "power_in",
+          "pin_name": "VDD",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u1302"
+        },
+        {
+          "detector": "analyze_connectivity",
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "confidence": "deterministic",
+          "evidence_source": "topology",
+          "category": "connectivity",
+          "summary": "Single-pin net: I2C4.SCL only connects to U1302.2 (SCL) (input)",
+          "description": "Net 'I2C4.SCL' has exactly one pin: U1302.2 (SCL), pin_type='input'. Verify the intended target \u2014 if this pin should connect somewhere, the wire/label is missing.",
+          "components": [
+            "U1302"
+          ],
+          "nets": [
+            "I2C4.SCL"
+          ],
+          "pins": [
+            "U1302.2"
+          ],
+          "net_display_name": "I2C4.SCL",
+          "pin_type": "input",
+          "pin_name": "SCL",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "report_context": {
+            "section": "Connectivity",
+            "impact": "Likely unfinished wiring: a driven or powered pin has no counterpart.",
+            "standard_ref": ""
+          },
+          "stages": [
+            "schematic"
+          ],
+          "finding_id": "schematic:NT-001:u1302#1"
+        }
+      ]
+    },
+    "reviewer": {
+      "total_findings": 18,
+      "by_category": {
+        "verification": 1,
+        "connectivity": 8,
+        "power": 4,
+        "signal_integrity": 4,
+        "sourcing": 1
+      },
+      "top_issues": [
+        {
+          "rule_id": "DS-001",
+          "severity": "error",
+          "summary": "No datasheets directory found and no BOM parts have MPNs. Review is a consistency check only \u2014 manufacturer specs cannot be verified.",
+          "recommendation": "Before reporting 'verified' findings, (1) populate the MPN field on BOM parts, (2) run the datasheet sync skill (digikey, mouser, lcsc, or element14) to download PDFs into ./datasheets/, then re-run analysis. If datasheets are unreachable, state every pin-level and electrical claim as 'per symbol/library' (consistency), not 'verified against datasheet' (correctness).",
+          "category": "verification"
+        },
+        {
+          "rule_id": "PP-001",
+          "severity": "error",
+          "summary": "IC power pin U1301.2 (VCC) has no DC path to a power rail (net '__unnamed_2')",
+          "recommendation": "Verify the schematic for this pin: the DC route must go through a conducting element (direct wire, 0\u03a9 resistor, inductor, ferrite bead, or bridged solder jumper) \u2014 not a capacitor. If the intent was to tie VCC through an LC filter, add the missing inductor or 0\u03a9 in series.",
+          "category": "power"
+        },
+        {
+          "rule_id": "SS-001",
+          "severity": "error",
+          "summary": "Sourcing blocker: BOM has <50% MPN coverage (0/8 unique parts). Board is not pre-fab ready.",
+          "recommendation": "Populate the MPN field on the listed refs (use the digikey / mouser / lcsc / element14 skill to search by value/footprint when the MPN isn't already known).",
+          "category": "sourcing"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: VIN only connects to U1301.3 (BIAS) (power_in)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: U1301.MODE only connects to U1301.11 (MODE) (input)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: U1301.SW only connects to U1301.14 (SW) (output)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: U1301.SW only connects to U1301.13 (SW) (output)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: U1301.COMP only connects to U1301.8 (COMP) (output)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: 3V3 only connects to U1302.6 (VDD) (power_in)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: I2C4.SCL only connects to U1302.2 (SCL) (input)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "NT-001",
+          "severity": "warning",
+          "summary": "Single-pin net: I2C4.SDA only connects to U1302.3 (SDA) (bidirectional)",
+          "recommendation": "Check the schematic at the referenced pin \u2014 add the missing wire or place a no-connect marker if the pin is intentionally floating.",
+          "category": "connectivity"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U1301 pin PGOOD (__unnamed_10) missing pull-up resistor",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from __unnamed_10 to the appropriate power rail.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U1301 pin MODE (__unnamed_11) missing pull-down resistor",
+          "recommendation": "Add a 10k pull-down resistor from __unnamed_11 to GND.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U1302 pin SCL (I2C4.SCL) missing pull-up resistor",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from I2C4.SCL to the appropriate power rail.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "PU-001",
+          "severity": "warning",
+          "summary": "U1302 pin SDA (I2C4.SDA) missing pull-up resistor",
+          "recommendation": "Add a 4.7k-10k pull-up resistor from I2C4.SDA to the appropriate power rail.",
+          "category": "signal_integrity"
+        },
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "3V3 has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        },
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "VIN has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        },
+        {
+          "rule_id": "RS-001",
+          "severity": "warning",
+          "summary": "VOUT has no declared source",
+          "recommendation": "Add a PWR_FLAG to declare the rail as externally powered (e.g. from a connector) or trace the rail back to a regulator output. If the source lives on another sheet, promote the net name to a global label.",
+          "category": "power"
+        }
+      ]
+    },
+    "manager": {
+      "risk_level": "moderate",
+      "blocker_count": 3,
+      "warning_count": 15,
+      "stage_readiness": {
+        "schematic": "needs_work",
+        "layout": "pass",
+        "pre_fab": "needs_work",
+        "bring_up": "pass"
+      },
+      "one_liner": "3 errors, 15 warnings across 5 categories. Schematic, pre-fab stages have blockers."
+    }
+  },
+  "capability_mode_ref": {
+    "source": "analysis/capability_mode.json",
+    "run_id": "20261022T214205Z-f250e4"
+  }
+}

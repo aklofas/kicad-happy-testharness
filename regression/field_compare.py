@@ -28,7 +28,7 @@ import importlib
 import json
 import os
 import re
-from collections import Counter
+from collections import Counter, OrderedDict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -849,16 +849,54 @@ def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = No
             "residuals": [d.to_json() for d in residuals], "violations": violations}
 
 
-def docs_for_report(report: dict, a_root: Path, b_root: Path) -> dict:
-    """Load (a_doc, b_doc) for compared units WITH deltas only (evaluate_budget consults
+class _LazyDocs:
+    """``{unit: (a_doc, b_doc)}`` for compared units WITH deltas, loaded on first access and
+    kept for the most recent few units only. Deltas arrive grouped per unit in sorted order,
+    so a small window serves them without holding every delta unit's pair in memory
+    (an output-changing round can touch ten thousand units)."""
+
+    _WINDOW = 4
+
+    def __init__(self, report: dict, a_root: Path, b_root: Path):
+        self._paths = {u["unit"]: (Path(a_root) / u["a"], Path(b_root) / u["b"]) for u in report["units"]
+                       if u["status"] == "compared" and u.get("delta_count", 0) > 0}
+        self._loaded: "OrderedDict[str, tuple]" = OrderedDict()
+
+    def __len__(self) -> int:
+        return len(self._paths)
+
+    def __iter__(self):
+        return iter(self._paths)
+
+    def __contains__(self, unit) -> bool:
+        return unit in self._paths
+
+    def get(self, unit, default=None):
+        if unit not in self._paths:
+            return default
+        hit = self._loaded.get(unit)
+        if hit is None:
+            pa, pb = self._paths[unit]
+            hit = (json.loads(pa.read_text(encoding="utf-8")), json.loads(pb.read_text(encoding="utf-8")))
+            self._loaded[unit] = hit
+            while len(self._loaded) > self._WINDOW:
+                self._loaded.popitem(last=False)
+        else:
+            self._loaded.move_to_end(unit)
+        return hit
+
+    def __getitem__(self, unit):
+        hit = self.get(unit)
+        if hit is None:
+            raise KeyError(unit)
+        return hit
+
+
+def docs_for_report(report: dict, a_root: Path, b_root: Path) -> _LazyDocs:
+    """Mapping of (a_doc, b_doc) for compared units WITH deltas only (evaluate_budget consults
     docs[delta.unit] alone), so budget `where`/predicates can resolve findings without
-    holding the whole corpus in memory."""
-    docs = {}
-    for u in report["units"]:
-        if u["status"] == "compared" and u.get("delta_count", 0) > 0:
-            docs[u["unit"]] = (json.loads((Path(a_root) / u["a"]).read_text(encoding="utf-8")),
-                               json.loads((Path(b_root) / u["b"]).read_text(encoding="utf-8")))
-    return docs
+    holding the whole corpus in memory. Pairs load on access, a few units at a time."""
+    return _LazyDocs(report, a_root, b_root)
 
 
 def _sha_agrees(budget_sha: Any, run_sha: Any) -> bool:

@@ -1,0 +1,24 @@
+{
+  "budget_id": "v232-backport",
+  "baseline_sha": "6a91aaa",
+  "candidate_sha": "4701c26",
+  "profile": "standard",
+  "normalization_policy": "volatile-leaves-v1",
+  "classes": [
+    {"id": "findings-A-B-C", "analyzer": "schematic", "path_glob": "/findings/**",
+     "predicate": "v232_backport:findings_explained",
+     "evidence": "handoff 2026-10-22 §3: A = RS-001 pins==[] confidence/description flip (#58); B = PU-001 removed on a single-pin no_connect net (#57); C = PP-001 removed on a BST/BOOT/BOOTSTRAP/CBST pin (#59). Index-aligned cascade of a removal is claimed only when the unit's finding_id-realigned movement is entirely A/B/C."},
+    {"id": "derived-summary", "analyzer": "schematic", "path_glob": "/summary/**", "op": ["changed"],
+     "predicate": "v232_backport:derived_explained",
+     "evidence": "summary is recomputed from the final findings; both sides must equal their own recomputation"},
+    {"id": "derived-trust-summary", "analyzer": "schematic", "path_glob": "/trust_summary/**", "op": ["changed", "added", "removed"],
+     "predicate": "v232_backport:derived_explained",
+     "evidence": "compute_trust_summary(findings): by_confidence -N deterministic / +N heuristic (class A), totals -1 per removal (B/C), trust_level/provenance pct follow"},
+    {"id": "derived-audience-summary", "analyzer": "schematic", "path_glob": "/audience_summary/**",
+     "predicate": "v232_backport:derived_explained",
+     "evidence": "build_audience_summary(findings): top_issues embed findings (A fields move, B/C rows drop), counts follow"}
+  ],
+  "unexplained_deltas_allowed": 0,
+  "unexplained_missing_units_allowed": 0,
+  "relock": false
+}
