@@ -1,7 +1,7 @@
 # Real snap pairs for the v2.3.2 backport budget (product 6a91aaa → 4701c26)
 
 Copied 2026-10-22 from the prototype gate trees that preceded the full gate
-(`results/v232_backport_gate_proto{,2}`, harness `c1d2d57947e`, standard profile,
+(`results/v232_gate_aux/proto{,2}`, harness `c1d2d57947e`, standard profile,
 `PYTHONHASHSEED=0`). One pair per budget class, used by
 `tests/test_budget_v232_backport.py` as the comparator's real-shape check of
 `regression/budgets/v232-backport.json` and its predicate module
