@@ -11,6 +11,81 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-22 — v2.3.2 backport: KH-450..453 FIXED-direct on `main` @ `4701c26` (GitHub #52–#55 / PRs #56–#59, EldarPolitkin)
+
+Externally reported AND fixed in one motion (FIXED-direct; never open in ISSUES.md —
+numbers assigned at adoption in PR order; KH-454 filed from the same batch, next KH → 455).
+Credit: EldarPolitkin (GitHub), from a Phase 0 audit of a real 8-sheet board. Range
+`6a91aaa..4701c26` = four squash commits on `main`; CI green at the 2.x pin `fc7a074fc7e`;
+contract 707/8/3; `--schema` byte-identical ×6; no sidecar change.
+
+Harness adoption (the contributor's drop-in tests, verbatim, renamed to KH keying):
+`tests/test_kh450_cross_analysis_input_paths.py` (4, subprocess),
+`tests/test_kh451_pu001_no_connect.py` (3), `tests/test_kh452_rs001_name_only_rail.py` (2),
+`tests/test_kh453_pp001_bootstrap_pin.py` (2) + the repro sheets `tests/fixtures/kh451/`,
+`kh452/`, `kh453/` (KiCad 10, one sheet each). 11/11 GREEN against `4701c26`; 6/11 RED
+against `6a91aaa` AND against the v3 tree `30cbfcb` (the fixes reach v3-dev only with the
+post-verdict merge-forward of `main`, so the pre-push hook stays RED until then).
+
+Gate: FULL standard profile `6a91aaa → 4701c26`, `--kind output-changing` under
+`regression/budgets/v232-backport.json` (classes A/B/C below; cross_analysis and every
+chained analyzer must be byte-identical). Record `results/v232_gate/adjudication_v232.md`;
+rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22, run `cb26e654`, 2,874 s at 32 jobs): ACCEPT** — 149,629 unit-pairs, census exact, 14 ledgered skips, 0 candidate failures; strict 1,213,113 deltas on 12,210 units ALL in the schematic analyzer (chained analyzers byte-identical, sidecars `run_id`-only); budget claimed 1,212,139 deltas, 0 violations, 974 residual deltas on ONE unit hand-adjudicated in-budget (a class-C removal unmasks a `(ref, pin)`-dedup-collided PP-001 on an unannotated `U?` design → KH-455 filed).
+
+### KH-450 (LOW) — `cross_analysis.py` traceback when `--schematic` / `--pcb` is a directory or not JSON
+
+- **File:** `skills/kicad/scripts/cross_analysis.py` `main()`
+- **Root cause:** `open(args.schematic)` + `json.load` with no path check — a first-time
+  user passing the project folder or the `.kicad_sch` itself got an `IsADirectoryError` /
+  `JSONDecodeError` traceback (exit 1).
+- **Fix (`2f84d44`, PR #56 / #52):** `_load_analyzer_json` → argparse usage error (exit 2)
+  naming the flag and the writer (`analyze_schematic.py --output`).
+- **Verification:** 4 subprocess tests (directory, missing, non-JSON, valid). Valid inputs
+  take the same path → zero corpus movement (budget class D: any cross_analysis delta is a
+  violation). Measured: cross_analysis 0 strict deltas over 36,462 units (emc / thermal / pcb / gerber 0 as well).
+
+### KH-451 (MEDIUM) — PU-001 asked for a pull-up on a pin carrying an explicit no-connect marker
+
+- **File:** `skills/kicad/scripts/validation_detectors.py` `validate_pullups`
+- **Root cause:** the net builder already flags a net `no_connect` when a `(no_connect)`
+  sits on its pin end, but `validate_pullups` never consulted the flag, so a deliberately
+  unused open-collector/open-drain pin was reported as missing its pull-up (true 0/2 on the
+  reporter's board).
+- **Fix (`a1b51c7`, PR #57 / #53):** skip a pin whose net is `no_connect` AND has ≤ 1 pin —
+  the same single-pin rule the pin-level NO_CONNECT logic in `analyze_schematic.py` uses.
+- **Verification:** 3 direct-context tests (marked pin skipped, unmarked pin still fires,
+  multi-pin no_connect net still fires). Corpus (budget class B, disappearance only):
+  measured 4,894 PU-001 disappearances / 2,671 units / 1,146 repos (pre-scan ≈ 4,880 / 1,143); every removed PU-001 sits on a `no_connect` net with ≤ 1 pin; 0 PU-001 appeared.
+
+### KH-452 (LOW) — RS-001 on a name-only rail claimed "carries power_in pins" at deterministic with empty `pins[]`
+
+- **File:** `skills/kicad/scripts/signal_detectors.py` `audit_rail_sources`
+- **Root cause:** `_power_rail` admits a net by `is_power_net_name` alone; the RS-001 text
+  and confidence were written for a rail with a `power_in` load, so a `VBAT` label touching
+  only two resistors was reported "carries power_in pins" at `deterministic` with `pins: []`.
+- **Fix (`665b773`, PR #58 / #54):** with no `power_in` pin on the rail, `confidence` and
+  `provenance.confidence` become `heuristic` and the description says "is named like a power
+  rail (no power_in pin on it)". `summary`, `pins`, `nets`, `severity`, `rule_id` unchanged →
+  `finding_id` STABLE. Rails with `power_in` loads are byte-identical.
+- **Verification:** 2 tests. Corpus (budget class A, flip only where `pins == []`):
+  measured 25,466 RS-001 flips / 10,398 units / 2,406 repos (pre-scan 25,390 / 2,398); all with `pins == []`, finding_id and per-file RS-001 counts stable; 0 flips with `pins != []`.
+
+### KH-453 (MEDIUM) — PP-001 reported a gate-drive bootstrap pin (`power_in`-typed by vendor symbols) as "no DC path to a power rail" at error
+
+- **File:** `skills/kicad/scripts/signal_detectors.py` `audit_power_pin_dc_paths`
+  (+ new `_BOOTSTRAP_PIN_TOKENS`, `_is_bootstrap_pin_name`)
+- **Root cause:** a bootstrap pin's supply is the capacitor to the switch node by design;
+  many vendor symbols type it `power_in`, so the DC-path walk (which rejects capacitor edges)
+  found no rail and raised an `error` (true 0/6 on the reporter's board).
+- **Fix (`4701c26`, PR #59 / #55):** skip a `power_in` pin whose name has a
+  `BST`/`BOOT`/`BOOTSTRAP`/`CBST` token (split on `_` and `/`, trailing digits stripped:
+  `BOOT1`, `BST_A`, `BST_N`, `VB/BST` match; `VBOOST`, `VIN` do not).
+- **Verification:** 2 tests. Corpus (budget class C, disappearance only on bootstrap-named
+  pins): measured 135 PP-001 disappearances / 61 units / 25 repos (pre-scan 133 / 25); pin names BST 33, BOOT 22, BST_N 18, BST_P 18, BST_A/B/C 7 each, BST_BK 6, BST1/BST2 5 each, BOOT1/BOOT2 3 each, BST_D 1; 0 removals outside the token set; one unmasked PP-001 appearance on Ganesh-Solapure (KH-455 mechanism).
+- **Rider → KH-454:** the bootstrap-only net still gets an RS-001 "no declared source"
+  (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
+  regulator-output pins; PP-001 severity vs heuristic confidence).
+
 ## 2026-10-17 — TH-073: `run_corpus_gate.py` accepted profiles that run no corpus analyzer, so a `--profile spice-offline` gate would have recorded zero units
 
 **Severity:** LOW (latent; no such gate was ever requested. The TH-072 class: a declared profile whose analyzers never reach Phase A yields an empty census with no SKIP record).

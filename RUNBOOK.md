@@ -2871,6 +2871,28 @@ Three verdicts, never conflated:
 result is stored under `rollup["modes"]`, and the gate exit requires
 `modes.strict_field_clean`. With `--budget`, that is the budgeted verdict == clean.
 
+**Removals cascade under index alignment — budget them per UNIT.** `compare_strict` aligns
+`findings[]` (and every other list) by index, so one removed finding produces a
+`changed`/`added`/`removed` delta on every later index and on the `audience_summary.*.top_issues`
+rows that embed findings: a 30-finding unit losing one PU-001 yields ~200 deltas, a 6-sheet root
+~2,600 (v2.3.2 backport gate, 2026-10-22). A budget class for an output-changing round therefore
+claims those paths with a unit-level `predicate`: re-pair the two `findings[]` by `finding_id`
+BASE (the product numbers findings that share a detection hash `…`, `…#1`, `…#2` in list order,
+so a removal renumbers its group's survivors — pair on the base id and match by content),
+classify every movement against the handoff's classes, and claim a delta only when its whole
+unit is explained, so an unrelated change in the same unit leaves EVERY delta of that unit as a
+residual. `summary`, `trust_summary` and `audience_summary` are pure functions of the final
+`findings[]` (`compute_trust_summary`, `build_audience_summary`): recompute them from each
+side's own findings and claim their deltas only when both sides equal their recomputation.
+First instance: `regression/budgets/v232_backport.py` (+ `python -m
+regression.budgets.v232_backport GATE_DIR -o class_summary.json` for the per-class findings /
+units / repos the adjudication quotes — delta counts are cascade-inflated and mean nothing
+per class). `docs_for_report` hands `evaluate_budget` a lazy mapping that loads a delta unit's
+pair on first access and keeps a few, so a round that touches ten thousand units does not hold
+them all in memory. Validate a new budget on a prototype first: a `--repo-list` gate over a
+handful of affected repos under `--kind structural`, then `compare_snap_trees.py --mode
+budgeted --budget <file>` over its slots, before the full run.
+
 **Exit code vs round verdict (maintainer ruling I9).** `gate_pass.pass` depends on `--kind`:
 
 | `--kind` | `--budget` | `gate_pass.pass` |
