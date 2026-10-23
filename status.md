@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-23 later (2) — CHECKPOINT 9 PUSHED: origin/v2.2-dev = caa50e5c9c7 (fast-forward from 13a00ae3291, 11 commits; pre-push hook vs product_0490c49 2,443 / 0 / 1 xfailed; ls-remote verified); TH-055 recoveries stay reseeded (user's decision); nothing unpushed; next = round-8 handoff (budgeted)
+Last updated: 2026-10-23 later (3) — Checklist 11 backlog pass: TH-076 fixed (constants registry lost 41 verification records at the round-2/3 re-baselines; scan now carries evidence by content hash; both audit registries rescanned at 0490c49), KH-467 filed (three divergent LED Vf tables); verified 183 → 229, critical 18 → 5; equations stale/unverified 31 — re-read pending; UNCOMMITTED pending review
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;

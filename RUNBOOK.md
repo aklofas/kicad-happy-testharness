@@ -162,7 +162,8 @@ check runs in the required offline tier as `tests/test_scan_coverage_gate.py`. W
 round moved symbols: `python3 tools/api_migration.py apply-map <relocation.json> --product
 $KICAD_HAPPY_DIR` lists every harness site to edit; `python3 tools/api_migration.py check`
 must then show no violation from this round before the round's response record is
-written. **Known FAIL until H1:** `check` reports `finding_schema.normalize_severity is
+written. In the same re-baseline, apply the map to the constants registry and rescan both
+audit registries (Checklist 11a; TH-076). **Known FAIL until H1:** `check` reports `finding_schema.normalize_severity is
 retire but still bound at tests/contract/test_action_format_report_v14.py:430`; that
 binding is deleted in H1, and it is the only violation `check` may show until then. An
 `UNVERIFIABLE (dynamic binding; verify with apply-map)` line means a done/retire entry is
@@ -895,6 +896,15 @@ This AST-scans all analyzer scripts and reports:
 - **New constants** — added since last scan. MUST be verified before merging.
 - **Changed constants** — content hash differs. Review what changed and why.
 - **Removed constants** — may indicate cleanup or regression. Verify intentional.
+
+A constant that moved file, moved into a split-off helper in the same file, or was
+merged with identical copies into a shared table keeps its id and evidence: `scan`
+pairs an orphaned entry with the single newcomer that has the same name and literal
+content hash (TH-076). A rename or a move whose content also changed needs the
+round's map first: `python3 validate/audit_constants.py relocate --map <relocation.json>`
+(record shape; `tools/round_record.py` converts the product shape), then `scan`.
+Rescan BOTH registries (`audit_constants.py scan`, `audit_equations.py scan`) at every
+re-baseline — they went unscanned from round 5 to round 7 once.
 
 If new constants are found:
 ```bash
