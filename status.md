@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-22 later — v3 arc on product_e45ce11; scan baseline re-keyed; KH-456..462 committed; pushed origin/v2.2-dev = CI pin checkpoint 8 candidate
+Last updated: 2026-10-23 — v2.3.2 corpus regen 0684046→2fd9aa0 CLEAN; corpus tracks v2.3.2; TH-055 pcb timeout class closed (189 boards recovered); TH-075 fixed / KH-463 filed; consolidation LOCAL (push on the user's word)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,20 @@ Last updated: 2026-10-22 later — v3 arc on product_e45ce11; scan baseline re-k
 ---
 
 ## Completed batches
+
+### 2026-10-23 — v2.3.2 CORPUS REGEN `0684046`→`2fd9aa0` EXECUTED + CLEAN under the backport-gate budget; corpus now tracks v2.3.2; TH-055 pcb timeout class CLOSED (189 boards recovered at 600 / 1800 s — out-of-budget class, reported); SPICE workdir incident caught before reseed (TH-075 fixed, KH-463 filed); consolidation COMMITTED LOCALLY, push awaits the user
+
+- **Analyzer:** clean clone `results/v232_regen/product_2fd9aa0` (= 4701c26 + manifests/docs; `git diff --stat 4701c26 HEAD -- skills/` empty; `--schema` ×6 byte-identical to 0684046). Before-check = the v2.3.1 ledger item for item (2,716,679 / 7 / 2; aspirational 343 / 1,855).
+- **Runners** (`regen_driver.py`, per-pass marker + rewritten audit): schematic 36,327 / 36,327; pcb 18,434 + 189 quarantined `.stale` at 120 s → 183 recovered at 600 s (8 jobs) → last 6 at 1800 s (6 jobs: Marble, MAXWELL/KH-449, cbm_ultipet, Amiga 2000 ×3, 980–1,043 s) → **0 pcb timeout boards, 0 `.stale`**; gerber 5,501; spice 36,326 (×2, see incident); emc 36,325 + encoder_go panel retried at 600 s; thermal 15,579 / 15,608 (April orphans). `validate_run_id` 112,359 / 0; SPICE cache inventory 0 differences; chain oracle 300 / 300 / 300 / 300 IDENTICAL (first cycle with no TH-055 DIFF).
+- **Comparator** (`compare_snap_trees.py` over a symlink tree of the fresh schematic outputs): strict vs the gate candidate tree 36,326 / 36,326 identical; budgeted vs the gate baseline tree under `v232-backport`: 12,157 delta units all claimed, 974 residual deltas all on the KH-455 unit (the gate's own residue).
+- **Class sizes measured on the corpus** (`class_sizes.py`, finding_id base + content re-pairing): A 25,466 / 10,398 / 2,406; B 4,894 / 2,671 / 1,146 (all single-pin); C 135 / 61 / 25 (BST/BOOT tokens only); KH-455 `U?.48 (VDD)` addition 1; AM-001 0; residue 0 — **every number equals the gate's**.
+- **Fracture set** (second after-check 6,722 fails / 2 errors): B 4,299 records / 1,085 repos; C 78 / 25; A anchors nothing; **TH-055 recovery 2,338 records / 118 repos / 365 units** (pcb decoupling_placement, EMC ground_plane / decoupling / clock_routing counts, EMC summaries, "CN in EMC findings") — every record inside the 144 recovered-board repos, 0 outside; standing FND debt 9. BUGFIX 0 / NEG 0 (14 watch-list locks held); aspirational 343 → 343.
+- **SPICE incident (TH-075 / KH-463):** first SPICE pass skipped 95 % of sims on 5,198 units whose path has whitespace / `,` / `&` / `'` / `µ` / `:` (3,332 lock fails / 679 repos) — the TH-059 per-unit `--workdir` carried raw names into the product's unquoted `.control` `echo > path` redirect (`spice_simulator.py:181`). `run_spice.unit_workdir()` sanitizes + digests (test added); rerun → 3.1 % skips both path classes; bucket 0. Product side KH-463 (the `analysis/<run>/spice_work/` default inherits the project path). Nothing wrong was locked.
+- **Reseed:** prune 0 ×6; seeds schematic 640,681 / 446,063 (−1,365 each = B + C), pcb 186,252 / 157,282, gerber 54,143 / 0, spice 117,043 / 396,148, emc 320,439 / 383,085, thermal 7,840 / 2,676; `snapshot --all` 18,804; schema auto-seed + scan → diff NO SCHEMA CHANGES; bugfix dry-run added 0 / updated 1 / removed 1 (the standing plan-5 pair, not applied).
+- **Final: 2,714,034 / 2,714,025 / 7 failed / 2 errors / 100.0%; aspirational 343 / 1,855** — the 7 + 2 = the FND debt ledger item for item. **Tiers:** hook `run_tests.py --unit` vs product_e45ce11 2,442 / 0 / 1 xfailed (+1 = the TH-075 test); combined tier `-m "unit or offline_contract"` 3,148 / 8 skipped / 4 xfailed / 0 failed; contract 707 / 8 / 3 vs product_2fd9aa0 (from a harness worktree at the 2.x-era tip `fc7a074fc7e` — the live tip binds v3 names since round 5).
+- **Verdict CLEAN**; out-of-budget class = the TH-055 recovery (harness-side, analyzer unchanged; the 8 recovered full-chain boards are byte-identical to the gate-ratified `--full` chain), reseeded as-is and flagged for the maintainer at the push gate. Record `results/v232_regen/adjudication_v232_regen.md`; `checks_final.json` there = the VALIDATION.md source. `results/v232_gate/` trees + `v232_gate_aux/proto*` pruned after the verdict (records kept).
+- **Round 7 handoff** arrived in the LOG during the regen (`0490c49`, gate range 4701c26..0490c49, budget EMPTY): preflight done — clean clone `results/v3_baseline/product_0490c49`, text oracle OK both ways (776 artefacts, Python 3.12.3); the FULL standard + full-chain gates run after this regen.
+- Open 50 KH + 21 TH; next KH-464 / TH-076.
 
 ### 2026-10-22 later — v3 TIP e45ce11 ADOPTED FOR THE TIERS (clone verified clean), scan-coverage baseline RE-KEYED 30cbfcb→e45ce11, KH-456..462 tracker commit REVIEWED + COMMITTED, PUSHED origin/v2.2-dev (hook green vs product_e45ce11) = CI PIN CHECKPOINT 8
 
