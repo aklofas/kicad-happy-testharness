@@ -27,8 +27,10 @@ Environment:
 """
 
 import argparse
+import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -110,6 +112,26 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
     return res.exit_code, None, res.elapsed_s
 
 
+_WORKDIR_UNSAFE = re.compile(r"[^A-Za-z0-9._-]")
+
+
+def unit_workdir(workdir_root, repo_name, stem):
+    """Per-unit ngspice workdir under workdir_root.
+
+    The simulator's .control block redirects into the workdir with an unquoted
+    path, so whitespace or punctuation in the repo/file name silently fails every
+    measurement. Unsafe characters are replaced and a short digest of the
+    original name keeps distinct units apart.
+    """
+    parts = []
+    for raw in (*repo_name.split("/"), stem):
+        safe = _WORKDIR_UNSAFE.sub("_", raw)
+        if safe != raw:
+            safe += "-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:8]
+        parts.append(safe)
+    return Path(workdir_root).joinpath(*parts)
+
+
 def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
                        extra_args, with_parasitics, extractor, resume,
                        workdir_root, env, outer_timeout):
@@ -145,7 +167,7 @@ def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
         simulator, input_json, output_json, timeout=timeout,
         parasitics_json=parasitics_json,
         extra_args=extra_args,
-        workdir=Path(workdir_root) / repo_name / input_json.stem,
+        workdir=unit_workdir(workdir_root, repo_name, input_json.stem),
         env=env, outer_timeout=outer_timeout,
     )
     return input_json, returncode, summary, output_json, elapsed, did_extract_parasitics

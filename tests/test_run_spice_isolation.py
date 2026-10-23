@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "run"))
 
-from run_spice import run_one_spice  # noqa: E402
+from run_spice import run_one_spice, unit_workdir  # noqa: E402
 
 RECORDER = """import json, os, sys
 argv = sys.argv[1:]
@@ -76,3 +76,13 @@ def test_unqualified_run_exits_2_without_all(tmp_path):
     assert r.returncode == 2, (r.returncode, r.stdout, r.stderr)
     assert "--all" in r.stderr
     assert list(tmp_path.rglob("*")) == []
+
+
+def test_unit_workdir_has_no_characters_ngspice_redirects_choke_on():
+    root = Path("/w")
+    wd = unit_workdir(root, "0Prashant/Kicad", "LED ARRAY CIRCUIT_LED ARRAY CIRCUIT.sch")
+    for part in wd.relative_to(root).parts:
+        assert not any(ch.isspace() or ch in ",&'\u00b5:" for ch in part), part
+    assert unit_workdir(root, "owner/repo", "plain.kicad_sch") == root / "owner/repo/plain.kicad_sch"
+    assert unit_workdir(root, "o/r", "a b") != unit_workdir(root, "o/r", "a,b")
+    assert unit_workdir(root, "o/r", "a b") != unit_workdir(root, "o/r", "a_b")
