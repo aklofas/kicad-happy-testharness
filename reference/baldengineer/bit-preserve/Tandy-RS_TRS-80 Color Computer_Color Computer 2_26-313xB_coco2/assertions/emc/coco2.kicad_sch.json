@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~225 (tolerance 10%)",
+      "description": "Finding count ~221 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 218,
-        "max": 232
+        "min": 214,
+        "max": 228
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~97",
+      "description": "by_severity.error ~96",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 92,
-        "max": 102
+        "min": 91,
+        "max": 101
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~102",
+      "description": "by_severity.warning ~99",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 96,
-        "max": 108
+        "min": 94,
+        "max": 104
       }
     },
     {
@@ -67,13 +67,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "7 decoupling finding(s)",
+      "description": "5 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 7
+        "value": 5
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "169 ground_plane finding(s)",
+      "description": "167 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 169
+        "value": 167
       }
     },
     {
@@ -178,11 +178,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "~168 net(s) with EMC scores",
+      "description": "~166 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 159
+        "value": 157
       }
     }
   ]

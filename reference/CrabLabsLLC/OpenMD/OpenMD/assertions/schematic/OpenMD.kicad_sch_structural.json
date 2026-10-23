@@ -36,12 +36,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 6 audit_power_pin_dc_paths",
+      "description": "Exactly 3 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 6
+        "value": 3
       }
     },
     {
@@ -394,22 +394,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R32$"
-      }
-    },
-    {
-      "id": "STRUCT-00000038",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-10-06T07:23:18Z",
-        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     }
   ]

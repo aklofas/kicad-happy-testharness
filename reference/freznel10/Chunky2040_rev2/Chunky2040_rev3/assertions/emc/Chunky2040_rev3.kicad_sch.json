@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~297 (tolerance 10%)",
+      "description": "Finding count ~194 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 288,
-        "max": 306
+        "min": 184,
+        "max": 204
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~71",
+      "description": "by_severity.error ~52",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 67,
-        "max": 75
+        "min": 49,
+        "max": 55
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~183",
+      "description": "by_severity.warning ~99",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 173,
-        "max": 193
+        "min": 94,
+        "max": 104
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "2 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -133,13 +133,13 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "160 ground_plane finding(s)",
+      "description": "58 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 160
+        "value": 58
       }
     },
     {
@@ -233,11 +233,11 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "~216 net(s) with EMC scores",
+      "description": "~130 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 209
+        "value": 123
       }
     }
   ]

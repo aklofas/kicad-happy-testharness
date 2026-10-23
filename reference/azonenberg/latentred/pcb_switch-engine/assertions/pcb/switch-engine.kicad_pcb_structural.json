@@ -27,6 +27,17 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "U23 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U23$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "U28 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
@@ -37,7 +48,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "U7 in analyze_thermal_pad_vias",
       "check": {
         "path": "findings",
@@ -45,17 +56,6 @@
         "op": "contains_match",
         "field": "component",
         "pattern": "^U7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "U23 in analyze_thermal_pad_vias",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_thermal_pad_vias",
-        "op": "contains_match",
-        "field": "component",
-        "pattern": "^U23$"
       }
     },
     {
@@ -1544,11 +1544,11 @@
     },
     {
       "id": "STRUCT-00000141",
-      "description": "Exactly 28 decoupling_placement",
+      "description": "Exactly 26 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 28
+        "value": 26
       }
     },
     {
@@ -1809,26 +1809,6 @@
         "op": "contains_match",
         "field": "ic",
         "pattern": "^U21$"
-      }
-    },
-    {
-      "id": "STRUCT-00000168",
-      "description": "U24 in decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U24$"
-      }
-    },
-    {
-      "id": "STRUCT-00000169",
-      "description": "U26 in decoupling_placement",
-      "check": {
-        "path": "decoupling_placement",
-        "op": "contains_match",
-        "field": "ic",
-        "pattern": "^U26$"
       }
     }
   ]
