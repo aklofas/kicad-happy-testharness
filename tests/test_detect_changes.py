@@ -291,3 +291,10 @@ if __name__ == "__main__":
             _shutil.rmtree(tmp, ignore_errors=True)
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+def test_kicad_core_modules_reach_every_analyzer_family():
+    every = {"schematic", "pcb", "gerber", "spice", "emc", "thermal"}
+    assert map_file_to_types("skills/kicad/scripts/kicad_core/render.py") == every
+    assert map_file_to_types("skills/kicad/scripts/kicad_core/cli.py") == every
+    assert map_file_to_types("skills/kicad/scripts/kicad_core/parts.py") == every

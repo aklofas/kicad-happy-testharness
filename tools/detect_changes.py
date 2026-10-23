@@ -50,6 +50,9 @@ FILE_TO_TYPES = {
 
 # Glob patterns for broader matching
 GLOB_PATTERNS = {
+    # kicad_core is imported by every analyzer family (emc/spice/thermal/cross included),
+    # so a change there is in scope for all of them; must precede the broader scripts glob.
+    "skills/kicad/scripts/kicad_core/": {"schematic", "pcb", "gerber", "spice", "emc", "thermal"},
     "skills/emc/": {"emc"},
     "skills/datasheets/": {"datasheets"},
     "skills/spice/": {"spice"},
