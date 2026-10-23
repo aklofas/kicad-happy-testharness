@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-23 later (3) — Checklist 11 backlog pass: TH-076 fixed (constants registry lost 41 verification records at the round-2/3 re-baselines; scan now carries evidence by content hash; both audit registries rescanned at 0490c49), KH-467 filed (three divergent LED Vf tables); verified 183 → 229, critical 18 → 5; equations stale/unverified 31 — re-read pending; UNCOMMITTED pending review
+Last updated: 2026-10-23 later (4) — Checklist 11 backlog pass COMMITTED LOCALLY (4 commits over eca0990e115, tip = equations re-verify): TH-076 fixed, KH-467 filed, constants verified 229 / critical 5, equations 105/105 verified (23 stale re-confirmed formula-unchanged against the last-verified product tag, 8 pcb geometry tags verified by reading); UNPUSHED, push on the user's word; `tests/python_compat_policy.json` carries the main-repo agent's in-flight round-8 edit (not committed)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
