@@ -14,7 +14,7 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-from kicad_types import AnalysisContext  # noqa: E402
+from kicad_types import build_analysis_context  # noqa: E402
 from validation_detectors import validate_pullups  # noqa: E402
 
 
@@ -36,12 +36,7 @@ def _ctx(int_no_connect, extra_int_pins=()):
                                  *extra_int_pins],
                         "no_connect": int_no_connect},
     }
-    pin_net = {}
-    for net_name, info in nets.items():
-        for p in info["pins"]:
-            pin_net[(p["component"], p["pin_number"])] = (net_name, p["pin_type"])
-    return AnalysisContext(components=comps, nets=nets, lib_symbols={},
-                           pin_net=pin_net)
+    return build_analysis_context(comps, nets, {})
 
 
 def _pu001(ctx):
