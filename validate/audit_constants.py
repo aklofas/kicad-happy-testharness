@@ -865,6 +865,67 @@ def update_registry(registry, scanned):
                 entry["impact_flags"] = cflags
         # else: entry no longer found in source — will be marked removed
 
+    # Carry an orphaned entry to the newcomer that is the same constant elsewhere:
+    # same name and literal content hash, exactly one newcomer with that signature
+    # (a file move, a function split, or several identical copies merged into one
+    # shared table). Without this, `relocate --map` was the only path that kept
+    # verification across a move, and rounds that skipped it dropped the entry and
+    # re-added it unverified (TH-076). Non-literal constants hash by line
+    # (`ast_<line>`) and never match.
+    def _literal_hash(h):
+        return bool(h) and not str(h).startswith("sha256:ast_")
+
+    def _has_evidence(e):
+        return e.get("status") == "verified" or any(
+            v.get("status") == "verified" for v in (e.get("entries") or {}).values())
+
+    orphans = {}
+    for entry in registry["constants"]:
+        key = (entry["file"], entry.get("scope", "module"), entry["name"])
+        if key not in scanned_map and _literal_hash(entry.get("content_hash")):
+            orphans.setdefault((entry["name"], entry["content_hash"]), []).append(entry)
+    newcomers = {}
+    for key, info in scanned_map.items():
+        if key not in existing_keys and _literal_hash(info.content_hash):
+            newcomers.setdefault((info.name, info.content_hash), []).append(info)
+    for sig, cands in newcomers.items():
+        olds = orphans.get(sig, [])
+        if len(cands) != 1 or not olds:
+            continue
+        info = cands[0]
+        entry = min(olds, key=lambda e: (e["file"] != info.file,
+                                         e.get("scope", "module") != info.scope,
+                                         not _has_evidence(e)))
+        olds.remove(entry)
+        new_data = info.to_dict()
+        if entry["file"] != info.file:
+            entry["relocated_from"] = entry["file"]
+        entry["file"] = info.file
+        entry["scope"] = info.scope
+        entry["line"] = new_data["line"]
+        entry["end_line"] = new_data["end_line"]
+        for k in ("function", "class"):
+            if k in new_data:
+                entry[k] = new_data[k]
+            else:
+                entry.pop(k, None)
+        if new_data.get("entries") and entry.get("entries"):
+            for k, v in new_data["entries"].items():
+                old_e = entry["entries"].get(k)
+                if old_e:
+                    v.setdefault("status", old_e.get("status", "unverified"))
+                    v.setdefault("source", old_e.get("source"))
+            entry["entries"] = new_data["entries"]
+        cat = classify_category(info)
+        oscore, oflags = compute_overfit_score(info, cat)
+        cscore, cflags = compute_impact_score(info, cat)
+        entry["overfit_score"] = round(oscore, 2)
+        entry["overfit_flags"] = oflags
+        entry["impact_score"] = round(cscore, 2)
+        entry["impact_flags"] = cflags
+        existing_keys.add((info.file, info.scope, info.name))
+        updated += 1
+
     # Add new entries
     for key, info in scanned_map.items():
         if key not in existing_keys:

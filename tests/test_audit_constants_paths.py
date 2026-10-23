@@ -108,3 +108,111 @@ def test_relocate_function_same_name_keeps_scope():
                                        "new_name": "f", "facade_until": None}]) == 2
     assert [(e["file"], e["scope"], e["name"]) for e in reg["constants"]] == [
         ("b.py", "f", "f:9"), ("b.py", "f:9", "x")]
+
+
+def _scanned(name, file, content_hash, entries=None, scope="module"):
+    return ac.ConstantInfo(name=name, file=file, line=1, scope=scope, const_type="lookup_table",
+                           entry_count=len(entries or {}), content_hash=content_hash,
+                           entries=entries)
+
+
+def test_update_registry_carries_evidence_across_a_file_move_by_hash():
+    """A verified constant whose file moved (same scope, name, hash; old key gone) keeps its id
+    and evidence instead of being removed and re-added unverified (TH-076)."""
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-106", "file": "skills/kicad/scripts/kicad_utils.py", "scope": "module",
+         "name": "_REGULATOR_VREF", "line": 143, "end_line": 249, "type": "lookup_table",
+         "entry_count": 2, "content_hash": "sha256:abc", "status": "verified",
+         "source": "TI datasheets", "notes": "n", "verified_entries": 1,
+         "entries": {"LM317": {"value": 1.25, "status": "verified", "source": "SLVS044"},
+                     "AP2112": {"value": 0.8, "status": "unverified", "source": None}}}]}
+    scanned = [_scanned("_REGULATOR_VREF", "skills/kicad/scripts/kicad_core/parts.py", "sha256:abc",
+                        {"LM317": {"value": 1.25}, "AP2112": {"value": 0.8}})]
+    added, updated, removed = ac.update_registry(reg, scanned)
+    assert (added, updated, removed) == (0, 1, 0)
+    c = reg["constants"][0]
+    assert c["id"] == "CONST-106"
+    assert c["file"] == "skills/kicad/scripts/kicad_core/parts.py"
+    assert c["relocated_from"] == "skills/kicad/scripts/kicad_utils.py"
+    assert c["status"] == "verified" and c["source"] == "TI datasheets" and c["notes"] == "n"
+    assert c["verified_entries"] == 1
+    assert c["entries"]["LM317"] == {"value": 1.25, "status": "verified", "source": "SLVS044"}
+    assert c["entries"]["AP2112"]["status"] == "unverified"
+
+
+def test_update_registry_ambiguous_hash_move_is_not_carried():
+    """Two newcomers with the same (scope, name, hash) cannot claim one orphan's evidence."""
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-001", "file": "a.py", "scope": "module", "name": "counts", "line": 1,
+         "end_line": 1, "type": "dict", "entry_count": 0, "content_hash": "sha256:same",
+         "status": "verified", "source": "s", "notes": None, "verified_entries": 0}]}
+    scanned = [_scanned("counts", "b.py", "sha256:same"), _scanned("counts", "c.py", "sha256:same")]
+    added, updated, removed = ac.update_registry(reg, scanned)
+    assert (added, updated, removed) == (2, 0, 1)
+    assert all(c["status"] == "unverified" for c in reg["constants"])
+
+
+def test_update_registry_hash_move_does_not_steal_from_a_surviving_key():
+    """An entry still present at its own key is updated in place; a same-hash twin elsewhere is new."""
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-001", "file": "a.py", "scope": "module", "name": "counts", "line": 1,
+         "end_line": 1, "type": "dict", "entry_count": 0, "content_hash": "sha256:same",
+         "status": "verified", "source": "s", "notes": None, "verified_entries": 0}]}
+    scanned = [_scanned("counts", "a.py", "sha256:same"), _scanned("counts", "b.py", "sha256:same")]
+    added, updated, removed = ac.update_registry(reg, scanned)
+    assert (added, updated, removed) == (1, 0, 0)
+    by_file = {c["file"]: c for c in reg["constants"]}
+    assert by_file["a.py"]["status"] == "verified" and "relocated_from" not in by_file["a.py"]
+    assert by_file["b.py"]["status"] == "unverified"
+
+
+def test_update_registry_carries_evidence_across_a_function_split_in_the_same_file():
+    """A local moved into a new helper (same file, name and hash, new scope) keeps its evidence."""
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-134", "file": "skills/kicad/scripts/signal_detectors.py",
+         "scope": "detect_power_regulators", "function": "detect_power_regulators",
+         "name": "_non_reg_exclude", "line": 10, "end_line": 12, "type": "set", "entry_count": 0,
+         "content_hash": "sha256:b55a", "status": "verified", "source": "s", "notes": None,
+         "verified_entries": 0}]}
+    info = _scanned("_non_reg_exclude", "skills/kicad/scripts/signal_detectors.py", "sha256:b55a",
+                    scope="_screen_regulator_candidate")
+    info.func = "_screen_regulator_candidate"
+    added, updated, removed = ac.update_registry(reg, [info])
+    assert (added, updated, removed) == (0, 1, 0)
+    c = reg["constants"][0]
+    assert c["id"] == "CONST-134" and c["status"] == "verified"
+    assert c["scope"] == "_screen_regulator_candidate" and c["function"] == "_screen_regulator_candidate"
+    assert "relocated_from" not in c
+
+
+def test_update_registry_merged_copies_keep_the_verified_copy():
+    """Two identical dicts merged into one shared table: the verified copy's id and evidence survive,
+    the other copy is removed."""
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-365", "file": "skills/kicad/scripts/signal_detectors.py",
+         "scope": "_default_switching_freq", "name": "defaults", "line": 1, "end_line": 1,
+         "type": "dict", "entry_count": 2, "content_hash": "sha256:2090", "status": "unverified",
+         "source": None, "notes": None, "verified_entries": 0},
+        {"id": "CONST-384", "file": "skills/emc/scripts/emc_rules.py",
+         "scope": "_default_switching_freq", "name": "defaults", "line": 1, "end_line": 1,
+         "type": "dict", "entry_count": 2, "content_hash": "sha256:2090", "status": "verified",
+         "source": "datasheets", "notes": None, "verified_entries": 0}]}
+    info = _scanned("defaults", "skills/kicad/scripts/kicad_core/parts.py", "sha256:2090",
+                    scope="default_switching_freq")
+    added, updated, removed = ac.update_registry(reg, [info])
+    assert (added, updated, removed) == (0, 1, 1)
+    c = reg["constants"][0]
+    assert c["id"] == "CONST-384" and c["status"] == "verified" and c["source"] == "datasheets"
+    assert c["file"] == "skills/kicad/scripts/kicad_core/parts.py"
+    assert c["relocated_from"] == "skills/emc/scripts/emc_rules.py"
+
+
+def test_update_registry_line_keyed_hash_never_carries():
+    """Non-literal constants hash as ast_<line>; a same-line coincidence must not transfer evidence."""
+    reg = {"version": 2, "last_scan": None, "constants": [
+        {"id": "CONST-139", "file": "a.py", "scope": "f", "name": "reg_info", "line": 1,
+         "end_line": 1, "type": "dict", "entry_count": 3, "content_hash": "sha256:ast_1741",
+         "status": "verified", "source": "s", "notes": None, "verified_entries": 0}]}
+    added, updated, removed = ac.update_registry(reg, [_scanned("reg_info", "b.py", "sha256:ast_1741", scope="g")])
+    assert (added, updated, removed) == (1, 0, 1)
+    assert reg["constants"][0]["status"] == "unverified"
