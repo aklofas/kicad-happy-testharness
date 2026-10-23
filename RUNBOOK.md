@@ -379,7 +379,9 @@ oracle (`results/v230_regen/chain_oracle.py` pattern): the fresh corpus
 outputs for the gate's `--full` chain projects must equal the chain's
 candidate tree modulo inputs/capability_mode_ref/elapsed_s.
 
-**SPICE locks are environment-sensitive until TH-059 lands.** `run_spice.py` lets the spice skill resolve part numbers through live distributor APIs (DigiKey/Mouser/element14 credentials in the environment) and cache models under each corpus checkout's `spice/` dir, so a part that missed the cache last regen can resolve to a behavioral model this time and flip `summary.pass` locks with no analyzer change (v2.3.1 regen: 21 locks / 12 repos). Tell: a fresh run of the OLD analyzer reproduces the NEW value, and `model_note` names `api:<distributor>` or `cache:<MPN>`. Attribute such fails to TH-059, not to the release under test.
+**SPICE runs are hermetic by default (TH-059 harness half): `run_spice.py` strips distributor credentials unless `--online`, so `summary.pass` locks seeded since the v2.3.2 regen assume no live part lookups. Audit skips, not just rewrites:** the simulator reports `skip` (never `fail`) when a measurement cannot be read back, so a broken environment looks like a quiet run. After the pass, bucket `summary.skip` / `summary.total` by whether the unit path has whitespace or punctuation — the two rates must agree (~3 %). The v2.3.2 regen first pass skipped 95 % of sims on 5,198 units because the per-unit `--workdir` carried raw repo/file names into an unquoted ngspice redirect (KH-463 / TH-075; `unit_workdir()` now sanitizes the name).
+
+**pcb timeout class (TH-055):** the standard pass quarantines a board whose previous output exists but which times out at 120 s as `<out>.stale`. Collect those repos and run a recovery pass before emc/thermal (they consume pcb outputs): `run_pcb.py --repo-list <repos> --jobs 8 --timeout 600`, then `--jobs 6 --timeout 1800` for the remainder; delete a `.stale` only once a fresh output exists next to it. v2.3.2 regen: 189 quarantined → 183 recovered at 600 s; the remainder are the KH-449 MAXWELL board and five other large THT boards.
 
 ### 4c. Snapshot new baselines
 
