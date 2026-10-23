@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-23 — v2.3.2 corpus regen 0684046→2fd9aa0 CLEAN; corpus tracks v2.3.2; TH-055 pcb timeout class closed (189 boards recovered); TH-075 fixed / KH-463 filed; consolidation LOCAL (push on the user's word)
+Last updated: 2026-10-23 later — v3 ROUND 7 (0490c49) gated CLEAN (FULL standard + full-chain strict-identical, text oracle OK both ways), harness re-baselined at 0490c49; v2.3.2 regen CLEAN earlier today; everything COMMITTED LOCALLY over 13a00ae3291 — UNPUSHED, push on the user's word (= CI pin checkpoint 9 candidate)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,17 @@ Last updated: 2026-10-23 — v2.3.2 corpus regen 0684046→2fd9aa0 CLEAN; corpus
 ---
 
 ## Completed batches
+
+### 2026-10-23 later — v3 ROUND 7 GATED CLEAN: candidate `0490c49` (v3-dev, range `4701c26..0490c49`, structural, budget EMPTY) — FULL standard 149,629 pairs strict-identical + FULL-CHAIN 21,405 pairs strict-identical + text oracle OK both ways; harness RE-BASELINED at 0490c49 (scan re-key 91 constants); KH-464..466 filed; COMMITTED LOCALLY, UNPUSHED (checkpoint-9 candidate)
+
+- **Candidate:** clean clone `results/v3_baseline/product_0490c49` (4701c26 is an ancestor; 123 skills files touched). Handoff `.superpowers/sdd/2026-10-14-refactor-arc/handoff-round7.md`; records copied to `results/v3_round7_gate/round7_{request,response}.json`.
+- **FULL standard** (run `966dcbe9`, 2,325 s at 32 jobs, harness `a732600b17e` clean): 149,629 PASS / 20,393 SKIP (20,379 not_applicable + 14 ledgered: KH-446 ×2, KH-447 ×3 + 9 dependency_missing) / 0 FAIL; census exact (sch 36,465 / pcb 18,660 / gerber 5,502 / emc, thermal, cross 36,462); strict 0 deltas on 149,629 pairs; raw deltas = run_id only; `--schema` ×6 identical. Evidence `results/v3_round7_gate/` (snap trees kept until round 8 is accepted).
+- **FULL-CHAIN** (run `360aa9fe`, 2,842 s at 8 jobs per KH-447, 260 repos of the seed-23 sample): 21,405 PASS / 2,234 SKIP (7 ledgered: KH-446 ×2, KH-447 LT3514 + 3 dependency_missing, KH-449 MAXWELL) / 0 FAIL; census = round 5's (sch 5,156 / pcb 3,015 / emc, thermal, cross 5,155); strict 0 deltas. Evidence `results/v3_round7_gate_fc/`.
+- **Text oracle** (candidate's `tools/check_refactor.py`, pinned fixtures `/tmp/harness-pin/tests/fixtures`, Python 3.12.3): candidate over candidate OK (776 artefacts); candidate tool over an `e45ce11` export OK (776). Logs `results/v3_round7_gate_aux/text_oracle_*.log`.
+- **Harness side:** `api_migration.py apply-map` → 17 optional `normalize_severity` sites, nothing to migrate (facade kept until round 9); `check` vs 0490c49 → only that pre-H1 item after migrating `tests/test_kh451..453` from `AnalysisContext(...)` to `build_analysis_context` (a 2026-10-22 adoption leftover, not a round-7 relocation); scan `check` FAIL on exactly the 91 line-keyed `lost_constants` (lost_files / lost_eq / lost_sites / new_untagged_era 0) → `--accept-baseline` (`accept_baseline_diff.log`) → CLEAN; `tools/detect_changes.py` gains a `skills/kicad/scripts/kicad_core/` glob → every analyzer family (render.py, cli.py, parts.py, classify.py are shared beyond schematic/pcb). Tiers vs product_0490c49: hook 2,443 / 0 / 1 xf; combined 3,148 / 1 (scan, before the re-key) / 8 / 4 → re-run after the re-key recorded in the LOG reply.
+- **Filings:** KH-464 (lifecycle_audit missing-input traceback, `:1048`), KH-465 (`is_cross_analysis_ground_name` exact set — SGND/GNDPWR/GND_ISO/VSSA/`/Power/GND` not ground, `cross_analysis.py:41`), KH-466 (`analyze_gerbers` exit 0 on a nonexistent dir, `:1168`/`:1646`) — all pre-existing, verified at 0490c49, LOW. Next KH-467 / TH-076.
+- **Commits (local, over the regen set):** `976633d73b7` detect_changes, `78cb255ccc9` kh451..453 builder, `b0f9dbaf9d3` KH-464..466, `6113186bf45` scan re-key, + this status entry. **UNPUSHED — push on the user's word; the pushed tip = CI harness-smoke pin checkpoint 9.** `KICAD_HAPPY_DIR` for the combined tier → `product_0490c49` (the re-key is line-keyed to it); the hook tier is green at both e45ce11 and 0490c49.
+- **Verdict ACCEPTED (structural: strict-clean on both profiles, census exact, skips all ledgered, candidate failures 0).** Round 8 = the budgeted round (KH-454 / KH-455 …) after the maintainer's acknowledgement. Open 53 KH + 21 TH.
 
 ### 2026-10-23 — v2.3.2 CORPUS REGEN `0684046`→`2fd9aa0` EXECUTED + CLEAN under the backport-gate budget; corpus now tracks v2.3.2; TH-055 pcb timeout class CLOSED (189 boards recovered at 600 / 1800 s — out-of-budget class, reported); SPICE workdir incident caught before reseed (TH-075 fixed, KH-463 filed); consolidation COMMITTED LOCALLY, push awaits the user
 
