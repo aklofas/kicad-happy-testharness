@@ -86,6 +86,17 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-23 — TH-075: `run_spice.py` per-unit `--workdir` carried raw repo/file names into ngspice — 18,464 sims silently skipped on 5,198 corpus units (whitespace/punctuation paths)
+
+**Severity:** MEDIUM (data: the first v2.3.2 regen SPICE pass would have locked wrong values on 3,332 units — caught by the after-check before reseed; no reference data affected).
+**File:** `run/run_spice.py` (`unit_workdir`, new); test `tests/test_run_spice_isolation.py`.
+**Discovered:** 2026-10-23, v2.3.2 corpus regen (`results/v232_regen/`), after-check bucket `spice_environment`: 3,332 SEED "At least N passing simulation(s)" fails / 679 repos.
+**Fixed:** 2026-10-23, same session.
+
+- **Root cause:** the TH-059 harness fix (H0 plan 2) moved SPICE scratch from `tempfile.mkdtemp` to `results/spice_work/<ts>/<owner>/<repo>/<stem>`. The product's testbench `.control` block redirects `echo … > <workdir>/<label>.out` unquoted (KH-463), so a space, `,`, `&`, `'`, `µ` or `:` anywhere in the repo or file name splits the redirect and every measurement reports `skip` ("ngspice … measurement failed", ~4 ms, though the ngspice log shows the analysis ran). Skip rate 95 % on affected units vs 3.7 % elsewhere; the v2.3.1 regen never saw it because it ran without `--workdir`.
+- **Fix:** `unit_workdir()` replaces characters outside `[A-Za-z0-9._-]` with `_` and appends an 8-hex sha1 of the original segment, so distinct raw names never share a directory.
+- **Verification:** new test (unsafe characters gone; `a b` / `a,b` / `a_b` map to distinct dirs; safe names unchanged); SPICE rerun at `2fd9aa0` (36,326 units rewritten): affected units skip 626 / 20,228 (3.1 %), others 4,467 / 134,020 (3.3 %); the `spice_environment` bucket (3,332 records) is 0 at the second after-check and the final ledger is the standing 7 + 2 (`results/v232_regen/adjudication_v232_regen.md`).
+
 ## 2026-10-22 — TH-074: long-run waiters stalled twice (pgrep self-match, zombie PID) — the finished v2.3.2 gate and its re-baseline sat unnoticed for ~1 h
 
 **Severity:** LOW (operational; no data affected — the runs themselves completed. Cost: idle box time and a missed completion notification, twice in one session).
