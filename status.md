@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-23 later — v3 ROUND 7 (0490c49) gated CLEAN (FULL standard + full-chain strict-identical, text oracle OK both ways), harness re-baselined at 0490c49; v2.3.2 regen CLEAN earlier today; everything COMMITTED LOCALLY over 13a00ae3291 — UNPUSHED, push on the user's word (= CI pin checkpoint 9 candidate)
+Last updated: 2026-10-23 later (2) — CHECKPOINT 9 PUSHED: origin/v2.2-dev = caa50e5c9c7 (fast-forward from 13a00ae3291, 11 commits; pre-push hook vs product_0490c49 2,443 / 0 / 1 xfailed; ls-remote verified); TH-055 recoveries stay reseeded (user's decision); nothing unpushed; next = round-8 handoff (budgeted)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
