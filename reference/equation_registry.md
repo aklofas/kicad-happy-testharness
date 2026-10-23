@@ -2,16 +2,16 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-16T22:49:26.708025+00:00
+**Last scan:** 2026-10-23T22:26:36.756882+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
 | Total equations | 105 |
-| Verified | 79 |
+| Verified | 74 |
 | Unverified | 7 |
-| Stale | 19 |
+| Stale | 24 |
 | Critical impact | 11 |
 | High impact | 34 |
 | Medium impact | 38 |
@@ -58,12 +58,12 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-035 | `check_connector_filtering` | d = √(Δx²+Δy²) (filter-to-connector distance) | filter_design | high | **stale** |
 | EQ-036 | `check_diff_pair_cm_radiation` | E_cm from V_cm and cable length using EQ-003 | unknown | medium | **stale** |
 | EQ-037 | `check_emi_filter_effectiveness` | ratio = f_sw/f_cutoff; ratio >= 5 for adequate EMI filter | filter_design | high | **verified** |
-| EQ-038 | `check_esd_protection_path` | V_overshoot = L × dI/dt; dI/dt = 37.5 GA/s for 8kV ESD | unknown | medium | **verified** |
-| EQ-039 | `check_ground_pour_ring` | Edge coverage from GND zone bounding box sampling | unknown | medium | **verified** |
+| EQ-038 | `check_esd_protection_path` | V_overshoot = L × dI/dt; dI/dt = 37.5 GA/s for 8kV ESD | unknown | medium | **stale** |
+| EQ-039 | `check_ground_pour_ring` | Edge coverage from GND zone bounding box sampling | unknown | medium | **stale** |
 | EQ-040 | `check_layer_transition_stitching` | Via distance from layer transition vias | parasitic | high | **stale** |
 | EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **stale** |
 | EQ-042 | `check_thermal_emc` | DC bias derating lookup + ferrite µ thermal degradation | thermal | medium | **verified** |
-| EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **verified** |
+| EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **stale** |
 | EQ-086 | `check_decoupling_via_distance` | d = √(Δx²+Δy²) (cap-to-via distance for connection inductance) | parasitic | high | **stale** |
 | EQ-087 | `check_clock_near_connector` | d = √(Δx²+Δy²) (clock trace midpoint to connector distance) | parasitic | high | **verified** |
 | EQ-088 | `check_input_cap_loop_area` | A = polygon_area(cap, IC, inductor) (hot loop area estimation) | unknown | medium | **verified** |
@@ -173,8 +173,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
 | EQ-020 | `detect_rc_filters` | f_c = 1/(2πRC) (RC filter cutoff frequency) | filter_design | high | **stale** |
-| EQ-021 | `detect_lc_filters` | f₀ = 1/(2π√(LC)) (LC resonant frequency) | filter_design | high | **verified** |
-| EQ-022 | `detect_lc_filters` | Z₀ = √(L/C) (LC characteristic impedance) | filter_design | high | **verified** |
+| EQ-021 | `detect_lc_filters` | f₀ = 1/(2π√(LC)) (LC resonant frequency) | filter_design | high | **stale** |
+| EQ-022 | `detect_lc_filters` | Z₀ = √(L/C) (LC characteristic impedance) | filter_design | high | **stale** |
 | EQ-069 | `detect_decoupling` | f_SRF = 1/(2π√(ESL×C)) (decoupling SRF) | filter_design | high | **verified** |
 | EQ-070 | `detect_design_observations` | Threshold comparisons for design quality metrics | filter_design | high | **stale** |
 | EQ-071 | `detect_opamp_circuits` | G = 1+Rf/Ri or -Rf/Ri; G_dB = 20log₁₀\|G\| (opamp gain) | opamp | medium | **stale** |
