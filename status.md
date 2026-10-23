@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-22 — v2.3.2 backport gate accepted + pushed (b2b77a10d57); KICAD_HAPPY_DIR = product_e45ce11; 145 GiB pruned
+Last updated: 2026-10-22 later — v3 arc on product_e45ce11; scan baseline re-keyed; KH-456..462 committed; pushed origin/v2.2-dev = CI pin checkpoint 8 candidate
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;
@@ -91,6 +91,15 @@ Last updated: 2026-10-22 — v2.3.2 backport gate accepted + pushed (b2b77a10d57
 ---
 
 ## Completed batches
+
+### 2026-10-22 later — v3 TIP e45ce11 ADOPTED FOR THE TIERS (clone verified clean), scan-coverage baseline RE-KEYED 30cbfcb→e45ce11, KH-456..462 tracker commit REVIEWED + COMMITTED, PUSHED origin/v2.2-dev (hook green vs product_e45ce11) = CI PIN CHECKPOINT 8
+
+- **Clone:** `results/v3_baseline/product_e45ce11` verified at `e45ce11` (= v3-dev 51bf131 + merge of main 4701c26; not on origin), working tree clean. `product_30cbfcb` already retired by the housekeeping pass; only `product_4701c26` + `product_e45ce11` remain. `KICAD_HAPPY_DIR` = `product_e45ce11` for the tiers and the pre-push hook (the hook reads the env var; nothing persistent to edit).
+- **Tiers at e45ce11 (before the re-key):** `run_tests.py --unit` 2,441 passed / 0 failed / 1 xfailed (the maintainer expected 2,434 against eeb2edd1c07; the +7 are `tests/test_wait_for_run.py` from the TH-074 commit `b2b77a10d57`, which their expectation predates); `tests/test_kh450..453_*.py` 11/11; `pytest -m "unit or offline_contract"` 3,146 passed / 8 skipped / 4 xfailed / 1 FAILED = `test_scan_coverage_not_lost` only, as expected.
+- **Re-key:** `tools/source_scan.py check --accept-baseline` (RUNBOOK 1i); diff = `product_sha` 30cbfcb→e45ce11, `validate_pullups:300→307`, `validate_voltage_levels:590→597`, `+signal_detectors|module|_BOOTSTRAP_PIN_TOKENS` — exactly the handoff's three items, nothing lost. `check` CLEAN; combined tier after the re-key 3,147 / 8 / 4 / 0. Commit `e5096743f04`.
+- **Tracker commit `cd990e35ab3`:** KH-456..462 (SacMap rev2 soak run 9 @ 4701c26) + riders on KH-431/432/436, next KH-463 — reviewed harness-side: all seven file:line citations verified against `product_4701c26` (`fab_release_gate.py` 180–203, `analyze_pcb.py:3538` rev regex, `capability_mode.py:87-89` stub, `analyze_schematic.py:5137` `audit_pwr_flags` / `:4101` `needs_level_shifter`, `emc_rules.py:632-639` value-substring skip, `datasheet_verify.py:1066` rc). KH-459 sizing (pwr_flag_warnings additions corpus-wide) deferred to its fixing round.
+- **PUSHED (user's word):** origin/v2.2-dev fast-forwarded from `b2b77a10d57` to the commit carrying this entry (hook green: unit tier vs product_e45ce11). That tip = CI harness-smoke pin for the first round-7 commit on v3-dev (checkpoint 8). Standing: v2.3.2 regen handoff `0684046→2fd9aa0` can run in parallel; round-7 request follows the user's plan review (base 4701c26, budget EMPTY).
+- Open 49 KH + 21 TH; next KH-463 / TH-075.
 
 ### 2026-10-22 — v2.3.2 BACKPORT GATE 6a91aaa→4701c26 ACCEPTED (FULL standard profile, BUDGETED 3 classes, 0 violations, 1 residue unit hand-adjudicated); KH-450..453 FIXED-direct (EldarPolitkin, GitHub #52–#55 / PRs #56–#59); KH-454 + KH-455 filed; v3 arc re-baselined at main@4701c26; PUSHED origin/v2.2-dev = `b2b77a10d57`; `KICAD_HAPPY_DIR` → `product_e45ce11`; 145 GiB of stale artefacts pruned
 
