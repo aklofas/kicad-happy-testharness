@@ -2,16 +2,16 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-23T22:26:36.756882+00:00
+**Last scan:** 2026-10-23T22:56:00.187291+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
 | Total equations | 105 |
-| Verified | 74 |
-| Unverified | 7 |
-| Stale | 24 |
+| Verified | 105 |
+| Unverified | 0 |
+| Stale | 0 |
 | Critical impact | 11 |
 | High impact | 34 |
 | Medium impact | 38 |
@@ -55,23 +55,23 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
 | EQ-034 | `check_connector_area_stitching` | Via density in connector proximity region | parasitic | high | **verified** |
-| EQ-035 | `check_connector_filtering` | d = √(Δx²+Δy²) (filter-to-connector distance) | filter_design | high | **stale** |
-| EQ-036 | `check_diff_pair_cm_radiation` | E_cm from V_cm and cable length using EQ-003 | unknown | medium | **stale** |
+| EQ-035 | `check_connector_filtering` | d = √(Δx²+Δy²) (filter-to-connector distance) | filter_design | high | **verified** |
+| EQ-036 | `check_diff_pair_cm_radiation` | E_cm from V_cm and cable length using EQ-003 | unknown | medium | **verified** |
 | EQ-037 | `check_emi_filter_effectiveness` | ratio = f_sw/f_cutoff; ratio >= 5 for adequate EMI filter | filter_design | high | **verified** |
-| EQ-038 | `check_esd_protection_path` | V_overshoot = L × dI/dt; dI/dt = 37.5 GA/s for 8kV ESD | unknown | medium | **stale** |
-| EQ-039 | `check_ground_pour_ring` | Edge coverage from GND zone bounding box sampling | unknown | medium | **stale** |
-| EQ-040 | `check_layer_transition_stitching` | Via distance from layer transition vias | parasitic | high | **stale** |
-| EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **stale** |
+| EQ-038 | `check_esd_protection_path` | V_overshoot = L × dI/dt; dI/dt = 37.5 GA/s for 8kV ESD | unknown | medium | **verified** |
+| EQ-039 | `check_ground_pour_ring` | Edge coverage from GND zone bounding box sampling | unknown | medium | **verified** |
+| EQ-040 | `check_layer_transition_stitching` | Via distance from layer transition vias | parasitic | high | **verified** |
+| EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **verified** |
 | EQ-042 | `check_thermal_emc` | DC bias derating lookup + ferrite µ thermal degradation | thermal | medium | **verified** |
-| EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **stale** |
-| EQ-086 | `check_decoupling_via_distance` | d = √(Δx²+Δy²) (cap-to-via distance for connection inductance) | parasitic | high | **stale** |
+| EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **verified** |
+| EQ-086 | `check_decoupling_via_distance` | d = √(Δx²+Δy²) (cap-to-via distance for connection inductance) | parasitic | high | **verified** |
 | EQ-087 | `check_clock_near_connector` | d = √(Δx²+Δy²) (clock trace midpoint to connector distance) | parasitic | high | **verified** |
 | EQ-088 | `check_input_cap_loop_area` | A = polygon_area(cap, IC, inductor) (hot loop area estimation) | unknown | medium | **verified** |
 | EQ-093 | `_suggest_pdn_cap` | C_suggest = 1/(4π²f²ESL) then round to E12 (PDN cap selection) | impedance | medium | **verified** |
 | EQ-094 | `estimate_switching_emissions` | V_n = V_peak × 2/(nπ) × sin(nπD) (trapezoidal harmonic envelope) | emc_radiation | critical | **verified** |
 | EQ-095 | `check_switching_node_area` | A_track = Σ(width_mm × length_mm) (switching node copper area) | emc_radiation | medium | **verified** |
 | EQ-096 | `check_pdn_distributed` | I_reflected = P_downstream / V_upstream (reflected transient current) | impedance | medium | **verified** |
-| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **stale** |
+| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **verified** |
 
 ## skills/kicad/scripts/kicad_core/passives.py
 
@@ -91,26 +91,26 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-048 | `analyze_decoupling_placement` | d = √(Δx²+Δy²) (cap-to-IC distance) | geometry | low | **stale** |
+| EQ-048 | `analyze_decoupling_placement` | d = √(Δx²+Δy²) (cap-to-IC distance) | geometry | low | **verified** |
 | EQ-056 | `analyze_tombstoning_risk` | d = √(Δx²+Δy²) (pad center asymmetry) | geometry | low | **verified** |
-| EQ-101 | `_min_power_pad_distance` | d = √((x1-x2)² + (y1-y2)²) over all pad pairs; return minimum. | geometry | low | **unverified** |
+| EQ-101 | `_min_power_pad_distance` | d = √((x1-x2)² + (y1-y2)²) over all pad pairs; return minimum. | geometry | low | **verified** |
 
 ## skills/kicad/scripts/pcb/copper.py
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-054 | `analyze_thermal_pad_vias` | effective = Σ(drill/0.3)² (drill-weighted via count) | thermal | medium | **stale** |
+| EQ-054 | `analyze_thermal_pad_vias` | effective = Σ(drill/0.3)² (drill-weighted via count) | thermal | medium | **verified** |
 | EQ-055 | `analyze_thermal_vias` | density = count / area_cm² (thermal via density) | thermal | medium | **verified** |
-| EQ-058 | `analyze_vias` | area = π(d/2)² (via annular ring) | geometry | low | **stale** |
-| EQ-102 | `_nearest_zone_copper_distance` | d = √((px-zx)² + (py-zy)²) for point-to-zone-pour proximity. | geometry | low | **unverified** |
-| EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from via center to any Edge.Cuts line segment. | geometry | low | **unverified** |
-| EQ-104 | `_pt_seg_dist` | Helper — same 2D point-to-segment distance as EQ-098. | geometry | low | **unverified** |
+| EQ-058 | `analyze_vias` | area = π(d/2)² (via annular ring) | geometry | low | **verified** |
+| EQ-102 | `_nearest_zone_copper_distance` | d = √((px-zx)² + (py-zy)²) for point-to-zone-pour proximity. | geometry | low | **verified** |
+| EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from via center to any Edge.Cuts line segment. | geometry | low | **verified** |
+| EQ-104 | `_pt_seg_dist` | Helper — same 2D point-to-segment distance as EQ-098. | geometry | low | **verified** |
 
 ## skills/kicad/scripts/pcb/dfm.py
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-049 | `analyze_dfm` | d = √(Δx²+Δy²) (DFM clearance measurement) | geometry | low | **stale** |
+| EQ-049 | `analyze_dfm` | d = √(Δx²+Δy²) (DFM clearance measurement) | geometry | low | **verified** |
 
 ## skills/kicad/scripts/pcb/geometry.py
 
@@ -118,8 +118,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 |---|---|---|---|---|---|
 | EQ-044 | `_arc_length_3pt` | arc = R × θ from circumcircle (3-point arc length) | geometry | low | **verified** |
 | EQ-047 | `_norm` | Angle normalization to [0, 2π) | geometry | low | **verified** |
-| EQ-098 | `_dist_point_to_segment` | d = min(\|\|P - (A + t(B-A))\|\|) with t clamped to [0,1] | geometry | low | **unverified** |
-| EQ-099 | `None` | Perimeter sample at (x + r·cos(iπ/4), y + r·sin(iπ/4)) for i=0..7 | geometry | low | **unverified** |
+| EQ-098 | `_dist_point_to_segment` | d = min(\|\|P - (A + t(B-A))\|\|) with t clamped to [0,1] | geometry | low | **verified** |
+| EQ-099 | `None` | Perimeter sample at (x + r·cos(iπ/4), y + r·sin(iπ/4)) for i=0..7 | geometry | low | **verified** |
 
 ## skills/kicad/scripts/pcb/presentation.py
 
@@ -131,8 +131,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **stale** |
-| EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **unverified** |
+| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **verified** |
+| EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **verified** |
 
 ## skills/kicad/scripts/pcb/routing.py
 
@@ -144,9 +144,9 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-046 | `_mark` | d = √(Δx²+Δy²) (grid cell marking) | geometry | low | **verified** |
 | EQ-050 | `analyze_net_lengths` | L = √(Δx²+Δy²) (track segment length) | geometry | low | **verified** |
 | EQ-051 | `analyze_pad_to_pad_distances` | d = √(Δx²+Δy²) (pad-to-pad distance) | geometry | low | **verified** |
-| EQ-052 | `analyze_power_nets` | d = √(Δx²+Δy²) (Euclidean distance) | geometry | low | **stale** |
-| EQ-053 | `analyze_return_path_continuity` | d = √(Δx²+Δy²) (trace-to-plane gap detection) | geometry | low | **stale** |
-| EQ-057 | `analyze_trace_proximity` | d = √(Δx²+Δy²) (grid-based proximity scan) | geometry | low | **stale** |
+| EQ-052 | `analyze_power_nets` | d = √(Δx²+Δy²) (Euclidean distance) | geometry | low | **verified** |
+| EQ-053 | `analyze_return_path_continuity` | d = √(Δx²+Δy²) (trace-to-plane gap detection) | geometry | low | **verified** |
+| EQ-057 | `analyze_trace_proximity` | d = √(Δx²+Δy²) (grid-based proximity scan) | geometry | low | **verified** |
 
 ## skills/kicad/scripts/schematic/audits.py
 
@@ -166,18 +166,18 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 |---|---|---|---|---|---|
 | EQ-061 | `_cap_impedance` | \|Z\| = √(ESR²+(2πfL-1/(2πfC))²) at given frequency | filter_design | high | **verified** |
 | EQ-062 | `analyze_pdn_impedance` | \|Z\| = √(ESR²+(ωL-1/ωC)²) swept over frequency | impedance | high | **verified** |
-| EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **stale** |
+| EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **verified** |
 
 ## skills/kicad/scripts/signal_detectors.py
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-020 | `detect_rc_filters` | f_c = 1/(2πRC) (RC filter cutoff frequency) | filter_design | high | **stale** |
-| EQ-021 | `detect_lc_filters` | f₀ = 1/(2π√(LC)) (LC resonant frequency) | filter_design | high | **stale** |
-| EQ-022 | `detect_lc_filters` | Z₀ = √(L/C) (LC characteristic impedance) | filter_design | high | **stale** |
+| EQ-020 | `detect_rc_filters` | f_c = 1/(2πRC) (RC filter cutoff frequency) | filter_design | high | **verified** |
+| EQ-021 | `detect_lc_filters` | f₀ = 1/(2π√(LC)) (LC resonant frequency) | filter_design | high | **verified** |
+| EQ-022 | `detect_lc_filters` | Z₀ = √(L/C) (LC characteristic impedance) | filter_design | high | **verified** |
 | EQ-069 | `detect_decoupling` | f_SRF = 1/(2π√(ESL×C)) (decoupling SRF) | filter_design | high | **verified** |
-| EQ-070 | `detect_design_observations` | Threshold comparisons for design quality metrics | filter_design | high | **stale** |
-| EQ-071 | `detect_opamp_circuits` | G = 1+Rf/Ri or -Rf/Ri; G_dB = 20log₁₀\|G\| (opamp gain) | opamp | medium | **stale** |
+| EQ-070 | `detect_design_observations` | Threshold comparisons for design quality metrics | filter_design | high | **verified** |
+| EQ-071 | `detect_opamp_circuits` | G = 1+Rf/Ri or -Rf/Ri; G_dB = 20log₁₀\|G\| (opamp gain) | opamp | medium | **verified** |
 
 ## skills/spice/scripts/extract_parasitics.py
 
@@ -219,5 +219,5 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-081 | `generate_decoupling` | \|Z\| at target freq from ESR+ESL cap model | spice_model | medium | **verified** |
 | EQ-082 | `generate_inrush` | I_peak = V/R at t=0 (startup inrush current) | spice_model | medium | **verified** |
 | EQ-083 | `generate_lc_filter` | f₀ = 1/(2π√(LC)) testbench (validates EQ-021) | spice_model | medium | **verified** |
-| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **stale** |
+| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **verified** |
 | EQ-085 | `generate_snubber` | f_damp = 1/(2πRC) (snubber damping frequency) | spice_model | medium | **verified** |

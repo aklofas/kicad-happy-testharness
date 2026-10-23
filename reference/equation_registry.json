@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_scan": "2026-10-23T22:26:36.756882+00:00",
+  "last_scan": "2026-10-23T22:56:00.187291+00:00",
   "equations": [
     {
       "id": "EQ-001",
@@ -285,10 +285,10 @@
       "function": "detect_rc_filters",
       "sources": [],
       "content_hash": "sha256:fa1ddd300349127a",
-      "status": "stale",
+      "status": "verified",
       "category": "filter_design",
       "impact": "high",
-      "verification_source": "RC filter cutoff: f_c=1/(2\u03c0RC). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "RC filter cutoff: f_c=1/(2\u03c0RC). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.0: formula unchanged; drift = sorted() over candidate caps (determinism).]",
       "notes": null
     },
     {
@@ -299,10 +299,10 @@
       "function": "detect_lc_filters",
       "sources": [],
       "content_hash": "sha256:31fbad708a23f642",
-      "status": "stale",
+      "status": "verified",
       "category": "filter_design",
       "impact": "high",
-      "verification_source": "LC resonance: f\u2080=1/(2\u03c0\u221a(LC)). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "LC resonance: f\u2080=1/(2\u03c0\u221a(LC)). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.2: formula unchanged; drift = bootstrap pin tokens moved to _BOOTSTRAP_PIN_TOKENS (KH-454).]",
       "notes": null,
       "relocated_from": "signal_detectors.py"
     },
@@ -314,10 +314,10 @@
       "function": "detect_lc_filters",
       "sources": [],
       "content_hash": "sha256:31fbad708a23f642",
-      "status": "stale",
+      "status": "verified",
       "category": "filter_design",
       "impact": "high",
-      "verification_source": "LC characteristic impedance: Z\u2080=\u221a(L/C). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "LC characteristic impedance: Z\u2080=\u221a(L/C). Self-evident from circuit theory. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.2: formula unchanged; drift = bootstrap pin tokens moved to _BOOTSTRAP_PIN_TOKENS (KH-454).]",
       "notes": null,
       "relocated_from": "signal_detectors.py"
     },
@@ -509,10 +509,10 @@
       "function": "check_connector_filtering",
       "sources": [],
       "content_hash": "sha256:82e4e6612f3c521b",
-      "status": "stale",
+      "status": "verified",
       "category": "filter_design",
       "impact": "high",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v1.4.0-rc.2: formula unchanged; drift = F6 power-only-connector severity gate; the filter-to-connector distance untouched.]",
       "notes": null
     },
     {
@@ -523,10 +523,10 @@
       "function": "check_diff_pair_cm_radiation",
       "sources": [],
       "content_hash": "sha256:247ee996f9ff2760",
-      "status": "stale",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": "Applies EQ-003 with CM voltage from diff pair skew. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Applies EQ-003 with CM voltage from diff pair skew. Derived. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v1.4.0-rc.2: formula unchanged; drift = MCU feature lookup takes project_dir + v2.0 trust gate; the E_cm/EQ-003 application untouched.]",
       "notes": null
     },
     {
@@ -552,10 +552,10 @@
       "function": "check_esd_protection_path",
       "sources": [],
       "content_hash": "sha256:cf64b6f23cafdde7",
-      "status": "stale",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": "ESD overshoot: V=L\u00d7dI/dt. TI SLVA680 \"ESD Protection Layout Guide\". URL: https://www.ti.com/lit/pdf/slva680 [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "ESD overshoot: V=L\u00d7dI/dt. TI SLVA680 \"ESD Protection Layout Guide\". URL: https://www.ti.com/lit/pdf/slva680 [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.2: formula unchanged; drift = _is_ground_net -> is_emc_ground_name.]",
       "notes": null,
       "relocated_from": "emc_rules.py"
     },
@@ -567,10 +567,10 @@
       "function": "check_ground_pour_ring",
       "sources": [],
       "content_hash": "sha256:c79566436d26d2e0",
-      "status": "stale",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": "Edge sampling heuristic. Engineering metric, not a physics formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Edge sampling heuristic. Engineering metric, not a physics formula. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.2: formula unchanged; drift = _is_ground_net -> is_emc_ground_name.]",
       "notes": null,
       "relocated_from": "emc_rules.py"
     },
@@ -582,10 +582,10 @@
       "function": "check_layer_transition_stitching",
       "sources": [],
       "content_hash": "sha256:d8d3b0b9e2403bb0",
-      "status": "stale",
+      "status": "verified",
       "category": "parasitic",
       "impact": "high",
-      "verification_source": "Euclidean distance to nearest via. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Euclidean distance to nearest via. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.0: formula unchanged; drift = _is_ground_net -> is_emc_ground_name; KH-410 touch-net recommendation wording.]",
       "notes": null
     },
     {
@@ -596,10 +596,10 @@
       "function": "check_pdn_impedance",
       "sources": [],
       "content_hash": "sha256:b5ed353aa6266773",
-      "status": "stale",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v1.3.1: formula unchanged; drift = KH-377 transient-current estimate source (config > power budget > 0.5 A default) and in-band/out-of-band split; Z_target still from pdn_target_impedance(vout, ripple_pct=5.0, i_transient).]",
       "notes": null
     },
     {
@@ -624,10 +624,10 @@
       "function": "check_via_stitching",
       "sources": [],
       "content_hash": "sha256:52795769f1fe4964",
-      "status": "stale",
+      "status": "verified",
       "category": "parasitic",
       "impact": "high",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.2: formula unchanged; drift = _is_ground_net -> is_emc_ground_name.]",
       "notes": null,
       "relocated_from": "emc_rules.py"
     },
@@ -699,10 +699,10 @@
       "function": "analyze_decoupling_placement",
       "sources": [],
       "content_hash": "sha256:38adb94b86b46888",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.1: formula unchanged; drift = loop extracted into _nearby_decoupling_caps; distance still from _min_power_pad_distance (EQ-101).]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -716,10 +716,10 @@
         "JLCPCB capabilities page, verified 2025-01."
       ],
       "content_hash": "sha256:4ca462c6e93d9b64",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.1: formula unchanged; drift = round-7 DFM split: the limits tables became module constants and the clearance distance now lives in _measure_track_spacing (centre distance \u221a(\u0394x\u00b2+\u0394y\u00b2), dfm.py:292); the tag still sits on analyze_dfm.]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -761,10 +761,10 @@
       "function": "analyze_power_nets",
       "sources": [],
       "content_hash": "sha256:c21a486e234486b6",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.0: formula unchanged; drift = power_rails parameter threaded into is_power_net_name.]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -776,10 +776,10 @@
       "function": "analyze_return_path_continuity",
       "sources": [],
       "content_hash": "sha256:460c933eb8f65522",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.0: formula unchanged; drift = KH-392/393/397 via-antipad credit (circle containment (px-vx)\u00b2+(py-vy)\u00b2 \u2264 (r+clearance)\u00b2) and power_rails; the gap-sampling distance untouched.]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -791,10 +791,10 @@
       "function": "analyze_thermal_pad_vias",
       "sources": [],
       "content_hash": "sha256:668165ed760b2126",
-      "status": "stale",
+      "status": "verified",
       "category": "thermal",
       "impact": "medium",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.0: formula unchanged; drift = KH-408 pad-rotation convention in the via containment check; the \u03a3(drill/0.3)\u00b2 weighting untouched.]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -836,10 +836,10 @@
       "function": "analyze_trace_proximity",
       "sources": [],
       "content_hash": "sha256:62036d1d86fab2a0",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.0: formula unchanged; drift = power_rails parameter threaded into is_power_net_name.]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -851,10 +851,10 @@
       "function": "analyze_vias",
       "sources": [],
       "content_hash": "sha256:f9c06d304864cddc",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Circle area: \u03c0(d/2)\u00b2. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Circle area: \u03c0(d/2)\u00b2. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.1: formula unchanged; drift = KH-383/KH-412 pad-drill and degenerate-drill facts, containment via _point_in_pad; the \u03c0(d/2)\u00b2 area untouched.]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -881,10 +881,10 @@
       "function": "extract_footprints",
       "sources": [],
       "content_hash": "sha256:6dae124b0d565ca9",
-      "status": "stale",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": "Standard 2D rotation matrix x' = x\u00b7cos\u03b8 \u2212 y\u00b7sin\u03b8, y' = x\u00b7sin\u03b8 + y\u00b7cos\u03b8; textbook formula, no external spec needed; hash refresh after type hints/docstring drift",
+      "verification_source": "Standard 2D rotation matrix x' = x\u00b7cos\u03b8 \u2212 y\u00b7sin\u03b8, y' = x\u00b7sin\u03b8 + y\u00b7cos\u03b8; textbook formula, no external spec needed; hash refresh after type hints/docstring drift [Re-confirmed 2026-10-23 at 0490c49 vs v1.3.1: formula unchanged; drift = rotation moved into the _fp_to_abs helper with the identical matrix (rad = radians(-angle)); KH-326/414/350 courtyard polygon extraction around it.]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -926,10 +926,10 @@
       "function": "analyze_protocol_compliance",
       "sources": [],
       "content_hash": "sha256:da534f3da773e9c2",
-      "status": "stale",
+      "status": "verified",
       "category": "filter_design",
       "impact": "high",
-      "verification_source": "I2C rise time: t_r=0.8473\u00d7R\u00d7C. I2C spec UM10204 Rev.7.0 \u00a77.2. 0.8473 = ln(0.7/0.3) for 30%-70% thresholds. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "I2C rise time: t_r=0.8473\u00d7R\u00d7C. I2C spec UM10204 Rev.7.0 \u00a77.2. 0.8473 = ln(0.7/0.3) for 30%-70% thresholds. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.0: formula unchanged; drift = sorted() over protocols_checked (determinism).]",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_schematic.py"
     },
@@ -1016,10 +1016,10 @@
       "function": "detect_design_observations",
       "sources": [],
       "content_hash": "sha256:1ef99b9ca1d4db68",
-      "status": "stale",
+      "status": "verified",
       "category": "filter_design",
       "impact": "high",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.0: formula unchanged; drift = sorted() over rail lists (determinism).]",
       "notes": null
     },
     {
@@ -1030,10 +1030,10 @@
       "function": "detect_opamp_circuits",
       "sources": [],
       "content_hash": "sha256:b922bd9b5bbf7634",
-      "status": "stale",
+      "status": "verified",
       "category": "opamp",
       "impact": "medium",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.2.0: formula unchanged; drift = _VOUT_PIN_NAMES shared constant + sorted() (determinism).]",
       "notes": null
     },
     {
@@ -1224,10 +1224,10 @@
       "function": "generate_opamp_circuit",
       "sources": [],
       "content_hash": "sha256:7919b7c5fc4b9ab3",
-      "status": "stale",
+      "status": "verified",
       "category": "spice_model",
       "impact": "medium",
-      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Re-verified after refactoring (AnalysisContext migration, design_rules split) - formula unchanged, only surrounding code moved [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.2: formula unchanged; drift = model_options plumbing to get_model_for_part.]",
       "notes": null,
       "relocated_from": "spice_templates.py"
     },
@@ -1254,10 +1254,10 @@
       "function": "check_decoupling_via_distance",
       "sources": [],
       "content_hash": "sha256:42bfe686246337b7",
-      "status": "stale",
+      "status": "verified",
       "category": "parasitic",
       "impact": "high",
-      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.]",
+      "verification_source": "Euclidean distance. Self-evident. [Re-confirmed 2026-04-16 post-analyzer-refactor; formula unchanged, hash drift from type hints / docstring updates.] [Re-confirmed 2026-10-23 at 0490c49 vs v2.0.0: formula unchanged; drift = KH-341/356 two-layer bail-out and same-net-pour skip (AABB containment); the cap-to-via distance untouched.]",
       "notes": null
     },
     {
@@ -1452,10 +1452,10 @@
         "Self-evident \u2014 2D point-to-segment distance (project, clamp, Euclidean)."
       ],
       "content_hash": "sha256:ef0d35e3f7a7e496",
-      "status": "unverified",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": null,
+      "verification_source": "2D point-to-segment distance: t = ((P-A)\u00b7(B-A))/|B-A|\u00b2 clamped to [0,1], d = |P-(A+t(B-A))|; degenerate segment falls back to point distance. Self-evident geometry, body checked 2026-10-23 at 0490c49.",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -1469,10 +1469,10 @@
         "Self-evident \u2014 8-point circle sampling at 45\u00b0 intervals."
       ],
       "content_hash": null,
-      "status": "unverified",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": null,
+      "verification_source": "8-point perimeter sample at angles i\u03c0/4, i=0..7, radius radius_mm around (x, y), plus the centre point. Self-evident geometry; body checked 2026-10-23 at 0490c49.",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -1486,10 +1486,10 @@
         "Standard computational geometry. Circumscribed circle"
       ],
       "content_hash": "sha256:96858a8ac8d5240d",
-      "status": "unverified",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": null,
+      "verification_source": "Circumscribed circle of (start, mid, end) in Cartesian form: D = 2(Sx(My\u2212Ey)+Mx(Ey\u2212Sy)+Ex(Sy\u2212My)), Ux = (|S|\u00b2(My\u2212Ey)+|M|\u00b2(Ey\u2212Sy)+|E|\u00b2(Sy\u2212My))/D, Uy = (|S|\u00b2(Ex\u2212Mx)+|M|\u00b2(Sx\u2212Ex)+|E|\u00b2(Mx\u2212Sx))/D \u2014 matches the standard formula (Wikipedia, Circumscribed circle, Cartesian coordinates); sweep sign from the mid-point angle, cardinal extrema added when swept. Body checked 2026-10-23 at 0490c49.",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -1503,10 +1503,10 @@
         "Self-evident \u2014 2D Euclidean distance."
       ],
       "content_hash": "sha256:78c5444ef860c52d",
-      "status": "unverified",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": null,
+      "verification_source": "Minimum 2D Euclidean distance over (IC power/ground pad, cap pad) pairs on absolute pad coordinates, footprint-centre fallback when pad data is missing. Self-evident; body checked 2026-10-23 at 0490c49.",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -1520,10 +1520,10 @@
         "Self-evident \u2014 2D Euclidean distance to the nearest"
       ],
       "content_hash": "sha256:fa455c8169a945e0",
-      "status": "unverified",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": null,
+      "verification_source": "Point-to-axis-aligned-box distance: dx = max(x_min-x, 0, x-x_max), dy likewise, d = \u221a(dx\u00b2+dy\u00b2) (0 inside the box); polygon branch delegates to zone_fills.min_edge_distance. Self-evident; body checked 2026-10-23 at 0490c49.",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -1537,10 +1537,10 @@
         "Self-evident \u2014 2D point-to-segment distance (see EQ-098)."
       ],
       "content_hash": "sha256:d42e2dce619d3063",
-      "status": "unverified",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": null,
+      "verification_source": "Minimum point-to-segment distance (EQ-104 helper) from the via centre over every Edge.Cuts line segment; rect edges expanded into their four sides. Self-evident; body checked 2026-10-23 at 0490c49.",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -1554,10 +1554,10 @@
         "Self-evident \u2014 kept as a local helper to avoid import cycles."
       ],
       "content_hash": "sha256:4094d49496a95957",
-      "status": "unverified",
+      "status": "verified",
       "category": "geometry",
       "impact": "low",
-      "verification_source": null,
+      "verification_source": "Same point-to-segment distance as EQ-098 (local helper); clamp and degenerate case checked 2026-10-23 at 0490c49.",
       "notes": null,
       "relocated_from": "skills/kicad/scripts/analyze_pcb.py"
     },
@@ -1588,10 +1588,10 @@
         "Threshold from Ott, \"EMC Engineering\" Ch. 11"
       ],
       "content_hash": "sha256:196d75a86d7ee776",
-      "status": "stale",
+      "status": "verified",
       "category": "unknown",
       "impact": "medium",
-      "verification_source": "Derived gate from EQ-105 + Euclidean distance formula; threshold from Ott EMC Engineering Ch. 11 rule-of-thumb for unshielded switching inductor coupling to high-impedance analog nodes (15mm proximity, 8mm high-severity tier)",
+      "verification_source": "Derived gate from EQ-105 + Euclidean distance formula; threshold from Ott EMC Engineering Ch. 11 rule-of-thumb for unshielded switching inductor coupling to high-impedance analog nodes (15mm proximity, 8mm high-severity tier) [Re-confirmed 2026-10-23 at 0490c49 vs v2.3.2: formula unchanged; drift = import path kicad_utils -> kicad_core.passives.]",
       "notes": null,
       "relocated_from": "emc_rules.py"
     },
