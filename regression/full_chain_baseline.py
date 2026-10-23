@@ -7,7 +7,8 @@ analyze_thermal per side with the harnesslib offline env (PYTHONHASHSEED=0, cred
 
 Usage: python3 regression/full_chain_baseline.py --base <worktree> [--cand <worktree>] --out <ABSOLUTE dir>
        [--n 300] [--seed 23] [--jobs 32] [--timeout 600]
-Layout: <out>/<side>/<owner>/<repo>/<unit>/{schematic,pcb,emc,thermal}.json, <out>/chain_log.jsonl, <out>/sample.json
+Layout: <out>/<side>/<owner>/<repo>/<unit>/{schematic,pcb,emc,thermal}.json, <out>/chain_log.jsonl, <out>/sample.json,
+<out>/done.json (completion marker, written last)
 
 Operational note (TH-067): pool workers can outlive a SIGKILLed parent. Start a real run
 under its own process group (e.g. `setsid python3 regression/full_chain_baseline.py ...`)
@@ -116,7 +117,11 @@ def main(argv=None) -> int:
             log.write(json.dumps(rec) + "\n")
             if i % 50 == 0:
                 print(f"  {i}/{len(jobs)}")
-    print(f"done: {len(sample)} projects x {len(sides_for(base=base, cand=cand))} side(s) -> {out}")
+    n_sides = len(sides_for(base=base, cand=cand))
+    # Completion marker for waiters (tools/wait_for_run.py): written only after every chain_log record.
+    (out / "done.json").write_text(json.dumps({"projects": len(sample), "sides": n_sides,
+                                               "records": len(jobs)}, indent=2) + "\n")
+    print(f"done: {len(sample)} projects x {n_sides} side(s) -> {out}")
     return 0
 
 

@@ -2952,6 +2952,40 @@ scrape whole, so URL normalisation, the `%PDF` sniff, the transport cascade and 
 are covered only by the product's unit tests; `--parallel > 1` is completion-order
 nondeterministic and not part of the oracle.
 
+### 26k. Launching a multi-hour run and waiting on it (no pgrep)
+
+Launch detached in its own process group (TH-067) and record the PID:
+
+```bash
+PYTHONHASHSEED=0 setsid nohup python3 regression/run_corpus_gate.py ... > results/<label>.log 2>&1 &
+echo $! > results/<label>.pid
+```
+
+Wait on the run's **completion marker**, not on its command line or its PID alone:
+
+```bash
+python3 tools/wait_for_run.py --marker results/<gate-dir>/manifest.json --pid $(cat results/<label>.pid) --log results/<label>.log
+python3 tools/wait_for_run.py --marker results/<out>/done.json --pid ...   # full_chain_baseline.py
+```
+
+Exit 0 = marker satisfied (`manifest.json` has `finished_at`; `done.json` exists — both are written
+last). Exit 1 = the process is gone without a marker (it died; read the log). Exit 2 = timeout.
+
+Why not the obvious shell loops:
+
+- `until ! pgrep -f "<pattern>"` **matches itself** whenever the pattern appears in the waiter's own
+  command line (it always does when you paste the gate argv) — the loop never ends, the box sits
+  idle and nobody is notified. Same trap for `pkill -f`, which then kills the shell issuing it.
+  If a pattern match is unavoidable, use the bracket form (`pgrep -f "[r]un_corpus_gate"`).
+- `while kill -0 $PID` **never returns for a zombie**: a `setsid nohup … &` parent whose launching
+  shell has exited lingers in state `Z` after finishing, and `kill -0` succeeds on zombies.
+  `wait_for_run.py` reads `/proc/<pid>/stat` and treats `Z` as gone.
+- The gate's stdout is block-buffered under `nohup`; progress is the `snap.json` count under
+  `<gate-dir>/baseline/`, not the log.
+
+To abort a run, kill the whole group (`kill -TERM -- -$(cat results/<label>.pid)`; under `setsid`
+the PID is the PGID), then check for orphaned analyzer workers before relaunching.
+
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 
 When the analyzer ships a new era with material detector behavior changes

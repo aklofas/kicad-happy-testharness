@@ -86,6 +86,17 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-22 — TH-074: long-run waiters stalled twice (pgrep self-match, zombie PID) — the finished v2.3.2 gate and its re-baseline sat unnoticed for ~1 h
+
+**Severity:** LOW (operational; no data affected — the runs themselves completed. Cost: idle box time and a missed completion notification, twice in one session).
+**File:** operator recipe (RUNBOOK 26k, new); `regression/full_chain_baseline.py` (no completion marker); new `tools/wait_for_run.py`.
+**Discovered:** 2026-10-22, v2.3.2 backport gate (`results/v232_gate`) and the 4701c26 re-baseline.
+**Fixed:** 2026-10-22, same session.
+
+- **Root cause (two shapes):** (1) the background waiter `until ! pgrep -f "run_corpus_gate.py --baseline-dir …"` matched its OWN zsh command line, which carried the pattern, so it looped after the gate exited (48 min in); a later `pkill -f "chain_after_aa.sh"` killed the shell issuing it for the same reason, so the chained full-chain launch never happened. (2) the replacement `while kill -0 $PID` waiter never returned either: the `setsid nohup … &` gate parent lingered as a zombie (`Z`) once its launching shell was gone, and `kill -0` succeeds on zombies. `full_chain_baseline.py` had no completion marker at all (its log line `done:` is the only signal; the H0 wrapper's `chain rc=` line is not written by the tool).
+- **Fix:** `tools/wait_for_run.py --marker <path> [--pid N] [--poll] [--timeout] [--log]` polls a completion marker (`manifest.json` `finished_at` for the gate; `done.json` for full-chain, which the tool now writes after the last `chain_log.jsonl` record; any other path = existence) and reads `/proc/<pid>/stat` to treat `Z`/`X` as gone — exit 0 marker / 1 process gone without marker / 2 timeout; it never matches command lines. RUNBOOK 26k documents launch + wait + abort. Tests `tests/test_wait_for_run.py` (7, incl. a real zombie child on which `os.kill(pid, 0)` still succeeds).
+- **Verification:** 7/7 new tests GREEN; `tests/test_full_chain_baseline.py` 6/6 unchanged; memory `reference_bash_waiter_pgrep_self_match` points at the tool.
+
 ## 2026-10-17 — TH-073: `run_corpus_gate.py` accepted profiles that run no corpus analyzer, so a `--profile spice-offline` gate would have recorded zero units
 
 **Severity:** LOW (latent; no such gate was ever requested. The TH-072 class: a declared profile whose analyzers never reach Phase A yields an empty census with no SKIP record).
