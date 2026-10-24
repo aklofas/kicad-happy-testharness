@@ -2,14 +2,14 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-24T01:50:56.580009+00:00
+**Last scan:** 2026-10-24T18:55:57.211503+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 722 |
-| Verified | 229 |
+| Total constants | 721 |
+| Verified | 228 |
 | Unverified | 493 |
 | Stale (changed since verification) | 0 |
 | Critical risk | 0 |
@@ -42,8 +42,6 @@
 | CONST-257 | `CISPR_25_CLASS5_RADIATED` | unknown | 4 | verified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-258 | `MIL_STD_461_RE102` | unknown | 3 | verified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-260 | `STANDARDS` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-261 | `MLCC_ESL` | datasheet_lookup | 8 | verified | 0.8 | 0.0 | **low** (0.0) |
-| CONST-262 | `MLCC_ESR` | datasheet_lookup | 8 | verified | 0.8 | 0.0 | **low** (0.0) |
 | CONST-288 | `DIFF_PAIR_PROTOCOLS` | keyword_classification | 12 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-289 | `MARKET_STANDARDS` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-153 | `COPPER_RESISTIVITY_OHM_MM` | physics | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
@@ -56,9 +54,9 @@
 | CONST-264 | `hs_patterns` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-155 | `suggested` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-280 | `_EMC_SEVERITY_MAP` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-460 | `finding` | keyword_classification | 14 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-188 | `check_missing_decoupling:628` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-189 | `check_connector_filtering:797` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-460 | `finding` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-005 | `check_missing_decoupling:638` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-012 | `check_connector_filtering:809` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-267 | `bands` | unknown | 3 | verified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-385 | `ss_keywords` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-363 | `PROXIMITY_MM` | physics | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
@@ -84,7 +82,7 @@
 |---|---|---|---|---|---|---|---|
 | CONST-310 | `CANONICAL_OUTPUTS` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-311 | `_OUTPUT_SOURCE_EXT` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-312 | `_SEVERITY_ORDER` | heuristic_threshold | 4 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-312 | `_SEVERITY_ORDER` | heuristic_threshold | 5 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 
 ## skills/kicad/scripts/analyze_gerbers.py
 
@@ -322,7 +320,7 @@
 | CONST-612 | `_INTERNAL_CJC_KEYWORDS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-613 | `_EN_PIN_NAMES` | keyword_classification | 14 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-614 | `_PG_PIN_NAMES` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-615 | `tree_entry` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-026 | `tree_entry` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-285 | `suggest_certifications:5607` | keyword_classification | 8 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-617 | `_WIFI_BLE_KEYWORDS` | keyword_classification | 28 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-618 | `_LORA_KEYWORDS` | keyword_classification | 16 | unverified | 0.4 | 0.0 | **medium** (0.4) |
@@ -474,8 +472,10 @@
 |---|---|---|---|---|---|---|---|
 | CONST-833 | `_REGULATOR_VREF` | datasheet_lookup | 114 | verified | 1.0 | 0.0 | **low** (0.0) |
 | CONST-834 | `_LOAD_TYPE_KEYWORDS` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-835 | `_KNOWN_FREQS` | datasheet_lookup | 105 | unverified | 0.8 | 0.0 | **low** (0.0) |
+| CONST-835 | `_KNOWN_FREQS` | datasheet_lookup | 105 | verified | 0.8 | 0.0 | **low** (0.0) |
 | CONST-384 | `defaults` | datasheet_lookup | 5 | verified | 0.7 | 0.0 | **low** (0.0) |
+| CONST-261 | `MLCC_ESL` | datasheet_lookup | 8 | verified | 0.8 | 0.0 | **low** (0.0) |
+| CONST-262 | `MLCC_ESR` | datasheet_lookup | 8 | verified | 0.8 | 0.0 | **low** (0.0) |
 
 ## skills/kicad/scripts/kicad_core/passives.py
 
@@ -654,12 +654,13 @@
 | CONST-731 | `VALID_BOARD_CLASSES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-732 | `VALID_SUPPLIERS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-733 | `VALID_BOM_GROUP_BY` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-027 | `VALID_DIFF_THRESHOLDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-734 | `DEFAULT_CONFIG` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-735 | `_IPC_CONTEXT_PATTERN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-736 | `VALID_TARGET_MARKETS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-737 | `VALID_PASSIVE_SIZES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-018 | `resolve_design_intent:392` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-021 | `resolve_design_intent:483` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-028 | `resolve_design_intent:412` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-029 | `resolve_design_intent:503` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-740 | `defaults` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-741 | `SEVERITY_WEIGHTS` | datasheet_lookup | 5 | verified | 0.7 | 0.0 | **low** (0.0) |
 | CONST-742 | `CONFIDENCE_WEIGHTS` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
@@ -810,17 +811,15 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
-| CONST-051 | `esl_by_pkg` | datasheet_lookup | 8 | verified | 0.8 | 0.0 | **low** (0.0) |
-| CONST-052 | `esr_base_by_pkg` | datasheet_lookup | 8 | verified | 0.8 | 0.0 | **low** (0.0) |
-| CONST-357 | `_is_electrolytic_or_tantalum:75` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-031 | `_is_electrolytic_or_tantalum:71` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-054 | `cap_entry` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-055 | `rail_result` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-371 | `SLEEP_PULL_MIN_OHM` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-372 | `_battery_rail_re` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-056 | `_iq_estimates_uA` | datasheet_lookup | 16 | verified | 0.9 | 0.0 | **low** (0.0) |
 | CONST-120 | `_DERATING_PROFILES` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-358 | `_classify_cap_dielectric:734` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-438 | `_classify_cap_dielectric:736` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-139 | `_classify_cap_dielectric:730` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-150 | `_classify_cap_dielectric:732` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-217 | `_CAP_DERATING` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-218 | `_RESISTOR_POWER_RATING` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-219 | `pkg_sizes` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -829,8 +828,8 @@
 | CONST-057 | `ic_current_estimates` | datasheet_lookup | 48 | verified | 1.0 | 0.0 | **low** (0.0) |
 | CONST-058 | `rail_info` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-059 | `dep_entry` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-461 | `analyze_power_sequencing:1623` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-462 | `analyze_power_sequencing:1625` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-183 | `analyze_power_sequencing:1627` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-062 | `pg_entry` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-063 | `debug_keywords` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-064 | `key_net_patterns` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -840,14 +839,14 @@
 | CONST-068 | `medium_ic_patterns` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-069 | `easy_ic_patterns` | keyword_classification | 16 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-070 | `difficulty_counts` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
-| CONST-464 | `_extract_package_info:1993` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-465 | `analyze_usb_compliance:2132` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-187 | `_extract_package_info:1995` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-192 | `analyze_usb_compliance:2134` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-073 | `conn_checks` | heuristic_threshold | 4 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-114 | `_PD_CONTROLLER_KEYWORDS` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-115 | `r_info` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-116 | `cc_detail` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-075 | `esd_keywords` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-466 | `analyze_usb_compliance:2364` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-194 | `analyze_usb_compliance:2366` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-381 | `_uc_specs` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-076 | `all_checks` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-077 | `rail_entry` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -897,22 +896,22 @@
 | CONST-146 | `esd_ic_keywords` | keyword_classification | 17 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-147 | `opamp_lib_keywords` | keyword_classification | 3 | verified | 0.3 | 0.1 | **low** (0.1) |
 | CONST-148 | `opamp_value_keywords` | keyword_classification | 25 | verified | 0.4 | 0.0 | **low** (0.0) |
-| CONST-665 | `detect_opamp_circuits:2595` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-666 | `detect_opamp_circuits:2601` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-667 | `detect_opamp_circuits:2918` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-668 | `detect_opamp_circuits:2920` | keyword_classification | 6 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-669 | `detect_opamp_circuits:2933` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-670 | `detect_transistor_circuits:3116` | keyword_classification | 6 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-671 | `detect_transistor_circuits:3119` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-672 | `detect_transistor_circuits:3122` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-673 | `detect_transistor_circuits:3126` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-204 | `detect_opamp_circuits:2600` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-231 | `detect_opamp_circuits:2606` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-249 | `detect_opamp_circuits:2923` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-251 | `detect_opamp_circuits:2925` | keyword_classification | 6 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-252 | `detect_opamp_circuits:2938` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-253 | `detect_transistor_circuits:3121` | keyword_classification | 6 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-254 | `detect_transistor_circuits:3124` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-255 | `detect_transistor_circuits:3127` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-256 | `detect_transistor_circuits:3131` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-246 | `snubber_data` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-152 | `source_sense` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-247 | `_jfet_kw` | keyword_classification | 20 | verified | 0.4 | 0.0 | **low** (0.0) |
-| CONST-674 | `postfilter_vd_and_dedup:3407` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-675 | `detect_design_observations:3653` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-259 | `postfilter_vd_and_dedup:3412` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-265 | `detect_design_observations:3658` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-175 | `obs` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-676 | `detect_design_observations:3826` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-268 | `detect_design_observations:3831` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-769 | `SHORTABLE` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-770 | `MASS_SHORT_THRESHOLD` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-771 | `_MODULE_INTERNAL_RAIL_PATTERNS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -1022,7 +1021,7 @@
 |---|---|---|---|---|---|---|---|
 | CONST-035 | `EVALUATOR_REGISTRY` | keyword_classification | 17 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-039 | `counts` | heuristic_threshold | 4 | verified | 0.4 | 0.0 | **low** (0.0) |
-| CONST-459 | `report` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-459 | `report` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/spice/scripts/spice_simulator.py
 
