@@ -86,6 +86,17 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-24 — TH-065: `audit_constants.py` registry identity carried source line numbers — inline keyword sets renamed and non-literal constants went stale on every line shift
+
+**Severity:** LOW (registry noise and lost evidence on non-literal constants; no corpus output or reference assertion involved).
+**File:** `validate/audit_constants.py` (`ConstantVisitor._check_inline_keywords`, `_check_assignment`, `update_registry`, `relocate_registry`); `reference/constants_registry.json`; `reference/scan_coverage_baseline.json`; test `tests/test_audit_constants_identity.py`.
+**Discovered:** 2026-10-15, H0 plan 4 recursive rescan (filed as function-scope `scope` churn).
+**Fixed:** 2026-10-24, after the a0df172 rescan showed the live class: 26 removed / 25 added were the same inline keyword sets renamed `func:628 → func:638`.
+
+- **Root cause:** two identities carried a line number. (1) Inline keyword sets (`any(k in v for k in (...))`) were named `<function>:<line>`, so any edit above them renamed the constant: removed + re-added with a fresh id (130 entries churned at every rescan). (2) Non-literal constants (dicts/lists holding names or calls) hashed as `sha256:ast_<line>`, so a line shift read as a content change and flipped a verified entry to `stale` (91 entries, 47 verified). Named function locals were already keyed by `(file, function scope, name)` — the filed description was broader than the code.
+- **Fix:** inline sets are named `<function>:kw<ordinal>` (ordinal within the function); before the merge, `update_registry` re-pairs each function's inline entries with the scanned sets by content hash (identical tuples pair by position), then by name, so a set inserted above the others moves the ordinals without moving the evidence, and legacy `func:<line>` names upgrade in place. Non-literal constants hash the AST without positions (`sha256:node_…`): unchanged across line moves, changed by any edit; the `ast_ → node_` switch is treated as a format upgrade, not an edit, and `node_` hashes keep the no-carry rule across files. `relocate --map` and `_in_function_scope` accept both synthetic forms.
+- **Verification:** 12 new tests (ordinal naming, line-shift stability, ordinal repair by hash, legacy upgrade, repair scoped to the function, identical tuples by position, relocation of the new names, structural hash stable / changing / format upgrade / stale on real change / no carry across files). Live rescan at a0df172 from the committed registry: 0 added / 0 removed / 91 updated (hash format), 130 renamed, every id and status preserved (228 verified), second scan 0 / 0 / 0; scan-coverage baseline re-keyed for the new names (`check` CLEAN); unit tier green.
+
 ## 2026-10-24 — KH-454: RS-001 fired "no declared source" on a bootstrap-only net — fixed in v3 round 8 (`6222468`)
 
 **Severity:** LOW

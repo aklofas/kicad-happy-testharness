@@ -905,6 +905,9 @@ round's map first: `python3 validate/audit_constants.py relocate --map <relocati
 (record shape; `tools/round_record.py` converts the product shape), then `scan`.
 Rescan BOTH registries (`audit_constants.py scan`, `audit_equations.py scan`) at every
 re-baseline — they went unscanned from round 5 to round 7 once.
+A pure line shift changes nothing: inline keyword sets are keyed `<function>:kw<n>` and
+non-literal constants hash their AST without positions (TH-065), so a rescan that reports
+added/removed entries is reporting real source changes.
 
 If new constants are found:
 ```bash

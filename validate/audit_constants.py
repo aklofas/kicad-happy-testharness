@@ -103,6 +103,28 @@ def _hash_value(obj):
     return "sha256:" + hashlib.sha256(canonical.encode()).hexdigest()[:16]
 
 
+def _node_hash(node):
+    """Structural hash of a non-literal value: the AST without positions, so a line shift
+    leaves it unchanged and any edit to the expression changes it (TH-065)."""
+    dump = ast.dump(node, include_attributes=False)
+    return "sha256:node_" + hashlib.sha256(dump.encode()).hexdigest()[:16]
+
+
+def _positional_hash(h):
+    """True for hashes that carry no literal content: legacy `ast_<line>` and `node_<hash>`.
+    They never transfer verification across files."""
+    return str(h or "").startswith(("sha256:ast_", "sha256:node_"))
+
+
+_SYNTHETIC_SUFFIX = re.compile(r":(kw)?\d+$")
+
+
+def _synthetic_name(name, func):
+    """True when `name` is the synthetic name of an inline keyword set in `func`:
+    `func:kw<ordinal>` (current) or `func:<line>` (legacy)."""
+    return bool(name) and name.startswith(func + ":") and bool(_SYNTHETIC_SUFFIX.fullmatch(name[len(func):]))
+
+
 def _extract_literal(node):
     """Try to extract a Python literal value from an AST node.
 
@@ -143,6 +165,7 @@ class ConstantVisitor(ast.NodeVisitor):
         self.filename = filename
         self.constants = []
         self._scope_stack = []  # list of (kind, name) tuples
+        self._inline_counts = {}  # scope -> inline keyword sets seen so far
 
     @property
     def _current_func(self):
@@ -224,7 +247,7 @@ class ConstantVisitor(ast.NodeVisitor):
                     entries = {str(k): {"value": v} for k, v in literal.items()}
                 content_hash = _hash_value(literal)
             else:
-                content_hash = f"sha256:ast_{lineno}"
+                content_hash = _node_hash(value_node)
             self.constants.append(ConstantInfo(
                 name=name, file=self.filename, line=lineno,
                 end_line=_node_end_line(value_node),
@@ -244,7 +267,7 @@ class ConstantVisitor(ast.NodeVisitor):
                 if literal:
                     content_hash = _hash_value(list(literal) if isinstance(literal, tuple) else literal)
                 else:
-                    content_hash = f"sha256:ast_{lineno}"
+                    content_hash = _node_hash(value_node)
                 self.constants.append(ConstantInfo(
                     name=name, file=self.filename, line=lineno,
                     end_line=_node_end_line(value_node),
@@ -264,7 +287,7 @@ class ConstantVisitor(ast.NodeVisitor):
                 if literal:
                     content_hash = _hash_value([list(t) if isinstance(t, tuple) else t for t in literal])
                 else:
-                    content_hash = f"sha256:ast_{lineno}"
+                    content_hash = _node_hash(value_node)
                 self.constants.append(ConstantInfo(
                     name=name, file=self.filename, line=lineno,
                     end_line=_node_end_line(value_node),
@@ -278,7 +301,7 @@ class ConstantVisitor(ast.NodeVisitor):
         # Set literal or frozenset() call with 3+ string entries
         if isinstance(value_node, ast.Set) and _count_string_literals(value_node) >= 3:
             literal = _extract_literal(value_node)
-            content_hash = _hash_value(sorted(literal)) if literal else f"sha256:ast_{lineno}"
+            content_hash = _hash_value(sorted(literal)) if literal else _node_hash(value_node)
             self.constants.append(ConstantInfo(
                 name=name, file=self.filename, line=lineno,
                 end_line=_node_end_line(value_node),
@@ -297,7 +320,7 @@ class ConstantVisitor(ast.NodeVisitor):
             inner = value_node.args[0]
             if isinstance(inner, ast.Set) and _count_string_literals(inner) >= 3:
                 literal = _extract_literal(inner)
-                content_hash = _hash_value(sorted(literal)) if literal else f"sha256:ast_{lineno}"
+                content_hash = _hash_value(sorted(literal)) if literal else _node_hash(value_node)
                 self.constants.append(ConstantInfo(
                     name=name, file=self.filename, line=lineno,
                     end_line=_node_end_line(value_node),
@@ -326,7 +349,7 @@ class ConstantVisitor(ast.NodeVisitor):
         # re.compile() call
         if self._is_re_compile(value_node):
             pattern = self._extract_re_pattern(value_node)
-            content_hash = _hash_value(pattern) if pattern else f"sha256:ast_{lineno}"
+            content_hash = _hash_value(pattern) if pattern else _node_hash(value_node)
             self.constants.append(ConstantInfo(
                 name=name, file=self.filename, line=lineno,
                 end_line=_node_end_line(value_node),
@@ -356,14 +379,17 @@ class ConstantVisitor(ast.NodeVisitor):
             if isinstance(iter_node, (ast.Tuple, ast.List)):
                 str_count = _count_string_literals(iter_node)
                 if str_count >= 3:
-                    # Synthetic name from function and line
+                    # Synthetic name: function plus the set's ordinal within it (a line
+                    # number here renamed the constant on every shift, TH-065)
                     func = self._current_func or "module"
-                    name = f"{func}:{call_node.lineno}"
+                    ordinal = self._inline_counts.get(self._scope, 0) + 1
+                    self._inline_counts[self._scope] = ordinal
+                    name = f"{func}:kw{ordinal}"
                     literal = _extract_literal(iter_node)
                     if literal:
                         content_hash = _hash_value(list(literal) if isinstance(literal, tuple) else literal)
                     else:
-                        content_hash = f"sha256:ast_{call_node.lineno}"
+                        content_hash = _node_hash(iter_node)
                     self.constants.append(ConstantInfo(
                         name=name, file=self.filename, line=call_node.lineno,
                         end_line=_node_end_line(call_node),
@@ -487,11 +513,11 @@ def qualify_registry_paths(registry, scanned_records):
 
 def _in_function_scope(scope, func):
     """True when `scope` is function `func` itself, a nested scope under it
-    (`func.inner`), or the `func:<line>` synthetic form."""
+    (`func.inner`), or a synthetic `func:kw<n>` / `func:<line>` form."""
     if not scope:
         return False
     head = scope.split(".", 1)[0]
-    return head == func or (head.startswith(func + ":") and head[len(func) + 1:].isdigit())
+    return head == func or _synthetic_name(head, func)
 
 
 def relocate_registry(registry, relocations):
@@ -526,7 +552,7 @@ def relocate_registry(registry, relocations):
                     if c.get("function") == old_name:
                         c["function"] = new_name
                     nm = c.get("name", "")
-                    if nm.startswith(old_name + ":") and nm[len(old_name) + 1:].isdigit():
+                    if _synthetic_name(nm, old_name):
                         c["name"] = new_name + nm[len(old_name):]
             moved += 1
     return moved
@@ -792,6 +818,52 @@ def _match_existing(registry, file, scope, name):
     return None
 
 
+def _repair_inline_names(registry, scanned_map):
+    """Re-key the inline keyword sets of each (file, scope) before the merge: pair an existing
+    entry with the scanned set that has its content hash (unique on both sides), else with
+    the scanned set of the same name, and rename the entry. Keeps an entry on its keywords
+    when a new set inserted above shifts the ordinals, and upgrades legacy `func:<line>`
+    names in place (TH-065)."""
+    groups = {}
+    for key, info in scanned_map.items():
+        if info.const_type == "inline_keywords":
+            groups.setdefault((info.file, info.scope), []).append(info)
+    for (file, scope), infos in groups.items():
+        func = infos[0].func or "module"
+        entries = [c for c in registry["constants"]
+                   if c.get("file") == file and c.get("scope", "module") == scope
+                   and _synthetic_name(c.get("name", ""), func)]
+        if not entries:
+            continue
+        by_hash = {}
+        for info in infos:
+            by_hash.setdefault(info.content_hash, []).append(info)
+        old_by_hash = {}
+        for c in entries:
+            old_by_hash.setdefault(c.get("content_hash"), []).append(c)
+        taken, paired = set(), set()
+        for h, olds in old_by_hash.items():
+            cands = by_hash.get(h, [])
+            if not cands or len(cands) != len(olds):
+                continue
+            # Same hash on both sides, same count: identical tuples pair by position
+            for c, info in zip(sorted(olds, key=lambda e: e.get("line", 0)),
+                               sorted(cands, key=lambda i: i.line)):
+                c["name"] = info.name
+                taken.add(info.name)
+                paired.add(id(c))
+        names = {info.name for info in infos}
+        for c in entries:
+            if id(c) in paired:
+                continue
+            if c["name"] in names and c["name"] not in taken:
+                taken.add(c["name"])
+            else:
+                # Legacy or displaced: its keywords are gone from this function. Give it
+                # a name no scanned set has so the removed-report drops it.
+                c["name"] = f"{func}:{c.get('line', 0)}"
+
+
 def update_registry(registry, scanned):
     """Merge scanned constants into the registry. Returns (added, updated, removed) counts."""
     added = updated = removed = 0
@@ -803,6 +875,8 @@ def update_registry(registry, scanned):
         key = (info.file, info.scope, info.name)
         if key not in scanned_map:
             scanned_map[key] = info
+
+    _repair_inline_names(registry, scanned_map)
 
     # Update existing entries
     existing_keys = set()
@@ -816,8 +890,12 @@ def update_registry(registry, scanned):
             cscore, cflags = compute_impact_score(info, cat)
             new_data = info.to_dict()
 
-            # Detect changes
-            changed = (entry.get("content_hash") != new_data["content_hash"]
+            # Detect changes. A legacy `ast_<line>` hash replaced by the structural
+            # `node_` hash is a format upgrade, not an edit (TH-065).
+            hash_changed = entry.get("content_hash") != new_data["content_hash"]
+            format_upgrade = (str(entry.get("content_hash") or "").startswith("sha256:ast_")
+                              and str(new_data["content_hash"]).startswith("sha256:node_"))
+            changed = (hash_changed
                        or entry.get("line") != new_data["line"]
                        or entry.get("entry_count") != new_data["entry_count"])
 
@@ -838,7 +916,7 @@ def update_registry(registry, scanned):
                 entry["impact_flags"] = cflags
 
                 # If content hash changed, mark as needs re-verification
-                if entry.get("content_hash") != new_data["content_hash"]:
+                if hash_changed and not format_upgrade:
                     if old_status == "verified":
                         entry["status"] = "stale"
                 else:
@@ -870,10 +948,10 @@ def update_registry(registry, scanned):
     # (a file move, a function split, or several identical copies merged into one
     # shared table). Without this, `relocate --map` was the only path that kept
     # verification across a move, and rounds that skipped it dropped the entry and
-    # re-added it unverified (TH-076). Non-literal constants hash by line
-    # (`ast_<line>`) and never match.
+    # re-added it unverified (TH-076). Non-literal constants carry no content in
+    # their hash and never match.
     def _literal_hash(h):
-        return bool(h) and not str(h).startswith("sha256:ast_")
+        return bool(h) and not _positional_hash(h)
 
     def _has_evidence(e):
         return e.get("status") == "verified" or any(
