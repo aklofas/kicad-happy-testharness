@@ -1,0 +1,255 @@
+{
+ "budget_id": "v3-round8",
+ "baseline_sha": "0490c49",
+ "candidate_sha": "a0df172",
+ "harness_sha": "caa50e5c9c7",
+ "profile": "standard",
+ "normalization_policy": "volatile-leaves-v1",
+ "classes": [
+  {
+   "id": "B1-diagnostics",
+   "path_glob": "/diagnostics",
+   "op": [
+    "added"
+   ],
+   "value_relation": "any",
+   "unit_bound": {
+    "max_units": 149629
+   },
+   "predicate": "v3_round8:b1_explained",
+   "evidence": "every analyzer envelope gains `diagnostics` right after `compat`, value [] unless a guarded pure-code failure was recorded (corpus expectation: [] everywhere; a non-empty list is a finding to report, not budget noise). .superpowers/sdd/2026-10-23-v3-refactor-round-8/task-5-report.md; product oracle /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-14-refactor-arc/round8/budget-task5.json (41 fixture files claimed, 0 unclaimed); pre-scan /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-14-refactor-arc/round8-prescan.json B1 (149629 units, 0 already carry the key)",
+   "expected_magnitude": 149629
+  },
+  {
+   "id": "B1-schema",
+   "path_glob": "/properties/diagnostics",
+   "op": [
+    "added"
+   ],
+   "evidence": "--schema x6: the only difference is the added `diagnostics` property (array of {source, exception, message, effect}, all required strings); top-level `required` untouched. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-14-refactor-arc/round8/schema-diff-task5.txt",
+   "expected_magnitude": 6
+  },
+  {
+   "id": "B2-emc-title",
+   "analyzer": "emc",
+   "path_glob": "/findings/*/title",
+   "op": [
+    "removed"
+   ],
+   "predicate": "v3_round8:b2_explained",
+   "evidence": "emc_rules._make_finding no longer writes `title`; `summary` always carried the same value and stays (finding_id input unchanged). .superpowers/sdd/2026-10-23-v3-refactor-round-8/task-6-report.md; product oracle round8/budget-task6.json (10 claimed); pre-scan B2 (214449 EMC findings, all with title)",
+   "expected_magnitude": 214449
+  },
+  {
+   "id": "B2-emc-key-order",
+   "analyzer": "emc",
+   "path_glob": "/findings/*",
+   "op": [
+    "key_order"
+   ],
+   "predicate": "v3_round8:b2_explained",
+   "evidence": "EMC finding keys now follow make_finding's order (detector, rule_id, category, summary, description, components, nets, pins, severity, confidence, evidence_source, recommendation, [fix_params], report_context, **extra). The product comparator reports order only when key sets are equal, so the product oracle shows 0 here; request the harness key_order op explicitly. Pinned by tools/tests/test_emc_finding_shape.py",
+   "expected_magnitude": 214449
+  },
+  {
+   "id": "B2-emc-top-issues-title",
+   "analyzer": "emc",
+   "path_glob": "/audience_summary/*/top_issues/*/title",
+   "op": [
+    "removed"
+   ],
+   "predicate": "v3_round8:b2_explained",
+   "evidence": "audience_summary top_issues embed the finding dicts (ruling R10). round8/budget-task6.json class B2-title-removed-top-issues (5 claimed); pre-scan 61643 entries",
+   "expected_magnitude": 61643
+  },
+  {
+   "id": "B2-emc-top-issues-key-order",
+   "analyzer": "emc",
+   "path_glob": "/audience_summary/*/top_issues/*",
+   "op": [
+    "key_order"
+   ],
+   "predicate": "v3_round8:b2_explained",
+   "evidence": "same reorder as B2-emc-key-order, in the embedded copies",
+   "expected_magnitude": 61643
+  },
+  {
+   "id": "B3-schema-era",
+   "path_glob": "/findings/*/schema_era",
+   "op": [
+    "added"
+   ],
+   "where": {
+    "rule_id": [
+     "BE-001",
+     "BE-002",
+     "BE-003",
+     "CC-001",
+     "CK-001",
+     "CK-002",
+     "CK-003",
+     "CK-004",
+     "DA-001",
+     "DC-001",
+     "DC-002",
+     "DC-003",
+     "DP-001",
+     "DP-002",
+     "DP-003",
+     "DP-004",
+     "DP-005",
+     "EE-001",
+     "EE-002",
+     "EF-001",
+     "EF-002",
+     "EG-001",
+     "ES-001",
+     "ES-002",
+     "FV-001",
+     "GP-001",
+     "GP-002",
+     "GP-003",
+     "GP-004",
+     "GP-005",
+     "IA-001",
+     "IO-001",
+     "IO-002",
+     "ML-001",
+     "NR-001",
+     "PD-001",
+     "PD-002",
+     "PD-003",
+     "PD-004",
+     "PP-001",
+     "PR-001",
+     "PR-002",
+     "PR-003",
+     "PR-004",
+     "PS-001",
+     "PS-002",
+     "RP-001",
+     "RP-002",
+     "RS-001",
+     "SH-001",
+     "SP-001",
+     "SU-001",
+     "SU-002",
+     "SU-003",
+     "SW-001",
+     "SW-002",
+     "SW-003",
+     "TH-001",
+     "TH-002",
+     "TW-001",
+     "UC-001",
+     "UC-002",
+     "UC-003",
+     "UC-004",
+     "VD-001",
+     "VD-002",
+     "VD-003",
+     "VD-004",
+     "VS-001",
+     "VS-002",
+     "XT-001",
+     "XV-001",
+     "XV-002"
+    ]
+   },
+   "value_relation": "any",
+   "predicate": "v3_round8:b3_explained",
+   "evidence": "schema_era=\"v3.0\" at 91 emit sites (89 keyword + RS-001/PP-001 dict literals) over 73 rule IDs; the value must be \"v3.0\"; findings already tagged v1.4 under a listed rule ID (147) are unchanged. .superpowers/sdd/2026-10-23-v3-refactor-round-8/task-7-report.md; round8/budget-task7.json (29 claimed); pre-scan per rule/analyzer in round8-prescan.json B3",
+   "expected_magnitude": 334673
+  },
+  {
+   "id": "B3-schema-era-top-issues",
+   "path_glob": "/audience_summary/*/top_issues/*/schema_era",
+   "op": [
+    "added"
+   ],
+   "predicate": "v3_round8:b3_explained",
+   "evidence": "embedded finding copies; `where` cannot resolve here, the predicate must check the entry's rule_id is in the B3 list (ruling R11). round8/budget-task7.json B3-schema-era-top-issues (23 claimed)",
+   "expected_magnitude": 312392
+  },
+  {
+   "id": "B3-schema-era-datasheet-verification",
+   "analyzer": "schematic",
+   "path_glob": "/datasheet_verification/findings/*/schema_era",
+   "op": [
+    "added"
+   ],
+   "predicate": "v3_round8:b3_explained",
+   "evidence": "listed for completeness: no corpus unit carries datasheet_verification findings (pre-scan B4 = 0)",
+   "expected_magnitude": 0
+  },
+  {
+   "id": "B4-ds-verify-severity",
+   "analyzer": "schematic",
+   "path_glob": "/datasheet_verification/findings/*/severity",
+   "op": [
+    "changed"
+   ],
+   "direction": "any",
+   "predicate": "v3_round8:b4_explained",
+   "evidence": "datasheet_verify/cross_verify severities CRITICAL/HIGH -> error, MEDIUM -> warning, INFO -> info. .superpowers/sdd/2026-10-23-v3-refactor-round-8/task-8-report.md; round8/budget-task8.json (0 claimed: no fixture carries the block); pre-scan: 0 corpus units carry datasheet_verification findings, so any claim here is new information",
+   "expected_magnitude": 0
+  },
+  {
+   "id": "B4-ds-verify-by-severity",
+   "analyzer": "schematic",
+   "path_glob": "/datasheet_verification/summary/by_severity/*",
+   "op": [
+    "added",
+    "removed",
+    "changed"
+   ],
+   "predicate": "v3_round8:b4_explained",
+   "evidence": "by_severity keys follow the findings (error/warning/info); pre-scan 0",
+   "expected_magnitude": 0
+  },
+  {
+   "id": "B5-findings",
+   "analyzer": "schematic",
+   "path_glob": "/findings/**",
+   "unit_bound": {
+    "max_units": 563
+   },
+   "predicate": "v3_round8:b5_findings_explained",
+   "evidence": "Unit-level semantic predicate (re-pair findings[] by finding_id, as v232_backport does): the only movements allowed are (A) RS-001 removed where the net is NOT is_power_net_name and every power_in pin on it is bootstrap-named (BST/BOOT/BOOTSTRAP/CBST tokens split on _ and /, digit suffix stripped; KH-454) and (B) PP-001 added for a (ref, pin_number) power_in pin that sits on two or more nets (duplicate / unannotated refs; dedup key is now (ref, pin, net); KH-455); every other pair equal modulo B1-B3. Index-aligned cascade of an A removal or B addition is claimed only when the whole unit is explained. .superpowers/sdd/2026-10-23-v3-refactor-round-8/task-9-report.md (kh453 sheet loses exactly schematic:RS-001:bst); round8/budget-task9.json (fixtures moved nothing). Pre-scan: A = 29 findings on 13 units (upper bound all-power_in-bootstrap 33; net-name token bound 67); B bounded by 550 units (2523 (ref,pin) keys) — duplicate (ref, unit) units 2801, of which 330 already carry PP-001; '?' refs on 2146 units"
+  },
+  {
+   "id": "B5-derived-summary",
+   "analyzer": "schematic",
+   "path_glob": "/summary/**",
+   "op": [
+    "changed",
+    "added",
+    "removed"
+   ],
+   "predicate": "v3_round8:b5_derived_explained",
+   "evidence": "summary is recomputed from the final findings; both sides must equal their own recomputation (v232_backport:derived_explained pattern)"
+  },
+  {
+   "id": "B5-derived-trust-summary",
+   "analyzer": "schematic",
+   "path_glob": "/trust_summary/**",
+   "op": [
+    "changed",
+    "added",
+    "removed"
+   ],
+   "predicate": "v3_round8:b5_derived_explained",
+   "evidence": "compute_trust_summary(findings): totals follow the A removals / B additions"
+  },
+  {
+   "id": "B5-derived-audience-summary",
+   "analyzer": "schematic",
+   "path_glob": "/audience_summary/**",
+   "predicate": "v3_round8:b5_derived_explained",
+   "evidence": "build_audience_summary(findings): top_issues embed findings (A rows drop, B rows appear), counts follow"
+  }
+ ],
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": true
+}
