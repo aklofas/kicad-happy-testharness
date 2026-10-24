@@ -17,7 +17,8 @@ RECORDER = """import json, os, sys
 argv = sys.argv[1:]
 out = argv[argv.index('--output') + 1]
 wd = argv[argv.index('--workdir') + 1] if '--workdir' in argv else None
-json.dump({"summary": {"total": 1, "pass": 1}, "workdir": wd,
+mc = argv[argv.index('--model-cache-dir') + 1] if '--model-cache-dir' in argv else None
+json.dump({"summary": {"total": 1, "pass": 1}, "workdir": wd, "model_cache_dir": mc,
            "has_creds": "DIGIKEY_CLIENT_ID" in os.environ,
            "offline": os.environ.get("KICAD_HAPPY_OFFLINE")}, open(out, "w"))
 """
@@ -86,3 +87,15 @@ def test_unit_workdir_has_no_characters_ngspice_redirects_choke_on():
     assert unit_workdir(root, "owner/repo", "plain.kicad_sch") == root / "owner/repo/plain.kicad_sch"
     assert unit_workdir(root, "o/r", "a b") != unit_workdir(root, "o/r", "a,b")
     assert unit_workdir(root, "o/r", "a b") != unit_workdir(root, "o/r", "a_b")
+
+
+def test_model_cache_is_pinned_to_the_unit_workdir(tmp_path):
+    """Without --model-cache-dir the simulator falls back to one global
+    /tmp/kicad-happy-spice/models shared by every worker, project and run (TH-077):
+    the per-unit workdir is the cache dir, so each unit resolves its models alone."""
+    sim = tmp_path / "sim.py"; sim.write_text(RECORDER)
+    inp = tmp_path / "x.kicad_sch.json"; inp.write_text("{}")
+    out = tmp_path / "out.json"
+    wd = tmp_path / "work"
+    rc, _, _ = run_one_spice(sim, inp, out, workdir=wd)
+    assert rc == 0 and json.loads(out.read_text())["model_cache_dir"] == str(wd)

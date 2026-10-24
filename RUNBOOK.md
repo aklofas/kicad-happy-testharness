@@ -3022,11 +3022,13 @@ python3 regression/compare_spice_offline.py /tmp/so/base/results/outputs/spice /
 
 quick_200 = 8,829 report files per side, ~2.5 min per side at 16 jobs. The comparator masks run
 ids, timings and the data-dir prefix; everything else is reported by (op, wildcarded path) with
-a count and an example unit. **Known run-to-run noise (TH-077):** `simulation_results[*].model_note`
-flips between `lookup:<MPN>` and `cache:<MPN>` for the same product depending on which worker
-reached the project's `spice/models/` cache first; quantify it with an A/A pass (run the same
-product twice) before attributing it to the candidate, and never mask it blindly — a different
-model SOURCE can mean a different model.
+a count and an example unit. The runner pins the simulator's model cache to each unit's
+workdir (`--model-cache-dir`, TH-077) — without it the product falls back to one global
+`/tmp/kicad-happy-spice/models` shared by every worker and run (KH-477) — so two passes of
+the same product are identical (A/A quick_200: 8,829 / 8,829) and a `model_note` difference
+is the candidate's. Expect `lookup:` on a part's first use in a unit and `cache:` on later
+uses in the same unit; outputs regenerated before 2026-10-24 carry the old global-cache
+labels.
 
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 

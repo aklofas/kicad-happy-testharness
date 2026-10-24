@@ -4,9 +4,8 @@
 The spice skill resolves its model cache to <project>/spice/models/ beside the
 corpus schematic (TH-059), and other simulator output can land elsewhere under
 spice/. run_spice.py --workdir keeps the harness's own simulation work files out
-of repos/, but the simulator's model-cache write into the corpus checkout is NOT
-prevented until the product gains --model-cache-dir. This tool exists to detect
-it: it hashes every file under every spice/ dir (recursively, keyed by path
+of repos/ and pins the simulator's model cache to the unit workdir
+(--model-cache-dir, TH-077); this tool proves no run wrote under repos/ anyway: it hashes every file under every spice/ dir (recursively, keyed by path
 relative to that spice/ dir, e.g. models/manifest.json) and never writes under
 --repos-root.
 

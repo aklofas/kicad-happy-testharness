@@ -91,7 +91,11 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
                "--output", str(out_path), "--compact", "--timeout", str(timeout)]
         if workdir is not None:
             Path(workdir).mkdir(parents=True, exist_ok=True)
-            cmd.extend(["--workdir", str(workdir)])
+            # The model cache lives with the unit's work files: the simulator's default
+            # (beside the schematic the analysis JSON names) has no name to go by in
+            # batch output and falls back to one global /tmp cache shared by every
+            # worker, project and run — a manifest race and a cross-project leak (TH-077).
+            cmd.extend(["--workdir", str(workdir), "--model-cache-dir", str(workdir)])
         if parasitics_json and Path(parasitics_json).exists():
             cmd.extend(["--parasitics", str(parasitics_json)])
         if extra_args:

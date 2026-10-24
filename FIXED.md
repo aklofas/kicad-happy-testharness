@@ -86,6 +86,17 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-24 — TH-077: spice-offline runs were not deterministic — `model_note` flipped `lookup:`/`cache:` because every worker shared one global `/tmp/kicad-happy-spice/models` cache
+
+**Severity:** LOW (a label, not a measurement; but the two-sided spice-offline comparison reported differences that were not the candidate's, and the cache also leaked models across projects and across runs of different products).
+**File:** `run/run_spice.py` (`run_one_spice`), `regression/compare_spice_offline.py` evidence under `results/v3_round8_gate_aux/spice_offline/`; test `tests/test_run_spice_isolation.py`.
+**Discovered:** 2026-10-24, v3 round-8 gate (A/A passes: 132 and 30 flips per 8,829 reports).
+**Fixed:** 2026-10-24.
+
+- **Root cause:** not the per-project cache race the filing assumed. `analyze_schematic.py` strips `file` from its output (`result.pop("file")`), so the simulator's `resolve_cache_dir` has no schematic to sit beside and falls back to `/tmp/kicad-happy-spice/models` — one directory shared by all 16 workers, every project and every run. `cache_model` rewrites the whole manifest read-modify-write with no lock or atomic rename, so concurrent writers clobber each other (the global dir held 86 model files and a 19-entry manifest) and readers hit partial JSON, miss, and resolve again: which unit reports `cache:` and which `lookup:` depended on scheduling. The corpus checkouts under `repos/` were never touched (their caches date from April), which is why `inventory_spice_caches --check` stayed clean. Product side filed as KH-477.
+- **Fix:** `run_one_spice` passes the per-unit workdir as `--model-cache-dir` beside `--workdir`, so each unit resolves its models alone under `<workdir>/<repo>/<unit>/spice/models`: no sharing between workers, nothing persisting in `/tmp`, nothing crossing products. The first use of a part in a unit now reports its real tier (`lookup:` offline) and later uses in the same unit `cache:`, in a fixed order.
+- **Verification:** new test (the recorder sees `--model-cache-dir` = the unit workdir); A/A over quick_200 at a0df172 with the fix: `compare_spice_offline` **IDENTICAL on 8,829 / 8,829** (`compare_aa_pinned_cache.json`), the global `/tmp` manifest mtime unchanged, 263 per-unit caches under the workdir; against the round-8 candidate run the only change is 264 `model_note` `cache:` → `lookup:` (`compare_cand_pinnedcache.json`). No reference assertion reads `model_note` (only the schema inventory names it), so the next corpus SPICE regen carries that string flip as a budget class, not a lock change. RUNBOOK 26l rewritten: the profile is deterministic; a `model_note` difference is now the candidate's.
+
 ## 2026-10-24 — TH-066: `audit_constants.py` / `audit_equations.py` walked three roots — 42 of the 140 product source files (bom, datasheets, distributors, kicad/review) never entered the registries
 
 **Severity:** LOW (coverage blind spot; nothing wrong was reported, 109 constants were not reported).
