@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-23 later (4) — Checklist 11 backlog pass COMMITTED LOCALLY (4 commits over eca0990e115, tip = equations re-verify): TH-076 fixed, KH-467 filed, constants verified 229 / critical 5, equations 105/105 verified (23 stale re-confirmed formula-unchanged against the last-verified product tag, 8 pcb geometry tags verified by reading); UNPUSHED, push on the user's word; `tests/python_compat_policy.json` carries the main-repo agent's in-flight round-8 edit (not committed)
+Last updated: 2026-10-23 later (5) — Checklist 11 set PUSHED: origin/v2.2-dev = 40852dd9ef4 (6 commits over ckpt-9 caa50e5c9c7; hook 2,449 / 0 / 1 xf vs product_0490c49; not a pin candidate). `_ADC_RESOLUTION_MAP` (CONST-553) verified prefix-by-prefix against datasheets: 14/29 hold, 15 wrong / multi-resolution / nonexistent → KH-468 filed; registry + ISSUES.md UNCOMMITTED pending review; critical constants now 4 (three LED tables KH-467, SWITCHING_EFFICIENCY); `tests/python_compat_policy.json` still carries the main-repo agent's in-flight round-8 edit (not committed)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;

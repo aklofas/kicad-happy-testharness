@@ -12,7 +12,7 @@
 | Verified | 229 |
 | Unverified | 493 |
 | Stale (changed since verification) | 0 |
-| Critical risk | 5 |
+| Critical risk | 4 |
 | High risk | 7 |
 
 ## skills/emc/scripts/analyze_emc.py
@@ -261,7 +261,7 @@
 | CONST-550 | `_ADC_PIN_PREFIXES` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-551 | `_VREF_PIN_NAMES` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-552 | `_SPI_PIN_NAMES` | keyword_classification | 13 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-553 | `_ADC_RESOLUTION_MAP` | datasheet_lookup | 29 | unverified | 0.7 | 0.0 | **critical** (0.7) |
+| CONST-553 | `_ADC_RESOLUTION_MAP` | datasheet_lookup | 29 | unverified | 0.7 | 0.0 | **medium** (0.4) |
 | CONST-554 | `_SUPERVISOR_IC_KEYWORDS` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-555 | `_WATCHDOG_IC_KEYWORDS` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-556 | `_RESET_OUTPUT_PINS` | keyword_classification | 15 | unverified | 0.4 | 0.0 | **medium** (0.4) |

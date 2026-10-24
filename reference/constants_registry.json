@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "last_scan": "2026-10-23T22:24:25.961885+00:00",
+  "last_scan": "2026-10-24T01:38:53.747987+00:00",
   "constants": [
     {
       "name": "SEVERITY_WEIGHTS",
@@ -4955,18 +4955,18 @@
       "entries": {
         "ads111": {
           "value": 16,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI SBAS444 ADS111x datasheet p.1 (local datasheets/ADS1115-62661b14.pdf): 16-bit; ADS1110/ADS1118/ADS1119 product pages 16-bit"
         },
         "ads101": {
           "value": 12,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI SBAS473 ADS101x datasheet p.1 (local datasheets/ADS1015-dbf1a190.pdf): 12-bit; ADS1018 product page 12-bit"
         },
         "ads131": {
           "value": 24,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI ADS131M04/ADS131M08 datasheets p.1 (local datasheets/ADS131M08-ac6ef0a2.pdf): 24-bit; ADS131A0x/E0x families 24-bit"
         },
         "ads126": {
           "value": 24,
@@ -4980,13 +4980,13 @@
         },
         "ads868": {
           "value": 16,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI ADS8681 product page: 16-bit 1 MSPS; ADS868xA datasheet (ADS8684/ADS8688): 16-bit"
         },
         "mcp320": {
           "value": 12,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "Microchip MCP3204/3208 DS21298 p.1 (local datasheets/MCP3208T_BI_SL-89bc1e17.pdf): 12-bit; MCP3201/3202 12-bit"
         },
         "mcp330": {
           "value": 10,
@@ -5005,13 +5005,13 @@
         },
         "mcp346": {
           "value": 16,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "Microchip AN5150 + MCP3461/2/4(R) listings: 16-bit delta-sigma, 153.6 ksps"
         },
         "mcp356": {
           "value": 24,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "Microchip DS20006181C MCP3561/2/4 p.1 (local datasheets/MCP3561_2_4_FAMILY_DATA_SHEET_DS20006181C-d75d7f60.pdf): 24-bit"
         },
         "mcp355": {
           "value": 24,
@@ -5020,8 +5020,8 @@
         },
         "max1161": {
           "value": 12,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "ADI MAX11612-MAX11617 datasheet: 12-bit, 94.4 ksps I2C family"
         },
         "max1163": {
           "value": 12,
@@ -5035,8 +5035,8 @@
         },
         "max1198": {
           "value": 8,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "ADI MAX1198 product page: dual 8-bit 100 Msps"
         },
         "max1192": {
           "value": 10,
@@ -5075,43 +5075,43 @@
         },
         "adc081": {
           "value": 8,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI ADC081S021 + ADC081C021 datasheets p.1 (local datasheets/ADC081S021-e4283e4e.pdf): 8-bit"
         },
         "adc082": {
           "value": 8,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI ADC082S021/051/101 product pages: 2-channel 8-bit SAR"
         },
         "adc121": {
           "value": 12,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI ADC121C021 datasheet p.1 (local datasheets/ADC121C021CIMK_NOPB-f464ed23.pdf): 12-bit; ADC121S021 12-bit"
         },
         "adc122": {
           "value": 12,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "TI ADC122S021/051/101 product pages: 2-channel 12-bit SAR"
         },
         "nau780": {
           "value": 24,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "Nuvoton NAU7802 datasheet p.1 (local datasheets/NAU7802-2f4d7085.pdf): 24-bit"
         }
       },
       "id": "CONST-553",
       "category": "datasheet_lookup",
       "status": "unverified",
-      "verified_entries": 0,
+      "verified_entries": 14,
       "source": null,
-      "notes": null,
+      "notes": "Checklist 11b 2026-10-23: 14/29 prefixes verified against datasheets. The other 15 are NOT verifiable as written and are filed as KH-468: wrong value (mcp330=10, MCP3301/02/04 are 13-bit; mcp355=24, MCP3550/51/53 are 22-bit; max1192=10, MAX1192 is dual 8-bit; ad770=14, AD7705..AD7709 are 16-bit); prefix spans several resolutions (ads126: ADS1260/61 24-bit vs ADS1262/63 32-bit; mcp342: MCP3421-24 18-bit vs MCP3425-28 16-bit; ltc24: LTC2440/2485 24-bit vs LTC2450-2483 16-bit; ltc23: LTC2308/09 12, LTC2314/2320 14, LTC2310 16, LTC2372 18, LTC2376/78 20; ad760: AD7605/06 16, AD7607 14, AD7608/09 18; ad799: AD7991 12, AD7995 10, AD7999 8; max1163: MAX11632-37 12-bit vs MAX11638/39 8-bit); no such part found at the manufacturer (ads861 = ADS861x, mcp340 = MCP340x, max1194, max1141).",
       "overfit_score": 0.0,
       "overfit_flags": [],
       "impact_score": 0.7,
       "impact_flags": [
         "datasheet_values"
       ],
-      "risk_score": 0.7
+      "risk_score": 0.36
     },
     {
       "name": "_SUPERVISOR_IC_KEYWORDS",
