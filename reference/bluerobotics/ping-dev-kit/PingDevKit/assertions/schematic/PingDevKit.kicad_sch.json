@@ -59,6 +59,12 @@
         "detector_filter": "analyze_voltage_derating",
         "op": "min_count",
         "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "VD-001",
+        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
     {
@@ -144,6 +150,12 @@
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "min_count",
         "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PP-001",
+        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
@@ -154,6 +166,12 @@
         "detector_filter": "audit_rail_sources",
         "op": "min_count",
         "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "RS-001",
+        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
@@ -479,12 +497,6 @@
         "detector_filter": "validate_crystal_load_caps",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "XT-001",
-        "tagged_at": "2026-10-23T10:05:24Z",
-        "tagged_reason": "new in v1.4, requires CrystalBlock dataclass (XT-001)"
       }
     },
     {
@@ -495,12 +507,6 @@
         "detector_filter": "validate_feedback_stability",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "FS-001",
-        "tagged_at": "2026-10-23T10:05:24Z",
-        "tagged_reason": "datasheet-gated on regulator load step + bandwidth (FS-001)"
       }
     },
     {
@@ -511,6 +517,12 @@
         "detector_filter": "validate_power_sequencing",
         "op": "min_count",
         "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PS-001",
+        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
@@ -521,12 +533,6 @@
         "detector_filter": "validate_pullups",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "PU-001",
-        "tagged_at": "2026-10-23T10:05:24Z",
-        "tagged_reason": "datasheet-gated on ds.quality >= 60 (PU-001)"
       }
     },
     {
@@ -537,12 +543,6 @@
         "detector_filter": "validate_voltage_levels",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-10-23T10:05:24Z",
-        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     },
     {

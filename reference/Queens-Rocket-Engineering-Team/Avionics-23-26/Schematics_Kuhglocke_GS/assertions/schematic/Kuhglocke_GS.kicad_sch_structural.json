@@ -12,6 +12,12 @@
         "detector_filter": "analyze_usb_compliance",
         "op": "equals",
         "value": 4
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "UC-004",
+        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
     {
@@ -22,6 +28,12 @@
         "detector_filter": "analyze_voltage_derating",
         "op": "equals",
         "value": 2
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "VD-001",
+        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
     {
@@ -66,12 +78,18 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
+      "description": "Exactly 2 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 1
+        "value": 2
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PP-001",
+        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
@@ -82,6 +100,12 @@
         "detector_filter": "audit_rail_sources",
         "op": "equals",
         "value": 7
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "RS-001",
+        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
@@ -385,12 +409,6 @@
         "detector_filter": "validate_led_resistors",
         "op": "equals",
         "value": 7
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "LR-001",
-        "tagged_at": "2026-10-23T10:05:38Z",
-        "tagged_reason": "datasheet-gated on LED Vf + If (LR-001)"
       }
     },
     {
@@ -401,12 +419,6 @@
         "detector_filter": "validate_voltage_levels",
         "op": "equals",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v1.4",
-        "tagged_by_rule": "VM-001",
-        "tagged_at": "2026-10-23T10:05:38Z",
-        "tagged_reason": "datasheet-gated on rated voltage vs rail voltage (VM-001)"
       }
     }
   ]
