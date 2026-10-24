@@ -20,6 +20,8 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO))
+from regression.schema_era import CURRENT_SCHEMA_ERA  # noqa: E402
 
 OUTPUT_JSON = {
     "analyzer_type": "schematic",
@@ -38,17 +40,17 @@ ASSERTIONS = [
         "check": {"path": "findings", "detector_filter": "detect_rc_filters",
                   "op": "min_count", "value": 1},
     },
-    # Tagged v1.4 → runs in default mode (CURRENT_SCHEMA_ERA), runs in --era v1.4,
+    # Tagged with the CURRENT era → runs in default mode, runs in --era <current>,
     # NOT in --era pre-v1.4
     {
         "id": "SEED-2",
         "description": "any pullup",
         "check": {"path": "findings", "detector_filter": "validate_pullups",
                   "op": "min_count", "value": 1},
-        "schema_era": {"era": "v1.4", "tagged_by_rule": "PU-001",
+        "schema_era": {"era": CURRENT_SCHEMA_ERA, "tagged_by_rule": "PU-001",
                        "tagged_at": "2026-01-01T00:00:00Z", "tagged_reason": "r"},
     },
-    # Tagged pre-v1.4 → NOT in default mode, NOT in --era v1.4, runs in --era pre-v1.4
+    # Tagged pre-v1.4 → NOT in default mode, NOT in --era <current>, runs in --era pre-v1.4
     {
         "id": "SEED-3",
         "description": "pullup pre-v1.4",
@@ -114,7 +116,7 @@ def _result_ids(result) -> set:
 
 
 def test_default_mode_runs_current_and_untagged_not_pre_v14():
-    """Default mode: SEED-1 (untagged) + SEED-2 (v1.4 == CURRENT) run; SEED-3 filtered."""
+    """Default mode: SEED-1 (untagged) + SEED-2 (tagged CURRENT) run; SEED-3 filtered."""
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         _setup_corpus(tmp)
@@ -126,12 +128,12 @@ def test_default_mode_runs_current_and_untagged_not_pre_v14():
         assert "SEED-3" not in ids, f"Expected SEED-3 filtered out, got: {ids}"
 
 
-def test_era_v14_same_as_default():
-    """--era v1.4 is identical to default (CURRENT_SCHEMA_ERA == v1.4)."""
+def test_era_current_same_as_default():
+    """--era <CURRENT_SCHEMA_ERA> is identical to default."""
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         _setup_corpus(tmp)
-        result = _run(tmp, "--era", "v1.4")
+        result = _run(tmp, "--era", CURRENT_SCHEMA_ERA)
         assert result.returncode == 0, f"Expected exit 0, got {result.returncode}\n{result.stderr}"
         ids = _result_ids(result)
         assert "SEED-1" in ids

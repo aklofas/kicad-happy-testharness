@@ -18,6 +18,7 @@ Design: docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md §4
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
 import subprocess
@@ -64,13 +65,37 @@ def _collect_detector_rule_pairs(kicad_happy: Path, source_path: Path, era: str,
     unresolved: list[dict] = []
     for s in source_scan.emit_sites(kicad_happy, source_path, det_enum):
         if not s.resolved:
-            if s.reason != "positional-emc":   # EMC legacy shape is ledgered, not reported here
+            if s.reason == "positional-emc" and s.detector and s.rule_id:
+                # EMC's positional _make_finding(category, severity, rule_id, ...) carries the
+                # era in **extra; the scanner keeps the site unresolved for coverage but
+                # resolves detector/rule_id, which is all discovery needs
+                if s.schema_era == era:
+                    pairs.append((s.detector, s.rule_id))
+            elif s.reason != "positional-emc":
                 unresolved.append({"file": s.file, "line": s.line, "callee": s.callee,
                                    "reason": s.reason})
             continue
         if s.schema_era == era:
             pairs.append((s.detector, s.rule_id))
+    pairs.extend(_dict_literal_pairs(source_path, era))
     return pairs, unresolved
+
+
+def _dict_literal_pairs(source_path: Path, era: str) -> list[tuple[str, str]]:
+    """Findings built as dict literals (RS-001 / PP-001 in signal_detectors) with literal
+    ``detector``, ``rule_id`` and ``schema_era`` keys; the scanner's call walk cannot see them."""
+    out: list[tuple[str, str]] = []
+    for node in ast.walk(source_scan.parse_source(source_path)):
+        if not isinstance(node, ast.Dict):
+            continue
+        lit = {}
+        for k, v in zip(node.keys, node.values):
+            key = source_scan._str_literal(k) if k is not None else None
+            if key in ("detector", "rule_id", "schema_era"):
+                lit[key] = source_scan._str_literal(v)
+        if lit.get("detector") and lit.get("rule_id") and lit.get("schema_era") == era:
+            out.append((lit["detector"], lit["rule_id"]))
+    return out
 
 
 def _fallback_summary(detector: str, era: str, rules: list[str]) -> str:
@@ -88,8 +113,7 @@ def discover(kicad_happy: Path, era: str,
         lambda: {"rules": set(), "source_files": set(), "emit_line_count": 0}
     )
     det_enum = source_scan.resolve_det_enum(kicad_happy)
-    files = [p for p in source_scan.iter_product_sources(kicad_happy)
-             if source_scan.rel(kicad_happy, p).startswith("skills/kicad/scripts/")]
+    files = list(source_scan.iter_product_sources(kicad_happy))   # every skills/*/scripts tree (EMC emits too)
     scanned = [source_scan.rel(kicad_happy, p) for p in files]
     unresolved_sites: list[dict] = []
     for path in files:

@@ -123,8 +123,9 @@ def emit_sites(product_root: Path, path: Path,
             rid = _str_literal(call.args[2])
             detector = f"emc_{cat}" if cat is not None else None
             rule_id = rid
-            sites.append(EmitSite(file_rel, call.lineno, callee, detector, rule_id, None,
-                                  False, "positional-emc"))
+            # the era rides in **extra; carried for discovery, the site stays unresolved
+            sites.append(EmitSite(file_rel, call.lineno, callee, detector, rule_id,
+                                  _str_literal(kws.get("schema_era")), False, "positional-emc"))
             continue
         if callee == "_make_finding" and call.args and ("detector" in kws or "rule_id" in kws):
             sites.append(EmitSite(file_rel, call.lineno, callee, None, _str_literal(kws.get("rule_id")),

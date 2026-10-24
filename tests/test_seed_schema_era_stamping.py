@@ -23,13 +23,20 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO))
+from regression.schema_era import CURRENT_SCHEMA_ERA  # noqa: E402
 
 # Real repo that has both a versioned and an unversioned detector in its outputs
 TEST_REPO = "greatscottgadgets/ubertooth"
 
-# Versioned detector (in v14_changed_detectors.json)
+# Versioned detector of the v1.4 registry (v14_changed_detectors.json) — used by the
+# explicit --schema-era pre-v1.4 test, which selects through that registry
 VERSIONED_DETECTOR = "validate_pullups"
-# Unversioned detector (not in v14_changed_detectors.json)
+# Versioned detector of the CURRENT era registry (v30_changed_detectors.json since the
+# round-8 relock): default-mode stamping selects through it
+VERSIONED_DETECTOR_CURRENT = "audit_rail_sources"
+CURRENT_PRIMARY_RULE = "RS-001"
+# Unversioned detector (in neither registry)
 UNVERSIONED_DETECTOR = "detect_rc_filters"
 
 
@@ -122,23 +129,23 @@ def _get_unstamped(assertions: list, detector: str) -> list:
 # ---- seed.py tests (flags and stamp behavior) ----------------------------
 
 def test_seed_default_stamps_versioned_detector():
-    """Default mode: assertions for validate_pullups get schema_era=v1.4 stamped."""
+    """Default mode: assertions for a CURRENT-era versioned detector get schema_era=CURRENT stamped."""
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         assertions = _run_seed_and_read_assertions(tmp)
-        stamped = _get_stamped(assertions, VERSIONED_DETECTOR)
+        stamped = _get_stamped(assertions, VERSIONED_DETECTOR_CURRENT)
         assert stamped, (
-            f"Expected at least one assertion for {VERSIONED_DETECTOR} "
+            f"Expected at least one assertion for {VERSIONED_DETECTOR_CURRENT} "
             f"to be stamped with schema_era, got none.\n"
             f"All detector_filters: "
             f"{sorted(d for d in set(a.get('check',{}).get('detector_filter') for a in assertions) if d)}"
         )
         era_obj = stamped[0]["schema_era"]
-        assert era_obj.get("era") == "v1.4", (
-            f"Expected era=v1.4, got {era_obj!r}"
+        assert era_obj.get("era") == CURRENT_SCHEMA_ERA, (
+            f"Expected era={CURRENT_SCHEMA_ERA}, got {era_obj!r}"
         )
-        assert era_obj.get("tagged_by_rule") == "PU-001", (
-            f"Expected tagged_by_rule=PU-001, got {era_obj!r}"
+        assert era_obj.get("tagged_by_rule") == CURRENT_PRIMARY_RULE, (
+            f"Expected tagged_by_rule={CURRENT_PRIMARY_RULE}, got {era_obj!r}"
         )
         assert era_obj.get("tagged_at") is not None, "Expected tagged_at to be set"
         assert era_obj.get("tagged_reason") is not None, "Expected tagged_reason to be set"
@@ -254,7 +261,7 @@ def test_seed_structural_schema_era_flag_accepted():
 
 
 def test_seed_structural_default_stamps_versioned_detector():
-    """seed_structural.py default: assertions for validate_pullups get stamped."""
+    """seed_structural.py default: assertions for a CURRENT-era versioned detector get stamped."""
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         _setup_tmp_outputs(tmp)
@@ -282,11 +289,10 @@ def test_seed_structural_default_stamps_versioned_detector():
             # If no structural assertions emitted (no ref fields matched),
             # just verify the flags don't crash — the flag-acceptance tests above cover this.
             return
-        stamped = _get_stamped(all_assertions, VERSIONED_DETECTOR)
-        # validate_pullups is in REF_FIELD_MAP, so structural assertions should exist for it
-        if _get_assertions_for_detector(all_assertions, VERSIONED_DETECTOR):
+        stamped = _get_stamped(all_assertions, VERSIONED_DETECTOR_CURRENT)
+        if _get_assertions_for_detector(all_assertions, VERSIONED_DETECTOR_CURRENT):
             assert stamped, (
-                f"Expected validate_pullups structural assertions to be stamped.\n"
+                f"Expected {VERSIONED_DETECTOR_CURRENT} structural assertions to be stamped.\n"
                 f"Detectors found: "
                 f"{sorted(d for d in set(a.get('check',{}).get('detector_filter') for a in all_assertions) if d)}"
             )

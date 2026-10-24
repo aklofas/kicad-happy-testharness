@@ -16,9 +16,9 @@ from typing import Iterator, Optional
 
 # ---- Constants -----------------------------------------------------------
 
-CURRENT_SCHEMA_ERA: str = "v1.4"
-"""Current assertion-era marker. Bump ONCE at the v3.0 output-freeze / relock
-event (spec 2026-10-14-h0 section 6.2); not before."""
+CURRENT_SCHEMA_ERA: str = "v3.0"
+"""Current assertion-era marker. Bumped at the v3.0 output-freeze / relock event
+(v3 round 8, candidate a0df172; spec 2026-10-14-h0 section 6.2)."""
 
 KNOWN_ERAS: tuple[str, ...] = ("pre-v1.4", "v1.4", "v3.0")
 """Eras the harness recognizes. Append-only; never remove."""

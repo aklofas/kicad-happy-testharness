@@ -1,0 +1,549 @@
+{
+  "era": "v3.0",
+  "generated_at": "2026-10-24T02:26:57Z",
+  "kicad_happy_commit": "a0df172",
+  "kicad_happy_branch": "HEAD",
+  "source_files_scanned": [
+    "skills/bom/scripts/_core_path.py",
+    "skills/bom/scripts/bom_manager.py",
+    "skills/bom/scripts/edit_properties.py",
+    "skills/bom/scripts/kicad_sexp.py",
+    "skills/bom/scripts/sync_datasheet_urls.py",
+    "skills/bom/scripts/translate_bom_pnp.py",
+    "skills/datasheets/scripts/_smoke_v14_roundtrip.py",
+    "skills/datasheets/scripts/datasheet_extract_cache.py",
+    "skills/datasheets/scripts/datasheet_features.py",
+    "skills/datasheets/scripts/datasheet_lookup.py",
+    "skills/datasheets/scripts/datasheet_page_selector.py",
+    "skills/datasheets/scripts/datasheet_score.py",
+    "skills/datasheets/scripts/datasheet_verify.py",
+    "skills/datasheets/scripts/extraction_schema.py",
+    "skills/datasheets/scripts/merge_results.py",
+    "skills/datasheets/scripts/plan_extraction.py",
+    "skills/datasheets/scripts/validate_extraction_result.py",
+    "skills/datasheets/scripts/validate_sanity_vector.py",
+    "skills/digikey/scripts/_core_path.py",
+    "skills/digikey/scripts/fetch_datasheet_digikey.py",
+    "skills/digikey/scripts/provider_digikey.py",
+    "skills/digikey/scripts/sync_datasheets_digikey.py",
+    "skills/element14/scripts/_core_path.py",
+    "skills/element14/scripts/fetch_datasheet_element14.py",
+    "skills/element14/scripts/provider_element14.py",
+    "skills/element14/scripts/sync_datasheets_element14.py",
+    "skills/emc/scripts/_core_path.py",
+    "skills/emc/scripts/analyze_emc.py",
+    "skills/emc/scripts/emc_envelope.py",
+    "skills/emc/scripts/emc_formulas.py",
+    "skills/emc/scripts/emc_rules.py",
+    "skills/emc/scripts/emc_spice.py",
+    "skills/kicad/review/scripts/_mini_jsonschema.py",
+    "skills/kicad/review/scripts/build_review_plan.py",
+    "skills/kicad/review/scripts/deep_review_gate.py",
+    "skills/kicad/review/scripts/merge_annotations.py",
+    "skills/kicad/review/scripts/run_phase4_exercise.py",
+    "skills/kicad/review/scripts/validate_review.py",
+    "skills/kicad/scripts/analysis_cache.py",
+    "skills/kicad/scripts/analyze_gerbers.py",
+    "skills/kicad/scripts/analyze_pcb.py",
+    "skills/kicad/scripts/analyze_schematic.py",
+    "skills/kicad/scripts/analyze_thermal.py",
+    "skills/kicad/scripts/analyzer_envelope.py",
+    "skills/kicad/scripts/bus_resolver.py",
+    "skills/kicad/scripts/capability_mode.py",
+    "skills/kicad/scripts/check_report_sections.py",
+    "skills/kicad/scripts/cross_analysis.py",
+    "skills/kicad/scripts/cross_verify.py",
+    "skills/kicad/scripts/detection_schema.py",
+    "skills/kicad/scripts/detector_helpers.py",
+    "skills/kicad/scripts/diff_analysis.py",
+    "skills/kicad/scripts/diff_engine.py",
+    "skills/kicad/scripts/domain_detectors.py",
+    "skills/kicad/scripts/envelopes/__init__.py",
+    "skills/kicad/scripts/envelopes/cross_analysis.py",
+    "skills/kicad/scripts/envelopes/gerber.py",
+    "skills/kicad/scripts/envelopes/pcb.py",
+    "skills/kicad/scripts/envelopes/schematic.py",
+    "skills/kicad/scripts/envelopes/thermal.py",
+    "skills/kicad/scripts/export_issues.py",
+    "skills/kicad/scripts/fab_release_gate.py",
+    "skills/kicad/scripts/finding_schema.py",
+    "skills/kicad/scripts/gen_output_schema_md.py",
+    "skills/kicad/scripts/inputs_builder.py",
+    "skills/kicad/scripts/kicad_core/__init__.py",
+    "skills/kicad/scripts/kicad_core/classify.py",
+    "skills/kicad/scripts/kicad_core/cli.py",
+    "skills/kicad/scripts/kicad_core/diagnostics.py",
+    "skills/kicad/scripts/kicad_core/fields.py",
+    "skills/kicad/scripts/kicad_core/model.py",
+    "skills/kicad/scripts/kicad_core/netnames.py",
+    "skills/kicad/scripts/kicad_core/netquery.py",
+    "skills/kicad/scripts/kicad_core/parts.py",
+    "skills/kicad/scripts/kicad_core/passives.py",
+    "skills/kicad/scripts/kicad_core/project.py",
+    "skills/kicad/scripts/kicad_core/render.py",
+    "skills/kicad/scripts/kicad_core/sexp.py",
+    "skills/kicad/scripts/kicad_core/values.py",
+    "skills/kicad/scripts/kicad_types.py",
+    "skills/kicad/scripts/kicad_utils.py",
+    "skills/kicad/scripts/lifecycle_audit.py",
+    "skills/kicad/scripts/lookup_detectors.py",
+    "skills/kicad/scripts/lookup_helpers.py",
+    "skills/kicad/scripts/netlist_queries.py",
+    "skills/kicad/scripts/output_filters.py",
+    "skills/kicad/scripts/output_io.py",
+    "skills/kicad/scripts/pcb/__init__.py",
+    "skills/kicad/scripts/pcb/assembly.py",
+    "skills/kicad/scripts/pcb/connectivity.py",
+    "skills/kicad/scripts/pcb/copper.py",
+    "skills/kicad/scripts/pcb/dfm.py",
+    "skills/kicad/scripts/pcb/geometry.py",
+    "skills/kicad/scripts/pcb/pipeline.py",
+    "skills/kicad/scripts/pcb/presentation.py",
+    "skills/kicad/scripts/pcb/reader.py",
+    "skills/kicad/scripts/pcb/routing.py",
+    "skills/kicad/scripts/pcb_connectivity.py",
+    "skills/kicad/scripts/project_config.py",
+    "skills/kicad/scripts/run_id.py",
+    "skills/kicad/scripts/schema_codec.py",
+    "skills/kicad/scripts/schematic/__init__.py",
+    "skills/kicad/scripts/schematic/audits.py",
+    "skills/kicad/scripts/schematic/bom_stats.py",
+    "skills/kicad/scripts/schematic/connectivity.py",
+    "skills/kicad/scripts/schematic/hierarchy.py",
+    "skills/kicad/scripts/schematic/ic_analysis.py",
+    "skills/kicad/scripts/schematic/legacy_reader.py",
+    "skills/kicad/scripts/schematic/net_analysis.py",
+    "skills/kicad/scripts/schematic/pipeline.py",
+    "skills/kicad/scripts/schematic/presentation.py",
+    "skills/kicad/scripts/schematic/reader.py",
+    "skills/kicad/scripts/schematic/system_analyses.py",
+    "skills/kicad/scripts/sexp_parser.py",
+    "skills/kicad/scripts/signal_detectors.py",
+    "skills/kicad/scripts/summarize_findings.py",
+    "skills/kicad/scripts/validation_detectors.py",
+    "skills/kicad/scripts/what_if.py",
+    "skills/lcsc/scripts/_core_path.py",
+    "skills/lcsc/scripts/fetch_datasheet_lcsc.py",
+    "skills/lcsc/scripts/provider_lcsc.py",
+    "skills/lcsc/scripts/search_lcsc.py",
+    "skills/lcsc/scripts/sync_datasheets_lcsc.py",
+    "skills/lcsc/scripts/test_search_lcsc.py",
+    "skills/mouser/scripts/_core_path.py",
+    "skills/mouser/scripts/fetch_datasheet_mouser.py",
+    "skills/mouser/scripts/provider_mouser.py",
+    "skills/mouser/scripts/sync_datasheets_mouser.py",
+    "skills/spice/scripts/_core_path.py",
+    "skills/spice/scripts/extract_parasitics.py",
+    "skills/spice/scripts/simulate_subcircuits.py",
+    "skills/spice/scripts/spice_model_cache.py",
+    "skills/spice/scripts/spice_model_generator.py",
+    "skills/spice/scripts/spice_models.py",
+    "skills/spice/scripts/spice_part_library.py",
+    "skills/spice/scripts/spice_results.py",
+    "skills/spice/scripts/spice_simulator.py",
+    "skills/spice/scripts/spice_spec_fetcher.py",
+    "skills/spice/scripts/spice_templates.py",
+    "skills/spice/scripts/spice_tolerance.py"
+  ],
+  "source_files_scanned_count": 140,
+  "unresolved_sites": [
+    {
+      "file": "skills/kicad/scripts/schematic/system_analyses.py",
+      "line": 2467,
+      "callee": "make_finding",
+      "reason": "rule_id:nonliteral"
+    }
+  ],
+  "detectors": {
+    "analyze_usb_compliance": {
+      "rules": [
+        "UC-004"
+      ],
+      "primary_rule": "UC-004",
+      "source_file": "skills/kicad/scripts/schematic/system_analyses.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
+    },
+    "analyze_voltage_derating": {
+      "rules": [
+        "VD-001",
+        "VD-002",
+        "VD-003",
+        "VD-004"
+      ],
+      "primary_rule": "VD-001",
+      "source_file": "skills/kicad/scripts/schematic/system_analyses.py",
+      "emit_line_count": 6,
+      "gating_summary": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
+    },
+    "audit_power_pin_dc_paths": {
+      "rules": [
+        "PP-001"
+      ],
+      "primary_rule": "PP-001",
+      "source_file": "skills/kicad/scripts/signal_detectors.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
+    },
+    "audit_rail_sources": {
+      "rules": [
+        "RS-001"
+      ],
+      "primary_rule": "RS-001",
+      "source_file": "skills/kicad/scripts/signal_detectors.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
+    },
+    "check_connector_current": {
+      "rules": [
+        "CC-001"
+      ],
+      "primary_rule": "CC-001",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (CC-001; 1 site)"
+    },
+    "check_critical_net_routing": {
+      "rules": [
+        "NR-001"
+      ],
+      "primary_rule": "NR-001",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (NR-001; 1 site)"
+    },
+    "check_cross_validation": {
+      "rules": [
+        "XV-001",
+        "XV-002"
+      ],
+      "primary_rule": "XV-001",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 3,
+      "gating_summary": "schema_era key added (XV-001, XV-002; 3 sites)"
+    },
+    "check_decoupling_adequacy": {
+      "rules": [
+        "DA-001"
+      ],
+      "primary_rule": "DA-001",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (DA-001; 1 site)"
+    },
+    "check_diff_pair_quality": {
+      "rules": [
+        "DP-005"
+      ],
+      "primary_rule": "DP-005",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (DP-005; 1 site)"
+    },
+    "check_esd_coverage_gaps": {
+      "rules": [
+        "EG-001"
+      ],
+      "primary_rule": "EG-001",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (EG-001; 1 site)"
+    },
+    "check_plane_splits": {
+      "rules": [
+        "PS-002"
+      ],
+      "primary_rule": "PS-002",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (PS-002; 1 site)"
+    },
+    "check_return_path_enhanced": {
+      "rules": [
+        "RP-002"
+      ],
+      "primary_rule": "RP-002",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (RP-002; 2 sites)"
+    },
+    "check_trace_width_power": {
+      "rules": [
+        "TW-001"
+      ],
+      "primary_rule": "TW-001",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (TW-001; 1 site)"
+    },
+    "check_via_stitching_density": {
+      "rules": [
+        "VS-002"
+      ],
+      "primary_rule": "VS-002",
+      "source_file": "skills/kicad/scripts/cross_analysis.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (VS-002; 2 sites)"
+    },
+    "detect_i2c_address_conflicts": {
+      "rules": [
+        "IA-001"
+      ],
+      "primary_rule": "IA-001",
+      "source_file": "skills/kicad/scripts/domain_detectors.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (IA-001; 1 site)"
+    },
+    "detect_shorted_two_pin_components": {
+      "rules": [
+        "SP-001"
+      ],
+      "primary_rule": "SP-001",
+      "source_file": "skills/kicad/scripts/signal_detectors.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (SP-001; 2 sites)"
+    },
+    "emc_board_edge": {
+      "rules": [
+        "BE-001",
+        "BE-002",
+        "BE-003"
+      ],
+      "primary_rule": "BE-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 4,
+      "gating_summary": "schema_era key added (BE-001, BE-002, BE-003; 4 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_clock_routing": {
+      "rules": [
+        "CK-001",
+        "CK-002",
+        "CK-003",
+        "CK-004"
+      ],
+      "primary_rule": "CK-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 4,
+      "gating_summary": "schema_era key added (CK-001, CK-002, CK-003, CK-004; 4 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_crosstalk": {
+      "rules": [
+        "XT-001"
+      ],
+      "primary_rule": "XT-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (XT-001; 2 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_decoupling": {
+      "rules": [
+        "DC-001",
+        "DC-002",
+        "DC-003"
+      ],
+      "primary_rule": "DC-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 4,
+      "gating_summary": "schema_era key added (DC-001, DC-002, DC-003; 4 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_diff_pair": {
+      "rules": [
+        "DP-001",
+        "DP-002",
+        "DP-003",
+        "DP-004"
+      ],
+      "primary_rule": "DP-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 4,
+      "gating_summary": "schema_era key added (DP-001, DP-002, DP-003, DP-004; 4 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_emi_filter": {
+      "rules": [
+        "EF-001",
+        "EF-002"
+      ],
+      "primary_rule": "EF-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (EF-001, EF-002; 2 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_emission_estimate": {
+      "rules": [
+        "EE-001",
+        "EE-002"
+      ],
+      "primary_rule": "EE-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (EE-001, EE-002; 2 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_esd_path": {
+      "rules": [
+        "ES-001",
+        "ES-002"
+      ],
+      "primary_rule": "ES-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 3,
+      "gating_summary": "schema_era key added (ES-001, ES-002; 3 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_ground_plane": {
+      "rules": [
+        "GP-001",
+        "GP-002",
+        "GP-003",
+        "GP-004",
+        "GP-005"
+      ],
+      "primary_rule": "GP-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 7,
+      "gating_summary": "schema_era key added (GP-001, GP-002, GP-003, GP-004, GP-005; 7 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_inductor_leakage": {
+      "rules": [
+        "ML-001"
+      ],
+      "primary_rule": "ML-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (ML-001; 1 site); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_io_filtering": {
+      "rules": [
+        "IO-001",
+        "IO-002"
+      ],
+      "primary_rule": "IO-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (IO-001, IO-002; 2 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_pdn": {
+      "rules": [
+        "PD-001",
+        "PD-002",
+        "PD-003",
+        "PD-004"
+      ],
+      "primary_rule": "PD-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 5,
+      "gating_summary": "schema_era key added (PD-001, PD-002, PD-003, PD-004; 5 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_return_path": {
+      "rules": [
+        "RP-001"
+      ],
+      "primary_rule": "RP-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (RP-001; 2 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_shielding": {
+      "rules": [
+        "SH-001"
+      ],
+      "primary_rule": "SH-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (SH-001; 1 site); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_stackup": {
+      "rules": [
+        "SU-001",
+        "SU-002",
+        "SU-003"
+      ],
+      "primary_rule": "SU-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 3,
+      "gating_summary": "schema_era key added (SU-001, SU-002, SU-003; 3 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_switching_emc": {
+      "rules": [
+        "SW-001",
+        "SW-002",
+        "SW-003"
+      ],
+      "primary_rule": "SW-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 4,
+      "gating_summary": "schema_era key added (SW-001, SW-002, SW-003; 4 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_thermal_emc": {
+      "rules": [
+        "TH-001",
+        "TH-002"
+      ],
+      "primary_rule": "TH-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 2,
+      "gating_summary": "schema_era key added (TH-001, TH-002; 2 sites); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "emc_via_stitching": {
+      "rules": [
+        "VS-001"
+      ],
+      "primary_rule": "VS-001",
+      "source_file": "skills/emc/scripts/emc_rules.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (VS-001; 1 site); shape: title folded into summary, keys reordered (EMC)"
+    },
+    "format_version_gate": {
+      "rules": [
+        "FV-001"
+      ],
+      "primary_rule": "FV-001",
+      "source_file": "skills/kicad/scripts/schematic/presentation.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (FV-001; 1 site)"
+    },
+    "validate_can_bus": {
+      "rules": [
+        "PR-003"
+      ],
+      "primary_rule": "PR-003",
+      "source_file": "skills/kicad/scripts/validation_detectors.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (PR-003; 1 site)"
+    },
+    "validate_i2c_bus": {
+      "rules": [
+        "PR-001"
+      ],
+      "primary_rule": "PR-001",
+      "source_file": "skills/kicad/scripts/validation_detectors.py",
+      "emit_line_count": 4,
+      "gating_summary": "schema_era key added (PR-001; 4 sites)"
+    },
+    "validate_power_sequencing": {
+      "rules": [
+        "PS-001"
+      ],
+      "primary_rule": "PS-001",
+      "source_file": "skills/kicad/scripts/validation_detectors.py",
+      "emit_line_count": 3,
+      "gating_summary": "schema_era key added (PS-001; 3 sites)"
+    },
+    "validate_spi_bus": {
+      "rules": [
+        "PR-002"
+      ],
+      "primary_rule": "PR-002",
+      "source_file": "skills/kicad/scripts/validation_detectors.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (PR-002; 1 site)"
+    },
+    "validate_usb_bus": {
+      "rules": [
+        "PR-004"
+      ],
+      "primary_rule": "PR-004",
+      "source_file": "skills/kicad/scripts/validation_detectors.py",
+      "emit_line_count": 1,
+      "gating_summary": "schema_era key added (PR-004; 1 site)"
+    }
+  }
+}
