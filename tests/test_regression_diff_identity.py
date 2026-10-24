@@ -300,3 +300,37 @@ def test_collect_observations_drops_deep_review_findings():
     obs = _collect_observations(envelope)
     assert len(obs) == 1
     assert obs[0]["rule_id"] == "VD-001"
+
+
+# ---------------------------------------------------------------------------
+# rewrites — a finding whose summary changed is one row, not disappeared + new
+# ---------------------------------------------------------------------------
+
+def _f(rule_id, summary, severity="warning", components=("U1",)):
+    return {"rule_id": rule_id, "severity": severity, "components": list(components),
+            "nets": ["VOUT"], "pins": [], "summary": summary}
+
+
+def test_diff_pairs_a_rewritten_summary_as_one_rewrite_row():
+    from regression.regression_diff import verdict
+    d = diff([_f("PM-002", "Pin U1.3 unconnected")], [_f("PM-002", "U1 pin 3 is not connected")])
+    assert d['disappeared'] == [] and d['new_unknown'] == []
+    assert [(r['rule_id'], r['kind']) for r in d['rewrites']] == [("PM-002", "rewrite")]
+    assert d['rewrites'][0]['before_summary'] == "Pin U1.3 unconnected"
+    assert verdict(d)[0] == "WARN"
+
+
+def test_diff_rewrite_with_a_severity_downgrade_still_fails():
+    from regression.regression_diff import verdict
+    d = diff([_f("PP-001", "old wording", "error")], [_f("PP-001", "new wording", "warning")])
+    r = d['rewrites'][0]
+    assert (r['kind'], r['before_severity'], r['after_severity']) == ("severity_change_with_rewrite", "error", "warning")
+    assert verdict(d) == ("FAIL", "1 severity downgrades")
+
+
+def test_diff_does_not_pair_rewrites_when_the_match_is_ambiguous():
+    before = [_f("PM-002", "wording A"), _f("PM-002", "wording B")]
+    after = [_f("PM-002", "wording C")]
+    d = diff(before, after)
+    assert d['rewrites'] == []
+    assert len(d['disappeared']) == 2 and len(d['new_unknown']) == 1

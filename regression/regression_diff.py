@@ -228,20 +228,26 @@ def diff(before_obs, after_obs):
             else:
                 shared.append(b)
 
+    new = []
     for key, a_list in after_idx.items():
         b_count = len(before_idx.get(key, []))
-        for a in a_list[b_count:]:
-            rid = a.get('rule_id', '')
-            if rid in NEW_V14_RULES:
-                new_known.append(a)
-            elif rid in UPGRADED_V14_RULES:
-                new_upgraded.append(a)
-            else:
-                new_unknown.append(a)
+        new.extend(a_list[b_count:])
+
+    disappeared, new, rewrites = _pair_rewrites(disappeared, new)
+
+    for a in new:
+        rid = a.get('rule_id', '')
+        if rid in NEW_V14_RULES:
+            new_known.append(a)
+        elif rid in UPGRADED_V14_RULES:
+            new_upgraded.append(a)
+        else:
+            new_unknown.append(a)
 
     return {
         'disappeared': disappeared,
         'severity_changes': severity_changes,
+        'rewrites': rewrites,
         'shared': shared,
         'new_known': new_known,
         'new_upgraded': new_upgraded,
@@ -249,14 +255,56 @@ def diff(before_obs, after_obs):
     }
 
 
+def _pair_rewrites(disappeared, new):
+    """Pair a disappeared finding with a new one that differs only in its summary
+    (same rule_id and the same component / net / pin sets), one-to-one. Such a pair
+    is one finding whose wording was rewritten, not a loss plus an addition; a
+    severity change on top is kept as ``severity_change_with_rewrite``. Ambiguous
+    matches (several on either side) are left as they are."""
+    def _ident(f):
+        return _canon_key(f)[:4]
+
+    by_old, by_new = {}, {}
+    for f in disappeared:
+        by_old.setdefault(_ident(f), []).append(f)
+    for f in new:
+        by_new.setdefault(_ident(f), []).append(f)
+    rewrites, paired_old, paired_new = [], set(), set()
+    for ident, olds in by_old.items():
+        news = by_new.get(ident, [])
+        if len(olds) != 1 or len(news) != 1:
+            continue
+        b, a = olds[0], news[0]
+        cmp = _sev_cmp(b.get('severity'), a.get('severity'))
+        rewrites.append({
+            'rule_id': b.get('rule_id'),
+            'components': b.get('components'),
+            'nets': b.get('nets'),
+            'before_summary': b.get('summary'),
+            'after_summary': a.get('summary'),
+            'before_severity': b.get('severity'),
+            'after_severity': a.get('severity'),
+            'kind': 'rewrite' if cmp == 'unchanged' else 'severity_change_with_rewrite',
+            'severity_kind': cmp,
+        })
+        paired_old.add(id(b))
+        paired_new.add(id(a))
+    return ([f for f in disappeared if id(f) not in paired_old],
+            [f for f in new if id(f) not in paired_new],
+            rewrites)
+
+
 def verdict(d):
-    downgrades = [c for c in d['severity_changes'] if c['kind'] == 'downgrade']
+    downgrades = ([c for c in d['severity_changes'] if c['kind'] == 'downgrade']
+                  + [r for r in d.get('rewrites', []) if r['severity_kind'] == 'downgrade'])
     if d['disappeared']:
         return 'FAIL', f"{len(d['disappeared'])} findings disappeared"
     if downgrades:
         return 'FAIL', f"{len(downgrades)} severity downgrades"
     if d['new_unknown']:
         return 'WARN', f"{len(d['new_unknown'])} new findings with unknown rule_ids"
+    if d.get('rewrites'):
+        return 'WARN', f"{len(d['rewrites'])} findings rewritten"
     return 'PASS', 'no regressions'
 
 
@@ -296,8 +344,10 @@ def main(argv=None):
         'new_known_count': len(d['new_known']),
         'new_upgraded_count': len(d['new_upgraded']),
         'new_unknown_count': len(d['new_unknown']),
+        'rewrites_count': len(d['rewrites']),
         'disappeared': d['disappeared'],
         'severity_changes': d['severity_changes'],
+        'rewrites': d['rewrites'],
         'new_unknown': d['new_unknown'],
     }
 
@@ -311,6 +361,7 @@ def main(argv=None):
         print(f"  new known v1.4 (NEW_V14_RULES): {report['new_known_count']}")
         print(f"  new upgraded v1.4 (UPGRADED_V14_RULES): {report['new_upgraded_count']}")
         print(f"  new unknown rule_ids: {report['new_unknown_count']}")
+        print(f"  rewritten (same rule/refs, new summary): {report['rewrites_count']}")
         if d['disappeared']:
             print("\nDISAPPEARED FINDINGS (top 10):")
             for f in d['disappeared'][:10]:

@@ -167,7 +167,8 @@ def diff_envelopes(a_path, b_path, a_ok, b_ok):
     if not a_ok and not b_ok:
         return {"verdict": "SKIP", "reason": "both_failed"}
     zero = {"disappeared_count": 0, "severity_downgrades": 0, "severity_upgrades": 0,
-            "new_known_count": 0, "new_upgraded_count": 0, "new_unknown_count": 0}
+            "new_known_count": 0, "new_upgraded_count": 0, "new_unknown_count": 0,
+            "rewrites_count": 0}
     if a_ok and not b_ok:
         return {"verdict": "FAIL", "reason": CANDIDATE_FAILED_REASON, **zero}
     if not a_ok and b_ok:
@@ -179,14 +180,17 @@ def diff_envelopes(a_path, b_path, a_ok, b_ok):
         return {"verdict": "SKIP", "reason": "snapshot_read_error", "detail": str(e)}
     d = rdiff.diff(rdiff._collect_observations(before), rdiff._collect_observations(after))
     verdict, reason = rdiff.verdict(d)
-    downgrades = [c for c in d["severity_changes"] if c["kind"] == "downgrade"]
-    upgrades = [c for c in d["severity_changes"] if c["kind"] == "upgrade"]
+    downgrades = ([c for c in d["severity_changes"] if c["kind"] == "downgrade"]
+                  + [r for r in d["rewrites"] if r["severity_kind"] == "downgrade"])
+    upgrades = ([c for c in d["severity_changes"] if c["kind"] == "upgrade"]
+                + [r for r in d["rewrites"] if r["severity_kind"] == "upgrade"])
     return {
         "verdict": verdict, "reason": reason,
         "disappeared_count": len(d["disappeared"]),
         "severity_downgrades": len(downgrades), "severity_upgrades": len(upgrades),
         "new_known_count": len(d["new_known"]), "new_upgraded_count": len(d["new_upgraded"]),
         "new_unknown_count": len(d["new_unknown"]),
+        "rewrites_count": len(d["rewrites"]), "rewrites": d["rewrites"],
         "disappeared": [{"rule_id": f.get("rule_id"), "components": f.get("components"),
                          "summary": f.get("summary") or ""} for f in d["disappeared"]],
         "downgrades": downgrades, "upgrades": upgrades,
@@ -260,6 +264,7 @@ def _compute_pass_criteria(totals: dict) -> dict:
         "new_unknown_count": totals["NewUnknown"],
         "new_upgraded_count": totals["NewUpgraded"],
         "warn_count": totals["WARN"],
+        "rewrites_count": totals.get("Rewrites", 0),
         "clean": (totals["Disappeared"] == 0 and totals["Downgrades"] == 0
                   and totals["FAIL"] == 0 and totals["NewUnknown"] == 0),
         "strict_clean": (totals["Disappeared"] == 0 and totals["Downgrades"] == 0
@@ -295,6 +300,7 @@ def _print_summary(report):
           f"downgrades={crit['severity_downgrades']}  "
           f"fail_verdicts={crit['fail_verdicts']}  "
           f"new_unknown={crit['new_unknown_count']}  "
+          f"rewrites={crit.get('rewrites_count', 0)}  "
           f"new_upgraded={crit['new_upgraded_count']}  "
           f"warn={warn_count}")
     # LOG 5: distinguish CLEAN (rc.1-compatible, NewUnknown-gated) from
@@ -561,6 +567,7 @@ def aggregate(records):
         c["new_known"] += r.get("new_known_count", 0)
         c["new_upgraded"] += r.get("new_upgraded_count", 0)
         c["new_unknown"] += r.get("new_unknown_count", 0)
+        c["rewrites"] += r.get("rewrites_count", 0)
         for rid in r.get("new_known_rule_ids", []):
             new_known_rules[rid] += 1
         for rid in r.get("new_upgraded_rule_ids", []):
@@ -665,10 +672,11 @@ def write_rollup(records, agg, section, layout, manifest, ledger=None, ledger_pa
                      "FAIL": c.get("FAIL", 0), "SKIP": c.get("SKIP", 0),
                      "Disappeared": c.get("disappeared", 0), "Downgrades": c.get("downgrades", 0),
                      "Upgrades": c.get("upgrades", 0), "NewKnown": c.get("new_known", 0),
-                     "NewUpgraded": c.get("new_upgraded", 0), "NewUnknown": c.get("new_unknown", 0)})
+                     "NewUpgraded": c.get("new_upgraded", 0), "NewUnknown": c.get("new_unknown", 0),
+                     "Rewrites": c.get("rewrites", 0)})
     totals = {k: sum(row[k] for row in rows) for k in
               ("PASS", "WARN", "FAIL", "SKIP", "Disappeared", "Downgrades", "Upgrades",
-               "NewKnown", "NewUpgraded", "NewUnknown")}
+               "NewKnown", "NewUpgraded", "NewUnknown", "Rewrites")}
     fail_list = [{"repo": repo, "analyzers": sorted({r["analyzer"] for r in recs}),
                   "units": [{"analyzer": r["analyzer"], "identity": r["identity"],
                              "reason": r.get("reason"), "disappeared": r.get("disappeared", []),
