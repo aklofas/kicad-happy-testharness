@@ -492,7 +492,7 @@ def test_diff_pair_skew_usb_exceeds_tolerance():
     skew = entry["intra_pair_skew"]
     assert skew["skew_mm"] == 2.0
     assert skew["tolerance_mm"] == 1.0
-    assert skew["severity"] in ("MEDIUM", "HIGH")
+    assert skew["severity"] in ("warning", "error")
     assert "detail" in skew
 
 

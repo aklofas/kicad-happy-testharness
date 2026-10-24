@@ -85,7 +85,7 @@ def _write_extraction(tmpdir, mpn, extraction):
 
 
 def test_pin_voltage_abs_max_exceeded():
-    """Pin at abs_max=3.6V on 5V net -> CRITICAL finding."""
+    """Pin at abs_max=3.6V on 5V net -> error finding."""
     tmpdir = tempfile.mkdtemp()
     try:
         extraction = _make_extraction([
@@ -101,7 +101,7 @@ def test_pin_voltage_abs_max_exceeded():
         findings = datasheet_verify.verify_pin_voltages(
             components, {}, tmpdir, {})
         assert len(findings) == 1
-        assert findings[0]["severity"] == "CRITICAL"
+        assert findings[0]["severity"] == "error"
         assert findings[0]["type"] == "pin_voltage_abs_max_exceeded"
         assert findings[0]["ref"] == "U1"
     finally:
@@ -191,7 +191,7 @@ def test_pin_voltage_no_extraction():
 # ============================================================
 
 def test_required_cap_missing():
-    """Required cap, none present -> HIGH finding."""
+    """Required cap, none present -> error finding."""
     tmpdir = tempfile.mkdtemp()
     try:
         extraction = _make_extraction([
@@ -213,7 +213,7 @@ def test_required_cap_missing():
         findings = datasheet_verify.verify_required_externals(
             components, nets, tmpdir, comp_lookup)
         assert len(findings) == 1
-        assert findings[0]["severity"] == "HIGH"
+        assert findings[0]["severity"] == "error"
         assert findings[0]["type"] == "missing_required_external"
     finally:
         shutil.rmtree(tmpdir)
@@ -251,7 +251,7 @@ def test_required_cap_present():
 
 
 def test_required_cap_wrong_type():
-    """Required cap, but resistor present -> HIGH finding."""
+    """Required cap, but resistor present -> error finding."""
     tmpdir = tempfile.mkdtemp()
     try:
         extraction = _make_extraction([
@@ -277,7 +277,7 @@ def test_required_cap_wrong_type():
         findings = datasheet_verify.verify_required_externals(
             components, nets, tmpdir, comp_lookup)
         assert len(findings) == 1
-        assert findings[0]["severity"] == "HIGH"
+        assert findings[0]["severity"] == "error"
     finally:
         shutil.rmtree(tmpdir)
 
@@ -329,28 +329,28 @@ def _make_decoupling_scenario(num_caps, required_count, required_text,
 
 
 def test_decoupling_zero_caps():
-    """0 caps when 2 required -> HIGH."""
+    """0 caps when 2 required -> error."""
     components, nets, tmpdir, comp_lookup, parsed_values = \
         _make_decoupling_scenario(0, 2, "22uF ceramic x2")
     try:
         findings = datasheet_verify.verify_decoupling(
             components, nets, tmpdir, comp_lookup, parsed_values)
         assert len(findings) == 1
-        assert findings[0]["severity"] == "HIGH"
+        assert findings[0]["severity"] == "error"
         assert findings[0]["type"] == "decoupling_insufficient"
     finally:
         shutil.rmtree(tmpdir)
 
 
 def test_decoupling_one_of_two():
-    """1 cap when 2 required -> MEDIUM."""
+    """1 cap when 2 required -> warning."""
     components, nets, tmpdir, comp_lookup, parsed_values = \
         _make_decoupling_scenario(1, 2, "22uF ceramic x2")
     try:
         findings = datasheet_verify.verify_decoupling(
             components, nets, tmpdir, comp_lookup, parsed_values)
         assert len(findings) == 1
-        assert findings[0]["severity"] == "MEDIUM"
+        assert findings[0]["severity"] == "warning"
     finally:
         shutil.rmtree(tmpdir)
 
@@ -431,7 +431,7 @@ def test_orchestrator_full_integration():
         assert result["summary"]["ics_with_extractions"] == 1
         assert result["summary"]["total_findings"] >= 1
         # Should find the voltage violation
-        crit = [f for f in result["findings"] if f["severity"] == "CRITICAL"]
+        crit = [f for f in result["findings"] if f["severity"] == "error"]
         assert len(crit) >= 1
     finally:
         shutil.rmtree(tmpdir)

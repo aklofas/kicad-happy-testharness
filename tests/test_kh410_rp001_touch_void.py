@@ -52,7 +52,7 @@ def test_touch_net_severity_and_title_unchanged():
     touch = _rp001("TOUCH_A")[0]
     ctrl = _rp001("SIG1")[0]
     assert touch["severity"] == ctrl["severity"]
-    assert touch["title"].replace("TOUCH_A", "X") == ctrl["title"].replace("SIG1", "X")
+    assert touch["summary"].replace("TOUCH_A", "X") == ctrl["summary"].replace("SIG1", "X")
 
 
 def test_control_net_keeps_original_text():

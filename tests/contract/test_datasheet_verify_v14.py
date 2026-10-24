@@ -403,7 +403,7 @@ def _lm2596_components(pin_nets=None):
 # --- RED test (KH-337): v2 fixture + pin above abs max → must emit finding ---
 
 def test_v2_pin_voltage_abs_max_exceeded(tmp_path):
-    """Pin 1 (VIN, domain VIN, abs_max=45V) connected to a 50V net → CRITICAL finding.
+    """Pin 1 (VIN, domain VIN, abs_max=45V) connected to a 50V net → error finding.
 
     This was the silent-zero bug: before the adapter, extraction.get('pins')
     returned None (v2 has base.pinout, not pins) → verifier skipped entirely.
@@ -420,7 +420,7 @@ def test_v2_pin_voltage_abs_max_exceeded(tmp_path):
         f"Expected pin_voltage_abs_max_exceeded finding but got: {[f['type'] for f in findings]}"
     )
     crit = [f for f in findings if f["type"] == "pin_voltage_abs_max_exceeded"]
-    assert crit[0]["severity"] == "CRITICAL"
+    assert crit[0]["severity"] == "error"
     assert crit[0]["mpn"] == "LM2596-ADJ"
     assert crit[0]["pin_number"] == "1"
     assert crit[0]["abs_max_V"] == 45
@@ -487,7 +487,7 @@ def test_v2_benign_usage_emits_not_verifiable(tmp_path):
         f"Expected exactly 1 extraction_not_verifiable finding, got {len(nv_findings)}: {nv_findings}"
     )
     nv = nv_findings[0]
-    assert nv["severity"] == "INFO"
+    assert nv["severity"] == "info"
     assert nv["mpn"] == "LM2596-ADJ"
     # Detail must mention what couldn't be checked
     assert "required-external" in nv["detail"] or "decoupling" in nv["detail"] or "application_circuit" in nv["detail"]
