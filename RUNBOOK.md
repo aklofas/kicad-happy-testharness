@@ -2998,6 +2998,33 @@ Why not the obvious shell loops:
 To abort a run, kill the whole group (`kill -TERM -- -$(cat results/<label>.pid)`; under `setsid`
 the PID is the PGID), then check for orphaned analyzer workers before relaunching.
 
+### 26l. spice-offline profile (v3 round 8)
+
+`harnesslib.profiles` declares `spice-offline` (`("spice",)`, 60 s per-file cap, hermetic), but
+`run_corpus_gate.py` refuses it (no corpus analyzer, TH-073): run it through `run/run_spice.py`
+once per product with the harness data dir redirected, then compare the two spice trees. The
+runner reads schematic outputs from `<DATA_DIR>/results/outputs/schematic`, so symlink the real
+corpus outputs into each data dir (read-only use) and keep `--workdir` under the data dir too:
+
+```bash
+for s in base cand; do mkdir -p /tmp/so/$s/results/outputs; ln -s $PWD/results/outputs/schematic /tmp/so/$s/results/outputs/schematic; done
+python3 tools/inventory_spice_caches.py --repos-root repos -o /tmp/so/caches_before.json
+KICAD_HAPPY_TESTHARNESS_DATA_DIR=/tmp/so/base KICAD_HAPPY_DIR=results/v3_baseline/product_<base> PYTHONHASHSEED=0 \
+  python3 run/run_spice.py --cross-section quick_200 --jobs 16 --workdir /tmp/so/base/spice_work
+KICAD_HAPPY_TESTHARNESS_DATA_DIR=/tmp/so/cand KICAD_HAPPY_DIR=results/v3_baseline/product_<cand> PYTHONHASHSEED=0 \
+  python3 run/run_spice.py --cross-section quick_200 --jobs 16 --workdir /tmp/so/cand/spice_work
+python3 tools/inventory_spice_caches.py --repos-root repos --check /tmp/so/caches_before.json   # 0 differences = hermetic
+python3 regression/compare_spice_offline.py /tmp/so/base/results/outputs/spice /tmp/so/cand/results/outputs/spice -o results/<gate>_aux/spice_offline/compare.json
+```
+
+quick_200 = 8,829 report files per side, ~2.5 min per side at 16 jobs. The comparator masks run
+ids, timings and the data-dir prefix; everything else is reported by (op, wildcarded path) with
+a count and an example unit. **Known run-to-run noise (TH-077):** `simulation_results[*].model_note`
+flips between `lookup:<MPN>` and `cache:<MPN>` for the same product depending on which worker
+reached the project's `spice/models/` cache first; quantify it with an A/A pass (run the same
+product twice) before attributing it to the candidate, and never mask it blindly — a different
+model SOURCE can mean a different model.
+
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 
 When the analyzer ships a new era with material detector behavior changes
@@ -3025,6 +3052,16 @@ This writes `regression/v30_changed_detectors.json`. Discovery fails loudly
 if any gating-notes key references a detector that does NOT appear at any
 `schema_era="v3.0"` emit site — catches typos and renames.
 
+Since round 8 the walk covers every `skills/*/scripts` tree (EMC emits carry the era too) and
+resolves three shapes the keyword scanner cannot: EMC's positional
+`_make_finding(category, severity, rule_id, …, schema_era="v3.0")` (detector `emc_<category>`;
+the scanner keeps the site unresolved for coverage but records its era), `Det.<ENUM>` detector
+attributes, and dict-literal findings with literal `detector` / `rule_id` / `schema_era` keys
+(RS-001 / PP-001). A site whose `rule_id` is a variable (the UC-001..003 spec table in
+`system_analyses`) still lands in `unresolved_sites`; its detector is discovered through its
+other sites, only the rule list is short. Point `KICAD_HAPPY_DIR` at the CANDIDATE clone, not
+the worktree.
+
 ### 27c. Bump `CURRENT_SCHEMA_ERA` in `regression/schema_era.py`
 
 ```python
@@ -3033,7 +3070,15 @@ KNOWN_ERAS = ("pre-v1.4", "v1.4", "v3.0")   # v3.0 is already present; this step
 ```
 
 KNOWN_ERAS is append-only — never remove old values. Run the module unit
-tests (`python3 -m pytest tests/test_schema_era_module.py tests/test_schema_era_required.py`) to confirm.
+tests (`python3 -m pytest tests/test_schema_era_module.py tests/test_schema_era_required.py`) to confirm;
+two of them pin the current era and move with it.
+
+`era_filter` is strict equality (`schema_era == CURRENT` or untagged): after the bump every
+assertion still stamped with the OLD era drops out of default mode, not only the freshly
+tagged ones. Before the bump, count them (`rg -c '"era": "v1.4"' reference --glob '*.json'`
+— 27,538 SEED/STRUCT, 0 curated, at the round-8 relock) and make sure the relock reseed
+replaces them; re-stamp any curated lock that still passes at the new era rather than letting
+the filter retire it.
 
 ### 27d. Identify repos where assertions fracture against new analyzer output
 

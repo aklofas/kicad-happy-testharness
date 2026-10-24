@@ -86,6 +86,39 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-24 — KH-454: RS-001 fired "no declared source" on a bootstrap-only net — fixed in v3 round 8 (`6222468`)
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/signal_detectors.py` — `audit_rail_sources._power_rail`
+**Discovered:** 2026-10-22, main-repo handoff for the v2.3.2 backport (found while sizing PR #59; credited to the v2.3.2-gate adjudication)
+**Fixed:** 2026-10-23 on `v3-dev` @ `6222468` (round 8 Task 9), accepted at candidate `a0df172`
+
+- **Root cause:** `_power_rail` admitted any net carrying a `power_in` pin, so a gate-drive BST/BOOT net (supplied by a capacitor to the switch node, no source by construction) was audited as a rail.
+- **Fix:** a `power_in` pin counts toward rail admission only if it is not bootstrap-named (`_is_bootstrap_pin_name`); name-admitted rails are untouched. Harness fixture `tests/fixtures/kh453/pp001_bootstrap.kicad_sch` loses exactly `schematic:RS-001:bst`.
+- **Verification:** round-8 FULL standard gate (`results/v3_round8_gate`), budget class B5-A: RS-001 removals on the corpus units whose power_in pins are all bootstrap-named (magnitudes in the round-8 reply); the 4 name-admitted bootstrap rails keep their finding (KH-473).
+
+## 2026-10-24 — KH-455: PP-001 deduplicated on `(ref, pin_number)` and masked a second symbol's power pin on unannotated designs — fixed in v3 round 8 (`6222468`)
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/signal_detectors.py` — `audit_power_pin_dc_paths`
+**Discovered:** 2026-10-22, v2.3.2 backport gate `6a91aaa→4701c26`, the gate's single residue unit (`Ganesh-Solapure/PCB-Projects` `STM 32 PCB`, every IC `U?`)
+**Fixed:** 2026-10-23 on `v3-dev` @ `6222468` (round 8 Task 9), accepted at candidate `a0df172`
+
+- **Root cause:** the dedup key `(ref, pin_num)` collides across symbols that share a reference (`U?` on unannotated boards, duplicate refs), so only the first pin of a colliding pair was ever evaluated.
+- **Fix:** dedup key `(ref, pin_num, net_name)`.
+- **Verification:** round-8 FULL standard gate, budget class B5-B: PP-001 additions only on units where a power_in `(ref, pin_number)` sits on two or more nets (count vs the 550-unit pre-scan bound in the round-8 reply).
+
+## 2026-10-24 — KH-463: SPICE testbench redirect `echo … > <path>` unquoted — every measurement skipped when the workdir path had whitespace — fixed in v3 round 8 (`c598140` + `a0df172`)
+
+**Severity:** MEDIUM
+**File:** `skills/spice/scripts/spice_simulator.py`, `simulate_subcircuits.py`
+**Discovered:** 2026-10-23, v2.3.2 corpus regen at `2fd9aa0` (18,464 of 19,455 sims skipped on 5,198 corpus units with whitespace / punctuation paths; harness side TH-075)
+**Fixed:** 2026-10-23 on `v3-dev` @ `c598140` (round 8 Task 10), with the fix-wave follow-up `a0df172` (simulator binaries made absolute in `find()` so a relative `NGSPICE_PATH` still execs under the new `cwd`)
+
+- **Root cause:** the `.control` block carried an absolute output path into the ngspice control language, which splits at whitespace; the `.out` file never appeared and the measurement reported `skip`.
+- **Fix:** backends take `run(cir_file, timeout=5, cwd=None)`; the orchestrator renders bare filenames and runs inside the workdir, so no path reaches ngspice. Output-neutral on paths without spaces.
+- **Verification:** product `tools/tests/test_spice_workdir` (`pass >= 1` + the written redirect; relative simulator path test); harness spice-offline profile at the round-8 gate: quick_200 both sides, identical apart from `diagnostics: []` and the run-to-run model-cache note (TH-077). The EMC SPICE path keeps the exposure (KH-472).
+
 ## 2026-10-23 — TH-076: `audit_constants.py scan` dropped verification evidence for every constant whose file moved without a `relocate --map` — 41 records lost at the v3 round-2/3 re-baselines, registry stale since round 5
 
 **Severity:** MEDIUM (evidence, not data: `_REGULATOR_VREF` 55/114 datasheet-verified entries, `_CAP_ESL` 7/7, `RF_ROLE_GAIN_DB` 10/10, `_KNOWN_FREQS` 102/105 and 37 keyword/format constants showed as never verified; 18 constants reported critical-risk, 13 of them spuriously. No corpus output or reference assertion involved).
