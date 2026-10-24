@@ -2,7 +2,7 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-23T22:24:25.961885+00:00
+**Last scan:** 2026-10-24T01:38:53.747987+00:00
 
 ## Summary
 
@@ -12,8 +12,8 @@
 | Verified | 229 |
 | Unverified | 493 |
 | Stale (changed since verification) | 0 |
-| Critical risk | 4 |
-| High risk | 7 |
+| Critical risk | 3 |
+| High risk | 8 |
 
 ## skills/emc/scripts/analyze_emc.py
 
@@ -107,7 +107,7 @@
 | CONST-387 | `MIN_PDISS_W` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-391 | `SEVERITY_WEIGHTS` | datasheet_lookup | 3 | verified | 0.7 | 0.0 | **low** (0.0) |
 | CONST-392 | `MAX_FINDINGS_PER_RULE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-393 | `SWITCHING_EFFICIENCY` | datasheet_lookup | 4 | unverified | 0.7 | 0.0 | **critical** (0.7) |
+| CONST-393 | `SWITCHING_EFFICIENCY` | datasheet_lookup | 4 | unverified | 0.7 | 0.0 | **high** (0.5) |
 | CONST-394 | `PACKAGE_THERMAL_RESISTANCE` | unknown | 38 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-190 | `_check_thermal_proximity:686` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-397 | `sev_order` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |

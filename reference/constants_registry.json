@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "last_scan": "2026-10-24T01:38:53.747987+00:00",
+  "last_scan": "2026-10-24T01:50:56.580009+00:00",
   "constants": [
     {
       "name": "SEVERITY_WEIGHTS",
@@ -1826,23 +1826,23 @@
         },
         "switching": {
           "value": 0.85,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "Engineering default, not a datasheet value: generic switching-regulator efficiency when no datasheet curve is available. Method = ON Semi AND8338 / ADI ADP5023 datasheet: P_loss = P_out*(1-eta)/eta at the worst-case point (min Vin, max Iout); datasheet front-page peaks for corpus-common parts (local datasheets/: TPS5430 95%, LMR33630 >95%, AP63203 88% light-load, MT3608 97%, TPS61023 94%, XL6009 94%, AP3012 81%, TPS63070 95%) sit 5-12 points above worst-case curves, so 85% is a conservative mid-range prior (NXP support guidance: switchers usually 80-90%). Output carries pdiss_confidence=heuristic and the eta in pdiss_source."
         }
       },
       "id": "CONST-393",
       "category": "datasheet_lookup",
       "status": "unverified",
-      "verified_entries": 0,
+      "verified_entries": 1,
       "source": null,
-      "notes": null,
+      "notes": "Checklist 11b 2026-10-23: only the 'switching' entry is reachable — detect_power_regulators emits topology in {LDO, switching, charge_pump, ic_with_internal_regulator, unknown} and never buck/boost/buck-boost (those live in power_dissipation.sub_topology, which analyze_thermal ignores), so corpus thermal outputs use 85% for all 432 switching_reg entries. The buck/boost/buck-boost keys are dead and disagree with the schematic detector's inline defaults (signal_detectors.py:2226-2245: buck 0.85 / boost 0.80 / buck-boost 0.78, unregistered literals). Filed as KH-469; the three dead entries stay unverified until the tables are unified.",
       "overfit_score": 0.0,
       "overfit_flags": [],
       "impact_score": 0.7,
       "impact_flags": [
         "datasheet_values"
       ],
-      "risk_score": 0.7
+      "risk_score": 0.52
     },
     {
       "name": "PACKAGE_THERMAL_RESISTANCE",
