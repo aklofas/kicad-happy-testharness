@@ -2,7 +2,7 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-24T01:38:53.747987+00:00
+**Last scan:** 2026-10-24T01:50:56.580009+00:00
 
 ## Summary
 
@@ -12,7 +12,7 @@
 | Verified | 229 |
 | Unverified | 493 |
 | Stale (changed since verification) | 0 |
-| Critical risk | 3 |
+| Critical risk | 0 |
 | High risk | 8 |
 
 ## skills/emc/scripts/analyze_emc.py
@@ -311,8 +311,8 @@
 | CONST-601 | `_INTERNAL_OSC_KEYWORDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-233 | `detect_rtc_circuits:4716` | keyword_classification | 9 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-603 | `battery_backup` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-604 | `_LED_VF` | datasheet_lookup | 8 | unverified | 0.7 | 0.0 | **critical** (0.7) |
-| CONST-605 | `_LED_VF_FLOOR` | datasheet_lookup | 8 | unverified | 0.7 | 0.0 | **critical** (0.7) |
+| CONST-604 | `_LED_VF` | datasheet_lookup | 8 | unverified | 0.7 | 0.0 | **low** (0.1) |
+| CONST-605 | `_LED_VF_FLOOR` | datasheet_lookup | 8 | unverified | 0.7 | 0.0 | **medium** (0.4) |
 | CONST-606 | `addr_keywords` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-607 | `_TC_IC_KEYWORDS` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-608 | `_RTD_IC_KEYWORDS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -955,7 +955,7 @@
 | CONST-797 | `_ENABLE_PIN_NAMES` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-679 | `_PS_PG_PIN_NAMES` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-799 | `_SEQUENCING_SENSITIVE_KEYWORDS` | keyword_classification | 21 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-800 | `_LED_VF_BY_COLOR` | datasheet_lookup | 9 | unverified | 0.7 | 0.0 | **critical** (0.7) |
+| CONST-800 | `_LED_VF_BY_COLOR` | datasheet_lookup | 9 | unverified | 0.7 | 0.0 | **low** (0.2) |
 | CONST-801 | `_LED_VF_DEFAULT` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-802 | `_LED_IF_MAX_DEFAULT_MA` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-803 | `_LED_IF_RECOMMENDED_MA` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |

@@ -163,6 +163,27 @@ yellow 2.0 vs 2.1, green 3.2 vs 2.2 (the floor table says 2.1), uv 3.5 vs 3.3;
 substantive one: 2.2 V is a GaP/AlGaInP green, 3.2 V an InGaN green, and the two
 rules silently pick opposite technologies. Orange/amber agree.
 
+**Measured 2026-10-23 (Checklist 11b, sources on CONST-604/605/800):** per-colour
+typicals from the local LED datasheets (Würth 150060/150080 series, Kingbright APT2012,
+Lite-On LTST-C170/C190/C191/C193, Vishay VLMO1300/VLMTG1500, Broadcom HSMW-C170, Cree
+CLV1A-FKB, SunLED XZM2, OSRAM LY P47F) plus the Wikipedia LED material table:
+red 1.95–2.1 (min 1.5–1.8), orange 2.0 (min 1.8), yellow 2.0–2.35 (min 1.95), amber 2.0,
+blue 3.2–3.3 (min 2.5–2.8), white ~3.2 (min 2.7–2.9), UV 3.5–3.7 (min 3.1), IR 1.2–1.35.
+**Green is genuinely bimodal:** GaP/AlInGaP green 2.0–2.2 V (LTST-C170GKT 2.1, VLMTG1500
+2.0) vs InGaN green 3.2–3.3 V (150060GS 3.2, APT2012ZGCK 3.3, XZM2DG53W 3.2); the colour
+word cannot pick one. So: `_LED_VF` 7/8 verified (green open); `_LED_VF_BY_COLOR` 6/9
+(red 1.8 is the datasheet minimum, not the typical; green 2.2 is the other technology; UV
+3.3 is below every sampled typical). **Floor rider:** `_LED_VF_FLOOR` red 1.85 / orange
+2.0 / amber 2.0 / blue 3.0 / white 3.0 all sit ABOVE the sampled datasheet minimums, so
+LA-004 can declare an LED dead on a rail it would light from (blue on 2.8 V); yellow /
+green / UV floors verified. Corpus: 11,472 LEDs carry a colour hint (red 3,940, green
+3,215, blue 1,311, ir 957, yellow 926, white 717, orange 223, amber 151, uv 32); 63,734
+carry none and take the 2.0 V default in both detectors; LA-004 fired 5 times, all green.
+For the unified table: nominal + minimum per colour as above, and for a bare "green" hint
+either a 2.1/3.2 pair with the lower bound for LA-004 and the current estimate reported
+as a range, or a technology keyword pass (`gap`, `ingan`, `pure green`, `true green`)
+before falling back.
+
 **Fix direction:** one shared table in `kicad_core` (the round-7 shared-tables
 pattern) with a cited source per colour (manufacturer typical-Vf ranges, e.g.
 Vishay / Kingbright / Würth colour tables), nominal + floor as two fields of one

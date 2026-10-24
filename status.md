@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-10-23 later (6) — ADC-map verification COMMITTED (8587290b2b8, UNPUSHED). `SWITCHING_EFFICIENCY` (CONST-393) checked: only the generic `switching` 85 % entry is reachable (verified as a sourced engineering default); the buck/boost/buck-boost keys are dead and the schematic detector carries a different inline table → KH-469 filed; registry + ISSUES.md UNCOMMITTED pending review; critical constants now 3 (the LED tables, KH-467); `tests/python_compat_policy.json` still carries the main-repo agent's in-flight round-8 edit (not committed)
+Last updated: 2026-10-23 later (7) — SWITCHING_EFFICIENCY set COMMITTED (e6b834d2444, UNPUSHED; 2 over origin 40852dd9ef4). LED Vf tables (CONST-604/605/800) verified per colour against local LED datasheets: 16/25 entries verified, green bimodal (GaP 2.1 vs InGaN 3.2) and five floor entries above datasheet minimums → KH-467 addendum; **critical-risk constants now 0**; registry + ISSUES.md UNCOMMITTED pending review; `tests/python_compat_policy.json` still carries the main-repo agent's in-flight round-8 edit (not committed)
 
 > Note: the Corpus summary table below was last fully refreshed 2026-04-15.
 > The 2026-05-14 gate updated the repo/file-count and issue-count rows;

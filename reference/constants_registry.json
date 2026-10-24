@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "last_scan": "2026-10-24T01:50:56.580009+00:00",
+  "last_scan": "2026-10-24T01:59:07.399717+00:00",
   "constants": [
     {
       "name": "SEVERITY_WEIGHTS",
@@ -6281,23 +6281,23 @@
       "entries": {
         "red": {
           "value": 2.0,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 2.0 V @20 mA: Wurth 150060RS/150080RS 2.0 (max 2.4), Lite-On LTST-C170KRKT/C191KRKT 2.0, Kingbright APT2012EC 2.0, SunLED XZM2MR53W 2.1 (local datasheets/); Wikipedia LED table red 1.63-2.03"
         },
         "orange": {
           "value": 2.0,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 2.0 V @20 mA: Vishay VLMO1300 2.0 (max 2.4) (local datasheets/VLMO1300-83a4603d.pdf); Wikipedia orange 2.03-2.10"
         },
         "yellow": {
           "value": 2.0,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 2.0 V @20 mA: Wurth 150060YS 2.0 (max 2.4); OSRAM LY P47F 2.35 typ (1.95-2.70) (local datasheets/); Wikipedia yellow 2.10-2.18"
         },
         "amber": {
           "value": 2.0,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 2.0 V @20 mA: Wurth 150060AS 2.0 (max 2.4) (local datasheets/150060AS55040-c202d1f3.pdf)"
         },
         "green": {
           "value": 3.2,
@@ -6306,33 +6306,33 @@
         },
         "blue": {
           "value": 3.2,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 3.2 V @20 mA: Wurth 150080BS 3.2 (max 3.5), Kingbright APT2012VBC 3.3 (max 4.0), Cree CLV1A-FKB blue 3.2, Lite-On LTST-C170TBKT 2.8-3.8 (local datasheets/); Wikipedia blue 2.48-3.7"
         },
         "white": {
           "value": 3.2,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ ~3.2 V: Broadcom HSMW-C170 2.9-3.9 (local datasheets/HSMW_C170_U0000_DS100-85e50010.pdf); Wikipedia phosphor white 2.7-3.5"
         },
         "uv": {
           "value": 3.5,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 3.5 V @20 mA: Roithner LED395 3.5 (max 4.0); Lite-On LTPL-C034UVH405 3.7; Wikipedia UV 3.1-4.4"
         }
       },
       "id": "CONST-604",
       "category": "datasheet_lookup",
       "status": "unverified",
-      "verified_entries": 0,
+      "verified_entries": 7,
       "source": null,
-      "notes": null,
+      "notes": "Checklist 11b 2026-10-23: 7/8 verified against local LED datasheets + the Wikipedia LED material table. 'green' 3.2 left unverified: the colour word alone is bimodal — GaP/AlInGaP green 2.0-2.2 V (Lite-On LTST-C170GKT 2.1, Vishay VLMTG1500 2.0) vs InGaN green 3.2-3.3 V (Wurth 150060GS 3.2, Kingbright APT2012ZGCK 3.3, SunLED XZM2DG53W 3.2); validation_detectors._LED_VF_BY_COLOR picks the other technology (2.2). KH-467.",
       "overfit_score": 0.0,
       "overfit_flags": [],
       "impact_score": 0.7,
       "impact_flags": [
         "datasheet_values"
       ],
-      "risk_score": 0.7
+      "risk_score": 0.09
     },
     {
       "name": "_LED_VF_FLOOR",
@@ -6356,8 +6356,8 @@
         },
         "yellow": {
           "value": 2.0,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "floor 2.0 V vs datasheet min: OSRAM LY P47F 1.95 min, Wurth 150060YS 2.0 typ (local datasheets/)"
         },
         "amber": {
           "value": 2.0,
@@ -6366,8 +6366,8 @@
         },
         "green": {
           "value": 2.1,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "floor 2.1 V = GaP/AlInGaP green typ (Lite-On LTST-C170GKT 2.1, Vishay VLMTG1500 2.0 min 1.8); InGaN greens sit well above (Wurth 150060GS 3.2) so the floor is the lower technology's, correct as a floor (local datasheets/)"
         },
         "blue": {
           "value": 3.0,
@@ -6381,23 +6381,23 @@
         },
         "uv": {
           "value": 3.2,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "floor 3.2 V vs Wikipedia UV minimum 3.1 V; Roithner LED395 3.5 typ"
         }
       },
       "id": "CONST-605",
       "category": "datasheet_lookup",
       "status": "unverified",
-      "verified_entries": 0,
+      "verified_entries": 3,
       "source": null,
-      "notes": null,
+      "notes": "Checklist 11b 2026-10-23: 3/8 verified as floors. The rest are ABOVE the sampled datasheet minimums, so LA-004 can call an LED dead on a rail it would light from: red 1.85 vs min 1.5-1.8 (Kingbright APTD1608LSECK 1.5, Lite-On LTST-C190KRKT 1.6); orange 2.0 vs VLMO1300 min 1.8; amber 2.0 = typ (min not published); blue 3.0 vs min 2.5-2.8 (Wurth 150060BS 2.5, Lite-On LTST-C170TBKT 2.8); white 3.0 vs min 2.7-2.9 (HSMW-C170 2.9, Wikipedia 2.7). Corpus LA-004 fires 5 times, all green. KH-467 rider.",
       "overfit_score": 0.0,
       "overfit_flags": [],
       "impact_score": 0.7,
       "impact_flags": [
         "datasheet_values"
       ],
-      "risk_score": 0.7
+      "risk_score": 0.44
     },
     {
       "name": "addr_keywords",
@@ -19609,18 +19609,18 @@
         },
         "orange": {
           "value": 2.0,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 2.0 V @20 mA: Vishay VLMO1300 2.0 (max 2.4) (local datasheets/VLMO1300-83a4603d.pdf); Wikipedia orange 2.03-2.10"
         },
         "amber": {
           "value": 2.0,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 2.0 V @20 mA: Wurth 150060AS 2.0 (max 2.4) (local datasheets/150060AS55040-c202d1f3.pdf)"
         },
         "yellow": {
           "value": 2.1,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 2.0-2.35 V @20 mA: Wurth 150060YS 2.0, OSRAM LY P47F 2.35 (local datasheets/); Wikipedia yellow 2.10-2.18"
         },
         "green": {
           "value": 2.2,
@@ -19629,13 +19629,13 @@
         },
         "blue": {
           "value": 3.2,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ 3.2 V @20 mA: Wurth 150080BS 3.2, Kingbright APT2012VBC 3.3, Cree CLV1A-FKB 3.2 (local datasheets/); Wikipedia blue 2.48-3.7"
         },
         "white": {
           "value": 3.2,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "typ ~3.2 V: Broadcom HSMW-C170 2.9-3.9 (local datasheets/); Wikipedia phosphor white 2.7-3.5"
         },
         "uv": {
           "value": 3.3,
@@ -19644,23 +19644,23 @@
         },
         "ir": {
           "value": 1.2,
-          "status": "unverified",
-          "source": null
+          "status": "verified",
+          "source": "GaAs/AlGaAs 940 nm: Vishay TSAL6400 1.35 V @100 mA (~1.2 V at 20 mA); Wikipedia infrared < 1.9 V"
         }
       },
       "id": "CONST-800",
       "category": "datasheet_lookup",
       "status": "unverified",
-      "verified_entries": 0,
+      "verified_entries": 6,
       "source": null,
-      "notes": null,
+      "notes": "Checklist 11b 2026-10-23: 6/9 verified. Unverified: 'red' 1.8 is the datasheet MINIMUM (typicals 1.95-2.1, _LED_VF uses 2.0); 'green' 2.2 is the GaP/AlInGaP technology while _LED_VF uses InGaN 3.2 — the colour word is bimodal; 'uv' 3.3 sits below every sampled typical (3.5-3.7, _LED_VF uses 3.5). KH-467: one table, nominal per colour, cited.",
       "overfit_score": 0.0,
       "overfit_flags": [],
       "impact_score": 0.7,
       "impact_flags": [
         "datasheet_values"
       ],
-      "risk_score": 0.7
+      "risk_score": 0.23
     },
     {
       "name": "_LED_VF_DEFAULT",
