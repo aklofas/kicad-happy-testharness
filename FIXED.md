@@ -86,6 +86,17 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-24 — TH-066: `audit_constants.py` / `audit_equations.py` walked three roots — 42 of the 140 product source files (bom, datasheets, distributors, kicad/review) never entered the registries
+
+**Severity:** LOW (coverage blind spot; nothing wrong was reported, 109 constants were not reported).
+**File:** `validate/audit_constants.py`, `validate/audit_equations.py` (`iter_source_files`), `tools/source_scan.py` (`coverage_snapshot`, `coverage_diff`), `tools/SCANNER_POLICY.md`; registries + `reference/scan_coverage_baseline.json`; tests in `tests/test_audit_constants_paths.py`, `tests/test_audit_equations_paths.py`, `tests/test_source_scan.py` (+ a constant in the plan-4 fake product's datasheets script).
+**Discovered:** 2026-10-15, H0 plan 4 final review (F9).
+**Fixed:** 2026-10-24.
+
+- **Root cause:** both audit tools kept their own `SCAN_ROOTS` walk (`skills/{kicad,spice,emc}/scripts`) while the shared walker `source_scan.iter_product_sources` covers every `skills/**/scripts/**` file; the coverage baseline recorded the gap as `constant_eq_roots` rather than closing it.
+- **Fix:** `iter_source_files` in both tools now returns the shared walker's list (one walker, one file identity); `SCAN_ROOTS`, the baseline's `constant_eq_roots` field and the `constant_eq_roots_changed` fail key are gone; `scan` refuses a root with no `skills/*/scripts` sources instead of testing for one hard-coded directory. Policy paragraph rewritten.
+- **Verification:** 3 new tests (both walks equal the shared walker on the fake product and include a datasheets script; the snapshot carries that script's constant and no roots field); 57 scanner/audit tests green. Live at a0df172: constants 721 → 830 (+109, all unverified, all low/medium risk, 0 critical: bom 36, datasheets 28, lcsc 12, kicad/review 10, element14 8, mouser 8, digikey 7 — 74 keyword lists, 23 thresholds, 8 standards), second scan 0 / 0 / 0; equations 105 tags unchanged (0 tags in the new files), untagged math functions 30 → 31; coverage baseline re-accepted (grew 109 constants, no losses, `check` CLEAN); unit + offline contract tiers green.
+
 ## 2026-10-24 — TH-065: `audit_constants.py` registry identity carried source line numbers — inline keyword sets renamed and non-literal constants went stale on every line shift
 
 **Severity:** LOW (registry noise and lost evidence on non-literal constants; no corpus output or reference assertion involved).

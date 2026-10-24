@@ -63,3 +63,12 @@ def test_update_registry_moved_and_changed_keeps_provenance_and_goes_stale():
     assert updated == 1 and relocated == 0 and e["status"] == "stale"
     assert e["file"] == "skills/kicad/scripts/validation_detectors.py"
     assert e["relocated_from"] == "old/place.py"
+
+
+def test_iter_source_files_is_the_shared_walker():
+    """One walker, one file identity (TH-066)."""
+    sys.path.insert(0, str(HARNESS / "tools"))
+    import source_scan
+    ours = [p.resolve() for p in ae.iter_source_files(FAKE)]
+    assert ours == [p.resolve() for p in source_scan.iter_product_sources(FAKE)]
+    assert any(p.as_posix().endswith("skills/datasheets/scripts/datasheet_lookup.py") for p in ours)

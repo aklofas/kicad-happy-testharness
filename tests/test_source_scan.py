@@ -204,8 +204,9 @@ def test_coverage_snapshot_distinguishes_same_basename():
     # SP-001 (enum-resolved, no schema_era) is the fixture's one resolved untagged site
     assert snap["untagged_era_sites"] == {"detect_shorted_two_pin_components|SP-001": 1}
     assert snap["untagged_era_total"] == 1
-    assert snap["constant_eq_roots"] == ["skills/emc/scripts", "skills/kicad/scripts",
-                                         "skills/spice/scripts"]
+    # constants come from the same walk as files (TH-066): a skill outside kicad/spice/emc
+    assert "skills/datasheets/scripts/datasheet_lookup.py|module|PROVIDER_PRIORITY" in snap["constants"]
+    assert "constant_eq_roots" not in snap
 
 
 def test_coverage_diff_detects_lost_site_and_constant(tmp_path):

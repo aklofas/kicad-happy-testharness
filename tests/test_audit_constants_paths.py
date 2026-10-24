@@ -216,3 +216,13 @@ def test_update_registry_line_keyed_hash_never_carries():
     added, updated, removed = ac.update_registry(reg, [_scanned("reg_info", "b.py", "sha256:ast_1741", scope="g")])
     assert (added, updated, removed) == (1, 0, 1)
     assert reg["constants"][0]["status"] == "unverified"
+
+
+def test_iter_source_files_is_the_shared_walker():
+    """One walker, one file identity (TH-066): the constants scan covers every file
+    `source_scan.iter_product_sources` covers, including skills outside kicad/spice/emc."""
+    sys.path.insert(0, str(HARNESS / "tools"))
+    import source_scan
+    ours = [p.resolve() for p in ac.iter_source_files(FAKE)]
+    assert ours == [p.resolve() for p in source_scan.iter_product_sources(FAKE)]
+    assert any(p.as_posix().endswith("skills/datasheets/scripts/datasheet_lookup.py") for p in ours)

@@ -43,9 +43,8 @@ from utils import DATA_DIR, OUTPUTS_DIR, resolve_kicad_happy_dir
 REGISTRY_PATH = DATA_DIR / "constants_registry.json"
 MARKDOWN_PATH = DATA_DIR / "constants_registry.md"
 
-# Skill script trees scanned recursively (root-relative). Report A2: the old
-# explicit basename lists missed nested packages and collided on basenames.
-SCAN_ROOTS = ("skills/kicad/scripts", "skills/spice/scripts", "skills/emc/scripts")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+from source_scan import iter_product_sources  # noqa: E402  (one walker, one file identity; TH-066)
 
 
 # ---------------------------------------------------------------------------
@@ -444,19 +443,12 @@ def scan_file(filepath, product_root=None):
 
 
 def iter_source_files(product_root):
-    """Every *.py under SCAN_ROOTS, recursive, sorted by root-relative path."""
-    root = Path(product_root)
-    files = []
-    for sub in SCAN_ROOTS:
-        base = root / sub
-        if not base.is_dir():
-            continue
-        files.extend(p for p in base.rglob("*.py") if "__pycache__" not in p.parts)
-    return sorted(files, key=lambda p: p.resolve().relative_to(root.resolve()).as_posix())
+    """Every *.py under skills/**/scripts/** — the shared walker's file set."""
+    return iter_product_sources(product_root)
 
 
 def scan_all(product_root):
-    """Scan every source file under SCAN_ROOTS. Returns list of ConstantInfo."""
+    """Scan every source file the shared walker finds. Returns list of ConstantInfo."""
     all_constants = []
     for fpath in iter_source_files(product_root):
         constants = scan_file(fpath, product_root)
@@ -1060,10 +1052,10 @@ def update_registry(registry, scanned):
 def cmd_scan(args):
     """Scan analyzer scripts and update the registry."""
     kicad_happy = resolve_kicad_happy_dir()
-    if not (kicad_happy / SCAN_ROOTS[0]).exists():
-        print(f"Error: {kicad_happy / SCAN_ROOTS[0]} not found", file=sys.stderr)
+    if not iter_source_files(kicad_happy):
+        print(f"Error: no skills/*/scripts sources under {kicad_happy}", file=sys.stderr)
         sys.exit(1)
-    print(f"Scanning {kicad_happy} ({', '.join(SCAN_ROOTS)})")
+    print(f"Scanning {kicad_happy} (skills/**/scripts)")
     scanned = scan_all(kicad_happy)
     print(f"\nTotal constants found: {len(scanned)}")
 

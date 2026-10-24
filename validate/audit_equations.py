@@ -43,9 +43,8 @@ from utils import DATA_DIR, resolve_kicad_happy_dir
 REGISTRY_PATH = DATA_DIR / "equation_registry.json"
 MARKDOWN_PATH = DATA_DIR / "equation_registry.md"
 
-# Skill script trees scanned recursively (report A2). Root-relative paths are
-# the location identity; EQ-NNN ids are the equation identity.
-SCAN_ROOTS = ("skills/kicad/scripts", "skills/spice/scripts", "skills/emc/scripts")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+from source_scan import iter_product_sources  # noqa: E402  (one walker, one file identity; TH-066)
 
 # Heuristic indicators that a function contains engineering math
 MATH_INDICATORS = frozenset({
@@ -208,17 +207,12 @@ def find_untagged(filepath, source_text=None, product_root=None):
 
 
 def iter_source_files(product_root):
-    root = Path(product_root)
-    files = []
-    for sub in SCAN_ROOTS:
-        base = root / sub
-        if base.is_dir():
-            files.extend(p for p in base.rglob("*.py") if "__pycache__" not in p.parts)
-    return sorted(files, key=lambda p: p.resolve().relative_to(root.resolve()).as_posix())
+    """Every *.py under skills/**/scripts/** — the shared walker's file set."""
+    return iter_product_sources(product_root)
 
 
 def scan_all_tagged(product_root):
-    """Tagged equations across SCAN_ROOTS (quiet; used by tests and source_scan)."""
+    """Tagged equations across every walked file (quiet; used by tests and source_scan)."""
     tagged = []
     for fpath in iter_source_files(product_root):
         source = fpath.read_text(encoding="utf-8")

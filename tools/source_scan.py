@@ -248,20 +248,11 @@ def _equations(product_root: Path) -> dict[str, str]:
     return {e["eq_id"]: e["file"] for e in audit_equations.iter_equations(product_root)}
 
 
-def _constant_eq_roots() -> list[str]:
-    """Roots the constants / EQ registries walk (narrower than `files`; TH-066)."""
-    _validate_on_path()
-    import audit_constants  # noqa: E402
-    import audit_equations  # noqa: E402
-    return sorted(set(audit_constants.SCAN_ROOTS) | set(audit_equations.SCAN_ROOTS))
-
-
 def coverage_snapshot(product_root: Path, exceptions: dict | None = None) -> dict:
     """Coverage at the product's HEAD.
 
-    `files` and `emit_sites` cover every walked file (iter_product_sources);
-    `eq_ids` and `constants` cover only `constant_eq_roots` (the audit tools'
-    SCAN_ROOTS), a narrower set — see tools/SCANNER_POLICY.md and TH-066.
+    `files`, `emit_sites`, `eq_ids` and `constants` all cover every walked file
+    (iter_product_sources; the audit tools use the same walker).
     `untagged_era_sites` maps `detector|rule_id` to its count of resolved sites
     carrying no schema_era; `untagged_era_total` is its sum (display only).
     """
@@ -289,7 +280,6 @@ def coverage_snapshot(product_root: Path, exceptions: dict | None = None) -> dic
         "snapshot_version": 2,
         "product_sha": _product_sha(root),
         "files": [rel(root, p) for p in files],
-        "constant_eq_roots": _constant_eq_roots(),
         "emit_sites": dict(sorted(emit.items())),
         "untagged_era_sites": dict(sorted(untagged.items())),
         "untagged_era_total": sum(untagged.values()),
@@ -316,9 +306,6 @@ def coverage_diff(baseline: dict, current: dict) -> dict:
         "unresolved": current["unresolved"],
         "exception_violations": current["exception_violations"],
         "new_untagged_era": sorted(k for k, n in c_untag.items() if n > b_untag.get(k, 0)),
-        "constant_eq_roots_changed": (
-            [] if baseline.get("constant_eq_roots") == current["constant_eq_roots"]
-            else [f"{baseline.get('constant_eq_roots')} -> {current['constant_eq_roots']}"]),
     }
     out["clean"] = not any(out[k] for k in FAIL_KEYS)
     out["grew"] = {
@@ -334,7 +321,7 @@ def coverage_diff(baseline: dict, current: dict) -> dict:
 
 
 FAIL_KEYS = ("lost_files", "lost_sites", "lost_eq", "lost_constants", "unresolved",
-             "exception_violations", "new_untagged_era", "constant_eq_roots_changed")
+             "exception_violations", "new_untagged_era")
 
 
 def _growth_summary(grew: dict) -> str:
@@ -344,8 +331,7 @@ def _growth_summary(grew: dict) -> str:
 
 
 def _print_diff(d: dict) -> None:
-    for key in ("lost_files", "lost_sites", "lost_eq", "lost_constants", "exception_violations",
-                "constant_eq_roots_changed"):
+    for key in ("lost_files", "lost_sites", "lost_eq", "lost_constants", "exception_violations"):
         for item in d[key]:
             print(f"  {key}: {item}")
     for s in d["unresolved"]:

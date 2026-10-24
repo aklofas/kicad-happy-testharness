@@ -61,7 +61,7 @@ registry review.
 SHA, every file scanned, every (detector, rule_id) emit-site count, the per-key
 untagged-era counts, every `EQ-nnn` id and every constant `(file, scope, name)`.
 `check` fails when any covered set shrinks (a lost file, site, equation or constant),
-an untagged count grows, or the constant/EQ roots change, unless the run is
+an untagged count grows, unless the run is
 re-baselined with `--accept-baseline`, whose diff is the review artifact.
 
 **Ratchet on growth.** When coverage grows (new files, site keys, EQ ids or
@@ -69,16 +69,11 @@ constants, or an untagged count drops), `check` stays CLEAN but prints
 `coverage grew: …`. Run `check --accept-baseline` and commit the rewritten baseline
 in the same round, so the next round cannot silently drop what this one added.
 
-**Constant / EQ roots are narrower than `files`.** `files` and `emit_sites` cover
-every `*.py` the walker finds (90 files at `6a91aaa`). `constants` and `eq_ids` come
-from `validate/audit_constants.py` and `validate/audit_equations.py`, which scan only
-their `SCAN_ROOTS`: `skills/kicad/scripts`, `skills/spice/scripts` and
-`skills/emc/scripts` (58 of the 90 files at `6a91aaa`). A constant or `EQ-nnn` tag in
-`kicad/review`, `datasheets`, `bom` or the distributor skills is invisible to both
-registries and to the baseline; moving one out of the three roots shows as a loss.
-The baseline records the roots as `constant_eq_roots`, so a roots change shows in
-the diff. Moving the audit tools onto the shared walker is tracked as TH-066; it
-rewrites the registries and needs its own reviewed churn commit.
+**Constants and EQ ids come from the same walk as `files`.** `validate/audit_constants.py`
+and `validate/audit_equations.py` consume `source_scan.iter_product_sources`, so a
+constant or `EQ-nnn` tag anywhere under `skills/**/scripts/**` (kicad, kicad/review,
+spice, emc, datasheets, bom and the distributor skills) enters both registries and the
+baseline (TH-066; before it the audit tools walked three roots, 58 of 90 files).
 
 ## What is frozen regardless of policy
 

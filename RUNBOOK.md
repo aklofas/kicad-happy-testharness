@@ -892,7 +892,7 @@ Run after ANY change to kicad-happy analyzer scripts:
 python3 validate/audit_constants.py scan --diff
 ```
 
-This AST-scans all analyzer scripts and reports:
+This AST-scans every `skills/**/scripts/**` file (the shared walker, TH-066) and reports:
 - **New constants** — added since last scan. MUST be verified before merging.
 - **Changed constants** — content hash differs. Review what changed and why.
 - **Removed constants** — may indicate cleanup or regression. Verify intentional.
