@@ -2,7 +2,7 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-24T19:51:07.504871+00:00
+**Last scan:** 2026-10-24T22:11:36.098092+00:00
 
 ## Summary
 

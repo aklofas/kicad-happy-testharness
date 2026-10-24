@@ -2,7 +2,7 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-24T19:51:10.628539+00:00
+**Last scan:** 2026-10-24T22:11:38.262314+00:00
 
 ## Summary
 

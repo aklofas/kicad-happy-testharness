@@ -207,7 +207,7 @@ ENTRY_POINTS = {
     "skills/kicad/scripts/cross_analysis.py": {"schematic", "pcb"},
     "skills/emc/scripts/analyze_emc.py": {"emc"},
     "skills/spice/scripts/simulate_subcircuits.py": {"spice"},
-    "skills/datasheets/scripts/datasheet_lookup.py": {"datasheets"},
+    "skills/datasheets/datasheet_types/cache_reader.py": {"datasheets"},
     "skills/digikey/scripts/sync_datasheets_digikey.py": {"datasheets"},
 }
 

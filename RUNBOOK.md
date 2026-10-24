@@ -2699,6 +2699,11 @@ Analyzer  PASS  WARN  FAIL  SKIP  Disappeared  Downgrades  NewKnown  NewUnknown
 - **NewUnknown** = surprise rule_ids — audit, WARN not blocking.
 - **NewUpgraded** (`UPGRADED_V14_RULES`) should be ≈0 — non-zero means a
   heuristic path drifted; investigate and report, not auto-fail.
+- **Rewrites** (per-unit `rewrites_count`, rollup `Rewrites`) = a finding whose
+  summary changed but whose rule_id and component / net / pin sets did not,
+  paired one-to-one with the new wording. It is one row, not a `disappeared` +
+  `new_unknown` pair: a pure rewrite is WARN, a rewrite with a severity drop
+  counts as a downgrade (FAIL). Ambiguous matches stay `disappeared` + new.
 
 ### 26e. Pass criteria
 
@@ -2755,9 +2760,11 @@ is **too strict** for v1.4-vs-v1.4 because:
    window as the gate (rc.2 added `LA-004`, `RS-003`, `LC-007`).
 2. **Demote-with-summary-rewrite** (e.g. rc.2 PM-002 / PP-001) shifts the
    `_canon_key` (which includes `_norm_summary`) on every reclassified
-   finding, so the diff engine reports it as paired
-   `disappeared` + `new_unknown` on the SAME rule_id rather than a
-   `severity_change` row. Net is 0 but auto-PASS can't recognize this.
+   finding. The diff engine now pairs the old and new wording one-to-one on
+   (rule_id, components, nets, pins) and reports a `rewrites` row
+   (`severity_change_with_rewrite` when the severity moved too, counted as a
+   downgrade/upgrade); only ambiguous matches still show as `disappeared` +
+   `new_unknown`.
 
 **Manual adjudication recipe:** the per-unit diff records at
 `<gate-dir>/diff/<analyzer>/<owner>/<repo>/<unit>.json` nest the
@@ -2774,7 +2781,8 @@ repos, 0 violations). For exact per-rule net deltas, aggregate from the raw
 `snap.json` pairs under `<gate-dir>/baseline/...` + `<gate-dir>/candidate/...` (historical gates: `v131/` + `v14/`) with
 `python3 tools/gate_rule_delta.py <gate-dir> [per_unit_out.json]` (Counter
 on `findings[].rule_id` both sides; global + per-unit nets). Same-rule-id
-paired disappeared+new_unknown with equal counts = demote-with-rewrite
+paired disappeared+new_unknown with equal counts (several per unit, so the
+one-to-one rewrite pairing could not claim them) = demote-with-rewrite
 signature (expected, net 0). Critical zero-deltas to verify: gerber /
 thermal / emc / cross_analysis 100% PASS, zero Downgrades anywhere. If any
 of these four moves on a rc-vs-rc, real regression.
@@ -3029,6 +3037,32 @@ the same product are identical (A/A quick_200: 8,829 / 8,829) and a `model_note`
 is the candidate's. Expect `lookup:` on a part's first use in a unit and `cache:` on later
 uses in the same unit; outputs regenerated before 2026-10-24 carry the old global-cache
 labels.
+
+### 26m. Product text oracle (`tools/check_refactor.py snapshot` / `text-compare`, v3 rounds 7-9)
+
+The product's own refactor oracle renders every `--text` / `--help` / JSON / summarize artefact over the
+harness fixtures and compares the two trees byte-for-byte. The maintainer captures the round's baseline
+(`<ARC>/roundN/text-baseline-rN`) over a PINNED harness fixture export, `/tmp/harness-pin/tests/fixtures`
+(= `git archive 7abf547b4a6 tests/fixtures`, verified identical 2026-10-24). Snapshot with THAT tree, not the
+live `tests/fixtures`:
+
+```bash
+cd <candidate clone> && python3 tools/check_refactor.py snapshot --fixtures /tmp/harness-pin/tests/fixtures --product <candidate clone> --out <scratch>/rN-cand
+python3 tools/check_refactor.py text-compare --allow <ARC>/roundN-text-allow.json <ARC>/roundN/text-baseline-rN <scratch>/rN-cand   # OK (776 artefacts, k allowed differ)
+python3 tools/check_refactor.py text-compare <ARC>/roundN/text-baseline-rN <scratch>/rN-cand                                        # FAIL listing exactly the allowed names
+mkdir -p <scratch>/rN-base && git -C <candidate clone> archive <base sha> | tar -x -C <scratch>/rN-base
+python3 tools/check_refactor.py snapshot --fixtures /tmp/harness-pin/tests/fixtures --product <scratch>/rN-base --out <scratch>/rN-base-snap
+python3 tools/check_refactor.py text-compare <ARC>/roundN/text-baseline-rN <scratch>/rN-base-snap                                   # OK, no allow list
+```
+
+The live fixture tree fails for two harness-side reasons that are not product deltas (round 9, first
+attempt): every fixture added since the pin shows as `EXTRA in candidate` (the `ko001` pcb alone = 112
+artefacts), and every artefact that embeds the fixture path (gerber `directory`, kh418 manifests) differs by
+the path prefix. Run the no-allow compare as well and check that its FAIL list equals the allow list by
+name; run the base side with no allow list. Keep both logs under `results/<gate>_aux/text_oracle.log`.
+Any analyzer invoked with the product clone as cwd and no `-o` writes `analysis/capability_mode.json`
+into the clone and dirties it (26i preflight); run the product's own `tools/tests` from the harness cwd
+or delete the sidecar afterwards.
 
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 

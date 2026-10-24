@@ -427,7 +427,7 @@ def test_normalize_severity_handles_legacy_uppercase_and_v14():
         sys.path.insert(0, str(main_repo_scripts))
         inserted = True
     try:
-        from finding_schema import normalize_severity
+        from kicad_core.render import normalize_severity
     finally:
         if inserted:
             sys.path.remove(str(main_repo_scripts))

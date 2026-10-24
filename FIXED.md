@@ -86,6 +86,62 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-24 — KH-472 / KH-464 / KH-466 / KH-475: the four output-neutral round-8 filings — fixed in v3 round 9 (`ec81ca6`, candidate `2498831`)
+
+Folded into the structural round 9 by the user's "include correctness-fixes" ruling (round-9
+ledger R1): each fix changes no fixture JSON and no corpus unit, so the round's budget stays
+EMPTY. The output-changing round-8 filings (KH-470/471/473/474/465) stay open as 3.0.x items.
+Harness verification common to all four: the product tests below GREEN in the clean clone
+`results/v3_baseline/product_2498831` (16 passed / 1 skipped, the skip = the absent 6a91aaa
+baseline); the round-9 text oracle (RUNBOOK 26l-style, pinned 7abf547 fixture tree) differs from
+the `586f29e` baseline in exactly the five declared artefacts (`neg__analyze_gerbers__missing.*`,
+`neg__lifecycle_audit__missing.*`, `help__summarize_findings.txt`); FULL standard + full-chain
+gate `a0df172..2498831` under `--kind structural` = corpus-neutral (record
+`results/v3_round9_gate/round9_response.json`).
+
+### KH-472 (LOW) — `emc_spice.py` `.control` block redirected `echo "done=1" > <absolute path>` and ran ngspice without `cwd`
+
+- **File:** `skills/emc/scripts/emc_spice.py` (`:418` redirect, `:426` `backend.run` without `cwd`, `tb.render(backend, out_file)` absolute at `:176` / `:297` / `:698`)
+- **Root cause:** the KH-463 recipe (bare filenames + `cwd`) reached the kicad SPICE path only; the
+  EMC PDN/decoupling testbenches still wrote absolute paths into the unquoted ngspice redirect, so a
+  `TMPDIR` with a space or shell punctuation skipped every EMC SPICE measurement.
+- **Fix (`ec81ca6`):** render bare filenames and run ngspice with `cwd=<workdir>`; output-neutral on
+  paths without spaces.
+- **Verification:** `tools/tests/test_emc_spice_workdir.py` (bare filenames, `cwd`); the maintainer's
+  whole-branch review A/B with real ngspice and a space in `TMPDIR` (base fails every EMC SPICE run,
+  tip matches the no-space run). Corpus: emc strict-field identical in the round-9 gate.
+
+### KH-464 (LOW) — `lifecycle_audit.py <missing input>` died with a `FileNotFoundError` traceback
+
+- **File:** `skills/kicad/scripts/lifecycle_audit.py` (`:1048` `open(input_path)` with no existence check)
+- **Root cause:** the one CLI left bare in round 7 because the frozen text-oracle artefact
+  `neg__lifecycle_audit__missing` quoted the traceback.
+- **Fix (`ec81ca6`):** path check → argparse usage error, exit 2 (the convention of the other CLIs).
+- **Verification:** `tools/tests/test_cli_usage_errors.py`; direct: `lifecycle_audit.py /nonexistent_file.json`
+  rc 1 at `a0df172` → rc 2 at `2498831`; the text-oracle artefact pair changes by design (allow list).
+
+### KH-466 (LOW) — `analyze_gerbers.py <nonexistent dir>` exited 0 with an empty, well-formed result
+
+- **File:** `skills/kicad/scripts/analyze_gerbers.py` (`:1168` `gerber_dir.glob(...)` on an unchecked path)
+- **Root cause:** no existence check on `args.directory`; a mistyped path looked like a board with no gerbers.
+- **Fix (`ec81ca6`):** `parser.error` (exit 2) when the argument is not a directory (ledger R3: one
+  exit code for one class of error); real inputs take the same path as before.
+- **Verification:** `tools/tests/test_cli_usage_errors.py`; direct: `analyze_gerbers.py /nonexistent_dir_xyz --compact`
+  rc 0 at `a0df172` → rc 2 at `2498831`; gerber census 5,502 / strict-field identical in the round-9 gate.
+
+### KH-475 (LOW) — SPICE Monte-Carlo trials printed one `Warning:` stderr line per fallback per trial
+
+- **File:** `skills/spice/scripts/simulate_subcircuits.py:172`, `skills/spice/scripts/spice_templates.py`, `skills/kicad/scripts/kicad_core/diagnostics.py`
+- **Root cause:** `record()` printed on every trial; the opamp fallback recorded inside
+  `spice_templates.generate_opamp_circuit` into the testbench's local list, bypassing any sink.
+- **Fix (`ec81ca6`, ledger R7):** `kicad_core.diagnostics.OnceSink` dedups on (source, message);
+  `generate_opamp_circuit(..., diagnostics=None)` records into the sink when given one and hands the
+  testbench a fresh list; `_run_single_sim` passes the sink only for Monte-Carlo trials, so the nominal
+  path (gate-visible on spice-offline) stays byte-identical.
+- **Verification:** `tools/tests/test_diagnostics.py::test_monte_carlo_trials_report_each_fallback_once`;
+  spice-offline quick_200 identical modulo the TH-077 `model_note` class (corpus runs no Monte-Carlo).
+  Deferred minor (handoff §13): a future generator that fills its testbench list would still repeat once per trial.
+
 ## 2026-10-24 — TH-077: spice-offline runs were not deterministic — `model_note` flipped `lookup:`/`cache:` because every worker shared one global `/tmp/kicad-happy-spice/models` cache
 
 **Severity:** LOW (a label, not a measurement; but the two-sided spice-offline comparison reported differences that were not the candidate's, and the cache also leaked models across projects and across runs of different products).
