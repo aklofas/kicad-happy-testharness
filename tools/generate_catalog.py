@@ -220,8 +220,8 @@ def _generate_tags(entry):
     else:
         tags.append("xlarge")
 
-    # Design domains
-    domains = entry.get("design_domains", [])
+    # Design domains: the catalog records emitted full names (detect_rf_chains)
+    domains = {d.removeprefix("detect_") for d in entry.get("design_domains", [])}
     if any(d in domains for d in ("rf_chains", "rf_matching")):
         tags.append("rf")
     if any(d in domains for d in ("power_regulators", "feedback_networks")):

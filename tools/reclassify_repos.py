@@ -324,7 +324,9 @@ def _score_repo(repo_entry, validated_entry, rule):
     signals = set()  # Track which signals fired for combo bonuses
 
     repo_name, owner, desc, topics = _get_text_signals(repo_entry, validated_entry)
-    detectors = repo_entry.get("detectors_fired", {})
+    # the catalog records the emitted full names (detect_key_matrices); the rules use short ones
+    detectors = {k.removeprefix("detect_"): v
+                 for k, v in repo_entry.get("detectors_fired", {}).items()}
     tags = set(repo_entry.get("tags", []))
 
     # 1. Topic matches (+3 each, strong signal)

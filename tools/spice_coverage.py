@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import OUTPUTS_DIR, add_repo_filter_args, resolve_repos, list_repos
 
-# Schematic findings detector → SPICE subcircuit_type
+# Schematic findings detector (emitted as detect_<key>) → SPICE subcircuit_type
 DETECTOR_SPICE_MAP = {
     "voltage_dividers": "voltage_divider",
     "rc_filters": "rc_filter",
@@ -29,15 +29,15 @@ DETECTOR_SPICE_MAP = {
     "protection_devices": "protection_device",
     "power_regulators": "regulator_feedback",
     "opamp_circuits": "opamp_circuit",
-    "current_sense_resistors": "current_sense",
+    "current_sense": "current_sense",
     "transistor_circuits": "transistor_circuit",
     "feedback_networks": "feedback_network",
-    "decoupling_capacitors": "decoupling",
-    "rf_matching_networks": "rf_matching",
+    "decoupling": "decoupling",
+    "rf_matching": "rf_matching",
     "bridge_circuits": "bridge_circuit",
     "snubber_circuits": "snubber_circuit",
     "inrush_limiters": "inrush",
-    "bms_balance_circuits": "bms_balance",
+    "bms_systems": "bms_balance",
     "rf_chains": "rf_chain",
 }
 
