@@ -384,6 +384,13 @@ def _aggregate(records):
     }
 
 
+def gate_clean(rollup):
+    """No board failed, none was skipped (a missing curated sub-sheet is lost evidence), and at
+    least one board was checked."""
+    s = rollup["summary"]
+    return s["FAIL"] == 0 and s["SKIP"] == 0 and s["PASS"] > 0
+
+
 def _print_summary(rollup):
     """One-line-per-board summary suitable for release-ops eyeballing."""
     s = rollup["summary"]
@@ -399,8 +406,11 @@ def _print_summary(rollup):
         ]
         cf_str = ", ".join(cf) if cf else "all PASS"
         print(f"  {name:<28}  {b['verdict']:<4}  {cf_str}")
-    if s["FAIL"] == 0:
+    if gate_clean(rollup):
         print("\nCLEAN — hierarchy contracts hold corpus-wide")
+    elif s["FAIL"] == 0:
+        print(f"\nNOT CLEAN — {s['SKIP']} curated board(s) skipped, {s['PASS']} checked. "
+              "A curated board must be present to count as evidence.")
     else:
         print(f"\nNOT CLEAN — {s['FAIL']} board(s) failed. "
               f"See rollup for per-contract details.")
@@ -472,7 +482,7 @@ def main(argv=None):
     print(f"\nRollup written to {rollup_path}")
 
     _print_summary(rollup)
-    return 0 if rollup["summary"]["FAIL"] == 0 else 1
+    return 0 if gate_clean(rollup) else 1
 
 
 if __name__ == "__main__":

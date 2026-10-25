@@ -91,9 +91,10 @@ def test_git_archive_exports_a_revision_and_overlays_paths(tmp_path):
 
 def test_gate_pass_needs_both_directions_and_no_diffs():
     ok, bad = {"exit_code": 0}, {"exit_code": 1}
-    assert do.gate_pass(ok, ok, [])
-    assert not do.gate_pass(bad, ok, []) and not do.gate_pass(ok, bad, [])
-    assert not do.gate_pass(ok, {"exit_code": None}, []) and not do.gate_pass(ok, ok, ["p/run/stdout.txt"])
+    assert do.gate_pass(ok, ok, [], 1)
+    assert not do.gate_pass(bad, ok, [], 1) and not do.gate_pass(ok, bad, [], 1)
+    assert not do.gate_pass(ok, {"exit_code": None}, [], 1) and not do.gate_pass(ok, ok, ["p/run/stdout.txt"], 1)
+    assert not do.gate_pass(ok, ok, [], 0)   # an empty frozen set is no evidence
 
 
 def test_main_passes_when_baseline_reproduces_the_frozen_set(tmp_path, capsys):

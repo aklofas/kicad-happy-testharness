@@ -622,7 +622,8 @@ def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | Non
                "by_op": dict(sorted(by_op.items())), "by_analyzer": dict(sorted(by_an.items()))}
     if mode == "raw":
         summary["run_id_differs"] = counts["run_id_differs"]
-    if counts["missing"] or counts["parse_errors"] or violations:
+    # zero compared units is no evidence of equality (ruling R3)
+    if counts["missing"] or counts["parse_errors"] or violations or not counts["compared"]:
         verdict = "error"
     elif deltas:
         verdict = "deltas"

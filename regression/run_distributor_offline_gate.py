@@ -81,12 +81,20 @@ def run_oracle(tree: Path, fixtures: Path, mode_args: list[str]) -> dict:
         return {"argv": cmd[1:], "exit_code": r.returncode, "timed_out": False,
                 "stdout": r.stdout, "stderr": r.stderr}
     except subprocess.TimeoutExpired as e:
+        # TimeoutExpired carries bytes even under text=True
         return {"argv": cmd[1:], "exit_code": None, "timed_out": True,
-                "stdout": e.stdout or "", "stderr": e.stderr or ""}
+                "stdout": _text(e.stdout), "stderr": _text(e.stderr)}
 
 
-def gate_pass(candidate: dict, baseline: dict, diffs: list[str]) -> bool:
-    return candidate["exit_code"] == 0 and baseline["exit_code"] == 0 and not diffs
+def _text(b) -> str:
+    return b.decode("utf-8", "replace") if isinstance(b, bytes) else (b or "")
+
+
+def gate_pass(candidate: dict, baseline: dict, diffs: list[str], expected_artefacts: int) -> bool:
+    """Both directions exit 0, no differing artefact, and a non-empty frozen set (an empty
+    expected set compares equal to anything and is no evidence)."""
+    return (candidate["exit_code"] == 0 and baseline["exit_code"] == 0 and not diffs
+            and expected_artefacts > 0)
 
 
 def _summary_line(text: str) -> str:
@@ -140,7 +148,8 @@ def main(argv=None) -> int:
     base_expected = gate / "baseline_expected"
     baseline = run_oracle(base_tree, fixtures, ["--write-expected", str(base_expected)])
     diffs = compare_dirs(frozen, base_expected)
-    ok = gate_pass(candidate, baseline, diffs)
+    n_expected = sum(1 for p in frozen.rglob("*") if p.is_file())
+    ok = gate_pass(candidate, baseline, diffs, n_expected)
 
     sides = {}
     for name, res, ref in (("candidate", candidate, cand_ref), ("baseline", baseline, base_ref)):
@@ -157,7 +166,7 @@ def main(argv=None) -> int:
         "timeout_s": PROFILE.timeout_s, "fixtures": str(fixtures),
         "harness": dataclasses.asdict(git_worktree_ref(HARNESS_DIR)),
         "candidate": sides["candidate"], "baseline": sides["baseline"],
-        "expected_artefacts": sum(1 for p in frozen.rglob("*") if p.is_file()),
+        "expected_artefacts": n_expected,
         "diffs": diffs,
         "gate_pass": {"pass": ok, "criterion": CRITERION},
     }

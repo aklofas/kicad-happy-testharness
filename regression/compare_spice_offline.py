@@ -4,7 +4,8 @@
 
 Volatile leaves (run ids, timings, the data-dir prefix in paths) are masked; every other
 difference is reported as (op, path-with-indices-wildcarded) with a count and one example
-unit. Exit 0 when the two trees are identical after masking, 1 otherwise, 2 on a bad tree.
+unit. Exit 0 when the two trees are identical after masking and share at least one report,
+1 otherwise (two empty trees are no evidence), 2 on a bad tree.
 
     python3 regression/compare_spice_offline.py A_ROOT B_ROOT -o report.json
 """
@@ -89,6 +90,7 @@ def compare(a_root: Path, b_root: Path) -> dict:
     return {
         "a_root": str(a_root), "b_root": str(b_root),
         "files": {"a": len(fa), "b": len(fb), "only_a": sorted(set(fa) - set(fb)), "only_b": sorted(set(fb) - set(fa))},
+        "compared": len(set(fa) & set(fb)) - unreadable,
         "identical_after_mask": identical, "unreadable": unreadable,
         "differences": {k: {"count": v, "example": examples[k]} for k, v in kinds.most_common()},
     }
@@ -111,8 +113,10 @@ def main(argv=None) -> int:
           f"only_b={len(rep['files']['only_b'])} identical={rep['identical_after_mask']} unreadable={rep['unreadable']}")
     for k, v in rep["differences"].items():
         print(f"  {v['count']:7d}  {k}   e.g. {v['example']['unit'][:70]}")
-    clean = not rep["differences"] and not rep["files"]["only_a"] and not rep["files"]["only_b"] and not rep["unreadable"]
-    print("spice-offline:", "IDENTICAL" if clean else "DIFFERENCES")
+    clean = (not rep["differences"] and not rep["files"]["only_a"] and not rep["files"]["only_b"]
+             and not rep["unreadable"] and rep["compared"] > 0)
+    print("spice-offline:", "IDENTICAL" if clean else
+          ("NO COMPARED REPORTS" if rep["compared"] == 0 else "DIFFERENCES"))
     return 0 if clean else 1
 
 
