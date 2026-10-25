@@ -374,7 +374,7 @@ def test_fetch_missing_downloads_valid_url():
         body = b"%PDF-1.5\n" + b"Y" * 500
         sha = hashlib.sha256(body).hexdigest()
         _seed_record_with_url(sha, "https://x.com/file.pdf", mpn="DOWNLOAD1")
-        with patch("urllib.request.urlopen", return_value=_mock_urlopen_response(body)):
+        with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_urlopen_response(body)):
             rc = cli_main(["fetch-missing"])
         assert rc == 0
         # Blob should now exist
@@ -400,7 +400,7 @@ def test_fetch_missing_skips_present_blobs():
         rec = load_record(sha)
         write_blob_atomic(store_path(rec), body, expected_sha256=sha)
         # Now run fetch-missing — should NOT call urlopen
-        with patch("urllib.request.urlopen") as mock_open:
+        with patch("validate.datasheet_db.fetcher._OPENER.open") as mock_open:
             rc = cli_main(["fetch-missing"])
             assert mock_open.call_count == 0, "should not have called urlopen for an already-present blob"
         assert rc == 0
@@ -420,7 +420,7 @@ def test_fetch_missing_handles_drift():
         _seed_record_with_url(old_sha, "https://x.com/drifted.pdf", mpn="DRIFT1")
 
         # Mock urlopen to return new_body when fetched
-        with patch("urllib.request.urlopen", return_value=_mock_urlopen_response(new_body)):
+        with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_urlopen_response(new_body)):
             rc = cli_main(["fetch-missing", "--jobs", "1"])
         assert rc == 0
 
@@ -456,7 +456,7 @@ def test_fetch_missing_marks_dead_url_after_fetch_error():
         _seed_record_with_url(sha, "https://x.com/dead.pdf", mpn="DEAD1")
 
         # Mock urlopen to raise (simulating 404 or connection error)
-        with patch("urllib.request.urlopen", side_effect=Exception("HTTP 404")):
+        with patch("validate.datasheet_db.fetcher._OPENER.open", side_effect=Exception("HTTP 404")):
             rc = cli_main(["fetch-missing", "--jobs", "1"])
         assert rc == 0
 

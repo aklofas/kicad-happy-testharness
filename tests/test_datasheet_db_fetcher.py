@@ -120,7 +120,7 @@ def _mock_response(body: bytes, status: int = 200, content_type: str = "applicat
 def test_fetch_bytes_success():
     body = b"%PDF-1.5\n" + b"X" * 1000
     expected_sha = hashlib.sha256(body).hexdigest()
-    with patch("urllib.request.urlopen", return_value=_mock_response(body)):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_response(body)):
         result = fetch_bytes("https://x.com/a.pdf")
         assert isinstance(result, FetchResult)
         assert result.sha256 == expected_sha
@@ -129,7 +129,7 @@ def test_fetch_bytes_success():
 
 
 def test_fetch_bytes_404_raises():
-    with patch("urllib.request.urlopen", side_effect=Exception("HTTP 404")):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", side_effect=Exception("HTTP 404")):
         try:
             fetch_bytes("https://x.com/missing.pdf")
             assert False, "should have raised"
@@ -139,7 +139,7 @@ def test_fetch_bytes_404_raises():
 
 def test_fetch_bytes_rejects_non_pdf_content_type():
     body = b"<html>not a pdf</html>"
-    with patch("urllib.request.urlopen", return_value=_mock_response(body, content_type="text/html")):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_response(body, content_type="text/html")):
         try:
             fetch_bytes("https://x.com/a.pdf")
             assert False, "should have raised"
@@ -149,14 +149,14 @@ def test_fetch_bytes_rejects_non_pdf_content_type():
 
 def test_fetch_bytes_accepts_pdf_magic_bytes_without_content_type():
     body = b"%PDF-1.5\n" + b"X" * 100
-    with patch("urllib.request.urlopen", return_value=_mock_response(body, content_type="application/octet-stream")):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_response(body, content_type="application/octet-stream")):
         result = fetch_bytes("https://x.com/a.pdf")
         assert result.size_bytes == len(body)
 
 
 def test_fetch_bytes_rejects_non_pdf_magic_bytes():
     body = b"NOT_A_PDF" + b"X" * 100
-    with patch("urllib.request.urlopen", return_value=_mock_response(body, content_type="application/octet-stream")):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_response(body, content_type="application/octet-stream")):
         try:
             fetch_bytes("https://x.com/a.pdf")
             assert False, "should have raised"
@@ -167,7 +167,7 @@ def test_fetch_bytes_rejects_non_pdf_magic_bytes():
 def test_fetch_verified_matches():
     body = b"%PDF-1.5\n" + b"X" * 100
     sha = hashlib.sha256(body).hexdigest()
-    with patch("urllib.request.urlopen", return_value=_mock_response(body)):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_response(body)):
         result = fetch_verified("https://x.com/a.pdf", expected_sha256=sha)
         assert result.matched is True
         assert result.fetch_result.sha256 == sha
@@ -176,7 +176,7 @@ def test_fetch_verified_matches():
 def test_fetch_verified_mismatch():
     body = b"%PDF-1.5\n" + b"X" * 100
     wrong_sha = "00" * 32
-    with patch("urllib.request.urlopen", return_value=_mock_response(body)):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_response(body)):
         result = fetch_verified("https://x.com/a.pdf", expected_sha256=wrong_sha)
         assert result.matched is False
         assert result.fetch_result.sha256 != wrong_sha
@@ -185,7 +185,7 @@ def test_fetch_verified_mismatch():
 def test_fetch_verified_no_expected_always_matches():
     """expected_sha256=None means 'take whatever you get'."""
     body = b"%PDF-1.5\n" + b"X" * 100
-    with patch("urllib.request.urlopen", return_value=_mock_response(body)):
+    with patch("validate.datasheet_db.fetcher._OPENER.open", return_value=_mock_response(body)):
         result = fetch_verified("https://x.com/a.pdf", expected_sha256=None)
         assert result.matched is True
 
@@ -312,3 +312,32 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {type(e).__name__}: {e}")
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+def test_sanitize_url_strips_api_keys_userinfo_and_fragment():
+    """sec A1-F7: apiKey/access_token, user:pass@ and #fragments reached the tracked manifest."""
+    got = sanitize_url("https://u:p@cdn.example.com/a.pdf?apiKey=1&access_token=2&api_key=3&rev=B#frag")
+    assert got == "https://cdn.example.com/a.pdf?rev=B"
+
+
+def test_fetch_refuses_non_http_urls():
+    """sec A1-F4: only http(s) URLs are fetched."""
+    import pytest
+    from validate.datasheet_db.fetcher import FetchError
+    for url in ("file:///etc/passwd", "ftp://example.com/a.pdf", "data:application/pdf,x"):
+        with pytest.raises(FetchError, match="only http"):
+            fetch_bytes(url)
+
+
+def test_redirect_policy_refuses_non_http_and_caps_hops():
+    """sec A1-F4: the redirect handler checked neither scheme nor the declared cap."""
+    import pytest
+    import urllib.request
+    from validate.datasheet_db import fetcher
+    assert fetcher._PolicyRedirectHandler.max_redirections == fetcher._FETCH_MAX_REDIRECTS == 5
+    h = fetcher._PolicyRedirectHandler()
+    req = urllib.request.Request("https://example.com/a.pdf")
+    with pytest.raises(fetcher.FetchError, match="non-http"):
+        h.redirect_request(req, None, 302, "Found", {}, "ftp://example.com/a.pdf")
+    assert h.redirect_request(req, None, 302, "Found", {}, "https://cdn.example.com/a.pdf") is not None
+    assert any(isinstance(x, fetcher._PolicyRedirectHandler) for x in fetcher._OPENER.handlers)

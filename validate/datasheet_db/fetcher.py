@@ -13,31 +13,26 @@ from dataclasses import dataclass
 # they expire (making the URL useless after minutes) and may contain secrets.
 _BAD_QUERY_KEYS = frozenset([
     "sig", "signature", "token", "auth", "key", "expires", "expire",
+    "apikey", "api_key", "access_token",
     "X-Amz-Signature", "X-Amz-Date", "X-Amz-Expires", "X-Amz-SignedHeaders",
     "X-Amz-Credential", "X-Amz-Algorithm", "X-Amz-Security-Token",
 ])
+_BAD_QUERY_KEYS_LOWER = frozenset(k.lower() for k in _BAD_QUERY_KEYS)
 
 
 def sanitize_url(url: str) -> str:
-    """Return `url` with known-problematic query parameters stripped.
-
-    Strips params matching `_BAD_QUERY_KEYS` (case-sensitive for AWS-style,
-    case-insensitive for the short forms). Preserves scheme, host, path,
-    and all other query params. Drops the `?` entirely if no params remain.
+    """Return `url` with known-problematic parts stripped: query parameters matching
+    `_BAD_QUERY_KEYS` (case-insensitive), userinfo (`user:pass@`) and the fragment.
+    Preserves scheme, host, port, path, and all other query params. Drops the `?`
+    entirely if no params remain.
     """
     parsed = urlparse(url)
-    if not parsed.query:
+    netloc = parsed.netloc.rsplit("@", 1)[-1]
+    if not parsed.query and netloc == parsed.netloc and not parsed.fragment:
         return url
-    kept = []
-    for key, value in parse_qsl(parsed.query, keep_blank_values=True):
-        if key in _BAD_QUERY_KEYS or key.lower() in {k.lower() for k in _BAD_QUERY_KEYS}:
-            continue
-        kept.append((key, value))
-    new_query = urlencode(kept)
-    return urlunparse((
-        parsed.scheme, parsed.netloc, parsed.path,
-        parsed.params, new_query, parsed.fragment,
-    ))
+    kept = [(k, v) for k, v in parse_qsl(parsed.query, keep_blank_values=True)
+            if k.lower() not in _BAD_QUERY_KEYS_LOWER]
+    return urlunparse((parsed.scheme, netloc, parsed.path, parsed.params, urlencode(kept), ""))
 
 
 class DomainRateLimiter:
@@ -103,6 +98,22 @@ _PDF_MAGIC = b"%PDF-"
 _ACCEPTED_CONTENT_TYPES = {"application/pdf", "application/octet-stream", ""}
 
 
+_FETCH_SCHEMES = ("http", "https")
+
+
+class _PolicyRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Follows at most _FETCH_MAX_REDIRECTS redirects, each to an http(s) URL only."""
+    max_redirections = _FETCH_MAX_REDIRECTS
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if urlparse(newurl).scheme.lower() not in _FETCH_SCHEMES:
+            raise FetchError(f"redirect to a non-http(s) URL refused: {newurl}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_OPENER = urllib.request.build_opener(_PolicyRedirectHandler)
+
+
 def fetch_bytes(url: str, timeout: float = _FETCH_DEFAULT_TIMEOUT) -> FetchResult:
     """Download `url` and return a FetchResult.
 
@@ -113,9 +124,11 @@ def fetch_bytes(url: str, timeout: float = _FETCH_DEFAULT_TIMEOUT) -> FetchResul
     Does NOT perform SHA256 verification against an expected value — that's
     the caller's job (see fetch_verified in Task 15).
     """
+    if urlparse(url).scheme.lower() not in _FETCH_SCHEMES:
+        raise FetchError(f"only http(s) URLs are fetched: {url}")
     req = urllib.request.Request(url, headers={"User-Agent": _FETCH_USER_AGENT})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        with _OPENER.open(req, timeout=timeout) as resp:
             content_type = resp.headers.get("Content-Type", "").split(";")[0].strip().lower()
             buf = bytearray()
             h = hashlib.sha256()
