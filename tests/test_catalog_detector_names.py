@@ -35,3 +35,12 @@ def test_reclassify_strong_detectors_match_full_names():
     entry = {"repo": "o/thing", "detectors_fired": {"detect_key_matrices": 3}}
     score, reasons = rr._score_repo(entry, {}, rule)
     assert any("key_matrices" in r for r in reasons) and score >= 3
+
+
+def test_catalog_counts_skip_the_capability_sidecar(tmp_path):
+    """TH-089: capability_mode.json was counted as a schematic/pcb/emc/spice output."""
+    import generate_catalog as gc
+    (tmp_path / "a.kicad_sch.json").write_text("{}")
+    (tmp_path / "capability_mode.json").write_text("{}")
+    (tmp_path / "_timing.json").write_text("{}")
+    assert [f.name for f in gc._output_files(tmp_path)] == ["a.kicad_sch.json"]

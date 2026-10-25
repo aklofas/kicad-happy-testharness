@@ -245,6 +245,13 @@ def _generate_tags(entry):
 
 # --- Main catalog builder ---
 
+
+def _output_files(d):
+    """Analyzer outputs in a repo dir: never the capability_mode.json sidecar or a
+    run-level _*.json file."""
+    return sorted(f for f in d.glob("*.json")
+                  if f.name != "capability_mode.json" and not f.name.startswith("_"))
+
 def build_repo_entry(repo_name, categories, repo_urls):
     """Build a complete catalog entry for one repo."""
     entry = {
@@ -258,7 +265,7 @@ def build_repo_entry(repo_name, categories, repo_urls):
     sch_outputs = []
     sch_dir = OUTPUTS_DIR / "schematic" / repo_name
     if sch_dir.exists():
-        for f in sch_dir.glob("*.json"):
+        for f in _output_files(sch_dir):
             data = safe_load_json(f, {})
             if data:
                 sch_outputs.append(data)
@@ -266,7 +273,7 @@ def build_repo_entry(repo_name, categories, repo_urls):
     pcb_outputs = []
     pcb_dir = OUTPUTS_DIR / "pcb" / repo_name
     if pcb_dir.exists():
-        for f in pcb_dir.glob("*.json"):
+        for f in _output_files(pcb_dir):
             data = safe_load_json(f, {})
             if data:
                 pcb_outputs.append(data)
@@ -274,7 +281,7 @@ def build_repo_entry(repo_name, categories, repo_urls):
     emc_outputs = []
     emc_dir = OUTPUTS_DIR / "emc" / repo_name
     if emc_dir.exists():
-        for f in emc_dir.glob("*.json"):
+        for f in _output_files(emc_dir):
             data = safe_load_json(f, {})
             if data:
                 emc_outputs.append(data)
@@ -282,13 +289,13 @@ def build_repo_entry(repo_name, categories, repo_urls):
     spice_outputs = []
     spice_dir = OUTPUTS_DIR / "spice" / repo_name
     if spice_dir.exists():
-        for f in spice_dir.glob("*.json"):
+        for f in _output_files(spice_dir):
             data = safe_load_json(f, {})
             if data:
                 spice_outputs.append(data)
 
     gerber_dir = OUTPUTS_DIR / "gerber" / repo_name
-    gerber_count = len(list(gerber_dir.glob("*.json"))) if gerber_dir.exists() else 0
+    gerber_count = len(_output_files(gerber_dir)) if gerber_dir.exists() else 0
 
     # KiCad versions
     versions = set()
@@ -322,7 +329,7 @@ def build_repo_entry(repo_name, categories, repo_urls):
     # File counts
     entry["projects"] = len(set(
         f.stem.rsplit(".", 1)[0] if "." in f.stem else f.stem
-        for f in (list(sch_dir.glob("*.json")) if sch_dir.exists() else [])
+        for f in (_output_files(sch_dir) if sch_dir.exists() else [])
     ))
     entry["schematic_files"] = len(sch_outputs)
     entry["pcb_files"] = len(pcb_outputs)

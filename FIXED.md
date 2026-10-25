@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-089: `generate_catalog.py` counted the `capability_mode.json` sidecar as an analyzer output
+
+**Severity:** LOW (derived catalog; inflated `projects`, `schematic_files`, `pcb_files`, `sheets`, EMC/SPICE summaries).
+**File:** `tools/generate_catalog.py` (`_output_files`); test `tests/test_catalog_detector_names.py`.
+**Discovered and fixed:** 2026-10-25, harness audit fix session, while regenerating `reference/repo_catalog.json` for code A5-F10.
+
+- **Root cause:** every per-type output walk used `glob("*.json")`, which takes the analyzer's `capability_mode.json` sidecar (the TH-050 class; sidecars appeared in May 2026, after the catalog was last generated) and any run-level `_*.json`. `jgrip/commodorelcd` read 2 schematics instead of 1.
+- **Fix:** one `_output_files()` helper excludes the sidecar and `_`-prefixed files for all six walks.
+- **Verification:** unit test; the regenerated catalog reports `jgrip/commodorelcd` with 1 project / 1 schematic.
+
 ## 2026-10-25 — TH-079: `generate_validation_md.py` built the category table and the total from different denominators
 
 **Severity:** LOW (generated release document).
