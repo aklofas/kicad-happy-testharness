@@ -246,3 +246,10 @@ def test_analytics_snippet_matches_its_generator():
     gen = (HARNESS / "tools" / "generate_analytics.py").read_text(encoding="utf-8")
     intro = snippet.splitlines()[2]
     assert intro.replace("`", "") in gen.replace("`", "")
+
+
+def test_smoke_list_names_existing_files():
+    """run_tests.py --smoke must not name a deleted test file."""
+    import run_tests
+    missing = [p for p in run_tests.SMOKE_TESTS if not (HARNESS / p.split("::")[0]).exists()]
+    assert not missing, missing
