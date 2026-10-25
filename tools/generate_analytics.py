@@ -64,6 +64,12 @@ def collect_assertion_data():
     return counts, total_files, len(repos_with_assertions)
 
 
+
+def _repo_of(findings_file):
+    """owner/repo of reference/<owner>/<repo>/<project>/findings.json."""
+    parts = findings_file.relative_to(REFERENCE_DIR).parts
+    return f"{parts[0]}/{parts[1]}" if len(parts) >= 3 else parts[0]
+
 def collect_findings_data():
     """Collect findings statistics."""
     by_status = Counter()
@@ -72,8 +78,7 @@ def collect_findings_data():
     total = 0
 
     for f in REFERENCE_DIR.rglob("findings.json"):
-        # reference/{owner}/{repo}/{project}/findings.json
-        repo = f"{f.parts[-3]}/{f.parts[-2]}" if len(f.parts) >= 4 else f.parts[-2]
+        repo = _repo_of(f)
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
             findings = data.get("findings", [])
@@ -93,7 +98,7 @@ def collect_findings_per_repo():
     """Get distribution of findings per repo."""
     repo_counts = defaultdict(int)
     for f in REFERENCE_DIR.rglob("findings.json"):
-        repo = f"{f.parts[-3]}/{f.parts[-2]}" if len(f.parts) >= 4 else f.parts[-2]
+        repo = _repo_of(f)
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
             repo_counts[repo] += len(data.get("findings", []))
@@ -419,11 +424,9 @@ def generate_findings_distribution_svg():
             dist[bucket] += 1
 
     # Also count repos with 0 findings
-    all_repos = set()
-    for d in REFERENCE_DIR.iterdir():
-        if d.is_dir() and not d.name.startswith(".") and d.name not in (
-            "constants_registry.json", "constants_registry.md", "test_mpns.json"):
-            all_repos.add(d.name)
+    all_repos = {f"{o.name}/{r.name}" for o in REFERENCE_DIR.iterdir()
+                 if o.is_dir() and not o.name.startswith(".")
+                 for r in o.iterdir() if r.is_dir() and not r.name.startswith(".")}
     zero_count = len(all_repos) - len([r for r, c in repo_counts.items() if c > 0])
     dist[0] = zero_count
 

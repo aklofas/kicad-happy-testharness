@@ -99,16 +99,11 @@ def cross_reference(fp_groups, name_groups):
     for repo in sorted(both):
         if repo in seen:
             continue
-        # Find all repos that share a fingerprint AND name group with this one
-        cluster = {repo}
-        for fp_gid in fp_repo_groups[repo]:
-            for peer in fp_groups[fp_gid]:
-                if peer in both:
-                    cluster.add(peer)
-        for name_gid in name_repo_groups[repo]:
-            for peer in name_groups[name_gid]:
-                if peer in both:
-                    cluster.add(peer)
+        # Peers that share a fingerprint group AND a name group with this one (the union
+        # also took repos that matched on only one signal)
+        fp_peers = {p for g in fp_repo_groups[repo] for p in fp_groups[g]}
+        name_peers = {p for g in name_repo_groups[repo] for p in name_groups[g]}
+        cluster = {repo} | (fp_peers & name_peers & both)
         if len(cluster) >= 2:
             confirmed.append(sorted(cluster))
             seen.update(cluster)

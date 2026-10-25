@@ -173,10 +173,10 @@ def _collect_outputs(repo):
                     d = json.loads(sup_path.read_text(encoding="utf-8"))
                     has_content = False
                     if sup_type == "spice":
+                        # current reports carry a flat simulation_results list (one item per
+                        # subcircuit); an item with a nested "simulations" list is the old shape
                         sims = d.get("simulation_results", [])
-                        has_content = any(
-                            s.get("simulations", []) for s in sims
-                        ) if sims else bool(d.get("simulations", []))
+                        has_content = bool(sims) or bool(d.get("simulations", []))
                     elif sup_type == "emc":
                         has_content = len(d.get("findings", [])) > 0
                     if has_content:
