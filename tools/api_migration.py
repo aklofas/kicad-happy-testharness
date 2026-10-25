@@ -15,6 +15,7 @@ import argparse
 import ast
 import fnmatch
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -498,6 +499,44 @@ def check(dispositions: dict, harness_imports: list[dict], blind: set | None = N
     return violations
 
 
+def _defined_names(path: Path) -> set | None:
+    """Top-level names a module defines or imports (None when it cannot be parsed)."""
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError, UnicodeDecodeError):
+        return None
+    names = set()
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            names.add(node.name)
+        elif isinstance(node, (ast.Assign, ast.AnnAssign)):
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            names |= {t.id for t in targets if isinstance(t, ast.Name)}
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            names |= {(a.asname or a.name).split(".")[0] for a in node.names}
+    return names
+
+
+def missing_destinations(dispositions: dict, product_root: Path) -> list[str]:
+    """`done` migrations whose destination does not exist in the product: the new owner file,
+    and the symbol in it (module-level `<module>` entries need only the file)."""
+    out = []
+    for e in dispositions["entries"]:
+        if e.get("status") != "done" or not e.get("new_owner"):
+            continue
+        dest = Path(product_root) / e["new_owner"]
+        name = e.get("new_name") or e["symbol"]
+        if not dest.is_file():
+            out.append(f"{e['module']}.{e['symbol']} done -> {e['new_owner']}: file missing")
+            continue
+        if name == "<module>":
+            continue
+        names = _defined_names(dest)
+        if names is None or name.split(".")[0] not in names:
+            out.append(f"{e['module']}.{e['symbol']} done -> {e['new_owner']}: {name} not defined there")
+    return out
+
+
 def cmd_status(args) -> int:
     d = json.loads(Path(args.dispositions).read_text(encoding="utf-8"))
     by = {}
@@ -559,10 +598,17 @@ def cmd_check(args) -> int:
     imports = scan_harness_imports(HARNESS_ROOT)
     live = {tuple(k) for k in blind_symbols(load_inventory(), imports, HARNESS_ROOT, aliases=done_aliases(d))}
     v = check(d, imports, load_blind_list(args.blind_list) | live)
+    if args.product:
+        v += missing_destinations(d, args.product)
     for line in v:
         print(f"  {line}")
     print("CLEAN" if not v else f"FAIL ({len(v)} violations)")
     return 0 if not v else 1
+
+
+def _default_product():
+    env = os.environ.get("KICAD_HAPPY_DIR")
+    return Path(env) if env else None
 
 
 def main(argv=None) -> int:
@@ -581,6 +627,9 @@ def main(argv=None) -> int:
     p = sub.add_parser("check")
     p.add_argument("--dispositions", type=Path, default=DISPOSITIONS_PATH)
     p.add_argument("--blind-list", type=Path, default=BLIND_LIST_PATH)
+    p.add_argument("--product", type=Path, default=_default_product(),
+                   help="product tree whose migration destinations must exist "
+                        "(default: $KICAD_HAPPY_DIR when set)")
     args = ap.parse_args(argv)
     return {"init-dispositions": cmd_init, "status": cmd_status,
             "apply-map": cmd_apply_map, "check": cmd_check}[args.cmd](args)

@@ -450,3 +450,21 @@ def test_module_site_mentioning_only_the_script_file_is_gone_not_blind(tmp_path)
     (tmp_path / "tests" / "b.py").write_text("import analyze_pcb\n", encoding="utf-8")
     assert am._still_referenced(tmp_path, "analyze_pcb", "<module>", ["tests/a.py"]) is False
     assert am._still_referenced(tmp_path, "analyze_pcb", "<module>", ["tests/b.py"]) is True
+
+
+def test_check_verifies_migration_destinations_exist(tmp_path):
+    """ruling R15 (code A5-F1): a `done` migration to a file or symbol that does not exist
+    passed `check` whenever the harness had moved its imports."""
+    import api_migration as am
+    (tmp_path / "pcb").mkdir()
+    (tmp_path / "pcb" / "dfm.py").write_text("MIN_REAL_DRILL_MM = 0.2\nfrom x import helper\n")
+    d = {"entries": [
+        {"module": "analyze_pcb", "symbol": "MIN_REAL_DRILL_MM", "status": "done", "new_owner": "pcb/dfm.py"},
+        {"module": "analyze_pcb", "symbol": "helper", "status": "done", "new_owner": "pcb/dfm.py"},
+        {"module": "analyze_pcb", "symbol": "Gone", "status": "done", "new_owner": "pcb/dfm.py"},
+        {"module": "analyze_pcb", "symbol": "<module>", "status": "done", "new_owner": "pcb/pipeline.py"},
+        {"module": "analyze_pcb", "symbol": "Kept", "status": "todo", "new_owner": "pcb/nowhere.py"},
+    ]}
+    assert am.missing_destinations(d, tmp_path) == [
+        "analyze_pcb.Gone done -> pcb/dfm.py: Gone not defined there",
+        "analyze_pcb.<module> done -> pcb/pipeline.py: file missing"]
