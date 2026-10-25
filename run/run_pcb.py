@@ -33,20 +33,21 @@ def _summarize(data):
     return f"footprints={s.get('footprint_count', 0)} tracks={s.get('track_segments', 0)}"
 
 
-if __name__ == "__main__":
-    # Defaults: pass --full and --proximity. Opt out with --no-full / --no-proximity.
+def normalize_pcb_argv(argv):
+    """Return (remaining_argv, extra_args): --full/--proximity default on, opt out with
+    --no-full / --no-proximity; explicit --full / --proximity are redundant and dropped."""
+    argv = list(argv)
     extra = ["--full", "--proximity"]
-    if "--no-full" in sys.argv:
-        sys.argv.remove("--no-full")
-        extra.remove("--full")
-    if "--no-proximity" in sys.argv:
-        sys.argv.remove("--no-proximity")
-        extra.remove("--proximity")
-    # Backward compat: explicit --full / --proximity are redundant but harmless.
-    for flag in ("--full", "--proximity"):
-        while flag in sys.argv:
-            sys.argv.remove(flag)
+    for opt_out, flag in (("--no-full", "--full"), ("--no-proximity", "--proximity")):
+        if opt_out in argv:
+            argv.remove(opt_out)
+            extra.remove(flag)
+    argv = [a for a in argv if a not in ("--full", "--proximity")]
+    return argv, extra
 
+
+if __name__ == "__main__":
+    remaining, extra = normalize_pcb_argv(sys.argv[1:])
     run_analyzer({
         "type_name": "pcb",
         "analyzer_script": "analyze_pcb.py",
@@ -54,4 +55,4 @@ if __name__ == "__main__":
         "output_subdir": "pcb",
         "summarize": _summarize,
         "extra_args": extra,
-    })
+    }, argv=remaining)

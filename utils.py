@@ -566,8 +566,9 @@ def run_analyzer(config, args=None, argv=None):
         output_subdir:   Output subdir (e.g., "schematic")
         summarize:       callable(json_data) -> str, extracts summary from output
     """
+    argv = sys.argv[1:] if argv is None else list(argv)
     if args is None:
-        args = build_batch_parser(config["type_name"]).parse_args()
+        args = build_batch_parser(config["type_name"]).parse_args(argv)
 
     batch_config = _batch.BatchConfig(
         type_name=config["type_name"], analyzer_script=config["analyzer_script"],
@@ -587,6 +588,6 @@ def run_analyzer(config, args=None, argv=None):
     repo_list, selection_source = resolve_repos_with_source(args, require_explicit_all=True)
     rc = _batch.run_batch(batch_config, settings, paths, repo_list=repo_list,
                           selection_source=selection_source,
-                          argv=tuple(sys.argv[1:] if argv is None else argv))
+                          argv=tuple(argv))
     if rc:
         sys.exit(rc)
