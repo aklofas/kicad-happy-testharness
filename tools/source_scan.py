@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Shared recursive source walker for every harness scanner.
 
-Owns: finding emit-site extraction under the literal-tag policy
-(tools/SCANNER_POLICY.md), the exception ledger (tools/scan_exceptions.json)
-and the coverage snapshot / diff used by `check`. File discovery, root-relative paths and parsing come from
-harnesslib.source_audit.sources (re-exported here). Never imports or evals product
-code: ast only.
+Owns: product file discovery, root-relative paths, finding emit-site
+extraction under the literal-tag policy (tools/SCANNER_POLICY.md), the
+exception ledger (tools/scan_exceptions.json) and the coverage snapshot /
+diff used by `check`. Never imports or evals product code: ast only.
 """
 from __future__ import annotations
 
@@ -18,6 +17,8 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# File discovery, root-relative paths and parsing live in harnesslib.source_audit.sources
+# and are re-exported here.
 from harnesslib.source_audit import constants as _constants_engine  # noqa: E402
 from harnesslib.source_audit import equations as _equations_engine  # noqa: E402
 from harnesslib.source_audit.sources import (  # noqa: E402,F401  (re-exported)
