@@ -77,7 +77,8 @@ def _copy_drift_root(dest):
 def _dispositions(ff):
     out = {}
     for f in json.loads(ff.read_text())["findings"]:
-        out[f["id"]] = {t: [i.get("disposition", {}).get("state") for i in f[t]]
+        out[f["id"]] = {t: [[i["disposition"]["state"], i["disposition"]["by"]] if "disposition" in i else None
+                            for i in f[t]]
                         for t in ("correct", "incorrect", "missed")}
     return out
 
@@ -89,3 +90,5 @@ def test_cleanup_and_refresh_apply_match_golden(tmp_path, tool):
     _run(tmp_path, *tool)
     golden = json.loads((FIXTURE / "drift_apply_golden.json").read_text())
     assert _dispositions(ff) == golden[tool[0]]
+    kept = json.loads(ff.read_text())["findings"][0]["incorrect"][4]["disposition"]
+    assert kept == {"state": "possibly_fixed", "by": "manual", "date": "2026-01-01"}
