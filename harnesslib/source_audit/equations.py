@@ -158,7 +158,7 @@ def find_untagged(filepath, source_text=None, product_root=None):
         if not func_src:
             continue
 
-        indicators = [ind for ind in MATH_INDICATORS if ind in func_src]
+        indicators = sorted(ind for ind in MATH_INDICATORS if ind in func_src)
         if len(indicators) >= 1:
             untagged.append({
                 "function": node.name,

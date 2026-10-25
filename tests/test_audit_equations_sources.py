@@ -61,3 +61,27 @@ def test_untagged_command_exits_2_on_an_unparsable_file(tmp_path, monkeypatch):
     with pytest.raises(SystemExit) as ex:
         ae.cmd_untagged(type("A", (), {})())
     assert ex.value.code == 2
+
+
+def test_untagged_indicators_do_not_depend_on_hash_seed(tmp_path):
+    import json
+    import os
+    import subprocess
+    p = _write(tmp_path, b"import math\n"
+                         b"def f(x):\n"
+                         b"    return (math.sqrt(x) + math.log(x) + math.pi + math.sin(x)\n"
+                         b"            + math.cos(x) + math.exp(x) + x**2 + 1e-9)\n")
+    code = ("import sys, json; sys.path.insert(0, %r);"
+            "import audit_equations as ae;"
+            "from pathlib import Path;"
+            "print(json.dumps(ae.find_untagged(Path(%r), product_root=Path(%r))))"
+            % (str(HARNESS / "validate"), str(p), str(tmp_path)))
+    outs = set()
+    for seed in ("0", "1", "2", "3"):
+        r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                           env=dict(os.environ, PYTHONHASHSEED=seed))
+        assert r.returncode == 0, r.stderr
+        outs.add(r.stdout)
+    assert len(outs) == 1
+    indicators = json.loads(outs.pop())[0]["indicators"]
+    assert indicators == sorted(indicators)

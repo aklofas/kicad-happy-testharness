@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-094: `audit_equations.py untagged` output order depended on PYTHONHASHSEED
+
+**Severity:** LOW
+**File:** `harnesslib/source_audit/equations.py` (`find_untagged`, `MATH_INDICATORS`)
+**Discovered:** 2026-10-25 (wave 10 final review). **Fixed:** 2026-10-25.
+
+- **Root cause:** the indicator list was built by iterating the frozenset `MATH_INDICATORS`, and the report prints the first three, so identical code could print different indicators for the same function under different hash seeds.
+- **Fix:** the indicators are sorted when collected.
+- **Verification:** `test_untagged_indicators_do_not_depend_on_hash_seed` (subprocesses under PYTHONHASHSEED 0-3 on a function with 8 indicators) fails before (4 distinct outputs) and passes after. On `product_07b7fb1` the read-only `untagged` report differs from the PYTHONHASHSEED=0 run only in the indicator text of 5 rows (the printed three are now the first three alphabetically); `list` is unchanged.
+
 ## 2026-10-25 — TH-092: `audit_equations.py` read product sources as UTF-8 text and `find_untagged` swallowed unparsable files
 
 **Severity:** LOW
