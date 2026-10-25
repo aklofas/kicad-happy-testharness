@@ -11,6 +11,156 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — KH-563: `fab_release_gate` reads producer keys that no longer exist, so missing layers and EMC errors pass, and a mistyped optional input path still gives PASS under `--strict`
+
+**Severity:** HIGH (the release GO signal; every real gerber and EMC input)
+**File:** `skills/kicad/scripts/fab_release_gate.py:241` (`check_layer_completeness` reads `completeness.missing_layers`); `:316` (`check_emc` reads a flat `critical` count); `:572-575` (`_load`), `:578` (`run_gate`); `:294` (thermal `f.get("components", ["?"])[0]`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R10-F1, kc/R10-F9, kc/R10-F2, kc/R10-reg-thermalidx) **Fixed:** product v3.0.x-dev `dbf2b2b, 9ecc0f7` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** `analyze_gerbers.py` emits `missing` (gbrjob branch, `analyze_gerbers.py:738`) or `missing_required` / `missing_recommended` (defaults branch, `:755-756`). Nothing writes `missing_layers`: 0 of 5,449 corpus gerber outputs carry it, while 656 have a non-empty missing list. `run_gate` with `missing_required: ['Edge.Cuts']` reports layer_completeness "pass — All expected layers present". EMC: the producer writes `summary.by_severity` (`analyze_emc.py:592-602`), so `check_emc` with `by_severity.error = 4` returns pass on every real EMC input. A mistyped `--gerbers` / `--thermal` / `--emc` path makes `_load` return None, the check becomes "skip", and `--strict` still gives PASS. A thermal error finding with `components: []` raises IndexError at `:294`.
+- **Fix:** The gate reads `missing` / `missing_required` and `summary.by_severity.error`; exit 1 on a FAIL verdict, 0 on PASS/WARN, 2 for an explicitly given path that is missing, unreadable or empty JSON (ruling 5); an empty `components` list no longer raises. Harness `tests/test_downstream_tools.py::test_fab_gate_backward_compat` adopted: rc 0 or 1, and 1 exactly when `overall_status` is FAIL. Product full-chain estimate: 266 / 300 units gain an `emc_risk` warn, verdict unchanged.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-564: gerber completeness (defaults branch) requires only the inner copper layers it found, so a missing inner layer reports `complete: True`
+
+**Severity:** HIGH (default path without a `.gbrjob`; 3,475 of 5,449 corpus gerber outputs; a missing inner layer is fab-fatal)
+**File:** `skills/kicad/scripts/analyze_gerbers.py:746-747` (`check_completeness` defaults branch); `layer_count` inferred at `:1219-1232` and never passed in
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R10-F3) **Fixed:** product v3.0.x-dev `57745d5, 8db8e73` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** `check_completeness([..., 'In1.Cu', ...], [PTH])` for a 4-layer set missing `In2.Cu` returns `complete: True, missing_required: []`. The required set is built from the inner layers present, not from the board's layer count.
+- **Fix:** Inner copper implied by the positional stackup is required; inner files without X2 count toward the implied layers and only the shortfall is reported missing; uppercase `.GL<n>` files are found. Corpus (FULL standard): 15 gerber units complete -> incomplete, GR-001 +112; 29 units read new `.GL<n>` files (GR-002 +32 / -1, see KH-484 addendum).
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-565: GR-005 "open board outline" fires at error severity on closed round boards because it counts draws instead of checking closure
+
+**Severity:** HIGH (default path; 54 of the 55 corpus Edge.Cuts files with 1-3 D01 draws are arc outlines)
+**File:** `skills/kicad/scripts/analyze_gerbers.py:1531-1537` (draw-count heuristic)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R10-F8) **Fixed:** product v3.0.x-dev `57745d5` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** a round board drawn as one or two arcs has fewer than the threshold number of draws, so it gets an error-severity GR-005. Example: the corpus output `AlpenglowIndustries/Alpenglow_RadiantRainbow_PCB/Gerbers.json` carries GR-005 on a closed 53.68 mm round board. Corpus-wide there are 66 GR-005 findings.
+- **Fix:** GR-005 tests outline closure (0.025 mm tolerance, ruling W2-2) instead of the draw count. Corpus (FULL standard): GR-005 -66 / +64 (survey estimate -66 / +51). Follow-ups filed as KH-657.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-566: cross-analysis CC-001 / EG-001 / DA-001 / TW-001 read producer keys no analyzer emits, so they emit 0 findings on every real input (and cross_verify's decoupling check never matches)
+
+**Severity:** HIGH (default cross-analysis path; dead on 100 % of 331 real corpus sch+pcb pairs)
+**File:** `skills/kicad/scripts/cross_analysis.py:246,254,705` (CC-001 / TW-001 read PCB `pads` and top-level `estimated_iout_A`); `:313` (EG-001 reads top-level `pin_net`); `:371-386,410` (DA-001 reads `per_rail` / `rails` / `ics` / `ic_count` / `ic_ref`, and only `decoupling_list[0]`); `skills/kicad/scripts/cross_verify.py:422` (rail name used as `ic_ref`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R11-F1, kc/R11-F2, kc/R11-F3, kc/R11-F11) **Fixed:** product v3.0.x-dev `c2a19c7, 1c63930` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** these are the producer shapes today: - `pcb/presentation.py:156` strips `pads` and emits `pad_nets` (191/191 corpus PCB outputs have `pad_nets`, 0 have `pads`). - `signal_detectors.py:2188-2192` nests `estimated_iout_A` under `power_dissipation` (117 of 505 regulator findings carry the nested key, 0 the top-level one). - No schematic producer emits top-level `pin_net`. Components carry `pin_nets` (`schematic/presentation.py:158`): 0 of 1,288 corpus outputs have `pin_net`, 1,210 have `pin_nets`. - DC-DET emits one record per rail with `rail` / `capacitors` / `cap_count` (`signal_detectors.py:1226-1236`). `run_all_checks` over 331 pairs: CC-001 ran 331× on 1,718 connectors with 0 findings; EG-001 ran 331× with 0 findings; DA-001 ran 173× and examined 0 items; TW-001 never ran ("no power regulator current estimates"). cross_verify's `(ic, cap)` lookup into PCB `decoupling_placement` (`pcb/assembly.py:109-112`) can never hit.
+- **Fix:** CC-001 / EG-001 / DA-001 / TW-001 read the keys the analyzers write; EG-001 is info; sheet-qualified grounds and power rails are skipped; the width table interpolates from 0 A. Corpus (FULL standard, no proximity): 18,653 cross_analysis units / 4,375 repos move — EG-001 +12,915 (info), DA-001 +3,347; CC-001 / TW-001 appear in the full-chain profile only (see status.md). The `cross_verify` decoupling half is NOT fixed here: it goes with the keep/retire decision, KH-661. Follow-ups KH-656 (EG-001) and KH-658 (CC-001 / TW-001).
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-567: DP-005 diff-pair matching accepts `…P`/`…N` only, so USB `DP`/`DM` pairs are never paired
+
+**Severity:** MEDIUM (warning-level DP-005; 5 of 4,000 sampled corpus schematics have differential `…DM` nets, all left unpaired)
+**File:** `skills/kicad/scripts/cross_analysis.py:904-910` (`_find_diff_pairs` patterns)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R11-F7) **Fixed:** product v3.0.x-dev `c2a19c7` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** `USB_DP` matches `(.+)[_]?P$` with base `USB_D`, so the code looks for `USB_DN`. No pattern accepts `…DM`, yet the schematic producer pairs DP/DM (`schematic/net_analysis.py:1186`) and PR-004 marks them differential (`schematic/pipeline.py:289-292`). Affected corpus examples: xDuinoRail, am64x, usb-sniffer-lite, RLCMeterH750.
+- **Fix:** DP-005 pairs `DP`/`DM` (and `…P`/`…N`). Corpus: see the full-chain line in status.md (product estimate <= 1).
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-568: thermal costs a current-sense shunt at the hypothetical 100 mV full-scale current and labels it `deterministic`, so a misdetected pF capacitor reports 2e9 W and Tj 3e11 °C
+
+**Severity:** HIGH (default thermal path; 453 shunt assessments in 21,298 corpus thermal outputs, 135 of them above 1 W)
+**File:** `skills/kicad/scripts/analyze_thermal.py:313-327` (shunt dissipation); producer `signal_detectors.py:1422-1423` (`detect_current_sense` 50/100 mV full-scale currents)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R11-F6) **Fixed:** product v3.0.x-dev `f01e435` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** thermal computes P = (0.1/R)²·R = 0.01/R. A 1 mΩ shunt gives 10 W, and in a 2512 package at 40 °C/W that is Tj = 425 °C (checked by hand). A capacitor misdetected as a shunt ("12 pF" read as 1.2e-11 Ω) gives 8.3e9 A, pdiss 2e9 W and Tj 3e11 °C (bit-preserve C64, Flipper_Zero_DIY). Findings on shunt refs: 150 TS-001, 26 TS-002, 29 TS-003.
+- **Fix:** A current-sense shunt with no operating current is skipped with `reason: no_operating_current` instead of being costed at the 100 mV full-scale current. Corpus (FULL standard): 270 thermal units / 179 repos — 455 shunt assessments removed, 1,256 findings removed, `thermal_score` moved on 212 units (survey estimate 452 assessments / 249 outputs). The `RF-C10`-style capacitor typed `resistor` that produced the 2e9 W case is filed separately as KH-654; it no longer reaches thermal.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-569: `_classify_package` patterns match in the wrong order, so MSOP/TSSOP get SOP θJA and `SOP.*8` catches SSOP-28 and SOIC-14
+
+**Severity:** MEDIUM (declared heuristic table; matters when dissipation is about 0.3 W or more in small packages)
+**File:** `skills/kicad/scripts/analyze_thermal.py:95-102,137-141` (`_PACKAGE_PATTERNS` order, `_classify_package`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R11-F4) **Fixed:** product v3.0.x-dev `f01e435, 64abd32` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** MSOP-8 → `('SOP-8', 120)`, TSSOP-8 → `('SOP-8', 120)`, TSSOP-20 / TSSOP-14 / MSOP-10 → `('SOP', 100)`. `SOP.*8` matches SSOP-28 and any name with a later "8" (`SOIC-14_3.9x8.7mm`). A typical MSOP-8 θJA is about 180-210 °C/W, so at 0.6 W Tj is underestimated by about 40 °C (97 vs 145 °C, checked by hand).
+- **Fix:** Package patterns are ordered so MSOP / TSSOP / SSOP / SOIC-14 get their own theta-JA; VSSOP takes the MSOP row; exposed-pad variants stay generic. Corpus (FULL standard): 21 assessments change package row (estimate ~21 of 2,149).
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-570: thermal `--text` report and `cross_verify.check_thermal_vias` read the retired `thermal_assessments` key, so the component table is missing and the counts print 0; a summary-only finding raises `KeyError: 'title'`
+
+**Severity:** HIGH (every current thermal output through the text reader; `check_thermal_vias` always returns `[]`)
+**File:** `skills/kicad/scripts/analyze_thermal.py:841,862-866,894` (`format_text_report`); `skills/kicad/scripts/cross_verify.py:561` (`check_thermal_vias`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R11-F8) **Fixed:** product v3.0.x-dev `f01e435` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** the producer emits `assessments` and `summary.by_severity` (`analyze_thermal.py:1139,1145`). Of 21,298 corpus thermal outputs, only 23 stale schema-less legacy files carry `thermal_assessments`. On a real current output, `format_text_report` omits the "Component Thermal Summary" table and prints HIGH/INFO counts of 0. A TJ-001-shaped finding (summary only, as `make_finding` builds it, `lookup_detectors.py:351-370`) raises `KeyError: 'title'`.
+- **Fix:** `format_text_report` reads `assessments` / `summary.by_severity` (the count line prints `ERROR:`; 3 product text artefacts re-frozen); `cross_verify.check_thermal_vias` reads `assessments`; a summary-only finding renders through `summary_or_title`.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-582: the Action "Top Risks" section and `summarize_findings` use legacy severity/confidence names, so Top Risks never renders and `datasheet-backed` findings are not counted
+
+**Severity:** MEDIUM (Action PR comment on every run; summary tool undercounts)
+**File:** `skills/kicad/scripts/project_config.py:899-901,932` (`compute_top_risks` weights keyed `HIGH`/…, `CONFIDENCE_WEIGHTS` uses `ai-inferred`), caller `action/format-report.py:178-198,487`; `skills/kicad/scripts/summarize_findings.py:153-160,187,206` (`_aggregate` confidence buckets and `--confidence` / `--evidence-source` choices)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R13-F4, kc/R12-F6; also `docs/audit/04-v3-security/findings/VERIFICATION.md` se/R2-reg-risk) **Fixed:** product v3.0.x-dev `8baeef7` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** `compute_top_risks([{severity: 'error', confidence: 'deterministic', category: 'thermal_safety'}])` leaves every bucket empty; with `'HIGH'` it scores. Current findings are lowercase `error/warning/info`, so the Action's Top Risks section never renders (checked on 400 harness EMC outputs whose categories do match the bucket sets). `_aggregate` on [datasheet-backed, heuristic] gives count 2 with `datasheet_backed 0`. `--confidence datasheet-backed` and `--evidence-source api_lookup` both exit "unknown". 182 corpus EMC outputs carry `datasheet-backed`. The comment at `summarize_findings.py:153` claims the vocabulary comes from finding_schema; the code does not.
+- **Fix:** Top Risks scores the canonical severities, so the Action report renders it (full-chain estimate 0/300 -> 300/300 reports; 3 product text artefacts gain `### Top Risks`); `summarize_findings` reads the schema's confidence and evidence vocabularies; the schematic histogram counts `error`. Minor: `--evidence-source simulation|user_config|lookup` is now a usage error, legacy `LOW` scores 0.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-584: CP-001 interpolates `list(set(nets))` into its description, so the text varies with the hash seed
+
+**Severity:** MEDIUM (multi-net CP-001 only; gate-invisible because the gate pins seed 0)
+**File:** `skills/kicad/scripts/pcb/copper.py:1022-1025,1068`; `finding_schema.py:425-428` (`sort_findings` sorts only `nets`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R9-F9) **Fixed:** product v3.0.x-dev `c40e135` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** `list(set(["AGND","DGND","GND"]))` order differs across PYTHONHASHSEED 0..5, and that order goes into `description`. There are 5 multi-net CP-001 findings in 3,023 sampled PCB outputs (e.g. Dodokamel2005/EPS- J1 `/+5V, GND`).
+- **Fix:** CP-001 lists foreign-zone nets sorted. Corpus (FULL standard): 10 pcb units / 9 repos, 71 CP-001 descriptions reworded (same words), plus their `top_issues` copies.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-591: Gerber `%TO.P` attributes take the previous pad's `%TO.N` net because KiCad emits P before N
+
+**Severity:** HIGH (systematic off-by-one on KiCad 6/7/8 output; reaches output only through `--full` gerber `connectivity`, which no product consumer reads)
+**File:** `skills/kicad/scripts/analyze_gerbers.py:184-191` (pin mapping attaches the current net at `%TO.P` time); output at `:1386-1399`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R10-F7) **Fixed:** product v3.0.x-dev `57745d5` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** KiCad 6.0.9 (PiEDB-Y15), 7 (Thinkpad-USB-keyboard) and 8 (ecg) all write `%TO.P` before `%TO.N` per pad. On a copy of PiEDB F_Cu, R11.1 gets net "" and R11.2 gets "Net-(D3-Pad5)", which is R11.1's real net. Named `TD` deletes appear in only 11 corpus files.
+- **Fix:** An X2 `%TO.P` pin takes its own `%TO.N` net (KiCad emits P before N); pins are recorded once per declaration so `x2_pin_count` is unchanged. `--full` only: no unit in the standard profile reads gerber connectivity.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-509: `netlist_queries.trace_through` / `components_within_hops` and the op-amp `fb_resistors` loop iterate sets — output order, first-match picks and op-amp gain vary with PYTHONHASHSEED [group 1]
+
+**Severity:** HIGH (default path, every schematic; breaks the Layer-1 byte-stable rule; seed-pinned gates cannot see it)
+**File:** `netlist_queries.py:194-201` (`trace_through` returns `_nets_by_comp`, a `set[str]`, in set order), `:285-286`, `:302` (`components_within_hops`); `signal_detectors.py:2690-2699` (`detect_opamp_circuits`, `for fb_ref in fb_resistors` over a set of str); first-match consumers `signal_detectors.py:1790-1797` (`_build_regulator_record`, `inductors = …; break`), `domain_detectors.py:3620-3627` → `:3695` (`_trace_clock_consumers` / clock distribution)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F9, kc/R5-F3 determinism half) **Fixed:** product v3.0.x-dev `c40e135` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** a synthetic six-output clock buffer gives four different consumer orders at PYTHONHASHSEED 0-3 (`['CLK_OUT5','CLK_OUT3',…]`, `['CLK_OUT0','CLK_OUT1',…]`, …). A regulator whose other nets carry more than one inductor gets `reg_info["inductor"]` by hash order. An inverting op-amp with two parallel feedback resistors reports gain −10 on four of seeds 0-7 and −20 on the other four (correct −6.667; the parallel value is KH-539). Same class as KH-366/367, a new location; distinct from KH-421, though the regulator inductor first-match may feed KH-421's U54 regulator-capacitor drift, so re-run Marble's seed sweep after the fix.
+- **Fix:** `trace_through` / `components_within_hops` return sorted lists and the op-amp feedback loop iterates sorted refs, so the regulator inductor pick, op-amp feedback parts and clock-consumer order no longer depend on PYTHONHASHSEED. Corpus at seed 0 (FULL standard): H1 regulator inductor / rail picks on 51 schematic units / 39 repos (55 regulators), H2 op-amp feedback parts on 9 units / 7 repos, CD-DET consumer order on 1 unit, plus 73 downstream emc / thermal / cross_analysis units. Most H1 records come from `PH0`/`PH1` GPIO pins read as a regulator SW pin, filed as KH-653.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-607: EMC ML-001 lists victims in set-iteration order, so finding order varies with PYTHONHASHSEED
+
+**Severity:** MEDIUM (default EMC path; order-only, invisible to the seed-0 gate)
+**File:** `skills/emc/scripts/emc_rules.py:4393` (`sensitive_refs = set()`), `:4426` (iterated unsorted into `sensitive`); no later sort (`run_all_checks` `:4589`, `analyze_emc.py:84` sorts only local per-rule lists)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R1-F7) — split from fix group 6 (different mechanism and budget from KH-608) **Fixed:** product v3.0.x-dev `c40e135` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** a synthetic board with L1 + Y1/Y2 + U5/U6 within 15 mm gives five different victim orders at PYTHONHASHSEED 0..4 (`['U5','Y2','U6','Y1']`, `['Y1','Y2','U5','U6']`, …). `finding_id` is content-derived and stable; the list order is not, which breaks the Layer-1 byte-stability rule. The gate pins seed 0 and cannot see it.
+- **Fix:** ML-001 victims are sorted. Corpus (FULL standard): 11 EMC units / 10 repos, 26 ML-001 findings re-bound to their `finding_id` slots (same findings, new order).
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-421: hash-seed nondeterminism on BerkeleyLab/Marble U54 (STM32F207) — PS-001 and a DO-DET "Regulator U54 missing capacitors" vary with PYTHONHASHSEED (539/538/537 findings at seeds 0/1/3)
+
+**Severity:** LOW-MEDIUM (pre-existing — identical at b008afa and 9fbbb26; KH-366/367 class; invisible to every harness gate because the gate pins `PYTHONHASHSEED=0`)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (PS-001 power-sequencing + DO-DET regulator-capacitor observation on U54; root cause `netlist_queries.trace_through` set order, see KH-509)
+**Discovered:** 2026-10-05, main-repo agent, KH-418 fix-wave determinism check (`follow-up-fix-wave-report.md`); filed by the harness 2026-10-06 **Fixed:** product v3.0.x-dev `c40e135` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** U54's `PH0`/`PH1` oscillator pins are read as a regulator SW pin (KH-653), and the inductor pick over its nets took the first entry of the set `trace_through` returned, so the U54 regulator record, its DO-DET capacitor observation and PS-001 changed with the hash seed.
+- **Fix:** Same root cause as KH-509 (`PH0` read as SW -> hash-ordered `trace_through` inductor pick on U54). Harness seed sweep on `BerkeleyLab/Marble/design/Marble.kicad_sch` (seeds 0-3, `results/v30x_w2_gate_aux/kh421_marble_seed_sweep.txt`): baseline `63f6a20` 535 / 534 / 535 / 533 findings with 4 distinct outputs; candidate `004bba5` 533 findings and one identical output at all four seeds.
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`.
+
+## 2026-10-25 — KH-655: EMC test-plan protocol, op-amp two-hop feedback and what_if parasitics / SPICE key order depended on the hash seed
+
+**Severity:** LOW (order and first-match picks under non-zero seeds; seed-pinned gates cannot see it)
+**File:** `skills/emc/scripts/emc_rules.py` (test plan `interface_risks` protocol per connector), `skills/kicad/scripts/signal_detectors.py` (op-amp 2-hop feedback via a mid net), `skills/kicad/scripts/what_if.py` (`_extract_parasitics`, `spice_deltas` key order)
+**Discovered:** 2026-10-25, product 3.0.x Wave 2 hash-seed sweep (sites outside the audit list, fixed on discovery) **Fixed:** product v3.0.x-dev `c40e135` (3.0.x Wave 2, unreleased).
+
+- **Root cause:** set iteration reached output: a connector carrying mixed pair types took the protocol of whichever pair came first; the 2-hop feedback path took the first resistor found; what_if parasitics and SPICE delta keys followed set order.
+- **Fix:** sorted iteration; the test plan takes the riskiest protocol per connector (rank tie-break by name).
+- **Verification:** Product-side: `tools/tests` 504 OK (4 jsonschema skips); `check_refactor.py quick` vs the `2a9f998` baseline 8/8 OK (0 fixture JSON deltas, 6 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; seed A/B 28 boards x seeds 0-3 = 0 deltas. Harness: Wave 2 gate `63f6a20`..`004bba5` (FULL standard budgeted clean, full-chain, spice-offline, distributor-offline, text oracle both ways) — see status.md; per-class magnitudes `results/v30x_w2_gate/class_summary.json`. Corpus: H5 test-plan class 0 units in the standard profile; what_if has no corpus profile.
+
 ## 2026-10-25 — TH-093: assertion-count helpers crashed on a bare-list assertion file
 
 **Severity:** LOW
