@@ -298,3 +298,11 @@ def test_kicad_core_modules_reach_every_analyzer_family():
     assert map_file_to_types("skills/kicad/scripts/kicad_core/render.py") == every
     assert map_file_to_types("skills/kicad/scripts/kicad_core/cli.py") == every
     assert map_file_to_types("skills/kicad/scripts/kicad_core/parts.py") == every
+
+
+def test_graph_impact_does_not_shadow_the_core_rule():
+    """code A5-F2: a non-empty graph result replaced the kicad_core/ all-families rule."""
+    from detect_changes import affected_types_for
+    f = "skills/kicad/scripts/kicad_core/parts.py"
+    got = affected_types_for(f, {f: {"emc", "schematic"}})
+    assert got == {"schematic", "pcb", "gerber", "spice", "emc", "thermal"}

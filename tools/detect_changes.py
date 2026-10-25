@@ -104,6 +104,13 @@ def map_file_to_types(filepath):
     return set()
 
 
+def affected_types_for(filepath, impact):
+    """The import graph's impact UNION the explicit path rules: a non-empty graph result must
+    not shadow a broader rule (kicad_core/ is in scope for every family even when the graph
+    reaches it from only some entry points)."""
+    return set(impact.get(filepath, set())) | set(map_file_to_types(filepath))
+
+
 def get_changed_functions(kicad_happy_dir, filepath, since="HEAD~1"):
     """Extract function names that changed between since and HEAD.
 
@@ -498,7 +505,7 @@ def main():
     affected_types = set()
     file_details = []
     for filepath in files:
-        types = set(impact.get(filepath, set())) or set(map_file_to_types(filepath))
+        types = affected_types_for(filepath, impact)
         funcs = get_changed_functions(kicad_happy, filepath, args.since)
         parse_incomplete = funcs is None
         if parse_incomplete:
