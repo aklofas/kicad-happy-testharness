@@ -1,0 +1,81 @@
+{
+  "budget_id": "v30x-wave2-full-chain",
+  "baseline_sha": "63f6a20",
+  "candidate_sha": "004bba5",
+  "profile": "full-chain",
+  "normalization_policy": "volatile-leaves-v1",
+  "classes": [
+    {
+      "id": "G2-gerber",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:g2",
+      "evidence": "G2a/b/c: inner copper implied by the positional stackup is required (GR-001, completeness); uppercase .GL<n> inner files read (gerbers/statistics/alignment, GR-002 on panelized boards); GR-005 by outline closure. Findings move only on GR-001/002/005; non-finding movement only under completeness/alignment/gerbers/statistics/pad_summary; derived blocks recomputed both sides. KH-564/565/591. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "gerber"
+    },
+    {
+      "id": "G3-cross",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:g3",
+      "evidence": "G3: CC-001/EG-001(info)/DA-001/TW-001/DP-005 read real keys; findings move only on those rules; checks_run moves only on items_examined/findings/ran/reason_skipped of those checks; derived blocks recomputed. KH-566/567. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "cross_analysis"
+    },
+    {
+      "id": "G4-thermal",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:g4",
+      "evidence": "G4a: shunts with no operating current skipped (reason no_operating_current); G4b: MSOP/TSSOP/SSOP/SOIC-14/VSSOP package-row order. Every moved assessment/finding names a skipped shunt or a ref whose assessment changed only in package/rtheta/tj/margin text; trust/audience recomputed. KH-568/569/570. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "thermal"
+    },
+    {
+      "id": "H1-regulator-inductor",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:h1",
+      "evidence": "H1: regulator inductor pick via sorted trace_through; a PR-DET inductor/output_rail changed and every other moved finding names that regulator, its inductors (either side) or its rails; power blocks follow. KH-509/KH-421. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "schematic"
+    },
+    {
+      "id": "H2-opamp-feedback",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:h2",
+      "evidence": "H2: OA-DET feedback parts / gain from sorted candidates. KH-584. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "schematic"
+    },
+    {
+      "id": "H3-cp001-text",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:h3",
+      "evidence": "H3: CP-001 description lists foreign-zone nets sorted (same words). KH-607. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "pcb"
+    },
+    {
+      "id": "H4-ml001-victims",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:h4",
+      "evidence": "H4: ML-001 victims sorted; finding_id<->victim re-binding (same findings, new order) or same victim multiset. KH-620 order half. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "emc"
+    },
+    {
+      "id": "H5-test-plan",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:h5",
+      "evidence": "H5: test_plan.interface_risks protocol/order only. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "emc"
+    },
+    {
+      "id": "H6-order-only",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:h6",
+      "evidence": "H6: order-only list fields (CD-DET consumers). KH-581/579 order halves. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md",
+      "analyzer": "schematic"
+    },
+    {
+      "id": "DS-downstream",
+      "path_glob": "/**",
+      "predicate": "v30x_wave2:ds",
+      "evidence": "Chained emc/thermal/cross_analysis units whose upstream schematic or pcb unit has strict deltas, claimed only when that upstream unit is itself explained by H1/H2/H3/H6 (downstream EMC/thermal/cross incl. RP-002, ML-001, SW-003). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave2/handoff-wave2.md"
+    }
+  ],
+  "unexplained_deltas_allowed": 0,
+  "unexplained_missing_units_allowed": 0,
+  "relock": false
+}

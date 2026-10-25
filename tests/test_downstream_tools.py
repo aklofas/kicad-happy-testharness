@@ -175,7 +175,10 @@ def test_fab_gate_backward_compat():
         sch = _write_json(_make_empty(), td, "sch.json")
         pcb = _write_json(_make_pcb(), td, "pcb.json")
         r = _run([FAB_GATE, "--schematic", sch, "--pcb", pcb])
-        assert r.returncode == 0, f"Crash: {r.stderr[:300]}"
+        # exit 1 on a FAIL verdict, 0 on PASS/WARN; 2 stays a usage error
+        assert r.returncode in (0, 1), f"Crash: {r.stderr[:300]}"
+        gate = json.loads(r.stdout)
+        assert (r.returncode == 1) == (gate["overall_status"] == "FAIL")
 
 
 # === summarize_findings.py ===
