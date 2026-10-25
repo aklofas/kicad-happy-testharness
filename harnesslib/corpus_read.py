@@ -27,8 +27,7 @@ def assertion_prefix(aid: str, no_dash: str = "OTHER") -> str:
 
 
 def assertion_items(data) -> list:
-    """The assertion dicts of a loaded assertion file, which is either an object with an
-    ``assertions`` key or a bare list of assertions."""
-    if isinstance(data, list):
-        return data
+    """The assertion dicts of a loaded assertion file. Only an object file carries them: a
+    bare list loads as an error in ``checks.load_assertions`` and runs no assertions, so it
+    contributes none here."""
     return data.get("assertions", []) if isinstance(data, dict) else []

@@ -41,7 +41,7 @@ def _count_assertions():
     aspirational = 0
     for f in DATA_DIR.rglob("assertions/*/*.json"):
         data = safe_load_json(f, {})
-        if not data:
+        if not data or not isinstance(data, dict):
             continue
         total_files += 1
         for a in assertion_items(data):
