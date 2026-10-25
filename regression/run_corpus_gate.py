@@ -25,7 +25,9 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
       output-changing  required    census_ok AND skips_ok AND budgeted verdict clean
                                    AND candidate_failures == 0
       relock           required    same as output-changing
-    candidate_failures (baseline ok, candidate failed/no output) are never budgetable.
+    Every kind also needs worker_exceptions == 0 and compared_units > 0.
+    candidate_failures (baseline ok, candidate failed/no output) and
+    worker_exceptions (a worker that raised) are never budgetable.
     For the output-changing kinds the findings strict_clean stays in gate_pass
     as information only. `--kind gate` is a deprecated alias for structural.
     gate_pass records the resolved `kind` and its `criterion`; the sha256 of
@@ -223,11 +225,15 @@ def phase_a_job(args):
     return rec
 
 
+class PreflightError(ValueError):
+    """The run's inputs cannot support a gate (exit 2 before any unit runs)."""
+
+
 def _load_manifest(analyzer, repos):
     path = MANIFESTS_DIR / MANIFEST_FILE[analyzer]
     if not path.exists():
-        print(f"  WARN: manifest {path} missing", file=sys.stderr)
-        return []
+        # an absent manifest would drop the analyzer from both the jobs and the census
+        raise PreflightError(f"manifest {path} missing for profile analyzer {analyzer}; run discover.py")
     lines = [l.strip() for l in path.read_text(encoding="utf-8").splitlines() if l.strip()]
     if repos is None:
         return lines
@@ -249,6 +255,16 @@ def build_phase_a_jobs(repos, layout, baseline_dir, candidate_dir, profile):
             jobs.append((analyzer, input_path, repo, str(baseline_dir), str(candidate_dir),
                          str(layout.root), profile.name))
     return jobs
+
+
+def duplicate_unit_keys(a_jobs) -> list[str]:
+    """(analyzer, repo, safe_name) keys shared by more than one input: safe_name flattens
+    `/` to `_`, so two such inputs would share one snapshot path and one unit id."""
+    seen = defaultdict(list)
+    for j in a_jobs:
+        seen[(j[0], j[2], safe_name(j[1]))].append(j[1])
+    return sorted(f"{a}/{repo}/{key}: {', '.join(sorted(paths))}"
+                  for (a, repo, key), paths in seen.items() if len(paths) > 1)
 
 
 def expected_census(a_jobs) -> dict[str, int]:
@@ -497,10 +513,13 @@ def resume_plan(layout, spec, input_shas=None):
     return reusable, []
 
 
+WORKER_EXCEPTION_REASON = "worker_exception"
+
+
 def _exception_record(analyzer, repo, unit_id, exc):
-    """A worker that raised is a FAIL unit, not a dead run (report I2)."""
+    """A worker that raised is a FAIL unit, not a dead run; it blocks gate_pass for every kind."""
     return {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
-            "verdict": "FAIL", "reason": "worker_exception",
+            "verdict": "FAIL", "reason": WORKER_EXCEPTION_REASON,
             "detail": f"{type(exc).__name__}: {exc}", "baseline": None, "candidate": None}
 
 
@@ -653,11 +672,20 @@ def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census
         ledgered, unledgered, unaccepted = split_bad_skips(skip_records, ledger)
     cand_fail = sum(1 for r in skip_records or () if r.get("verdict") == "FAIL"
                     and r.get("reason") == CANDIDATE_FAILED_REASON)
+    worker_exc = sum(1 for r in skip_records or () if r.get("verdict") == "FAIL"
+                     and r.get("reason") == WORKER_EXCEPTION_REASON)
+    # zero compared units is no evidence: a run of ledgered debt alone never passes
+    compared = (None if skip_records is None else
+                sum(1 for r in skip_records if r.get("verdict") != "SKIP" and _both_ok(r)))
     skips_ok = not unledgered
     census_ok = all(executed_census.get(a, 0) == n for a, n in expected_census.items())
     strict = bool(criteria["strict_clean"])
-    return {"pass": strict and skips_ok and census_ok and cand_fail == 0, "strict_clean": strict,
+    evidence_ok = compared is None or compared > 0
+    return {"pass": (strict and skips_ok and census_ok and cand_fail == 0 and worker_exc == 0
+                     and evidence_ok),
+            "strict_clean": strict,
             "census_ok": census_ok, "skips_ok": skips_ok, "candidate_failures": cand_fail,
+            "worker_exceptions": worker_exc, "compared_units": compared,
             "ledgered_skips": ledgered, "unledgered_skips": unledgered,
             "ledgered_unaccepted": {"count": len(unaccepted), "identities": unaccepted},
             "skip_breakdown": dict(skip_breakdown),
@@ -749,8 +777,9 @@ KIND_CHOICES = ("structural", "output-changing", "relock", "aa", "baseline", "ga
 BUDGETED_KINDS = ("output-changing", "relock")
 CRITERIA = {
     "structural": ("structural: findings strict_clean AND strict_field_clean AND census_ok AND skips_ok "
-                   "AND candidate_failures == 0"),
-    **{k: f"{k}: census_ok AND skips_ok AND budgeted verdict clean AND candidate_failures == 0"
+                   "AND candidate_failures == 0 AND worker_exceptions == 0 AND compared_units > 0"),
+    **{k: (f"{k}: census_ok AND skips_ok AND budgeted verdict clean AND candidate_failures == 0 "
+           "AND worker_exceptions == 0 AND compared_units > 0")
        for k in BUDGETED_KINDS},
 }
 
@@ -794,6 +823,8 @@ def apply_modes(report, modes, kind="structural", budget_sha256=None):
         # a candidate-only analyzer failure is never budgetable (review I2)
         gp["pass"] = (bool(gp.get("census_ok")) and bool(gp.get("skips_ok"))
                       and gp.get("candidate_failures", 0) == 0
+                      and gp.get("worker_exceptions", 0) == 0
+                      and gp.get("compared_units") != 0
                       and (modes.get("budgeted") or {}).get("verdict") == "clean")
     else:
         gp["pass"] = bool(gp.get("pass")) and gp["strict_field_clean"]
@@ -811,6 +842,12 @@ def recheck_gate_pass(gate_dir, ledger=None, use_default_ledger=True):
     if len(rollups) != 1:
         raise ValueError(f"{root}: expected exactly one rollup_*.json, found {len(rollups)}")
     report = json.loads(rollups[0].read_text(encoding="utf-8"))
+    manifest = read_manifest(root)
+    if not manifest.get("finished_at"):
+        raise ValueError(f"{root}: manifest has no finished_at (the run did not finish)")
+    rollup_run = (report.get("identity") or {}).get("run_id")
+    if rollup_run != manifest.get("run_id"):
+        raise ValueError(f"{root}: rollup run_id {rollup_run} != manifest run_id {manifest.get('run_id')}")
     last = {}
     for line in (root / "units.jsonl").read_text(encoding="utf-8").splitlines():
         if line.strip():
@@ -826,7 +863,7 @@ def recheck_gate_pass(gate_dir, ledger=None, use_default_ledger=True):
     gp = compute_gate_pass(report["pass_criteria"], agg["skip_breakdown"],
                            report["gate_pass"]["expected_census"], agg["executed_census"],
                            skip_records=records, ledger=ledger_doc)
-    kind = read_manifest(root).get("kind")
+    kind = manifest.get("kind")
     if not kind:
         print("warning: manifest has no kind; rechecking as structural", file=sys.stderr)
         kind = "structural"
@@ -936,7 +973,17 @@ def main(argv=None):
     section = (args.label or getattr(args, "cross_section", None)
                or getattr(args, "repo", None) or "full").replace("/", "_")
 
-    a_jobs = build_phase_a_jobs(repos, layout, args.baseline_dir, args.candidate_dir, profile)
+    try:
+        a_jobs = build_phase_a_jobs(repos, layout, args.baseline_dir, args.candidate_dir, profile)
+    except PreflightError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(2)
+    dups = duplicate_unit_keys(a_jobs)
+    if dups:
+        print(f"Error: {len(dups)} unit keys collide after path flattening:", file=sys.stderr)
+        for d in dups:
+            print(f"  {d}", file=sys.stderr)
+        sys.exit(2)
     a_key = lambda j: f"{j[0]}/{j[2]}/{safe_name(j[1])}"  # noqa: E731
     unit_ids = sorted(f"{j[2]}/{safe_name(j[1])}" for j in a_jobs)
     env = build_env(offline=profile.offline)

@@ -132,7 +132,8 @@ def test_output_changing_passes_on_clean_budget_despite_findings(kind):
     assert gp["pass"] is True
     assert gp["strict_clean"] is False  # kept as information
     assert gp["kind"] == kind
-    assert gp["criterion"] == f"{kind}: census_ok AND skips_ok AND budgeted verdict clean AND candidate_failures == 0"
+    assert gp["criterion"] == (f"{kind}: census_ok AND skips_ok AND budgeted verdict clean AND candidate_failures == 0 "
+                               "AND worker_exceptions == 0 AND compared_units > 0")
 
 
 @pytest.mark.parametrize("verdict", ["residuals", "over_budget", "error"])
@@ -149,7 +150,7 @@ def test_output_changing_still_needs_census_and_skips(census_ok, skips_ok):
 
 def test_structural_unchanged_and_criterion():
     crit = ("structural: findings strict_clean AND strict_field_clean AND census_ok AND skips_ok "
-            "AND candidate_failures == 0")
+            "AND candidate_failures == 0 AND worker_exceptions == 0 AND compared_units > 0")
     out = gate.apply_modes(_gp(strict_clean=False), _modes("n/a", strict_field_clean=True))
     assert out["gate_pass"]["pass"] is False
     assert out["gate_pass"]["kind"] == "structural" and out["gate_pass"]["criterion"] == crit
@@ -216,7 +217,8 @@ LEDGER_SCH = {"timeout_units": [{"identity": f"schematic/{SCH}"}]}
 def _skips(records):
     bd = {"not_applicable": 0, "both_failed": 0, "dependency_missing": 0, "snapshot_read_error": 0}
     for r in records:
-        bd[r["reason"]] += 1
+        if r["verdict"] == "SKIP":
+            bd[r["reason"]] += 1
     return bd
 
 
@@ -225,8 +227,13 @@ def _round2_like():
             *(_skiprec(a, SCH, "dependency_missing", "skipped", "skipped") for a in ("thermal", "emc", "cross_analysis"))]
 
 
+def _compared(uid="o/r/ok.kicad_sch"):
+    return {"analyzer": "schematic", "repo": "o/r", "unit_id": uid, "identity": uid, "verdict": "PASS",
+            "baseline": {"status": "ok"}, "candidate": {"status": "ok"}}
+
+
 def test_ledgered_both_failed_and_dependents_keep_skips_ok():
-    recs = _round2_like()
+    recs = _round2_like() + [_compared()]
     gp = gate.compute_gate_pass(_crit(), _skips(recs), {}, {}, skip_records=recs, ledger=LEDGER_SCH)
     assert gp["skips_ok"] is True and gp["pass"] is True
     assert gp["ledgered_skips"] == 4 and gp["unledgered_skips"] == []

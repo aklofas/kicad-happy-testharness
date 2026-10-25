@@ -11,6 +11,28 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-081: a ledgered baseline timeout covered any candidate failure
+
+**Severity:** HIGH (corpus gate false-pass path; no past verdict affected).
+**File:** `tools/baseline_ledger_check.py` (`skip_covering`); test `tests/test_gate_status_matrix.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (code A1-F4).
+**Fixed:** 2026-10-25.
+
+- **Root cause:** for a `both_failed` SKIP with no crash on either side, `skip_covering` returned the ledger identity whenever the baseline side timed out, without reading the candidate status. A candidate `invalid_output` / `no_output` / `exit_unexpected` on a timeout-ledgered unit was counted ledgered and the gate passed.
+- **Fix:** a timeout entry covers a `both_failed` unit only when it timed out on BOTH sides (the crash branch already required a crash on both sides with the ledgered exit code).
+- **Verification:** status-matrix rows `timeout_vs_{invalid_output,no_output,exit_unexpected}` and the reverse fail on the old code and pass after. Round 9b: every `both_failed` unit in both archived `units.jsonl` is timeout/timeout or crash/crash, so the recheck verdict is unchanged and the acceptance stands as recorded.
+
+## 2026-10-25 — TH-080: a worker exception did not block `gate_pass` for the output-changing and relock kinds
+
+**Severity:** HIGH (corpus gate false-pass path; no past verdict affected).
+**File:** `regression/run_corpus_gate.py` (`compute_gate_pass`, `apply_modes`, `CRITERIA`); tests `tests/test_gate_status_matrix.py`, `tests/test_run_corpus_gate_modes.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (code A1-F7).
+**Fixed:** 2026-10-25.
+
+- **Root cause:** a raise inside a gate worker becomes a `FAIL` / `worker_exception` record counted in the executed census. The structural kind caught it through findings `strict_clean`; the budgeted kinds replace that criterion with the budgeted verdict, and `candidate_failures` counted only `CANDIDATE_FAILED_REASON`, so the pass bit stayed true with a FAIL in the rollup.
+- **Fix:** `gate_pass` gains `worker_exceptions` (FAIL / `worker_exception` records); every kind requires it to be 0. Same commit (ruling R3): `gate_pass.compared_units` counts units with both sides published, and every kind requires at least one, so a run of ledgered debt alone never passes. The criterion strings and RUNBOOK 26i name both.
+- **Verification:** status-matrix test (15 record shapes × 5 kinds) fails on the old code for the worker-exception and zero-evidence rows and passes after; `--recheck` of the archived round-9b gates (`results/v3_round9b_gate`, `_fc`) reproduces the recorded verdict field for field, with 0 `worker_exception` records in either `units.jsonl`.
+
 ## 2026-10-22 — v2.3.2 backport: KH-450..453 FIXED-direct on `main` @ `4701c26` (GitHub #52–#55 / PRs #56–#59, EldarPolitkin)
 
 Externally reported AND fixed in one motion (FIXED-direct; never open in ISSUES.md —

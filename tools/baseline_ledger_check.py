@@ -90,19 +90,20 @@ def new_timeout(rec: dict, known: set[str]) -> str | None:
 
 def skip_covering(rec: dict, known: set[str], upstream: dict | None = None,
                   crashes: dict | None = None) -> str | None:
-    """The ledger identity that covers a gate SKIP, or None. A both_failed unit is covered by
-    its crash_units entry when it crashed on BOTH sides with the ledgered exit_code, else by its
-    baseline-side timeout (new_timeout finds nothing new) when neither side crashed; a
-    dependency_missing unit is covered by whatever covers its upstream schematic record. A
-    crash on one side only and snapshot_read_error are never covered."""
+    """The ledger identity that covers a gate SKIP, or None. A both_failed unit is covered only
+    when its ledgered failure mode holds on BOTH sides: a crash_units entry when it crashed on
+    both sides with the ledgered exit_code, a timeout_units entry when it timed out on both
+    sides. A candidate invalid_output / no_output / exit_unexpected is never covered by a
+    baseline timeout. A dependency_missing unit is covered by whatever covers its upstream
+    schematic record. A crash on one side only and snapshot_read_error are never covered."""
     crashes = crashes or {}
     reason = rec.get("reason")
     if reason == "both_failed":
         base_cr, cand_cr = _crash_sides(rec)
-        ident, base_to, _ = _timeout_sides(rec)
+        ident, base_to, cand_to = _timeout_sides(rec)
         if base_cr or cand_cr:
             return ident if base_cr and cand_cr and new_crash(rec, crashes) is None else None
-        return ident if base_to and new_timeout(rec, known) is None else None
+        return ident if base_to and cand_to and new_timeout(rec, known) is None else None
     if reason == "dependency_missing" and upstream is not None and upstream.get("reason") == "both_failed":
         return skip_covering(upstream, known, crashes=crashes)
     return None

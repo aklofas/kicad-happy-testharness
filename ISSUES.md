@@ -2910,18 +2910,6 @@ A malformed tracked assertion file (hand edit, merge conflict) is skipped with n
 **Discovered:** 2026-10-25, harness external audit round 1 (code A3-F3)
 A single-repo discover leaves `all_*.txt` naming only that repo. The gate derives both its job list and its expected census from those files, so `census_ok` holds over one repo. `add_repos` runs discover per repo in a pool, so after a corpus-expansion batch the globals name only the last repo, and concurrent workers see "No schematics found". Live manifests were intact at the audit (36,465 schematics, 2026-10-15). Fix: rebuild the globals from every per-repo manifest with an atomic replace; record a manifest digest + census and refuse a census drop without `--allow-census-drop` (ruling R4).
 
-### TH-081: a ledgered baseline timeout covers any candidate failure
-**Severity:** HIGH (corpus gate false pass)
-**File:** `tools/baseline_ledger_check.py:93-105` (`skip_covering`)
-**Discovered:** 2026-10-25, harness external audit round 1 (code A1-F4)
-For a `both_failed` SKIP with no crash on either side, `skip_covering` returns the ledger identity when the baseline side timed out, without reading the candidate side's status. A candidate `invalid_output` / `no_output` / `exit_unexpected` on a timeout-ledgered unit is therefore counted as ledgered; `candidate_failures` counts only `CANDIDATE_FAILED_REASON`, and `gate_pass` is true. Fix: cover a `both_failed` unit only when the ledgered failure mode holds on both sides.
-
-### TH-080: a worker exception does not block `gate_pass` for the output-changing and relock kinds
-**Severity:** HIGH (corpus gate false pass)
-**File:** `regression/run_corpus_gate.py:500-504` (`_exception_record`: FAIL / `worker_exception`), `:654-655` (`candidate_failures`), `:792-797` (`apply_modes`)
-**Discovered:** 2026-10-25, harness external audit round 1 (code A1-F7)
-A raise inside `phase_a_job` (e.g. `diff_envelopes` on an unexpected shape after both snaps are published) becomes a FAIL record counted in the executed census. The structural kind catches it through findings `strict_clean`; the budgeted kinds replace that with the budgeted verdict and check only census / skips / `candidate_failures` (which counts only `CANDIDATE_FAILED_REASON`), so `gate_pass` stays true with a FAIL in the rollup. Fix: count `worker_exception` records as execution failures for every kind.
-
 ### TH-079: `generate_validation_md.py` builds the category table and the total from different denominators
 **Severity:** LOW (generated release document)
 **File:** harness `tools/generate_validation_md.py`; product `VALIDATION.md:82-88`
