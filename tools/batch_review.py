@@ -493,10 +493,6 @@ Output ONLY the JSON {"array" if len(has_types) > 1 else "block"}, nothing else.
 def _project_from_output(output_path, repo):
     """Derive the project name from an output path."""
     stem = Path(output_path).stem  # e.g. "Hardware_Rev2_Rev2.kicad_sch"
-    # Remove the file extension part
-    for ext in (".kicad_sch", ".sch"):
-        if stem.endswith(ext.replace(".", "_")):
-            break
     # The project is the directory structure encoded in the filename
     # Look for it in reference/
     ref_dir = HARNESS_DIR / "reference" / repo

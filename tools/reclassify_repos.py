@@ -432,16 +432,6 @@ def reclassify_in_repos_md(moves):
     """
     lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
 
-    # Build index: category header line numbers
-    category_ends = {}  # category -> last entry line index
-    current_cat = None
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if stripped.startswith("## "):
-            current_cat = stripped[3:].strip()
-        elif current_cat and stripped.startswith("- http"):
-            category_ends[current_cat] = i
-
     # Every destination must exist before any line is removed (a missing header used to
     # drop the removed lines)
     headers = {l.strip()[3:].strip() for l in lines if l.strip().startswith("## ")}
