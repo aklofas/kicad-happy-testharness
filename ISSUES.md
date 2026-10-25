@@ -2898,12 +2898,6 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 ## Test Harness Issues
 
-### TH-088: `analyze_bom_mismatch.py` enumerates one directory level and finds nothing
-**Severity:** LOW (operator report tool)
-**File:** `validate/analyze_bom_mismatch.py:26-36`
-**Discovered:** 2026-10-25, harness external audit round 1 (arch O7c; code A4-F14)
-The output walk globs `outputs_dir/<dir>/*.json`, but schematic outputs live at `schematic/<owner>/<repo>/…`, so the owner level holds no JSON and the tool reports no mismatches on any corpus. `--repo owner/repo` is compared against `d.name` (the owner directory) and never matches. Fix: walk `<owner>/<repo>` and filter by the canonical owner/repo name.
-
 ### TH-087: `validate_design_intent.py` scans the whole corpus on a multi-repo selection
 **Severity:** LOW (validator scope)
 **File:** `validate/validate_design_intent.py:146-151`

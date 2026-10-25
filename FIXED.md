@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-088: `analyze_bom_mismatch.py` enumerated one directory level and found nothing
+
+**Severity:** LOW (operator report tool).
+**File:** `validate/analyze_bom_mismatch.py` (`schematic_output_files`); test `tests/test_analyze_bom_mismatch.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (arch O7c; code A4-F14). **Fixed:** 2026-10-25.
+
+- **Root cause:** the walk globbed `<outputs>/<dir>/*.json`, but schematic outputs live at `<outputs>/<owner>/<repo>/`, so no JSON was ever read; `--repo owner/repo` was compared with the owner directory name.
+- **Fix:** walk owner/repo, filter by the canonical `owner/repo`, skip run-level files and the `capability_mode.json` sidecar; outputs are found through `utils.OUTPUTS_DIR` (data-dir override honoured).
+- **Verification:** unit test on a tmp layout; `--repo jgrip/commodorelcd` now reports its mismatch.
+
 ## 2026-10-25 — TH-041: `test_run_*_basic` integration tests failed with `KeyError: 'analyzer_type'` — `_first_output()` picked up `capability_mode.json`
 
 **Severity:** LOW.

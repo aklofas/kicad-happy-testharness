@@ -3,7 +3,7 @@
 
 Usage:
     python3 validate/analyze_bom_mismatch.py
-    python3 validate/analyze_bom_mismatch.py --repo OpenMower
+    python3 validate/analyze_bom_mismatch.py --repo owner/repo
 """
 
 import argparse
@@ -13,7 +13,21 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import HARNESS_DIR
+from utils import OUTPUTS_DIR
+
+
+def schematic_output_files(outputs_dir, repo=None):
+    """Schematic outputs live at <outputs>/<owner>/<repo>/*.json; `repo` is owner/repo."""
+    files = []
+    if not outputs_dir.exists():
+        return files
+    for owner_dir in sorted(d for d in outputs_dir.iterdir() if d.is_dir()):
+        for repo_dir in sorted(d for d in owner_dir.iterdir() if d.is_dir()):
+            if repo and f"{owner_dir.name}/{repo_dir.name}" != repo:
+                continue
+            files.extend(f for f in sorted(repo_dir.glob("*.json"))
+                         if f.name != "capability_mode.json" and not f.name.startswith("_"))
+    return files
 
 
 def main():
@@ -23,17 +37,8 @@ def main():
                         help="Minimum |bom_qty - comp_count| to flag (default: 5)")
     args = parser.parse_args()
 
-    outputs_dir = HARNESS_DIR / "results" / "outputs" / "schematic"
     threshold = args.threshold
-
-    # Collect JSON files from per-repo subdirectories
-    json_files = []
-    if outputs_dir.exists():
-        repo_dirs = sorted(d for d in outputs_dir.iterdir() if d.is_dir())
-        if args.repo:
-            repo_dirs = [d for d in repo_dirs if d.name == args.repo]
-        for repo_dir in repo_dirs:
-            json_files.extend(sorted(repo_dir.glob("*.json")))
+    json_files = schematic_output_files(OUTPUTS_DIR / "schematic", args.repo)
 
     total_mismatch = 0
     cause_final = Counter()
