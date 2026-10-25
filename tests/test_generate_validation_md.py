@@ -46,7 +46,7 @@ def test_assertion_breakdown_comes_from_measured_results():
     assert "| SEED | 2 |" in md
     assert "| STRUCT | 1 |" in md
     assert "| BUGFIX | 1 |" in md
-    assert "| FND | 1 |" in md
+    assert "| FND |" not in md   # aspirational: outside the total, outside the rows (TH-079)
 
 
 def test_gate_section_is_release_agnostic():
@@ -106,3 +106,26 @@ if __name__ == "__main__":
                 traceback.print_exc()
     print(f"{ok} passed, {fail} failed")
     sys.exit(1 if fail else 0)
+
+
+def test_missing_evidence_path_is_an_error(tmp_path):
+    """code A5-F7 / arch A3-F7: a mistyped --check-results path published "100%"."""
+    import pytest
+    with pytest.raises(FileNotFoundError):
+        gvm._load_check_results(tmp_path / "nope.json")
+    with pytest.raises(FileNotFoundError):
+        gvm._load_gate_rollup(tmp_path / "nope.json")
+    assert gvm._load_check_results(None) is None
+
+
+def test_category_rows_share_the_total_denominator():
+    """TH-079: the category rows counted aspirational results the total excludes."""
+    results = {"total": 3, "passed": 2, "failed": 1, "errors": 0, "pass_rate": "66.7%",
+               "results": [{"id": "SEED-1", "passed": True}, {"id": "SEED-2", "passed": False},
+                           {"id": "FND-1", "passed": True}, {"id": "FND-2", "passed": False,
+                                                              "aspirational": True}]}
+    stats = gvm._measured_assertion_stats(results)
+    assert sum(stats["by_type"].values()) == stats["total"] == 3
+    md = gvm.generate_markdown(check_results=results)
+    assert "| SEED | 2 | 50.0% |" in md and "| FND | 1 | 100.0% |" in md
+    assert "100%" not in md.split("### Crash testing")[1].split("### Regression")[0]

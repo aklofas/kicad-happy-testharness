@@ -77,16 +77,21 @@ def _count_th_issues():
 
 
 def _load_check_results(path):
-    """Load run_checks --json output. Returns dict or None."""
-    if not path or not Path(path).exists():
+    """Load run_checks --json output. None when no path is given; a given path that does not
+    exist is an error (a mistyped path must not publish an unmeasured document)."""
+    if not path:
         return None
+    if not Path(path).exists():
+        raise FileNotFoundError(f"check results not found: {path}")
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def _load_gate_rollup(path):
-    """Load v1.4 Layer 1 gate rollup JSON. Returns dict or None."""
-    if not path or not Path(path).exists():
+    """Load a corpus gate rollup JSON. None when no path is given; a missing path is an error."""
+    if not path:
         return None
+    if not Path(path).exists():
+        raise FileNotFoundError(f"gate rollup not found: {path}")
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
@@ -145,10 +150,15 @@ def _measured_assertion_stats(check_results):
     The measured total is authoritative; the catalog's per-repo sums are only
     the fallback when no check results are supplied.
     """
-    by_type = Counter()
+    by_type, passed = Counter(), Counter()
     for r in check_results.get("results", []):
-        by_type[(r.get("id") or "?").split("-")[0]] += 1
-    return {"total": check_results.get("total", 0), "by_type": dict(by_type)}
+        if r.get("aspirational"):   # outside the total, so outside the category rows too
+            continue
+        prefix = (r.get("id") or "?").split("-")[0]
+        by_type[prefix] += 1
+        passed[prefix] += bool(r.get("passed"))
+    return {"total": check_results.get("total", 0), "by_type": dict(by_type),
+            "passed_by_type": dict(passed)}
 
 
 def generate_markdown(check_results=None, gate_rollup=None,
@@ -240,19 +250,19 @@ The corpus is sourced from public GitHub repositories. It is not curated for "ea
 
 ## What gets tested
 
-Every analysis script runs against every applicable file in the corpus. Nothing is skipped or excluded.
+Every analysis script runs against every applicable file in the corpus. Units that time out or crash on both the baseline and the candidate are carried as accepted baseline debt in the harness ledger (`reference/baseline_debts/`), never silently dropped.
 
 ### Crash testing
 
-| Analyzer | Files tested | Success rate |
-|----------|-------------|--------------|
-| Schematic (`analyze_schematic.py`) | {sch_files:,} | 100% |
-| PCB (`analyze_pcb.py`) | {pcb_files:,} | 100% |
-| Gerber (`analyze_gerbers.py`) | {gerber_files:,} | 100% |
-| EMC (`analyze_emc.py`) | {emc_files:,} | 100% |
-| SPICE (`simulate_subcircuits.py`) | {spice_files:,} | 100% |
+| Analyzer | Output files |
+|----------|-------------|
+| Schematic (`analyze_schematic.py`) | {sch_files:,} |
+| PCB (`analyze_pcb.py`) | {pcb_files:,} |
+| Gerber (`analyze_gerbers.py`) | {gerber_files:,} |
+| EMC (`analyze_emc.py`) | {emc_files:,} |
+| SPICE (`simulate_subcircuits.py`) | {spice_files:,} |
 
-A single unhandled exception across any analyzer on any file in the corpus is treated as a release blocker.
+The counts are output files present in the corpus tree. A new unhandled exception on any file is a release blocker; the corpus gate's `candidate_failures` count is the measured value.
 
 ### Regression assertions
 
@@ -271,11 +281,14 @@ Hard assertions on known-good output values. If a previously correct result chan
 
     md += "| Category | Assertion count | Pass rate |\n"
     md += "|----------|----------------|-----------|\n"
-    rate_str = check_results.get("pass_rate", "100%") if check_results else "100%"
+    rate_str = check_results.get("pass_rate", "not measured") if check_results else "not measured"
+    passed_by_type = assertion_stats.get("passed_by_type", {})
     for atype, count in sorted(assertion_stats.get("by_type", {}).items(),
                                 key=lambda x: -x[1]):
         if count > 0:
-            md += f"| {atype} | {count:,} | {rate_str} |\n"
+            row_rate = (f"{passed_by_type[atype] / count * 100:.1f}%" if atype in passed_by_type
+                        else "not measured")
+            md += f"| {atype} | {count:,} | {row_rate} |\n"
     md += f"| **Total** | **{assertion_stats.get('total', 0):,}** | **{rate_str}** |\n"
 
     md += f"""
@@ -344,7 +357,7 @@ python3 run/run_emc.py --resume
 python3 regression/run_checks.py
 ```
 
-The harness requires Python 3.8+ and a checkout of the corpus repos. ngspice is optional but recommended for SPICE assertions. Use `--cross-section smoke` for a quick 20-repo validation.
+The harness requires Python 3.10+ and a checkout of the corpus repos. ngspice is optional but recommended for SPICE assertions. Use `--cross-section smoke` for a quick 20-repo validation.
 
 ## Issue tracking
 
@@ -368,7 +381,7 @@ Each closed analyzer issue has a corresponding bugfix regression guard assertion
 | Components parsed | {cat_stats.get('total_components', 0):,} |
 | Nets traced | {cat_stats.get('total_nets', 0):,} |
 | Regression assertions | {assertion_stats.get('total', 0):,} at {rate_str} |
-| Bugfix guards | {bugfix_count} (100% — no regressions) |
+| Bugfix guards | {bugfix_count} |
 | Closed issues | {closed_kh} analyzer + {closed_th} harness |
 | Open issues | {open_kh} analyzer + {open_th} harness |
 | Schematic detectors | {n_detectors} |

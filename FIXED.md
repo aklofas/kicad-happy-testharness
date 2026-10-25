@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-079: `generate_validation_md.py` built the category table and the total from different denominators
+
+**Severity:** LOW (generated release document).
+**File:** `tools/generate_validation_md.py` (`_measured_assertion_stats`, `generate_markdown`, `_load_check_results`, `_load_gate_rollup`); `tools/generate_analytics.py`; tests `tests/test_generate_validation_md.py`.
+**Discovered:** 2026-10-25, product external audit round 1 (filed by the main-repo agent). **Fixed:** 2026-10-25 with harness audit arch A3-F7 / code A5-F7.
+
+- **Root cause:** the per-prefix category rows counted every result, aspirational ones included (1,855 at the time), while the total is `run_checks`' non-aspirational total; every row was then labelled with the single corpus pass rate, and a missing `--check-results` path silently fell back to "100%". The crash-testing table and the bugfix row printed literal 100% values that no input measured, and `generate_analytics.py` printed a "100% pass rate" for assertions it only counts.
+- **Fix:** category rows skip aspirational results and carry their own measured pass rate (so they sum to the total); a given evidence path that does not exist raises; no rate is printed without measurement ("not measured"); the crash table lists output-file counts and points at the gate's `candidate_failures` and the baseline-debt ledger; "Python 3.8+" → 3.10+.
+- **Verification:** tests (rows sum to the total with per-row rates; a missing path raises; no 100% in the crash table) fail on the old code and pass after. The next VALIDATION.md must be regenerated from one `checks_final.json`, never hand-edited.
+
 ## 2026-10-25 — TH-088: `analyze_bom_mismatch.py` enumerated one directory level and found nothing
 
 **Severity:** LOW (operator report tool).

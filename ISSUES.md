@@ -2904,16 +2904,6 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 **Discovered:** 2026-10-25, harness external audit round 1 (arch O7b)
 `repo_filter` is set only when `len(repos) == 1`; a cross-section or any multi-repo selection leaves it `None`, so every repo in the corpus is validated. Fix: filter by the selected repo set.
 
-### TH-079: `generate_validation_md.py` builds the category table and the total from different denominators
-**Severity:** LOW (generated release document)
-**File:** harness `tools/generate_validation_md.py`; product `VALIDATION.md:82-88`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/05-v3-docs/findings/VERIFICATION.md` do/R1-F8, fix-order group 8)
-`VALIDATION.md:82-88`: the category rows sum to 2,718,534 (1,386,323 + 1,327,433 + 4,541 + 237). That is 1,855 over the stated total of 2,716,679, and 1,855 equals the corpus's aspirational-assertion count. The category rows evidently include aspirational assertions that the total excludes. The record also leaves open:
-- which validation snapshot is authoritative;
-- why there are 4,850 version-distribution rows against 5,857 repos.
-
-Fix: compute the category rows from the same denominator as the total, then regenerate from one `checks_final.json` at the v3.0.0 release commit. Do not hand-edit VALIDATION.md. The spice-integration.md half of R1-F8 is in KH-640.
-
 ### TH-078: the gate has no "debt resolved" disposition — a ledgered crash/timeout unit that the candidate fixes fails `skips_ok`, the findings `strict_clean` and the strict comparator, so a structural round with a resolved debt can never `gate_pass` mechanically
 
 **Severity:** LOW (adjudication cost + a hand-written exception in the round's response builder; no wrong verdict was issued)

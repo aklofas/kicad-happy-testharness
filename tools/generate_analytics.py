@@ -328,9 +328,9 @@ def generate_corpus_overview_svg():
 
     # Summary stats at bottom
     y_bottom = y_start + len(stages) * (bar_h + gap) + 20
+    # counts of assertion definitions: this tool never evaluates them, so it shows no pass rate
     stats = [
-        (f"{total_assertions:,}", "assertions"),
-        ("100%", "pass rate"),
+        (f"{total_assertions:,}", "assertions defined"),
         (f"{sum(findings_by_repo.values()):,}", "findings"),
     ]
     stat_w = w // len(stats)
@@ -666,7 +666,7 @@ def print_summary():
     print(f"  With assertions:      {repos_assertions:,}")
     print(f"  With findings:        {repos_with_findings:,}")
     print()
-    print(f"Assertions ({total_assertions:,} total, 100% pass rate):")
+    print(f"Assertions ({total_assertions:,} defined; run regression/run_checks.py for the pass rate):")
     for k, v in sorted(assertion_counts.items(), key=lambda x: -x[1]):
         pct = v / total_assertions * 100
         print(f"  {k:<20} {v:>8,}  ({pct:5.1f}%)")
