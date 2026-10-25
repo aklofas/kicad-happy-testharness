@@ -109,14 +109,18 @@ def validate_design_intent(data, filepath=""):
     return issues
 
 
-def _scan_outputs(repo_filter=None, analyzer_types=("schematic", "pcb")):
-    """Scan outputs and validate design_intent. Returns (issues, stats)."""
+def _scan_outputs(repos=None, analyzer_types=("schematic", "pcb")):
+    """Scan outputs of `repos` (owner/repo names; None = every repo) and validate
+    design_intent. Returns (issues, stats)."""
     issues = []
     stats = defaultdict(int)
+    wanted = set(repos) if repos is not None else None
 
     for atype in analyzer_types:
         base_dir = OUTPUTS_DIR / atype
-        for repo_name, repo_dir in iter_output_repos(base_dir, repo_filter):
+        for repo_name, repo_dir in iter_output_repos(base_dir):
+            if wanted is not None and repo_name not in wanted:
+                continue
             for json_file in sorted(repo_dir.glob("*.json")):
                 if json_file.name.startswith("_"):
                     continue
@@ -143,12 +147,8 @@ def main():
                         help="Print summary only, suppress per-file details")
     args = parser.parse_args()
 
-    repo_filter = None
-    repos = resolve_repos(args)
-    if repos and len(repos) == 1:
-        repo_filter = repos[0]
-
-    issues, stats = _scan_outputs(repo_filter)
+    # a cross-section or repo list filters too, not only a single --repo
+    issues, stats = _scan_outputs(resolve_repos(args))
 
     checked = stats.get("files_checked", 0)
     ok = stats.get("files_ok", 0)

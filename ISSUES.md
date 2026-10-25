@@ -2898,12 +2898,6 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 ## Test Harness Issues
 
-### TH-087: `validate_design_intent.py` scans the whole corpus on a multi-repo selection
-**Severity:** LOW (validator scope)
-**File:** `validate/validate_design_intent.py:146-151`
-**Discovered:** 2026-10-25, harness external audit round 1 (arch O7b)
-`repo_filter` is set only when `len(repos) == 1`; a cross-section or any multi-repo selection leaves it `None`, so every repo in the corpus is validated. Fix: filter by the selected repo set.
-
 ### TH-078: the gate has no "debt resolved" disposition — a ledgered crash/timeout unit that the candidate fixes fails `skips_ok`, the findings `strict_clean` and the strict comparator, so a structural round with a resolved debt can never `gate_pass` mechanically
 
 **Severity:** LOW (adjudication cost + a hand-written exception in the round's response builder; no wrong verdict was issued)

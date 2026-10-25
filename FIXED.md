@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-087: `validate_design_intent.py` scanned the whole corpus on a multi-repo selection
+
+**Severity:** LOW (validator scope).
+**File:** `validate/validate_design_intent.py` (`_scan_outputs`, `main`); test `tests/test_validate_design_intent_scope.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (arch O7b). **Fixed:** 2026-10-25.
+
+- **Root cause:** `main` set a repo filter only when exactly one repo was selected; a cross-section or repo list left it `None`, so every repo was validated.
+- **Fix:** `_scan_outputs` takes the resolved repo list and filters by membership; `None` still means every repo.
+- **Verification:** test with three repos and a two-repo selection fails on the old code and passes after.
+
 ## 2026-10-25 — TH-089: `generate_catalog.py` counted the `capability_mode.json` sidecar as an analyzer output
 
 **Severity:** LOW (derived catalog; inflated `projects`, `schematic_files`, `pcb_files`, `sheets`, EMC/SPICE summaries).
