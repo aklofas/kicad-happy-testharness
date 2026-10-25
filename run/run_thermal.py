@@ -30,10 +30,11 @@ from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # sibling _chained, whatever else is named `run`
 from harnesslib.profiles import PROFILES
 from harnesslib.batch import map_units
-from run._chained import err_first_line, expand_selection
 from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
+from _chained import err_first_line, expand_selection
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, DEFAULT_JOBS,

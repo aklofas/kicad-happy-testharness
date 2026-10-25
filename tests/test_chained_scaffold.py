@@ -9,10 +9,13 @@ from types import SimpleNamespace
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+HARNESS = Path(__file__).resolve().parent.parent
+for _p in (HARNESS, HARNESS / "run"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 from harnesslib.batch import map_units
-from run import _chained
-from run._chained import err_first_line, expand_selection
+import _chained
+from _chained import err_first_line, expand_selection
 
 
 def _sleepy(pair):
