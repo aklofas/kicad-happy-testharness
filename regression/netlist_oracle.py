@@ -101,9 +101,13 @@ def compare(
     - analyzer_only / oracle_only: nets on that side with zero pins in the
       shared universe (reported for diagnostics only, not pass/fail-gating).
 
-    ``pass`` requires zero split, zero merged, and equal single-pin net
-    counts on both sides (single-pin nets are the signature of the phantom
-    bus-member defect this harness exists to catch).
+    ``pass`` requires zero split, zero merged, equal single-pin net counts on
+    both sides (single-pin nets are the signature of the phantom bus-member
+    defect this harness exists to catch), and identical real-pin inventories:
+    a real (non ``#``-pseudo-ref, non-stacked) pin present on one side only
+    falls outside the shared universe, so without this check a pin the
+    analyzer dropped from a 3+-pin net would be invisible to split/merged
+    (``missing_pins`` / ``extra_pins``).
 
     Stacked-pin divergence (reported, not gating): a connector symbol can
     define the same physical pin NUMBER twice with different functions — e.g.
@@ -135,6 +139,8 @@ def compare(
             oracle_pins[pin] = name
 
     shared = set(analyzer_pins) & set(oracle_pins)
+    missing_pins = sorted(p for p in set(oracle_pins) - set(analyzer_pins) if not p[0].startswith("#"))
+    extra_pins = sorted(p for p in set(analyzer_pins) - set(oracle_pins) if not p[0].startswith("#"))
 
     analyzer_restricted = {
         name: frozenset(p for p in pins if p in shared)
@@ -198,5 +204,8 @@ def compare(
         "analyzer_single_pin": analyzer_single_pin,
         "oracle_single_pin": oracle_single_pin,
         "stacked_pins": sorted(f"{ref}.{pin}" for ref, pin in stacked),
-        "pass": not split and not merged and analyzer_single_pin == oracle_single_pin,
+        "missing_pins": [f"{ref}.{pin}" for ref, pin in missing_pins],
+        "extra_pins": [f"{ref}.{pin}" for ref, pin in extra_pins],
+        "pass": (not split and not merged and analyzer_single_pin == oracle_single_pin
+                 and not missing_pins and not extra_pins),
     }

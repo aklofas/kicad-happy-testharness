@@ -71,6 +71,8 @@ def _apply_nc_divergence(result: dict) -> None:
         not result["split"]
         and not real_merged
         and result["analyzer_single_pin"] == adjusted_oracle_single
+        and not result.get("missing_pins")
+        and not result.get("extra_pins")
     )
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -195,6 +197,9 @@ def print_report(result: dict, debug_unresolved: bool = False) -> None:
     print(f"  matched: {result['matched']}  split: {len(result['split'])}  merged: {len(result['merged'])}")
     print(f"  analyzer_only: {len(result['analyzer_only'])}  oracle_only: {len(result['oracle_only'])}")
     print(f"  single-pin nets — analyzer: {result['analyzer_single_pin']}  oracle: {result['oracle_single_pin']}")
+    if result.get("missing_pins") or result.get("extra_pins"):
+        print(f"  real pins missing from analyzer: {result.get('missing_pins')[:10]}  "
+              f"only in analyzer: {result.get('extra_pins')[:10]}")
     excluded = []
     if result.get("nc_divergence"):
         excluded.append(f"nc_divergence={result['nc_divergence']}")

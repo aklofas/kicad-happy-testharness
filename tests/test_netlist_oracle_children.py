@@ -54,3 +54,16 @@ def test_analyzer_child_times_out(tmp_path, monkeypatch):
 def test_no_home_directory_fallback():
     assert not hasattr(o, "_default_kicad_happy_dir")
     assert "~/Projects" not in (HARNESS / "regression" / "run_netlist_oracle.py").read_text()
+
+
+def test_dropped_real_pin_on_a_multi_pin_net_fails_the_oracle():
+    """code A7-F1: a real pin missing from the analyzer fell outside the shared universe and
+    was invisible to split/merged — a genuine false GO on a 3+-pin net."""
+    from regression.netlist_oracle import compare
+    oracle = {"/SDA": {("U1", "5"), ("U2", "3"), ("R1", "1")}, "/SCL": {("U1", "6"), ("U2", "4")}}
+    analyzer = {"/SDA": {("U1", "5"), ("U2", "3")}, "/SCL": {("U1", "6"), ("U2", "4")},
+                "+3V3": {("#PWR01", "1")}}
+    r = compare(analyzer, oracle)
+    assert not r["split"] and not r["merged"]
+    assert r["missing_pins"] == ["R1.1"] and r["pass"] is False
+    assert compare(oracle, oracle)["pass"] is True
