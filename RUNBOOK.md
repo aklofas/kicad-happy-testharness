@@ -3230,7 +3230,7 @@ See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
 | Findings drift | `python3 regression/drift.py --repo {repo}` |
 | Finding refresh | `python3 regression/refresh_findings.py` |
 | Assertion metrics | `python3 regression/assertion_metrics.py summary` |
-| Full corpus run | `python3 harness.py run --full` |
+| Full corpus run | `python3 harness.py run --all` |
 | Smoke corpus run | `python3 harness.py run --smoke` |
 | What-if sweep | `python3 $KICAD_HAPPY_DIR/skills/kicad/scripts/what_if.py analysis.json R5=4.7k` |
 | Diff two outputs | `python3 $KICAD_HAPPY_DIR/skills/kicad/scripts/diff_analysis.py base.json head.json` |

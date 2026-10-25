@@ -71,3 +71,23 @@ def test_checkout_pin_failure_counts_as_failure(tmp_path, monkeypatch, capsys):
     assert checkout.clone_repos(repos, 0) == 1
     out = capsys.readouterr().out
     assert "pin failed" in out and "Cloned:  0" in out and "Failed:  1" in out
+
+
+def test_harness_run_without_selection_exits_2(tmp_path):
+    """code A3-F6 (ruling R1): `harness.py run` with no selector injected --all itself."""
+    import os
+    import subprocess
+    r = subprocess.run([sys.executable, str(HARNESS / "harness.py"), "run"], cwd=HARNESS,
+                       env=dict(os.environ, KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(tmp_path)),
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 2 and "needs --all" in r.stderr
+    assert "Unit tests" not in r.stdout
+
+
+def test_run_datasheets_without_selection_exits_2(tmp_path):
+    import os
+    import subprocess
+    r = subprocess.run([sys.executable, str(HARNESS / "run" / "run_datasheets.py"), "--validate-only"],
+                       cwd=HARNESS, env=dict(os.environ, KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(tmp_path)),
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 2 and "--all" in r.stderr

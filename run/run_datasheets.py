@@ -393,8 +393,8 @@ def main():
             print("Warning: DIGIKEY_CLIENT_ID not set — downloads may fail",
                   file=sys.stderr)
 
-    repo_list = resolve_repos(args)
-    repos = repo_list if repo_list else find_repos_with_schematics()
+    repo_list = resolve_repos(args, require_explicit_all=True)   # ruling R1: never implied
+    repos = repo_list if repo_list is not None else find_repos_with_schematics()
 
     if not repos:
         print("No repos with schematic outputs found. Run run_schematic.py first.",

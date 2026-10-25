@@ -80,8 +80,15 @@ def cmd_run(args):
         filter_args = ["--cross-section", args.cross_section]
     elif args.repo:
         filter_args = ["--repo", args.repo]
+    elif args.all_repos:
+        filter_args = ["--all"]
+    else:
+        # a mutating whole-corpus run is never implied (ruling R1)
+        print("Error: harness.py run needs --all, --smoke, --cross-section or --repo",
+              file=sys.stderr)
+        sys.exit(2)
 
-    run_filter_args = filter_args or ["--all"]  # mutating runs need explicit --all
+    run_filter_args = filter_args
     resume_flag = ["--resume"] if args.resume else []
 
     steps.append(([py, "run_tests.py", "--tier", "unit"], "Unit tests"))
@@ -225,6 +232,8 @@ subcommands:
     p_run.add_argument("--smoke", action="store_true", help="Smoke pack (20 repos)")
     p_run.add_argument("--repo", help="Single repo")
     p_run.add_argument("--cross-section", help="Named cross-section")
+    p_run.add_argument("--all", dest="all_repos", action="store_true",
+                       help="Whole corpus (required: never implied)")
     p_run.add_argument("--resume", action="store_true", help="Skip existing outputs")
     p_run.add_argument("--skip-spice", action="store_true", help="Skip SPICE")
     p_run.add_argument("--skip-emc", action="store_true", help="Skip EMC")
