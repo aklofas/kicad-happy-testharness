@@ -55,20 +55,39 @@ def test_in_detector_missed():
     assert "U3" in check["pattern"]
 
 
-def test_field_value_equals():
-    """field_value_equals → field_equals check."""
-    item = {
-        "detector": "detect_voltage_dividers",
-        "subject_refs": ["R1", "R2"],
-        "expected_relation": "field_value_equals",
-        "field": "ratio",
-        "expected_value": 0.5,
-    }
-    check = _check_from_structured(item, "correct")
-    assert check is not None
+def _fve_item(refs=("R1", "R2"), detector="detect_voltage_dividers"):
+    return {"detector": detector, "subject_refs": list(refs), "expected_relation": "field_value_equals",
+            "field": "ratio", "expected_value": 0.5}
+
+
+def _eval(check, findings):
+    from regression.checks import evaluate_assertion
+    return evaluate_assertion({"id": "F", "check": dict(check)}, {"findings": findings})["passed"]
+
+
+def test_field_value_equals_round_trip():
+    """field_value_equals -> a field_equals check the evaluator honours: it passes on the
+    expected value, fails on a changed value, and fails while the subject is absent."""
+    check = _check_from_structured(_fve_item(), "correct")
     assert check["op"] == "field_equals"
-    assert check["field"] == "ratio"
-    assert check["value"] == 0.5
+    assert check["match_field"] == "r_top.ref" and check["match_value"] == "R1"
+    assert check["assert_field"] == "ratio" and check["assert_value"] == 0.5
+    det = "detect_voltage_dividers"
+    good = [{"detector": det, "r_top": {"ref": "R9"}, "ratio": 0.1},
+            {"detector": det, "r_top": {"ref": "R1"}, "ratio": 0.5}]
+    assert _eval(check, good)
+    changed = [dict(good[0]), {**good[1], "ratio": 0.25}]
+    assert not _eval(check, changed)
+    assert not _eval(check, [good[0]])          # detector item for R1 absent
+    assert _eval(check, good + [{"detector": "detect_other", "ratio": 9}])
+
+
+def test_field_value_equals_short_detector_name_and_no_refs():
+    check = _check_from_structured(_fve_item(refs=(), detector="voltage_dividers"), "correct")
+    assert check["detector_filter"] == "detect_voltage_dividers"
+    assert check["op"] == "contains_match" and check["field"] == "ratio" and check["pattern"] == r"^0\.5$"
+    assert _eval(check, [{"detector": "detect_voltage_dividers", "ratio": 0.5}])
+    assert not _eval(check, [{"detector": "detect_voltage_dividers", "ratio": 0.4}])
 
 
 def test_count_equals():

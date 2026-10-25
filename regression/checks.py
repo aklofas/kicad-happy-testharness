@@ -87,6 +87,17 @@ def _item_field(item, field):
     return val
 
 
+def _item_path(item, field):
+    """A dotted-path field of a dict item, or None when any step is missing (plain keys read
+    exactly like item.get)."""
+    val = item
+    for part in field.split("."):
+        if not isinstance(val, dict):
+            return None
+        val = val.get(part)
+    return val
+
+
 def _field_strings(field_val):
     """Normalize a field value into an iterable of strings for regex matching.
 
@@ -219,8 +230,8 @@ def evaluate_assertion(assertion, data):
         assert_value = check.get("assert_value", "")
         found = False
         for item in val:
-            if isinstance(item, dict) and item.get(match_field) == match_value:
-                actual = item.get(assert_field)
+            if isinstance(item, dict) and _item_path(item, match_field) == match_value:
+                actual = _item_path(item, assert_field)
                 result["actual"] = actual
                 result["expected"] = assert_value
                 result["passed"] = actual == assert_value

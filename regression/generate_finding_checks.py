@@ -91,9 +91,20 @@ def _pick_best_ref(refs, ref_field, detector_name):
     return refs[0]
 
 
+def _full_detector(name):
+    """Structured items may carry a short detector name ("power_regulators"); outputs and
+    REF_FIELD_MAP use the full function name."""
+    if name in REF_FIELD_MAP:
+        return name
+    for key in REF_FIELD_MAP:
+        if key.endswith("_" + name):
+            return key
+    return name
+
+
 def _check_from_structured(item, item_type):
     """Generate a check dict from structured finding fields."""
-    detector = item.get("detector", "")
+    detector = _full_detector(item.get("detector", ""))
     refs = item.get("subject_refs", [])
     relation = item.get("expected_relation", "")
 
@@ -120,11 +131,21 @@ def _check_from_structured(item, item_type):
         return None
 
     elif relation == "field_value_equals":
+        # field_equals selects the item by match_field/match_value and compares
+        # assert_field with assert_value; without a subject ref, "some item has this value"
         field = item.get("field")
         value = item.get("expected_value")
-        if field is not None and value is not None:
-            return {**_base(), "op": "field_equals", "field": field, "value": value}
-        return None
+        if field is None or value is None:
+            return None
+        ref_field = REF_FIELD_MAP.get(detector)
+        if refs and ref_field:
+            return {**_base(), "op": "field_equals",
+                    "match_field": ref_field, "match_value": _pick_best_ref(refs, ref_field, detector),
+                    "assert_field": field, "assert_value": value}
+        if isinstance(value, (dict, list)):
+            return None
+        return {**_base(), "op": "contains_match", "field": field,
+                "pattern": f"^{re.escape(str(value))}$"}
 
     elif relation == "count_equals":
         value = item.get("expected_value")
