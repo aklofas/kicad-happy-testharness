@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — KH-626: the product refactor oracle (`tools/check_refactor.py`) passed on unseen key reorders, relative snapshot roots, a write-then-fail analyzer, unknown budget selectors and worsened tag sites
+
+**Severity:** MEDIUM (dev-only oracle and CI `tags` guard; no stored baseline was contaminated).
+**File:** `tools/check_refactor.py` (`compare_json`, `run_text_snapshot`, `_produce`, the tag ratchet, `load_budget`).
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R6-F1, F2, F3, F5, F6). **Fixed:** `b3e4954` on product `v3.0.x-dev` (3.0.x Wave 0, local, not yet released). sk/R6-F4 (`distributor_offline` provider eviction) is still open as KH-646.
+
+- **Root cause:** each check failed open: `order` deltas only when key sets were equal; text snapshots ran relative roots from an empty cwd and accepted a nonzero exit on both sides; `_produce` failed only on a missing output file; budget `where` keys other than `rule_id` were ignored and `path` was not compiled; the tag ratchet compared site identity, not shape.
+- **Fix:** `compare_json` reports common-key reorders alongside added/removed keys; `run_text_snapshot` resolves its roots and fails a positive run that exits nonzero; `_produce` fails on `rc != 0`; one validated `load_budget` (types, compiled `path`, known `where` keys, rc 2) serves `budget-compare` and `quick`; the ratchet rejects a known site whose missing/non-literal keys grew.
+- **Verification (product side):** 135 new lines of tests in `tools/tests/test_check_refactor.py`; `check_refactor.py quick` vs the 07b7fb1 baseline OK on all 8 checks; `tools/tests` 353 OK against the pinned harness fixtures. Harness side: product-neutral — at `b1efab4` the `skills/`, `action/` and `plugin.json` trees are byte-identical to `07b7fb1` (same git tree hashes), so no gate run is needed.
+
 ## 2026-10-25 — TH-062: print-and-return vacuous skip paths in required-tier tests bypassed the known-skips allowlist
 
 **Severity:** LOW (tests passed vacuously when a product module or fixture was missing).
