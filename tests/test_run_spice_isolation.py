@@ -136,7 +136,7 @@ def test_failed_extraction_never_reuses_or_simulates(tmp_path):
     orig = utils.OUTPUTS_DIR
     try:
         utils.OUTPUTS_DIR = tmp_path / "outputs"
-        res = run_spice._process_one_spice(sch, sim, spice_dir, 5, [], True, ext, False,
+        res = run_spice._process_one_spice(sch, sim, spice_dir, 5, [], True, ext,
                                            tmp_path / "work", None, 60)
     finally:
         utils.OUTPUTS_DIR = orig

@@ -42,7 +42,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.execution import build_env
 from harnesslib.profiles import PROFILES
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
-                   find_schematic_outputs, find_pcb_output, should_skip_resume,
+                   find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
                    retire_orphaned_outputs)
 
@@ -135,23 +135,20 @@ def unit_workdir(workdir_root, repo_name, stem):
 
 
 def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
-                       extra_args, with_parasitics, extractor, resume,
+                       extra_args, with_parasitics, extractor,
                        workdir_root, env, outer_timeout):
     """Process one schematic JSON through SPICE simulation.
 
     Top-level function so it can be pickled by ProcessPoolExecutor.
 
     Returns:
-        (input_json, returncode_or_"SKIPPED", summary_or_None, output_json,
+        (input_json, returncode, summary_or_None, output_json,
          elapsed, parasitics_extracted_bool)
     """
     repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
     out_dir = spice_out_dir / repo_name
     out_dir.mkdir(parents=True, exist_ok=True)
     output_json = out_dir / input_json.name
-
-    if should_skip_resume(output_json, resume):
-        return input_json, "SKIPPED", None, output_json, 0.0, False
 
     parasitics_json = None
     did_extract_parasitics = False
@@ -296,7 +293,6 @@ def main():
     total_files = 0
     files_with_sims = 0
     errors = 0
-    skipped = 0
     type_counts = {}
     timings = []
     t_start = time.time()
@@ -312,7 +308,6 @@ def main():
         extra_args=args.extra_args,
         with_parasitics=args.with_parasitics,
         extractor=extractor,
-        resume=args.resume,
         workdir_root=workdir_root,
         env=env,
         outer_timeout=args.outer_timeout,
@@ -338,10 +333,6 @@ def main():
         if did_extract:
             parasitics_extracted += 1
         rel = f"{input_json.parent.name}/{input_json.name}"
-
-        if returncode == "SKIPPED":
-            skipped += 1
-            continue
 
         timings.append((f"{input_json.parent.name}/{input_json.name}", elapsed))
         total_files += 1
@@ -394,8 +385,6 @@ def main():
     print(title)
     print(f"{'='*60}")
     print(f"Schematic files processed:  {total_files}")
-    if skipped:
-        print(f"Skipped (--resume):         {skipped}")
     if args.with_parasitics:
         print(f"Parasitics extracted:       {parasitics_extracted}")
     print(f"Files with simulations:     {files_with_sims}")

@@ -447,20 +447,6 @@ def list_projects_in_data(repo_name):
 # Resume / skip helpers
 # ---------------------------------------------------------------------------
 
-def should_skip_resume(outfile, resume):
-    """DEPRECATED (TH-049): parses-as-JSON is not identity. Use harnesslib.identity.unit_is_current."""
-    if not resume:
-        return False
-    outfile = Path(outfile)
-    if not outfile.exists() or outfile.stat().st_size < 3:
-        return False
-    try:
-        json.loads(outfile.read_text(encoding="utf-8"))
-        return True
-    except (json.JSONDecodeError, OSError):
-        return False
-
-
 # ---------------------------------------------------------------------------
 # Schematic/PCB output finders (used by SPICE, EMC, cross-validation)
 # ---------------------------------------------------------------------------

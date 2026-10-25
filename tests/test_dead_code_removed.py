@@ -20,6 +20,8 @@ def test_utils_has_no_harnesslib_reexports_or_dead_timeouts():
 
 
 def test_chained_workers_take_no_resume():
-    import run_emc, run_thermal
+    import run_emc, run_spice, run_thermal, utils
+    assert not hasattr(utils, "should_skip_resume")
+    assert "resume" not in inspect.signature(run_spice._process_one_spice).parameters
     assert "resume" not in inspect.signature(run_emc._process_one_emc).parameters
     assert "resume" not in inspect.signature(run_thermal._process_one_thermal).parameters
