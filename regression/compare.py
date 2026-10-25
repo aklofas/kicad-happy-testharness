@@ -67,9 +67,18 @@ def _compare_manifest_entries(baseline_entry, current_entry):
             if type_changes:
                 changes["component_types"] = type_changes
             continue
-        if isinstance(bval, (int, float)) and isinstance(cval, (int, float)):
+        if (isinstance(bval, (int, float)) and isinstance(cval, (int, float))
+                and not isinstance(bval, bool) and not isinstance(cval, bool)):
             if bval != cval:
                 changes[key] = {"baseline": bval, "current": cval, "delta": cval - bval}
+        elif isinstance(bval, dict) and isinstance(cval, dict):
+            # by_type, by_severity, ...: every sub-key, not only the three named above
+            sub = {k: {"baseline": bval.get(k), "current": cval.get(k)}
+                   for k in bval.keys() | cval.keys() if bval.get(k) != cval.get(k)}
+            if sub:
+                changes[key] = sub
+        elif bval != cval or type(bval) is not type(cval):
+            changes[key] = {"baseline": bval, "current": cval}
     return changes
 
 
@@ -103,6 +112,7 @@ def compare_project(repo_name, project_name, project_path, analyzer_type, only_c
         "files_with_changes": 0,
         "files_only_in_baseline": [],
         "files_only_in_current": [],
+        "files_with_errors": [],
         "file_diffs": {},
         "change_scores": {},
     }
@@ -118,12 +128,14 @@ def compare_project(repo_name, project_name, project_path, analyzer_type, only_c
             results["files_only_in_current"].append(fname)
             continue
 
-        results["files_compared"] += 1
         base_entry = baseline_manifest[fname]
         curr_entry = current_manifest[fname]
 
         if "error" in base_entry or "error" in curr_entry:
+            # unparseable on either side: an error, never a compared-and-unchanged file
+            results["files_with_errors"].append(fname)
             continue
+        results["files_compared"] += 1
 
         changes = _compare_manifest_entries(base_entry, curr_entry)
         if changes:
@@ -153,6 +165,8 @@ def print_type_report(atype, results):
         print(f"    Only in baseline: {len(results['files_only_in_baseline'])}")
     if results["files_only_in_current"]:
         print(f"    Only in current:  {len(results['files_only_in_current'])}")
+    if results["files_with_errors"]:
+        print(f"    Parse errors:     {len(results['files_with_errors'])}")
 
     scored = sorted(results["change_scores"].items(), key=lambda x: x[1], reverse=True)
     if scored:
