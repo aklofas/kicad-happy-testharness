@@ -545,6 +545,28 @@ def find_pcb_output(schematic_json):
             pcb_path = pcb_dir / stem.replace(old, new)
             if pcb_path.exists() and pcb_path.stat().st_size > 0:
                 return pcb_path
+            return None
+    # a hash-truncated name lost its suffix: pair through the repo's manifest instead
+    return _pcb_output_by_manifest(repo_name, stem, pcb_dir)
+
+
+def _pcb_output_by_manifest(repo_name, sch_output_name, pcb_dir):
+    """The PCB output paired with a schematic output whose name was hash-truncated
+    (TH-013 cap): map the output name back to its input through the per-repo schematic
+    manifest, swap the input's suffix for .kicad_pcb, and name that the runner's way."""
+    manifest = MANIFESTS_DIR / repo_name / "schematics.txt"
+    if not manifest.exists():
+        return None
+    for line in manifest.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or safe_name(line) + ".json" != sch_output_name:
+            continue
+        for suffix in (".kicad_sch", ".sch"):
+            if line.endswith(suffix):
+                pcb_path = pcb_dir / (safe_name(line[: -len(suffix)] + ".kicad_pcb") + ".json")
+                if pcb_path.exists() and pcb_path.stat().st_size > 0:
+                    return pcb_path
+        return None
     return None
 
 
@@ -770,6 +792,18 @@ def run_analyzer(config, args=None):
             label = repo_list[0] if len(repo_list) == 1 else f"{len(repo_list)} repos"
             print(f"No {config['type_name']}s found for {label}", file=sys.stderr)
             sys.exit(1)
+
+    # safe_name flattens "/" to "_": two inputs with one flat name would share an output
+    # file and a unit id, the second silently overwriting the first
+    by_name = defaultdict(list)
+    for f in files:
+        by_name[(repo_name_from_path(f), safe_name(f))].append(f)
+    dups = {k: v for k, v in by_name.items() if len(v) > 1}
+    if dups:
+        print(f"Error: {len(dups)} output names collide after path flattening:", file=sys.stderr)
+        for (repo, name), paths in sorted(dups.items()):
+            print(f"  {repo}/{name}: {', '.join(sorted(paths))}", file=sys.stderr)
+        sys.exit(2)
 
     type_name = config["type_name"]
     output_subdir = config["output_subdir"]

@@ -202,3 +202,17 @@ def test_validation_failure_is_recorded_and_never_resumed(env, capsys):
     units = [json.loads(l) for l in (out_root / "units.jsonl").read_text().splitlines()]
     assert units[-1]["status"] == "validation_failed"
     assert json.loads((out_root / "manifest.json").read_text())["totals"]["validation_failed"] == 1
+
+
+def test_colliding_output_names_are_rejected_before_work(env, capsys):
+    """code A3-F1: `a/b.kicad_pcb` and `a_b.kicad_pcb` share one flat output name."""
+    (env.tmp / "repos" / "o" / "r" / "a").mkdir()
+    one = env.tmp / "repos" / "o" / "r" / "a" / "b.kicad_pcb"
+    two = env.tmp / "repos" / "o" / "r" / "a_b.kicad_pcb"
+    for b in (one, two):
+        b.write_text("(kicad_pcb)")
+    (env.tmp / "manifests" / "all_pcbs.txt").write_text(f"{one}\n{two}\n")
+    with pytest.raises(SystemExit) as ei:
+        env.utils.run_analyzer(_config("ok"), _args())
+    assert ei.value.code == 2 and "collide" in capsys.readouterr().err
+    assert not (env.data / "results" / "outputs" / "pcb" / "manifest.json").exists()

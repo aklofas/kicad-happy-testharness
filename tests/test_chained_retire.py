@@ -49,3 +49,24 @@ def test_run_thermal_retires_output_of_a_quarantined_pcb(tmp_path):
                        env=env, capture_output=True, text=True, timeout=60)
     assert not old.exists() and old.with_name("b_thermal.json.stale").exists(), r.stdout + r.stderr
     assert "RETIRED o/r/b_thermal.json" in r.stdout
+
+
+def test_truncated_schematic_output_still_pairs_with_its_pcb(tmp_path, monkeypatch):
+    """code A3-F9 / A3-F1: a hash-truncated output name loses its .kicad_sch suffix, so the
+    schematic never paired with its PCB (16 corpus boards lost EMC-with-PCB and thermal)."""
+    monkeypatch.setattr(utils, "REPOS_DIR", tmp_path / "repos")
+    monkeypatch.setattr(utils, "OUTPUTS_DIR", tmp_path / "outputs")
+    monkeypatch.setattr(utils, "MANIFESTS_DIR", tmp_path / "manifests")
+    deep = "very_long_directory_name_" * 8
+    sch_in = tmp_path / "repos" / "o" / "r" / deep / "board.kicad_sch"
+    pcb_in = sch_in.with_suffix(".kicad_pcb")
+    sch_name, pcb_name = utils.safe_name(str(sch_in)) + ".json", utils.safe_name(str(pcb_in)) + ".json"
+    assert not sch_name.endswith(".kicad_sch.json")            # the cap truncated it
+    (tmp_path / "manifests" / "o" / "r").mkdir(parents=True)
+    (tmp_path / "manifests" / "o" / "r" / "schematics.txt").write_text(f"{sch_in}\n")
+    for kind, name in (("schematic", sch_name), ("pcb", pcb_name)):
+        d = tmp_path / "outputs" / kind / "o" / "r"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / name).write_text("{}")
+    sch_out = tmp_path / "outputs" / "schematic" / "o" / "r" / sch_name
+    assert utils.find_pcb_output(sch_out) == tmp_path / "outputs" / "pcb" / "o" / "r" / pcb_name
