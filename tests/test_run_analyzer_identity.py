@@ -187,3 +187,18 @@ def test_gerber_directory_unit_runs(env, capsys):
     (gdir / "a.gbr").write_text("G04 changed*")
     env.utils.run_analyzer(cfg, _args(resume=True))
     assert "Skip:" not in capsys.readouterr().out
+
+
+def test_validation_failure_is_recorded_and_never_resumed(env, capsys):
+    """code A3-F2: a --validate VFAIL logged status ok, so --validate --resume skipped the
+    unit and exited 0. The fake's pcb envelope lacks footprints/statistics/connectivity."""
+    for resume in (False, True):
+        with pytest.raises(SystemExit) as ei:
+            env.utils.run_analyzer(_config("ok"), _args(validate=True, resume=resume))
+        assert ei.value.code == 1
+        out = capsys.readouterr().out
+        assert "VFAIL" in out and "Skip:" not in out
+    out_root = env.data / "results" / "outputs" / "pcb"
+    units = [json.loads(l) for l in (out_root / "units.jsonl").read_text().splitlines()]
+    assert units[-1]["status"] == "validation_failed"
+    assert json.loads((out_root / "manifest.json").read_text())["totals"]["validation_failed"] == 1

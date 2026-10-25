@@ -846,6 +846,11 @@ def run_analyzer(config, args=None):
         err_msg = err_lines[-1] if err_lines else f"exit {returncode}"
         return False, f"FAIL [{i}] {relpath}\n     {status}: {err_msg}"
 
+    def _recorded_status(ok, status):
+        # a published output that fails --validate is a failure, never an ok unit a
+        # later --resume would skip
+        return "validation_failed" if not ok and status in ("ok", "ok_findings_exit") else status
+
     def _record(file_path, returncode, elapsed, status, out_sha):
         log.append({"analyzer": output_subdir, "unit_id": _uid(file_path),
                     "run_id": run_id, "input_sha256": input_hashes[file_path], "status": status,
@@ -867,10 +872,11 @@ def run_analyzer(config, args=None):
                 continue
             returncode, _, elapsed, status, out_sha = _run_one(
                 analyzer, file_path, outfile, errfile, extra_args, cap, output_subdir, env)
+            ok, msg = _format_result(i, relpath, returncode, outfile, status)
+            status = _recorded_status(ok, status)
             _record(file_path, returncode, elapsed, status, out_sha)
             status_totals[status] += 1
             timings.append((relpath, elapsed))
-            ok, msg = _format_result(i, relpath, returncode, outfile, status)
             passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
             print(msg)
     else:
@@ -887,10 +893,11 @@ def run_analyzer(config, args=None):
             for future in as_completed(tasks):
                 i, relpath, outfile, file_path = tasks[future]
                 returncode, _, elapsed, status, out_sha = future.result()
+                ok, msg = _format_result(i, relpath, returncode, outfile, status)
+                status = _recorded_status(ok, status)
                 _record(file_path, returncode, elapsed, status, out_sha)
                 status_totals[status] += 1
                 timings.append((relpath, elapsed))
-                ok, msg = _format_result(i, relpath, returncode, outfile, status)
                 passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
                 print(msg)
 
