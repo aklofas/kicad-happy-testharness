@@ -68,10 +68,10 @@
           "expected_value": 4.04,
           "check": {
             "path": "findings",
-            "op": "field_equals",
+            "detector_filter": "detect_power_regulators",
+            "op": "contains_match",
             "field": "vout",
-            "value": 4.04,
-            "detector_filter": "detect_power_regulators"
+            "pattern": "^4\\.04$"
           }
         }
       ],

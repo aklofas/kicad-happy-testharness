@@ -17,9 +17,9 @@
 
 ### Incorrect
 - Same false current_sense detection: R12 (R220) with U7 (LT1785) is RS485 bus resistor, not current shunt
-  (signal_analysis.current_sense)
+  (detect_current_sense)
 - Same OKI-78SR voltage estimation error: estimated_vout=1.5V instead of 5V
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 (none)

@@ -21,9 +21,9 @@
 
 ### Incorrect
 - Voltage divider R59/R58 (2.15k/3.4k, ratio=0.613) is actually the feedback divider for the LM25145 buck converter. With Vref=0.6V, Vout=0.6/0.613=0.979V which is clearly wrong. The feedback_divider entry says R56 (18k) connects at the midpoint, suggesting a more complex 3-resistor divider. The estimated_vout of 0.979V is incorrect; the actual output should be 5V.
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - VBUS decoupling shows only C1 (10nF) which seems low but may be correct for the specific design context
-  (signal_analysis.decoupling_analysis)
+  (detect_decoupling)
 
 ### Missed
 (none)
@@ -50,7 +50,7 @@
 
 ### Incorrect
 - U15 estimated_vout is 0.979V which is wrong; the LM25145 output is +5V. The 3-resistor feedback network (R56+R59 top, R58 bottom) is not correctly analyzed
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 (none)

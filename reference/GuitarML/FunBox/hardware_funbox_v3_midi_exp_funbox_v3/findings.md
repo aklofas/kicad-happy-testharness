@@ -23,7 +23,7 @@
 
 ### Missed
 - H11L1 (U5) optocoupler not detected as an isolation_barrier. The H11L1 is a phototransistor optocoupler specifically used for MIDI input galvanic isolation, which is a textbook isolation barrier.
-  (signal_analysis.isolation_barriers)
+  (detect_isolation_barriers)
 
 ### Suggestions
 - Optocoupler ICs (H11L1, 6N138, PC900, etc.) should be detected as isolation barriers when used in MIDI or other isolation circuits.

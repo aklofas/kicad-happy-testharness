@@ -18,11 +18,11 @@
 
 ### Incorrect
 - SIT8008 MEMS oscillator classified as crystal — it is a packaged oscillator, not a crystal requiring load caps
-  (signal_analysis.crystal_circuits)
+  (detect_crystal_circuits)
 - All 3 voltage dividers duplicated in feedback_networks (same R5/R6, R9/R10, R13/R14 pairs)
-  (signal_analysis)
+  (findings)
 - TLV62569 estimated Vout=1.1V for all three regulators despite different output rails (+1V1, +2V5, +3V3)
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - BOM sum (116) does not match total_components (121) — 5 missing, only mounting_hole(4) accounted for
   (statistics)
 

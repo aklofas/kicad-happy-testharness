@@ -23,9 +23,9 @@
 
 ### Incorrect
 - Current sense detection claims R12 (R220=0.22 ohm) is a shunt resistor with U7 (LT1785xS8) as sense IC on RS485-A/RS485-B nets. However, U7 is an RS485 transceiver, not a current sense amplifier. R12 is likely a termination or bias resistor, not a current shunt.
-  (signal_analysis.current_sense)
+  (detect_current_sense)
 - U4 (OKI-78SR-5_1.5-W36-C) estimated_vout=1.5V is wrong; it outputs 5V. The '1.5' in the part name refers to the 1.5A current rating, not the output voltage. The output rail is correctly labeled +5V.
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 (none)

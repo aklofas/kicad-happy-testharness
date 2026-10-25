@@ -11,10 +11,12 @@
           "analyzer_section": "detect_voltage_dividers",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_voltage_dividers",
             "op": "field_equals",
-            "field": "ratio",
-            "value": 0.077,
-            "detector_filter": "detect_voltage_dividers"
+            "match_field": "r_top.ref",
+            "match_value": "R18",
+            "assert_field": "ratio",
+            "assert_value": 0.077
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -31,10 +33,12 @@
           "analyzer_section": "detect_voltage_dividers",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_voltage_dividers",
             "op": "field_equals",
-            "field": "ratio",
-            "value": 0.053,
-            "detector_filter": "detect_voltage_dividers"
+            "match_field": "r_top.ref",
+            "match_value": "R14",
+            "assert_field": "ratio",
+            "assert_value": 0.053
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -161,10 +165,12 @@
           "analyzer_section": "detect_power_regulators",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_power_regulators",
             "op": "field_equals",
-            "field": "ratio",
-            "value": 0.613,
-            "detector_filter": "detect_power_regulators"
+            "match_field": "ref",
+            "match_value": "R56",
+            "assert_field": "ratio",
+            "assert_value": 0.613
           },
           "detector": "power_regulators",
           "subject_refs": [

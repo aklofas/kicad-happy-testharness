@@ -37,10 +37,10 @@
           "expected_value": 0.5,
           "check": {
             "path": "findings",
-            "op": "field_equals",
+            "detector_filter": "detect_power_regulators",
+            "op": "contains_match",
             "field": "vout",
-            "value": 0.5,
-            "detector_filter": "detect_power_regulators"
+            "pattern": "^0\\.5$"
           }
         }
       ],

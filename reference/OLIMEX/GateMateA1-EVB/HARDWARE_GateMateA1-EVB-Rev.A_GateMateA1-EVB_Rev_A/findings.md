@@ -19,15 +19,15 @@
 
 ### Incorrect
 - The file uses (version 20230121) which corresponds to KiCad 7.x. The analyzer reads file_version correctly as '20230121' but reports kicad_version as 'unknown'. The kicad_version field should map file format versions to app version strings (20230121 = KiCad 7.x). This affects all three revisions identically.
-  (signal_analysis)
+  (findings)
 - Six power rails (+1V8, +3V3, +1V2, +5V_USB, +2V5, GND) are flagged as missing PWR_FLAG. However, all FPGA supply rails are directly driven by TPS62A02A switching regulator outputs (power_out pins) — these do not need PWR_FLAGs. The +5V_USB is sourced from USB-C connector. The warnings appear because the analyzer checks for PWR_FLAG symbols but the regulator output pins may not be recognized as power drivers on those nets. This is a high-confidence false positive for this design topology.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 - Each TPS62A02A regulator (U11-U15) has a 1.0uH power inductor (L3-L7) in series with the output followed by large bulk capacitors (22uF + 47uF). These are classic LC output filter topologies. The lc_filters detector returns 0 results. The detector likely only looks for passive LC networks not associated with a regulator, missing this important class of LC filter entirely.
-  (signal_analysis)
+  (findings)
 - The GateMate FPGA has JTAG configuration pins and the board includes a JTAG_LED1 indicator and JTAG-related labels (TCK, TDI, TDO, TMS visible in bus signals and global labels). The analyzer does not report any JTAG interface detection. Bus signal detector does find CFG_MD[0..3] and clock signals, but a dedicated JTAG bus protocol detector is absent.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -54,17 +54,17 @@
 
 ### Incorrect
 - U15 (SY8089AAAC) output_rail reported as '__unnamed_7' instead of VDD_CORE. Feedback divider R73=1k/R78=2k not detected, so estimated_vout absent. Vout = 0.6*(1+1k/2k) = 0.9V nominal.
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - R73 (1k) + C125 (47uF) incorrectly paired as a 3.39 Hz RC low-pass filter. R73 is actually the top feedback resistor for U15 (VDD_CORE to U15 FB), and C125 is the output bulk cap.
-  (signal_analysis.rc_filters)
+  (detect_rc_filters)
 - FET1 and FET2 (BSS138 N-MOSFETs) classified with load_type='inductive', but these are open-drain level shifters for PS2 keyboard interface. No inductive load present.
-  (signal_analysis.transistor_circuits)
+  (detect_transistor_circuits)
 
 ### Missed
 - Five TVS protection diodes (TVS1-TVS5, GG0402052R542P) on VGA signal lines absent from protection_devices. TVS1-3 protect RGB, TVS4-5 protect sync signals.
-  (signal_analysis.protection_devices)
+  (detect_protection_devices)
 - VGA weighted-resistor DAC not detected. FPGA drives 4-bit Red, 5-bit Green, 4-bit Blue channels into resistor-ladder DACs feeding VGA1.
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Suggestions
 - In power_regulators, trace feedback divider from regulator output rail through resistor to FB pin to catch cases like U15 where Rtop connects output-to-FB.

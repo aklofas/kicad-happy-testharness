@@ -275,10 +275,12 @@
           "expected_value": 0.6,
           "check": {
             "path": "findings",
+            "detector_filter": "detect_power_regulators",
             "op": "field_equals",
-            "field": "vout",
-            "value": 0.6,
-            "detector_filter": "detect_power_regulators"
+            "match_field": "ref",
+            "match_value": "U15",
+            "assert_field": "vout",
+            "assert_value": 0.6
           }
         },
         {

@@ -11,10 +11,10 @@
           "analyzer_section": "validate_feedback_stability",
           "check": {
             "path": "findings",
-            "op": "field_equals",
+            "detector_filter": "feedback_networks",
+            "op": "contains_match",
             "field": "vout",
-            "value": 3.3,
-            "detector_filter": "validate_feedback_stability"
+            "pattern": "^3\\.3$"
           },
           "detector": "feedback_networks",
           "subject_refs": [

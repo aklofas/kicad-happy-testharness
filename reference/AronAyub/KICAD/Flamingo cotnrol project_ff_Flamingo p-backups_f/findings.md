@@ -16,21 +16,21 @@
 
 ### Incorrect
 - U1 (FP6291) incorrectly listed in bms_systems. FP6291 is a boost converter, not a battery management IC. Only U2 (TP4056) should appear in bms_systems
-  (signal_analysis.bms_systems)
+  (detect_bms_systems)
 - Reset pin analysis for U4 (4017) and U5 (4017) reports has_pullup=true and has_filter_cap=true on GND net. The RESET pin of CD4017 is connected to GND (held low = not reset), which is correct design, but the analysis lists every component on the GND net as 'connected_components' (60+ entries including all power symbols, caps, resistors, connectors, ICs) - this is the global GND net, not a dedicated reset network
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 - RC filter RV1/C7 at 15.92 Hz: RV1 is a potentiometer (100k variable resistor) used as an adjustable voltage source for the 555 timer threshold, not a fixed RC filter. The cutoff frequency is meaningless for a variable component
-  (signal_analysis.rc_filters)
+  (detect_rc_filters)
 - Regulator caps observation for U1 (FP6291) reports missing output caps on BOOST net, but C2+C3+C4 (10uF+10uF+0.1uF) are the boost output caps - they were correctly detected in lc_filters but not cross-referenced
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Missed
 - LM555 timer (U3) driving CD4017 decade counters (U4, U5) to create LED sequencing pattern is not detected. This is a classic 555+4017 LED chaser circuit
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 - TP4056 (U2) no longer detected in bms_systems (was previously detected with NTC sensor TH1)
-  (signal_analysis.bms_systems)
+  (detect_bms_systems)
 - LC filter L1/C2+C3+C4 at 16.37 kHz on BOOST net no longer detected (boost converter output filter)
-  (signal_analysis.lc_filters)
+  (detect_lc_filters)
 
 ### Suggestions
 - Filter bms_systems to only include known charger/BMS ICs (TP4056, BQ2057, etc.), not boost converters that happen to be in the same lib

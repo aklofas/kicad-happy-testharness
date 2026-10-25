@@ -55,10 +55,12 @@
           "analyzer_section": "detect_rc_filters",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_rc_filters",
             "op": "field_equals",
-            "field": "vout",
-            "value": 0.6,
-            "detector_filter": "detect_rc_filters"
+            "match_field": "resistor.ref",
+            "match_value": "R80",
+            "assert_field": "vout",
+            "assert_value": 0.6
           },
           "detector": "rc_filters",
           "subject_refs": [

@@ -19,7 +19,7 @@
 
 ### Missed
 - Voltage divider R805/R804 is feedback for LMR36506 (U802) but is_feedback not set, not linked in feedback_networks, no estimated_vout for U802
-  (signal_analysis.feedback_networks)
+  (validate_feedback_stability)
 
 ### Suggestions
 - Fix lib_name/lib_id mismatch for 0-pin components

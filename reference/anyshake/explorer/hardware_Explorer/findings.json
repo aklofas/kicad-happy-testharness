@@ -33,10 +33,12 @@
           "analyzer_section": "detect_power_regulators",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_power_regulators",
             "op": "field_equals",
-            "field": "vout",
-            "value": 7.467,
-            "detector_filter": "detect_power_regulators"
+            "match_field": "ref",
+            "match_value": "U3",
+            "assert_field": "vout",
+            "assert_value": 7.467
           },
           "detector": "power_regulators",
           "subject_refs": [
@@ -54,10 +56,10 @@
           "analyzer_section": "validate_feedback_stability",
           "check": {
             "path": "findings",
-            "op": "field_equals",
+            "detector_filter": "feedback_networks",
+            "op": "contains_match",
             "field": "ratio",
-            "value": 0.107,
-            "detector_filter": "validate_feedback_stability"
+            "pattern": "^0\\.107$"
           },
           "detector": "feedback_networks",
           "subject_refs": [

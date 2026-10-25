@@ -19,25 +19,25 @@
 
 ### Incorrect
 - U20/U17 (TPS630701, buck-boost) classified as LDO — have external inductors L5/L6 not detected
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - U11/U13 (LT3652HV) estimated_vout=1.523V wrong — LT3652 is battery charger with Vref=3.3V not 0.6V
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - U20 compensation_capacitors contains 30+ unrelated caps (MCU decoupling, crystal loads)
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 - battery_chargers empty but U11/U13 (LT3652HV) and U15 (BQ25883) are charger ICs
-  (signal_analysis.battery_chargers)
+  (detect_battery_chargers)
 - 5 INA230 current monitors (U9/U10/U16/U19/U23) not detected
-  (signal_analysis.current_sense)
+  (detect_current_sense)
 - U6 (MAX708) voltage supervisor IC missed — only RC reset detected
-  (signal_analysis.reset_supervisors)
+  (detect_reset_supervisors)
 - LED12-15 (SK68xx NeoPixel) addressable LEDs missed
-  (signal_analysis.addressable_led_chains)
+  (detect_addressable_leds)
 - U22 (TPS54226) feedback divider not found, estimated_vout=None
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - 4 MCP9700A temperature sensors missed
-  (signal_analysis.sensor_interfaces)
+  (detect_sensor_interfaces)
 
 ### Suggestions
 - Detect battery charger ICs by BOM description ('BAT CHG') and known part families (LT3652, BQ25883)

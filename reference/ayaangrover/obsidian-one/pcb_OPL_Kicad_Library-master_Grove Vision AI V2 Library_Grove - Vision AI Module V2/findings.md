@@ -16,7 +16,7 @@
 
 ### Incorrect
 - Q4 gate_driver_ics contains unrelated ICs (U1 processor, U3 LDO, U5 memory) — should only list ICs with output pins connected to gate net
-  (signal_analysis.transistor_circuits)
+  (detect_transistor_circuits)
 
 ### Missed
 (none)

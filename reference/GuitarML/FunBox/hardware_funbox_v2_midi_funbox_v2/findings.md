@@ -22,7 +22,7 @@
 
 ### Missed
 - H11L1 (U5) optocoupler not detected as an isolation_barrier for MIDI input galvanic isolation.
-  (signal_analysis.isolation_barriers)
+  (detect_isolation_barriers)
 
 ### Suggestions
 - Optocoupler ICs (H11L1, 6N138, etc.) should be detected as isolation barriers.
@@ -57,35 +57,35 @@
 
 ### Incorrect
 - U2 (L7805) topology labeled as 'LDO' but the L7805 is a classic fixed linear regulator (~2V dropout), not a low-dropout regulator
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - Design observation claims missing regulator input/output caps for U2, but C6 (100uF), C7/C8 (100nF) are on VCC input and C9/C10 (100nF) are on 5V output
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 - Net classification marks '5V' as 'signal' when it is clearly a power rail (output of L7805). Similarly '3V3_A' classified as 'signal' but is a 3.3V analog power rail
   (design_analysis.net_classification)
 - U1 unit 5 (power pins V+/V-) listed as opamp_circuit with configuration 'unknown' - this is the power supply unit, not a signal circuit
-  (signal_analysis.opamp_circuits)
+  (detect_opamp_circuits)
 - All 6 potentiometer instances reported as POT4 with identical net connections (GND, 3V3_A, POT_6) due to schematic annotation bug propagated without flagging different actual connections per instance
   (components)
 - ESD coverage audit lists POT4 as a connector 6 times with identical signal nets, creating redundant entries from the duplicate reference
-  (signal_analysis.esd_coverage_audit)
+  (audit_esd_protection)
 - BOM groups R15 (100 ohm resistor) together with C1/C2 (100pF capacitors) under the same '100' value label, creating ambiguity
   (bom)
 
 ### Missed
 - Fourth voltage divider R13 (1M) / R14 (1M) from 5V to GND biasing U1 pin 3 (unit 1 non-inverting input) was not detected. Identical topology to the three detected dividers
-  (signal_analysis.voltage_dividers)
+  (detect_voltage_dividers)
 - MIDI input isolation barrier via U5 (H11L1 optocoupler) not detected. Provides galvanic isolation between MIDI input jack and Daisy Seed UART RX with D2 (1N4148) protection, R30 (220R) current limiting, R31 (470R) pull-up, R32 (10R) output
-  (signal_analysis.isolation_barriers)
+  (detect_isolation_barriers)
 - D1 (1N5817 Schottky diode) reverse polarity protection in power input path not detected. Standard guitar pedal power protection circuit
-  (signal_analysis.protection_devices)
+  (detect_protection_devices)
 - MIDI interface not detected as UART bus. A1 pins connected to MIDI_OUT and MIDI_IN through MIDI I/O circuitry. Standard MIDI uses 31.25 kbaud UART
   (design_analysis.bus_analysis.uart)
 - Audio input AC coupling capacitors C1 and C2 (100pF) not detected as part of audio signal chain
-  (signal_analysis.audio_circuits)
+  (detect_audio_circuits)
 - Complete audio signal chain (input jack -> AC coupling -> bias resistor -> buffer -> Daisy Seed -> RC filter -> output buffer -> output jack) not characterized as audio_circuit
-  (signal_analysis.audio_circuits)
+  (detect_audio_circuits)
 - Decoupling capacitor C30 (100nF) on 3V3_A rail near U5 not identified in decoupling_analysis
-  (signal_analysis.decoupling_analysis)
+  (detect_decoupling)
 - I2C bus detected but Daisy Seed I2C pins are not connected to external devices - should note unused bus or not report it
   (design_analysis.bus_analysis.i2c)
 

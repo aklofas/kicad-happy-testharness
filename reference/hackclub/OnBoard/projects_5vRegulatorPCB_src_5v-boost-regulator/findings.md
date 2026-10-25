@@ -18,7 +18,7 @@
 
 ### Incorrect
 - Estimated Vout of 5.95V flagged with 19% mismatch vs +5V net name, but TPS61032 Vref is actually 0.5V not 0.595V, so actual Vout = 0.5*(1+1620k/180k) = 5.0V exactly matching +5V rail
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 (none)

@@ -16,7 +16,7 @@
 
 ### Incorrect
 - L2 value '30ohm' (ferrite bead impedance) misparsed as 30.0 henries. Invalidates LC filter detection (L2/C27 reported as LC filter with 29Hz resonance, but L2 is impedance not inductance).
-  (signal_analysis.lc_filters)
+  (detect_lc_filters)
 
 ### Missed
 (none)

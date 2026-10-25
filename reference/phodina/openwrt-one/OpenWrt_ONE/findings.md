@@ -21,23 +21,23 @@
 - CLIP? (32 instances) classified as capacitor -- SHIELD_CLIP components are RF shield clips, not capacitors
   (statistics.component_types)
 - 24 of 40 regulators are false positives: 8x BLOCK_BPI_2 title blocks, 6x repeated MT7981B SoC, plus flash/RTC/EEPROM/logic ICs
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - AP7366-W5-7 inconsistently classified as switching in some sheets but correctly as LDO in others
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - POE-RT5400-12V has estimated_vout=1.2 -- parsed '12V' suffix as denominator giving 1.2V instead of 12V
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - All switching regulators share identical rail names input_rail=DVDD33, output_rail=EN_1V8 -- rail assignment collapses across sheets
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 - Zero voltage dividers detected across the entire design despite multiple feedback networks for buck converters
-  (signal_analysis.voltage_dividers)
+  (detect_voltage_dividers)
 - Zero Ethernet interfaces detected -- EN8811 PHY + SQ24015-1PG/SG24002G magnetics + RJ45 connectors present
-  (signal_analysis.ethernet_interfaces)
+  (detect_ethernet_interfaces)
 - Zero memory interfaces detected -- MT7981B to NT5AD512M16C4-JR DDR4 interface present
-  (signal_analysis.memory_interfaces)
+  (detect_memory_interfaces)
 - Zero RF chains/matching detected -- MT7976C WiFi has SAW filters, BPFs, diplexers, matching inductors, MMCX connectors
-  (signal_analysis.rf_chains)
+  (detect_rf_chains)
 
 ### Suggestions
 - Footprint-based override: TP* footprint should force test_point classification regardless of ref prefix
@@ -68,21 +68,21 @@
 - CN? prefix (8 connector instances) misclassified as 'capacitor' because 'C' prefix fires before 'CN'.
   (statistics.component_types)
 - USB ESD inconsistency: design_observations says has_esd_protection: false while differential_pairs says has_esd: true for same USB nets.
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 - JTAG_JTCK and JTAG_JTMS falsely detected as I2C SDA/SCL lines.
   (design_analysis.bus_analysis.i2c)
 
 ### Missed
 - DDR4 memory interface not detected despite 58 EMI0_* nets connecting MT7981B to NT5AD512M16C4-JR.
-  (signal_analysis.memory_interfaces)
+  (detect_memory_interfaces)
 - EN8811 2.5GbE Ethernet PHY not detected despite HSGMII and SMI_MDC/MDIO connections.
-  (signal_analysis.ethernet_interfaces)
+  (detect_ethernet_interfaces)
 - MT7976C Wi-Fi 6 radio entirely absent from rf_chains despite AFE0_WF* analog front-end nets.
-  (signal_analysis.rf_chains)
+  (detect_rf_chains)
 - 26 of 30 UART detections are false positives: WiFi TX gain rails (AVDD18_WF3_TX_GA), Ethernet PHY nets (TXVP_A), SGMII nets.
   (design_analysis.bus_analysis.uart)
 - Most power regulators missed: only one AP7366 detected, missing SY8089AAAC, MP8756GD, LA1314HD, LA3484A.
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Suggestions
 - Fix total_components to use component instance count, not BOM line count for unannotated designs.

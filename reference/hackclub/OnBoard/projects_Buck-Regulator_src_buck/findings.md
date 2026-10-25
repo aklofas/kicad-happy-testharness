@@ -17,17 +17,17 @@
 
 ### Incorrect
 - LM2596S-12 is a FIXED 12V output regulator - the -12 suffix indicates fixed output. The feedback divider analysis calculates estimated_vout=14.135V using Vref=1.285V which is wrong. For fixed output versions, pin 4 (ON/OFF) is not a feedback pin, and the resistor divider likely serves as enable/UVLO control, not output voltage setting.
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - IC ref fields are ? for all components including U1, J1, J2
   (ic_pin_analysis)
 - IC function not identified for LM2596S-12 despite lib_id containing Regulator_Switching
   (ic_pin_analysis)
 - Output rail shown as __unnamed_1 instead of being associated with Vout net
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 - LM2596 variant identification (-12 = fixed 12V, -5 = fixed 5V, -3.3 = fixed 3.3V, -ADJ = adjustable) should drive different analysis paths
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - Schottky diode (D1=SS54) in the buck converter freewheeling path not analyzed as part of the switching topology
   (subcircuits)
 

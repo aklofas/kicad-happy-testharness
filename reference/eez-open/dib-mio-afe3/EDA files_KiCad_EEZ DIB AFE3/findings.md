@@ -23,13 +23,13 @@
 
 ### Incorrect
 - Design observation for IC6 (DG212) decoupling is repeated 4 times (once per unit) claiming +15V_ISO rail missing caps; should be deduplicated to one observation per component
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Missed
 - No isolation_barriers detected despite OK2 optocouplers and isolated power domains (_ISO suffix rails). The optocouplers provide galvanic isolation between measurement and digital domains.
-  (signal_analysis.isolation_barriers)
+  (detect_isolation_barriers)
 - No power_regulators detected. While power may come from backplane, the isolated DC-DC converters (if present on other sheets) or the power rail structure suggests power regulation should be noted.
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Suggestions
 - Deduplicate per-unit design observations for multi-unit ICs - DG212 has 4 identical switch units but the decoupling warning should appear only once

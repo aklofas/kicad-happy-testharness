@@ -27,15 +27,15 @@
 
 ### Incorrect
 - XL7015 (U5) estimated Vout=7.267V using assumed Vref=0.6V (heuristic), but XL7015 datasheet specifies Vref=1.25V. Correct calculation: Vout = 1.25 * (1 + 30k/2.7k) = 15.14V, which matches the +15V output net name.
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 - TPA3255DDV (U1) Class-D audio amplifier speaker outputs through LC filters to J3 screw terminal and Load1/Load2 nets not detected as speaker/buzzer circuits
-  (signal_analysis.buzzer_speaker_circuits)
+  (detect_buzzer_speakers)
 - XLR audio input (J2 AC3FAH2-XLR) and output (J7 AC3FAH2-XLR, J6 AC3MAH-AU-PRE) connectors not detected as audio interface connectors
-  (signal_analysis.bus_interfaces)
+  (detect_bus_interfaces)
 - No current sense detection despite R6=3.3ohm, R7=3.3ohm, R8=3R3, R10=3R3 likely being Class-D output sense resistors for overcurrent protection on TPA3255
-  (signal_analysis.current_sense)
+  (detect_current_sense)
 
 ### Suggestions
 - Add XL7015 to the Vref lookup table with Vref=1.25V to fix voltage estimation

@@ -14,13 +14,13 @@
 
 ### Incorrect
 - Q8 AO3401A false led_driver for D7/R25 — D7 is on net __unnamed_32 (USR_LED), Q8 drain is on __unnamed_4; no connectivity. R25 (215k) is Q10 gate pull-down, not LED current resistor
-  (signal_analysis.transistor_circuits)
+  (detect_transistor_circuits)
 - Q5/Q7/Q9 has_snubber=true false positive — R18 (215k) is an open-drain pull-up, not a snubber
-  (signal_analysis.transistor_circuits)
+  (detect_transistor_circuits)
 - I2C bus_analysis has_pull_up=false for CAM.SDA/SCL despite R29/R30 (10k to +3V3) present; design_observations correctly detects them
   (design_analysis.bus_analysis.i2c)
 - U11 MT9284-28J LED driver misclassified as switching regulator with output_rail=VBUS and estimated_vout=2.8V — drives 10 IR LEDs, not a voltage output
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 (none)
@@ -47,9 +47,9 @@
 
 ### Incorrect
 - Same Q8 false LED driver, TVS missed, CC check fail, snubber false positive, I2C pull-up inconsistency, MT9284 misclassification as rev2
-  (signal_analysis)
+  (findings)
 - U8/U7 input_rail=__unnamed_0 instead of named rail — +3.3VA label removed between rev2 and rev3.1
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 (none)

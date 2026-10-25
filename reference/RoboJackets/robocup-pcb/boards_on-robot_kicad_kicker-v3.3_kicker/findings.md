@@ -41,7 +41,7 @@
 
 ### Missed
 - R17(505k)/R18(113k) feedback voltage divider from V+ HV rail to U3 FB pin not detected. Ratio=18.3%, critical for boost converter output voltage regulation.
-  (signal_analysis.voltage_dividers)
+  (detect_voltage_dividers)
 
 ### Suggestions
 - Ensure voltage divider detection identifies resistor chains connected to IC feedback pins in power regulation circuits

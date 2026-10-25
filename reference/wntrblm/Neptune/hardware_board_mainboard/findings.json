@@ -92,10 +92,12 @@
           "analyzer_section": "detect_opamp_circuits",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_opamp_circuits",
             "op": "field_equals",
-            "field": "gain",
-            "value": 3.2,
-            "detector_filter": "detect_opamp_circuits"
+            "match_field": "reference",
+            "match_value": "U1",
+            "assert_field": "gain",
+            "assert_value": 3.2
           },
           "detector": "opamp_circuits",
           "subject_refs": [

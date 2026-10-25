@@ -17,21 +17,21 @@
 
 ### Incorrect
 - 7 false positive RF matching networks detected - these are power supply LC filter components (L1 6.8uH, C7 10uF, C4 0.1uF) misidentified as antenna matching circuits
-  (signal_analysis.rf_matching)
+  (detect_rf_matching)
 - BD9G101G input rail shown as __unnamed_11 - should trace through diode bridge to 24VAC input
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - AMS1117-3.3 missing input cap warning for +5V rail is incorrect - C7/C9 (10uF) are on the +5V rail from BD9G101G output
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 - BD9G101G estimated Vout=4.04V using 0.6V Vref heuristic - BD9G101G actual Vref is 0.75V giving Vout=5.04V which matches the +5V rail
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 
 ### Missed
 - Full-wave bridge rectifier (7x SS210 diodes) for 24VAC input not detected as a rectifier circuit
-  (signal_analysis)
+  (findings)
 - Fuse F1 (140mA/340mA) on input not connected to protection_devices analysis
-  (signal_analysis.protection_devices)
+  (detect_protection_devices)
 - USB-C connector (J4) present but no USB data analysis or ESD protection check
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Suggestions
 - RF matching detector should require plausible RF component values (not 10uF caps or 6.8uH inductors)

@@ -98,10 +98,12 @@
           "analyzer_section": "detect_power_regulators",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_power_regulators",
             "op": "field_equals",
-            "field": "estimated_vout",
-            "value": 2.8,
-            "detector_filter": "detect_power_regulators"
+            "match_field": "ref",
+            "match_value": "U11",
+            "assert_field": "estimated_vout",
+            "assert_value": 2.8
           },
           "detector": "power_regulators",
           "subject_refs": [

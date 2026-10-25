@@ -23,11 +23,11 @@
 
 ### Incorrect
 - Y1 SG-8002CA 8M-PCML0 is an active oscillator (SG-8002CA series by Epson), not a passive crystal. The analyzer incorrectly identified 12 power decoupling capacitors on D+3V3 rail as crystal load caps, resulting in a nonsensical effective_load_pF=50003.0. Active oscillators have no external load caps.
-  (signal_analysis.crystal_circuits)
+  (detect_crystal_circuits)
 - U1 TPS5430DDA detected as switching regulator with input_rail=VCC but no output_rail identified. The TPS5430DDA in this design generates the GNDA analog reference rail through an unusual topology (PH->L1->GNDA), and its feedback divider R4/R3 is detected as a separate voltage_divider but not linked to U1
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - Design observation for regulator_caps flags U4 TPS72325DBV and U5 AMS1117-3.3 as missing output caps, but the output nets are __unnamed which makes it hard to verify. U2 LP2985-2.5 also flagged for missing output caps on __unnamed_12
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Missed
 (none)

@@ -25,10 +25,10 @@
           "analyzer_section": "detect_opamp_circuits",
           "check": {
             "path": "findings",
-            "op": "field_equals",
+            "detector_filter": "detect_opamp_circuits",
+            "op": "contains_match",
             "field": "gain",
-            "value": 1.0,
-            "detector_filter": "detect_opamp_circuits"
+            "pattern": "^1\\.0$"
           },
           "detector": "opamp_circuits",
           "subject_refs": [],
@@ -70,10 +70,12 @@
           "analyzer_section": "detect_voltage_dividers",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_voltage_dividers",
             "op": "field_equals",
-            "field": "ratio",
-            "value": 0.968,
-            "detector_filter": "detect_voltage_dividers"
+            "match_field": "r_top.ref",
+            "match_value": "R24",
+            "assert_field": "ratio",
+            "assert_value": 0.968
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -90,10 +92,12 @@
           "analyzer_section": "detect_voltage_dividers",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_voltage_dividers",
             "op": "field_equals",
-            "field": "ratio",
-            "value": 0.968,
-            "detector_filter": "detect_voltage_dividers"
+            "match_field": "r_top.ref",
+            "match_value": "R22",
+            "assert_field": "ratio",
+            "assert_value": 0.968
           },
           "detector": "voltage_dividers",
           "subject_refs": [
@@ -110,10 +114,12 @@
           "analyzer_section": "detect_voltage_dividers",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_voltage_dividers",
             "op": "field_equals",
-            "field": "ratio",
-            "value": 0.5,
-            "detector_filter": "detect_voltage_dividers"
+            "match_field": "r_top.ref",
+            "match_value": "R13",
+            "assert_field": "ratio",
+            "assert_value": 0.5
           },
           "detector": "voltage_dividers",
           "subject_refs": [

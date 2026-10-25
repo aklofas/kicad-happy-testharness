@@ -20,9 +20,9 @@
 
 ### Incorrect
 - U3 LMR38010 estimated_vout=1.978V is wrong. The analyzer assumed Vref=0.6V (heuristic) but LMR38010 actual Vref is 1.0V per datasheet. Correct Vout = 1.0 / 0.303 = 3.30V, matching the +3V3 output rail
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - Design observation vout_net_mismatch reports 40.1% difference between estimated 1.978V and +3V3 rail, but this mismatch is caused by the wrong Vref assumption, not a real circuit error
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Missed
 (none)

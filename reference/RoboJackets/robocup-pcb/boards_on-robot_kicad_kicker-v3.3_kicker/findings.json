@@ -127,10 +127,12 @@
           "analyzer_section": "detect_voltage_dividers",
           "check": {
             "path": "findings",
+            "detector_filter": "detect_voltage_dividers",
             "op": "field_equals",
-            "field": "ratio",
-            "value": 18.3,
-            "detector_filter": "detect_voltage_dividers"
+            "match_field": "r_top.ref",
+            "match_value": "R17",
+            "assert_field": "ratio",
+            "assert_value": 18.3
           },
           "detector": "voltage_dividers",
           "subject_refs": [

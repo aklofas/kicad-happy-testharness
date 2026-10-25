@@ -17,9 +17,9 @@
 
 ### Incorrect
 - U1 unit3 (+8VREF non-inverting amp, gain=3.2) misclassified as 'transimpedance_or_buffer' — has R205 (220k) feedback and R202 (100k) to GND, a standard non-inverting topology
-  (signal_analysis.opamp_circuits)
+  (detect_opamp_circuits)
 - design_observations: U1 TL074 decoupling warning emitted 5 times (once per symbol unit) instead of once per IC
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Missed
 (none)

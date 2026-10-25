@@ -13,13 +13,13 @@
 
 ### Incorrect
 - LTC3126 estimated_vout=2.41V using assumed Vref=0.6V -- actual Vref=0.8V (VSET pins to GND), correct Vout=3.3V matching +3V3 output rail
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - IC801/IC802 LTC7000EMSE gate drivers have 0 pins parsed due to lib_name/lib_id mismatch -- lib_symbols keyed by local name but lookup uses lib_id
   (ic_pin_analysis)
 
 ### Missed
 - R701/R702 (5 milliohm, 1W) current sense resistors on ACP/ACN and SRP/SRN pins not detected
-  (signal_analysis.current_sense)
+  (detect_current_sense)
 
 ### Suggestions
 - Voltage divider detector should accept dedicated feedback ground pins (FBG, AGND, etc.) as bottom reference

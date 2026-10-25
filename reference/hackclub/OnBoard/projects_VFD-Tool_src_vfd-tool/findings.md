@@ -19,17 +19,17 @@
 
 ### Incorrect
 - TPS562200 U7 estimated Vout=2.58V but U8 (identical part) has no estimated Vout
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - TPS54331DR U10 has no estimated Vout despite likely having feedback divider
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - BOM sum (171) does not match total_components (174) — 3 missing, test_points=4 but test_points appear in BOM for other projects
   (statistics)
 
 ### Missed
 - VFD (vacuum fluorescent display) driver circuitry not detected — this is the main function of the board
-  (signal_analysis)
+  (findings)
 - No current sense detection despite likely having sense resistors for VFD filament drive
-  (signal_analysis.current_sense)
+  (detect_current_sense)
 
 ### Suggestions
 - Ensure estimated_vout is computed consistently for all switching regulators with feedback dividers

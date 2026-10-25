@@ -25,11 +25,11 @@
 
 ### Incorrect
 - U9 (TPS631000) estimated_vout is 5.914V but the output rail is correctly labeled +5V. The vout estimate is slightly off from the nominal 5V, likely due to heuristic Vref=0.6V vs actual TPS631000 Vref=0.5V
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - U10 (TPS631000) estimated_vout is 3.969V on the +3.3V rail; same Vref heuristic issue. With actual Vref=0.5V, output would be 0.5/0.151=3.31V which matches the +3.3V rail exactly
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - RC filter R3/C8 (10k/4u7) classified as 'RC-network' with ground_net='+3.3V' which is wrong - this is a reset RC delay circuit, not a ground-referenced filter
-  (signal_analysis.rc_filters)
+  (detect_rc_filters)
 
 ### Missed
 (none)
@@ -55,9 +55,9 @@
 
 ### Incorrect
 - U9/U10 estimated_vout values are off due to assumed Vref=0.6V instead of TPS631000's actual 0.5V
-  (signal_analysis.power_regulators)
+  (detect_power_regulators)
 - Missing caps observation for U9/U10 claims Vdc input rail lacks decoupling, but input capacitors may be on the parent schematic or connected via hierarchical labels
-  (signal_analysis.design_observations)
+  (detect_design_observations)
 
 ### Missed
 (none)

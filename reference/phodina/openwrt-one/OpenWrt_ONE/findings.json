@@ -50,10 +50,10 @@
           "expected_value": 1.2,
           "check": {
             "path": "findings",
-            "op": "field_equals",
+            "detector_filter": "detect_power_regulators",
+            "op": "contains_match",
             "field": "estimated_vout",
-            "value": 1.2,
-            "detector_filter": "detect_power_regulators"
+            "pattern": "^1\\.2$"
           }
         },
         {
