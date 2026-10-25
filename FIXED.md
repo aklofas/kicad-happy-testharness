@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-083: `run_checks` silently dropped an unreadable assertion file
+
+**Severity:** HIGH (silent assertion loss; no corpus file was affected).
+**File:** `regression/checks.py` (`load_assertions`), `regression/run_checks.py` (`_check_one_set`, `check_assertions`, `main`); tests in `tests/test_run_checks.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (code A2-F1).
+**Fixed:** 2026-10-25.
+
+- **Root cause:** `load_assertions` caught `JSONDecodeError` / `OSError` and `continue`d: a malformed tracked file vanished from the totals, and if it was the only file the run printed "No assertions found" and exited 0.
+- **Fix:** an unreadable file (also non-UTF-8, or JSON that is not an object) becomes an error set carrying `_load_error`; `run_checks` reports it as `load_errors` (JSON + text, with the file), keeps it through the era filter, and exits 1 even under `--allow-errors` (that flag is for missing outputs on shallow clones). `check_assertions` (used by `promote.py`) counts it as an error.
+- **Verification:** two subprocess tests (broken file beside a passing set; broken file alone) fail on the old code and pass after. Full-corpus `run_checks --all --era all` before/after: identical, 2,714,062 / 7 failed / 2 errors, `load_errors` 0, no change in the non-passing set.
+
 ## 2026-10-25 — TH-082: `discover.py --repo` rewrote the global manifests from one repo — a "full" gate then ran and passed on that repo
 
 **Severity:** HIGH (corpus gate false-pass path; live manifests were intact, no past verdict affected).

@@ -2898,12 +2898,6 @@ The output walk globs `outputs_dir/<dir>/*.json`, but schematic outputs live at 
 **Discovered:** 2026-10-25, harness external audit round 1 (code A2-F4)
 A missing key reads as `""`, which matches `^$`, so the lock fails correctly. JSON `null` stringifies to `"None"` and `[]` yields no strings, so neither matches and the lock passes. A field regressing to null — the most likely shape of a field regression — is invisible to every required-field lock on every domain detector. Fix: the required-field form rejects null and empty lists; measure the corpus effect before landing (corpus-semantics change).
 
-### TH-083: `run_checks` silently drops an unreadable assertion file
-**Severity:** HIGH (silent assertion loss)
-**File:** `regression/checks.py:366-385` (`load_assertions`: `except (json.JSONDecodeError, OSError): continue`); `regression/run_checks.py:226-229`
-**Discovered:** 2026-10-25, harness external audit round 1 (code A2-F1)
-A malformed tracked assertion file (hand edit, merge conflict) is skipped with no record or warning; its assertions vanish from the totals, and if it was the only file the run exits 0 "No assertions found". Fix: an unreadable file is a structured error and `run_checks` exits non-zero.
-
 ### TH-079: `generate_validation_md.py` builds the category table and the total from different denominators
 **Severity:** LOW (generated release document)
 **File:** harness `tools/generate_validation_md.py`; product `VALIDATION.md:82-88`

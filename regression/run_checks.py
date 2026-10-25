@@ -41,6 +41,9 @@ def check_assertions(data_dir, repo_name=None, analyzer_type=None):
         repo = aset.get("_repo", "")
         project_path = aset.get("_project_path")
         assertions = aset.get("assertions", [])
+        if aset.get("_load_error"):   # an unreadable assertion file
+            errors += 1
+            continue
 
         output_file = find_output_file(file_pattern, repo, project_path, atype)
 
@@ -116,11 +119,22 @@ def _check_one_set(aset):
     project_path = aset.get("_project_path")
 
     result = {
-        "total": 0, "passed": 0, "failed": 0, "errors": 0,
+        "total": 0, "passed": 0, "failed": 0, "errors": 0, "load_errors": 0,
         "aspirational_total": 0, "aspirational_passed": 0,
         "aspirational_failed": 0,
         "failures": [], "results": [],
     }
+
+    if aset.get("_load_error"):
+        result["load_errors"] = 1
+        result["results"].append({
+            "file": aset.get("_source_file", file_pattern), "repo": repo_name,
+            "project": project_name, "id": "<assertion file>",
+            "description": "assertion file could not be loaded",
+            "passed": False, "error": f"assertion file unreadable: {aset['_load_error']}",
+            "aspirational": False,
+        })
+        return result
 
     output_file = find_output_file(file_pattern, repo_name, project_path, atype)
 
@@ -236,13 +250,13 @@ def main():
         for aset in assertion_sets:
             kept = [a for a in aset.get("assertions", [])
                     if era_filter(a, target_era)]
-            if kept:
+            if kept or aset.get("_load_error"):
                 filtered_aset = dict(aset)
                 filtered_aset["assertions"] = kept
                 filtered_sets.append(filtered_aset)
         assertion_sets = filtered_sets
 
-    total = passed = failed = errors = 0
+    total = passed = failed = errors = load_errors = 0
     aspirational_total = aspirational_passed = aspirational_failed = 0
     failures = []
     all_results = []
@@ -260,6 +274,7 @@ def main():
                 passed += r["passed"]
                 failed += r["failed"]
                 errors += r["errors"]
+                load_errors += r["load_errors"]
                 aspirational_total += r["aspirational_total"]
                 aspirational_passed += r["aspirational_passed"]
                 aspirational_failed += r["aspirational_failed"]
@@ -273,6 +288,7 @@ def main():
             passed += r["passed"]
             failed += r["failed"]
             errors += r["errors"]
+            load_errors += r["load_errors"]
             aspirational_total += r["aspirational_total"]
             aspirational_passed += r["aspirational_passed"]
             aspirational_failed += r["aspirational_failed"]
@@ -285,6 +301,7 @@ def main():
             "passed": passed,
             "failed": failed,
             "errors": errors,
+            "load_errors": load_errors,
             "pass_rate": f"{passed/total*100:.1f}%" if total > 0 else "N/A",
             "results": all_results,
         }
@@ -309,6 +326,11 @@ def main():
         print(f"Passed: {passed}")
         print(f"Failed: {failed}")
         print(f"Errors: {errors}")
+        if load_errors:
+            print(f"Unreadable assertion files: {load_errors}")
+            for r in all_results:
+                if r.get("id") == "<assertion file>":
+                    print(f"  LOAD ERROR {r['file']}: {r['error']}")
         if total > 0:
             print(f"Rate:   {passed/total*100:.1f}%")
 
@@ -325,7 +347,7 @@ def main():
                 if f.get("error"):
                     print(f"       Error: {f['error']}")
 
-    if failed > 0:
+    if failed > 0 or load_errors > 0:   # --allow-errors never waives an unreadable file
         sys.exit(1)
     elif errors > 0 and not args.allow_errors:
         sys.exit(1)

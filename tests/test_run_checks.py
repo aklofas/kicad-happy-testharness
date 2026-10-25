@@ -303,3 +303,31 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {e}")
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+def _write_broken_assertion_file(tmpdir, name="broken_finding.json"):
+    adir = Path(tmpdir) / "reference" / _REPO / _PROJECT / "assertions" / "schematic"
+    adir.mkdir(parents=True, exist_ok=True)
+    (adir / name).write_text('{"file_pattern": "test_file", "assertions": [', encoding="utf-8")
+
+
+def test_unreadable_assertion_file_is_a_load_error_beside_good_sets():
+    """A malformed assertion file next to passing sets is reported and fails the run (code A2-F1)."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _write_assertion_file(tmpdir, [{"id": "T-1", "description": "d",
+                                        "check": {"path": "component_count", "op": "equals", "value": 1}}])
+        _write_output_file(tmpdir, {"component_count": 1})
+        _write_broken_assertion_file(tmpdir)
+        rc, out = _run_checks(tmpdir, ["--allow-errors"])
+        assert rc == 1
+        assert out["passed"] == 1 and out["load_errors"] == 1
+        assert any(r["id"] == "<assertion file>" and "broken_finding.json" in r["file"] for r in out["results"])
+
+
+def test_only_file_unreadable_is_not_no_assertions_found():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _write_broken_assertion_file(tmpdir)
+        (Path(tmpdir) / "reference" / _REPO / _PROJECT / "baselines").mkdir(parents=True, exist_ok=True)
+        (Path(tmpdir) / "reference" / _REPO / _PROJECT / "baselines" / "metadata.json").write_text("{}")
+        rc, out = _run_checks(tmpdir)
+        assert rc == 1 and out["load_errors"] == 1

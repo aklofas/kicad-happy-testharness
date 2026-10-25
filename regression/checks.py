@@ -381,7 +381,14 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                         data["_project_path"] = project_path
                         data["_source_file"] = str(f)
                         all_assertions.append(data)
-                    except (json.JSONDecodeError, OSError):
-                        continue
+                    except (json.JSONDecodeError, OSError, UnicodeDecodeError, AttributeError) as e:
+                        # an unreadable file is an error set, never a silent loss of its assertions
+                        all_assertions.append({
+                            "_load_error": f"{type(e).__name__}: {e}",
+                            "_repo": repo_key, "_project": proj_dir.name,
+                            "_project_path": project_path, "_source_file": str(f),
+                            "analyzer_type": type_dir.name, "file_pattern": f.name,
+                            "assertions": [],
+                        })
 
     return all_assertions
