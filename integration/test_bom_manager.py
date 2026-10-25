@@ -56,7 +56,7 @@ def find_root_schematics(repos_dir: Path, repo_filter: str = "") -> list[Path]:
         if sch.exists():
             if repo_filter:
                 rel = sch.relative_to(repos_dir)
-                if repo_filter.lower() not in str(rel.parts[0]).lower():
+                if repo_filter.lower() not in "/".join(rel.parts[:2]).lower():
                     continue
             roots.append(sch)
     return roots
@@ -89,7 +89,7 @@ def run_bom_manager(args: list[str], timeout: int = 60) -> dict:
         }
 
 
-def test_analyze(sch_path: Path, verbose: bool = False) -> dict:
+def check_analyze(sch_path: Path, verbose: bool = False) -> dict:
     result = run_bom_manager(["analyze", str(sch_path), "--json", "--recursive"])
 
     report = None
@@ -100,7 +100,7 @@ def test_analyze(sch_path: Path, verbose: bool = False) -> dict:
             result["success"] = False
             result["stderr"] += "\nFailed to parse JSON output"
 
-    checks = {}
+    checks = {"exit_ok": result["success"]}   # a failed run is a failure, not an empty pass
     if report:
         checks["has_convention"] = "convention" in report
         checks["has_stats"] = "stats" in report
@@ -131,10 +131,10 @@ def test_analyze(sch_path: Path, verbose: bool = False) -> dict:
     }
 
 
-def test_export(sch_path: Path, output_csv: Path, verbose: bool = False) -> dict:
+def check_export(sch_path: Path, output_csv: Path, verbose: bool = False) -> dict:
     result = run_bom_manager(["export", str(sch_path), "-o", str(output_csv), "--recursive"])
 
-    checks = {}
+    checks = {"exit_ok": result["success"]}
     if result["success"]:
         checks["csv_created"] = output_csv.exists()
 
@@ -167,7 +167,7 @@ def test_export(sch_path: Path, output_csv: Path, verbose: bool = False) -> dict
     }
 
 
-def test_order(csv_path: Path, output_dir: Path, verbose: bool = False) -> dict:
+def check_order(csv_path: Path, output_dir: Path, verbose: bool = False) -> dict:
     if not csv_path.exists():
         return {
             "result": {"success": False, "stderr": "CSV not found"},
@@ -213,12 +213,12 @@ def test_order(csv_path: Path, output_dir: Path, verbose: bool = False) -> dict:
 
     result = run_bom_manager(["order", str(csv_path), "-o", str(output_dir), "--json"])
 
-    checks = {}
+    checks = {"exit_ok": result["success"]}
     if result["success"] and result["stdout"].strip():
         try:
             order_result = json.loads(result["stdout"])
         except json.JSONDecodeError:
-            checks["json_parse_failed"] = True
+            checks["json_parses"] = False
             return {"result": result, "checks": checks}
 
         orders = order_result.get("orders", {})
@@ -247,7 +247,7 @@ def test_order(csv_path: Path, output_dir: Path, verbose: bool = False) -> dict:
     }
 
 
-def test_export_merge(sch_path: Path, output_csv: Path, verbose: bool = False) -> dict:
+def check_export_merge(sch_path: Path, output_csv: Path, verbose: bool = False) -> dict:
     if not output_csv.exists():
         return {"result": {"success": False}, "checks": {"skipped": True}}
 
@@ -276,7 +276,7 @@ def test_export_merge(sch_path: Path, output_csv: Path, verbose: bool = False) -
 
     result = run_bom_manager(["export", str(sch_path), "-o", str(output_csv), "--recursive"])
 
-    checks = {}
+    checks = {"exit_ok": result["success"]}
     if result["success"] and output_csv.exists():
         with open(output_csv, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
@@ -379,7 +379,7 @@ def main():
 
     for i, sch in enumerate(schematics, 1):
         rel = sch.relative_to(REPOS_DIR)
-        repo_name = rel.parts[0]
+        repo_name = "/".join(rel.parts[:2])   # owner/repo, not the owner alone
         print(f"{Colors.CYAN}[{i}/{len(schematics)}] {rel}{Colors.RESET}")
 
         sch_out = out_base / repo_name / sch.stem
@@ -390,7 +390,7 @@ def main():
         sch_start = time.time()
 
         if "analyze" in stages:
-            analyze_result = test_analyze(sch, verbose=args.verbose)
+            analyze_result = check_analyze(sch, verbose=args.verbose)
             ar = analyze_result["result"]
             ac = analyze_result["checks"]
 
@@ -413,7 +413,7 @@ def main():
             pass
 
         if "export" in stages:
-            export_result = test_export(sch, csv_path, verbose=args.verbose)
+            export_result = check_export(sch, csv_path, verbose=args.verbose)
             er = export_result["result"]
             ec = export_result["checks"]
 
@@ -429,7 +429,7 @@ def main():
             print_check_result("export", ec, verbose=args.verbose)
 
         if "order" in stages:
-            order_result = test_order(csv_path, order_dir, verbose=args.verbose)
+            order_result = check_order(csv_path, order_dir, verbose=args.verbose)
             oc = order_result["checks"]
 
             if oc.get("skipped") or oc.get("skipped_empty"):
@@ -445,7 +445,7 @@ def main():
             print_check_result("order", oc, verbose=args.verbose)
 
         if "merge" in stages and csv_path.exists():
-            merge_result = test_export_merge(sch, csv_path, verbose=args.verbose)
+            merge_result = check_export_merge(sch, csv_path, verbose=args.verbose)
             mc = merge_result["checks"]
 
             if mc.get("skipped") or mc.get("skipped_empty"):
