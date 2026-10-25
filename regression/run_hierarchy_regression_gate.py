@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """v1.4 hierarchy regression gate — curated sub-sheets, fresh paired runs.
 
-Audit LOG 9 / regression-testing-audit F9 (2026-05-15): the existing
-``run_v14_gate.py`` intentionally passes ``--no-hierarchy`` to both v1.3.1 and
+The standard gate (``run_v14_gate.py``) intentionally passes ``--no-hierarchy`` to both v1.3.1 and
 v1.4 sides so the comparison stays apples-to-apples. That leaves a coverage
 hole: a v1.5 change that accidentally turns hierarchy auto-discovery into a
 no-op (or fans hierarchy expansion out per-component) would NOT be caught by
@@ -40,12 +39,12 @@ Contracts per board:
   3. **hierarchy_determinism** — with hierarchy enabled and
      ``PYTHONHASHSEED=0``, two consecutive runs MUST produce byte-equal
      envelopes modulo volatile fields (``timestamp``, ``run_id``,
-     ``capability_mode_ref``). Distinct from the LOG 7 contract
+     ``capability_mode_ref``). Distinct from the cross-seed contract
      (``test_only_deterministic_hash_seed``): that one is RED-xfail and
      tests cross-seed invariance (a v1.5 product fix); this one tests
      intra-seed reproducibility and should be GREEN today.
 
-Curated set (3 sub-sheets with confirmed differentials, 2026-05-16):
+Curated set (3 sub-sheets with confirmed differentials):
 
   * ``chof747/kicad-building-blocks/mcu_3v3_pwr_regulation.kicad_sch``
     — small (12 findings hier / 9 no-hier)
@@ -242,7 +241,8 @@ def _check_finding_superset(hier_env, nohier_env, known_suppressions=()):
 def _check_determinism(env_a, env_b):
     """Contract 3: two consecutive default-mode runs (PYTHONHASHSEED=0) MUST
     produce byte-equal envelopes after stripping volatile fields. Distinct
-    from LOG 7 (cross-seed invariance, RED-xfail) — this is intra-seed
+    from ``test_only_deterministic_hash_seed`` (cross-seed invariance,
+    RED-xfail) — this is intra-seed
     reproducibility, GREEN today."""
     stripped_a = _strip_volatile(env_a)
     stripped_b = _strip_volatile(env_b)

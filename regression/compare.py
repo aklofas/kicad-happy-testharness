@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compare current analyzer outputs against baselines.
 
-Uses per-project baselines in data/{repo}/{project}/baselines/ to compare
+Uses per-project baselines in reference/{owner}/{repo}/{project}/baselines/ to compare
 against current outputs in results/outputs/{type}/{repo}/.
 
 Usage:

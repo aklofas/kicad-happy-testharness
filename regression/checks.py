@@ -1,7 +1,7 @@
 """Assertion data model and evaluation for analyzer outputs.
 
 Assertions are machine-checkable facts about what an analyzer should
-find in a specific file. They live in data/{repo}/{project}/assertions/{type}/
+find in a specific file. They live in reference/{owner}/{repo}/{project}/assertions/{type}/
 and are checked into git, providing permanent regression protection.
 
 Assertion format:
@@ -105,7 +105,7 @@ def _field_strings(field_val):
     For lists, returns str() of each element. This lets contains_match /
     not_contains_match / count_matches iterate list-typed fields (e.g., a
     finding's `components: ["R5", "C3"]`) without relying on Python's
-    list repr. Fixes TH-031.
+    list repr (TH-031).
     """
     if isinstance(field_val, list):
         return [str(v) for v in field_val]
@@ -307,10 +307,11 @@ def evaluate_assertion(assertion, data):
 
 
 def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=None):
-    """Load assertion files from data/{repo}/{project}/assertions/{type}/.
+    """Load assertion files from reference/{owner}/{repo}/{project}/assertions/{type}/.
 
     Args:
-        data_dir: Path to the data/ directory
+        data_dir: Path to the reference/ directory (utils.DATA_DIR, under the
+            data root that KICAD_HAPPY_TESTHARNESS_DATA_DIR can relocate)
         analyzer_type: Filter to one type (schematic, pcb, gerber)
         file_pattern: Filter by file_pattern glob
         repo_name: Filter to one repo
@@ -323,7 +324,7 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
 
     all_assertions = []
 
-    # Walk data/{owner}/{repo}/{project}/assertions/{type}/*.json
+    # Walk reference/{owner}/{repo}/{project}/assertions/{type}/*.json
     repo_dirs = []
     if repo_name:
         rd = data_dir / repo_name

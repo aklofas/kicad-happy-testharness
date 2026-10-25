@@ -1,4 +1,4 @@
-"""Schema-era tagging for assertion migration (spec §19, design A8).
+"""Schema-era tagging for assertion migration.
 
 Single source of truth for era logic. Imported by checks.py, seed*.py,
 run_checks.py, check_staleness.py, tag_assertions.py.
@@ -17,8 +17,8 @@ from typing import Iterator, Optional
 # ---- Constants -----------------------------------------------------------
 
 CURRENT_SCHEMA_ERA: str = "v3.0"
-"""Current assertion-era marker. Bumped at the v3.0 output-freeze / relock event
-(v3 round 8, candidate a0df172; spec 2026-10-14-h0 section 6.2)."""
+"""Current assertion-era marker. Bump it when assertions are relocked after an
+output change; v3.0 marks the v3.0 output freeze."""
 
 KNOWN_ERAS: tuple[str, ...] = ("pre-v1.4", "v1.4", "v3.0")
 """Eras the harness recognizes. Append-only; never remove."""
@@ -31,7 +31,8 @@ _DEFAULT_REGISTRY_DIR = Path(__file__).resolve().parent
 def normalize_schema_era(raw) -> Optional[dict]:
     """Canonicalize a schema_era value to its full object form.
 
-    Accepts None / bare-string / object. See spec §3.6 for precedence.
+    Accepts None / bare-string / object; a bare string becomes an object with
+    null provenance fields.
     Returns None for missing input. Raises ValueError on malformed dict,
     TypeError on unsupported types.
     """

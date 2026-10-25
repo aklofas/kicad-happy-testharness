@@ -42,8 +42,8 @@ def validate_structural(ctx, name, data, is_modern):
     ctx.stats["total"] += 1
 
     # Modern (.kicad_sch / v1.4 envelopes): provenance lives in `inputs` and
-    # compatibility metadata in `compat` (Track 1.3 + 1.4); the legacy top-level
-    # `file` field was removed at Track 1.3.
+    # compatibility metadata in `compat`; the legacy top-level `file` field is
+    # no longer emitted.
     # Legacy (.sch KiCad 5): pre-envelope shape, still emits `file`; no compat.
     if is_modern:
         required = ["inputs", "compat", "components", "nets", "labels",

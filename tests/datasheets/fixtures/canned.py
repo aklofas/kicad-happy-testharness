@@ -187,7 +187,7 @@ def make_stm32f103c8t6() -> tuple[Callable[[dict], None], str]:
 
 
 # ---------------------------------------------------------------------------
-# Exported collection (ordered to match task spec)
+# Exported collection (stable fixture-builder order)
 # ---------------------------------------------------------------------------
 
 ALL_BUILDERS = [

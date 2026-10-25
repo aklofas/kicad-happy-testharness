@@ -1,4 +1,4 @@
-"""One subprocess recipe for every analyzer run (report B12/A3).
+"""One subprocess recipe for every analyzer run.
 
 - hermetic env (seed pinned, credentials stripped unless online)
 - output written to a private temp path, validated, published atomically

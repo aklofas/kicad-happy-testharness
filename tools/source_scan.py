@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared recursive source walker for every harness scanner (report A2).
+"""Shared recursive source walker for every harness scanner.
 
 Owns: product file discovery, root-relative paths, finding emit-site
 extraction under the literal-tag policy (tools/SCANNER_POLICY.md), the

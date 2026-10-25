@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Datasheet database/registry CLI. Sub-project A of v1.3 roadmap.
+"""Datasheet database/registry CLI.
 
 Usage:
     datasheet_db insert --url URL [--mpn MPN] [--manufacturer MFR]

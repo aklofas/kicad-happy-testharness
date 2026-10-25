@@ -78,7 +78,7 @@ def _changed_files(kicad_happy_dir, since):
 def get_changed_files(kicad_happy_dir, since="HEAD~1"):
     """Changed files in kicad-happy since `since`. Returns None when git fails
     (not a repo, unknown ref, shallow clone) - callers must treat None as a
-    diagnostic failure, never as 'no changes' (report B12)."""
+    diagnostic failure, never as 'no changes'."""
     files, err = _changed_files(kicad_happy_dir, since)
     if err:
         print(f"error: {err}", file=sys.stderr)
@@ -204,8 +204,7 @@ def recommend_actions(affected_types):
 
 
 # Entry points the harness invokes directly, and the analyzer types each one
-# evidences. cross_analysis consumes schematic+pcb outputs; thermal was an
-# empty exact entry before (report A2); datasheets had none.
+# evidences. cross_analysis consumes schematic+pcb outputs.
 ENTRY_POINTS = {
     "skills/kicad/scripts/analyze_schematic.py": {"schematic"},
     "skills/kicad/scripts/analyze_pcb.py": {"pcb"},
@@ -255,7 +254,7 @@ def _discover_modules(kicad_happy_dir):
 
 
 def build_module_index(kicad_happy_dir):
-    """Dotted module name -> root-relative path, package-qualified (report A2).
+    """Dotted module name -> root-relative path, package-qualified.
 
     A file skills/<skill>/scripts/a/b.py is importable as 'a.b' from any script
     in that skill (scripts/ is on sys.path), and 'a' maps to a/__init__.py.
@@ -278,7 +277,7 @@ def resolve_import(importer_rel, node, index):
 
     Importing `a.b.c` executes `a/__init__.py` and `a/b/__init__.py` first, so
     every indexed ancestor package `__init__.py` of a resolved name is an edge
-    too (spec §4.2).
+    too.
     """
     out = set()
 

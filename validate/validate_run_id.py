@@ -7,7 +7,7 @@ pointers:
   - inputs.run_id            -- minted by build_inputs() at write time
   - capability_mode_ref.run_id -- the session ID from capability_mode.json
 
-Post-v1.4 polish-pass (audit Highest-Risk #5), all 6 analyzers resolve
+All 6 analyzers resolve
 capability_mode_ref BEFORE build_inputs and pass run_id=capability_mode_ref.run_id
 into build_inputs. The output invariant is:
 

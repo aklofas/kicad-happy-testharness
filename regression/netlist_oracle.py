@@ -28,7 +28,7 @@ import re
 import subprocess
 from pathlib import Path
 
-# Verified against kicad-cli 10.0.4 output (2026-07-24). (net (code..) (name
+# Verified against kicad-cli 10.0.4 output. (net (code..) (name
 # "..")...) blocks are newline/tab-separated, not single-line, but \s matches
 # newlines so these still anchor correctly.
 NET_RE = re.compile(

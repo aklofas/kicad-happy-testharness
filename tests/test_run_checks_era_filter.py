@@ -1,12 +1,11 @@
-"""Tests for --era filter on regression/run_checks.py (A8 read-side).
+"""Tests for --era filter on regression/run_checks.py (schema-era read side).
 
 Builds a tiny synthetic repo + assertions tree in tmp, runs run_checks.py as
 a subprocess with --json, asserts the right assertions are included/excluded
 in each mode (default / --era pre-v1.4 / --era all).
 
-Runs under bare python3 in the pre-push hook. Each test is a callable
-test_* function; main() at bottom runs them all and exits non-zero on any
-failure.
+Collected by pytest (unit tier). main() at the bottom also runs every
+test_* function directly and exits non-zero on any failure.
 """
 from __future__ import annotations
 

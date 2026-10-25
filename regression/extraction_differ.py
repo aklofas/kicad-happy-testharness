@@ -1,4 +1,4 @@
-"""Extraction differ for v1.4 datasheet cache files (spec §9).
+"""Extraction differ for v1.4 datasheet cache files.
 
 Compares two extractions of the same MPN with domain-aware tolerance:
   - SpecValue min/typ/max: ±5% OR ±1 LSD numeric tolerance
@@ -87,7 +87,7 @@ class DiffReport:
 
 
 # ===========================================================================
-# Numeric tolerance — spec §9 line 623: ±5% OR ±1 LSD whichever larger
+# Numeric tolerance: ±5% or ±1 least-significant digit, whichever is larger
 # ===========================================================================
 
 _PCT_TOLERANCE = 0.05  # 5%
@@ -138,10 +138,10 @@ def _numeric_within_tolerance(gold: float, candidate: float) -> bool:
 
 
 # ===========================================================================
-# Condition fuzzy match — spec §9 line 625
+# Condition fuzzy match: conditions are normalized before comparison
 # ===========================================================================
 
-# Unicode equivalences spec calls out specifically.
+# Compatibility code points folded to their canonical letters before comparison.
 _UNICODE_EQUIVALENCES = {
     "\u00b5": "\u03bc",   # µ MICRO SIGN → μ GREEK LETTER MU
     "\u2126": "\u03a9",   # Ω OHM SIGN → Ω GREEK CAPITAL OMEGA
@@ -174,7 +174,7 @@ def _normalize_condition(s: str) -> str:
 # SpecValue diff — combines numeric + unit + condition + evidence
 # ===========================================================================
 
-# Confidence ordering per Track 2.4.
+# Confidence ordering, so a candidate downgrade can be flagged.
 _CONFIDENCE_ORDER = {"low": 0, "medium": 1, "high": 2}
 
 
@@ -224,7 +224,7 @@ def _lost_fields(path_prefix: str, gold: dict, cand: dict, fields: dict) -> list
 
 
 def _diff_evidence(path_prefix: str, gold_ev: dict, cand_ev: dict) -> list[DiffEntry]:
-    """Diff an evidence sub-dict per spec §9 lines 627-630."""
+    """Diff an evidence sub-dict: lost fields, page within ±1, section and confidence."""
     entries = []
 
     entries.extend(_lost_fields(path_prefix, gold_ev, cand_ev, {
@@ -317,7 +317,7 @@ def _diff_specvalue(path: str, gold: dict, cand: dict) -> list[DiffEntry]:
                 gold_value=g_cond, candidate_value=c_cond,
             ))
 
-    # notes: NOT DIFFED (per spec line 626)
+    # notes are advisory and intentionally not diffed
 
     g_ev = gold.get("evidence") or {}
     c_ev = cand.get("evidence") or {}
@@ -453,7 +453,7 @@ def compute_exit_code(report: DiffReport) -> int:
 def main(argv: Optional[list[str]] = None) -> int:
     import argparse
     parser = argparse.ArgumentParser(
-        description="Diff two v1.4 datasheet extractions per spec §9 tolerance.")
+        description="Diff two v1.4 datasheet extractions with domain-aware tolerance.")
     parser.add_argument("--gold", required=True, type=Path,
                         help="Path to the gold/reference extraction JSON.")
     parser.add_argument("--candidate", required=True, type=Path,

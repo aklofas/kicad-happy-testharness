@@ -258,9 +258,10 @@ def generate_spice_structural_assertions(data, strict=True):
         ast_num += 1
 
     # Per-component-ref assertions: "R5 simulated as rc_filter"
-    # The components field is a list, so str() produces "['R5', 'C3']".
-    # Use word-boundary matching to find the ref within the stringified list.
-    # Skip un-annotated refs (ending in ?) — they're not stable.
+    # contains_match tests the pattern against each element of the components
+    # list; the word boundaries keep R5 from matching R50.
+    # Skip un-annotated refs (ending in ?) and refs with other characters —
+    # they're not stable.
     seen = set()
     for r in results:
         stype = r.get("subcircuit_type", "unknown")
@@ -363,9 +364,9 @@ def generate_thermal_structural_assertions(data, strict=True):
     """Generate structural assertions from thermal analysis output.
 
     For each component ref in TH-DET assessments, asserts presence via
-    detector_filter on the top-level `assessments[]` list. (Pre-Track 1.2,
-    TH-DET lived in `findings[]`; the 1.2 envelope split moved per-component
-    junction-temperature estimates into `assessments[]`.)
+    detector_filter on the top-level `assessments[]` list. Per-component
+    junction-temperature estimates live in `assessments[]`, separate from
+    `findings[]`.
     """
     assessments = [a for a in data.get("assessments", [])
                    if a.get("detector") == "analyze_thermal"

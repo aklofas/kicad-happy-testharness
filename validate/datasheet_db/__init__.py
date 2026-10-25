@@ -1,4 +1,4 @@
-"""Datasheet database/registry package — sub-project A of the v1.3 roadmap.
+"""Datasheet database/registry package.
 
 Provides a content-addressed PDF store (L0) + git-tracked sharded manifest (L1)
 plus a CLI (`tools/datasheet_db.py`) for insert/find/fetch-missing/migrate/

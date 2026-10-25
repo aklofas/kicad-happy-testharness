@@ -361,11 +361,10 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--schemas-dir", default=None,
                         help="Where current schemas live")
     parser.add_argument("--release", action="store_true",
-                        help="Pre-release mode (Task 5: INFO escalates to "
+                        help="Pre-release mode (INFO escalates to "
                              "WARNING in human report)")
     parser.add_argument("--known-divergences", default=None,
-                        help="Path to _KNOWN_DIVERGENCES.md for cross-reference "
-                             "(Task 5)")
+                        help="Path to _KNOWN_DIVERGENCES.md for cross-reference")
     args = parser.parse_args(argv)
 
     if not args.mpn and not args.all:
@@ -404,7 +403,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         if any(f.category == "malformed" for f in findings):
             has_malformed = True
 
-    # Annotate with _KNOWN_DIVERGENCES.md cross-references (Task 5)
+    # Annotate with _KNOWN_DIVERGENCES.md cross-references
     kd_path = (Path(args.known_divergences) if args.known_divergences
                else gold_root / "_KNOWN_DIVERGENCES.md")
     kd_map = _parse_known_divergences(kd_path)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Take a snapshot of current analyzer outputs as a baseline.
 
-Creates per-project baselines in data/{repo}/{project}/baselines/
+Creates per-project baselines in reference/{owner}/{repo}/{project}/baselines/
 with compact manifest entries for each analyzer type.
 
 Usage:

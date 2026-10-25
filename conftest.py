@@ -1,6 +1,6 @@
 """Root pytest configuration: tier markers, default selection, product-root header.
 
-Marker derivation (review B9, TH-053): explicit markers win; else module
+Marker derivation (TH-053): explicit markers win; else module
 ``TIER == "online"`` → online; else ``tests/contract/`` → offline_contract;
 ``integration/`` → online; everything else → unit. Default selection with no
 ``-m`` is ``unit or offline_contract``; pass ``--all-tiers`` or an explicit

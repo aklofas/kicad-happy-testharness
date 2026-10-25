@@ -10,9 +10,8 @@ diverges from the finding's detector field.
 
 Groups by the explicit detector literal. Emits
 regression/v{N}_changed_detectors.json with per-detector rule_ids,
-primary rule, source files, gating summary.
-
-Design: docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md §4
+primary rule, source files, gating summary. Grouping uses the emitted
+detector literal, never the enclosing function name.
 """
 
 from __future__ import annotations

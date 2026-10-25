@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 """Regression guard: analyzers must accept bare filenames (no directory component).
 
-Covers kicad-happy bug #2 from the 2026-04-11 main-repo inspection brief:
-`analyze_pcb.py` crashed with `FileNotFoundError: ''` when given a bare
+Covers a kicad-happy bug where `analyze_pcb.py` crashed with `FileNotFoundError: ''` when given a bare
 filename like `"foo.kicad_pcb"` because `os.path.dirname("foo.kicad_pcb")`
 returns `""` and `os.listdir('')` fails. The harness normalizes paths before
 invoking analyzers, so the bug was invisible in routine runner use — it only
-tripped on ad-hoc invocations from inside a project directory. Main-repo fix
-landed in kicad-happy commit 9693347 (status as of 2026-04-11: unpushed —
-this test will stay in FAIL state until the fix is pulled, then flip to PASS).
+tripped on ad-hoc invocations from inside a project directory. Fixed in kicad-happy commit 9693347.
 
 This test copies real corpus projects into a temp directory, chdir's into each
 copy, invokes each analyzer with a BARE filename (no `./`, no absolute path), and

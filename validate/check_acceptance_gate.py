@@ -1,8 +1,8 @@
-"""4-check acceptance gate runner for Phase 3a datasheet extractions.
+"""4-check acceptance gate runner for datasheet extractions.
 
 Implements the gate defined in
 docs/superpowers/specs/2026-04-20-sanity-vector-authoring.md § 4-check
-acceptance gate wiring. Runs four checks against a Phase 3a extraction and
+acceptance gate wiring. Runs four checks against an extraction and
 reports per-check pass/fail/skipped + structured details.
 
 Usage:
@@ -12,7 +12,7 @@ Usage:
 Exit codes:
     0 — all 4 checks passed
     1 — at least one check FAIL
-    2 — all non-skipped checks passed but >=1 SKIPPED (Phase 3a tools missing)
+    2 — all non-skipped checks passed but >=1 SKIPPED (main-repo tools missing)
     3 — error before checks ran (missing extraction, malformed input)
 """
 from __future__ import annotations
@@ -75,7 +75,7 @@ class CheckResult:
 def _sanitize_mpn(mpn: str) -> str:
     """Filename-safe MPN. [A-Za-z0-9_-.] kept, else _.
 
-    Dots preserved per Phase 3b convention (cache files keep frequency
+    Dots preserved (cache files keep frequency
     notation like ABM8G-106-12.000MHZ-T.json) — main-repo's
     datasheet_verify.py flag-mode sanitizer was updated for this.
     """
@@ -89,7 +89,7 @@ def _sanitize_mpn(mpn: str) -> str:
 def check_quality_score(*, cache_path: Path, threshold: int = 60) -> CheckResult:
     """Read extraction.quality_score from the merged <mpn>.json cache.
 
-    Spec: "Score >= 60 per main-repo's datasheet_score.py (with Phase 3a
+    Spec: "Score >= 60 per main-repo's datasheet_score.py (with
     extensions for v2 schema sections)." main-repo's pipeline writes the
     score into the cache file at extract time; harness just reads it.
     """
@@ -152,7 +152,7 @@ def _resolve_actual(cache_value: Any) -> Optional[dict]:
     """Coerce a cache value to a comparable dict.
 
     Cache fields hold one of:
-      - list[SpecValue dict] — pick [0] (highest trust per Track 2.4)
+      - list[SpecValue dict] — pick [0] (lists are ordered highest trust first)
       - scalar (e.g. base.package.pin_count = 5) — wrap as {"typ": 5}
       - string (e.g. base.package.code = "TO-263") — wrap as {"name": ...}
       - None (path resolved but value absent)
@@ -302,7 +302,7 @@ def check_sanity_vector_diff(*, cache_path: Path,
 
 
 # ===========================================================================
-# Check 1 — Schema validation per task result (Phase 3a tool subprocess)
+# Check 1 — Schema validation per task result (main-repo tool subprocess)
 # ===========================================================================
 
 _REQUIRED_TASK_IDS = ("scout", "base", "pinout")
@@ -311,8 +311,8 @@ _REQUIRED_TASK_IDS = ("scout", "base", "pinout")
 def _discover_task_ids(extract_dir: Path, sanitized_mpn: str) -> list[str]:
     """Find all `<mpn>.<task_id>.result.json` files and return task IDs.
 
-    Phase 3b ships 5 new categories (diode, transistor, opamp, mcu, crystal)
-    on top of regulator — the actual category emitted depends on the part.
+    Extraction categories (regulator, diode, transistor, opamp, mcu, crystal)
+    vary by part — the actual category emitted depends on the part.
     Discover via filename glob so the gate doesn't need a hardcoded list.
     """
     pattern = f"{sanitized_mpn}.*.result.json"
@@ -322,11 +322,11 @@ def _discover_task_ids(extract_dir: Path, sanitized_mpn: str) -> list[str]:
 def check_schema_validation(*, mpn: str, extract_dir: Path,
                              kicad_happy_dir: Path,
                              python: Optional[str] = None) -> CheckResult:
-    """Validate each <mpn>.<task_id>.result.json against its Track 2.1 schema.
+    """Validate each <mpn>.<task_id>.result.json against its extraction schema.
 
-    Subprocesses main-repo's validate_extraction_result.py (Phase 3a deliverable).
+    Subprocesses main-repo's validate_extraction_result.py.
     If the tool is not available, returns SKIPPED — gate runs end-to-end
-    without main-repo deps and gains this check when Phase 3a ships.
+    without main-repo deps and gains this check when the tool is present.
     """
     name = "Check 1 — Schema validation"
     tool = (kicad_happy_dir / "skills" / "datasheets" / "scripts"
@@ -388,7 +388,7 @@ def check_schema_validation(*, mpn: str, extract_dir: Path,
 
 
 # ===========================================================================
-# Check 2 — datasheet_verify.py self-consistency (Phase 3a extension)
+# Check 2 — datasheet_verify.py self-consistency
 # ===========================================================================
 
 def check_self_consistency(*, mpn: str, extract_dir: Path,
@@ -396,7 +396,7 @@ def check_self_consistency(*, mpn: str, extract_dir: Path,
                             python: Optional[str] = None) -> CheckResult:
     """Run main-repo's datasheet_verify.py on the merged cache.
 
-    CLI shape (per main-repo's #50 handoff):
+    CLI shape:
         python3 datasheet_verify.py <extraction_path>
     Exit 0 = no issues. Exit nonzero = issues found (text reported on stdout).
     """
@@ -520,7 +520,7 @@ def compute_exit_code(results: list[CheckResult]) -> int:
 def main(argv: Optional[list[str]] = None) -> int:
     import argparse
     parser = argparse.ArgumentParser(
-        description="Run the 4-check acceptance gate for a Phase 3a extraction.")
+        description="Run the 4-check acceptance gate for a datasheet extraction.")
     parser.add_argument("--mpn", required=True,
                         help="MPN to gate (e.g. LM2596-ADJ).")
     parser.add_argument("--extract-dir", required=True, type=Path,

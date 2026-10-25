@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Layer 2 review metrics runner. v1.4 B9 scaffolding — measurement only.
+"""Layer 2 review metrics runner — measurement only.
 
-Reads reference review packets, replays recorded reviewer output, computes
-7 metrics per spec docs/superpowers/specs/2026-05-16-b9-layer2-review-metrics-design.md,
-emits per_packet/aggregate JSON + markdown report. No live LLM dispatch at v1.4.
+Reads reference review packets, replays recorded reviewer output, compares it
+with each packet's expected output to compute 7 metrics, and emits
+per_packet/aggregate JSON + markdown report. No live LLM dispatch.
 """
 from __future__ import annotations
 
@@ -126,7 +126,7 @@ def _compute_calibration(annotations, exp_supp_ids):
 
 
 def _compute_cost_delta(loaded):
-    # Cost ledger not present at v1.4 — flagged carry-over for main-repo.
+    # Null unless the annotations carry a usable actual/estimated cost pair.
     rec = loaded["review_annotations"]
     cost = rec.get("cost")
     if not isinstance(cost, dict):

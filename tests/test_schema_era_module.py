@@ -1,8 +1,7 @@
-"""Unit tests for regression/schema_era.py (A8 schema-era module).
+"""Unit tests for regression/schema_era.py (schema-era module).
 
-Runs under bare python3 in the pre-push hook. Each test is a callable
-test_* function; main() at bottom runs them all and exits non-zero on any
-failure.
+Collected by pytest (unit tier). main() at the bottom also runs every
+test_* function directly and exits non-zero on any failure.
 """
 from __future__ import annotations
 
@@ -85,7 +84,7 @@ def test_era_filter_all_passes_everything():
 
 def test_era_filter_matches_current_or_untagged():
     assert schema_era.era_filter({"schema_era": "v3.0"}, "v3.0") is True
-    assert schema_era.era_filter({}, "v3.0") is True            # untagged = current (v3.0 since round 8)
+    assert schema_era.era_filter({}, "v3.0") is True            # untagged = current (v3.0)
     assert schema_era.era_filter({}, "v1.4") is False           # untagged is NOT a past era
     assert schema_era.era_filter({"schema_era": "v1.4"}, "v1.4") is True
     assert schema_era.era_filter({"schema_era": "pre-v1.4"}, "v1.4") is False

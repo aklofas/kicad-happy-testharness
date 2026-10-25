@@ -238,7 +238,7 @@ def add_repo_filter_args(parser):
     """Add --repo, --cross-section, --repo-list and --all to an argparse parser.
 
     The first three are mutually exclusive selectors; --all is the explicit
-    whole-corpus switch required by mutating batch runs (B12/TH-049).
+    whole-corpus switch required by mutating batch runs (TH-049).
     """
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--repo", help="Process only this repo (owner/repo)")
@@ -351,7 +351,7 @@ def discover_projects(repo_name):
     normalization, stem deduplication (when the directory basename equals the
     stem, per KiCad convention), and the TH-013 length cap. The stem is the
     basename of the .kicad_pro/.kicad_pcb/.pro marker file (without extension)
-    and is retained in the dict so tools like the TH-013 migration script can
+    and is retained in the dict so name migration tools can
     reconstruct the original (pdir, stem) tuple without re-scanning repos/.
     """
     repo_dir = REPOS_DIR / repo_name
@@ -660,7 +660,7 @@ def _run_one(analyzer, file_path, outfile, errfile, extra_args=None, timeout=Non
 
     Returns (returncode, outfile, elapsed_s, status, output_sha256). The output
     is written to a private temp path, validated, and published atomically; a
-    stale previous output is quarantined as <outfile>.stale on any failure (B12).
+    stale previous output is quarantined as <outfile>.stale on any failure.
     `timeout` is the per-file cap in seconds (default: standard profile)."""
     from harnesslib.execution import run_once, build_env
     cap = ANALYZER_TIMEOUT if timeout is None else timeout

@@ -21,7 +21,7 @@ never snap.json, so each tree is first snapified: every *.json whose top-level o
 "analyzer_type" becomes <gate-dir>/{baseline,candidate}/<analyzer_type>/<relpath without
 .json>/snap.json (run-dir path segments such as 20261015T101500Z-a1b2c3 or 2026-10-15_1015
 are renamed RUN-<n> in sorted order so both sides line up), then the two trees are compared
-with the strict policy. Recipe (Task 7 Step 4) — both sessions at the SAME --basetemp so
+with the strict policy. Recipe — both sessions at the SAME --basetemp so
 embedded tmp paths are identical, moving the tree aside between runs:
 
   BT=$PWD/results/v3_baseline/aa_fixtures/tmp

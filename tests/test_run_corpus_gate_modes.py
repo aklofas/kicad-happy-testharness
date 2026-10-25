@@ -54,7 +54,7 @@ def test_main_rejects_malformed_budget_before_running(tmp_path, monkeypatch, cap
     assert "--budget" in capsys.readouterr().err
 
 
-# ---- ruling I9: gate exit semantics per kind ---------------------------------
+# ---- gate exit semantics per kind --------------------------------------------
 
 import hashlib  # noqa: E402
 import json  # noqa: E402
@@ -196,7 +196,7 @@ def test_print_summary_shows_kind_criterion_and_budget(capsys):
     assert "over_budget: C1, C2" in out
 
 
-# ---- Task D: ledger-aware skips_ok ----------------------------------------------
+# ---- ledger-aware skips_ok ------------------------------------------------------
 
 def _crit():
     totals = {"PASS": 1, "WARN": 0, "FAIL": 0, "SKIP": 0, "Disappeared": 0, "Downgrades": 0,
@@ -361,7 +361,7 @@ def test_recheck_round2_passes_with_crash_units_ledgered(tmp_path):
     assert gp["unledgered_skips"] == [f"both_failed pcb {CRASHES[1]}"]
 
 
-# ---- review I3a: covering ledger entries without accepted_by are reported ------------
+# ---- covering ledger entries without accepted_by are reported ------------
 
 def test_ledgered_unaccepted_reported_skips_ok_unchanged():
     recs = _round2_like()
@@ -376,7 +376,7 @@ def test_ledgered_unaccepted_reported_skips_ok_unchanged():
     assert gp["ledgered_unaccepted"] == {"count": 0, "identities": []}
 
 
-# ---- review I2: candidate-only failures are never budgetable ------------------------
+# ---- candidate-only failures are never budgetable ------------------------
 
 def _cand_fail(analyzer="pcb", uid="o/r/x.kicad_pcb"):
     return {"analyzer": analyzer, "repo": "o/r", "unit_id": uid, "identity": uid, "verdict": "FAIL",
@@ -422,7 +422,7 @@ def test_print_summary_shows_candidate_failures(capsys):
     assert "candidate_failures=2" in capsys.readouterr().out
 
 
-# ---- review I3b: the ledger must belong to the run's baseline ----------------------
+# ---- the ledger must belong to the run's baseline ----------------------
 
 def test_check_ledger_sha_full_prefix_and_mismatch(tmp_path):
     full = "6a91aaaea124152b2923326c1cf77278e0999cd4"

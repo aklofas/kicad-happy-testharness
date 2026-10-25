@@ -1,4 +1,4 @@
-"""schema_era: v3.0 era + required passthrough (H0-5 / A4)."""
+"""Schema-era registry requirements and independent selection/stamp eras."""
 from __future__ import annotations
 
 import sys
@@ -18,7 +18,7 @@ REG = HARNESS_ROOT / "tests" / "fixtures" / "h0" / "plan5" / "registry_dir"
 
 def test_v30_is_known_and_current_unchanged():
     assert se.KNOWN_ERAS == ("pre-v1.4", "v1.4", "v3.0")
-    assert se.CURRENT_SCHEMA_ERA == "v3.0"   # bumped at the v3 round-8 relock (a0df172)
+    assert se.CURRENT_SCHEMA_ERA == "v3.0"   # bumped at the v3.0 relock
     assert se.normalize_schema_era("v3.0")["era"] == "v3.0"
     assert se._registry_filename("v3.0") == "v30_changed_detectors.json"
 

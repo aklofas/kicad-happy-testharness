@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Adopt the product API inventory as the per-symbol migration checklist (A1).
+"""Adopt the product API inventory as the per-symbol migration checklist.
 
 Commands:
   init-dispositions   generate reference/product_api/dispositions.json from the inventory
@@ -62,7 +62,7 @@ def iter_symbols(inventory: dict) -> list[dict]:
 def initial_disposition(module: str, symbol: str, private: bool) -> str:
     if (module, symbol) in RETIRE_SYMBOLS or any(f in symbol for f in RETIRE_NAME_FRAGMENTS):
         return "retire"
-    if private:                      # spec §4.4: every underscore entry migrates
+    if private:                      # every underscore entry migrates
         return "migrate"
     if any(fnmatch.fnmatchcase(module, pat) for pat in KEEP_CONTRACT_MODULES):
         return "keep-contract"
@@ -394,7 +394,7 @@ def scan_harness_imports(harness_root: Path, inventory: dict | None = None) -> l
                     emit(node.lineno, dotted.rsplit(".", 1)[-1], target[1])
                     # a dotted module absent from the inventory (a v3 package such as
                     # pcb.presentation) binds the patch target exactly as the attribute
-                    # branch reads `alias.attr` (round-5 patch_targets)
+                    # branch reads `alias.attr`
                     if "." in dotted:
                         emit(node.lineno, dotted, target[1])
     return out
@@ -435,7 +435,7 @@ def blind_symbols(inventory: dict, harness_imports: list[dict],
     (new_module, new_name) a `done` relocation moved it to: a site file that
     binds the NEW key counts as covered, so migrated entries are not flagged,
     while a done entry whose old-owner site is still dynamically bound stays
-    visible (it would otherwise pass `check` as CLEAN — the F2 failure mode)."""
+    visible (it would otherwise pass `check` as CLEAN — an otherwise silent unresolved old-owner binding)."""
     bound: dict[tuple, set] = {}
     for h in harness_imports:
         bound.setdefault((h["module"], h["symbol"]), set()).add(h["file"])

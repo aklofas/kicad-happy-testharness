@@ -1,5 +1,5 @@
 # harnesslib/selection.py
-"""Repo selection semantics (report B12 / TH-049).
+"""Repo selection semantics (TH-049).
 
 None means "all repos". An explicit empty selection is an error, never all.
 Mutating all-corpus runs must say --all when require_explicit_all is True.

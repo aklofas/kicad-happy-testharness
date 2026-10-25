@@ -52,7 +52,7 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
     critical findings with a valid envelope; that is accepted
     (harnesslib ACCEPTED_EXITS["emc"]) and reported as 0. Output is
     temp-written and published atomically, so a stale previous output never
-    stands in for this run's result (TH-054/B12). None means timeout.
+    stands in for this run's result (TH-054). None means timeout.
     """
     from harnesslib.execution import run_once, build_env
 

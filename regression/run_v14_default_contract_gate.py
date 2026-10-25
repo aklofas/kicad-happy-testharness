@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """v1.4 default-mode contract gate driver — POST-HOC scan over v14 snapshots.
 
-Audit LOG 8 / regression-testing-audit F4 (2026-05-15): "second v1.4-only
-gate (not comparing v1.3.1) that validates user-facing default-mode
-contracts". The existing ``run_v14_gate.py`` answers "does v1.4 regress
+A second, v1.4-only gate (not comparing v1.3.1) that validates user-facing
+default-mode contracts. The existing ``run_v14_gate.py`` answers "does v1.4 regress
 against v1.3.1?"; this gate answers "do v1.4's own envelopes hold their
 self-consistency promises?". Catches a class of bugs the comparison gate
 misses (e.g., a v1.4 detector that emits ``severity='WARNING'`` literal
@@ -19,11 +18,11 @@ Contracts validated per envelope:
   2. **Summary integrity** — ``summary.total_findings == len(findings)``,
      ``summary.by_severity`` sums match per-severity bucket counts.
   3. **Severity normalization** — every finding's ``severity`` ∈
-     ``{error, warning, info}`` (lowercase only). Locks the F1.4 bug
+     ``{error, warning, info}`` (lowercase only). Locks the bug
      class where literal uppercase ``'WARNING'`` was appended to findings
      and downstream filters silently mismatched.
   4. **Run-id linkage** — ``inputs.run_id == capability_mode_ref.run_id``.
-     Audit Highest-Risk #5 invariant. Already locked corpus-wide via
+     Already locked corpus-wide via
      ``validate/validate_run_id.py`` (one-shot validator); this gate is the
      ongoing contract assertion (re-run as part of release validation).
 
@@ -39,7 +38,7 @@ comparison-gate phase.
 Pre-requisite: a corpus gate (``regression/run_corpus_gate.py``) must have
 populated the gate dir. If neither slot exists the driver exits 2.
 
-Deferred for follow-up commit (LOG 8b):
+Deferred (not implemented here):
 
   5. Layer 2 strip is no-op on deterministic content — requires running
      analyzers in both default + ``--only-deterministic`` modes on a
@@ -149,7 +148,7 @@ def _check_severity_normalized(envelope):
 
 def _check_run_id_linkage(envelope):
     """Contract 4: ``inputs.run_id`` MUST equal ``capability_mode_ref.run_id``.
-    The audit Highest-Risk #5 invariant — proves the envelope is pinned to
+    Proves the envelope is pinned to
     the capability_mode record that drove its production."""
     inputs = envelope.get("inputs") or {}
     cmr = envelope.get("capability_mode_ref") or {}

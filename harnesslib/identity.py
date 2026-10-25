@@ -1,6 +1,6 @@
 """Run identity: worktree refs, digests, RunSpec, run manifest (v1), unit log.
 
-Report A3/A6/TH-049: every run is bound to product+harness SHAs, effective
+Every run is bound to product+harness SHAs, effective
 args, env, selection and input digests; resume is by identity, never by path.
 """
 from __future__ import annotations

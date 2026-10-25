@@ -6,7 +6,7 @@ Walks the raw `.kicad_sch` AST using only `sexp_parser.py` from kicad-happy
 analyzer's output JSON. Surfaces parser bugs in analyze_schematic.py before
 they corrupt any downstream detector.
 
-**Scope:** schematic only (Sprint 1). PCB is a follow-up. Extraction facts
+**Scope:** schematic only; PCB is not verified. Extraction facts
 only, not interpretation — this verifier cannot catch detector semantic bugs
 or resolved-net errors.
 
@@ -239,8 +239,8 @@ def extract_analyzer_facts(output: dict) -> dict:
     so the first sheet processed (the analyzed file itself) is always 0.
     Without this filter, root sheets in hierarchical projects show
     massive `extra_item` floods (e.g. bitaxeUltra: 16 sexp vs 136 analyzer).
-    Cross-sheet verification is a follow-up — Sprint 1 verifies one file
-    at a time against itself.
+    Cross-sheet verification is not implemented — each file is verified
+    on its own against itself.
     """
     components = [c for c in (output.get("components") or []) if c.get("_sheet", 0) == 0]
     no_connects = [n for n in (output.get("no_connects") or []) if n.get("_sheet", 0) == 0]
@@ -304,7 +304,7 @@ def compare_facts(sexp_facts: dict, analyzer_facts: dict) -> list:
         field: str  — which fact category the mismatch is in
         detail: str — short human-readable description
 
-    Sprint 1 uses strict comparison — no normalization. The verifier defaults
+    Comparison is strict — no normalization. The verifier defaults
     to "the sexp is the source of truth" when they disagree, since sexp is
     closer to the raw file than any analyzer interpretation.
     """
@@ -576,7 +576,7 @@ def main():
     # Filter to KiCad 6+ .kicad_sch files only. Legacy `.sch` files (KiCad 5)
     # use a non-S-expression format that sexp_parser cannot read. Verifying
     # them would require a separate parser that shares code with
-    # analyze_schematic's legacy path — explicitly out of scope for Sprint 1.
+    # analyze_schematic's legacy path — out of scope here.
     all_schematics = [s for s in all_schematics if s.endswith(".kicad_sch")]
 
     repos_dir = str(REPOS_DIR)

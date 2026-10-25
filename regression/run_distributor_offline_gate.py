@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """distributor-offline profile: the product's offline distributor oracle, run both ways.
 
-The oracle (`tools/distributor_offline.py` + `tools/tests/fixtures/distributor/`, product
-v3 round 6) replays every distributor sync/fetch CLI in process over recorded provider
-responses and compares the artefacts byte-for-byte with an expected set frozen at the
-pre-round tip. This runner is the harness-side evidence for that profile (declared in
+The oracle (`tools/distributor_offline.py` + `tools/tests/fixtures/distributor/` in the
+product) replays every distributor sync/fetch CLI in process over recorded provider
+responses and compares the artefacts byte-for-byte with an expected set frozen at an
+earlier product commit. This runner is the harness-side evidence for that profile (declared in
 harnesslib.profiles; run_corpus_gate.py refuses it because it runs no corpus analyzer):
 
   1. candidate direction: `--all --expected <candidate>/tools/tests/fixtures/distributor/expected`

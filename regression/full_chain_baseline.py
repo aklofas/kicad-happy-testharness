@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tracked --full pcb -> emc -> thermal chain runner (promoted from results/v23_gate/full_chain_ab.py).
+"""Tracked --full pcb -> emc -> thermal chain runner.
 
 Samples N projects with a same-stem .kicad_pro/.kicad_sch/.kicad_pcb triple, runs
 analyze_schematic (hierarchy on) + analyze_pcb --full --proximity + analyze_emc +

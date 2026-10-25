@@ -41,8 +41,8 @@ class DomainRateLimiter:
     Thread-safe. One shared instance across all workers in a single process.
     Does NOT cross process boundaries — if you use ProcessPoolExecutor, each
     process has its own limiter and the first request per domain per process
-    is not rate-limited. This is a known limitation we accept for
-    simplicity (see spec §4.5).
+    is not rate-limited. This is a known limitation accepted for
+    simplicity.
     """
 
     def __init__(self, interval_seconds: float = 1.0, *, clock=time.monotonic, sleep=time.sleep):
@@ -121,7 +121,7 @@ def fetch_bytes(url: str, timeout: float = _FETCH_DEFAULT_TIMEOUT) -> FetchResul
     Raises FetchError on any network failure or non-PDF response.
 
     Does NOT perform SHA256 verification against an expected value — that's
-    the caller's job (see fetch_verified in Task 15).
+    the caller's job (see fetch_verified).
     """
     if urlparse(url).scheme.lower() not in _FETCH_SCHEMES:
         raise FetchError(f"only http(s) URLs are fetched: {url}")

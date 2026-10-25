@@ -83,7 +83,7 @@ def test_failed_schematic_step_keeps_pcb_key_free(monkeypatch, tmp_path):
     log = fc.run_chain((str(pcb), "baseline", str(tmp_path / "kh"), str(tmp_path / "out"), 5))
     assert len(calls) == 1 and log["schematic"]["rc"] == 1
     assert log["pcb_path"] == str(pcb) and "pcb" not in log
-    assert log.get("pcb", {}).get("rc", "absent") == "absent"  # Task 9 verification shape
+    assert log.get("pcb", {}).get("rc", "absent") == "absent"
 
 
 def test_main_resolves_relative_worktrees(monkeypatch, tmp_path):

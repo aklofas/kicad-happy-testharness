@@ -1,11 +1,10 @@
-"""Tests for regression/tag_assertions.py (A8 backfill tool).
+"""Tests for regression/tag_assertions.py (schema-era backfill tool).
 
 Builds a synthetic mini-corpus in tmp_path with 4 assertion files
 (versioned/unversioned mix), runs the tool, asserts correct tagging.
 
-Runs under bare python3 in the pre-push hook. Each test is a callable
-test_* function; main() at bottom runs them all and exits non-zero on any
-failure.
+Collected by pytest (unit tier). main() at the bottom also runs every
+test_* function directly and exits non-zero on any failure.
 """
 from __future__ import annotations
 

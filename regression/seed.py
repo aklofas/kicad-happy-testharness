@@ -6,7 +6,8 @@ that should remain stable across analyzer changes. Useful for
 bootstrapping the assertion set for newly tested repos.
 
 Outputs are in results/outputs/{type}/{repo}/.
-Assertions are written to data/{repo}/{project}/assertions/{type}/.
+Assertions are written to reference/{owner}/{repo}/{project}/assertions/{type}/
+(utils.DATA_DIR, under the data root KICAD_HAPPY_TESTHARNESS_DATA_DIR can relocate).
 
 Usage:
     python3 regression/seed.py --repo OpenMower
@@ -121,7 +122,6 @@ _DETECTOR_FIELD_SPECS = {
                      "usb_pd_controller"],
         },
     },
-    # Batch 4
     "detect_adc_circuits": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
@@ -140,7 +140,6 @@ _DETECTOR_FIELD_SPECS = {
             "type": ["clock_generator", "pll", "oscillator_output"],
         },
     },
-    # Batch 5
     "detect_display_interfaces": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
@@ -159,7 +158,6 @@ _DETECTOR_FIELD_SPECS = {
             "type": ["level_shifter_ic", "discrete_level_shifter"],
         },
     },
-    # Batch 6
     "detect_audio_circuits": {
         "required_fields": ["ref", "type"],
         "enum_fields": {
@@ -180,7 +178,6 @@ _DETECTOR_FIELD_SPECS = {
             "type": ["rtc"],
         },
     },
-    # Batch 7
     "audit_led_circuits": {
         "required_fields": ["ref", "type", "drive_method"],
         "enum_fields": {
@@ -828,7 +825,7 @@ def generate_emc_assertions(data, tolerance=0.10):
     if total == 0:
         return assertions
 
-    # Total findings count range — use total_findings (KH-246 rename)
+    # Total findings count range — use total_findings, with total_checks fallback (KH-246)
     total_key = "summary.total_findings" if "total_findings" in summary else "summary.total_checks"
     lo, hi = _range_bounds(total, tolerance)
     assertions.append({
@@ -852,7 +849,7 @@ def generate_emc_assertions(data, tolerance=0.10):
             })
             ast_num += 1
 
-    # Normalized by_severity (Phase 4: {error, warning, info})
+    # Normalized by_severity: error, warning, info
     by_sev = summary.get("by_severity")
     if isinstance(by_sev, dict):
         for sev_key in ("error", "warning", "info"):
@@ -908,7 +905,7 @@ def generate_emc_assertions(data, tolerance=0.10):
         })
         ast_num += 1
 
-    # Test plan section (Phase 2+)
+    # Test plan section
     test_plan = data.get("test_plan", {})
     if test_plan:
         fb_count = len(test_plan.get("frequency_bands", []))
@@ -932,7 +929,7 @@ def generate_emc_assertions(data, tolerance=0.10):
             })
             ast_num += 1
 
-    # Regulatory coverage section (Phase 2+)
+    # Regulatory coverage section
     reg = data.get("regulatory_coverage", {})
     if reg:
         market = reg.get("market", "")
@@ -1007,7 +1004,7 @@ def generate_thermal_assertions(data, tolerance=0.10):
             })
             ast_num += 1
 
-    # Normalized by_severity (Phase 4: {error, warning, info})
+    # Normalized by_severity: error, warning, info
     by_sev = summary.get("by_severity")
     if isinstance(by_sev, dict):
         for sev_key in ("error", "warning", "info"):
@@ -1300,7 +1297,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                 total_assertions += len(assertions)
                 continue
 
-            # Write to data/{repo}/{project}/assertions/{type}/
+            # Write to reference/{owner}/{repo}/{project}/assertions/{type}/
             out_dir = data_dir(repo_name, proj_name, "assertions") / atype
             out_dir.mkdir(parents=True, exist_ok=True)
             out_file = out_dir / _truncate_with_hash(f"{file_pattern}.json")

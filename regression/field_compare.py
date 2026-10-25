@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Field-level comparator for analyzer envelopes: raw / strict / budgeted modes.
 
-Scope (spec §3, report A3/A4): compare two snapshot trees (or two documents)
+Scope: compare two snapshot trees (or two documents)
 and report COMPLETE per-path deltas. The findings multiset diff in
 ``regression/regression_diff.py`` remains the secondary ``findings_summary``;
 ``regression/_differ.py`` (compact baseline projection) is unrelated and
@@ -11,7 +11,7 @@ Modes
   raw       the per-unit file set (names + sha256 of every regular file in the unit
             dir, excluding ``*.stale`` / ``*.tmp-*``); legitimately fails whenever
             ``/inputs/run_id`` differs and says so in the report (``note`` +
-            ``summary.run_id_differs``). DEFERRED: spec §3.2's comparison of captured
+            ``summary.run_id_differs``). DEFERRED: a comparison of captured
             stdout/stderr/exit is not built; the gate records only ``exit_code`` and
             ``stderr_tail`` in ``units.jsonl``, which raw mode does not read.
   strict    recursive JSON field comparison; absent != null; bool != number;
@@ -125,7 +125,7 @@ def load_policy(name: str, policy_dir: Path | None = None) -> Policy:
     return Policy(name=name, leaves=leaves, root_prefixes=list(rp))
 
 
-# ---- strict comparison (Task 2) ---------------------------------------------
+# ---- strict comparison ------------------------------------------------------
 
 OPS = ("added", "removed", "changed", "type_changed", "key_order", "bytes", "lexical_numeric")
 
@@ -212,7 +212,7 @@ class _Ctx:
     def __init__(self, unit, analyzer, key_order):
         self.unit, self.analyzer, self.key_order = unit, analyzer, key_order
         self.deltas: list[Delta] = []
-        self.masked: set[str] = set()      # exact pointers masked by policy (Task 3)
+        self.masked: set[str] = set()      # exact pointers masked by policy
         self.violations: list[str] = []
 
     def emit(self, path, op, before, after):
@@ -645,7 +645,7 @@ def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | Non
     return report
 
 
-# ---- budgets (Task 5) --------------------------------------------------------
+# ---- budgets ----------------------------------------------------------------
 
 SEVERITY_ORDER = {"info": 0, "warning": 1, "error": 2}
 _CLASS_KEYS = {"id", "analyzer", "path_glob", "op", "where", "direction", "value_relation",

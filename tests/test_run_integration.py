@@ -131,8 +131,9 @@ def test_run_gerbers_basic():
 
 
 # ---------------------------------------------------------------------------
-# run_emc.py (requires schematic output to already exist — test_run_schematic_basic
-# runs first alphabetically and populates it)
+# run_emc.py (requires schematic output to already exist — it relies on
+# test_run_schematic_basic running earlier in this file's definition order;
+# selecting this test alone does not create that prerequisite)
 # ---------------------------------------------------------------------------
 
 def test_run_emc_basic():

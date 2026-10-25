@@ -1,4 +1,4 @@
-"""Round record schema (spec §9) — request/response shapes are machine-validated."""
+"""Round record schema — request/response shapes are machine-validated."""
 import copy
 import json
 from pathlib import Path

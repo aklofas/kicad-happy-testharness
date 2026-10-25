@@ -86,10 +86,9 @@ EXPORT_TIMEOUT_S = 300
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
-# Paths relative to the harness root. m68k-hbc fills the spec's "C64" role
-# (no single multi-sheet C64 project exists in the corpus) — same-name
-# D[0..31]/A[0..31] vector buses across 24 sheets; root file resolved as the
-# .kicad_sch matching the .kicad_pro stem (verified 2026-07-24).
+# Paths relative to the harness root. m68k-hbc is the multi-sheet vector-bus
+# case — same-name D[0..31]/A[0..31] vector buses across 24 sheets; root file
+# resolved as the .kicad_sch matching the .kicad_pro stem.
 GOLDEN = {
     "incrementer": "repos/freesurfer-rge/slothpu16/pcbs/Incrementer/Incrementer.kicad_sch",
     "alu-carrier": "repos/freesurfer-rge/slothpu16/pcbs/ALU Carrier/ALU Carrier.kicad_sch",
@@ -98,7 +97,7 @@ GOLDEN = {
     # Older s-expr era (KiCad 6, file version 20221004) — the KiCad "video"
     # demo: 7 sub-sheets, vector buses DQ[0..31]/DPC[0..31]/ADR[2..6]/MXA[0..10]
     # crossing sheet pins. Validates our parse of the older grammar against
-    # KiCad's own interpretation of the same file (Task 11 Step 5b). The golden
+    # KiCad's own interpretation of the same file. The golden
     # four are all KiCad 7.
     "older-era": "repos/circuitly/kicad-demos/video/video.kicad_sch",
 }

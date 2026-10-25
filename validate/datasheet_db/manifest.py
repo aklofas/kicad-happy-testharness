@@ -17,11 +17,9 @@ def record_path(sha256: str) -> Path:
 
     Layout: reference/datasheet_manifest/{sha256[:2]}/{sha256}.json
 
-    Defensively rejects sha values that are obviously too short to be a real
-    sha256. The threshold (more than 3 chars) is arbitrary — the sharding
-    logic only requires 2 chars for `sha[:2]`. Plan called for `< 3`; raised
-    to `<= 3` so the rejection test (`record_path("abc")`) actually fires.
-    Real shas are 64 chars, so this guard never trips in production.
+    Defensively rejects sha values of 3 chars or fewer. The threshold is
+    arbitrary — the sharding only needs 2 chars for `sha[:2]`; the full
+    record validator enforces a real 64-char sha256.
     """
     if not isinstance(sha256, str) or len(sha256) <= 3:
         raise ValueError(f"sha256 must be a string of more than 3 chars, got {sha256!r}")

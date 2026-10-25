@@ -295,7 +295,7 @@ def check_invariants(data, filepath=""):
             _add(f"schema_version='{sv}' is not valid semver (expected X.Y.Z)")
 
     # --- by_severity normalization: when present, must have {error, warning, info} ---
-    # Phase 4 adds normalized by_severity to EMC, gerber, and thermal outputs.
+    # EMC, gerber, and thermal outputs carry a normalized by_severity.
     # Validate structure when present, and cross-check against raw counts if available.
     summary = data.get("summary", {})
     if isinstance(summary, dict):

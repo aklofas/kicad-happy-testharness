@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Known-baseline-debts ledger (spec §7 step 3).
+"""Known-baseline-debts ledger.
 
   build --product-sha SHA --references-sha SHA --checks checks.json --junit contract.xml \
         --units results/.../units.jsonl --issues ISSUES.md --analyzer-diff TEXT \
@@ -182,7 +182,7 @@ def main(argv=None) -> int:
         return 0
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     try:
-        from baseline_ledger_check import run_check  # Task 5
+        from baseline_ledger_check import run_check
     except ImportError:
         print("check requires baseline_ledger_check (Task 5)", file=sys.stderr)
         return 2

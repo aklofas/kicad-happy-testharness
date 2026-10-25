@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""Corpus regression gate (H0-1): baseline vs candidate product worktrees.
+"""Corpus regression gate: baseline vs candidate product worktrees.
 
-Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
-(report A3/A6/B12):
+Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes:
   * slots are baseline/candidate (not v131/v14)
   * every analyzer run goes through harnesslib.execution.run_once: exit codes
     recorded, accepted-exit table, temp-then-publish, stale quarantine
@@ -10,14 +9,14 @@ Successor of run_v14_gate.py (kept as a flag-compatible wrapper). Changes
     harness SHAs, args, env, selection and input digests, expected census
   * Phase B enumerates the Phase A success records, not directories on disk
   * --resume reuses a unit only on identity match (manifest + input sha)
-  * exit 0 only when strict_clean AND census complete AND no both_failed /
-    dependency_missing SKIPs AND modes.strict_field_clean ("gate_pass"); `clean`
-    is kept for history
+  * exit 0 only when gate_pass.pass holds: the per-kind criteria below, with
+    both_failed / dependency_missing SKIPs judged against the baseline-debts
+    ledger (skips_ok); `clean` is kept for history
   * after phase B the comparator modes run (raw + strict, budgeted with
-    --budget; spec §3.5) and land under rollup["modes"]. With --budget,
+    --budget) and land under rollup["modes"]. With --budget,
     strict_field_clean is the budgeted verdict == clean.
-  * gate_pass per --kind (maintainer ruling I9; overrides spec §2.4 read
-    literally for the output-changing kinds):
+  * gate_pass per --kind (a structural round must be strict-field identical; an
+    output-changing round is judged by its declared budget instead):
       kind             --budget    gate_pass.pass
       structural       forbidden   findings strict_clean AND strict_field_clean
                                    AND census_ok AND skips_ok AND candidate_failures == 0
@@ -354,9 +353,9 @@ def _print_summary(report):
           f"rewrites={crit.get('rewrites_count', 0)}  "
           f"new_upgraded={crit['new_upgraded_count']}  "
           f"warn={warn_count}")
-    # LOG 5: distinguish CLEAN (rc.1-compatible, NewUnknown-gated) from
-    # STRICT-CLEAN (also gates on WARN). Surface both verdicts so main-repo
-    # picks the right one for the release decision.
+    # Distinguish CLEAN (NewUnknown-gated, tolerates WARN baselines) from
+    # STRICT-CLEAN (also gates on WARN). Surface both verdicts so the release
+    # decision can pick the right one.
     if crit.get('strict_clean'):
         print(f"  => STRICT-CLEAN -- 0 WARN baselines, eligible for tag")
     elif crit['clean']:
@@ -795,7 +794,7 @@ def build_arg_parser():
     ap.add_argument("--gate-dir", required=True, help="evidence tree root (results/<label>_gate)")
     ap.add_argument("--profile", default="standard", choices=sorted(PROFILES))
     ap.add_argument("--kind", default="structural", choices=KIND_CHOICES,
-                    help="round kind (ruling I9); 'gate' is a deprecated alias for structural")
+                    help="round kind (decides whether --budget is forbidden or required); 'gate' is a deprecated alias for structural")
     ap.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS)
     ap.add_argument("--label", default=None, help="rollup filename label (default: section)")
     ap.add_argument("--resume", action="store_true",
@@ -831,7 +830,7 @@ def resolve_kind(kind):
 
 
 def kind_budget_error(kind, budget):
-    """Ruling I9 request check: the error message, or None when kind and --budget agree."""
+    """Kind/--budget agreement check: the error message, or None when they agree."""
     if budget and kind not in BUDGETED_KINDS:
         return (f"Error: --budget is not allowed for kind={kind}: a structural round's budget "
                 f"MUST be empty (ruling I9, spec §2.4)")
@@ -845,7 +844,7 @@ def budget_file_sha256(path):
 
 
 def apply_modes(report, modes, kind="structural", budget_sha256=None):
-    """Merge run_modes() output into the rollup and set gate_pass per kind (ruling I9).
+    """Merge run_modes() output into the rollup and set gate_pass per kind.
 
     structural/aa/baseline: findings strict_clean AND strict_field_clean AND census_ok
     AND skips_ok. output-changing/relock: census_ok AND skips_ok AND budgeted verdict
@@ -858,7 +857,7 @@ def apply_modes(report, modes, kind="structural", budget_sha256=None):
     gp = report.setdefault("gate_pass", {})
     gp["strict_field_clean"] = bool(modes.get("strict_field_clean"))
     if kind in BUDGETED_KINDS:
-        # a candidate-only analyzer failure is never budgetable (review I2)
+        # a candidate-only analyzer failure is never budgetable
         gp["pass"] = (bool(gp.get("census_ok")) and bool(gp.get("skips_ok"))
                       and gp.get("candidate_failures", 0) == 0
                       and gp.get("worker_exceptions", 0) == 0

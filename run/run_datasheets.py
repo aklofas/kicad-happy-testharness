@@ -3,8 +3,8 @@
 
 This script handles the deterministic parts of the datasheet pipeline:
   1. Download PDFs via sync_datasheets_digikey.py (requires DigiKey API credentials)
-  2. Register downloaded PDFs into datasheet_db as a side effect (sub-project A
-     integration) — new records for novel SHAs, merged found_in for dupes
+  2. Register downloaded PDFs into datasheet_db as a side effect —
+     new records for novel SHAs, merged found_in for dupes
   3. Validate/score existing extractions cached in datasheets/extracted/
 
 The actual PDF→JSON extraction step is NOT automated here — it happens

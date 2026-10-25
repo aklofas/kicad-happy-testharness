@@ -1,7 +1,7 @@
 """Shared MPN→slug derivation for A7 gold storage.
 
 Mirrors validate/check_acceptance_gate.py:_sanitize_mpn but lowercases for
-filesystem-friendly slugs. Dots preserved per Phase 3b convention
+filesystem-friendly slugs. Dots are preserved
 (ABM8G-106-12.000MHZ-T → abm8g-106-12.000mhz-t).
 """
 from __future__ import annotations

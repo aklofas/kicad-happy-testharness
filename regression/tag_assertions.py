@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Backfill schema_era tags on existing assertion corpus (A8, spec §19.3).
+"""Backfill schema_era tags on the existing assertion corpus.
 
 One-shot mechanical migration. Walks reference/**/assertions/*.json and
 tags any assertion whose detector_filter is in the era's versioned-detector

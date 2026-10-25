@@ -1,4 +1,4 @@
-"""Promote a gate-passed extraction to gold (A7).
+"""Promote a gate-passed extraction to gold.
 
 Reads a v1.4 datasheet extraction cache file, re-runs the A6 acceptance gate,
 re-runs the sanity-vector diff, validates the cache against the current
@@ -264,7 +264,7 @@ def _check_pdf_sha(cache: dict, pdf_dir: Path) -> tuple[Optional[str], str, str]
 
 
 def _show_content_diff(slug_dir: Path, cache: dict, cache_path: Path) -> bool:
-    """Print what the promotion changes before the operator confirms: the A5 differ against
+    """Print what the promotion changes before the operator confirms: the extraction differ against
     the newest existing gold, or a content summary on first curation. False when the
     review evidence cannot be produced (the promotion is then blocked)."""
     golds = sorted(slug_dir.glob("gold_v*.json")) if slug_dir.is_dir() else []
@@ -435,7 +435,7 @@ def _do_recurate_from(*, args, cache: dict, cache_path: Path) -> int:
     Steps:
       1. Validate pre-conditions (prior gold exists, majors differ)
       2. Run gate (unless --no-gate) + sanity diff + cache schema validation
-      3. Show A5 differ output (cache vs old gold)
+      3. Show extraction differ output (cache vs old gold)
       4. Confirm (or skip with --yes)
       5. Rename existing gold_v<old>.json → gold_v<old>.json.archived in place
       6. Write new gold_v<new>.json
@@ -474,7 +474,7 @@ def _do_recurate_from(*, args, cache: dict, cache_path: Path) -> int:
         return rc
     sanity_dir, pdf_sha, pdf_filename = ok
 
-    # Show A5 differ output (best-effort; non-fatal if differ fails)
+    # Show extraction differ output (best-effort; non-fatal if differ fails)
     print(f"\n=== Re-curation diff: schema {prior_base} → {new_base} ===")
     differ_cli = _HARNESS_ROOT / "regression" / "extraction_differ.py"
     if differ_cli.exists():
@@ -536,9 +536,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--no-gate", action="store_true",
                         help="Skip A6 gate re-run (sanity-vector diff still runs)")
     parser.add_argument("--re-curate-from", default=None,
-                        help="Re-curation sweep mode (Q4): previous schema base "
+                        help="Re-curation sweep mode: previous schema base "
                              "version (e.g. '1.0' when promoting 2.0). Renames "
-                             "existing gold in-place to .archived, runs A5 differ "
+                             "existing gold in-place to .archived, runs the extraction differ "
                              "against archived, prompts user, writes new gold.")
     args = parser.parse_args(argv)
 
@@ -546,7 +546,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     cache_path = cache_dir / f"{cache_key(args.mpn)}.json"
     cache = _load_cache(cache_path)
 
-    # ─── Re-curate-from mode (Q4 main-repo addition; spec §5.1.1)
+    # ─── Re-curate-from mode: re-curate an existing gold after a major schema-version change
     if args.re_curate_from:
         return _do_recurate_from(
             args=args, cache=cache, cache_path=cache_path,

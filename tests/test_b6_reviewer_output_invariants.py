@@ -1,6 +1,6 @@
-"""B6 reviewer-output regression coverage (Phase 4 Layer 2).
+"""Reviewer-output regression coverage (Layer 2 review).
 
-Per main-repo handoff (LOG #80 ask c). The reviewer.md prompt at
+The reviewer.md prompt at
 `skills/kicad/review/prompts/reviewer.md` is the spec source-of-truth.
 review_annotations.schema.json captures the JSON shape; this file
 asserts behavioral invariants that the schema doesn't formally enforce.
@@ -8,11 +8,11 @@ asserts behavioral invariants that the schema doesn't formally enforce.
 **Replay seed** — `tests/fixtures/phase4-review-trace/` carries the real
 GNSSDO Phase 4d-active exercise output (run_id 20260504T070303Z-12b692,
 10 annotations / 6 confirmed / 4 suppressed / 0 escalated, captured
-2026-05-03 via Task 35 subagent dispatch). The trace is the seed for
+from a recorded reviewer run). The trace is the seed for
 behavioral assertions; mutation-style tests deepcopy it and twiddle one
 field to exercise the negative case.
 
-**Invariants tested** (LOG #80 ask c):
+**Invariants tested**:
 
   1. produced_for_run_id format `YYYYMMDDTHHMMSSZ-<6hex>` matches
      run_id.py generator pattern.
@@ -25,8 +25,8 @@ field to exercise the negative case.
        (a) status=='escalated' → suggested_severity MUST equal 'error'
        (b) status=='confirmed'|'suppressed' → suggested_severity MUST
            be omitted (not present in dict)
-  5. reviewer_observations: [] empty array when capability_mode says
-     reviewer_observations_enabled=false (v1.4 default).
+  5. reviewer_observations: [] empty array in the archived fixture (the
+     capability_mode switch for it is retired; see the test).
   6. finding_id duplicate-allowed counter-example: real trace has two
      annotations targeting `sch:PR-001:u18` (SCL + SDA pull-up
      companions on the same I2C segment). The merge logic accepts
@@ -42,7 +42,7 @@ Plus structural sanity:
      review_annotations.schema.json (skips cleanly when jsonschema
      library is absent).
 
-v1.5 carry-overs flagged in main-repo notes (LOG #80, #82):
+Known gaps flagged to the product:
   - Schema-tighten suggested_severity ↔ status='escalated' coupling
     formally (today the rule lives in prose in reviewer.md only).
   - Raw-dict → make_finding migration: 4 of 6 analyzers (pcb / thermal
@@ -71,7 +71,7 @@ ANNOTATIONS_PATH = TRACE_DIR / "review_annotations.json"
 MERGE_REPORT_PATH = TRACE_DIR / "_merge_report.json"
 CAPABILITY_MODE_PATH = TRACE_DIR / "capability_mode.json"
 
-# run_id.py emits this exact pattern (LOG #65, schema_codec.py).
+# run_id.py emits this exact pattern (schema_codec.py).
 RUN_ID_RE = re.compile(r"^\d{8}T\d{6}Z-[0-9a-f]{6}$")
 
 
@@ -146,7 +146,7 @@ def test_trace_fixtures_present_and_loadable():
 
 def test_trace_annotations_count_matches_seed():
     """Real GNSSDO trace published 10 annotations (6 confirmed / 4 suppressed
-    / 0 escalated) per main-repo handoff."""
+    / 0 escalated)."""
     annotations, merge, _ = _load_trace()
     if annotations is None:
         return

@@ -31,7 +31,7 @@ from utils import DATA_DIR, data_dir, project_prefix, _truncate_with_hash, atomi
 
 
 def _iter_findings_files(repo_name=None):
-    """Iterate findings.json files under data/{repo}/{project}/.
+    """Iterate findings.json files under reference/{owner}/{repo}/{project}/.
 
     If repo_name is given, only iterate that repo's projects.
     """
@@ -460,7 +460,7 @@ def promote_to_assertion(finding_id, dry_run=False):
         "assertions": assertions,
     }
 
-    # Write to data/{repo}/{project}/assertions/{type}/
+    # Write to reference/{owner}/{repo}/{project}/assertions/{type}/
     # Use target_proj which may differ from proj for cross-project assertions
     out_dir = data_dir(repo, target_proj, "assertions") / atype
     out_dir.mkdir(parents=True, exist_ok=True)

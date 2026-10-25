@@ -516,7 +516,7 @@ def _in_function_scope(scope, func):
 
 
 def relocate_registry(registry, relocations):
-    """Apply a round's relocation map (spec §9 `relocations[]`) to registry entries.
+    """Apply a round record's relocation map (`relocations[]`) to registry entries.
 
     Matches on old_owner plus either the constant's own name (a moved constant)
     or its scope (a moved function: its local constants carry
@@ -944,7 +944,7 @@ def update_registry(registry, scanned):
     # same name and literal content hash, exactly one newcomer with that signature
     # (a file move, a function split, or several identical copies merged into one
     # shared table). Without this, `relocate --map` was the only path that kept
-    # verification across a move, and rounds that skipped it dropped the entry and
+    # verification across a move; a scan without it dropped the entry and
     # re-added it unverified (TH-076). Non-literal constants carry no content in
     # their hash and never match.
     def _literal_hash(h):
@@ -1807,7 +1807,7 @@ def main():
     p_scan = sub.add_parser("scan", help="Scan scripts, update registry")
     p_scan.add_argument("--diff", action="store_true", help="Show what changed")
 
-    p_reloc = sub.add_parser("relocate", help="Apply a relocation map (spec §9) to registry paths")
+    p_reloc = sub.add_parser("relocate", help="Apply a relocation map to registry paths")
     p_reloc.add_argument("--map", required=True, help="relocation JSON (list or {relocations: [...]})")
 
     # list

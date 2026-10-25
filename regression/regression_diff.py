@@ -33,12 +33,12 @@ from pathlib import Path
 # New v1.4 finding surfaces. None of these existed as findings in v1.3.1,
 # so they are clean additions with no `disappeared` risk — counted as
 # additions, never regressions:
-#   AM/OV/TJ/FT/PM/EX  Phase 4c detectors, fire under datasheet schema
+#   AM/OV/TJ/FT/PM/EX  datasheet-backed detectors, fire under datasheet schema
 #                      availability.
 #   VD-001..VD-004     voltage/power-derating audit, migrated out of the
 #                      v1.3.1 nested ``result["voltage_derating"]`` section
 #                      into rich findings[].
-#   XT-001             Phase 4b gave the crystal load-cap check a genuine
+#   XT-001             v1.4 gave the crystal load-cap check a genuine
 #                      heuristic path (target_load_source=
 #                      "parsed_from_value"): the crystal value string
 #                      carries an explicit pF spec and the board's C1/C2
@@ -51,16 +51,16 @@ from pathlib import Path
 NEW_V14_RULES = {
     'AM-001', 'OV-001', 'TJ-001', 'FT-001', 'PM-001', 'EX-001',
     'VD-001', 'VD-002', 'VD-003', 'VD-004', 'XT-001',
-    # rc.2 additions (Track 4 polish, c904bb3..6b6e622): per-color LED Vf
+    # rc.2 additions (c904bb3..6b6e622): per-color LED Vf
     # floor (LA-004), source-via-bridged-jumper info (RS-003), lifecycle
     # audit "not attached" info reminder (LC-007).
     'LA-004', 'RS-003', 'LC-007',
-    # rc.3 addition (Phase A-D F5, 8e63900): high-DNP-rate BOM audit.
+    # rc.3 addition (8e63900): high-DNP-rate BOM audit.
     # Only matters for gates whose baseline predates BL-001.
     'BL-001',
     # This set is CLOSED as of v2.0: per-rule budgeting for new heuristic
-    # rule families is retired (v2.0 spec §2). Do not add v2.0+ entries.
-    # v2.1 exception (USER-APPROVED 2026-07-15, KH-338): usb_compliance
+    # rule families is retired. Do not add v2.0+ entries.
+    # v2.1 exception (user-approved, KH-338): usb_compliance
     # check failures promoted to rich findings — detector
     # analyze_usb_compliance, warning/deterministic/topology. UC-001 (no
     # VBUS decoupling), UC-002 (no VBUS ESD), UC-003 (CC pulldown
@@ -68,7 +68,7 @@ NEW_V14_RULES = {
     'UC-001', 'UC-002', 'UC-003', 'UC-004',
 }
 
-# Phase 4b upgraded detectors whose datasheet-backed branch is gated off
+# v1.4-upgraded detectors whose datasheet-backed branch is gated off
 # until AnalysisContext.cache_dir is wired. Heuristic-mode logic preserves
 # v1.3 behaviour bit-for-bit. Any new additions in this set should appear
 # only when the datasheet path activates — flag for manual review rather
@@ -81,7 +81,7 @@ SEVERITY_ORDER = {'info': 0, 'warning': 1, 'error': 2}
 def _canon_refs(seq):
     """Stable string for a list-like field — includes ALL items, sorted.
 
-    LOG 6 (audit Highest-Risk #15): the original ``_first()`` helper only
+    The original ``_first()`` helper only
     keyed on the first ref/net/pin, so a regression that dropped secondary
     refs (e.g. components ``["U1","C4","C5"]`` → ``["U1"]`` from one v1.4
     detector change) collided into the same canonical key as the v1.3
@@ -115,7 +115,7 @@ def _norm_summary(summary):
     whitespace runs to single spaces so that ordering / formatting churn
     doesn't change the canonical key.
 
-    LOG 6: whitespace-only diffs (e.g. double-space → single-space, trailing
+    Whitespace-only diffs (e.g. double-space → single-space, trailing
     whitespace) on otherwise-identical summaries used to produce different
     canonical keys, causing spurious 'disappeared + new' pairs. The
     ``_WS_RUN`` collapse fixes that without losing any real content."""
@@ -135,7 +135,7 @@ def _canon_key(f):
     Excludes severity (so we can detect downgrades on shared findings)
     and excludes v1.4-only fields (finding_id, schema_era). Includes the
     FULL sorted ref/net/pin sets via :func:`_canon_refs` so dropped
-    secondary refs change the key (audit Highest-Risk #15 / LOG 6).
+    secondary refs change the key.
     """
     return (
         str(f.get('rule_id') or ''),
@@ -147,11 +147,11 @@ def _canon_key(f):
 
 
 def is_deep_review_doc(doc):
-    """True if ``doc`` is a deep_review.json document (v2.0 spec §3.C).
+    """True if ``doc`` is a deep_review.json document (a v2.0 artifact).
 
     deep_review.json is LLM-written and NON-DETERMINISTIC BY DESIGN — it is
-    permanently excluded from regression-diff scope (v2.0 spec §7,
-    load-bearing). Shape: no ``analyzer_type``; carries a ``quarantined``
+    permanently excluded from regression-diff scope
+    (load-bearing). Shape: no ``analyzer_type``; carries a ``quarantined``
     list next to ``findings``.
     """
     if not isinstance(doc, dict):
@@ -169,7 +169,7 @@ def _collect_observations(envelope):
 
     deep_review findings (detector='deep_review' or finding_id prefixed
     'deep_review:') are dropped: non-deterministic by design, permanently
-    out of diff scope (v2.0 spec §7) even if a future artifact merges
+    out of diff scope even if a future artifact merges
     them into an envelope.
     """
     obs = list(envelope.get('findings') or [])

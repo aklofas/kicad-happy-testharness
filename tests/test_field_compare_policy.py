@@ -11,10 +11,10 @@ def test_tracked_policy_loads_and_names_itself():
     assert isinstance(p, Policy)
     assert p.name == "volatile-leaves-v1"
     pointers = {leaf.get("pointer") or leaf.get("pointer_glob") for leaf in p.leaves}
-    # the two leaves that differ on an identical-code pair (see plan "Reality check")
+    # both run-id leaves vary across identical-code runs
     assert "/inputs/run_id" in pointers
     assert "/capability_mode_ref/run_id" in pointers
-    # the spec's wrong guesses must NOT be in the tracked policy
+    # unlisted top-level run_id/generated_at fields must remain comparable
     assert "/run_id" not in pointers
     assert "/inputs/generated_at" not in pointers
 
