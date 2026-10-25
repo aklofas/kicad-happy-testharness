@@ -23,6 +23,7 @@ from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
+from harnesslib.corpus_read import json_files
 from utils import OUTPUTS_DIR, DATA_DIR, list_repos, safe_load_json
 CATALOG_JSON = DATA_DIR / "repo_catalog.json"
 CATALOG_MD = DATA_DIR / "repo_catalog.md"
@@ -249,8 +250,7 @@ def _generate_tags(entry):
 def _output_files(d):
     """Analyzer outputs in a repo dir: never the capability_mode.json sidecar or a
     run-level _*.json file."""
-    return sorted(f for f in d.glob("*.json")
-                  if f.name != "capability_mode.json" and not f.name.startswith("_"))
+    return json_files(d, sort=True, skip_underscore=True, skip_sidecar=True)
 
 def build_repo_entry(repo_name, categories, repo_urls):
     """Build a complete catalog entry for one repo."""

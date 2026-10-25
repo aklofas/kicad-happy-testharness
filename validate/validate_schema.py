@@ -22,6 +22,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib.corpus_read import json_files
 from utils import (OUTPUTS_DIR, DATA_DIR, list_repos,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos)
 
@@ -47,7 +48,7 @@ def scan_schematic_outputs(repos):
         repo_dir = OUTPUTS_DIR / "schematic" / repo
         if not repo_dir.exists():
             continue
-        for f in repo_dir.glob("*.json"):
+        for f in json_files(repo_dir, sort=False, skip_underscore=False, skip_sidecar=False):
             try:
                 data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
@@ -92,9 +93,7 @@ def scan_thermal_outputs(repos):
         repo_dir = OUTPUTS_DIR / "thermal" / repo
         if not repo_dir.exists():
             continue
-        for f in repo_dir.glob("*.json"):
-            if f.name.startswith("_") or f.name == "capability_mode.json":
-                continue
+        for f in json_files(repo_dir, sort=False, skip_underscore=True, skip_sidecar=True):
             try:
                 data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
@@ -116,7 +115,7 @@ def scan_pcb_outputs(repos):
         repo_dir = OUTPUTS_DIR / "pcb" / repo
         if not repo_dir.exists():
             continue
-        for f in repo_dir.glob("*.json"):
+        for f in json_files(repo_dir, sort=False, skip_underscore=False, skip_sidecar=False):
             try:
                 data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
@@ -153,7 +152,7 @@ def scan_spice_outputs(repos):
         repo_dir = OUTPUTS_DIR / "spice" / repo
         if not repo_dir.exists():
             continue
-        for f in repo_dir.glob("*.json"):
+        for f in json_files(repo_dir, sort=False, skip_underscore=False, skip_sidecar=False):
             try:
                 data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
@@ -180,7 +179,7 @@ def scan_emc_outputs(repos):
         repo_dir = OUTPUTS_DIR / "emc" / repo
         if not repo_dir.exists():
             continue
-        for f in repo_dir.glob("*.json"):
+        for f in json_files(repo_dir, sort=False, skip_underscore=False, skip_sidecar=False):
             try:
                 data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
@@ -221,7 +220,7 @@ def scan_gerber_outputs(repos):
         repo_dir = OUTPUTS_DIR / "gerber" / repo
         if not repo_dir.exists():
             continue
-        for f in repo_dir.glob("*.json"):
+        for f in json_files(repo_dir, sort=False, skip_underscore=False, skip_sidecar=False):
             try:
                 data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):

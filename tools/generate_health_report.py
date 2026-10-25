@@ -20,6 +20,7 @@ from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
+from harnesslib.corpus_read import assertion_prefix
 from utils import DATA_DIR, OUTPUTS_DIR, safe_load_json
 
 HEALTH_LOG = DATA_DIR / "health_log.jsonl"
@@ -45,7 +46,7 @@ def _count_assertions():
         total_files += 1
         for a in data.get("assertions", []):
             aid = a.get("id", "")
-            prefix = aid.split("-")[0] if "-" in aid else "OTHER"
+            prefix = assertion_prefix(aid)
             if prefix in counts:
                 counts[prefix] += 1
             else:

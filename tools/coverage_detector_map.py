@@ -18,6 +18,7 @@ from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
+from harnesslib.corpus_read import assertion_prefix
 from utils import OUTPUTS_DIR, DATA_DIR, safe_load_json
 
 EQUATION_REGISTRY = DATA_DIR / "equation_registry.json"
@@ -102,7 +103,7 @@ def count_assertions():
         for a in data.get("assertions", []):
             path = a.get("check", {}).get("path", "")
             aid = a.get("id", "")
-            prefix = aid.split("-")[0] if "-" in aid else ""
+            prefix = assertion_prefix(aid, no_dash="")
             # Match detector from path or detector_filter
             det_filter = a.get("check", {}).get("detector_filter", "")
             for det in _load_detectors():
