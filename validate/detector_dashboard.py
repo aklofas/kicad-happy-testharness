@@ -82,11 +82,6 @@ def collect_detector_stats(detector_filter=None, repos=None):
 def format_report(stats, detector_filter=None):
     """Format detector stats as text report."""
     lines = []
-    total_files = 0
-    for det in sorted(stats):
-        s = stats[det]
-        total_files = max(total_files, s["files"])
-
     for det in sorted(stats, key=lambda d: -stats[d]["files"]):
         s = stats[det]
         spec = _DETECTOR_FIELD_SPECS.get(det, {})

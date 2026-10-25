@@ -22,11 +22,6 @@ from utils import OUTPUTS_DIR, list_repos, add_repo_filter_args, resolve_repos, 
 VALID_PRODUCT_CLASSES = {"prototype", "production"}
 VALID_IPC_CLASSES = {1, 2, 3}
 VALID_TARGET_MARKETS = {"hobby", "consumer", "industrial", "medical", "automotive", "aerospace"}
-NULLABLE_FIELDS = {
-    "expected_lifetime_years", "operating_temp_range",
-    "preferred_passive_size", "test_coverage_target",
-    "approved_manufacturers",
-}
 
 
 def validate_design_intent(data, filepath=""):
@@ -99,12 +94,6 @@ def validate_design_intent(data, filepath=""):
         issues.append((filepath, "design_intent.source is missing"))
     elif not isinstance(src, dict):
         issues.append((filepath, f"design_intent.source is {type(src).__name__}, expected dict"))
-
-    # Nullable fields: don't fail if None
-    for field in NULLABLE_FIELDS:
-        val = di.get(field)
-        # None is acceptable — no issue reported
-        # Field absence is also acceptable for nullable fields
 
     return issues
 

@@ -35,16 +35,6 @@ PCB_SECTIONS = [
 ]
 
 
-def _collect_fields(items):
-    """Collect all field names from a list of dicts, returning {field: count}."""
-    fields = defaultdict(int)
-    for item in items:
-        if isinstance(item, dict):
-            for key in item:
-                fields[key] += 1
-    return dict(fields)
-
-
 def scan_schematic_outputs(repos):
     """Scan schematic outputs and build field inventory for findings detectors.
 

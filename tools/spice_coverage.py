@@ -41,9 +41,6 @@ DETECTOR_SPICE_MAP = {
     "rf_chains": "rf_chain",
 }
 
-# Reverse map for unmapped type detection
-_SPICE_TO_DETECTOR = {v: k for k, v in DETECTOR_SPICE_MAP.items()}
-
 
 def count_detections(schematic_data):
     """Count detections per detector type from a schematic output."""

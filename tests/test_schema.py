@@ -10,28 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "validate"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "regression"))
 
 from validate_schema import (
-    _collect_fields, scan_schematic_outputs, diff_inventories, build_inventory,
+    scan_schematic_outputs, diff_inventories, build_inventory,
 )
 from checks import KNOWN_OPS, validate_assertion_structure
-
-
-# === _collect_fields ===
-
-def test_collect_fields_basic():
-    items = [{"a": 1, "b": 2}, {"a": 3, "c": 4}]
-    fields = _collect_fields(items)
-    assert fields == {"a": 2, "b": 1, "c": 1}
-
-def test_collect_fields_empty():
-    assert _collect_fields([]) == {}
-
-def test_collect_fields_non_dict():
-    assert _collect_fields(["string", 42, None]) == {}
-
-def test_collect_fields_mixed():
-    items = [{"a": 1}, "not a dict", {"b": 2}]
-    fields = _collect_fields(items)
-    assert fields == {"a": 1, "b": 1}
 
 
 # === diff_inventories ===

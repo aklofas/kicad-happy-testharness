@@ -197,13 +197,6 @@ def find_untagged(filepath, source_text=None, product_root=None):
             continue
         if node.name in tagged_functions:
             continue
-        if node.name.startswith("_") and node.name not in (
-            "_microstrip_impedance", "_arc_length_3pt", "_shoelace_area",
-            "_cap_impedance", "_estimate_dc_bias_derating",
-        ):
-            # Skip most private helpers unless known formula functions
-            pass
-
         # Get function source
         try:
             func_src = ast.get_source_segment(source_text, node)

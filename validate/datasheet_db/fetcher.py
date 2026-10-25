@@ -95,7 +95,6 @@ _FETCH_USER_AGENT = "kicad-happy-testharness/1.3 (+https://github.com/aklofas/ki
 _FETCH_MAX_REDIRECTS = 5
 _FETCH_DEFAULT_TIMEOUT = 60.0
 _PDF_MAGIC = b"%PDF-"
-_ACCEPTED_CONTENT_TYPES = {"application/pdf", "application/octet-stream", ""}
 
 
 _FETCH_SCHEMES = ("http", "https")

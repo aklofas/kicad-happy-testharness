@@ -61,21 +61,6 @@ KICAD_HAPPY_DIR = resolve_kicad_happy_dir()
 sys.path.insert(0, str(Path(KICAD_HAPPY_DIR) / "skills" / "kicad" / "scripts"))
 from kicad_core.sexp import parse_file, find_all, find_first, get_value, get_property
 
-# Normalization rules for Sprint 1 — deliberately empty.
-# When a mismatch class shows up repeatedly across the corpus and the
-# difference is a documented formatting artifact (e.g., trailing whitespace,
-# unicode normalization), add a rule here. Each rule must be justified in
-# reports/parser_verification/normalization_rationale.md.
-NORMALIZATION_RULES = {
-    # "component_values": [],  # list of (regex, replacement) pairs
-    # "label_names": [],
-}
-
-
-def _normalize(field: str, value):
-    """Apply NORMALIZATION_RULES for the given field. No-op in Sprint 1."""
-    return value
-
 
 def _collect_power_lib_ids(root: list) -> set:
     """Walk lib_symbols and return the set of lib_ids marked `(power)`.

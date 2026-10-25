@@ -805,14 +805,6 @@ def _next_id(registry):
     return f"CONST-{n:03d}"
 
 
-def _match_existing(registry, file, scope, name):
-    """Find an existing registry entry by (file, scope, name); `file` is root-relative."""
-    for c in registry.get("constants", []):
-        if c.get("file") == file and c.get("scope", "module") == scope and c.get("name") == name:
-            return c
-    return None
-
-
 def _repair_inline_names(registry, scanned_map):
     """Re-key the inline keyword sets of each (file, scope) before the merge: pair an existing
     entry with the scanned set that has its content hash (unique on both sides), else with
@@ -1548,32 +1540,6 @@ def _ref_prefix(ref):
         else:
             break
     return prefix
-
-
-def _resolve_datasheet_path(mpn):
-    """Return the local path to the PDF for `mpn`, or None if not present.
-
-    Forward-looking helper — not currently called from audit_constants but
-    provided so future verification features (e.g. re-reading a datasheet
-    to confirm a constant value) can resolve PDFs via the datasheet_db
-    manifest instead of hand-rolling path lookups. Added as part of
-    Sub-project A (datasheet store) Phase 8 integration.
-
-    Uses the datasheet_db manifest to locate records by MPN and returns the
-    blob storage path. Returns None if no record is found or if the blob file
-    does not exist on disk.
-    """
-    try:
-        from validate.datasheet_db.manifest import find_by_mpn
-        from validate.datasheet_db.storage import store_path
-    except ImportError:
-        return None
-
-    matches = find_by_mpn(mpn)
-    if not matches:
-        return None
-    path = store_path(matches[0])
-    return path if path.exists() else None
 
 
 def _corpus_bonus(flags):
