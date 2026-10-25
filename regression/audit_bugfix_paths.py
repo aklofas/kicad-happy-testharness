@@ -208,15 +208,25 @@ def audit(fix=False):
     return results
 
 
+GUESS_NOTES = ("prefix_adjusted", "fuzzy")
+
+
 def apply_fixes(results):
     """Apply suggested fixes to the registry."""
     registry = json.loads(REGISTRY_FILE.read_text(encoding="utf-8"))
 
-    # Build a lookup: (issue, assertion_index) -> suggestion
+    # Build a lookup: (issue, assertion_index) -> suggestion. Prefix-adjusted and fuzzy
+    # suggestions are guesses with no tie to the requested source_file: report, never apply.
     fix_map = {}
     for r in results:
-        if not r["matched"] and r.get("suggestion"):
-            fix_map[(r["issue"], r["index"])] = r["suggestion"]
+        sug = r.get("suggestion")
+        if r["matched"] or not sug:
+            continue
+        if sug.get("note") in GUESS_NOTES:
+            print(f"  {r['issue']}[{r['index']}]: not applied ({sug['note']} guess -> {sug.get('match')}); "
+                  "fix the registry entry by hand")
+            continue
+        fix_map[(r["issue"], r["index"])] = sug
 
     if not fix_map:
         print("No fixes to apply.")

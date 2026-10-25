@@ -516,7 +516,10 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                     try:
                         existing = json.loads(out_file.read_text(encoding="utf-8"))
                         if existing.get("generated_by") == "seed_structural.py":
-                            out_file.unlink()
+                            if dry_run:
+                                print(f"  {repo_name}/{proj_name}: would remove {out_file.name}")
+                            else:
+                                out_file.unlink()
                     except (json.JSONDecodeError, OSError):
                         pass
                 continue
