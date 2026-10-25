@@ -1,3 +1,4 @@
+import ast
 from pathlib import Path
 
 from harnesslib import corpus
@@ -18,6 +19,20 @@ def test_corpus_takes_repos_dir_explicitly(tmp_path):
 
 
 def test_harnesslib_corpus_imports_no_harness_layers():
-    src = (Path(corpus.__file__)).read_text()
-    for banned in ("import utils", "from utils", "regression", "from run", "import run"):
-        assert banned not in src
+    tree = ast.parse(Path(corpus.__file__).read_text(encoding="utf-8"))
+    banned = {"utils", "run", "regression", "tools", "validate"}
+    for node in ast.walk(tree):
+        mods = []
+        if isinstance(node, ast.Import):
+            mods = [a.name for a in node.names]
+        elif isinstance(node, ast.ImportFrom):
+            mods = [node.module or ""]
+        for m in mods:
+            assert m.split(".")[0] not in banned, m
+
+
+def test_utils_wrappers_follow_a_patched_repos_dir(monkeypatch, tmp_path):
+    monkeypatch.setattr(utils, "REPOS_DIR", tmp_path / "R")
+    p = tmp_path / "R" / "o" / "r" / "sub" / "b.kicad_pcb"
+    assert utils.repo_name_from_path(p) == "o/r"
+    assert utils.safe_name(p) == "sub_b.kicad_pcb"

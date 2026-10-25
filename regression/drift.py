@@ -92,7 +92,7 @@ def validate_finding_items(finding):
 
     results = []
 
-    def add(category, item_type, index, check, description):
+    def add(item_type, index, category, description, check):
         results.append(ItemResult(item_type, index, category, description, bool(check)))
 
     has_checkable = False
@@ -105,18 +105,18 @@ def validate_finding_items(finding):
         check = item.get("check")
         r, resolvable = _evaluate(check, output) if check else (None, True)
         if check and not resolvable:
-            add("unresolvable", "correct", index, check, f"{desc} — check path {check['path']} not in output")
+            add("correct", index, "unresolvable", f"{desc} — check path {check['path']} not in output", check)
         elif check:
             if r["passed"]:
-                add("ok", "correct", index, check, f"{desc} — check passed")
+                add("correct", index, "ok", f"{desc} — check passed", check)
             else:
-                add("regression", "correct", index, check, f"{desc} — check FAILED: actual={r.get('actual')}")
+                add("correct", index, "regression", f"{desc} — check FAILED: actual={r.get('actual')}", check)
         else:
             count = _section_count(output, section)
             if count is None or count == 0:
-                add("regression", "correct", index, check, f"{desc} — {section} now empty/missing")
+                add("correct", index, "regression", f"{desc} — {section} now empty/missing", check)
             else:
-                add("ok", "correct", index, check, f"{desc} — {section} has {count} items")
+                add("correct", index, "ok", f"{desc} — {section} has {count} items", check)
 
     # Check incorrect items — count change suggests fix
     for index, item in checkable_items(finding, "incorrect"):
@@ -126,20 +126,20 @@ def validate_finding_items(finding):
         check = item.get("check")
         r, resolvable = _evaluate(check, output) if check else (None, True)
         if check and not resolvable:
-            add("unresolvable", "incorrect", index, check, f"{desc} — check path {check['path']} not in output")
+            add("incorrect", index, "unresolvable", f"{desc} — check path {check['path']} not in output", check)
         elif check:
             if r["passed"]:
                 # not_contains_match passed = ref is gone = bug fixed
-                add("possibly_fixed", "incorrect", index, check, f"{desc} — bug appears fixed")
+                add("incorrect", index, "possibly_fixed", f"{desc} — bug appears fixed", check)
             else:
                 # not_contains_match failed = ref still there = bug still present
-                add("ok", "incorrect", index, check, f"{desc} — bug still present: {r.get('actual')}")
+                add("incorrect", index, "ok", f"{desc} — bug still present: {r.get('actual')}", check)
         else:
             count = _section_count(output, section)
             if count is None or count == 0:
-                add("possibly_fixed", "incorrect", index, check, f"{desc} — {section} now empty")
+                add("incorrect", index, "possibly_fixed", f"{desc} — {section} now empty", check)
             else:
-                add("ok", "incorrect", index, check, f"{desc} — {section} has {count} items")
+                add("incorrect", index, "ok", f"{desc} — {section} has {count} items", check)
 
     # Check missed items — data appearing suggests new detection
     for index, item in checkable_items(finding, "missed"):
@@ -149,18 +149,18 @@ def validate_finding_items(finding):
         check = item.get("check")
         r, resolvable = _evaluate(check, output) if check else (None, True)
         if check and not resolvable:
-            add("unresolvable", "missed", index, check, f"{desc} — check path {check['path']} not in output")
+            add("missed", index, "unresolvable", f"{desc} — check path {check['path']} not in output", check)
         elif check:
             if r["passed"]:
-                add("now_detected", "missed", index, check, f"{desc} — check passed (now detected)")
+                add("missed", index, "now_detected", f"{desc} — check passed (now detected)", check)
             else:
-                add("ok", "missed", index, check, f"{desc} — check still failing: actual={r.get('actual')}")
+                add("missed", index, "ok", f"{desc} — check still failing: actual={r.get('actual')}", check)
         else:
             count = _section_count(output, section)
             if count is not None and count > 0:
-                add("now_detected", "missed", index, check, f"{desc} — {section} now has {count} items")
+                add("missed", index, "now_detected", f"{desc} — {section} now has {count} items", check)
             else:
-                add("ok", "missed", index, check, f"{desc} — {section} still empty/missing")
+                add("missed", index, "ok", f"{desc} — {section} still empty/missing", check)
 
     if not has_checkable:
         return [ItemResult(None, None, "no_checkable_items", "no items with analyzer_section", False)]

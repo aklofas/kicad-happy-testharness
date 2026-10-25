@@ -402,7 +402,8 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
 
 def map_units(fn, units, jobs, *, unpack=False):
     """Apply fn to each unit; results come back in input order whatever the
-    completion order. Sequential when jobs <= 1."""
+    completion order. Sequential when jobs <= 1. With unpack, each unit is a sequence
+    spread as fn(*unit)."""
     units = list(units)
     if jobs <= 1:
         return [fn(*u) if unpack else fn(u) for u in units]

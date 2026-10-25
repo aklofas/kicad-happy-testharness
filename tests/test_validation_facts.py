@@ -77,23 +77,19 @@ def test_validate_emc_derives_pcb_without_size_check(tmp_path, monkeypatch):
     sch_dir.mkdir(parents=True)
     (sch_dir / "a.kicad_sch.json").write_text("{}")
 
-    calls = []
-    real_loads = json.loads
+    read_paths = []
+    real_read_text = Path.read_text
 
-    class _Spy:
-        JSONDecodeError = json.JSONDecodeError
-
-        @staticmethod
-        def loads(text):
-            calls.append(text)
-            return real_loads(text)
+    def spy_read_text(self, *args, **kwargs):
+        read_paths.append(self)
+        return real_read_text(self, *args, **kwargs)
 
     monkeypatch.setattr(validate_emc, "OUTPUTS_DIR", out)
     monkeypatch.setattr(cross_analyzer, "OUTPUTS_DIR", out)
-    monkeypatch.setattr(validate_emc, "json", _Spy)
+    monkeypatch.setattr(Path, "read_text", spy_read_text)
     sch, pcb = validate_emc.find_source_json(emc_json)
     assert sch == {} and pcb is None
-    assert "" in calls  # the empty file was read and parsed
+    assert pcb_dir / "a.kicad_pcb.json" in read_paths  # the empty file was read and parsed
 
     pairs = cross_analyzer.find_paired_outputs("o/r")
     assert [p["pcb"] for p in pairs] == [None]  # cross_analyzer skips zero-size

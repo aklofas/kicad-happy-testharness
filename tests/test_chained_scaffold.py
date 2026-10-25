@@ -21,10 +21,6 @@ def _sleepy(pair):
     return i
 
 
-def _square(x):
-    return x * x
-
-
 def _add(a, b):
     return a + b
 
@@ -39,8 +35,8 @@ def test_map_units_keeps_input_order_when_completion_is_reversed():
 
 
 def test_map_units_sequential_and_parallel_agree():
-    units = list(range(6))
-    assert map_units(_square, units, 1) == map_units(_square, units, 2)
+    units = [(i, 0.05 * (5 - i)) for i in range(6)]
+    assert map_units(_sleepy, units, 1) == map_units(_sleepy, units, 3) == list(range(6))
 
 
 def test_map_units_unpack_passes_pairs_as_two_args():
@@ -58,6 +54,12 @@ def test_expand_selection_calls_finder_per_repo_in_order(monkeypatch):
     monkeypatch.setattr(_chained, "resolve_repos_with_source",
                         lambda args, require_explicit_all: (["a", "b"], "repo-list"))
     calls = []
+    seen = {}
+
+    def resolve(args, require_explicit_all):
+        seen["require_explicit_all"] = require_explicit_all
+        return ["a", "b"], "repo-list"
+    monkeypatch.setattr(_chained, "resolve_repos_with_source", resolve)
 
     def finder(rn):
         calls.append(rn)
@@ -65,6 +67,7 @@ def test_expand_selection_calls_finder_per_repo_in_order(monkeypatch):
 
     assert expand_selection(SimpleNamespace(), finder) == (["a", "b"], ["a1", "a2", "b1", "b2"])
     assert calls == ["a", "b"]
+    assert seen["require_explicit_all"] is True
 
 
 def test_expand_selection_all_calls_finder_with_none(monkeypatch):

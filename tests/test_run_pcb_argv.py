@@ -22,11 +22,23 @@ from run_pcb import normalize_pcb_argv  # noqa: E402
     (["--no-full"], ["--repo", "o/r", "--jobs", "1", "--proximity"]),
     (["--no-full", "--no-proximity"], ["--repo", "o/r", "--jobs", "1"]),
     (["--full", "--proximity", "--full"], ["--repo", "o/r", "--jobs", "1", "--full", "--proximity"]),
-    (["--resume"], ["--repo", "o/r", "--jobs", "1", "--full", "--proximity"]),
+    (["--no-full", "--full"], ["--repo", "o/r", "--jobs", "1", "--proximity"]),
 ])
 def test_normalize_matches_recorded_argv(flags, recorded):
     remaining, extra = normalize_pcb_argv(["--repo", "o/r", "--jobs", "1", *flags])
-    assert [a for a in remaining if a != "--resume"] + extra == recorded
+    assert remaining + extra == recorded
+
+
+def test_resume_passes_through_unchanged():
+    remaining, extra = normalize_pcb_argv(["--repo", "o/r", "--resume"])
+    assert remaining == ["--repo", "o/r", "--resume"]
+    assert extra == ["--full", "--proximity"]
+
+
+def test_repeated_opt_out_removes_only_one_occurrence():
+    remaining, extra = normalize_pcb_argv(["--repo", "o/r", "--no-full", "--no-full"])
+    assert remaining == ["--repo", "o/r", "--no-full"]
+    assert extra == ["--proximity"]
 
 
 def test_normalize_does_not_mutate_its_input():

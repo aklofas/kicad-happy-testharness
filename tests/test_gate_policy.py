@@ -52,6 +52,14 @@ def test_apply_modes_stores_final_pass():
     assert out["gate_pass"]["pass"] is True and out["gate_pass"]["strict_field_clean"] is True
 
 
+def test_apply_modes_budgeted_verdict_overrides_findings_level_pass():
+    from regression.gate_policy import apply_modes
+    report = {"gate_pass": {"pass": False, "census_ok": True, "skips_ok": True}}
+    out = apply_modes(report, {"budgeted": {"verdict": "clean"}}, kind="relock")
+    assert out["gate_pass"]["pass"] is True
+    assert out["gate_pass"]["kind"] == "relock"
+
+
 def test_gate_policy_does_not_import_the_driver():
     import regression.gate_policy as p
     assert "run_corpus_gate" not in Path(p.__file__).read_text()

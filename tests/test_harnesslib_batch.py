@@ -1,5 +1,6 @@
 """harnesslib.batch: the batch lifecycle behind utils.run_analyzer, and the two output
 validators named for their distinct contracts."""
+import dataclasses
 import json
 import subprocess
 import sys
@@ -81,8 +82,8 @@ def test_run_batch_returns_exit_codes_instead_of_exiting(tmp_path, capsys):
     assert _run(_paths(tmp_path / "e", manifest_lines=[one]), repo_list=["x/y"]) == 1
     assert "No pcbs found for x/y" in capsys.readouterr().err
 
-    paths = batch.BatchPaths(**{**_paths(tmp_path / "c", manifest_lines=[one, two]).__dict__,
-                                "repos_dir": tmp_path / "repos"})
+    paths = dataclasses.replace(
+        _paths(tmp_path / "c", manifest_lines=[one, two]), repos_dir=tmp_path / "repos")
     assert _run(paths) == 2
     assert "collide" in capsys.readouterr().err
     assert not (paths.outputs_dir / "pcb" / "manifest.json").exists()
@@ -101,8 +102,10 @@ def test_run_analyzer_honours_patched_utils_globals(monkeypatch, tmp_path, capsy
     board.write_text("(kicad_pcb)")
     (tmp_path / "manifests").mkdir()
     (tmp_path / "manifests" / "all_pcbs.txt").write_text(f"{board}\n")
-    monkeypatch.setenv("KICAD_HAPPY_TESTHARNESS_DATA_DIR", str(tmp_path / "data"))
     monkeypatch.setenv("KICAD_HAPPY_DIR", str(product))
+    live_out = utils.OUTPUTS_DIR / "pcb"
+    live_manifest = live_out / "manifest.json"
+    live_before = live_manifest.stat().st_mtime_ns if live_manifest.exists() else None
     monkeypatch.setattr(utils, "HARNESS_DIR", tmp_path / "harness")
     monkeypatch.setattr(utils, "REPOS_DIR", tmp_path / "repos")
     monkeypatch.setattr(utils, "MANIFESTS_DIR", tmp_path / "manifests")
@@ -118,3 +121,6 @@ def test_run_analyzer_honours_patched_utils_globals(monkeypatch, tmp_path, capsy
     m = json.loads((tmp_path / "outputs" / "pcb" / "manifest.json").read_text())
     assert m["totals"]["ok"] == 1
     assert "PASS" in capsys.readouterr().out
+    # the live corpus outputs captured before patching must be untouched
+    assert (live_manifest.stat().st_mtime_ns if live_manifest.exists() else None) == live_before
+    assert not (live_out / "o" / "r" / "ok.kicad_pcb.json").exists()

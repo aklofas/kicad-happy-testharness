@@ -1,7 +1,9 @@
 """Corpus gate acceptance policy: findings criteria, skip judgement against the
 baseline-debts ledger, gate_pass and the per-kind final verdict.
 
-Pure: no analyzer runs, no gate-dir layout. The gate driver re-exports these names.
+Runs no analyzers and knows no gate-dir layout; the only side effect is putting tools/ on
+sys.path to import the baseline-ledger checker on demand. The gate driver re-exports
+these names.
 """
 from __future__ import annotations
 
@@ -16,7 +18,7 @@ OK_STATUSES = ("ok", "ok_findings_exit")
 
 
 def _ok(res) -> bool:
-    return res.status in ("ok", "ok_findings_exit")
+    return res.status in OK_STATUSES
 
 
 CANDIDATE_FAILED_REASON = "candidate failed/produced no output"

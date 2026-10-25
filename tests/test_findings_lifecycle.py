@@ -76,6 +76,43 @@ def test_refresh_reports_no_checkable_items(tmp_path):
     assert out["stale"] == 0
 
 
+def _incorrect_items(ff):
+    return json.loads(ff.read_text())["findings"][0]["incorrect"]
+
+
+def test_refresh_apply_writes_no_disposition_without_checkable_items(tmp_path):
+    ff = _tree(tmp_path, [GONE])
+    data = json.loads(ff.read_text())
+    for item in data["findings"][0]["incorrect"]:
+        del item["analyzer_section"]
+    ff.write_text(json.dumps(data))
+    _run(tmp_path, "regression/refresh_findings.py", "--apply")
+    assert all("disposition" not in i for i in _incorrect_items(ff))
+
+
+def test_refresh_apply_writes_no_disposition_without_output(tmp_path):
+    ff = _tree(tmp_path, [GONE])
+    (tmp_path / "results" / "outputs" / "schematic" / REPO / SRC).unlink()
+    out = json.loads(_run(tmp_path, "regression/refresh_findings.py", "--json"))
+    assert out["no_output"] == 1
+    _run(tmp_path, "regression/refresh_findings.py", "--apply")
+    assert all("disposition" not in i for i in _incorrect_items(ff))
+
+
+def test_refresh_apply_skips_count_based_item_without_a_check(tmp_path):
+    ff = _tree(tmp_path, [GONE])
+    data = json.loads(ff.read_text())
+    data["findings"][0]["incorrect"].append(
+        {"description": "count based", "analyzer_section": "detect_missing_section"})
+    ff.write_text(json.dumps(data))
+    drift = json.loads(_run(tmp_path, "regression/drift.py", "--all", "--json"))
+    assert drift["counts"]["possibly_fixed"] == 2          # the count-based item does drift
+    _run(tmp_path, "regression/refresh_findings.py", "--apply")
+    items = _incorrect_items(ff)
+    assert items[0]["disposition"]["state"] == "possibly_fixed"
+    assert "disposition" not in items[1]
+
+
 FIXTURE = HARNESS / "tests" / "fixtures" / "wave10"
 
 

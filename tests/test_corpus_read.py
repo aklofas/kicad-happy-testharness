@@ -34,10 +34,14 @@ def test_json_files_flags(tmp_path):
         "a.json", "b.json"]
 
 
-def test_json_files_unsorted_is_glob_order(tmp_path):
+def test_json_files_unsorted_keeps_glob_order(tmp_path, monkeypatch):
     d = _make(tmp_path)
+    fixed = [d / "b.json", d / "capability_mode.json", d / "a.json", d / "_agg.json"]
+    monkeypatch.setattr(type(d), "glob", lambda self, pattern: iter(fixed))
     got = json_files(d, sort=False, skip_underscore=False, skip_sidecar=False)
-    assert got == list(d.glob("*.json"))
+    assert got == fixed
+    assert json_files(d, sort=True, skip_underscore=False, skip_sidecar=False) == sorted(fixed)
+    assert json_files(d, sort=False, skip_underscore=True, skip_sidecar=True) == [d / "b.json", d / "a.json"]
 
 
 def test_assertion_prefix():

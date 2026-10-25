@@ -66,3 +66,10 @@ def test_golden_covers_the_byte_boundaries():
 def test_naming_reads_repos_dir_at_call_time(monkeypatch, tmp_path):
     monkeypatch.setattr(utils, "REPOS_DIR", tmp_path / "elsewhere")
     assert utils.repo_name_from_path(tmp_path / "elsewhere" / "o" / "r" / "x.kicad_sch") == "o/r"
+
+
+def test_backslash_paths_are_normalized_by_the_helpers_themselves():
+    assert utils.project_key("hw\\rev2", "board.kicad_pcb") == "hw_rev2_board.kicad_pcb"
+    assert utils.project_key("hw\\rev2", "board.kicad_pcb") == utils.project_key("hw/rev2", "board.kicad_pcb")
+    assert utils.project_prefix("hw\\rev2") == "hw_rev2_"
+    assert utils.project_prefix("hw\\rev2") == utils.project_prefix("hw/rev2")

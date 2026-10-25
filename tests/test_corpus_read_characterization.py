@@ -34,6 +34,9 @@ def plain(x):
     return x
 
 repos = ["o/r"]
+changes = [{"change_type": "removed", "category": "schematic", "detector": "rc_filters",
+            "field": "rc_filters"}]
+stale = validate_schema.find_stale_assertions(changes)
 out = {
     "schema_inventory": validate_schema.build_inventory(repos, jobs=1),
     "catalog_entry": generate_catalog.build_repo_entry(
@@ -42,6 +45,8 @@ out = {
     "coverage_by_prefix": coverage_report._count_assertions_by_prefix(
         utils.DATA_DIR / "o" / "r" / "p" / "assertions"),
     "detector_map_counts": coverage_detector_map.count_assertions(),
+    "stale_assertions": sorted(
+        (Path(s["assertion_file"]).name, s["assertion_id"]) for s in stale),
 }
 print(json.dumps(plain(out), indent=1, sort_keys=True))
 """
@@ -59,3 +64,12 @@ def capture(tmp_path):
 
 def test_corpus_readers_match_golden(tmp_path):
     assert json.loads(capture(tmp_path)) == json.loads(GOLDEN.read_text(encoding="utf-8"))
+
+
+def test_bare_list_assertion_file_contributes_nothing(tmp_path):
+    out = json.loads(capture(tmp_path))
+    # The fixture holds a bare list in assertions/schematic; it must neither crash the
+    # readers nor add to the counts or to the stale-assertion report.
+    assert (FIXTURE / "reference/o/r/p/assertions/schematic/bare_list.json").is_file()
+    assert all(name != "bare_list.json" for name, _ in out["stale_assertions"])
+    assert out["stale_assertions"], "the capture must still find the object-file match"
