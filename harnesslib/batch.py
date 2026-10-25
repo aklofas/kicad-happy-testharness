@@ -398,3 +398,18 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
     if failed:
         return 1
     return 0
+
+
+def map_units(fn, units, jobs, *, unpack=False):
+    """Apply fn to each unit; results come back in input order whatever the
+    completion order. Sequential when jobs <= 1."""
+    units = list(units)
+    if jobs <= 1:
+        return [fn(*u) if unpack else fn(u) for u in units]
+    results = [None] * len(units)
+    with ProcessPoolExecutor(max_workers=jobs) as pool:
+        futures = {(pool.submit(fn, *u) if unpack else pool.submit(fn, u)): i
+                   for i, u in enumerate(units)}
+        for future in as_completed(futures):
+            results[futures[future]] = future.result()
+    return results
