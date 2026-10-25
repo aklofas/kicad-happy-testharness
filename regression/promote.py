@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Promote current results to reference when they improve.
+"""Promote current results to reference: a reviewed adoption of changed outputs.
 
-Compares current analyzer outputs (results/) against reference data
-(reference/) and promotes improvements. This updates baselines and
-regenerates seed assertions for projects where outputs improved.
+Compares current analyzer outputs (results/) against reference data (reference/) and,
+with --apply, re-snapshots baselines and regenerates seed assertions. --apply refuses a
+repo whose current outputs fail a (non-aspirational) assertion or error, or whose result
+tree is partial (a baseline file has no current output): adopt only what was reviewed.
 
 Usage:
     python3 regression/promote.py --repo OpenMower              # Show what would change
@@ -66,6 +67,11 @@ def check_baseline_changes(repo_name):
             results = compare_project(repo_name, proj_name, stored_path, atype)
             if "error" in results:
                 continue
+            if results["files_only_in_baseline"]:
+                changes.append({
+                    "project": proj_name, "type": atype, "status": "partial",
+                    "missing": len(results["files_only_in_baseline"]),
+                })
             if results["files_with_changes"] > 0 or results["files_only_in_current"]:
                 changes.append({
                     "project": proj_name,
@@ -114,6 +120,9 @@ def promote_repo(repo_name, dry_run=True):
         return False
 
     has_improvements = False
+    partial = [c for c in changes if c["status"] == "partial"]
+    for c in partial:
+        print(f"  PARTIAL: {c['project']}/{c['type']} — {c['missing']} baseline files have no current output")
     for c in changes:
         if c["status"] == "new":
             print(f"  NEW: {c['project']} — {c['detail']}")
@@ -127,9 +136,21 @@ def promote_repo(repo_name, dry_run=True):
     if not has_improvements:
         return False
 
+    blockers = []
+    if assertion_results["failed"] or assertion_results["errors"]:
+        blockers.append(f"{assertion_results['failed']} failing / {assertion_results['errors']} "
+                        "erroring assertions")
+    if partial:
+        blockers.append("partial result tree")
     if dry_run:
-        print(f"\n  Run with --apply to promote these changes to reference/")
+        if blockers:
+            print(f"\n  --apply would refuse: {'; '.join(blockers)}")
+        else:
+            print(f"\n  Run with --apply to promote these changes to reference/")
         return True
+    if blockers:
+        print(f"\n  REFUSED: {'; '.join(blockers)}. Fix or re-run before adopting.")
+        return False
 
     # Apply: re-snapshot baselines
     print(f"\n  Promoting baselines...")

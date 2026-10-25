@@ -92,3 +92,41 @@ def test_save_findings_and_repos_md_use_the_atomic_writer(tmp_path, monkeypatch)
     (tmp_path / "repos.md").write_text("## Cat\n- https://github.com/o/r\n")
     add_repos.remove_from_repos_md("https://github.com/o/r")
     assert calls[0] == "findings.json" and calls[-1] == "repos.md"
+
+
+def _promote_env(tmp_path, monkeypatch, assertions, changes):
+    import promote
+    out = tmp_path / "outputs" / "schematic" / "o" / "r"
+    out.mkdir(parents=True)
+    (out / "x.json").write_text("{}")
+    monkeypatch.setattr(promote, "OUTPUTS_DIR", tmp_path / "outputs")
+    monkeypatch.setattr(promote, "check_assertions", lambda d, repo_name=None: assertions)
+    monkeypatch.setattr(promote, "check_baseline_changes", lambda r: changes)
+    applied = []
+    monkeypatch.setattr(promote, "create_snapshot", lambda r: applied.append("snapshot"))
+    monkeypatch.setattr(promote, "generate_for_repo", lambda *a: applied.append("seed") or (0, 0, 0))
+    return promote, applied
+
+
+CHANGED = [{"project": "p", "type": "schematic", "status": "changed", "compared": 1, "changed": 1, "new_files": 0}]
+
+
+@pytest.mark.parametrize("assertions,changes,why", [
+    ({"total": 3, "passed": 2, "failed": 1, "errors": 0}, CHANGED, "failing"),
+    ({"total": 3, "passed": 3, "failed": 0, "errors": 0},
+     CHANGED + [{"project": "p", "type": "pcb", "status": "partial", "missing": 2}], "partial result tree"),
+])
+def test_promote_refuses_failing_assertions_and_partial_trees(tmp_path, monkeypatch, capsys,
+                                                              assertions, changes, why):
+    """code A2-F6 (ruling R11): promotion is a reviewed adoption; it never adopts failing
+    outputs or a partial tree."""
+    promote, applied = _promote_env(tmp_path, monkeypatch, assertions, changes)
+    assert promote.promote_repo("o/r", dry_run=False) is False
+    assert applied == [] and why in capsys.readouterr().out
+
+
+def test_promote_applies_a_clean_complete_tree(tmp_path, monkeypatch):
+    promote, applied = _promote_env(tmp_path, monkeypatch,
+                                    {"total": 3, "passed": 3, "failed": 0, "errors": 0}, CHANGED)
+    assert promote.promote_repo("o/r", dry_run=False) is True
+    assert applied[0] == "snapshot"

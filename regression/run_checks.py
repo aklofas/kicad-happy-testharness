@@ -48,7 +48,7 @@ def check_assertions(data_dir, repo_name=None, analyzer_type=None):
         output_file = find_output_file(file_pattern, repo, project_path, atype)
 
         if not output_file:
-            n = len(assertions)
+            n = sum(1 for a in assertions if not a.get("aspirational"))
             errors += n
             total += n
             continue
@@ -56,12 +56,14 @@ def check_assertions(data_dir, repo_name=None, analyzer_type=None):
         try:
             data = json.loads(output_file.read_text(encoding="utf-8"))
         except Exception:
-            n = len(assertions)
+            n = sum(1 for a in assertions if not a.get("aspirational"))
             errors += n
             total += n
             continue
 
         for assertion in assertions:
+            if assertion.get("aspirational"):   # known-bug locks do not gate adoption
+                continue
             total += 1
             result = evaluate_assertion(assertion, data)
             if result["passed"]:
