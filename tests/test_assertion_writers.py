@@ -27,6 +27,6 @@ def test_insert_after_check_and_stamp_appends():
     _insert_schema_era(a, "v1.4", "R", "T", "why")
     assert list(a) == ["id", "check", "schema_era", "z"]
     assert a["schema_era"] == era_payload("v1.4", "R", "T", "why")
-    b = {"id": "x", "check": {"detector_filter": "detect_pullups"}, "z": 1}
-    if stamp_schema_era(b, tagged_at="T"):
-        assert list(b)[-1] == "schema_era"
+    b = {"id": "x", "check": {"detector_filter": "audit_power_pin_dc_paths"}, "z": 1}
+    assert stamp_schema_era(b, tagged_at="T") is True
+    assert list(b)[-1] == "schema_era"
