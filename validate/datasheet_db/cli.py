@@ -91,6 +91,10 @@ def _scan_repos_and_ingest(args, now: str) -> int:
         existing = load_record(sha)
         if existing is not None:
             # Merge: add the found_in entry
+            if args.dry_run:
+                print(f"[dry-run] would merge: {sha[:12]} ({pdf.name})")
+                merged += 1
+                continue
             merged_rec = merge_record(existing, {"found_in": [found_in_entry]}, now=now)
             save_record(merged_rec)
             merged += 1

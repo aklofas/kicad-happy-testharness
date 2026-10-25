@@ -579,3 +579,24 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {type(e).__name__}: {e}")
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+def test_scan_repos_dry_run_writes_nothing_on_merge():
+    """code A4-F10: --scan-repos --dry-run saved the merge of an existing record before the
+    dry-run guard."""
+    import json
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"; corpus = tmp / "corpus"
+        store.mkdir(); manifest.mkdir()
+        fake = corpus / "o" / "r" / "datasheets" / "part.pdf"
+        fake.parent.mkdir(parents=True)
+        _make_fake_pdf(fake, b"merge me")
+        assert _run_cli(["insert", "--file", str(fake), "--mpn", "P1"], store, manifest).returncode == 0
+        before = {p: p.read_bytes() for p in manifest.rglob("*.json")}
+        r = _run_cli(["insert", "--scan-repos", "--dry-run"], store, manifest,
+                     extra_env={"DATASHEET_DB_REPOS_DIR": str(corpus)})
+        assert r.returncode == 0, r.stderr
+        assert "would merge" in r.stdout
+        assert {p: p.read_bytes() for p in manifest.rglob("*.json")} == before
+        rec = json.loads(next(iter(before.values())))
+        assert not any(f.get("type") == "repo" for f in rec.get("found_in", []))
