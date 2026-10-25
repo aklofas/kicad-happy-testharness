@@ -157,13 +157,15 @@ def write_blob_atomic(target_path, data: bytes, expected_sha256: str = None) -> 
 
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent.parent
+# defaults follow the harness data root (KICAD_HAPPY_TESTHARNESS_DATA_DIR), like utils
+DATA_ROOT = Path(os.environ.get("KICAD_HAPPY_TESTHARNESS_DATA_DIR") or HARNESS_DIR)
 STORE_DIR = Path(os.environ.get(
     "DATASHEET_DB_STORE_DIR",
-    str(HARNESS_DIR / "datasheets")
+    str(DATA_ROOT / "datasheets")
 ))
 REPOS_DIR = Path(os.environ.get(
     "DATASHEET_DB_REPOS_DIR",
-    str(HARNESS_DIR / "repos")
+    str(DATA_ROOT / "repos")
 ))
 
 

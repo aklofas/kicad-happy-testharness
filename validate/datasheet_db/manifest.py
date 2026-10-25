@@ -7,7 +7,8 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent.parent
 MANIFEST_DIR = Path(os.environ.get(
     "DATASHEET_DB_MANIFEST_DIR",
-    str(HARNESS_DIR / "reference" / "datasheet_manifest")
+    str(Path(os.environ.get("KICAD_HAPPY_TESTHARNESS_DATA_DIR") or HARNESS_DIR)
+        / "reference" / "datasheet_manifest")
 ))
 
 

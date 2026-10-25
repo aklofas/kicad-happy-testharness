@@ -14,8 +14,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
+from utils import DATA_ROOT  # noqa: E402
+
 DEFAULT_PACKETS_DIR = HARNESS_DIR / "regression" / "reference_review_packets"
-DEFAULT_OUTPUT_ROOT = HARNESS_DIR / "results" / "review_metrics"
+DEFAULT_OUTPUT_ROOT = DATA_ROOT / "results" / "review_metrics"
 PACKET_SCHEMA_PATH = DEFAULT_PACKETS_DIR / "packet_schema.json"
 
 PACKET_FILES = {

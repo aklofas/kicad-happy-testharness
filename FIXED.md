@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-041: `test_run_*_basic` integration tests failed with `KeyError: 'analyzer_type'` — `_first_output()` picked up `capability_mode.json`
+
+**Severity:** LOW.
+**File:** `tests/test_run_integration.py` (`_first_output`, `_data_root`).
+**Discovered:** 2026-05-16. **Fixed:** 2026-10-25, with the harness audit's single-data-root fix (code A3-F5, A6-F1).
+
+- **Root cause:** `_first_output` skipped only `_*`-prefixed run-level files, so the analyzer's `capability_mode.json` sidecar sorted first and was read as an analyzer envelope.
+- **Fix:** the sidecar is skipped. The module now runs every runner inside a private `KICAD_HAPPY_TESTHARNESS_DATA_DIR` (target checkout linked in read-only, discovered there) and reads outputs from it, so it no longer rewrites the live `results/outputs/<type>/jgrip/commodorelcd` or the corpus `_timing.json` (code A6-F1).
+- **Verification:** `pytest -m online tests/test_run_integration.py` 7/7 against product `07b7fb1`; the live `_timing.json` mtimes are unchanged by the run.
+
 ## 2026-10-25 — TH-086: `audit_equations.py scan --diff` was a no-op
 
 **Severity:** LOW (operator diagnostic).

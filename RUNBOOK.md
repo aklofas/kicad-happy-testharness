@@ -3021,11 +3021,13 @@ the PID is the PGID), then check for orphaned analyzer workers before relaunchin
 `harnesslib.profiles` declares `spice-offline` (`("spice",)`, 60 s per-file cap, hermetic), but
 `run_corpus_gate.py` refuses it (no corpus analyzer, TH-073): run it through `run/run_spice.py`
 once per product with the harness data dir redirected, then compare the two spice trees. The
-runner reads schematic outputs from `<DATA_DIR>/results/outputs/schematic`, so symlink the real
-corpus outputs into each data dir (read-only use) and keep `--workdir` under the data dir too:
+data dir redirects every corpus path (checkouts, reference data, outputs, manifests), so the
+runner reads schematic outputs from `<DATA_DIR>/results/outputs/schematic` and the cross-section
+from `<DATA_DIR>/reference/cross_sections.json`: symlink both into each data dir (read-only use)
+and keep `--workdir` under the data dir too:
 
 ```bash
-for s in base cand; do mkdir -p /tmp/so/$s/results/outputs; ln -s $PWD/results/outputs/schematic /tmp/so/$s/results/outputs/schematic; done
+for s in base cand; do mkdir -p /tmp/so/$s/results/outputs /tmp/so/$s/reference; ln -s $PWD/results/outputs/schematic /tmp/so/$s/results/outputs/schematic; ln -s $PWD/reference/cross_sections.json /tmp/so/$s/reference/cross_sections.json; done
 python3 tools/inventory_spice_caches.py --repos-root repos -o /tmp/so/caches_before.json
 KICAD_HAPPY_TESTHARNESS_DATA_DIR=/tmp/so/base KICAD_HAPPY_DIR=results/v3_baseline/product_<base> PYTHONHASHSEED=0 \
   python3 run/run_spice.py --cross-section quick_200 --jobs 16 --workdir /tmp/so/base/spice_work

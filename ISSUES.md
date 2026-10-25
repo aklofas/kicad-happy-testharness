@@ -3297,54 +3297,6 @@ is open.
 
 ---
 
-### TH-041: `test_run_*_basic` integration tests fail with `KeyError: 'analyzer_type'` — `_first_output()` picks up `capability_mode.json`
-
-**Severity:** LOW
-**File:** `tests/test_run_integration.py:38-46` (`_first_output`) and call sites at
-`:74` (schematic), `:93` (pcb), `:158` (spice via downstream chain)
-**Discovered:** 2026-05-16 during first venv-backed full-suite run after v1.4.0-rc.1
-
-**Symptom:** Three integration tests fail back-to-back:
-```
-tests/test_run_integration.py::test_run_schematic_basic - KeyError: 'analyzer_type'
-tests/test_run_integration.py::test_run_pcb_basic      - KeyError: 'analyzer_type'
-tests/test_run_integration.py::test_run_spice_basic    - AssertionError (downstream)
-```
-
-The schematic test asserts `data["analyzer_type"] == "schematic"` on the file
-returned by `_first_output("schematic")`. That envelope key IS present in the
-actual analyzer output (`commodorelcd.kicad_sch.json` has `analyzer_type` at
-top level), but `_first_output` returns `capability_mode.json` instead because
-it sorts alphabetically and only skips files starting with `_`.
-
-**Root cause:** v1.4 added `capability_mode.json` as a sibling metadata file in
-each analyzer output dir (B1/B2 absorption work, see `project_b1_b2_absorption`
-memory). Pre-v1.4 the directory only contained `*.kicad_sch.json` envelopes, so
-`_first_output`'s "first `*.json` that doesn't start with `_`" heuristic
-worked by accident. Now `capability_mode.json` sorts before
-`commodorelcd.kicad_sch.json` and is returned first — it lacks `analyzer_type`
-because it's a metadata sidecar, not an envelope.
-
-Repro:
-```
-$ ls results/outputs/schematic/jgrip/commodorelcd/
-capability_mode.json          # ← picked up by _first_output
-commodorelcd.kicad_sch.err
-commodorelcd.kicad_sch.json   # ← what the test actually wants
-```
-
-Same pattern applies to PCB (`capability_mode.json` next to `*.kicad_pcb.json`)
-and SPICE (chain-dependency on the schematic check).
-
-**Likely fix:** Tighten `_first_output()` to filter for actual envelope files
-(`*.kicad_sch.json`, `*.kicad_pcb.json`, `*.gbr.json`, etc.) or exclude the
-specific metadata sidecar names (`capability_mode.json`, `capability_mode_ref.json`).
-Skipping only `_`-prefixed files is no longer sufficient.
-
-**Not tag-blocking** — pre-existing in rc.1, doesn't affect analyzer behavior.
-
----
-
 ### TH-042: `test_schema_completeness_zebra_x` fails — 7 new v1.4 detectors lack `SCHEMAS` entries
 
 **Severity:** LOW

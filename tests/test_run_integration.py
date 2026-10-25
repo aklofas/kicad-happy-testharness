@@ -13,22 +13,42 @@ Target repo: jgrip/commodorelcd (small: 1 schematic, 1 PCB).
 
 TIER = "online"
 
+import functools
 import json
 import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
-REPOS_DIR = HARNESS_DIR / "repos"
-OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
+LIVE_REPOS_DIR = HARNESS_DIR / "repos"
 
 # Target repo for integration tests. Update if the smoke pack changes.
 INTEGRATION_TEST_REPO = "jgrip/commodorelcd"
 
 
 def _skip_if_no_repo():
-    return not (REPOS_DIR / INTEGRATION_TEST_REPO).exists()
+    return not (LIVE_REPOS_DIR / INTEGRATION_TEST_REPO).exists()
+
+
+@functools.lru_cache(maxsize=None)
+def _data_root() -> Path:
+    """A private KICAD_HAPPY_TESTHARNESS_DATA_DIR for the module: the target checkout is
+    linked in read-only and discovered there, so the runners never write the live
+    results/outputs tree or its _timing.json."""
+    root = Path(tempfile.mkdtemp(prefix="run-integration-"))
+    link = root / "repos" / INTEGRATION_TEST_REPO
+    link.parent.mkdir(parents=True)
+    link.symlink_to(LIVE_REPOS_DIR / INTEGRATION_TEST_REPO, target_is_directory=True)
+    subprocess.run([sys.executable, str(HARNESS_DIR / "discover.py"), "--repo", INTEGRATION_TEST_REPO],
+                   cwd=str(HARNESS_DIR), env=_env(root), capture_output=True, text=True,
+                   timeout=300, check=True)
+    return root
+
+
+def _env(root):
+    return {**os.environ, "KICAD_HAPPY_TESTHARNESS_DATA_DIR": str(root)}
 
 
 def _skip_if_no_kh():
@@ -44,16 +64,17 @@ def _run(runner_rel_path: str, *extra_args):
         [sys.executable, str(HARNESS_DIR / runner_rel_path),
          "--repo", INTEGRATION_TEST_REPO, "--jobs", "1", *extra_args],
         cwd=str(HARNESS_DIR), capture_output=True, text=True, timeout=300,
+        env=_env(_data_root()),
     )
 
 
 def _first_output(analyzer_type: str):
-    """Return first .json under results/outputs/{type}/{repo}/, or None."""
-    repo_dir = OUTPUTS_DIR / analyzer_type / INTEGRATION_TEST_REPO
+    """Return first .json under the module data root's results/outputs/{type}/{repo}/, or None."""
+    repo_dir = _data_root() / "results" / "outputs" / analyzer_type / INTEGRATION_TEST_REPO
     if not repo_dir.exists():
         return None
     for p in sorted(repo_dir.glob("*.json")):
-        if p.name.startswith("_"):
+        if p.name.startswith("_") or p.name == "capability_mode.json":   # run-level files, sidecar
             continue
         return p
     return None

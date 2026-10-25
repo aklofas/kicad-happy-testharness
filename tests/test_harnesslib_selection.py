@@ -104,9 +104,13 @@ def _hermetic_env(tmp_path):
 
 
 def test_cli_no_selector_exits_2_with_count(tmp_path):
+    # the data dir redirects the manifests too: give the runner one to read
+    (tmp_path / "results" / "manifests").mkdir(parents=True)
+    (tmp_path / "results" / "manifests" / "all_gerbers.txt").write_text("")
+    before = sorted(tmp_path.rglob("*"))
     r = subprocess.run([sys.executable, str(_ROOT / "run" / "run_gerbers.py")],
                        capture_output=True, text=True, timeout=60, env=_hermetic_env(tmp_path))
-    assert list(tmp_path.rglob("*")) == []
+    assert sorted(tmp_path.rglob("*")) == before
     assert r.returncode == 2 and "repos in corpus" in r.stderr and "--all" in r.stderr
 
 

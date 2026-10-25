@@ -22,6 +22,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 from regression.schema_era import CURRENT_SCHEMA_ERA  # noqa: E402
@@ -44,15 +46,19 @@ def _setup_tmp_outputs(tmp: Path) -> None:
     """Copy ubertooth schematic outputs into the tmp data tree.
 
     seed.py reads from OUTPUTS_DIR (= tmp/results/outputs/ when the env var
-    is set) and writes assertions to DATA_DIR (= tmp/reference/).
-    We only copy the output JSON files — the seeder discovers projects via
-    the real repos/ directory, so no repos/ setup is needed.
+    is set) and writes assertions to DATA_DIR (= tmp/reference/). The data dir
+    also redirects repos/, so the live checkout is linked in read-only for
+    project discovery: these tests read the corpus (marked `corpus`).
     """
     src = REPO / "results" / "outputs" / "schematic" / TEST_REPO
     dst = tmp / "results" / "outputs" / "schematic" / TEST_REPO
     dst.mkdir(parents=True, exist_ok=True)
     for jf in src.glob("*.json"):
         shutil.copy2(jf, dst / jf.name)
+    link = tmp / "repos" / TEST_REPO
+    link.parent.mkdir(parents=True, exist_ok=True)
+    if not link.exists():
+        link.symlink_to(REPO / "repos" / TEST_REPO, target_is_directory=True)
 
 
 def _run_seed(tmp: Path, *extra_args) -> subprocess.CompletedProcess:
@@ -128,6 +134,7 @@ def _get_unstamped(assertions: list, detector: str) -> list:
 
 # ---- seed.py tests (flags and stamp behavior) ----------------------------
 
+@pytest.mark.corpus
 def test_seed_default_stamps_versioned_detector():
     """Default mode: assertions for a CURRENT-era versioned detector get schema_era=CURRENT stamped."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -151,6 +158,7 @@ def test_seed_default_stamps_versioned_detector():
         assert era_obj.get("tagged_reason") is not None, "Expected tagged_reason to be set"
 
 
+@pytest.mark.corpus
 def test_seed_default_does_not_stamp_unversioned_detector():
     """Default mode: assertions for detect_rc_filters are NOT stamped."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -169,6 +177,7 @@ def test_seed_default_does_not_stamp_unversioned_detector():
         )
 
 
+@pytest.mark.corpus
 def test_seed_no_schema_era_skips_all_stamping():
     """--no-schema-era: no assertions are stamped regardless of detector."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -181,6 +190,7 @@ def test_seed_no_schema_era_skips_all_stamping():
         )
 
 
+@pytest.mark.corpus
 def test_seed_custom_schema_era_stamps_with_pre_v14():
     """--schema-era pre-v1.4: versioned detector stamped with pre-v1.4."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -236,6 +246,7 @@ def _run_structural_seeder(tmp: Path, *extra_args) -> subprocess.CompletedProces
     )
 
 
+@pytest.mark.corpus
 def test_seed_structural_no_schema_era_flag_accepted():
     """seed_structural.py accepts --no-schema-era without crashing."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -248,6 +259,7 @@ def test_seed_structural_no_schema_era_flag_accepted():
         )
 
 
+@pytest.mark.corpus
 def test_seed_structural_schema_era_flag_accepted():
     """seed_structural.py accepts --schema-era without crashing."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -260,6 +272,7 @@ def test_seed_structural_schema_era_flag_accepted():
         )
 
 
+@pytest.mark.corpus
 def test_seed_structural_default_stamps_versioned_detector():
     """seed_structural.py default: assertions for a CURRENT-era versioned detector get stamped."""
     with tempfile.TemporaryDirectory() as tmp:

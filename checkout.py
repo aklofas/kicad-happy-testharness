@@ -25,9 +25,9 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from utils import HARNESS_DIR
+from utils import HARNESS_DIR, REPOS_DIR
 REPOS_MD = HARNESS_DIR / "repos.md"
-CLONE_DIR = HARNESS_DIR / "repos"
+CLONE_DIR = REPOS_DIR
 
 
 def parse_repos_md(path: Path) -> list[dict]:

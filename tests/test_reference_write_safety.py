@@ -130,3 +130,24 @@ def test_promote_applies_a_clean_complete_tree(tmp_path, monkeypatch):
                                     {"total": 3, "passed": 3, "failed": 0, "errors": 0}, CHANGED)
     assert promote.promote_repo("o/r", dry_run=False) is True
     assert applied[0] == "snapshot"
+
+
+def test_data_dir_override_moves_every_corpus_path(tmp_path):
+    """code A3-F5: the override moved only reference/ and results/outputs; checkouts,
+    manifests, cross-sections, review metrics and the datasheet store stayed live."""
+    import os
+    import subprocess
+    code = (
+        "import sys; sys.path.insert(0, '.'); sys.path.insert(0, 'run');"
+        "import utils, checkout, run_review_metrics as rm;"
+        "from validate.datasheet_db import storage, manifest;"
+        "print('\\n'.join(str(p) for p in (utils.REPOS_DIR, utils.DATA_DIR, utils.OUTPUTS_DIR,"
+        " utils.MANIFESTS_DIR, utils.CROSS_SECTIONS_FILE, checkout.CLONE_DIR, rm.DEFAULT_OUTPUT_ROOT,"
+        " storage.STORE_DIR, storage.REPOS_DIR, manifest.MANIFEST_DIR)))")
+    env = {k: v for k, v in os.environ.items() if not k.startswith("DATASHEET_DB_")}
+    env["KICAD_HAPPY_TESTHARNESS_DATA_DIR"] = str(tmp_path)
+    r = subprocess.run([sys.executable, "-c", code], cwd=HARNESS, env=env, capture_output=True,
+                       text=True, timeout=60)
+    assert r.returncode == 0, r.stderr
+    paths = r.stdout.split()
+    assert len(paths) == 10 and all(p.startswith(str(tmp_path)) for p in paths), paths

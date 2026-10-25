@@ -19,11 +19,14 @@ from pathlib import Path, PurePosixPath
 from harnesslib.profiles import PROFILES as _PROFILES
 
 HARNESS_DIR = Path(__file__).resolve().parent
-REPOS_DIR = HARNESS_DIR / "repos"
+# KICAD_HAPPY_TESTHARNESS_DATA_DIR moves every corpus data path at once (checkouts,
+# reference data, outputs, manifests), so a redirected run never reads or writes the live tree
 _data_override = os.environ.get("KICAD_HAPPY_TESTHARNESS_DATA_DIR")
-DATA_DIR = Path(_data_override) / "reference" if _data_override else HARNESS_DIR / "reference"
-OUTPUTS_DIR = Path(_data_override) / "results" / "outputs" if _data_override else HARNESS_DIR / "results" / "outputs"
-MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
+DATA_ROOT = Path(_data_override) if _data_override else HARNESS_DIR
+REPOS_DIR = DATA_ROOT / "repos"
+DATA_DIR = DATA_ROOT / "reference"
+OUTPUTS_DIR = DATA_ROOT / "results" / "outputs"
+MANIFESTS_DIR = DATA_ROOT / "results" / "manifests"
 ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "emc", "thermal", "datasheets"]
 MISC_CATEGORY = "Miscellaneous KiCad projects"
 
@@ -93,7 +96,7 @@ def project_key(pdir: str, stem: str) -> str:
     return _truncate_with_hash(flat)
 
 
-CROSS_SECTIONS_FILE = HARNESS_DIR / "reference" / "cross_sections.json"
+CROSS_SECTIONS_FILE = DATA_DIR / "cross_sections.json"
 
 
 def project_prefix(project_path: str) -> str:
