@@ -343,7 +343,16 @@ def test_recuration_checks_the_pdf_hash(tmp_path):
     assert sha is None and name == "x.pdf" and "PDF SHA mismatch" in msg
     src = (REPO_ROOT / "regression" / "promote_gold.py").read_text()
     body = src[src.index("def _do_recurate_from"):src.index("def main(")]
-    assert body.index("_check_pdf_sha(") < body.index(".rename(archived_path)")
+    assert body.index("_check_prerequisites(") < body.index(".rename(archived_path)")
+    helper = src[src.index("def _check_prerequisites"):src.index("def _do_recurate_from")]
+    assert "_check_pdf_sha(" in helper
+
+
+def test_prerequisites_are_shared_by_both_promotion_paths():
+    """arch A2-F6: normal promotion and --re-curate-from ran duplicated prerequisite blocks."""
+    src = (REPO_ROOT / "regression" / "promote_gold.py").read_text()
+    assert src.count("_run_sanity_diff(args.mpn") == 1
+    assert src.count("_check_prerequisites(args, cache)") == 2
 
 
 def test_cache_files_use_the_gate_cache_key():

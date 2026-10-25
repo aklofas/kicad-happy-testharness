@@ -383,6 +383,48 @@ def _run_sanity_diff(mpn: str, cache: dict,
     return (len(divergences) == 0, divergences)
 
 
+def _check_prerequisites(args, cache: dict):
+    """Gate re-run (unless --no-gate), sanity-vector diff, cache schema validation and the
+    PDF SHA check, shared by normal promotion and --re-curate-from.
+
+    Returns (None, (sanity_dir, pdf_sha, pdf_filename)) when all pass, else (2, None).
+    """
+    if not args.no_gate:
+        gate_pass, gate_summary = _run_a6_gate(args.mpn, _resolve_cache_dir(args.cache_dir))
+        if not gate_pass:
+            print("ERROR: A6 gate did not pass 4/4. Promotion blocked.",
+                  file=sys.stderr)
+            print(gate_summary, file=sys.stderr)
+            return 2, None
+        print("[ok] A6 gate: 4/4 PASS")
+
+    sanity_dir = _resolve_sanity_dir()
+    sanity_pass, divergences = _run_sanity_diff(args.mpn, cache, sanity_dir)
+    if not sanity_pass:
+        print("ERROR: sanity-vector diff has divergences. Promotion blocked.",
+              file=sys.stderr)
+        for d in divergences:
+            print(f"  - {d.get('path', '<no path>')}: {d['reason']}",
+                  file=sys.stderr)
+        return 2, None
+    print("[ok] sanity-vector diff: all fields within tolerance")
+
+    schema_ok, schema_summary = _validate_cache_schema(cache, _resolve_kicad_happy_dir())
+    if not schema_ok:
+        print(f"ERROR: cache fails extraction.schema.json: {schema_summary}",
+              file=sys.stderr)
+        return 2, None
+    print(f"[ok] cache schema validation: {schema_summary}")
+
+    # The PDF the metadata will name must be the extraction's source, checked before anything moves
+    pdf_sha, pdf_filename, msg = _check_pdf_sha(cache, _resolve_pdf_dir(args.pdf_dir))
+    if msg:
+        print(msg, file=sys.stderr if pdf_sha is None else sys.stdout)
+    if pdf_sha is None:
+        return 2, None
+    return None, (sanity_dir, pdf_sha, pdf_filename)
+
+
 def _do_recurate_from(*, args, cache: dict, cache_path: Path) -> int:
     """Execute the --re-curate-from sweep flow.
 
@@ -427,42 +469,10 @@ def _do_recurate_from(*, args, cache: dict, cache_path: Path) -> int:
               f"normal promote handles this case", file=sys.stderr)
         return 2
 
-    # Run gate (unless --no-gate) + sanity diff + cache schema validation
-    cache_dir = _resolve_cache_dir(args.cache_dir)
-    if not args.no_gate:
-        gate_pass, gate_summary = _run_a6_gate(args.mpn, cache_dir)
-        if not gate_pass:
-            print("ERROR: A6 gate did not pass 4/4. Promotion blocked.",
-                  file=sys.stderr)
-            print(gate_summary, file=sys.stderr)
-            return 2
-        print("[ok] A6 gate: 4/4 PASS")
-
-    sanity_dir = _resolve_sanity_dir()
-    sanity_pass, divergences = _run_sanity_diff(args.mpn, cache, sanity_dir)
-    if not sanity_pass:
-        print("ERROR: sanity-vector diff has divergences. Promotion blocked.",
-              file=sys.stderr)
-        for d in divergences:
-            print(f"  - {d.get('path', '<no path>')}: {d['reason']}",
-                  file=sys.stderr)
-        return 2
-    print("[ok] sanity-vector diff: all fields within tolerance")
-
-    kicad_happy_dir = _resolve_kicad_happy_dir()
-    schema_ok, schema_summary = _validate_cache_schema(cache, kicad_happy_dir)
-    if not schema_ok:
-        print(f"ERROR: cache fails extraction.schema.json: {schema_summary}",
-              file=sys.stderr)
-        return 2
-    print(f"[ok] cache schema validation: {schema_summary}")
-
-    # The PDF the metadata will name must be the extraction's source, checked before anything moves
-    pdf_sha, pdf_filename, msg = _check_pdf_sha(cache, _resolve_pdf_dir(args.pdf_dir))
-    if msg:
-        print(msg, file=sys.stderr if pdf_sha is None else sys.stdout)
-    if pdf_sha is None:
-        return 2
+    rc, ok = _check_prerequisites(args, cache)
+    if rc is not None:
+        return rc
+    sanity_dir, pdf_sha, pdf_filename = ok
 
     # Show A5 differ output (best-effort; non-fatal if differ fails)
     print(f"\n=== Re-curation diff: schema {prior_base} → {new_base} ===")
@@ -542,43 +552,10 @@ def main(argv: Optional[list[str]] = None) -> int:
             args=args, cache=cache, cache_path=cache_path,
         )
 
-    # ─── Gate re-run (belt-and-suspenders; skipped with --no-gate)
-    if not args.no_gate:
-        gate_pass, gate_summary = _run_a6_gate(args.mpn, cache_dir)
-        if not gate_pass:
-            print("ERROR: A6 gate did not pass 4/4. Promotion blocked.",
-                  file=sys.stderr)
-            print(gate_summary, file=sys.stderr)
-            return 2
-        print("[ok] A6 gate: 4/4 PASS")
-
-    # ─── Sanity-vector diff
-    sanity_dir = _resolve_sanity_dir()
-    sanity_pass, divergences = _run_sanity_diff(args.mpn, cache, sanity_dir)
-    if not sanity_pass:
-        print("ERROR: sanity-vector diff has divergences. Promotion blocked.",
-              file=sys.stderr)
-        for d in divergences:
-            print(f"  - {d.get('path', '<no path>')}: {d['reason']}",
-                  file=sys.stderr)
-        return 2
-    print("[ok] sanity-vector diff: all fields within tolerance")
-
-    # ─── Cache schema validation
-    kicad_happy_dir = _resolve_kicad_happy_dir()
-    schema_ok, schema_summary = _validate_cache_schema(cache, kicad_happy_dir)
-    if not schema_ok:
-        print(f"ERROR: cache fails extraction.schema.json: {schema_summary}",
-              file=sys.stderr)
-        return 2
-    print(f"[ok] cache schema validation: {schema_summary}")
-
-    # ─── PDF SHA verification
-    pdf_sha, pdf_filename, msg = _check_pdf_sha(cache, _resolve_pdf_dir(args.pdf_dir))
-    if msg:
-        print(msg, file=sys.stderr if pdf_sha is None else sys.stdout)
-    if pdf_sha is None:
-        return 2
+    rc, ok = _check_prerequisites(args, cache)
+    if rc is not None:
+        return rc
+    sanity_dir, pdf_sha, pdf_filename = ok
 
     # ─── Resolve gold dir + classify event
     gold_root = _resolve_gold_dir()
