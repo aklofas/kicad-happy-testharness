@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from datetime import date
 
-from drift import checkable_items, validate_finding
+from drift import validate_finding_items
 from findings import load_findings, save_findings, _iter_findings_files
 from utils import DATA_DIR
 
@@ -30,37 +30,14 @@ DISPOSITION_STATE = {"correct": "regression", "incorrect": "possibly_fixed", "mi
 
 
 def _find_removal_indices(finding):
-    """Run drift validation and return indices to remove per item type.
-
-    Matches drift results to finding items by iterating in the same order
-    as validate_finding(), which processes correct/incorrect/missed items
-    sequentially. Items with explicit check fields are matched by their
-    (category, item_type) — not by description substrings.
+    """Return the indices to disposition per item type, from the drift results.
 
     Returns {correct: set(int), incorrect: set(int), missed: set(int)}.
     """
-    results = validate_finding(finding)
     removals = {"correct": set(), "incorrect": set(), "missed": set()}
-
-    # Build per-type result lists in the same iteration order as validate_finding
-    type_results = {"correct": [], "incorrect": [], "missed": []}
-    for category, item_type, desc in results:
-        if item_type in type_results:
-            type_results[item_type].append(category)
-
-    # Map categories to removal decisions
-    removal_categories = {
-        "correct": {"regression"},
-        "incorrect": {"possibly_fixed"},
-        "missed": {"now_detected"},
-    }
-
-    for item_type, categories in type_results.items():
-        # validate_finding yields one result per checkable item, in order
-        for (i, _item), category in zip(checkable_items(finding, item_type), categories):
-            if category in removal_categories[item_type]:
-                removals[item_type].add(i)
-
+    for r in validate_finding_items(finding):
+        if r.item_type in removals and r.category == DISPOSITION_STATE[r.item_type]:
+            removals[r.item_type].add(r.index)
     return removals
 
 

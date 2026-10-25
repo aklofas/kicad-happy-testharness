@@ -20,7 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from drift import _evaluate, _load_output, checkable_items, validate_finding
+from drift import validate_finding_items
 from findings import _iter_findings_files, save_findings
 from utils import DATA_DIR
 
@@ -31,17 +31,17 @@ def analyze_finding_drift(finding):
     Returns dict with drift summary: {status, total_items, drifted_items,
     possibly_fixed, regressions, now_detected, details}.
     """
-    results = validate_finding(finding)
+    results = validate_finding_items(finding)
     # A sentinel (item_type None) says nothing was checked; it is not an item.
-    sentinel = next((cat for cat, item_type, _ in results if item_type is None), None)
+    sentinel = next((r.category for r in results if r.item_type is None), None)
     if sentinel:
         results = []
 
     total = len(results)
-    possibly_fixed = sum(1 for cat, _, _ in results if cat == "possibly_fixed")
-    regressions = sum(1 for cat, _, _ in results if cat == "regression")
-    now_detected = sum(1 for cat, _, _ in results if cat == "now_detected")
-    ok = sum(1 for cat, _, _ in results if cat == "ok")
+    possibly_fixed = sum(1 for r in results if r.category == "possibly_fixed")
+    regressions = sum(1 for r in results if r.category == "regression")
+    now_detected = sum(1 for r in results if r.category == "now_detected")
+    ok = sum(1 for r in results if r.category == "ok")
 
     drifted = possibly_fixed + regressions + now_detected
 
@@ -146,19 +146,13 @@ def main():
 
             # Record a disposition on items whose check now passes (incorrect: bug gone;
             # missed: now detected); an unresolvable check path proves nothing
-            if args.apply and (drift["possibly_fixed"] or drift["now_detected"]):
-                output = _load_output(finding.get("analyzer_type", ""),
-                                      finding.get("repo", repo), finding.get("source_file", ""))
-                for item_type, state in (("incorrect", "possibly_fixed"), ("missed", "now_detected")):
-                    for _, item in checkable_items(finding, item_type):
-                        check = item.get("check")
-                        if not (check and output):
-                            continue
-                        r, resolvable = _evaluate(check, output)
-                        if resolvable and r["passed"]:
-                            item["disposition"] = {"state": state, "by": "refresh_findings",
-                                                   "date": datetime.now(timezone.utc).date().isoformat()}
-                            modified = True
+            if args.apply:
+                for r in drift["details"]:
+                    if r.has_check and r.category in ("possibly_fixed", "now_detected"):
+                        finding[r.item_type][r.index]["disposition"] = {
+                            "state": r.category, "by": "refresh_findings",
+                            "date": datetime.now(timezone.utc).date().isoformat()}
+                        modified = True
 
         if modified and args.apply:
             save_findings(repo, proj, data)

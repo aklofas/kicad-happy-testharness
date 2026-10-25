@@ -15,7 +15,9 @@ Usage:
 import argparse
 import json
 import sys
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import OUTPUTS_DIR, resolve_path, add_repo_filter_args, resolve_repos
@@ -63,99 +65,112 @@ def checkable_items(finding, item_type):
             if item.get("analyzer_section") and not item.get("disposition")]
 
 
-def validate_finding(finding):
-    """Validate a single finding against current output.
+@dataclass(frozen=True)
+class ItemResult:
+    """Drift verdict for one checkable item; the sentinels (nothing was checked) have
+    item_type and index None."""
+    item_type: Optional[str]
+    index: Optional[int]
+    category: str
+    description: str
+    has_check: bool
 
-    Returns list of (category, item_type, description) tuples.
-    """
+
+def validate_finding_items(finding):
+    """Validate a single finding against current output: one ItemResult per checkable item,
+    or one sentinel."""
     repo = finding.get("repo", "")
     atype = finding.get("analyzer_type", "")
     source = finding.get("source_file", "")
 
     if not repo or not atype or not source:
-        return [("no_checkable_items", None, "missing repo/analyzer_type/source_file")]
+        return [ItemResult(None, None, "no_checkable_items", "missing repo/analyzer_type/source_file", False)]
 
     output = _load_output(atype, repo, source)
     if output is None:
-        return [("no_output", None, f"{atype}/{repo}/{source}")]
+        return [ItemResult(None, None, "no_output", f"{atype}/{repo}/{source}", False)]
 
     results = []
+
+    def add(category, item_type, index, check, description):
+        results.append(ItemResult(item_type, index, category, description, bool(check)))
+
     has_checkable = False
 
     # Check correct items — should still have data
-    for _, item in checkable_items(finding, "correct"):
+    for index, item in checkable_items(finding, "correct"):
         section = item.get("analyzer_section")
         has_checkable = True
         desc = item.get("description", section)
         check = item.get("check")
         r, resolvable = _evaluate(check, output) if check else (None, True)
         if check and not resolvable:
-            results.append(("unresolvable", "correct", f"{desc} — check path {check['path']} not in output"))
+            add("unresolvable", "correct", index, check, f"{desc} — check path {check['path']} not in output")
         elif check:
             if r["passed"]:
-                results.append(("ok", "correct", f"{desc} — check passed"))
+                add("ok", "correct", index, check, f"{desc} — check passed")
             else:
-                results.append(("regression", "correct",
-                                f"{desc} — check FAILED: actual={r.get('actual')}"))
+                add("regression", "correct", index, check, f"{desc} — check FAILED: actual={r.get('actual')}")
         else:
             count = _section_count(output, section)
             if count is None or count == 0:
-                results.append(("regression", "correct", f"{desc} — {section} now empty/missing"))
+                add("regression", "correct", index, check, f"{desc} — {section} now empty/missing")
             else:
-                results.append(("ok", "correct", f"{desc} — {section} has {count} items"))
+                add("ok", "correct", index, check, f"{desc} — {section} has {count} items")
 
     # Check incorrect items — count change suggests fix
-    for _, item in checkable_items(finding, "incorrect"):
+    for index, item in checkable_items(finding, "incorrect"):
         section = item.get("analyzer_section")
         has_checkable = True
         desc = item.get("description", section)
         check = item.get("check")
         r, resolvable = _evaluate(check, output) if check else (None, True)
         if check and not resolvable:
-            results.append(("unresolvable", "incorrect", f"{desc} — check path {check['path']} not in output"))
+            add("unresolvable", "incorrect", index, check, f"{desc} — check path {check['path']} not in output")
         elif check:
             if r["passed"]:
                 # not_contains_match passed = ref is gone = bug fixed
-                results.append(("possibly_fixed", "incorrect",
-                                f"{desc} — bug appears fixed"))
+                add("possibly_fixed", "incorrect", index, check, f"{desc} — bug appears fixed")
             else:
                 # not_contains_match failed = ref still there = bug still present
-                results.append(("ok", "incorrect",
-                                f"{desc} — bug still present: {r.get('actual')}"))
+                add("ok", "incorrect", index, check, f"{desc} — bug still present: {r.get('actual')}")
         else:
             count = _section_count(output, section)
             if count is None or count == 0:
-                results.append(("possibly_fixed", "incorrect", f"{desc} — {section} now empty"))
+                add("possibly_fixed", "incorrect", index, check, f"{desc} — {section} now empty")
             else:
-                results.append(("ok", "incorrect", f"{desc} — {section} has {count} items"))
+                add("ok", "incorrect", index, check, f"{desc} — {section} has {count} items")
 
     # Check missed items — data appearing suggests new detection
-    for _, item in checkable_items(finding, "missed"):
+    for index, item in checkable_items(finding, "missed"):
         section = item.get("analyzer_section")
         has_checkable = True
         desc = item.get("description", section)
         check = item.get("check")
         r, resolvable = _evaluate(check, output) if check else (None, True)
         if check and not resolvable:
-            results.append(("unresolvable", "missed", f"{desc} — check path {check['path']} not in output"))
+            add("unresolvable", "missed", index, check, f"{desc} — check path {check['path']} not in output")
         elif check:
             if r["passed"]:
-                results.append(("now_detected", "missed",
-                                f"{desc} — check passed (now detected)"))
+                add("now_detected", "missed", index, check, f"{desc} — check passed (now detected)")
             else:
-                results.append(("ok", "missed",
-                                f"{desc} — check still failing: actual={r.get('actual')}"))
+                add("ok", "missed", index, check, f"{desc} — check still failing: actual={r.get('actual')}")
         else:
             count = _section_count(output, section)
             if count is not None and count > 0:
-                results.append(("now_detected", "missed", f"{desc} — {section} now has {count} items"))
+                add("now_detected", "missed", index, check, f"{desc} — {section} now has {count} items")
             else:
-                results.append(("ok", "missed", f"{desc} — {section} still empty/missing"))
+                add("ok", "missed", index, check, f"{desc} — {section} still empty/missing")
 
     if not has_checkable:
-        return [("no_checkable_items", None, "no items with analyzer_section")]
+        return [ItemResult(None, None, "no_checkable_items", "no items with analyzer_section", False)]
 
     return results
+
+
+def validate_finding(finding):
+    """validate_finding_items as (category, item_type, description) tuples."""
+    return [(r.category, r.item_type, r.description) for r in validate_finding_items(finding)]
 
 
 def main():
