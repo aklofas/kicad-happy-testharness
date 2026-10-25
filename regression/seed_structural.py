@@ -97,6 +97,10 @@ def generate_structural_assertions(data, strict=True):
             ref = get_ref_from_item(det_name, item)
             if ref and ref not in seen_refs:
                 seen_refs.add(ref)
+                # a composite field ("R163 442k") holds the ref as its first token: anchor at a
+                # token boundary so the lock matches its own source but not "R1630"
+                pattern = (f"^{re.escape(ref)}$" if _raw_ref(item, ref_field) == ref
+                           else f"^{re.escape(ref)}(\\s|$)")
                 assertions.append({
                     "id": f"STRUCT-{ast_num:08d}",
                     "description": f"{ref} in {det_name}",
@@ -105,12 +109,19 @@ def generate_structural_assertions(data, strict=True):
                         "detector_filter": det_name,
                         "op": "contains_match",
                         "field": ref_field,
-                        "pattern": f"^{re.escape(ref)}$",
+                        "pattern": pattern,
                     },
                 })
                 ast_num += 1
 
     return assertions
+
+
+def _raw_ref(item, ref_field):
+    val = item
+    for part in ref_field.split("."):
+        val = val.get(part) if isinstance(val, dict) else None
+    return None if val is None else str(val).strip()
 
 
 def generate_pcb_structural_assertions(data, strict=True):

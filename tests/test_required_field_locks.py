@@ -68,3 +68,32 @@ def test_include_empty_locks_use_full_detector_names(monkeypatch):
                 if a["check"].get("detector_filter") == "detect_power_regulators")
     present = {"findings": [{"detector": "detect_power_regulators"}]}
     assert not evaluate_assertion(copy.deepcopy(lock), present)["passed"]
+
+
+def test_composite_ref_struct_lock_matches_its_source_only():
+    """A composite ref field ("R163 442k") seeds a STRUCT lock that passes on its own output and
+    does not accept a near-miss ref (code A2-F14)."""
+    from regression import seed_structural
+    det = "detect_power_regulators"
+    src = {"findings": [{"detector": det, "ref": "R163 442k"}, {"detector": det, "ref": "U2"}],
+           "statistics": {"total_components": 20}}
+    locks = [a for a in seed_structural.generate_structural_assertions(src)
+             if a["check"].get("op") == "contains_match"]
+    by_ref = {a["description"].split()[0]: a for a in locks}
+    assert set(by_ref) == {"R163", "U2"}
+    for a in locks:
+        assert evaluate_assertion(copy.deepcopy(a), src)["passed"], a
+    near = {"findings": [{"detector": det, "ref": "R1630 442k"}]}
+    assert not evaluate_assertion(copy.deepcopy(by_ref["R163"]), near)["passed"]
+    assert not evaluate_assertion(copy.deepcopy(by_ref["U2"]), {"findings": [{"detector": det, "ref": "U20"}]})["passed"]
+
+
+@pytest.mark.parametrize("op,value,actual,want", [
+    ("max_count", 1.0, 1.83, False),   # int(1.83) == 1 passed this lock
+    ("min_count", 0.8, 0.81, True),    # int(0.81) == 0 failed this one
+    ("max_count", 2, 2, True),
+])
+def test_fractional_operands_are_not_truncated(op, value, actual, want):
+    """code A2-F10: count operators compare fractional scalars by value."""
+    a = {"id": "X", "check": {"path": "x", "op": op, "value": value}}
+    assert evaluate_assertion(a, {"x": actual})["passed"] is want

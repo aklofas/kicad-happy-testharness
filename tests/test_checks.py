@@ -25,7 +25,7 @@ def _eval(op, path, data, **check_kwargs):
 def test_countable():
     assert _countable(None) == 0
     assert _countable(42) == 42
-    assert _countable(3.7) == 3
+    assert _countable(3.7) == 3.7   # fractional scalars are not truncated
     assert _countable([1, 2, 3]) == 3
     assert _countable({"a": 1}) == 1
     assert _countable("hello") == 0

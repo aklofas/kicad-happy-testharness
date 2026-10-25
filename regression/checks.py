@@ -126,7 +126,9 @@ def _countable(val):
         return 0
     if isinstance(val, (list, dict)):
         return len(val)
-    if isinstance(val, (int, float)):
+    if isinstance(val, float):
+        return val      # a fractional scalar keeps its value: int(6.5) would compare as 6
+    if isinstance(val, int):
         return int(val)
     return 0
 
