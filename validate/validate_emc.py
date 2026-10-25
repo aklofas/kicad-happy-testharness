@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib.validation import pcb_output_name
 from utils import OUTPUTS_DIR, add_repo_filter_args, resolve_repos
 
 
@@ -205,11 +206,7 @@ def find_source_json(emc_json_path):
     # Derive PCB path
     pcb_data = None
     stem = emc_json_path.name
-    pcb_name = None
-    if stem.endswith(".kicad_sch.json"):
-        pcb_name = stem.replace(".kicad_sch.json", ".kicad_pcb.json")
-    elif stem.endswith(".sch.json"):
-        pcb_name = stem.replace(".sch.json", ".kicad_pcb.json")
+    pcb_name = pcb_output_name(stem)
     if pcb_name:
         pcb_path = OUTPUTS_DIR / "pcb" / repo_name / pcb_name
         if pcb_path.exists():

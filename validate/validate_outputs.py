@@ -21,6 +21,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib import validation
 from utils import (OUTPUTS_DIR, REPOS_DIR, MANIFESTS_DIR, list_repos,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
                    _truncate_with_hash)
@@ -211,11 +212,9 @@ def validate_new_sections(ctx, name, data):
             ctx.anomalies["many_ground_domains"].append((name, f"{len(domains)} ground domains"))
 
 
-_DESIGN_INTENT_REQUIRED = {"product_class", "ipc_class", "target_market",
-                           "confidence", "detection_signals", "source"}
-_PRODUCT_CLASSES = {"prototype", "production"}
-_TARGET_MARKETS = {"hobby", "consumer", "industrial", "medical",
-                   "automotive", "aerospace"}
+_DESIGN_INTENT_REQUIRED = validation.DESIGN_INTENT_REQUIRED
+_PRODUCT_CLASSES = validation.PRODUCT_CLASSES
+_TARGET_MARKETS = validation.TARGET_MARKETS
 
 
 def validate_design_intent(ctx, name, data):
@@ -232,7 +231,7 @@ def validate_design_intent(ctx, name, data):
             ctx.anomalies["design_intent_missing_field"].append((name, f"missing '{field}'"))
 
     ipc = di.get("ipc_class")
-    if ipc is not None and ipc not in (1, 2, 3):
+    if ipc is not None and ipc not in validation.IPC_CLASSES:
         ctx.anomalies["design_intent_bad_ipc"].append((name, f"ipc_class={ipc!r}"))
 
     pc = di.get("product_class")

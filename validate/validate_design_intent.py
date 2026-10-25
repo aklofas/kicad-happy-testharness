@@ -17,11 +17,12 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib import validation
 from utils import OUTPUTS_DIR, list_repos, add_repo_filter_args, resolve_repos, iter_output_repos
 
-VALID_PRODUCT_CLASSES = {"prototype", "production"}
-VALID_IPC_CLASSES = {1, 2, 3}
-VALID_TARGET_MARKETS = {"hobby", "consumer", "industrial", "medical", "automotive", "aerospace"}
+VALID_PRODUCT_CLASSES = validation.PRODUCT_CLASSES
+VALID_IPC_CLASSES = validation.IPC_CLASSES
+VALID_TARGET_MARKETS = validation.TARGET_MARKETS
 
 
 def validate_design_intent(data, filepath=""):

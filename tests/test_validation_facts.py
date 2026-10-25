@@ -97,3 +97,21 @@ def test_validate_emc_derives_pcb_without_size_check(tmp_path, monkeypatch):
 
     pairs = cross_analyzer.find_paired_outputs("o/r")
     assert [p["pcb"] for p in pairs] == [None]  # cross_analyzer skips zero-size
+
+
+def test_validators_share_the_fact_objects():
+    from harnesslib import validation
+    assert vo._DESIGN_INTENT_REQUIRED is validation.DESIGN_INTENT_REQUIRED
+    assert vo._PRODUCT_CLASSES is validation.PRODUCT_CLASSES
+    assert vo._TARGET_MARKETS is validation.TARGET_MARKETS
+    assert vdi.VALID_PRODUCT_CLASSES is validation.PRODUCT_CLASSES
+    assert vdi.VALID_IPC_CLASSES is validation.IPC_CLASSES
+    assert vdi.VALID_TARGET_MARKETS is validation.TARGET_MARKETS
+    assert validation.IPC_CLASSES == {1, 2, 3}
+
+
+def test_pcb_output_name():
+    from harnesslib.validation import pcb_output_name
+    assert pcb_output_name("a.kicad_sch.json") == "a.kicad_pcb.json"
+    assert pcb_output_name("a.sch.json") == "a.kicad_pcb.json"
+    assert pcb_output_name("a.json") is None
