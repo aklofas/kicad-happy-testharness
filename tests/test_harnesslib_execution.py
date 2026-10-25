@@ -192,3 +192,14 @@ def test_run_once_timeout_with_grandchild_returns_promptly(tmp_path):
     assert r.status == "timeout"
     assert time.time() - t0 < 6
     assert _no_temp(tmp_path)
+
+
+def test_timeout_reaches_quarantine_without_killpg(tmp_path, monkeypatch):
+    """code A3-F12: where os.killpg does not exist the AttributeError escaped _kill_group and
+    skipped the timeout quarantine."""
+    dest = tmp_path / "out.json"
+    dest.write_text('{"old": true}')
+    monkeypatch.delattr(ex.os, "killpg")
+    r = ex.run_once(_cmd("sleep"), dest, analyzer="pcb", timeout=1, env=_env())
+    assert r.status == "timeout" and not dest.exists()
+    assert dest.with_name("out.json.stale").exists()

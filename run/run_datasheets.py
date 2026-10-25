@@ -76,7 +76,8 @@ def download_datasheets(repo_name, sync_script, dry_run=False, delay=0.3,
     Processes all .kicad_sch files in the repo (not just the first one),
     sharing a single datasheets/ output directory so parts are deduplicated.
 
-    Returns (downloaded_count, failed_count, total_parts) or None on error.
+    Returns (downloaded_count, failed_count, sync_errors) or None on error; sync_errors lists
+    sync runs that exited non-zero, timed out or could not start.
     """
     repo_dir = REPOS_DIR / repo_name
     if not repo_dir.exists():
@@ -96,6 +97,7 @@ def download_datasheets(repo_name, sync_script, dry_run=False, delay=0.3,
 
     total_downloaded = 0
     total_failed = 0
+    sync_errors = []
 
     # Use a shared output dir so the index.json deduplicates across schematics
     out_dir = repo_dir / "datasheets"
@@ -110,19 +112,23 @@ def download_datasheets(repo_name, sync_script, dry_run=False, delay=0.3,
 
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-            for line in result.stdout.split("\n"):
-                if "Downloaded" in line and "bytes" in line:
-                    total_downloaded += 1
-                if "Failed:" in line:
-                    try:
-                        total_failed += int(
-                            line.strip().split("Failed:")[1].strip().split()[0])
-                    except (ValueError, IndexError):
-                        pass
-        except (subprocess.TimeoutExpired, Exception):
+        except (subprocess.TimeoutExpired, OSError) as e:
+            sync_errors.append(f"{input_file.name}: {type(e).__name__}")
             continue
+        for line in result.stdout.split("\n"):
+            if "Downloaded" in line and "bytes" in line:
+                total_downloaded += 1
+            if "Failed:" in line:
+                try:
+                    total_failed += int(
+                        line.strip().split("Failed:")[1].strip().split()[0])
+                except (ValueError, IndexError):
+                    pass
+        if result.returncode != 0:
+            tail = (result.stderr.strip().splitlines() or [""])[-1]
+            sync_errors.append(f"{input_file.name}: exit {result.returncode} {tail}")
 
-    return total_downloaded, total_failed, 0
+    return total_downloaded, total_failed, sync_errors
 
 
 def validate_extractions(repo_dir):
@@ -329,6 +335,7 @@ def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
         if dl:
             result["downloaded"] = dl[0]
             result["download_failed"] = dl[1]
+            result["sync_errors"] = dl[2]
         # Opportunistically register downloaded PDFs into datasheet_db.
         # Errors are swallowed — the main download flow is authoritative.
         if not dry_run:
@@ -371,6 +378,8 @@ def main():
                         help="Seconds between DigiKey API calls per repo (default: 0.3)")
     parser.add_argument("--parallel", type=int, default=4,
                         help="Download workers within each repo (default: 4)")
+    parser.add_argument("--best-effort", action="store_true",
+                        help="Exit 0 despite download failures or sync errors")
     args = parser.parse_args()
 
     sync_script = _kicad_happy / "skills" / "digikey" / "scripts" / "sync_datasheets_digikey.py"
@@ -406,6 +415,7 @@ def main():
 
     total_downloaded = 0
     total_failed = 0
+    sync_errors = []
     total_extracted = 0
     total_stale = 0
     total_sufficient = 0
@@ -427,6 +437,8 @@ def main():
         repos_processed += 1
         total_downloaded += result["downloaded"]
         total_failed += result["download_failed"]
+        for err in result.get("sync_errors", []):
+            sync_errors.append(f"{result['repo']}: {err}")
         total_db_ingested += result.get("db_ingested", 0)
         total_db_merged += result.get("db_merged", 0)
 
@@ -473,6 +485,7 @@ def main():
         "total_parts": total_parts,
         "total_downloaded": total_downloaded,
         "total_failed": total_failed,
+        "sync_errors": sync_errors,
         "total_db_ingested": total_db_ingested,
         "total_db_merged": total_db_merged,
         "total_extracted": total_extracted,
@@ -493,6 +506,9 @@ def main():
     if not args.validate_only:
         print(f"PDFs downloaded:        {total_downloaded}")
         print(f"Download failures:      {total_failed}")
+        print(f"Sync errors:            {len(sync_errors)}")
+        for err in sync_errors[:20]:
+            print(f"  {err}")
         print(f"datasheet_db ingested:  {total_db_ingested} (new records)")
         print(f"datasheet_db merged:    {total_db_merged} (dedup hits)")
     if not args.download_only:
@@ -504,6 +520,11 @@ def main():
             print(f"By category:")
             for cat, count in sorted(all_categories.items(), key=lambda x: -x[1]):
                 print(f"  {cat:30s}: {count}")
+
+    if (total_failed or sync_errors) and not args.validate_only and not args.best_effort:
+        print("\nDownload failures or sync errors: exit 1 (--best-effort to accept them)",
+              file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

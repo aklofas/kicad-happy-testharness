@@ -100,10 +100,19 @@ def _cleanup(temp: Path) -> None:
 
 
 def _kill_group(proc: subprocess.Popen) -> None:
+    """Kill the child's process group (Linux, the supported platform); where killpg does not
+    exist, kill the child alone. Never raises, so the caller always reaches its quarantine."""
+    killpg = getattr(os, "killpg", None)
     try:
-        os.killpg(proc.pid, signal.SIGKILL)
+        if killpg is not None:
+            killpg(proc.pid, signal.SIGKILL)
+            return
     except (ProcessLookupError, PermissionError):
+        pass
+    try:
         proc.kill()
+    except OSError:
+        pass
 
 
 def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str,

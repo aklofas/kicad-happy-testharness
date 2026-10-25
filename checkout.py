@@ -131,7 +131,7 @@ def checkout_hash(repo_dir: Path, commit_hash: str) -> bool:
 
     Fetches the specific commit with --depth 1, then checks it out.
     Requires full 40-char hash (GitHub rejects short hashes for fetch).
-    Returns False only on fetch failure — caller decides how to handle.
+    Returns False when the fetch or the checkout fails — caller decides how to handle.
     """
     try:
         subprocess.run(
@@ -172,12 +172,12 @@ def get_remote_head(url: str) -> str | None:
 def fetch_local(repo_dir: Path) -> bool:
     """Run git fetch in a local clone."""
     try:
-        subprocess.run(
+        r = subprocess.run(
             ["git", "fetch", "--quiet"],
             cwd=str(repo_dir), capture_output=True, text=True, timeout=60,
         )
-        return True
-    except Exception:
+        return r.returncode == 0
+    except (subprocess.TimeoutExpired, OSError):
         return False
 
 
@@ -192,7 +192,8 @@ def _filter_repos(repos, filter_str):
 
 
 def clone_repos(repos, limit):
-    """Clone/restore repos from repos.md."""
+    """Clone/restore repos from repos.md. Returns the number of failures: a clone that
+    failed, or a clone / existing checkout that could not be put at its pinned commit."""
     if limit:
         repos = repos[:limit]
 
@@ -216,7 +217,9 @@ def clone_repos(repos, limit):
                     if checkout_hash(dest, repo["hash"]):
                         print(" OK")
                     else:
-                        print(" (pin failed, keeping current)")
+                        print(" FAILED (pin failed, keeping current)")
+                        failed += 1
+                        continue
             skipped += 1
             continue
 
@@ -230,7 +233,9 @@ def clone_repos(repos, limit):
         if repo["hash"] and len(repo["hash"]) >= 40:
             print(f" -> {repo['hash'][:12]}", end="", flush=True)
             if not checkout_hash(dest, repo["hash"]):
-                print(f" (pin failed, staying at HEAD)", end="")
+                print(f" FAILED (pin failed, staying at HEAD {get_head_hash(dest)[:12]})")
+                failed += 1
+                continue
         elif repo["hash"]:
             print(f" (short hash, staying at HEAD)", end="")
 
@@ -251,6 +256,7 @@ def clone_repos(repos, limit):
         pinned = sum(1 for r in repos if not r["hash"])
         if pinned:
             print(f"Pinned {pinned} new hashes in repos.md")
+    return failed
 
 
 def _check_one_repo(repo, do_fetch):
@@ -371,6 +377,8 @@ def main():
                         help="Output as JSON (with --check-updates)")
     parser.add_argument("--jobs", "-j", type=int, default=8,
                         help="Parallel workers for --check-updates (default: 8)")
+    parser.add_argument("--best-effort", action="store_true",
+                        help="Exit 0 despite clone or pin failures (clone mode)")
     args = parser.parse_args()
 
     if not REPOS_MD.exists():
@@ -383,7 +391,11 @@ def main():
     if args.check_updates:
         check_updates(repos, args.fetch, args.pin, args.json, args.jobs)
     else:
-        clone_repos(repos, args.limit)
+        failed = clone_repos(repos, args.limit)
+        if failed and not args.best_effort:
+            print(f"{failed} clone/pin failures: exit 1 (--best-effort to accept them)",
+                  file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == "__main__":

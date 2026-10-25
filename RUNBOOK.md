@@ -15,6 +15,8 @@ follow the closest one and add a new checklist for the pattern afterward.
 
 **Prerequisites:** `KICAD_HAPPY_DIR` env var set (or `../kicad-happy` exists), repos
 checked out via `python3 checkout.py`, manifests built via `python3 discover.py`.
+`checkout.py` (clone or pin failures) and `run/run_datasheets.py` (download failures, sync
+errors) exit 1 when anything failed; pass `--best-effort` to accept partial results.
 
 ---
 

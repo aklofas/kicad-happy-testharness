@@ -47,22 +47,19 @@ from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    retire_orphaned_outputs)
 
 
-def run_extract_parasitics(extractor_script, pcb_json, parasitics_json):
-    """Run extract_parasitics.py on a PCB analysis JSON.
+def run_extract_parasitics(extractor_script, pcb_json, parasitics_json, env=None):
+    """Run extract_parasitics.py on a PCB analysis JSON through run_once: the harness env
+    (pinned hash seed, no credentials), a temp file published only on success, and a
+    quarantined stale file on failure, so a failed run never reuses an old extraction.
 
-    Returns:
-        True if extraction succeeded, False otherwise.
+    Returns (ok, detail).
     """
-    try:
-        result = subprocess.run(
-            [sys.executable, str(extractor_script),
-             str(pcb_json),
-             "--output", str(parasitics_json)],
-            capture_output=True, text=True, timeout=30,
-        )
-        return result.returncode == 0 and parasitics_json.exists()
-    except Exception:
-        return False
+    from harnesslib.execution import run_once, build_env
+    res = run_once(lambda out: [sys.executable, str(extractor_script), str(pcb_json),
+                                "--output", str(out)],
+                   Path(parasitics_json), analyzer="parasitics", timeout=30,
+                   env=env or build_env(offline=True))
+    return res.status == "ok", f"{res.status}: {res.detail}"
 
 
 def _err_first_line(err_file):
@@ -162,11 +159,13 @@ def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
         pcb_json = find_pcb_output(input_json)
         if pcb_json:
             parasitics_json = out_dir / (input_json.stem + ".parasitics.json")
-            ok = run_extract_parasitics(extractor, pcb_json, parasitics_json)
-            if ok:
-                did_extract_parasitics = True
-            else:
-                parasitics_json = None
+            ok, detail = run_extract_parasitics(extractor, pcb_json, parasitics_json, env=env)
+            if not ok:
+                # a plain simulation stored under spice-parasitics would pass as a parasitics run
+                output_json.with_suffix(".err").write_text(
+                    f"parasitics_failed: {detail}\n", encoding="utf-8")
+                return input_json, 1, None, output_json, 0.0, False
+            did_extract_parasitics = True
 
     returncode, summary, elapsed = run_one_spice(
         simulator, input_json, output_json, timeout=timeout,

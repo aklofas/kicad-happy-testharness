@@ -99,3 +99,48 @@ def test_model_cache_is_pinned_to_the_unit_workdir(tmp_path):
     wd = tmp_path / "work"
     rc, _, _ = run_one_spice(sim, inp, out, workdir=wd)
     assert rc == 0 and json.loads(out.read_text())["model_cache_dir"] == str(wd)
+
+
+EXTRACT_RECORDER = """import json, os, sys
+out = sys.argv[sys.argv.index('--output') + 1]
+json.dump({"has_creds": "DIGIKEY_CLIENT_ID" in os.environ,
+           "hash_seed": os.environ.get("PYTHONHASHSEED")}, open(out, "w"))
+"""
+
+
+def test_parasitics_extraction_uses_the_harness_env(tmp_path, monkeypatch):
+    """code A3-F8: the extractor inherited credentials and an unpinned hash seed."""
+    from run_spice import run_extract_parasitics
+    monkeypatch.setenv("DIGIKEY_CLIENT_ID", "secret")
+    ext = tmp_path / "ext.py"; ext.write_text(EXTRACT_RECORDER)
+    out = tmp_path / "x.parasitics.json"
+    ok, _ = run_extract_parasitics(ext, tmp_path / "x.kicad_pcb.json", out)
+    doc = json.loads(out.read_text())
+    assert ok and doc == {"has_creds": False, "hash_seed": "0"}
+
+
+def test_failed_extraction_never_reuses_or_simulates(tmp_path):
+    """code A3-F8: an extractor failure ran plain SPICE into spice-parasitics as a success,
+    and exit 0 without a rewrite reused a stale parasitics file."""
+    import run_spice
+    sch = tmp_path / "outputs" / "schematic" / "o" / "r" / "x.kicad_sch.json"
+    sch.parent.mkdir(parents=True); sch.write_text("{}")
+    pcb = tmp_path / "outputs" / "pcb" / "o" / "r" / "x.kicad_pcb.json"
+    pcb.parent.mkdir(parents=True); pcb.write_text("{}")
+    spice_dir = tmp_path / "outputs" / "spice-parasitics"
+    stale = spice_dir / "o" / "r" / "x.kicad_sch.parasitics.json"
+    stale.parent.mkdir(parents=True); stale.write_text('{"old": true}')
+    ext = tmp_path / "ext.py"; ext.write_text("import sys; sys.exit(0)\n")   # exit 0, writes nothing
+    sim = tmp_path / "sim.py"; sim.write_text("raise SystemExit('simulator must not run')\n")
+    import utils
+    orig = utils.OUTPUTS_DIR
+    try:
+        utils.OUTPUTS_DIR = tmp_path / "outputs"
+        res = run_spice._process_one_spice(sch, sim, spice_dir, 5, [], True, ext, False,
+                                           tmp_path / "work", None, 60)
+    finally:
+        utils.OUTPUTS_DIR = orig
+    _, rc, summary, out_json, _, extracted = res
+    assert rc == 1 and summary is None and extracted is False
+    assert not stale.exists() and not out_json.exists()
+    assert out_json.with_suffix(".err").read_text().startswith("parasitics_failed")
