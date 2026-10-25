@@ -122,12 +122,40 @@ def _is_corpus_marker(node):
     return "mark.corpus" in ast.unparse(node)
 
 
+def _corpus_names(tree, text):
+    """Module-level names bound to a corpus path (`_RESULTS = HARNESS / "results" / ...`),
+    followed through later assignments that use them (`SCH = _RESULTS / "schematic"`)."""
+    names = set()
+    changed = True
+    while changed:
+        changed = False
+        for n in tree.body:
+            if not isinstance(n, (ast.Assign, ast.AnnAssign)):
+                continue
+            targets = n.targets if isinstance(n, ast.Assign) else [n.target]
+            ids = {t.id for t in targets if isinstance(t, ast.Name)} - names
+            if not ids or n.value is None:
+                continue
+            used = {x.id for x in ast.walk(n.value) if isinstance(x, ast.Name)}
+            if _has_token(ast.get_source_segment(text, n.value) or "") or used & names:
+                names |= ids
+                changed = True
+    return names
+
+
+def _touches(node, text, names):
+    if _has_token(ast.get_source_segment(text, node) or ""):
+        return True
+    return any(isinstance(x, ast.Name) and x.id in names for x in ast.walk(node))
+
+
 def _corpus_offenders(tree, text):
-    """Names of test functions that touch corpus paths (directly or via a
-    module-level helper) without a corpus marker."""
+    """Names of test functions that touch corpus paths (directly, via a module-level name
+    bound to one, or via a module-level helper) without a corpus marker."""
+    names = _corpus_names(tree, text)
     helpers = {n.name for n in tree.body
                if isinstance(n, ast.FunctionDef) and not n.name.startswith("test_")
-               and _has_token(ast.get_source_segment(text, n) or "")}
+               and _touches(n, text, names)}
     module_marked = any(
         isinstance(n, ast.Assign) and any(getattr(t, "id", "") == "pytestmark" for t in n.targets)
         and _is_corpus_marker(n.value) for n in tree.body)
@@ -139,7 +167,7 @@ def _corpus_offenders(tree, text):
             continue
         calls = {c.func.id for c in ast.walk(n)
                  if isinstance(c, ast.Call) and isinstance(c.func, ast.Name)}
-        touches = _has_token(ast.get_source_segment(text, n) or "") or bool(calls & helpers)
+        touches = _touches(n, text, names) or bool(calls & helpers)
         if touches and not any(_is_corpus_marker(d) for d in n.decorator_list):
             bad.append(n.name)
     return bad
@@ -186,3 +214,18 @@ def test_no_print_and_return_skips():
         offenders += [f"{f.relative_to(HARNESS)}:{text[:m.start()].count(chr(10)) + 1}"
                       for m in _PRINT_SKIP_RETURN.finditer(text)]
     assert not offenders, offenders
+
+
+def test_corpus_audit_resolves_module_level_names():
+    """code A6-F4: a corpus path kept in a module constant escaped the audit."""
+    src = (
+        "from pathlib import Path\n"
+        "HARNESS = Path(__file__).parent\n"
+        "_RESULTS = HARNESS / \"results\" / \"outputs\"\n"
+        "SCH = _RESULTS / \"schematic\"\n"
+        "def _first():\n    return next(SCH.glob('*'))\n"
+        "def test_direct():\n    assert _RESULTS.exists()\n"
+        "def test_via_helper():\n    assert _first()\n"
+        "def test_clean(tmp_path):\n    assert tmp_path\n"
+    )
+    assert sorted(_corpus_offenders(ast.parse(src), src)) == ["test_direct", "test_via_helper"]

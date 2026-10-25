@@ -9,14 +9,16 @@ net names before iterating. This is a pre-existing bug, unrelated to any
 specific corpus board -- reproduced on hackrf-one (has multiple clock nets:
 crystal + SPI/I2S/name-matched)."""
 
-TIER = "unit"
-
 import json
 import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+import pytest
+
+pytestmark = pytest.mark.corpus
 
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
@@ -50,7 +52,7 @@ def _run(seed, tmpdir):
 
 def test_ck001_order_stable_across_hash_seeds():
     if not (SCH.exists() and PCB.exists()):
-        return  # corpus outputs absent -- nothing to check
+        pytest.skip("hackrf-one corpus outputs absent")
     tmpdir = tempfile.mkdtemp()
     outs = {seed: _run(seed, tmpdir) for seed in SEEDS}
     unique = set(outs.values())
