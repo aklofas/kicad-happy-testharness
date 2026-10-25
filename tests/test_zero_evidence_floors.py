@@ -57,3 +57,17 @@ def test_distributor_timeout_record_is_text(tmp_path, monkeypatch):
     monkeypatch.setattr(do, "PROFILE", types.SimpleNamespace(timeout_s=1, name="distributor-offline"))
     res = do.run_oracle(tree, tmp_path, [])
     assert res["timed_out"] is True and isinstance(res["stdout"], str) and isinstance(res["stderr"], str)
+
+
+def test_json_equal_keeps_bool_and_number_apart():
+    from regression.field_compare import json_equal
+    assert not json_equal(True, 1) and not json_equal(0, False) and not json_equal(1, "1")
+    assert json_equal(1, 1.0) and json_equal(True, True) and json_equal(None, None)
+
+
+def test_spice_bool_to_int_flip_is_a_difference(tmp_path):
+    for side, val in (("a", "true"), ("b", "1")):
+        (tmp_path / side).mkdir()
+        (tmp_path / side / "x.json").write_text('{"simulation_results": [{"pass": %s}]}' % val)
+    rep = compare_spice_offline.compare(tmp_path / "a", tmp_path / "b")
+    assert list(rep["differences"]) == ["changed /simulation_results/*/pass"]

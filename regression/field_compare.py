@@ -200,6 +200,12 @@ def _kind(v: Any) -> str:
     return type(v).__name__
 
 
+def json_equal(a: Any, b: Any) -> bool:
+    """Equality with JSON kinds kept apart: true/1 and false/0 differ (Python's bool is an int),
+    while 1 and 1.0 stay equal (one JSON number kind)."""
+    return _kind(a) == _kind(b) and a == b
+
+
 class _Ctx:
     __slots__ = ("unit", "analyzer", "key_order", "deltas", "masked", "violations")
 

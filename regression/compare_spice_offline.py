@@ -19,6 +19,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from regression.field_compare import json_equal  # noqa: E402
+
 VOLATILE = frozenset({"run_id", "elapsed_s", "elapsed", "timestamp", "generated_at", "started_at",
                       "finished_at", "total_elapsed_s", "avg_per_file_s", "slowest", "duration_s",
                       "sim_time_s", "wall_s"})
@@ -62,7 +65,7 @@ def _diff(x, y, p=""):
         else:
             for i, (a, b) in enumerate(zip(x, y)):
                 out += _diff(a, b, f"{p}/{i}")
-    elif x != y:
+    elif not json_equal(x, y):
         out.append(("changed", p, str(x)[:80], str(y)[:80]))
     return out
 
