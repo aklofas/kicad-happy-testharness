@@ -2896,18 +2896,6 @@ The output walk globs `outputs_dir/<dir>/*.json`, but schematic outputs live at 
 **Discovered:** 2026-10-25, harness external audit round 1 (arch O7b)
 `repo_filter` is set only when `len(repos) == 1`; a cross-section or any multi-repo selection leaves it `None`, so every repo in the corpus is validated. Fix: filter by the selected repo set.
 
-### TH-086: `audit_equations.py scan --diff` is a no-op
-**Severity:** LOW (operator diagnostic)
-**File:** `validate/audit_equations.py:388` (save), `:401` (diff reload)
-**Discovered:** 2026-10-25, harness external audit round 1 (arch O7a)
-`cmd_scan` calls `save_registry` before the `--diff` branch, which then compares the freshly tagged equations against `load_registry()` — the registry it just wrote. No `+` line can ever print. Fix: take the diff against the registry as loaded before the save.
-
-### TH-085: constants corpus-hit counts are always zero — `_SECTION_TO_CONSTANTS` keys are short detector names
-**Severity:** LOW (audit registry scoring)
-**File:** `validate/audit_constants.py:1563-1570` (keys such as `"power_regulators"`), `:1658-1665` (`section_hits` from `findings[].detector`), `:1737-1754` (overfit score)
-**Discovered:** 2026-10-25, harness external audit round 1 (arch O6; code A4-F12, A4-F13)
-`section_hits` is built from `findings[].detector`, which carries full names (`detect_power_regulators`); the same file compares the full name at :1637. The short keys never match, so every constant mapped through this table gets 0 corpus hits. Separately the overfit score is accumulated onto the stored value on every `corpus` run instead of being recomputed. Fix: key the table by full detector names; recompute the score idempotently.
-
 ### TH-079: `generate_validation_md.py` builds the category table and the total from different denominators
 **Severity:** LOW (generated release document)
 **File:** harness `tools/generate_validation_md.py`; product `VALIDATION.md:82-88`

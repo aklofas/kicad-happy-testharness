@@ -87,12 +87,30 @@ def _find_enclosing_function(tree, line):
     """Find the function definition enclosing a given line number."""
     best = None
     for node in ast.walk(tree):
-        if isinstance(node, ast.FunctionDef):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             end = getattr(node, "end_lineno", node.lineno + 100)
             if node.lineno <= line <= end:
                 if best is None or node.lineno > best.lineno:
                     best = node
     return best
+
+
+def _tagged_statement(tree, line):
+    """For a tag outside any function: the innermost class, else the first top-level
+    statement at or after the tag line (the code the comment describes)."""
+    best = None
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef):
+            end = getattr(node, "end_lineno", node.lineno)
+            if node.lineno <= line <= end and (best is None or node.lineno > best.lineno):
+                best = node
+    if best is not None:
+        return best
+    return next((n for n in tree.body if getattr(n, "end_lineno", n.lineno) >= line), None)
+
+
+class ScanError(Exception):
+    """A source file could not be parsed: the scan must not save."""
 
 
 def scan_file(filepath, source_text=None, product_root=None):
@@ -106,8 +124,8 @@ def scan_file(filepath, source_text=None, product_root=None):
     lines = source_text.splitlines()
     try:
         tree = ast.parse(source_text)
-    except SyntaxError:
-        return []
+    except SyntaxError as e:
+        raise ScanError(f"syntax error in {filepath}: {e}") from None
 
     equations = []
     filename = (Path(filepath).resolve().relative_to(Path(product_root).resolve()).as_posix()
@@ -135,7 +153,9 @@ def scan_file(filepath, source_text=None, product_root=None):
         # Find enclosing function
         func_node = _find_enclosing_function(tree, lineno)
         func_name = func_node.name if func_node else None
-        func_hash = _hash_function_body(source_text, func_node) if func_node else None
+        # a tag outside a function still needs a hash, or its verification can never go stale
+        hash_node = func_node or _tagged_statement(tree, lineno)
+        func_hash = _hash_function_body(source_text, hash_node) if hash_node else None
 
         equations.append({
             "id": eq_id,
@@ -285,6 +305,11 @@ def update_registry(registry, scanned):
                 if old.get("status") == "verified":
                     old["status"] = "stale"
                 updated += 1
+            elif eq.get("content_hash") and not old.get("content_hash"):
+                # verified before the code it covers had a hash: nothing ties it to this code
+                if old.get("status") == "verified":
+                    old["status"] = "stale"
+                updated += 1
             # Update location info
             old["file"] = eq["file"]
             old["line"] = eq["line"]
@@ -380,10 +405,17 @@ def _classify_category(eq):
 def cmd_scan(args):
     """Scan sources for EQ tags, update registry."""
     print("Scanning for equation tags...", file=sys.stderr)
-    tagged, untagged = scan_all()
+    if not iter_source_files(resolve_kicad_happy_dir()):
+        print(f"Error: no skills/*/scripts sources under {resolve_kicad_happy_dir()}", file=sys.stderr)
+        sys.exit(1)
+    try:
+        tagged, untagged = scan_all()
+    except ScanError as e:
+        print(f"Error: {e}; registry not saved", file=sys.stderr)
+        sys.exit(2)
 
     registry = load_registry()
-    old_count = len(registry["equations"])
+    before = {e["id"]: e.get("content_hash") for e in registry["equations"]}
     added, updated, removed, relocated = update_registry(registry, tagged)
     save_registry(registry)
 
@@ -395,12 +427,13 @@ def cmd_scan(args):
     print(f"Registry entries: {len(registry['equations'])}", file=sys.stderr)
 
     if args.diff:
-        old_ids = {eq["id"] for eq in registry["equations"]}
+        # against the registry as it was before this scan saved
         print("\n--- Changes ---", file=sys.stderr)
         for eq in tagged:
-            if eq["id"] not in {e["id"] for e in load_registry()["equations"]
-                                 if e.get("content_hash") == eq.get("content_hash")}:
+            if eq["id"] not in before or before[eq["id"]] != eq.get("content_hash"):
                 print(f"  + {eq['file']}:{eq['function']} ({eq['id']})", file=sys.stderr)
+        for eid in sorted(set(before) - {eq["id"] for eq in tagged}):
+            print(f"  - {eid}", file=sys.stderr)
 
 
 def _tail(text, width):

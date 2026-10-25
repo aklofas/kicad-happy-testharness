@@ -11,6 +11,28 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-086: `audit_equations.py scan --diff` was a no-op
+
+**Severity:** LOW (operator diagnostic).
+**File:** `validate/audit_equations.py` (`cmd_scan`); test `tests/test_audit_registry_honesty.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (arch O7a).
+**Fixed:** 2026-10-25.
+
+- **Root cause:** `cmd_scan` saved the registry, then `--diff` compared the scan against `load_registry()` — the registry it had just written — so no `+` line could print.
+- **Fix:** the diff runs against the id → hash map taken before `update_registry`, and also lists removed ids. Same commit (code A4-F7, A4-F8): a syntax error aborts the scan (exit 2, nothing saved) instead of returning an empty list that deleted the file's records; an empty product root exits 1; a tag outside any function is hashed over its class or the statement it precedes, and a verified entry whose code had no hash goes stale once hashed (EQ-099 and EQ-108 at the next scan).
+- **Verification:** tests fail on the old code and pass after; against product `07b7fb1` all 105 equations now carry a hash and no source file fails to parse (843 constants).
+
+## 2026-10-25 — TH-085: constants corpus-hit counts were always zero, and the overfit score grew on every `corpus` run
+
+**Severity:** LOW (audit registry scoring).
+**File:** `validate/audit_constants.py` (`cmd_corpus`, `_corpus_bonus`); test `tests/test_audit_registry_honesty.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (arch O6; code A4-F12, A4-F13).
+**Fixed:** 2026-10-25.
+
+- **Root cause:** `_SECTION_TO_CONSTANTS` is keyed by short names (`"crystal_circuits"`) and was looked up in `section_hits`, which holds the full `findings[].detector` names (`detect_crystal_circuits`), so every mapped constant got 0 repos. The corpus pass also added its overfit increment to the stored score, which already held the previous run's increment.
+- **Fix:** the lookup unions the short name with the `detect_` / `audit_` / `validate_` / `analyze_` forms; the previous corpus increment is read back from the `corpus_*` flags and removed before the new one is applied, so a re-run on the same corpus leaves the score unchanged.
+- **Verification:** test: a `detect_crystal_circuits` finding gives `_osc_keywords` 1 repo (was 0); a zero-hit constant stays at 0.6 over three runs (was +0.5 per run). The tracked registry changes at the next `corpus` run (Checklist 11), not in this commit.
+
 ## 2026-10-25 — TH-084: required-field SEED locks passed on JSON `null` and `[]`
 
 **Severity:** HIGH (assertions that could not fail on the most likely field regression; the corpus had no such regression).

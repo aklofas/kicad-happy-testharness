@@ -423,18 +423,21 @@ class ConstantVisitor(ast.NodeVisitor):
         return None
 
 
+class ScanError(Exception):
+    """A source file could not be read or parsed: the scan must not save (it would drop that
+    file's registry entries and their verification evidence)."""
+
+
 def scan_file(filepath, product_root=None):
     """Scan one Python file. `file` is root-relative when product_root is given."""
     try:
         source = filepath.read_bytes()
     except OSError as e:
-        print(f"  Warning: could not read {filepath}: {e}", file=sys.stderr)
-        return []
+        raise ScanError(f"could not read {filepath}: {e}") from None
     try:
         tree = ast.parse(source, filename=str(filepath))
     except SyntaxError as e:
-        print(f"  Warning: syntax error in {filepath}: {e}", file=sys.stderr)
-        return []
+        raise ScanError(f"syntax error in {filepath}: {e}") from None
     label = (filepath.resolve().relative_to(Path(product_root).resolve()).as_posix()
              if product_root else filepath.name)
     visitor = ConstantVisitor(label)
@@ -917,14 +920,24 @@ def update_registry(registry, scanned):
                     entry["notes"] = old_notes
                     entry["verified_entries"] = old_verified
 
-                # Merge per-entry verification for lookup tables
+                # Merge per-entry verification for lookup tables; evidence follows the value,
+                # so an entry whose value changed is stale (if it was verified), not verified
                 if new_data.get("entries") and old_entries_data:
                     for k, v in new_data["entries"].items():
                         if k in old_entries_data:
                             old_e = old_entries_data[k]
-                            v.setdefault("status", old_e.get("status", "unverified"))
-                            v.setdefault("source", old_e.get("source"))
+                            old_st = old_e.get("status", "unverified")
+                            if "value" in old_e and old_e.get("value") != v.get("value"):
+                                v.setdefault("status", "stale" if old_st == "verified" else old_st)
+                                v.setdefault("source", None)
+                            else:
+                                v.setdefault("status", old_st)
+                                v.setdefault("source", old_e.get("source"))
                     entry["entries"] = new_data["entries"]
+                    entry["verified_entries"] = sum(
+                        1 for v in entry["entries"].values() if v.get("status") == "verified")
+                    if entry.get("status") == "verified" and entry["verified_entries"] < len(entry["entries"]):
+                        entry["status"] = "stale"
             else:
                 # No change — just update line numbers and scores
                 entry["line"] = new_data["line"]
@@ -1056,7 +1069,11 @@ def cmd_scan(args):
         print(f"Error: no skills/*/scripts sources under {kicad_happy}", file=sys.stderr)
         sys.exit(1)
     print(f"Scanning {kicad_happy} (skills/**/scripts)")
-    scanned = scan_all(kicad_happy)
+    try:
+        scanned = scan_all(kicad_happy)
+    except ScanError as e:
+        print(f"Error: {e}; registry not saved", file=sys.stderr)
+        sys.exit(2)
     print(f"\nTotal constants found: {len(scanned)}")
 
     registry = load_registry()
@@ -1559,6 +1576,20 @@ def _resolve_datasheet_path(mpn):
     return path if path.exists() else None
 
 
+def _corpus_bonus(flags):
+    """The overfit increment a previous corpus run applied, from the flags it left."""
+    bonus = 0.0
+    for f in flags:
+        if f == "corpus_zero_hits":
+            bonus += 0.5
+        elif f.startswith("corpus_narrow:"):
+            bonus += 0.3
+        elif f.startswith("corpus_unused_entries:"):
+            z, n = f.split(":", 1)[1].split("/")
+            bonus += int(z) / int(n) * 0.3 if int(n) else 0.0
+    return bonus
+
+
 # Map findings detector names to the constant names (in signal_detectors.py
 # or kicad_utils.py) that drive their detection.  This lets us measure which
 # detector functions fire across the corpus.
@@ -1718,7 +1749,10 @@ def cmd_corpus(args):
 
     # Update signal-analysis-linked constants
     for section, const_names in _SECTION_TO_CONSTANTS.items():
-        repo_set = section_hits.get(section, set())
+        # findings carry full detector names; the table keys are short
+        repo_set = set()
+        for pre in ("", "detect_", "audit_", "validate_", "analyze_"):
+            repo_set |= section_hits.get(pre + section, set())
         for cname in const_names:
             for e in by_name.get(cname, []):
                 e["corpus_hits"] = {
@@ -1737,12 +1771,11 @@ def cmd_corpus(args):
         old_score = entry.get("overfit_score", 0)
         old_flags = entry.get("overfit_flags", [])
 
-        # Remove old corpus-based flags
+        # Remove the previous corpus contribution (read back from its flags) so a re-run
+        # with the same corpus leaves the score unchanged; corpus data is additive on
+        # top of the small structural heuristics (0.0-0.2)
         new_flags = [f for f in old_flags if not f.startswith("corpus_")]
-        new_score = old_score
-
-        # Subtract old corpus contribution (if any) — we'll recompute
-        # The structural heuristics are small (0.0-0.2), corpus data is additive
+        new_score = max(old_score - _corpus_bonus(old_flags), 0.0)
         if repo_count == 0 and entry.get("entry_count", 0) > 0:
             new_score = min(new_score + 0.5, 1.0)
             new_flags.append("corpus_zero_hits")
