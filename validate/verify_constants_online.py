@@ -14,16 +14,15 @@ Usage:
 
 import argparse
 import json
-import os
 import re
 import sys
 import time
-import urllib.parse
 import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import DATA_DIR
+from validate.digikey_auth import get_digikey_token  # noqa: E402
 
 REGISTRY_FILE = DATA_DIR / "constants_registry.json"
 
@@ -34,30 +33,6 @@ VERIFIABLE_CONSTANTS = {
     "_KNOWN_FREQS": "switching_frequency",
     "_iq_estimates_uA": "quiescent_current",
 }
-
-
-def get_digikey_token():
-    """Get OAuth token for DigiKey API."""
-    client_id = os.environ.get("DIGIKEY_CLIENT_ID", "")
-    client_secret = os.environ.get("DIGIKEY_CLIENT_SECRET", "")
-    if not client_id or not client_secret:
-        return None, None
-    try:
-        data = urllib.parse.urlencode({
-            "client_id": client_id, "client_secret": client_secret,
-            "grant_type": "client_credentials",
-        }).encode()
-        req = urllib.request.Request(
-            "https://api.digikey.com/v1/oauth2/token",
-            data=data,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-        )
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            token = json.loads(resp.read()).get("access_token", "")
-        return token, client_id
-    except Exception as e:
-        print(f"DigiKey auth failed: {e}", file=sys.stderr)
-        return None, None
 
 
 def search_digikey(mpn, token, client_id):
