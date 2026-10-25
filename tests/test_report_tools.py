@@ -36,3 +36,28 @@ def test_batch_review_attaches_flat_spice_results():
     """A flat simulation_results list (no per-item "simulations") counts as content."""
     src = (HARNESS / "tools" / "batch_review.py").read_text()
     assert "s.get(\"simulations\", [])" not in src
+
+
+def test_analytics_collectors_read_the_relocated_data_root(tmp_path):
+    """The collectors follow KICAD_HAPPY_TESTHARNESS_DATA_DIR for reference/ and results/."""
+    import os
+    import subprocess
+    proj = tmp_path / "reference" / "o" / "r" / "p"
+    (proj / "assertions" / "schematic").mkdir(parents=True)
+    (proj / "assertions" / "schematic" / "a.json").write_text(
+        json.dumps({"assertions": [{"id": "SEED-1"}, {"id": "STRUCT-1"}]}))
+    out = tmp_path / "results" / "outputs" / "spice"
+    out.mkdir(parents=True)
+    (out / "_aggregate.json").write_text(json.dumps({"marker": 1}))
+    code = ("import json, generate_analytics as ga;"
+            "a = ga.collect_assertion_data();"
+            "print(json.dumps([str(ga.REFERENCE_DIR), str(ga.RESULTS_DIR), str(a)]))")
+    env = dict(os.environ, KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(tmp_path),
+               PYTHONPATH=str(HARNESS / "tools"))
+    r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                       env=env, cwd=tmp_path)
+    assert r.returncode == 0, r.stderr
+    ref, res, data = json.loads(r.stdout.strip().splitlines()[-1])
+    assert ref == str(tmp_path / "reference")
+    assert res == str(tmp_path / "results")
+    assert "'SEED': 1" in data and "'STRUCT': 1" in data

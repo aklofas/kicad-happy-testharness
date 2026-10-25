@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-091: `generate_analytics.py` ignored `KICAD_HAPPY_TESTHARNESS_DATA_DIR`
+
+**Severity:** LOW
+**File:** `tools/generate_analytics.py` (`REFERENCE_DIR`, `RESULTS_DIR`, checkout count)
+**Discovered:** 2026-10-25 (while planning wave 10). **Fixed:** 2026-10-25.
+
+- **Root cause:** the module derived its data directories from its own `HARNESS_DIR`, so with the data root moved it still read the in-tree `reference/`, `results/` and `repos/`.
+- **Fix:** `REFERENCE_DIR` is now `utils.DATA_DIR`, `RESULTS_DIR` and the checkout count derive from `utils.DATA_ROOT`. The SVG output directory (`analytics/`) and the harness-tree docs it parses (`FIXED.md`, `ISSUES.md`, `repos.md`) stay in the harness tree.
+- **Verification:** `test_analytics_collectors_read_the_relocated_data_root` (subprocess with the env var pointing at a tmp tree) fails before (collectors report the in-tree `reference/`) and passes after; the tracked analytics SVGs were not regenerated.
+
 ## 2026-10-25 — KH-497: distributor sync writes through symlinked `manifest.tmp` / `<name>.pdf.part` and renames manifest `file` paths from outside `datasheets/`
 
 **Severity:** HIGH (Critical in the audit: reachable from PR content in the Action with no credentials, because the LCSC sync runs on every Action run)

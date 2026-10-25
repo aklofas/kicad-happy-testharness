@@ -20,8 +20,10 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
-REFERENCE_DIR = HARNESS_DIR / "reference"
-RESULTS_DIR = HARNESS_DIR / "results"
+sys.path.insert(0, str(HARNESS_DIR))
+from utils import DATA_DIR as REFERENCE_DIR, DATA_ROOT  # noqa: E402
+
+RESULTS_DIR = DATA_ROOT / "results"
 ANALYTICS_DIR = HARNESS_DIR / "analytics"
 
 
@@ -191,7 +193,7 @@ def collect_corpus_stats():
                 repos_in_md += 1
 
     repos_checked_out = 0
-    repos_dir = HARNESS_DIR / "repos"
+    repos_dir = DATA_ROOT / "repos"
     if repos_dir.exists():
         repos_checked_out = sum(1 for d in repos_dir.iterdir()
                                 if d.is_dir() and not d.name.startswith("."))
