@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """Unified entry point for the kicad-happy test harness.
 
-Consolidates validate_all.py, run_corpus.py, and run_tests.py into a single
-CLI with subcommands. The old scripts remain for backwards compatibility.
+Dispatches to run_tests.py, the batch runners, regression/run_checks.py and
+tools/generate_health_report.py. `validate` runs only regression/run_checks.py
+(assertions against existing outputs); it does not run tests or the validate/
+tools. `run` needs an explicit selection: --all, --smoke, --cross-section or
+--repo (exit 2 otherwise).
 
 Usage:
     python3 harness.py test                              # unit tests
     python3 harness.py test --tier online                # integration tests
     python3 harness.py validate                          # assertions on existing outputs
     python3 harness.py validate --cross-section smoke    # subset
-    python3 harness.py run --smoke                       # generate + validate smoke pack
-    python3 harness.py run --cross-section quick_200     # generate + validate subset
-    python3 harness.py run --full                        # everything
+    python3 harness.py run --smoke                       # generate + check smoke pack
+    python3 harness.py run --cross-section quick_200     # generate + check subset
+    python3 harness.py run --all                         # whole corpus
     python3 harness.py health                            # health report
     python3 harness.py status                            # quick summary
 """
@@ -229,7 +232,7 @@ subcommands:
 
     # run
     p_run = sub.add_parser("run", help="Generate outputs + validate")
-    p_run.add_argument("--smoke", action="store_true", help="Smoke pack (20 repos)")
+    p_run.add_argument("--smoke", action="store_true", help="Smoke cross-section (reference/cross_sections.json)")
     p_run.add_argument("--repo", help="Single repo")
     p_run.add_argument("--cross-section", help="Named cross-section")
     p_run.add_argument("--all", dest="all_repos", action="store_true",

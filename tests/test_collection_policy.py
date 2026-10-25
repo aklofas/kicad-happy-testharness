@@ -238,3 +238,11 @@ def test_product_root_comes_from_tests_product_root_only():
                        if f.name != "product_root.py"
                        and _PRODUCT_FALLBACK.search(f.read_text(encoding="utf-8")))
     assert not offenders, offenders
+
+
+def test_analytics_snippet_matches_its_generator():
+    """docs A1-F19 register: the generator rewrote the snippet's prose on every run."""
+    snippet = (HARNESS / "analytics" / "README_SNIPPET.md").read_text(encoding="utf-8")
+    gen = (HARNESS / "tools" / "generate_analytics.py").read_text(encoding="utf-8")
+    intro = snippet.splitlines()[2]
+    assert intro.replace("`", "") in gen.replace("`", "")

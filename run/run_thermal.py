@@ -11,7 +11,7 @@ with PCB ``Foo.kicad_pcb.json`` in the same owner/repo.
 Usage:
     python3 run/run_thermal.py --all
     python3 run/run_thermal.py --repo Dylanfg123/Zebra-X
-    python3 run/run_thermal.py --jobs 16
+    python3 run/run_thermal.py --all --jobs 16
     python3 run/run_thermal.py --cross-section smoke
 
 Prerequisites:

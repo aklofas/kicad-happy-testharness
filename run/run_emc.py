@@ -7,9 +7,9 @@ when available. It does NOT re-run the schematic or PCB analyzers.
 
 Usage:
     python3 run/run_emc.py --all
-    python3 run/run_emc.py --repo OpenMower
-    python3 run/run_emc.py --jobs 8
-    python3 run/run_emc.py --standard cispr-class-b
+    python3 run/run_emc.py --repo owner/repo
+    python3 run/run_emc.py --cross-section smoke --jobs 8
+    python3 run/run_emc.py --repo owner/repo --standard cispr-class-b
 
 Prerequisites:
     1. Schematic analysis outputs exist in results/outputs/schematic/

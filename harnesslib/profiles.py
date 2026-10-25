@@ -1,6 +1,7 @@
 # harnesslib/profiles.py
-"""Declared execution profiles (spec §7). Timeouts live here, not in a module
-constant read at import time (TH-055)."""
+"""Declared execution profiles. Each profile's timeout_s is the source of truth
+for its per-file cap; the batch runners' default (utils.ANALYZER_TIMEOUT) is
+read from the standard profile at import time."""
 from __future__ import annotations
 
 from dataclasses import dataclass

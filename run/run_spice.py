@@ -7,20 +7,20 @@ analyzer — it consumes the outputs already in results/outputs/schematic/.
 
 Usage:
     python3 run/run_spice.py --all
-    python3 run/run_spice.py --repo OpenMower
-    python3 run/run_spice.py --jobs 4
-    python3 run/run_spice.py --timeout 10
+    python3 run/run_spice.py --repo owner/repo
+    python3 run/run_spice.py --cross-section smoke --jobs 4
+    python3 run/run_spice.py --repo owner/repo --timeout 10
 
 Prerequisites:
     1. ngspice installed (apt install ngspice)
     2. Schematic analysis outputs exist in results/outputs/schematic/
        (run run/run_schematic.py first)
 
-Isolation (TH-059): --workdir keeps the harness's simulation work files out of
-repos/, and distributor credentials are stripped unless --online. The
-simulator's model-cache write into <project>/spice/models/ in the corpus
-checkout is NOT prevented until the product gains --model-cache-dir;
-tools/inventory_spice_caches.py --check detects it.
+Isolation: --workdir keeps the harness's simulation work files out of repos/,
+each unit's workdir is also passed as the simulator's --model-cache-dir so
+model-cache writes stay out of the corpus checkout, and distributor
+credentials are stripped unless --online. tools/inventory_spice_caches.py
+--check detects any cache write that still lands under repos/.
 
 Environment:
     KICAD_HAPPY_DIR  Path to kicad-happy repo (required if not at ../kicad-happy)
@@ -198,10 +198,9 @@ def main():
     parser.add_argument("--workdir", default=None,
                         help="Scratch root for the harness's simulation work files "
                              "(default: results/spice_work/<timestamp>); never inside "
-                             "repos/. The simulator's own model-cache write into the "
-                             "corpus checkout is NOT prevented until the product gains "
-                             "--model-cache-dir; use tools/inventory_spice_caches.py "
-                             "--check to detect it (TH-059)")
+                             "repos/. Each unit's workdir is also the simulator's "
+                             "--model-cache-dir; tools/inventory_spice_caches.py "
+                             "--check detects cache writes under repos/")
     parser.add_argument("--online", action="store_true",
                         help="Keep distributor credentials in the simulator env "
                              "(default: stripped, hermetic offline run)")
