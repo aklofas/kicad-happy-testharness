@@ -28,6 +28,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import source_scan  # noqa: E402  (harness sibling module)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib.source_audit import sources  # noqa: E402
 
 
 def _resolve_kicad_happy() -> Path:
@@ -89,9 +91,9 @@ def _dict_literal_pairs(source_path: Path, era: str) -> list[tuple[str, str]]:
             continue
         lit = {}
         for k, v in zip(node.keys, node.values):
-            key = source_scan._str_literal(k) if k is not None else None
+            key = sources.str_literal(k) if k is not None else None
             if key in ("detector", "rule_id", "schema_era"):
-                lit[key] = source_scan._str_literal(v)
+                lit[key] = sources.str_literal(v)
         if lit.get("detector") and lit.get("rule_id") and lit.get("schema_era") == era:
             out.append((lit["detector"], lit["rule_id"]))
     return out

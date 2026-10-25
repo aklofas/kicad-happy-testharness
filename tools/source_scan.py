@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Shared recursive source walker for every harness scanner.
 
-Owns: product file discovery, root-relative paths, finding emit-site
-extraction under the literal-tag policy (tools/SCANNER_POLICY.md), the
-exception ledger (tools/scan_exceptions.json) and the coverage snapshot /
-diff used by `check`. Never imports or evals product code: ast only.
+Owns: finding emit-site extraction under the literal-tag policy
+(tools/SCANNER_POLICY.md), the exception ledger (tools/scan_exceptions.json)
+and the coverage snapshot / diff used by `check`. File discovery, root-relative paths and parsing come from
+harnesslib.source_audit.sources (re-exported here). Never imports or evals product
+code: ast only.
 """
 from __future__ import annotations
 
@@ -16,30 +17,12 @@ import sys
 from dataclasses import dataclass, asdict
 from pathlib import Path
 
-
-def iter_product_sources(product_root: Path) -> list[Path]:
-    """Every *.py under skills/**/scripts/** (recursive), sorted, no __pycache__."""
-    root = Path(product_root)
-    out: list[Path] = []
-    for scripts_dir in sorted(root.glob("skills/*/scripts")) + sorted(root.glob("skills/*/*/scripts")):
-        if not scripts_dir.is_dir():
-            continue
-        for p in scripts_dir.rglob("*.py"):
-            if not p.is_file() or "__pycache__" in p.relative_to(root).parts:
-                continue
-            out.append(p)
-    return sorted(set(out), key=lambda p: rel(root, p))
-
-
-def rel(product_root: Path, path: Path) -> str:
-    """Root-relative POSIX path (the identity used in every scanner output)."""
-    return Path(path).resolve().relative_to(Path(product_root).resolve()).as_posix()
-
-
-def parse_source(path: Path) -> ast.Module:
-    """Parse honouring PEP 263 coding cookies / BOM: feed bytes, not text."""
-    return ast.parse(Path(path).read_bytes(), filename=str(path))
-
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from harnesslib.source_audit import constants as _constants_engine  # noqa: E402
+from harnesslib.source_audit import equations as _equations_engine  # noqa: E402
+from harnesslib.source_audit.sources import (  # noqa: E402,F401  (re-exported)
+    iter_product_sources, parse_source, rel, str_literal as _str_literal,
+)
 
 FACTORY_NAMES = ("make_finding", "_make_finding")
 TAG_KEYWORDS = ("detector", "rule_id", "schema_era")
@@ -67,12 +50,6 @@ def _callee_name(call: ast.Call) -> str | None:
         return f.id
     if isinstance(f, ast.Attribute):
         return f.attr
-    return None
-
-
-def _str_literal(node: ast.AST | None) -> str | None:
-    if isinstance(node, ast.Constant) and isinstance(node.value, str):
-        return node.value
     return None
 
 
@@ -229,23 +206,13 @@ def _product_sha(product_root: Path) -> str:
         return "unknown"
 
 
-def _validate_on_path() -> None:
-    p = str(HARNESS_ROOT / "validate")
-    if p not in sys.path:
-        sys.path.insert(0, p)
-
-
 def _constants(product_root: Path) -> list[str]:
-    _validate_on_path()
-    import audit_constants  # noqa: E402  (harness module, not product)
     return sorted({f"{r['file']}|{r['scope']}|{r['name']}"
-                   for r in audit_constants.iter_constant_records(product_root)})
+                   for r in _constants_engine.iter_constant_records(product_root)})
 
 
 def _equations(product_root: Path) -> dict[str, str]:
-    _validate_on_path()
-    import audit_equations  # noqa: E402
-    return {e["eq_id"]: e["file"] for e in audit_equations.iter_equations(product_root)}
+    return {e["eq_id"]: e["file"] for e in _equations_engine.iter_equations(product_root)}
 
 
 def coverage_snapshot(product_root: Path, exceptions: dict | None = None) -> dict:
