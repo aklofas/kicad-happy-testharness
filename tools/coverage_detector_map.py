@@ -18,7 +18,7 @@ from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
-from harnesslib.corpus_read import assertion_prefix
+from harnesslib.corpus_read import assertion_items, assertion_prefix
 from utils import OUTPUTS_DIR, DATA_DIR, safe_load_json
 
 EQUATION_REGISTRY = DATA_DIR / "equation_registry.json"
@@ -100,7 +100,7 @@ def count_assertions():
 
     for f in DATA_DIR.rglob("assertions/schematic/*.json"):
         data = safe_load_json(f, {})
-        for a in data.get("assertions", []):
+        for a in assertion_items(data):
             path = a.get("check", {}).get("path", "")
             aid = a.get("id", "")
             prefix = assertion_prefix(aid, no_dash="")

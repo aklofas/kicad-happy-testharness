@@ -61,3 +61,17 @@ def test_analytics_collectors_read_the_relocated_data_root(tmp_path):
     assert ref == str(tmp_path / "reference")
     assert res == str(tmp_path / "results")
     assert "'SEED': 1" in data and "'STRUCT': 1" in data
+
+
+def test_assertion_counters_accept_a_bare_list_file(tmp_path, monkeypatch):
+    import generate_health_report as ghr
+    import coverage_report as cr
+    adir = tmp_path / "o" / "r" / "p" / "assertions" / "pcb"
+    adir.mkdir(parents=True)
+    (adir / "bare.json").write_text(json.dumps([{"id": "SEED-1"}, {"id": "BUGFIX-2"}]))
+    (adir / "bare_empty.json").write_text("[]")
+    assert cr._count_assertions_by_prefix(tmp_path / "o" / "r" / "p" / "assertions") == {
+        "SEED": 1, "BUGFIX": 1}
+    monkeypatch.setattr(ghr, "DATA_DIR", tmp_path)
+    counts, files, _ = ghr._count_assertions()
+    assert (counts["SEED"], counts["BUGFIX"], files) == (1, 1, 1)

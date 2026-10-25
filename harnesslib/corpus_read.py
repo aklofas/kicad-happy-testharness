@@ -24,3 +24,11 @@ def json_files(directory: Path, *, sort: bool, skip_underscore: bool,
 def assertion_prefix(aid: str, no_dash: str = "OTHER") -> str:
     """The id family of an assertion id (``SEED-12`` -> ``SEED``)."""
     return aid.split("-")[0] if "-" in aid else no_dash
+
+
+def assertion_items(data) -> list:
+    """The assertion dicts of a loaded assertion file, which is either an object with an
+    ``assertions`` key or a bare list of assertions."""
+    if isinstance(data, list):
+        return data
+    return data.get("assertions", []) if isinstance(data, dict) else []

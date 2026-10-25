@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-093: assertion-count helpers called `.get` on a bare-list assertion file
+
+**Severity:** LOW
+**File:** `tools/coverage_report.py` (`_count_assertions_by_prefix`), `tools/generate_health_report.py` (`_count_assertions`), `tools/generate_catalog.py`, `tools/coverage_detector_map.py`, `validate/validate_schema.py`, `harnesslib/corpus_read.py`
+**Discovered:** 2026-10-25 (wave 10 final review). **Fixed:** 2026-10-25.
+
+- **Root cause:** the readers called `.get("assertions", ...)` on whatever `safe_load_json` returned, so an assertion file that is a bare list raised `AttributeError` (any list in the coverage report, any non-empty list in the health report). Extending the characterization fixture with such a file showed the same crash in the catalog builder; the detector map and the schema stale-assertion scan had the same call.
+- **Fix:** `corpus_read.assertion_items` returns the list itself for a bare-list file and the `assertions` value of an object file; the five readers use it (prefix rules and empty-file skipping unchanged). Note `checks.load_assertions` does not accept a bare list (it records a load error for the file), so these counts include assertions the checker will not run; the counters are reports over what is on disk.
+- **Verification:** `test_assertion_counters_accept_a_bare_list_file` fails before with `AttributeError: 'list' object has no attribute 'get'` and passes after. The wave-10 corpus-read fixture deliberately had no bare-list file; `reference/o/r/p/assertions/pcb/bare_list.json` (SEED-20, FND-20) and `bare_list_empty.json` are added and only the affected golden entries change (catalog total 10 to 12, coverage SEED/FND +1 each, health SEED/FND +1 and files 7 to 8).
+
 ## 2026-10-25 — TH-094: `audit_equations.py untagged` output order depended on PYTHONHASHSEED
 
 **Severity:** LOW

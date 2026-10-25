@@ -20,7 +20,7 @@ from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
-from harnesslib.corpus_read import assertion_prefix
+from harnesslib.corpus_read import assertion_items, assertion_prefix
 from utils import DATA_DIR, safe_load_json
 
 
@@ -35,7 +35,7 @@ def _count_assertions_by_prefix(assertions_dir):
             continue
         for f in type_dir.glob("*.json"):
             data = safe_load_json(f, {})
-            for a in data.get("assertions", []):
+            for a in assertion_items(data):
                 aid = a.get("id", "")
                 prefix = assertion_prefix(aid)
                 counts[prefix] += 1

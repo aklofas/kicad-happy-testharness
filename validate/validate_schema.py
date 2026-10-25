@@ -22,7 +22,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from harnesslib.corpus_read import json_files
+from harnesslib.corpus_read import assertion_items, json_files
 from utils import (OUTPUTS_DIR, DATA_DIR, list_repos,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos)
 
@@ -537,8 +537,8 @@ def find_stale_assertions(changes):
             data = json.loads(f.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
             continue
-        atype = data.get("analyzer_type", "schematic")
-        for a in data.get("assertions", []):
+        atype = data.get("analyzer_type", "schematic") if isinstance(data, dict) else "schematic"
+        for a in assertion_items(data):
             path = a.get("check", {}).get("path", "")
             # Check if path references a removed field
             for (cat, det, field), change in removed_fields.items():
