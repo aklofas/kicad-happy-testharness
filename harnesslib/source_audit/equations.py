@@ -3,6 +3,7 @@ The registry and its CLI live in validate/audit_equations.py."""
 import ast
 import hashlib
 import re
+import tokenize
 from pathlib import Path
 
 from .sources import iter_product_sources
@@ -56,13 +57,22 @@ class ScanError(Exception):
     """A source file could not be parsed: the scan must not save."""
 
 
+def read_source_text(filepath):
+    """Source text decoded per PEP 263 (coding cookie / BOM), as the compiler would."""
+    try:
+        with tokenize.open(filepath) as f:
+            return f.read()
+    except (OSError, SyntaxError, UnicodeDecodeError) as e:
+        raise ScanError(f"could not read {filepath}: {e}") from None
+
+
 def scan_file(filepath, source_text=None, product_root=None):
     """Scan a file for EQ-NNN tags and extract equation metadata.
 
     Returns list of equation info dicts.
     """
     if source_text is None:
-        source_text = filepath.read_text(encoding="utf-8")
+        source_text = read_source_text(filepath)
 
     lines = source_text.splitlines()
     try:
@@ -119,12 +129,12 @@ def find_untagged(filepath, source_text=None, product_root=None):
     Returns list of (function_name, line, math_op_count, indicators_found).
     """
     if source_text is None:
-        source_text = filepath.read_text(encoding="utf-8")
+        source_text = read_source_text(filepath)
 
     try:
         tree = ast.parse(source_text)
-    except SyntaxError:
-        return []
+    except SyntaxError as e:
+        raise ScanError(f"syntax error in {filepath}: {e}") from None
 
     # Find all EQ-tagged lines
     tagged_functions = set()
@@ -171,8 +181,7 @@ def scan_all_tagged(product_root):
     """Tagged equations across every walked file (quiet; used by tests and source_scan)."""
     tagged = []
     for fpath in iter_source_files(product_root):
-        source = fpath.read_text(encoding="utf-8")
-        tagged.extend(scan_file(fpath, source, product_root=product_root))
+        tagged.extend(scan_file(fpath, product_root=product_root))
     return tagged
 
 

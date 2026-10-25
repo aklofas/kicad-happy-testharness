@@ -42,7 +42,7 @@ MARKDOWN_PATH = DATA_DIR / "equation_registry.md"
 
 from harnesslib.source_audit.equations import (  # noqa: E402,F401  (engine; names re-exported)
     EQ_TAG_RE, MATH_INDICATORS, SOURCE_RE, ScanError, _find_enclosing_function,
-    _hash_function_body, _tagged_statement, find_untagged, iter_equations,
+    _hash_function_body, _tagged_statement, find_untagged, iter_equations, read_source_text,
     iter_product_sources, iter_source_files, scan_all_tagged, scan_file,
 )
 
@@ -70,7 +70,7 @@ def scan_all():
     kicad_happy = resolve_kicad_happy_dir()
     all_tagged, all_untagged = [], []
     for fpath in iter_source_files(kicad_happy):
-        source = fpath.read_text(encoding="utf-8")
+        source = read_source_text(fpath)
         tagged = scan_file(fpath, source, product_root=kicad_happy)
         untagged = find_untagged(fpath, source, product_root=kicad_happy)
         all_tagged.extend(tagged)
@@ -397,7 +397,11 @@ def cmd_render(args):
 def cmd_untagged(args):
     """Find functions with math operations but no EQ tag."""
     print("Scanning for untagged math functions...", file=sys.stderr)
-    _, untagged = scan_all()
+    try:
+        _, untagged = scan_all()
+    except ScanError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(2)
 
     if not untagged:
         print("\nNo untagged math functions found.")

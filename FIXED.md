@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-092: `audit_equations.py` read product sources as UTF-8 text and `find_untagged` swallowed unparsable files
+
+**Severity:** LOW
+**File:** `harnesslib/source_audit/equations.py` (`scan_file`, `find_untagged`), `validate/audit_equations.py` (`scan_all`, `cmd_untagged`)
+**Discovered:** 2026-10-25 (while planning wave 10). **Fixed:** 2026-10-25.
+
+- **Root cause:** both scans called `read_text(encoding="utf-8")`, so a source with a non-UTF-8 coding cookie raised a raw `UnicodeDecodeError`; `find_untagged` returned `[]` on `SyntaxError` where `scan_file` raised `ScanError`, so an unparsable file silently vanished from the untagged-math report.
+- **Fix:** a shared `read_source_text` decodes per PEP 263 (`tokenize.open`) and raises `ScanError` on read/decode failure; `find_untagged` raises `ScanError` on `SyntaxError`; `scan_all`, `scan_all_tagged` and `cmd_untagged` use it, and `untagged` exits 2 on `ScanError` as `scan` does.
+- **Verification:** `tests/test_audit_equations_sources.py` (latin-1 cookie source with a tagged and an untagged function, unparsable and undecodable sources, `untagged` exit code) fails before and passes after. Read-only `audit_equations.py untagged` and `list` against `product_07b7fb1` (PYTHONHASHSEED=0) are byte-identical before and after (stdout and stderr); the product sources are UTF-8.
+
 ## 2026-10-25 — TH-091: `generate_analytics.py` ignored `KICAD_HAPPY_TESTHARNESS_DATA_DIR`
 
 **Severity:** LOW
