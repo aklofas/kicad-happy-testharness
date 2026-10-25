@@ -1306,14 +1306,20 @@ Compares current outputs against finding expectations. Surfaces:
 - **Regressions** — something that was correct is now wrong
 - **Improvements** — something that was wrong is now correct
 - **Possibly fixed** — an `incorrect` item that may have been addressed
+- **Unresolvable** — the item's check path no longer exists in the output (a legacy
+  `signal_analysis.*` path or a renamed section); regenerate the check, it proves nothing
 
 ### 13g. Clean up stale drift
 
 ```bash
-python3 regression/cleanup_drift.py
+python3 regression/cleanup_drift.py --dry-run   # preview
+python3 regression/cleanup_drift.py --apply
 ```
 
-Removes drift items from findings that reference outputs no longer present.
+Records a `disposition` (`state`, `date`, `by`) on drifted items — possibly-fixed
+`incorrect`, now-detected `missed`, regressed `correct` — and keeps them with their
+evidence; drift skips dispositioned items afterwards. `refresh_findings.py --apply` does the
+same for items whose check now passes. Nothing is deleted.
 
 ---
 

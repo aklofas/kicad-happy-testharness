@@ -47,6 +47,22 @@ def _section_count(data, section_path):
     return 1
 
 
+def _evaluate(check, output):
+    """(result, resolvable). A check whose path no longer resolves in the output (a legacy
+    `signal_analysis.*` path, a renamed section) says nothing about the bug: it is
+    `unresolvable`, never `possibly_fixed` (not_contains_match passes on a non-list)."""
+    if check.get("path") and resolve_path(output, check["path"]) is None:
+        return None, False
+    return evaluate_assertion({"check": check, "id": "drift", "description": ""}, output), True
+
+
+def checkable_items(finding, item_type):
+    """Items drift evaluates, in order: carry an analyzer_section and no disposition (an
+    item resolved by cleanup keeps its record and is not re-flagged)."""
+    return [(i, item) for i, item in enumerate(finding.get(item_type, []))
+            if item.get("analyzer_section") and not item.get("disposition")]
+
+
 def validate_finding(finding):
     """Validate a single finding against current output.
 
@@ -67,15 +83,15 @@ def validate_finding(finding):
     has_checkable = False
 
     # Check correct items — should still have data
-    for item in finding.get("correct", []):
+    for _, item in checkable_items(finding, "correct"):
         section = item.get("analyzer_section")
-        if not section:
-            continue
         has_checkable = True
         desc = item.get("description", section)
         check = item.get("check")
-        if check:
-            r = evaluate_assertion({"check": check, "id": "drift", "description": ""}, output)
+        r, resolvable = _evaluate(check, output) if check else (None, True)
+        if check and not resolvable:
+            results.append(("unresolvable", "correct", f"{desc} — check path {check['path']} not in output"))
+        elif check:
             if r["passed"]:
                 results.append(("ok", "correct", f"{desc} — check passed"))
             else:
@@ -89,15 +105,15 @@ def validate_finding(finding):
                 results.append(("ok", "correct", f"{desc} — {section} has {count} items"))
 
     # Check incorrect items — count change suggests fix
-    for item in finding.get("incorrect", []):
+    for _, item in checkable_items(finding, "incorrect"):
         section = item.get("analyzer_section")
-        if not section:
-            continue
         has_checkable = True
         desc = item.get("description", section)
         check = item.get("check")
-        if check:
-            r = evaluate_assertion({"check": check, "id": "drift", "description": ""}, output)
+        r, resolvable = _evaluate(check, output) if check else (None, True)
+        if check and not resolvable:
+            results.append(("unresolvable", "incorrect", f"{desc} — check path {check['path']} not in output"))
+        elif check:
             if r["passed"]:
                 # not_contains_match passed = ref is gone = bug fixed
                 results.append(("possibly_fixed", "incorrect",
@@ -114,15 +130,15 @@ def validate_finding(finding):
                 results.append(("ok", "incorrect", f"{desc} — {section} has {count} items"))
 
     # Check missed items — data appearing suggests new detection
-    for item in finding.get("missed", []):
+    for _, item in checkable_items(finding, "missed"):
         section = item.get("analyzer_section")
-        if not section:
-            continue
         has_checkable = True
         desc = item.get("description", section)
         check = item.get("check")
-        if check:
-            r = evaluate_assertion({"check": check, "id": "drift", "description": ""}, output)
+        r, resolvable = _evaluate(check, output) if check else (None, True)
+        if check and not resolvable:
+            results.append(("unresolvable", "missed", f"{desc} — check path {check['path']} not in output"))
+        elif check:
             if r["passed"]:
                 results.append(("now_detected", "missed",
                                 f"{desc} — check passed (now detected)"))
@@ -172,8 +188,8 @@ def main():
         return
 
     all_results = []
-    counts = {"ok": 0, "regression": 0, "possibly_fixed": 0,
-              "now_detected": 0, "no_output": 0, "no_checkable_items": 0}
+    counts = {"ok": 0, "regression": 0, "possibly_fixed": 0, "now_detected": 0,
+              "unresolvable": 0, "no_output": 0, "no_checkable_items": 0}
 
     for finding in findings:
         fid = finding.get("id", "?")
@@ -209,7 +225,7 @@ def main():
 
     # Summary
     print("Summary:")
-    for cat in ["ok", "regression", "possibly_fixed", "now_detected",
+    for cat in ["ok", "regression", "possibly_fixed", "now_detected", "unresolvable",
                 "no_output", "no_checkable_items"]:
         if counts[cat]:
             print(f"  {cat}: {counts[cat]}")

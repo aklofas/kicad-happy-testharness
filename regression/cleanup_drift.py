@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Clean up findings based on drift detection results.
 
-Removes stale items from findings that have drifted due to analyzer fixes:
-- possibly_fixed incorrect items → remove from incorrect array
-- now_detected missed items → remove from missed array
-- regression correct items → remove from correct array (stale check paths)
+Records a disposition on items that have drifted due to analyzer fixes (the item and its
+evidence stay in findings.json; drift no longer re-flags it):
+- possibly_fixed incorrect items
+- now_detected missed items
+- regression correct items (stale check paths)
 
 Usage:
     python3 regression/cleanup_drift.py --dry-run    # preview changes
@@ -18,9 +19,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from drift import validate_finding
+from datetime import date
+
+from drift import checkable_items, validate_finding
 from findings import load_findings, save_findings, _iter_findings_files
 from utils import DATA_DIR
+
+
+DISPOSITION_STATE = {"correct": "regression", "incorrect": "possibly_fixed", "missed": "now_detected"}
 
 
 def _find_removal_indices(finding):
@@ -50,18 +56,10 @@ def _find_removal_indices(finding):
     }
 
     for item_type, categories in type_results.items():
-        items = finding.get(item_type, [])
-        # validate_finding skips items without analyzer_section, so we
-        # need to track which items produced results
-        result_idx = 0
-        for i, item in enumerate(items):
-            section = item.get("analyzer_section")
-            if not section:
-                continue
-            if result_idx < len(categories):
-                if categories[result_idx] in removal_categories[item_type]:
-                    removals[item_type].add(i)
-                result_idx += 1
+        # validate_finding yields one result per checkable item, in order
+        for (i, _item), category in zip(checkable_items(finding, item_type), categories):
+            if category in removal_categories[item_type]:
+                removals[item_type].add(i)
 
     return removals
 
@@ -100,9 +98,9 @@ def main():
             if indices:
                 parts.append(f"{len(indices)} {key}")
                 total_removed += len(indices)
-        print(f"  {fid}: remove {', '.join(parts)}")
+        print(f"  {fid}: disposition {', '.join(parts)}")
 
-    print(f"\nTotal items to remove: {total_removed} across {len(drift_removals)} findings")
+    print(f"\nTotal items to disposition: {total_removed} across {len(drift_removals)} findings")
 
     if args.dry_run:
         print("\n(dry run — no changes made)")
@@ -121,17 +119,14 @@ def main():
                 continue
 
             removals = drift_removals[fid]
-            for key in ["correct", "incorrect", "missed"]:
-                indices = removals.get(key, set())
-                if indices and key in finding:
-                    original = finding[key]
-                    finding[key] = [item for i, item in enumerate(original)
-                                    if i not in indices]
-                    if len(finding[key]) != len(original):
-                        changed = True
+            for key, state in DISPOSITION_STATE.items():
+                for i in sorted(removals.get(key, set())):
+                    finding[key][i]["disposition"] = {
+                        "state": state, "date": date.today().isoformat(), "by": "cleanup_drift"}
+                    changed = True
 
         if changed:
-            save_findings(fdata, repo, proj)
+            save_findings(repo, proj, fdata)
             modified_files.add(fpath)
 
     print(f"\nModified {len(modified_files)} findings files (JSON + markdown regenerated)")

@@ -2,7 +2,8 @@
 """Automated finding review refresh — detect stale findings and clean up.
 
 Runs drift detection on all findings, identifies stale items (possibly fixed bugs,
-newly detected circuits, aged findings), and optionally cleans them up.
+newly detected circuits, aged findings), and with --apply records a disposition on the
+resolved items (they stay in findings.json with their evidence).
 
 Usage:
     python3 regression/refresh_findings.py                # dry run
@@ -19,8 +20,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from drift import validate_finding
-from findings import _iter_findings_files, render_md, save_findings
+from drift import _evaluate, _load_output, checkable_items, validate_finding
+from findings import _iter_findings_files, save_findings
 from utils import DATA_DIR
 
 
@@ -86,7 +87,7 @@ def main():
     parser.add_argument("--max-age", type=int, default=30,
                         help="Flag findings older than N days (default: 30)")
     parser.add_argument("--apply", action="store_true",
-                        help="Clean up stale findings (remove drifted items)")
+                        help="Record a disposition on resolved items (kept, not deleted)")
     parser.add_argument("--json", action="store_true", help="JSON output")
     args = parser.parse_args()
 
@@ -137,54 +138,24 @@ def main():
                     "age_days": age,
                 })
 
-            # Apply cleanup if requested
-            if args.apply and drift["possibly_fixed"] > 0:
-                # Remove possibly-fixed incorrect items
-                new_incorrect = []
-                for item in finding.get("incorrect", []):
-                    check = item.get("check")
-                    if check:
-                        from checks import evaluate_assertion
-                        from drift import _load_output
-                        output = _load_output(
-                            finding.get("analyzer_type", ""),
-                            finding.get("repo", repo),
-                            finding.get("source_file", ""))
-                        if output:
-                            r = evaluate_assertion(
-                                {"check": check, "id": "cleanup",
-                                 "description": ""}, output)
-                            if r["passed"]:
-                                # Bug appears fixed — remove item
-                                modified = True
-                                continue
-                    new_incorrect.append(item)
-                finding["incorrect"] = new_incorrect
-
-            if args.apply and drift["now_detected"] > 0:
-                # Remove now-detected missed items
-                new_missed = []
-                for item in finding.get("missed", []):
-                    check = item.get("check")
-                    if check:
-                        from drift import _load_output
-                        output = _load_output(
-                            finding.get("analyzer_type", ""),
-                            finding.get("repo", repo),
-                            finding.get("source_file", ""))
-                        if output:
-                            r = evaluate_assertion(
-                                {"check": check, "id": "cleanup",
-                                 "description": ""}, output)
-                            if r["passed"]:
-                                modified = True
-                                continue
-                    new_missed.append(item)
-                finding["missed"] = new_missed
+            # Record a disposition on items whose check now passes (incorrect: bug gone;
+            # missed: now detected); an unresolvable check path proves nothing
+            if args.apply and (drift["possibly_fixed"] or drift["now_detected"]):
+                output = _load_output(finding.get("analyzer_type", ""),
+                                      finding.get("repo", repo), finding.get("source_file", ""))
+                for item_type, state in (("incorrect", "possibly_fixed"), ("missed", "now_detected")):
+                    for _, item in checkable_items(finding, item_type):
+                        check = item.get("check")
+                        if not (check and output):
+                            continue
+                        r, resolvable = _evaluate(check, output)
+                        if resolvable and r["passed"]:
+                            item["disposition"] = {"state": state, "by": "refresh_findings",
+                                                   "date": datetime.now(timezone.utc).date().isoformat()}
+                            modified = True
 
         if modified and args.apply:
-            ff.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-            render_md(repo, proj, data)
+            save_findings(repo, proj, data)
 
     if args.json:
         json.dump({
