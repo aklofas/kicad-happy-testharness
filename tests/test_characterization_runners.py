@@ -104,3 +104,22 @@ def test_harness_run_plans_every_step_for_the_selection(monkeypatch):
     assert descs == ["Unit tests", "Analyzer: run_schematic", "Analyzer: run_pcb", "Analyzer: run_gerbers",
                      "SPICE simulations", "EMC analysis", "Assertion checks"]
     assert all(cmd[-2:] == ["--repo", "o/r"] for d, cmd in calls[1:])
+
+
+@pytest.mark.parametrize("flags, recorded", [
+    ([], ["--repo", "o/r", "--jobs", "1", "--full", "--proximity"]),
+    (["--no-proximity"], ["--repo", "o/r", "--jobs", "1", "--full"]),
+    (["--no-full"], ["--repo", "o/r", "--jobs", "1", "--proximity"]),
+    (["--no-full", "--no-proximity"], ["--repo", "o/r", "--jobs", "1"]),
+    (["--full", "--proximity", "--full"], ["--repo", "o/r", "--jobs", "1", "--full", "--proximity"]),
+    (["--resume"], ["--repo", "o/r", "--jobs", "1", "--full", "--proximity"]),
+])
+def test_run_pcb_records_normalized_argv(tmp_path, flags, recorded):
+    prod, data = _product(tmp_path), _data(tmp_path)
+    r = subprocess.run([sys.executable, str(HARNESS / "run" / "run_pcb.py"),
+                        "--repo", "o/r", "--jobs", "1", *flags],
+                       cwd=HARNESS, env=_env(tmp_path, data, prod), capture_output=True,
+                       text=True, timeout=120)
+    assert r.returncode == 0, r.stderr
+    manifest = json.loads((data / "results" / "outputs" / "pcb" / "manifest.json").read_text())
+    assert manifest["argv"] == recorded
