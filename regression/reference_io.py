@@ -80,3 +80,7 @@ def load_set_output(aset):
         return json.loads(output_file.read_text(encoding="utf-8")), None
     except Exception as e:
         return None, f"JSON parse error: {e}"
+
+
+def write_assertion_file(path, data):
+    path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")

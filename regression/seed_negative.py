@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from findings import _iter_findings_files
 from regression.schema_era import stamp_schema_era, CURRENT_SCHEMA_ERA
+from regression.reference_io import write_assertion_file
 from utils import (
     DATA_DIR,
     DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
@@ -150,7 +151,7 @@ def _write_repo_worker(repo, project, assertions):
         "evidence_source": "auto_seeded",
         "assertions": assertions,
     }
-    outfile.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    write_assertion_file(outfile, data)
     return f"{repo}/{project}", 1
 
 

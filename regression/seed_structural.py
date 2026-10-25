@@ -23,6 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from regression.schema_era import stamp_schema_era, CURRENT_SCHEMA_ERA
+from regression.reference_io import write_assertion_file
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
@@ -553,7 +554,7 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                 if existing.get("generated_by") != "seed_structural.py":
                     continue
 
-            out_file.write_text(json.dumps(assertion_data, indent=2) + "\n", encoding="utf-8")
+            write_assertion_file(out_file, assertion_data)
             total_files += 1
             total_assertions += len(assertions)
 

@@ -183,6 +183,11 @@ def iter_versioned_detector_functions(era: str = CURRENT_SCHEMA_ERA,
     return iter(sorted(reg.get("detectors", {}).keys()))
 
 
+def era_payload(era, tagged_by_rule, tagged_at, tagged_reason) -> dict:
+    return {"era": era, "tagged_by_rule": tagged_by_rule,
+            "tagged_at": tagged_at, "tagged_reason": tagged_reason}
+
+
 def stamp_schema_era(
     assertion: dict,
     *,
@@ -227,10 +232,5 @@ def stamp_schema_era(
                                           registry_dir=registry_dir, required=required)
     if tagged_at is None:
         tagged_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    assertion["schema_era"] = {
-        "era": era,
-        "tagged_by_rule": primary,
-        "tagged_at": tagged_at,
-        "tagged_reason": summary,
-    }
+    assertion["schema_era"] = era_payload(era, primary, tagged_at, summary)
     return True

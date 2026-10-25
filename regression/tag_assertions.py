@@ -36,6 +36,7 @@ from regression.schema_era import (
     is_versioned_detector,
     load_versioned_detector_map,
     primary_rule_for_detector,
+    era_payload,
 )
 
 
@@ -155,12 +156,7 @@ def _insert_schema_era(
     Inserts after 'check' key to maintain a stable key order that keeps
     git diffs clean. If 'check' is not present, schema_era is appended.
     """
-    new_era = {
-        "era": era,
-        "tagged_by_rule": tagged_by_rule,
-        "tagged_at": tagged_at,
-        "tagged_reason": tagged_reason,
-    }
+    new_era = era_payload(era, tagged_by_rule, tagged_at, tagged_reason)
     # Rebuild dict preserving all keys, inserting schema_era after 'check'
     result: dict = {}
     inserted = False
