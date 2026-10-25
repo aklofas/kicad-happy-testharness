@@ -23,25 +23,17 @@ import argparse
 import json
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib.batch import map_units
+from run._chained import err_first_line, expand_selection
 from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
-                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
+                   add_repo_filter_args, DEFAULT_JOBS,
                    retire_orphaned_outputs)
-
-
-def _err_first_line(err_file):
-    """First line of the .err file: the 'status: detail' summary."""
-    try:
-        lines = err_file.read_text(encoding="utf-8").strip().splitlines()
-        return lines[0] if lines else "unknown error"
-    except OSError:
-        return "unknown error"
 
 
 def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
@@ -139,14 +131,7 @@ def main():
         sys.exit(1)
 
     # Find schematic outputs
-    repo_list, selection_source = resolve_repos_with_source(
-        args, require_explicit_all=True)
-    if repo_list is not None:
-        inputs = []
-        for rn in repo_list:
-            inputs.extend(find_schematic_outputs(rn))
-    else:
-        inputs = find_schematic_outputs(None)
+    repo_list, inputs = expand_selection(args, find_schematic_outputs)
 
     # Output directory; an EMC output whose schematic output is gone is retired
     emc_out_dir = OUTPUTS_DIR / "emc"
@@ -195,22 +180,9 @@ def main():
                          analyzer=analyzer,
                          compact=args.compact)
 
-    results_list = []
-    if args.jobs <= 1:
-        for i, inp in enumerate(inputs, 1):
-            result = process_fn(inp)
-            results_list.append((i, result))
-    else:
-        with ProcessPoolExecutor(max_workers=args.jobs) as pool:
-            futures = {pool.submit(process_fn, inp): i
-                       for i, inp in enumerate(inputs, 1)}
-            for future in as_completed(futures):
-                i = futures[future]
-                results_list.append((i, future.result()))
+    results = map_units(process_fn, inputs, args.jobs)
 
-    results_list.sort(key=lambda x: x[0])
-
-    for i, (input_json, returncode, summary, output_json, had_pcb, elapsed) in results_list:
+    for i, (input_json, returncode, summary, output_json, had_pcb, elapsed) in enumerate(results, 1):
         rel = f"{input_json.parent.name}/{input_json.name}"
 
         timings.append((f"{input_json.parent.name}/{input_json.name}", elapsed))
@@ -219,13 +191,13 @@ def main():
         if returncode != 0 and returncode is not None:
             errors += 1
             err_file = output_json.with_suffix(".err")
-            err_msg = _err_first_line(err_file)
+            err_msg = err_first_line(err_file)
             print(f"FAIL [{i:4d}] {rel}")
             print(f"           {err_msg}")
             continue
         if summary is None:
             errors += 1
-            print(f"FAIL [{i:4d}] {rel} ({_err_first_line(output_json.with_suffix('.err'))})")
+            print(f"FAIL [{i:4d}] {rel} ({err_first_line(output_json.with_suffix('.err'))})")
             continue
 
         if had_pcb:

@@ -8,16 +8,17 @@ from utils import resolve_repos_with_source
 
 
 def expand_selection(args, finder):
-    """Resolve the repo selection and gather finder(repo) results in order;
-    finder(None) when the selection is every repo."""
+    """Resolve the repo selection; return (repo_list, units) where units
+    gathers finder(repo) results in order, or finder(None) when the selection
+    is every repo (repo_list is then None)."""
     repo_list, _selection_source = resolve_repos_with_source(
         args, require_explicit_all=True)
     if repo_list is not None:
         inputs = []
         for rn in repo_list:
             inputs.extend(finder(rn))
-        return inputs
-    return finder(None)
+        return repo_list, inputs
+    return None, finder(None)
 
 
 def err_first_line(err_file):

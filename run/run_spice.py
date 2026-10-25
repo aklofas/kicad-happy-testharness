@@ -34,17 +34,18 @@ import re
 import subprocess
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.execution import build_env
 from harnesslib.profiles import PROFILES
+from harnesslib.batch import map_units
+from run._chained import err_first_line, expand_selection
 from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
-                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
+                   add_repo_filter_args, DEFAULT_JOBS,
                    retire_orphaned_outputs)
 
 
@@ -61,15 +62,6 @@ def run_extract_parasitics(extractor_script, pcb_json, parasitics_json, env=None
                    Path(parasitics_json), analyzer="parasitics", timeout=30,
                    env=env or build_env(offline=True))
     return res.status == "ok", f"{res.status}: {res.detail}"
-
-
-def _err_first_line(err_file):
-    """First line of the .err file: the 'status: detail' summary."""
-    try:
-        lines = err_file.read_text(encoding="utf-8").strip().splitlines()
-        return lines[0] if lines else "unknown error"
-    except OSError:
-        return "unknown error"
 
 
 def run_one_spice(simulator_script, input_json, output_json, timeout=5,
@@ -246,14 +238,7 @@ def main():
         sys.exit(1)
 
     # Find schematic outputs
-    repo_list, selection_source = resolve_repos_with_source(
-        args, require_explicit_all=True)
-    if repo_list is not None:
-        inputs = []
-        for rn in repo_list:
-            inputs.extend(find_schematic_outputs(rn))
-    else:
-        inputs = find_schematic_outputs(None)
+    repo_list, inputs = expand_selection(args, find_schematic_outputs)
 
     # Output directory; a SPICE output whose schematic output is gone is retired
     if args.with_parasitics:
@@ -316,23 +301,9 @@ def main():
         outer_timeout=args.outer_timeout,
     )
 
-    results_list = []
-    if args.jobs <= 1:
-        for i, inp in enumerate(inputs, 1):
-            result = worker(inp)
-            results_list.append((i, result))
-    else:
-        with ProcessPoolExecutor(max_workers=args.jobs) as pool:
-            futures = {pool.submit(worker, inp): i
-                       for i, inp in enumerate(inputs, 1)}
-            for future in as_completed(futures):
-                i = futures[future]
-                results_list.append((i, future.result()))
+    results = map_units(worker, inputs, args.jobs)
 
-    # Sort by index for ordered output
-    results_list.sort(key=lambda x: x[0])
-
-    for i, (input_json, returncode, summary, output_json, elapsed, did_extract) in results_list:
+    for i, (input_json, returncode, summary, output_json, elapsed, did_extract) in enumerate(results, 1):
         if did_extract:
             parasitics_extracted += 1
         rel = f"{input_json.parent.name}/{input_json.name}"
@@ -343,7 +314,7 @@ def main():
         if returncode != 0 or summary is None:
             errors += 1
             err_file = output_json.with_suffix(".err")
-            err_msg = _err_first_line(err_file)
+            err_msg = err_first_line(err_file)
             print(f"FAIL [{i:4d}] {rel}")
             print(f"           {err_msg}")
             continue

@@ -26,16 +26,17 @@ import argparse
 import json
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.profiles import PROFILES
+from harnesslib.batch import map_units
+from run._chained import err_first_line, expand_selection
 from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
-                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
+                   add_repo_filter_args, DEFAULT_JOBS,
                    retire_orphaned_outputs)
 
 # TH-055: the cap comes from the declared standard profile.
@@ -74,15 +75,6 @@ def find_thermal_pairs(repo_filter=None):
             seen.add(key)
             pairs.append((sch_json, pcb_json))
     return pairs
-
-
-def _err_first_line(err_file):
-    """First line of the .err file: the 'status: detail' summary."""
-    try:
-        lines = err_file.read_text(encoding="utf-8").strip().splitlines()
-        return lines[0] if lines else "unknown error"
-    except OSError:
-        return "unknown error"
 
 
 def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
@@ -158,14 +150,7 @@ def main():
         sys.exit(1)
 
     # Find matching pairs
-    repo_list, selection_source = resolve_repos_with_source(
-        args, require_explicit_all=True)
-    if repo_list is not None:
-        pairs = []
-        for rn in repo_list:
-            pairs.extend(find_thermal_pairs(rn))
-    else:
-        pairs = find_thermal_pairs(None)
+    repo_list, pairs = expand_selection(args, find_thermal_pairs)
 
     # Output directory
     thermal_out_dir = OUTPUTS_DIR / "thermal"
@@ -207,22 +192,9 @@ def main():
                          timeout=args.timeout,
                          analyzer=analyzer)
 
-    results_list = []
-    if args.jobs <= 1:
-        for i, (sch_json, pcb_json) in enumerate(pairs, 1):
-            result = process_fn(sch_json, pcb_json)
-            results_list.append((i, result))
-    else:
-        with ProcessPoolExecutor(max_workers=args.jobs) as pool:
-            futures = {pool.submit(process_fn, sch, pcb): i
-                       for i, (sch, pcb) in enumerate(pairs, 1)}
-            for future in as_completed(futures):
-                i = futures[future]
-                results_list.append((i, future.result()))
+    results = map_units(process_fn, pairs, args.jobs, unpack=True)
 
-    results_list.sort(key=lambda x: x[0])
-
-    for i, (input_json, returncode, summary, output_json, elapsed) in results_list:
+    for i, (input_json, returncode, summary, output_json, elapsed) in enumerate(results, 1):
         rel = f"{input_json.parent.name}/{input_json.name}"
 
         timings.append((rel, elapsed))
@@ -231,13 +203,13 @@ def main():
         if returncode != 0 and returncode is not None:
             errors += 1
             err_file = output_json.with_suffix(".err")
-            err_msg = _err_first_line(err_file)
+            err_msg = err_first_line(err_file)
             print(f"FAIL [{i:4d}] {rel}")
             print(f"           {err_msg}")
             continue
         if summary is None:
             errors += 1
-            print(f"FAIL [{i:4d}] {rel} ({_err_first_line(output_json.with_suffix('.err'))})")
+            print(f"FAIL [{i:4d}] {rel} ({err_first_line(output_json.with_suffix('.err'))})")
             continue
 
         tc = summary.get("total_checks", 0)

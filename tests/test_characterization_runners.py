@@ -107,6 +107,17 @@ def test_chained_emc_happy_path(tmp_path):
     assert agg["total_files"] == 1 and agg["errors"] == 0 and agg["retired"] == 0
 
 
+def test_chained_emc_empty_selection(tmp_path):
+    prod, data = _product(tmp_path), tmp_path / "data"
+    (data / "results" / "outputs" / "schematic").mkdir(parents=True)
+    r = subprocess.run([sys.executable, str(HARNESS / "run" / "run_emc.py"), "--repo", "o/r", "--jobs", "2"],
+                       cwd=HARNESS, env=_env(tmp_path, data, prod), capture_output=True, text=True,
+                       timeout=120)
+    assert r.returncode == 1, r.stdout + r.stderr
+    assert "No schematic outputs found for specified repos" in r.stderr
+    assert not (data / "results" / "outputs" / "emc" / "_aggregate.json").exists()
+
+
 def test_harness_run_plans_every_step_for_the_selection(monkeypatch):
     sys.path.insert(0, str(HARNESS))
     import harness
