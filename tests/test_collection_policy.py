@@ -156,3 +156,16 @@ def test_corpus_paths_require_marker():
             continue
         offenders += [f"{rel}::{name}" for name in _corpus_offenders(ast.parse(text), text)]
     assert not offenders, f"corpus-reading tests without @pytest.mark.corpus or allowlist entry: {offenders}"
+
+
+def test_pytest_floor_reads_strict_markers_from_ini(tmp_path):
+    """requirements-dev pins pytest>=9.0: older pytest ignores `strict_markers` in pytest.ini,
+    so a typo'd marker would silently select nothing."""
+    req = (HARNESS / "requirements-dev.txt").read_text()
+    assert "pytest>=9.0" in req.split()
+    (tmp_path / "pytest.ini").write_text((HARNESS / "pytest.ini").read_text())
+    (tmp_path / "test_typo.py").write_text("import pytest\n\n@pytest.mark.unitt\ndef test_x():\n    pass\n")
+    proc = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
+                           str(tmp_path / "test_typo.py")], cwd=tmp_path, capture_output=True,
+                          text=True, timeout=120)
+    assert proc.returncode != 0 and "unitt" in proc.stdout + proc.stderr
