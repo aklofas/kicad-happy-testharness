@@ -39,7 +39,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (
-    DEFAULT_JOBS, OUTPUTS_DIR, REPOS_DIR, add_repo_filter_args,
+    DATA_ROOT, DEFAULT_JOBS, OUTPUTS_DIR, REPOS_DIR, add_repo_filter_args,
     resolve_kicad_happy_dir, resolve_repos,
 )
 
@@ -99,8 +99,10 @@ def download_datasheets(repo_name, sync_script, dry_run=False, delay=0.3,
     total_failed = 0
     sync_errors = []
 
-    # Use a shared output dir so the index.json deduplicates across schematics
-    out_dir = repo_dir / "datasheets"
+    # Use a shared output dir so the index.json deduplicates across schematics. It is
+    # harness-owned, never the clone: the sync reads and renames entries named by any
+    # manifest it finds in its output dir, and a clone's committed one is untrusted.
+    out_dir = datasheets_dir_for(repo_name)
 
     for input_file in json_files:
         cmd = [sys.executable, str(sync_script), str(input_file),
@@ -131,8 +133,13 @@ def download_datasheets(repo_name, sync_script, dry_run=False, delay=0.3,
     return total_downloaded, total_failed, sync_errors
 
 
-def validate_extractions(repo_dir):
-    """Validate existing extractions for a repo.
+def datasheets_dir_for(repo_name):
+    """The harness-owned download directory of a repo: results/datasheets/<owner>/<repo>."""
+    return DATA_ROOT / "results" / "datasheets" / repo_name
+
+
+def validate_extractions(repo_name):
+    """Validate existing extractions for a repo (in its harness download directory).
 
     Returns a report dict with scores, staleness, and coverage info.
     """
@@ -141,12 +148,12 @@ def validate_extractions(repo_dir):
     )
     from datasheet_score import score_extraction
 
-    datasheets_dir = repo_dir / "datasheets"
+    datasheets_dir = datasheets_dir_for(repo_name)
     extract_dir = datasheets_dir / "extracted"
     index_path = datasheets_dir / "index.json"
 
     report = {
-        "repo": repo_dir.name,
+        "repo": repo_name,
         "total_parts": 0,
         "downloaded": 0,
         "download_failed": 0,
@@ -214,11 +221,11 @@ def validate_extractions(repo_dir):
     return report
 
 
-def _register_repo_pdfs_in_datasheet_db(repo_name, repo_dir):
-    """Register newly-downloaded PDFs from repo_dir/datasheets/ into datasheet_db
-    as a side effect of the download phase.
+def _register_repo_pdfs_in_datasheet_db(repo_name):
+    """Register newly-downloaded PDFs from the repo's harness download directory into
+    datasheet_db as a side effect of the download phase.
 
-    Walks the repo's `datasheets/` subdirectory, computes SHA256 for each PDF,
+    Walks results/datasheets/<owner>/<repo>/, computes SHA256 for each PDF,
     and either creates a new datasheet_db record (with `found_in` pointing at
     the repo path) or merges into an existing record with dedup. The primary
     MPN is inferred from the filename stem.
@@ -240,7 +247,7 @@ def _register_repo_pdfs_in_datasheet_db(repo_name, repo_dir):
     except ImportError:
         return 0, 0
 
-    datasheets_dir = repo_dir / "datasheets"
+    datasheets_dir = datasheets_dir_for(repo_name)
     if not datasheets_dir.exists():
         return 0, 0
 
@@ -340,16 +347,14 @@ def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
         # Errors are swallowed — the main download flow is authoritative.
         if not dry_run:
             try:
-                ingested, merged_count = _register_repo_pdfs_in_datasheet_db(
-                    repo_name, repo_dir
-                )
+                ingested, merged_count = _register_repo_pdfs_in_datasheet_db(repo_name)
                 result["db_ingested"] = ingested
                 result["db_merged"] = merged_count
             except Exception:
                 pass
 
     if not download_only:
-        report = validate_extractions(repo_dir)
+        report = validate_extractions(repo_name)
         if report:
             result["report"] = report
             repo_out = ds_out_dir / repo_name

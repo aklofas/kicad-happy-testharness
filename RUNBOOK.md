@@ -2015,8 +2015,12 @@ python3 run/run_datasheets.py --repo {repo} --download-only
 ```
 
 This uses the DigiKey API to download PDFs for all ICs found in schematic outputs.
-PDFs are stored in `repos/{repo}/datasheets/` (git-ignored). The downloader is
-idempotent — re-running skips already-downloaded files.
+PDFs, the sync's `manifest.json`/`index.json` and the `extracted/` cache live in the
+harness-owned `results/datasheets/{owner}/{repo}/` (git-ignored), never in the clone: the
+sync reads and renames entries named by a manifest in its output directory, and a clone's
+committed `datasheets/manifest.json` is untrusted. Downloads made before 2026-10-25 under
+`repos/{repo}/datasheets/` are no longer read. The downloader is idempotent — re-running
+skips already-downloaded files.
 
 For bulk downloading across multiple repos:
 ```bash
@@ -2030,7 +2034,8 @@ kicad skill session. This is NOT automated in batch because it requires LLM infe
 (a Claude Code session, not API calls).
 
 When the kicad skill reviews a project, it reads datasheets and caches extractions in
-`datasheets/extracted/`. Extraction coverage grows incrementally over time as projects
+`datasheets/extracted/`; for a corpus repo, point the session at
+`results/datasheets/{owner}/{repo}/` so 18d finds them in `extracted/` there. Extraction coverage grows incrementally over time as projects
 are reviewed in Claude Code sessions.
 
 **Do not attempt to automate this step** — it requires interactive Claude sessions.
