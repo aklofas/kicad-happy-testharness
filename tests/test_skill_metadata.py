@@ -11,11 +11,9 @@ import os
 import re
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
-KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR",
-    str(Path(__file__).resolve().parent.parent.parent / "kicad-happy"),
-)
+KICAD_HAPPY = str(PRODUCT_ROOT)
 SKILLS_DIR = os.path.join(KICAD_HAPPY, "skills")
 
 CODEX_DESCRIPTION_LIMIT = 1024

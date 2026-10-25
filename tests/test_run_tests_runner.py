@@ -12,9 +12,9 @@ import pytest
 HARNESS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS))
 import run_tests  # noqa: E402
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
-ENV = {**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
-    "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))}
+ENV = {**os.environ, "KICAD_HAPPY_DIR": str(PRODUCT_ROOT)}
 
 
 class _Args:

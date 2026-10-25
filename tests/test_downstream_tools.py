@@ -8,12 +8,10 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
-KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR",
-    str(HARNESS_DIR.parent / "kicad-happy"),
-)
+KICAD_HAPPY = str(PRODUCT_ROOT)
 FORMAT_REPORT = os.path.join(KICAD_HAPPY, "action", "format-report.py")
 FAB_GATE = os.path.join(KICAD_HAPPY, "skills", "kicad", "scripts", "fab_release_gate.py")
 SUMMARIZE = os.path.join(KICAD_HAPPY, "skills", "kicad", "scripts", "summarize_findings.py")

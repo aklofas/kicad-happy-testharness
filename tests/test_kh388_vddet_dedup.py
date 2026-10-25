@@ -13,7 +13,6 @@ two duplicate entries in the output.
 TIER = "unit"
 
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -22,14 +21,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fixtures._build_sch import Schematic, pin1, pin2, ic_pin_pos
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
 
 def run_analyzer(sch):
     """Build schematic, run analyzer, return parsed JSON or None."""
-    kh_dir = os.environ.get("KICAD_HAPPY_DIR",
-                str(HARNESS_DIR.parent / "kicad-happy"))
+    kh_dir = str(PRODUCT_ROOT)
     script = Path(kh_dir) / "skills" / "kicad" / "scripts" / "analyze_schematic.py"
     if not script.exists():
         return None

@@ -27,13 +27,13 @@ by-design, not a bug this fix introduces.
 TIER = "unit"
 
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = Path(os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy")))
+_KH = Path(str(PRODUCT_ROOT))
 BOM_MANAGER = _KH / "skills/bom/scripts/bom_manager.py"
 FIXTURE = _HARNESS / "tests/fixtures/kh414/mpn_pn_fields.kicad_sch"
 _CACHE = {}

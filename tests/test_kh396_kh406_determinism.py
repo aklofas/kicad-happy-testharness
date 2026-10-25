@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 try:
     import pytest
@@ -31,7 +32,7 @@ except ImportError:  # run_tests.py runs this file under bare python3 (no pytest
             raise SystemExit(0)
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
+_KH = str(PRODUCT_ROOT)
 SCH = os.path.join(_KH, "skills", "kicad", "scripts", "analyze_schematic.py")
 FIX = _HARNESS / "tests" / "fixtures" / "determinism" / "usb_dual_esd.kicad_sch"
 HACKRF = _HARNESS / "repos" / "greatscottgadgets" / "hackrf" / "hardware" / "hackrf-one" / "hackrf-one.kicad_sch"

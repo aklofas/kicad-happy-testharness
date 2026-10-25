@@ -3,7 +3,6 @@
 TIER = "unit"
 
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -12,6 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fixtures._build_sch import Schematic, pin1, pin2, ic_pin_pos, _PIN_OFFSET
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 
 def test_empty_schematic_is_valid_sexp():
@@ -139,8 +139,7 @@ def test_analyzer_accepts_output():
     )
     with tempfile.TemporaryDirectory() as tmp:
         path = sch.write(str(Path(tmp) / "test.kicad_sch"))
-        kh_dir = os.environ.get("KICAD_HAPPY_DIR",
-                    str(Path(__file__).resolve().parent.parent.parent / "kicad-happy"))
+        kh_dir = str(PRODUCT_ROOT)
         script = Path(kh_dir) / "skills" / "kicad" / "scripts" / "analyze_schematic.py"
         if not script.exists():
             return  # skip if kicad-happy not available

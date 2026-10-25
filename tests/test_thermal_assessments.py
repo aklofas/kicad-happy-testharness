@@ -37,6 +37,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs" / "thermal"
@@ -44,7 +45,7 @@ OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs" / "thermal"
 CURRENT_SCHEMA_VERSION = "1.4.0"
 ASSESSMENT_RULE_IDS = {"TH-DET"}  # widen as new assessment-emitting detectors land
 
-_KH = os.environ.get("KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy"))
+_KH = str(PRODUCT_ROOT)
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 from analyze_thermal import _thermal_confidence  # noqa: E402

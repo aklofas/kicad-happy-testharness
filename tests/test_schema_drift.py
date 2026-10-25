@@ -61,12 +61,10 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
-KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR",
-    str(HARNESS_DIR.parent / "kicad-happy"),
-)
+KICAD_HAPPY = str(PRODUCT_ROOT)
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
 
 

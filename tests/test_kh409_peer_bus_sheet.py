@@ -55,13 +55,13 @@ below covers this.
 TIER = "unit"
 
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = Path(os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy")))
+_KH = Path(str(PRODUCT_ROOT))
 SCH = _KH / "skills/kicad/scripts/analyze_schematic.py"
 FIXTURE = _HARNESS / "tests/fixtures/kh409-altium-bus/page1.kicad_sch"
 _CACHE = {}

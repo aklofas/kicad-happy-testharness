@@ -19,7 +19,6 @@ from __future__ import annotations
 TIER = "unit"
 
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -29,9 +28,9 @@ import pytest
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 sys.path.insert(0, str(HARNESS_DIR / "tests"))
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
-KH_DIR = Path(os.environ.get(
-    "KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy")))
+KH_DIR = Path(str(PRODUCT_ROOT))
 KH_PYTHON = KH_DIR / ".venv" / "bin" / "python"
 
 REVIEW_SCRIPTS_DIR = KH_DIR / "skills" / "kicad" / "review" / "scripts"

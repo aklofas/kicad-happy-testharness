@@ -10,15 +10,15 @@ TIER = "unit"
 
 import io
 import json
-import os
 import subprocess
 import sys
 import tempfile
 from contextlib import redirect_stderr
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = Path(os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy")))
+_KH = Path(str(PRODUCT_ROOT))
 sys.path.insert(0, str(_KH / "skills" / "kicad" / "scripts"))
 
 import capability_mode

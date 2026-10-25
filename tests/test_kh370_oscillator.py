@@ -18,7 +18,6 @@ oscillator; U2 = generic MCU sharing the I2C bus via local labels.
 TIER = "unit"
 
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -50,6 +49,7 @@ except ImportError:  # pre-push hook runs root tests under bare python3 (no
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fixtures._build_sch import Schematic, ic_pin_pos
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
@@ -75,8 +75,7 @@ MCU_PINS = [
 
 def run_analyzer(sch):
     """Build schematic, run analyzer, return parsed JSON or None."""
-    kh_dir = os.environ.get("KICAD_HAPPY_DIR",
-                str(HARNESS_DIR.parent / "kicad-happy"))
+    kh_dir = str(PRODUCT_ROOT)
     script = Path(kh_dir) / "skills" / "kicad" / "scripts" / "analyze_schematic.py"
     if not script.exists():
         return None

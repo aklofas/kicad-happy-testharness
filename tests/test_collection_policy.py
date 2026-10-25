@@ -7,14 +7,14 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS = Path(__file__).resolve().parent.parent
 TREE = HARNESS / "tests" / "fixtures" / "h0" / "plan1" / "sample_tree"
 
 
 def _collect(*extra, quiet=True):
-    env = {**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
-        "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))}
+    env = {**os.environ, "KICAD_HAPPY_DIR": str(PRODUCT_ROOT)}
     proc = subprocess.run(
         [sys.executable, "-m", "pytest", "--collect-only", *(["-q"] if quiet else []),
          "-p", "no:cacheprovider", str(TREE), *extra],
@@ -60,8 +60,7 @@ def test_unknown_marker_is_rejected():
         proc = subprocess.run([sys.executable, "-m", "pytest", "--collect-only", "-q",
                                "-p", "no:cacheprovider", str(bad)],
                               capture_output=True, text=True, cwd=HARNESS,
-                              env={**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
-                                  "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))})
+                              env={**os.environ, "KICAD_HAPPY_DIR": str(PRODUCT_ROOT)})
         assert proc.returncode != 0
         assert "'uint' not found in `markers`" in proc.stdout + proc.stderr
     finally:
@@ -78,8 +77,7 @@ def test_script_style_integration_file_is_ignored():
         [sys.executable, "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider",
          "integration/"],
         capture_output=True, text=True, cwd=HARNESS,
-        env={**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
-            "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))})
+        env={**os.environ, "KICAD_HAPPY_DIR": str(PRODUCT_ROOT)})
     assert proc.returncode in (0, 5), proc.stdout + proc.stderr
     assert "INTERNALERROR" not in proc.stdout + proc.stderr
 
@@ -90,8 +88,7 @@ def _run_skip_tree(tmp_path, known):
     allow = tmp_path / "known_skips.json"
     allow.write_text(json.dumps(known))
     env = {**os.environ, "HARNESS_KNOWN_SKIPS": str(allow),
-           "KICAD_HAPPY_DIR": os.environ.get("KICAD_HAPPY_DIR",
-                                             str(Path.home() / "Projects" / "kicad-happy"))}
+           "KICAD_HAPPY_DIR": str(PRODUCT_ROOT)}
     return subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(tree)],
                           capture_output=True, text=True, cwd=HARNESS, env=env)
 
@@ -229,3 +226,15 @@ def test_corpus_audit_resolves_module_level_names():
         "def test_clean(tmp_path):\n    assert tmp_path\n"
     )
     assert sorted(_corpus_offenders(ast.parse(src), src)) == ["test_direct", "test_via_helper"]
+
+
+_PRODUCT_FALLBACK = re.compile(r'os\.environ\.get\(\s*"KICAD_HAPPY_DIR"\s*,')
+
+
+def test_product_root_comes_from_tests_product_root_only():
+    """ruling R16 (code A6-F6): a test resolves the product through tests.product_root, never a
+    silent sibling or ~/Projects fallback of its own."""
+    offenders = sorted(str(f.relative_to(HARNESS)) for f in (HARNESS / "tests").rglob("*.py")
+                       if f.name != "product_root.py"
+                       and _PRODUCT_FALLBACK.search(f.read_text(encoding="utf-8")))
+    assert not offenders, offenders

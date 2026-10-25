@@ -20,6 +20,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 LIVE_REPOS_DIR = HARNESS_DIR / "repos"
@@ -52,8 +53,7 @@ def _env(root):
 
 
 def _skip_if_no_kh():
-    kh = os.environ.get(
-        "KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy"))
+    kh = str(PRODUCT_ROOT)
     return not (Path(kh) / "skills" / "kicad" / "scripts"
                 / "analyze_schematic.py").exists()
 

@@ -8,6 +8,7 @@ from pathlib import Path
 HARNESS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS))
 from tools.test_manifest import compare_legacy  # noqa: E402
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 
 def test_compare_legacy_rows():
@@ -30,8 +31,7 @@ def test_compare_legacy_rows():
 
 def test_cli_writes_manifest(tmp_path):
     out = tmp_path / "m.json"
-    env = {**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
-        "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))}
+    env = {**os.environ, "KICAD_HAPPY_DIR": str(PRODUCT_ROOT)}
     proc = subprocess.run([sys.executable, "tools/test_manifest.py", "--out", str(out),
                            "--paths", "tests/fixtures/h0/plan1/sample_tree", "--all-tiers"],
                           capture_output=True, text=True, cwd=HARNESS, env=env)
@@ -46,8 +46,7 @@ SAMPLE = "tests/fixtures/h0/plan1/sample_tree"
 
 def _manifest_cli(tmp_path, *flags):
     out = tmp_path / "m.json"
-    env = {**os.environ, "KICAD_HAPPY_DIR": os.environ.get(
-        "KICAD_HAPPY_DIR", str(Path.home() / "Projects" / "kicad-happy"))}
+    env = {**os.environ, "KICAD_HAPPY_DIR": str(PRODUCT_ROOT)}
     proc = subprocess.run([sys.executable, "tools/test_manifest.py", "--out", str(out),
                            "--paths", SAMPLE, *flags],
                           capture_output=True, text=True, cwd=HARNESS, env=env)

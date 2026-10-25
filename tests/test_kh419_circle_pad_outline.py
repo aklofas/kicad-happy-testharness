@@ -26,13 +26,13 @@ except ImportError:  # run_tests.py runs this file under bare python3 (no pytest
 
 import json
 import math
-import os
 import subprocess
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = Path(os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy")))
+_KH = Path(str(PRODUCT_ROOT))
 sys.path.insert(0, str(_KH / "skills" / "kicad" / "scripts"))
 PCB = _KH / "skills/kicad/scripts/analyze_pcb.py"
 FIXTURE = _HARNESS / "tests/fixtures/kh419/circle_touch_pad.kicad_pcb"

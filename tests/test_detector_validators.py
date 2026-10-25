@@ -10,15 +10,14 @@ each detector's logic without invoking the schematic parser.
 
 TIER = "unit"
 
-import os
 import sys
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR / "tests"))
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
-_KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy"))
+_KICAD_HAPPY = str(PRODUCT_ROOT)
 _SCRIPTS = Path(_KICAD_HAPPY) / "skills" / "kicad" / "scripts"
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))

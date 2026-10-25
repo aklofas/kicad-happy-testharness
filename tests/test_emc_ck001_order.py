@@ -17,11 +17,12 @@ import tempfile
 from pathlib import Path
 
 import pytest
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 pytestmark = pytest.mark.corpus
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
+_KH = str(PRODUCT_ROOT)
 ANALYZE_EMC = os.path.join(_KH, "skills", "emc", "scripts", "analyze_emc.py")
 
 # Corpus outputs of greatscottgadgets/hackrf hackrf-one (the 13 MB schematic

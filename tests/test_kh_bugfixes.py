@@ -14,9 +14,10 @@ import sys
 import pytest
 from collections import Counter
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
+_KH = str(PRODUCT_ROOT)
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 RESULTS = _HARNESS / "results" / "outputs" / "schematic"

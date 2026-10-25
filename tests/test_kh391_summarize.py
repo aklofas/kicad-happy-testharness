@@ -10,14 +10,14 @@ Tests that deep-review findings are rendered honestly:
 """
 
 import json
-import os
 import sys
 import tempfile
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 # Bridge path to main repo
 HARNESS_ROOT = Path(__file__).resolve().parents[2]
-MAIN_REPO_ROOT = Path(os.environ.get("KICAD_HAPPY_DIR", str(HARNESS_ROOT.parent / "kicad-happy"))).resolve()
+MAIN_REPO_ROOT = Path(str(PRODUCT_ROOT)).resolve()
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
 
 from summarize_findings import main as summarize_main

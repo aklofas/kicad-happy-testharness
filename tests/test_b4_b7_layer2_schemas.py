@@ -21,14 +21,13 @@ from __future__ import annotations
 TIER = "unit"
 
 import json
-import os
 import sys
 from pathlib import Path
 import pytest
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
-KH_DIR = Path(os.environ.get(
-    "KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy")))
+KH_DIR = Path(str(PRODUCT_ROOT))
 
 REVIEW_SCHEMA_DIR = KH_DIR / "skills" / "kicad" / "review" / "schemas"
 REVIEW_FIXTURE_DIR = KH_DIR / "skills" / "kicad" / "review" / "fixtures"

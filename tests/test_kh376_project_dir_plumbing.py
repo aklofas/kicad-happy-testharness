@@ -40,9 +40,10 @@ import tempfile
 import json
 from pathlib import Path
 from unittest import mock
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
+_KH = str(PRODUCT_ROOT)
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 sys.path.insert(0, os.path.join(_KH, "skills", "datasheets", "scripts"))
 sys.path.insert(0, os.path.join(_KH, "skills", "emc", "scripts"))

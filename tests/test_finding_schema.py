@@ -8,12 +8,10 @@ from pathlib import Path
 
 # Harness root
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 # kicad-happy scripts directory
-KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR",
-    str(Path(__file__).resolve().parent.parent.parent / "kicad-happy"),
-)
+KICAD_HAPPY = str(PRODUCT_ROOT)
 SCRIPTS_DIR = os.path.join(KICAD_HAPPY, "skills", "kicad", "scripts")
 sys.path.insert(0, SCRIPTS_DIR)
 

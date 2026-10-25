@@ -5,16 +5,16 @@ one, a field no output carries any more is a failure, never a silent pass.
 """
 
 import json
-import os
 import sys
 from pathlib import Path
 
 import pytest
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 pytestmark = pytest.mark.corpus
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
+_KH = str(PRODUCT_ROOT)
 
 sys.path.insert(0, str(_HARNESS))
 

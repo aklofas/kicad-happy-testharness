@@ -11,9 +11,10 @@ TIER = "unit"
 import os
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 _HARNESS = Path(__file__).resolve().parent.parent
-_KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
+_KH = str(PRODUCT_ROOT)
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 from kicad_core.netnames import is_ground_name, is_power_net_name  # noqa: E402

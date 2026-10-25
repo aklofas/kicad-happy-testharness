@@ -20,15 +20,12 @@ Usage:
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 # Add kicad-happy scripts dir so `from kicad_types import build_analysis_context` works.
-_KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR",
-    str(Path(__file__).resolve().parent.parent.parent.parent / "kicad-happy"),
-)
+_KICAD_HAPPY = str(PRODUCT_ROOT)
 _SCRIPTS = Path(_KICAD_HAPPY) / "skills" / "kicad" / "scripts"
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))

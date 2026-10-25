@@ -32,18 +32,17 @@ except ImportError:  # run_tests.py runs this file under bare python3 (no pytest
             raise SystemExit(0)
 
 import json
-import os
 import re
 import subprocess
 import sys
 from pathlib import Path
+from tests.product_root import PRODUCT_ROOT  # noqa: E402
 
 pytestmark = pytest.mark.corpus  # every test reads repos/ fixtures
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 REPOS_DIR = HARNESS_DIR / "repos"
-_KICAD_HAPPY = os.environ.get(
-    "KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy"))
+_KICAD_HAPPY = str(PRODUCT_ROOT)
 _SCRIPTS = Path(_KICAD_HAPPY) / "skills" / "kicad" / "scripts"
 
 # File-format version strings that identify KiCad 10.0 output.
