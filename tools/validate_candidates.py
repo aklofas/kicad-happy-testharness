@@ -93,6 +93,7 @@ def _shallow_clone(url, dest, timeout=60):
         subprocess.run(
             ["git", "clone", "--quiet", "--depth", "1", url, str(dest)],
             capture_output=True, text=True, timeout=timeout, check=True,
+            env={**os.environ, "GIT_LFS_SKIP_SMUDGE": "1"},   # no repo-chosen LFS endpoint
         )
         return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):

@@ -19,6 +19,7 @@ Usage:
 import argparse
 import fnmatch
 import json
+import os
 import re
 import subprocess
 import sys
@@ -115,14 +116,28 @@ def pin_hash_in_repos_md(url: str, full_hash: str):
         return
 
 
+# Corpus clones are attacker-shaped: a repo can bloat its default-branch tip or name its own
+# git-lfs endpoint in .lfsconfig. Skip LFS smudging (the analyzers never read LFS objects)
+# and bound every network git call.
+CLONE_TIMEOUT_S = 600
+
+
+def corpus_git_env():
+    return {**os.environ, "GIT_LFS_SKIP_SMUDGE": "1"}
+
+
 def clone_repo(url: str, dest: Path) -> bool:
     """Shallow-clone a git repo (--depth 1). Returns True on success."""
     cmd = ["git", "clone", "--quiet", "--depth", "1", url, str(dest)]
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, capture_output=True, text=True,
+                       timeout=CLONE_TIMEOUT_S, env=corpus_git_env())
         return True
     except subprocess.CalledProcessError as e:
         print(f" FAILED: {e.stderr.strip()}")
+        return False
+    except subprocess.TimeoutExpired:
+        print(f" FAILED: clone timed out after {CLONE_TIMEOUT_S}s")
         return False
 
 
@@ -137,13 +152,15 @@ def checkout_hash(repo_dir: Path, commit_hash: str) -> bool:
         subprocess.run(
             ["git", "fetch", "--quiet", "--depth", "1", "origin", commit_hash],
             cwd=str(repo_dir), check=True, capture_output=True, text=True,
+            timeout=CLONE_TIMEOUT_S, env=corpus_git_env(),
         )
         subprocess.run(
             ["git", "checkout", "--quiet", commit_hash],
             cwd=str(repo_dir), check=True, capture_output=True, text=True,
+            timeout=CLONE_TIMEOUT_S, env=corpus_git_env(),
         )
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return False
 
 

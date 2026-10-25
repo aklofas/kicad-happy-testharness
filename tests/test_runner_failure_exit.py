@@ -91,3 +91,17 @@ def test_run_datasheets_without_selection_exits_2(tmp_path):
                        cwd=HARNESS, env=dict(os.environ, KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(tmp_path)),
                        capture_output=True, text=True, timeout=60)
     assert r.returncode == 2 and "--all" in r.stderr
+
+
+def test_corpus_clones_skip_lfs_and_are_bounded(monkeypatch):
+    """sec A1-F5: clones ran with the global git-lfs smudge filter and no timeout."""
+    import subprocess
+    import checkout
+    seen = []
+    monkeypatch.setattr(checkout.subprocess, "run",
+                        lambda cmd, **kw: seen.append(kw) or subprocess.CompletedProcess(cmd, 0))
+    checkout.clone_repo("https://github.com/o/r", Path("/nonexistent/x"))
+    checkout.checkout_hash(Path("/nonexistent/x"), "f" * 40)
+    assert len(seen) == 3
+    for kw in seen:
+        assert kw["env"]["GIT_LFS_SKIP_SMUDGE"] == "1" and kw["timeout"] == checkout.CLONE_TIMEOUT_S
