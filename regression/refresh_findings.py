@@ -32,18 +32,21 @@ def analyze_finding_drift(finding):
     possibly_fixed, regressions, now_detected, details}.
     """
     results = validate_finding(finding)
+    # A sentinel (item_type None) says nothing was checked; it is not an item.
+    sentinel = next((cat for cat, item_type, _ in results if item_type is None), None)
+    if sentinel:
+        results = []
 
     total = len(results)
     possibly_fixed = sum(1 for cat, _, _ in results if cat == "possibly_fixed")
     regressions = sum(1 for cat, _, _ in results if cat == "regression")
     now_detected = sum(1 for cat, _, _ in results if cat == "now_detected")
-    no_output = sum(1 for cat, _, _ in results if cat == "no_output")
     ok = sum(1 for cat, _, _ in results if cat == "ok")
 
     drifted = possibly_fixed + regressions + now_detected
 
-    if no_output:
-        status = "no_output"
+    if sentinel:
+        status = sentinel
     elif total == 0:
         status = "no_checkable_items"
     elif drifted > total * 0.5:
@@ -98,6 +101,7 @@ def main():
     all_regressions = 0
     all_now_detected = 0
     no_output_count = 0
+    no_checkable_count = 0
 
     for repo, proj, ff in _iter_findings_files(args.repo):
         try:
@@ -119,6 +123,8 @@ def main():
             all_now_detected += drift["now_detected"]
             if drift["status"] == "no_output":
                 no_output_count += 1
+            elif drift["status"] == "no_checkable_items":
+                no_checkable_count += 1
 
             if drift["status"] in ("needs_re_review", "partially_drifted"):
                 stale_findings.append({
@@ -166,6 +172,7 @@ def main():
             "regressions": all_regressions,
             "now_detected": all_now_detected,
             "no_output": no_output_count,
+            "no_checkable_items": no_checkable_count,
         }, sys.stdout, indent=2)
         print()
         return
@@ -179,6 +186,7 @@ def main():
     print(f"  Regressions detected: {all_regressions}")
     print(f"  Newly detected: {all_now_detected}")
     print(f"  No output found: {no_output_count}")
+    print(f"  No checkable items: {no_checkable_count}")
 
     if stale_findings:
         print(f"\nStale findings:")

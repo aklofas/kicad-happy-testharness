@@ -65,6 +65,17 @@ def test_drift_reports_unresolvable_and_skips_dispositioned(tmp_path):
     assert out["counts"]["possibly_fixed"] == 0 and out["counts"]["unresolvable"] == 1
 
 
+def test_refresh_reports_no_checkable_items(tmp_path):
+    ff = _tree(tmp_path, [GONE])
+    data = json.loads(ff.read_text())
+    for item in data["findings"][0]["incorrect"]:
+        del item["analyzer_section"]
+    ff.write_text(json.dumps(data))
+    out = json.loads(_run(tmp_path, "regression/refresh_findings.py", "--json"))
+    assert out["no_checkable_items"] == 1 and out["no_output"] == 0
+    assert out["stale"] == 0
+
+
 FIXTURE = HARNESS / "tests" / "fixtures" / "wave10"
 
 

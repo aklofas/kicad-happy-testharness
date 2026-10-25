@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-090: `refresh_findings.py` reported findings with no checkable items as current
+
+**Severity:** LOW (the review-refresh report undercounted unreviewable findings).
+**File:** `regression/refresh_findings.py` (`analyze_finding_drift`).
+**Discovered:** 2026-10-25, while planning wave 10. **Fixed:** 2026-10-25.
+
+- **Root cause:** `drift.validate_finding` returns a single sentinel tuple (item type `None`) when nothing is checkable or the output is missing. `analyze_finding_drift` counted it in `total_items`, so a finding with no `analyzer_section` items had total 1, no drift and read `current`; the `no_checkable_items` status was unreachable.
+- **Fix:** a sentinel result is separated before counting and becomes the finding's status (`no_checkable_items` or `no_output`, total 0). The report (text and `--json`) gains a `no_checkable_items` count; `--apply` already acts only on possibly-fixed/now-detected items, so these findings are still skipped.
+- **Verification:** `test_refresh_reports_no_checkable_items` fails before (report has no such count; the finding read current) and passes after; the drift apply golden is unchanged.
+
 ## 2026-10-25 — KH-626: the product refactor oracle (`tools/check_refactor.py`) passed on unseen key reorders, relative snapshot roots, a write-then-fail analyzer, unknown budget selectors and worsened tag sites
 
 **Severity:** MEDIUM (dev-only oracle and CI `tags` guard; no stored baseline was contaminated).
