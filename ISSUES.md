@@ -3057,6 +3057,8 @@ Plan 2 gave only `utils.run_analyzer` (schematic/pcb/gerber) identity resume.
 is not implemented for this runner yet (TH-064); rerun without --resume";
 `harness.py run` no longer passes `--resume` to spice/emc.
 
+**2026-10-25:** the dead existence-resume plumbing behind the refusal (the worker `resume` argument, the `SKIPPED` branches and counters, `utils.should_skip_resume`) was deleted (arch A1-F6). The refusal stays; identity resume is built fresh from the pattern below.
+
 **Fix direction:** reuse the `run_analyzer` pattern: batch manifest + `units.jsonl`
 (records stamped with `run_id`), archive the old log on non-resume runs, and
 `unit_is_current(..., run_id=<matched manifest run_id>)`. Closes when `--resume`
