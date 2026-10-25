@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-062: print-and-return vacuous skip paths in required-tier tests bypassed the known-skips allowlist
+
+**Severity:** LOW (tests passed vacuously when a product module or fixture was missing).
+**File:** `tests/test_synthetic.py` (11), `test_b1_b2_finding_id_invariants.py` (10), `test_b4_b7_layer2_schemas.py` (15), `test_b3_b8_layer2_behavior.py` (8 — the filing's 16 double-counted), `test_top_level_sheets.py` (4), `test_b9_review_metrics.py` (2); plus the audit's code A6-F2 / A6-F3 sites in `test_enrichment_fields.py`, `test_b5_4b_4c_detector_invariants.py`, `test_b5d_detector_fire_shapes.py`, `datasheets/test_a7_meta_schema.py`, `test_seed_schema_era_stamping.py`; guard test `tests/test_collection_policy.py::test_no_print_and_return_skips`.
+**Discovered:** 2026-10-14, H0 plan 1 final review. **Fixed:** 2026-10-25 with harness audit code A6-F2 / A6-F3.
+
+- **Root cause:** guards printed "SKIP" (or returned silently) and returned, so pytest recorded a pass that `tests/known_skips.json` never saw; a product layout move would have turned whole files into no-ops.
+- **Fix:** the 50 printed-SKIP guards are `pytest.skip(reason)` (any skip in a required tier must now be allowlisted); missing product imports and the jsonschema dev dependency in the B5 / B5d / A7 meta-schema files `pytest.fail` (required in their tiers); `test_enrichment_fields.py` is marked `corpus` and fails when the corpus tree exists but no output carries the field (16/16 pass for real on the corpus); the era-stamping structural test requires a non-empty emission. A lint test forbids the print-SKIP-return idiom.
+- **Verification:** lint test fails on the old files and passes after; required tiers green; `pytest -m corpus` on the enrichment and era-stamping files green.
+
 ## 2026-10-25 — TH-087: `validate_design_intent.py` scanned the whole corpus on a multi-repo selection
 
 **Severity:** LOW (validator scope).

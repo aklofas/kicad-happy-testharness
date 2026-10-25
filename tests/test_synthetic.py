@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fixtures._build_sch import Schematic, pin1, pin2, ic_pin_pos
+import pytest
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,8 +55,7 @@ def test_vd_equal_divider():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     vd = [f for f in data.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
     assert len(vd) == 1, f"Expected 1 divider, got {len(vd)}: {vd}"
     ratio = vd[0]["ratio"]
@@ -76,8 +76,7 @@ def test_vd_unequal_divider():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     vd = [f for f in data.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
     assert len(vd) == 1, f"Expected 1 divider, got {len(vd)}: {vd}"
     expected = 22 / (10 + 22)  # 0.6875
@@ -98,8 +97,7 @@ def test_vd_negative_pullup():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     vd = [f for f in data.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
     assert len(vd) == 0, f"Expected 0 dividers (pull-up only), got {len(vd)}: {vd}"
 
@@ -118,8 +116,7 @@ def test_vd_negative_series_r():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     vd = [f for f in data.get("findings", []) if f.get("detector") == "detect_voltage_dividers"]
     assert len(vd) == 0, f"Expected 0 dividers (series R only), got {len(vd)}: {vd}"
 
@@ -157,8 +154,7 @@ def test_rc_lowpass():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     rc = [f for f in data.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     assert len(rc) >= 1, f"Expected ≥1 RC filter, got {len(rc)}: {rc}"
     assert rc[0]["cutoff_hz"] > 0, f"Expected cutoff_hz > 0, got {rc[0]['cutoff_hz']}"
@@ -194,8 +190,7 @@ def test_rc_highpass():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     rc = [f for f in data.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     assert len(rc) >= 1, f"Expected ≥1 RC filter, got {len(rc)}: {rc}"
     assert rc[0]["cutoff_hz"] > 0, f"Expected cutoff_hz > 0, got {rc[0]['cutoff_hz']}"
@@ -214,8 +209,7 @@ def test_rc_negative_bypass_cap():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     rc = [f for f in data.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     assert len(rc) == 0, f"Expected 0 RC filters (bypass cap only), got {len(rc)}: {rc}"
 
@@ -244,8 +238,7 @@ def test_rc_negative_rc_snubber_like():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     rc = [f for f in data.get("findings", []) if f.get("detector") == "detect_rc_filters"]
     assert len(rc) == 0, f"Expected 0 RC filters (parallel R+C snubber), got {len(rc)}: {rc}"
 
@@ -275,8 +268,7 @@ def test_reg_positive_by_value():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     regs = [f for f in data.get("findings", []) if f.get("detector") == "detect_power_regulators"]
     assert len(regs) >= 1, f"Expected ≥1 regulator, got {len(regs)}: {regs}"
     refs = [r["ref"] for r in regs]
@@ -308,8 +300,7 @@ def test_crystal_positive():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     cc = [f for f in data.get("findings", []) if f.get("detector") == "detect_crystal_circuits"]
     assert len(cc) >= 1, f"Expected ≥1 crystal circuit, got {len(cc)}: {cc}"
     y1 = [c for c in cc if c.get("reference") == "Y1"]
@@ -332,8 +323,7 @@ def test_protection_positive():
     )
     data = run_analyzer(sch)
     if data is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     pd = [f for f in data.get("findings", []) if f.get("detector") == "detect_protection_devices"]
     assert len(pd) >= 1, f"Expected ≥1 protection device, got {len(pd)}: {pd}"
     d1 = [d for d in pd if d.get("ref") == "D1"]

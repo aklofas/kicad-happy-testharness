@@ -2932,21 +2932,6 @@ RSS ceiling (rlimit on the child, recorded as a `crash`/`oom` status) so one
 runaway unit cannot take the host down regardless of the job count. RUNBOOK
 preflight now lists the full-chain profile with the hierarchy profile.
 
-### TH-062: 58 print-and-return vacuous skip paths in required-tier smoke files bypass the known-skips allowlist
-
-**Severity:** LOW (tests pass vacuously when the analyzer is not importable or a
-fixture is missing; no current failure, but a product-layout move such as the v3
-arc would silently turn them into no-ops)
-**Files:** `tests/test_synthetic.py` (11), `tests/test_b1_b2_finding_id_invariants.py`
-(10), `tests/test_b4_b7_layer2_schemas.py` (15), `tests/test_b3_b8_layer2_behavior.py`
-(16), `tests/test_top_level_sheets.py` (4), `tests/test_b9_review_metrics.py` (2)
-**Discovered:** 2026-10-14, H0 plan 1 final review. The paths are gated on
-"analyzer not importable" or "fixture missing" and print then return, so pytest
-records a pass and the known-skips allowlist never sees them.
-
-**Fix direction:** convert each to `pytest.skip` with a reason (then each must be
-allowlisted or fixed) before the H0-7 CI pin checkpoint.
-
 ### TH-061: `tests/test_datasheet_db_cli.py` plants and deletes a file under `HARNESS_DIR/repos/.test_fallback/` — a write into the corpus checkout tree
 
 **Severity:** LOW (corpus inputs must be immutable; the fixture cleans up after

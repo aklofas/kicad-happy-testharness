@@ -125,7 +125,7 @@ def test_schema_era_lands_at_top_level_not_in_extra():
     LOG #74; main-repo wording was loose ('NOT nested under extra')."""
     make_finding = _import_make_finding()
     if make_finding is None:
-        return  # silent skip
+        pytest.fail('finding_schema.make_finding not importable from the product')
 
     finding = make_finding(
         detector="detect_absolute_max_violations",
@@ -155,7 +155,7 @@ def test_make_finding_rejects_invalid_confidence():
     Catches drift if a detector starts emitting bogus confidence values."""
     make_finding = _import_make_finding()
     if make_finding is None:
-        return
+        pytest.fail('finding_schema.make_finding not importable from the product')
 
     try:
         make_finding(
@@ -179,7 +179,7 @@ def test_make_finding_rejects_invalid_evidence_source():
     VALID_EVIDENCE_SOURCES vocabulary."""
     make_finding = _import_make_finding()
     if make_finding is None:
-        return
+        pytest.fail('finding_schema.make_finding not importable from the product')
 
     try:
         make_finding(
@@ -204,7 +204,7 @@ def test_make_finding_accepts_datasheet_backed_combo():
     the finding dict at the top level."""
     make_finding = _import_make_finding()
     if make_finding is None:
-        return
+        pytest.fail('finding_schema.make_finding not importable from the product')
 
     finding = make_finding(
         detector="detect_absolute_max_violations",
@@ -256,7 +256,7 @@ def test_xt_001_silent_when_status_ok():
     """XT-001 must NOT emit findings for load_cap_status='ok'."""
     fn = _import_validate_crystal_load_caps()
     if fn is None:
-        return
+        pytest.fail('validation detector not importable from the product')
     findings = fn(_make_ctx(), [_make_xc("ok")])
     assert findings == [], \
         f"XT-001 must be silent for status='ok'; got {len(findings)} findings."
@@ -266,7 +266,7 @@ def test_xt_001_silent_when_status_unverified():
     """XT-001 must NOT emit findings for load_cap_status='unverified'."""
     fn = _import_validate_crystal_load_caps()
     if fn is None:
-        return
+        pytest.fail('validation detector not importable from the product')
     findings = fn(_make_ctx(), [_make_xc("unverified")])
     assert findings == [], (
         f"XT-001 must be silent for status='unverified'; got "
@@ -278,7 +278,7 @@ def test_xt_001_fires_datasheet_backed_when_out_of_spec_with_datasheet_source():
     XT-001 fires with confidence='datasheet-backed', evidence_source='datasheet'."""
     fn = _import_validate_crystal_load_caps()
     if fn is None:
-        return
+        pytest.fail('validation detector not importable from the product')
     findings = fn(
         _make_ctx(),
         [_make_xc("out_of_spec", target_load_source="datasheet")])
@@ -299,7 +299,7 @@ def test_xt_001_frequency_default_not_datasheet_backed():
     away from a frequency-default fallback."""
     fn = _import_validate_crystal_load_caps()
     if fn is None:
-        return
+        pytest.fail('validation detector not importable from the product')
     findings = fn(
         _make_ctx(),
         [_make_xc("out_of_spec", target_load_source="frequency_default")])
@@ -318,7 +318,7 @@ def test_xt_001_marginal_fires_as_info():
     out_of_spec). Confirms the severity routing matches the docstring."""
     fn = _import_validate_crystal_load_caps()
     if fn is None:
-        return
+        pytest.fail('validation detector not importable from the product')
     findings = fn(
         _make_ctx(),
         [_make_xc("marginal", target_load_source="datasheet")])

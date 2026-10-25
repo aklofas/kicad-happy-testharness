@@ -24,6 +24,7 @@ import json
 import os
 import sys
 from pathlib import Path
+import pytest
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 KH_DIR = Path(os.environ.get(
@@ -60,8 +61,7 @@ def test_review_annotations_schema_parses():
     """review_annotations.schema.json is JSON-loadable."""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP: review_annotations.schema.json not found")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     assert schema.get("title") == "Layer 2 Review Annotations", \
         f"unexpected title: {schema.get('title')!r}"
 
@@ -71,8 +71,7 @@ def test_reviewer_observations_has_no_maxitems():
     (Flipped from test_reviewer_observations_maxItems_is_5.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     obs = schema["properties"]["reviewer_observations"]
     assert "maxItems" not in obs, \
         f"maxItems cap must stay removed in v2.0, got {obs.get('maxItems')!r}"
@@ -83,8 +82,7 @@ def test_observation_confidence_enum_includes_high():
     {high, medium, low}. (Flipped from test_observation_confidence_enum_is_medium_low.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     enum = schema["properties"]["reviewer_observations"]["items"]["properties"]["confidence"]["enum"]
     assert set(enum) == {"high", "medium", "low"}, \
         f"expected {{high, medium, low}}, got {set(enum)}"
@@ -94,8 +92,7 @@ def test_observation_origin_const_is_llm_novel():
     """observation origin is const 'llm_novel' (locked, no other producers)."""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     origin = schema["properties"]["reviewer_observations"]["items"]["properties"]["origin"]
     assert origin.get("const") == "llm_novel", \
         f"expected const='llm_novel', got {origin!r}"
@@ -106,8 +103,7 @@ def test_observation_severity_enum_includes_error():
     {error, warning, info}. (Flipped from test_observation_severity_enum_is_warning_info.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     enum = schema["properties"]["reviewer_observations"]["items"]["properties"]["severity"]["enum"]
     assert set(enum) == {"error", "warning", "info"}, \
         f"expected {{error, warning, info}}, got {set(enum)}"
@@ -118,14 +114,12 @@ def test_review_annotations_example_fixture_validates():
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     fixture = _load_json(REVIEW_ANNOTATIONS_FIXTURE_PATH)
     if schema is None or fixture is None:
-        print("  SKIP: schema or fixture missing")
-        return
+        pytest.skip('schema or fixture missing')
     assert fixture.get("reviewer_observations") == [], \
         "v1.4 default reviewer_observations must be empty array"
     Validator = _import_jsonschema()
     if Validator is None:
-        print("  SKIP: jsonschema unavailable")
-        return
+        pytest.skip('jsonschema unavailable')
     Validator(schema).validate(fixture)
 
 
@@ -134,12 +128,10 @@ def test_six_item_observations_array_accepted():
     (Flipped from test_six_item_observations_array_rejected.)"""
     schema = _load_json(REVIEW_ANNOTATIONS_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     Validator = _import_jsonschema()
     if Validator is None:
-        print("  SKIP: jsonschema unavailable")
-        return
+        pytest.skip('jsonschema unavailable')
     obs = {
         "origin": "llm_novel",
         "observation": "x",
@@ -189,8 +181,7 @@ def test_design_context_schema_permits_triple_shape():
     """design_category and environment both accept oneOf [enum, triple]."""
     schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     for field in ("design_category", "environment"):
         oneOf = schema["properties"][field].get("oneOf")
         assert isinstance(oneOf, list) and len(oneOf) == 2, \
@@ -207,12 +198,10 @@ def test_design_context_example_fixture_validates():
     schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
     fixture = _load_json(DESIGN_CONTEXT_FIXTURE_PATH)
     if schema is None or fixture is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     Validator = _import_jsonschema()
     if Validator is None:
-        print("  SKIP: jsonschema unavailable")
-        return
+        pytest.skip('jsonschema unavailable')
     Validator(schema).validate(fixture)
     # Plain enum form: invariant trivially holds (no triple to check)
     assert _check_design_context_precedence(fixture) == []
@@ -222,8 +211,7 @@ def test_synthesized_triple_with_declared_null_passes_invariant():
     """declared=null => no precedence constraint; invariant holds trivially."""
     schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     Validator = _import_jsonschema()
     payload = {
         "design_category": {
@@ -247,8 +235,7 @@ def test_synthesized_triple_with_declared_equal_effective_passes_invariant():
     """declared==effective: invariant holds; schema accepts."""
     schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     Validator = _import_jsonschema()
     payload = {
         "design_category": "power_supply",
@@ -273,8 +260,7 @@ def test_synthesized_triple_with_declared_not_equal_effective_fails_invariant():
     but harness invariant flags it. Confirms harness is the enforcer."""
     schema = _load_json(DESIGN_CONTEXT_SCHEMA_PATH)
     if schema is None:
-        print("  SKIP")
-        return
+        pytest.skip('review_annotations.schema.json not found')
     Validator = _import_jsonschema()
     payload = {
         "design_category": "power_supply",

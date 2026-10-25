@@ -298,10 +298,8 @@ def test_seed_structural_default_stamps_versioned_detector():
                         all_assertions.extend(data.get("assertions", []))
                     except Exception:
                         continue
-        if not all_assertions:
-            # If no structural assertions emitted (no ref fields matched),
-            # just verify the flags don't crash — the flag-acceptance tests above cover this.
-            return
+        # an empty emission proves nothing about stamping
+        assert all_assertions, "seed_structural emitted no assertions for the test repo"
         stamped = _get_stamped(all_assertions, VERSIONED_DETECTOR_CURRENT)
         if _get_assertions_for_detector(all_assertions, VERSIONED_DETECTOR_CURRENT):
             assert stamped, (

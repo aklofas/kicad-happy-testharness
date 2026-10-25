@@ -24,6 +24,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+import pytest
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
@@ -111,8 +112,7 @@ def _run_merge(tmp: Path, raw_envelopes, review):
 def test_b8_valid_annotation_merges_with_llm_review_overlay():
     """Status=confirmed annotation gains llm_review overlay; applied_count==1."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
-        print("  SKIP: merge_annotations.py not available")
-        return
+        pytest.skip('merge_annotations.py not available')
     finding = {
         "finding_id": "sch:VM-001:u3",
         "detector": "validate_voltage_levels",
@@ -155,8 +155,7 @@ def test_b8_orphan_annotation_logged_in_orphan_annotations_key():
     report.orphan_annotations[] (a separate top-level key from
     invariant_violations[]) and merge exits 0."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
-        print("  SKIP")
-        return
+        pytest.skip('merge_annotations.py not available')
     real_finding = {
         "finding_id": "sch:VM-001:u3",
         "rule_id": "VM-001",
@@ -196,8 +195,7 @@ def test_b8_v2_suppress_error_applies():
     llm_review overlay; no suppress_error invariant violation; the finding's
     own severity field stays unchanged (suppression is an overlay)."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
-        print("  SKIP")
-        return
+        pytest.skip('merge_annotations.py not available')
     error_finding = {
         "finding_id": "sch:VM-001:u3",
         "rule_id": "VM-001",
@@ -238,8 +236,7 @@ def test_b8_v2_suppress_datasheet_backed_applies():
     """v2.0 (spec §5): suppressing a confidence=datasheet-backed finding
     applies the llm_review overlay; no suppress_datasheet violation."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
-        print("  SKIP")
-        return
+        pytest.skip('merge_annotations.py not available')
     ds_finding = {
         "finding_id": "sch:OV-001:u5",
         "rule_id": "OV-001",
@@ -276,8 +273,7 @@ def test_b8_v2_no_suppression_rate_cap():
     """v2.0 (spec §5): 5 findings, 2 suppressions = 40% — previously over the
     30% cap — must NOT produce a suppression_rate_exceeded violation."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
-        print("  SKIP")
-        return
+        pytest.skip('merge_annotations.py not available')
     findings = [
         {
             "finding_id": f"sch:PU-001:r{i}",
@@ -317,12 +313,10 @@ def test_b8_HI3_strip_llm_overlays_yields_dict_equal_raw():
     raw envelope. Confirms merge_annotations.py:158 raise does NOT
     fire on valid input — i.e., HI-3 is honored end-to-end."""
     if not MERGE_ANNOTATIONS_SCRIPT.exists():
-        print("  SKIP")
-        return
+        pytest.skip('merge_annotations.py not available')
     strip = _import_strip_llm_overlays()
     if strip is None:
-        print("  SKIP: strip_llm_overlays not importable")
-        return
+        pytest.skip('strip_llm_overlays not importable')
     finding = {
         "finding_id": "sch:VM-001:u3",
         "rule_id": "VM-001",
@@ -362,8 +356,7 @@ def test_b8_HI3_strip_handles_nested_llm_keys():
     list and assert all llm_* keys are gone after strip."""
     strip = _import_strip_llm_overlays()
     if strip is None:
-        print("  SKIP")
-        return
+        pytest.skip('strip_llm_overlays not importable')
     payload = {
         "analyzer_type": "schematic",
         "findings": [

@@ -7,6 +7,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT))
@@ -71,7 +72,7 @@ def test_schema_loads_as_draft_2020_12():
 def test_valid_meta_passes_validation():
     validator = _validator()
     if validator is None:
-        return  # jsonschema not available; skip
+        pytest.fail('jsonschema not installed (requirements-dev)')
     errors = list(validator.iter_errors(_valid_meta()))
     assert errors == []
 
@@ -79,7 +80,7 @@ def test_valid_meta_passes_validation():
 def test_missing_mpn_fails():
     validator = _validator()
     if validator is None:
-        return  # jsonschema not available; skip
+        pytest.fail('jsonschema not installed (requirements-dev)')
     meta = _valid_meta()
     del meta["mpn"]
     errors = list(validator.iter_errors(meta))
@@ -89,7 +90,7 @@ def test_missing_mpn_fails():
 def test_invalid_pdf_sha256_format_fails():
     validator = _validator()
     if validator is None:
-        return  # jsonschema not available; skip
+        pytest.fail('jsonschema not installed (requirements-dev)')
     meta = _valid_meta()
     meta["pdf_sha256"] = "not-a-sha"
     errors = list(validator.iter_errors(meta))
@@ -99,7 +100,7 @@ def test_invalid_pdf_sha256_format_fails():
 def test_extra_top_level_key_fails():
     validator = _validator()
     if validator is None:
-        return  # jsonschema not available; skip
+        pytest.fail('jsonschema not installed (requirements-dev)')
     meta = _valid_meta()
     meta["extra_field"] = "should_not_be_here"
     errors = list(validator.iter_errors(meta))
@@ -109,7 +110,7 @@ def test_extra_top_level_key_fails():
 def test_history_must_be_list():
     validator = _validator()
     if validator is None:
-        return  # jsonschema not available; skip
+        pytest.fail('jsonschema not installed (requirements-dev)')
     meta = _valid_meta()
     meta["history"] = "not-a-list"
     errors = list(validator.iter_errors(meta))
@@ -119,7 +120,7 @@ def test_history_must_be_list():
 def test_history_event_enum_enforced():
     validator = _validator()
     if validator is None:
-        return  # jsonschema not available; skip
+        pytest.fail('jsonschema not installed (requirements-dev)')
     meta = _valid_meta()
     meta["history"][0]["event"] = "bogus_event"
     errors = list(validator.iter_errors(meta))
@@ -129,7 +130,7 @@ def test_history_event_enum_enforced():
 def test_curated_from_gate_run_id_nullable():
     validator = _validator()
     if validator is None:
-        return  # jsonschema not available; skip
+        pytest.fail('jsonschema not installed (requirements-dev)')
     meta = _valid_meta()
     meta["curated_from"]["gate_run_id"] = None
     errors = list(validator.iter_errors(meta))

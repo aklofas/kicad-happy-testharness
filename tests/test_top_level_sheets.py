@@ -33,6 +33,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+import pytest
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 KH_DIR = Path(os.environ.get(
@@ -74,8 +75,7 @@ def test_merge_path_fires_and_sheets_count_is_three():
     """Envelope ``sheets`` lists all three pages — merge happened."""
     result = _run_analyzer(SYNTHETIC_PAGE1)
     if result is None:
-        print("  SKIP: analyzer or fixture missing")
-        return
+        pytest.skip('analyzer or fixture missing')
     env, stderr = result
     assert "discovered 2 additional top-level sheets" in stderr, \
         f"expected merge-notice in stderr, got: {stderr[:200]!r}"
@@ -90,8 +90,7 @@ def test_components_merged_from_all_pages():
     """All three pages contribute components — peer sheets are not dropped."""
     result = _run_analyzer(SYNTHETIC_PAGE1)
     if result is None:
-        print("  SKIP")
-        return
+        pytest.skip('analyzer or fixture missing')
     env, _ = result
     comps = env.get("components", [])
     assert len(comps) == 9, \
@@ -109,8 +108,7 @@ def test_power_symbols_refreshed_after_peer_merge():
     """
     result = _run_analyzer(SYNTHETIC_PAGE1)
     if result is None:
-        print("  SKIP")
-        return
+        pytest.skip('analyzer or fixture missing')
     env, _ = result
     ps = env.get("power_symbols", [])
     assert len(ps) == 6, (
@@ -134,8 +132,7 @@ def test_single_sheet_no_top_level_sheets_skips_merge():
     """
     result = _run_analyzer(SIMPLE_SCH)
     if result is None:
-        print("  SKIP")
-        return
+        pytest.skip('analyzer or fixture missing')
     env, stderr = result
     assert "additional top-level sheets" not in stderr, (
         f"merge path should not fire on simple-project (no top_level_sheets); "

@@ -52,6 +52,7 @@ for _p in (KH_SCRIPTS, KH_DS_PKG, KH_DS_SCRIPTS):
 # Fixture helpers (build_ctx, ic, resistor, capacitor)
 sys.path.insert(0, str(HARNESS_DIR / "tests"))
 from fixtures._build_ctx import build_ctx, ic, capacitor  # noqa: E402
+import pytest
 
 GOLD_DIR = HARNESS_DIR / "regression" / "reference_extractions"
 
@@ -107,14 +108,14 @@ def test_am_001_fires_on_vdd_above_absolute_max():
     """5V applied to STM32F103C8T6 VDD pin (datasheet absmax 4.0V) fires AM-001."""
     ld = _lookup_detectors()
     if ld is None:
-        return  # v1.3 tree, skip
+        pytest.fail('lookup_detectors not importable from the product')
     if _datasheet_types() is None:
-        return
+        pytest.fail('datasheet_types not importable from the product')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return  # gold file missing
+            pytest.fail('gold extraction fixture missing')
         # STM32F103 has VDD pins at 24/36/48 with power_domain="VDD".
         # Build a 3-pin minimal ic surfacing pin "24" (VDD_1) connected to
         # an over-voltage rail.
@@ -156,12 +157,12 @@ def test_am_001_silent_when_vdd_within_absolute_max():
     """3.3V applied to STM32F103 VDD pin (max 4.0V) does NOT fire AM-001."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "STM32F103C8T6",
                 [("24", "VDD_1"), ("8", "VSS_1")],
                 lib_id="MCU_ST_STM32F1:STM32F103C8Tx",
@@ -185,12 +186,12 @@ def test_am_001_silent_when_no_mpn():
     """Component without mpn never invokes lookup; AM-001 silent."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         # No mpn= → component_mpn helper returns the value field, but we
         # set value to a string the cache doesn't know about so lookup
         # misses and the detector falls through silently.
@@ -217,12 +218,12 @@ def test_ov_001_fires_above_recommended_max():
     """4V VDD (max recommended 3.6V, abs_max 4.0V) fires OV-001 warning."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "STM32F103C8T6",
                 [("24", "VDD_1"), ("8", "VSS_1")],
                 mpn="STM32F103C8T6")
@@ -250,12 +251,12 @@ def test_ov_001_fires_below_recommended_min():
     """1.5V VDD (min recommended 2.0V) fires OV-001 (under-voltage warning)."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "STM32F103C8T6",
                 [("24", "VDD_1"), ("8", "VSS_1")],
                 mpn="STM32F103C8T6")
@@ -277,12 +278,12 @@ def test_ov_001_silent_within_recommended_range():
     """3.3V VDD (in 2.0-3.6V range) does NOT fire OV-001."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "STM32F103C8T6",
                 [("24", "VDD_1"), ("8", "VSS_1")],
                 mpn="STM32F103C8T6")
@@ -311,12 +312,12 @@ def test_tj_001_fires_when_tj_estimate_exceeds_max():
     """STM32F103 TJmax=150°C, θJA=55°C/W. Ambient 25°C + 3W → 190°C → fires."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         # detect_tj_exceeds_max takes assessments (not ctx) per signature.
         assessments = [{
             "ref": "U1",
@@ -344,12 +345,12 @@ def test_tj_001_silent_when_tj_estimate_within_max():
     """Ambient 25°C + 0.5W * 55°C/W = 52.5°C → silent."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         assessments = [{
             "ref": "U1",
             "mpn": "STM32F103C8T6",
@@ -374,12 +375,12 @@ def test_ft_001_fires_on_5v_to_non_tolerant_pin():
     """5V on STM32F103 PC13 (pin 2, is_5v_tolerant=False) fires FT-001."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "STM32F103C8T6",
                 [("2", "PC13-TAMPER-RTC"), ("8", "VSS_1")],
                 mpn="STM32F103C8T6")
@@ -408,12 +409,12 @@ def test_ft_001_silent_below_threshold():
     """3.3V on PC13 (non-5V-tolerant) below 4.5V threshold → silent."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "STM32F103C8T6",
                 [("2", "PC13-TAMPER-RTC"), ("8", "VSS_1")],
                 mpn="STM32F103C8T6")
@@ -439,12 +440,12 @@ def test_pm_001_fires_when_i2c_net_on_non_i2c_pin():
     """STM32F103 PC13 has only RTC alt-function. Net 'I2C1_SDA' fires PM-001."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "STM32F103C8T6",
                 [("2", "PC13-TAMPER-RTC"), ("8", "VSS_1")],
                 mpn="STM32F103C8T6")
@@ -473,12 +474,12 @@ def test_pm_001_silent_when_alt_functions_empty():
     """Pin with no alt_functions skips silently (datasheet didn't publish map)."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         # VBAT is pin 1, has no alt_functions in the gold.
         u1 = ic("U1", "STM32F103C8T6",
                 [("1", "VBAT"), ("8", "VSS_1")],
@@ -505,12 +506,12 @@ def test_ex_001_fires_when_input_capacitor_missing():
     """LM2596-ADJ requires Cin per datasheet. Empty input rail fires EX-001."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "lm2596-adj", "LM2596-ADJ")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         # Only the regulator IC + an unrelated component — no caps anywhere.
         u1 = ic("U1", "LM2596-ADJ",
                 [("1", "VIN"), ("3", "Ground")],
@@ -551,12 +552,12 @@ def test_ex_001_silent_when_input_capacitor_present():
     """LM2596-ADJ with a capacitor on VIN does NOT fire EX-001 for cin."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "lm2596-adj", "LM2596-ADJ")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "LM2596-ADJ",
                 [("1", "VIN"), ("3", "Ground")],
                 mpn="LM2596-ADJ")
@@ -590,12 +591,12 @@ def test_ex_001_fires_when_inductor_missing_in_switching():
     """LM2596-ADJ requires an inductor (regulator.inductor_range). Empty fires."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     with tempfile.TemporaryDirectory() as td:
         cache = _setup_cache(Path(td), "lm2596-adj", "LM2596-ADJ")
         if cache is None:
-            return
+            pytest.fail('gold extraction fixture missing')
         u1 = ic("U1", "LM2596-ADJ",
                 [("1", "VIN"), ("3", "Ground")],
                 mpn="LM2596-ADJ")
@@ -639,7 +640,7 @@ def test_all_fired_findings_carry_required_envelope_keys():
     severity, confidence, evidence_source, schema_era. Plus components list."""
     ld = _lookup_detectors()
     if ld is None or _datasheet_types() is None:
-        return
+        pytest.fail('product lookup_detectors / datasheet_types not importable')
 
     required = _required_finding_keys()
     findings_to_check: list[dict] = []
@@ -648,10 +649,10 @@ def test_all_fired_findings_carry_required_envelope_keys():
         # AM-001 fire
         cache_stm = _setup_cache(Path(td), "stm32f103c8t6", "STM32F103C8T6")
         if cache_stm is None:
-            return
+            pytest.fail("gold extraction fixture missing")
         cache_lm = _setup_cache(Path(td), "lm2596-adj", "LM2596-ADJ")
         if cache_lm is None:
-            return
+            pytest.fail("gold extraction fixture missing")
 
         u1 = ic("U1", "STM32F103C8T6",
                 [("24", "VDD_1"), ("2", "PC13-TAMPER-RTC"), ("8", "VSS_1")],

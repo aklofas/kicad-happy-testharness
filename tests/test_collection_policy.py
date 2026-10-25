@@ -1,6 +1,7 @@
 """Root conftest.py marker derivation and default tier selection (B9, TH-053)."""
 import ast
 import json
+import re
 import os
 import shutil
 import subprocess
@@ -169,3 +170,19 @@ def test_pytest_floor_reads_strict_markers_from_ini(tmp_path):
                            str(tmp_path / "test_typo.py")], cwd=tmp_path, capture_output=True,
                           text=True, timeout=120)
     assert proc.returncode != 0 and "unitt" in proc.stdout + proc.stderr
+
+
+_PRINT_SKIP_RETURN = re.compile(r'^([ \t]+)print\(\s*f?["\'][^"\']*SKIP[^"\']*["\']\s*\)\n\1return\b', re.M)
+
+
+def test_no_print_and_return_skips():
+    """TH-062 / code A6-F2: a printed "SKIP" followed by return records a pass the known-skips
+    allowlist never sees; skips go through pytest.skip."""
+    offenders = []
+    for f in sorted((HARNESS / "tests").rglob("test_*.py")):
+        if "/fixtures/" in f.as_posix():
+            continue
+        text = f.read_text(encoding="utf-8")
+        offenders += [f"{f.relative_to(HARNESS)}:{text[:m.start()].count(chr(10)) + 1}"
+                      for m in _PRINT_SKIP_RETURN.finditer(text)]
+    assert not offenders, offenders

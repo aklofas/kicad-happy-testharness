@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+import pytest
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 PACKETS_DIR = HARNESS_DIR / "regression" / "reference_review_packets"
@@ -51,8 +52,7 @@ def test_packet_schema_validates_demo():
     Skips cleanly when jsonschema library is absent."""
     js = _jsonschema()
     if js is None:
-        print("SKIP: jsonschema unavailable")
-        return
+        pytest.skip('jsonschema unavailable')
     schema = _load(SCHEMA_PATH)
     packet = _build_packet_dict(DEMO_PACKET)
     js.validate(instance=packet, schema=schema)
@@ -276,8 +276,7 @@ def test_malformed_packet_skips_clean_via_schema():
 
     js = _jsonschema()
     if js is None:
-        print("SKIP: jsonschema unavailable")
-        return
+        pytest.skip('jsonschema unavailable')
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)

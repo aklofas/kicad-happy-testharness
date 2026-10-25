@@ -31,6 +31,7 @@ sys.path.insert(0, str(HARNESS_DIR))
 sys.path.insert(0, str(HARNESS_DIR / "tests"))
 
 from fixtures._build_sch import Schematic, pin1, pin2
+import pytest
 
 KH_DIR = Path(os.environ.get(
     "KICAD_HAPPY_DIR", str(HARNESS_DIR.parent / "kicad-happy")))
@@ -108,8 +109,7 @@ def test_capability_mode_ref_present_in_envelope():
     """Schematic envelope carries top-level capability_mode_ref (Phase 4a)."""
     env = _run_analyzer_synthetic()
     if env is None:
-        print("  SKIP: kicad-happy not available")
-        return
+        pytest.skip('kicad-happy not available')
     assert "capability_mode_ref" in env, \
         f"capability_mode_ref missing from envelope keys: {sorted(env.keys())[:10]}..."
 
@@ -118,8 +118,7 @@ def test_capability_mode_ref_shape():
     """capability_mode_ref has {source, run_id} shape with non-empty values."""
     env = _run_analyzer_synthetic()
     if env is None:
-        print("  SKIP")
-        return
+        pytest.skip('kicad-happy not available')
     cmr = env["capability_mode_ref"]
     assert isinstance(cmr, dict), f"expected dict, got {type(cmr).__name__}"
     assert "source" in cmr and "run_id" in cmr, \
@@ -134,8 +133,7 @@ def test_capability_mode_ref_run_id_format():
     """run_id matches sortable format: YYYYMMDDTHHMMSSZ-<6hex>."""
     env = _run_analyzer_synthetic()
     if env is None:
-        print("  SKIP")
-        return
+        pytest.skip('kicad-happy not available')
     run_id = env["capability_mode_ref"]["run_id"]
     assert re.match(r"^\d{8}T\d{6}Z-[0-9a-f]{6,}$", run_id), \
         f"run_id format unexpected: {run_id!r}"
@@ -146,8 +144,7 @@ def test_capability_mode_ref_run_id_format():
 def test_finding_id_allowed_in_finding_schema():
     """analyze_schematic --schema declares finding_id as optional on Finding."""
     if not ANALYZER.exists():
-        print("  SKIP: analyzer not available")
-        return
+        pytest.skip('analyzer not available')
     proc = subprocess.run(
         [_python(), str(ANALYZER), "--schema"],
         capture_output=True, text=True, timeout=20,
@@ -171,8 +168,7 @@ def test_make_finding_emits_finding_id_with_components():
     """make_finding(components=[...]) → {source}:{rule_id}:{component}."""
     mf = _import_make_finding()
     if mf is None:
-        print("  SKIP: make_finding not importable")
-        return
+        pytest.skip('make_finding not importable')
     f = mf(
         detector="detect_test", rule_id="AM-001",
         category="testing", summary="test summary",
@@ -189,8 +185,7 @@ def test_make_finding_emits_finding_id_with_detection_id():
     """make_finding(detection_id=X) → {source}:{detection_id}."""
     mf = _import_make_finding()
     if mf is None:
-        print("  SKIP")
-        return
+        pytest.skip('kicad-happy not available')
     f = mf(
         detector="detect_test", rule_id="AM-001",
         category="testing", summary="test", description="test",
@@ -205,8 +200,7 @@ def test_make_finding_emits_finding_id_with_summary_hash_fallback():
     """No locators → {source}:{rule_id}:{12-hex-hash} fallback."""
     mf = _import_make_finding()
     if mf is None:
-        print("  SKIP")
-        return
+        pytest.skip('kicad-happy not available')
     f = mf(
         detector="detect_test", rule_id="AM-001",
         category="testing", summary="some specific summary text",
@@ -227,8 +221,7 @@ def test_finding_id_pattern_in_corpus_envelope():
     finding_id; that's expected and not a failure."""
     env = _run_analyzer_synthetic()
     if env is None:
-        print("  SKIP")
-        return
+        pytest.skip('kicad-happy not available')
     findings = env.get("findings") or []
     with_id = [f for f in findings if f.get("finding_id")]
     bad = [(f.get("detector"), f["finding_id"]) for f in with_id
@@ -242,8 +235,7 @@ def test_make_finding_is_deterministic():
     """Same inputs produce identical finding_id across calls."""
     mf = _import_make_finding()
     if mf is None:
-        print("  SKIP")
-        return
+        pytest.skip('kicad-happy not available')
     kwargs = dict(
         detector="detect_test", rule_id="AM-001",
         category="testing", summary="determinism check",
@@ -266,8 +258,7 @@ def test_finding_id_set_stable_across_analyzer_runs():
     env1 = _run_analyzer_synthetic()
     env2 = _run_analyzer_synthetic()
     if env1 is None or env2 is None:
-        print("  SKIP")
-        return
+        pytest.skip('kicad-happy not available')
     ids1 = {f["finding_id"] for f in env1.get("findings", [])
             if f.get("finding_id")}
     ids2 = {f["finding_id"] for f in env2.get("findings", [])

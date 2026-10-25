@@ -1,15 +1,17 @@
-"""Unit tests for enrichment fields added to kicad-happy analyzers.
+"""Enrichment fields added to kicad-happy analyzers, checked on real corpus outputs.
 
-Validates output field presence and structure by scanning real corpus outputs.
-Tests skip gracefully when enrichment outputs haven't been generated yet.
+These read results/outputs (marked `corpus`, opt-in). Without a corpus tree they skip; with
+one, a field no output carries any more is a failure, never a silent pass.
 """
-
-TIER = "unit"
 
 import json
 import os
 import sys
 from pathlib import Path
+
+import pytest
+
+pytestmark = pytest.mark.corpus
 
 _HARNESS = Path(__file__).resolve().parent.parent
 _KH = os.environ.get("KICAD_HAPPY_DIR", str(_HARNESS.parent / "kicad-happy"))
@@ -48,12 +50,14 @@ def _find_output_with(output_type, check_fn, max_scan=5000):
     return None, None
 
 
-def _skip_if_none(data, path, feature_name):
-    """Print skip message and return True if data is None."""
-    if data is None:
-        print(f"  SKIP: no {feature_name} output found in corpus (enrichment not yet run)")
-        return True
-    return False
+def _require_found(data, feature_name):
+    """Skip without a corpus outputs tree; fail when the tree exists but no output carries
+    the feature (the product dropped it, or the field moved)."""
+    if data is not None:
+        return
+    if not _RESULTS.is_dir():
+        pytest.skip("no corpus outputs tree")
+    pytest.fail(f"no {feature_name} output found in the corpus outputs")
 
 
 # ---------------------------------------------------------------------------
@@ -70,8 +74,7 @@ def test_i2c_bus_speed_mode():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "I2C bus with speed_mode"):
-        return
+    _require_found(data, "I2C bus with speed_mode")
     ba = data["design_analysis"]["bus_analysis"]
     bus = next(b for b in ba["i2c"] if "speed_mode" in b)
     assert isinstance(bus["speed_mode"], str), "speed_mode must be a string"
@@ -89,8 +92,7 @@ def test_i2c_bus_voltage_and_pullup():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "I2C bus with voltage_level_V and pull_up_ohms"):
-        return
+    _require_found(data, "I2C bus with voltage_level_V and pull_up_ohms")
     ba = data["design_analysis"]["bus_analysis"]
     bus = next(b for b in ba["i2c"]
                if b.get("voltage_level_V") is not None and b.get("pull_up_ohms") is not None)
@@ -110,8 +112,7 @@ def test_can_bus_termination():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "CAN bus with termination"):
-        return
+    _require_found(data, "CAN bus with termination")
     ba = data["design_analysis"]["bus_analysis"]
     bus = next(b for b in ba["can"]
                if b.get("termination") is not None and b["termination"])
@@ -130,8 +131,7 @@ def test_can_diff_pair_termination():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "CAN diff pair with termination"):
-        return
+    _require_found(data, "CAN diff pair with termination")
     da = data["design_analysis"]
     dp = next(d for d in da["differential_pairs"] if d.get("has_termination"))
     assert dp["has_termination"] is True
@@ -158,8 +158,7 @@ def test_bus_devices_are_dicts():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "bus with enriched device dicts"):
-        return
+    _require_found(data, "bus with enriched device dicts")
     ba = data["design_analysis"]["bus_analysis"]
     for bt in ("i2c", "spi", "uart", "can"):
         for bus in ba.get(bt, []):
@@ -184,8 +183,7 @@ def test_bus_controller_field():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "bus with controller field"):
-        return
+    _require_found(data, "bus with controller field")
     ba = data["design_analysis"]["bus_analysis"]
     for bt in ("i2c", "spi"):
         for bus in ba.get(bt, []):
@@ -210,8 +208,7 @@ def test_switching_regulator_power_dissipation():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "switching regulator with power_dissipation"):
-        return
+    _require_found(data, "switching regulator with power_dissipation")
     regs = [f for f in data["findings"] if f.get("detector") == "detect_power_regulators"]
     reg = next(r for r in regs
                if r.get("power_dissipation", {}).get("topology") == "switching")
@@ -238,8 +235,7 @@ def test_ldo_regulator_power_dissipation():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "LDO regulator with power_dissipation"):
-        return
+    _require_found(data, "LDO regulator with power_dissipation")
     regs = [f for f in data["findings"] if f.get("detector") == "detect_power_regulators"]
     reg = next(r for r in regs
                if "dropout_V" in r.get("power_dissipation", {}))
@@ -266,8 +262,7 @@ def test_crystal_target_load_pF():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "crystal circuit with target_load_pF"):
-        return
+    _require_found(data, "crystal circuit with target_load_pF")
     xtals = [f for f in data["findings"] if f.get("detector") == "detect_crystal_circuits"]
     xtal = next(x for x in xtals if "target_load_pF" in x)
     tl = xtal["target_load_pF"]
@@ -287,8 +282,7 @@ def test_crystal_load_cap_validation():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "crystal circuit with load_cap_status"):
-        return
+    _require_found(data, "crystal circuit with load_cap_status")
     xtals = [f for f in data["findings"] if f.get("detector") == "detect_crystal_circuits"]
     xtal = next(x for x in xtals
                 if "load_cap_status" in x and "load_cap_error_pct" in x)
@@ -315,8 +309,7 @@ def test_esd_device_details_exist():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "ESD coverage with device details"):
-        return
+    _require_found(data, "ESD coverage with device details")
     esd_findings = [f for f in data["findings"] if f.get("detector") == "audit_esd_protection"]
     entry = next(e for e in esd_findings
                  if e.get("esd_device_details"))
@@ -335,8 +328,7 @@ def test_esd_device_detail_structure():
         return False
 
     data, path = _find_output_with("schematic", check)
-    if _skip_if_none(data, path, "ESD coverage with device details"):
-        return
+    _require_found(data, "ESD coverage with device details")
     esd_findings = [f for f in data["findings"] if f.get("detector") == "audit_esd_protection"]
     entry = next(e for e in esd_findings
                  if e.get("esd_device_details"))
@@ -358,8 +350,7 @@ def test_decoupling_proximity_exists():
         return bool(data.get("decoupling_proximity"))
 
     data, path = _find_output_with("pcb", check)
-    if _skip_if_none(data, path, "PCB with decoupling_proximity"):
-        return
+    _require_found(data, "PCB with decoupling_proximity")
     dp = data["decoupling_proximity"]
     assert isinstance(dp, list), "decoupling_proximity must be a list"
     assert len(dp) > 0
@@ -371,8 +362,7 @@ def test_decoupling_proximity_structure():
         return bool(data.get("decoupling_proximity"))
 
     data, path = _find_output_with("pcb", check)
-    if _skip_if_none(data, path, "PCB with decoupling_proximity"):
-        return
+    _require_found(data, "PCB with decoupling_proximity")
     dp = data["decoupling_proximity"]
     for entry in dp:
         assert isinstance(entry, dict), "each entry must be a dict"
@@ -398,8 +388,7 @@ def test_emc_category_summary_exists():
         return bool(data.get("category_summary"))
 
     data, path = _find_output_with("emc", check)
-    if _skip_if_none(data, path, "EMC with category_summary"):
-        return
+    _require_found(data, "EMC with category_summary")
     cs = data["category_summary"]
     assert isinstance(cs, dict), "category_summary must be a dict"
     assert len(cs) > 0, "category_summary must not be empty"
@@ -411,8 +400,7 @@ def test_emc_category_summary_structure():
         return bool(data.get("category_summary"))
 
     data, path = _find_output_with("emc", check)
-    if _skip_if_none(data, path, "EMC with category_summary"):
-        return
+    _require_found(data, "EMC with category_summary")
     cs = data["category_summary"]
     for cat_name, cat_info in cs.items():
         assert "count" in cat_info, f"category {cat_name} must have 'count'"
