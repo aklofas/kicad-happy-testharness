@@ -86,6 +86,48 @@ rollup `results/v232_gate/rollup_v232_full_standard.json`. **Result (2026-10-22,
   (its only `power_in` pin is the bootstrap pin); plus the two #55 riders (VREG-style
   regulator-output pins; PP-001 severity vs heuristic confidence).
 
+## 2026-10-24 — v3 round 9b (review-period fixes on the accepted v3.0.0 candidate, `2498831..07b7fb1`): KH-477 / KH-478 / KH-446 / KH-479 fixed; KH-447 resolved for LT3514 (discrete-nes stays open)
+
+Ten output-neutral commits landed on `v3-dev` during the user's review period (three bug-hunt
+reviews: core / periphery / docs) plus the two round-9 filings. The harness ran an incremental
+structural gate `2498831..07b7fb1` with an EMPTY budget: FULL standard + full-chain strict-field
+identical on every compared pair, spice-offline identical, distributor-offline 41/41, text oracle
+exactly the seven declared artefact entries, `--schema` ×6 byte-identical (record
+`results/v3_round9b_gate/round9b_response.json`; standard run `a583afde` 149,629 compared pairs + full-chain run `f77cd9bc` 21,405 compared pairs, both `strict: compared == identical, deltas 0, 1 missing_a` = the LT3514 candidate-only output, candidate failures 0, census exact, 8 + 1 ledgered skips, 5 + 5 unledgered = exactly the declared KH-446 / KH-447 units — adjudicated by hand because the gate has no debt-resolved disposition, TH-078). Verification common to the four
+entries: the product tests named below GREEN on a `git archive` export of `07b7fb1`
+(`tools/tests/test_analysis_cache_containment.py` + `test_cli_usage_errors.py` +
+`test_schematic_input_guards.py` + `test_spice_model_cache.py` + `test_spice_model_options.py` +
+`test_spice_failures.py` + `test_emc_spice_workdir.py` + `test_diagnostics.py`: 65 passed / 1
+skipped, `results/v3_round9b_gate_aux/product_tests_07b7fb1.txt`).
+
+### KH-477 (LOW) — SPICE model cache fell back to one machine-wide `/tmp/kicad-happy-spice/models` for every run, with a non-atomic manifest
+
+- **File:** `skills/spice/scripts/spice_model_cache.py` (`resolve_cache_dir`, `cache_model`, manifest writer), `skills/spice/scripts/simulate_subcircuits.py`
+- **Root cause:** the resolver keyed the per-project cache on the analysis JSON's top-level `file`, which no analyzer envelope carries (`analyze_schematic.py` pops it), so every consumer without `--model-cache-dir` shared one temp directory; `manifest.json` was read-modify-written with no lock and no rename.
+- **Fix (`cd2e49b`, corrected in `cf51839` and `07b7fb1`):** the cache sits beside the project the analysis names — `file`, else `inputs.source_files[0]` (the first fix in `cd2e49b` had made every default run cache per-run because no envelope carries `file`; the maintainer's correction); the fallback is one per-process `mkdtemp("kicad-happy-spice-")`; the manifest is written through `NamedTemporaryFile` + `os.replace`; `simulate_subcircuits.py` passes its workdir as the override when the analysis names no source and gained `--model-cache-dir` / `--offline`; a model that cannot be cached is still used, with one `spice_model_cache.cache_model` "model not cached" diagnostic.
+- **Verification:** `test_spice_model_cache.py` (per-process fallback, `source_files` names the project, `file` wins, atomic write, failed write leaves no temp file, uncacheable model still used, simulate defaults to the workdir / caches beside the named source) GREEN at the tip; the harness never reaches the default path because `run/run_spice.py` pins `--model-cache-dir` to the unit workdir (TH-077), so the corpus SPICE outputs are unaffected: spice-offline quick_200 identical 8,829 / 8,829 reports after the run-id/timing mask, 0 `model_note` flips, `inventory_spice_caches --check` 0 differences (`results/v3_round9b_gate_aux/spice_offline/compare_base_cand.json`). Remaining cache hygiene (manifest mode 0600, non-atomic `.lib` write, cross-writer manifest race) is filed separately (3.0.x).
+
+### KH-478 (LOW) — `emc_spice.run_distributed_pdn_spice` always returned `(False, None)` and leaked its `emc_dpdn_*` temp directory
+
+- **File:** `skills/emc/scripts/emc_spice.py:654` (`run_distributed_pdn_spice`)
+- **Root cause:** measurement tuples built as `('ac', 'z_at_<i>', 'find vr(ic_load) at=<f>')` where `SpiceTestbench` expects `(name, 'find', expr, 'at=<f>')`, so no `.meas` rendered and the sweep stayed empty; `tempfile.mkdtemp` with no `finally`.
+- **Fix (`cd2e49b`):** tuples `(f'z_at_{i}', 'find', 'vm(ic_load)', f'at={_format_eng(f)}')` as the `run_pdn_spice` sibling; `try/except/finally` with a `record()` diagnostic and `shutil.rmtree`; new `diagnostics=None` keyword (compatible extension). The function is still unwired (no product caller), so the fix is corpus-neutral.
+- **Verification:** direct repro on both exports with ngspice-42 (`results/v3_round9b_gate_aux/kh478_repro_{base,cand}.json`): a two-cap node (10 µF / 100 nF) → `2498831` `(False, None)` + one `/tmp/emc_dpdn_*` left behind; `07b7fb1` `(True, 61 points)` (1 kHz → 15.758 Ω) + 0 left behind; `run_pdn_spice` on the same caps `(True, 61)` both sides. `test_emc_spice_workdir.py::test_distributed_pdn_renders_measurements_and_cleans_up` GREEN.
+
+### KH-446 (LOW) — `analyze_pcb.py` crashed with a traceback (exit 1) on an empty `.kicad_pcb`
+
+- **File:** `skills/kicad/scripts/analyze_pcb.py` / `analyze_schematic.py` (`main`), `kicad_core/project.py`, `kicad_core/cli.py`
+- **Root cause:** the s-expression parser's `ValueError("Unexpected end of input at position 0")` escaped `main` uncaught; the input was never checked for emptiness.
+- **Fix (`c6f4807`):** an empty or whitespace-only root input is an argparse usage error (exit 2, `file is empty; expected a KiCad board (.kicad_pcb)`), no traceback, no output; a KiCad 5 `.pro` resolves to its sibling file; a recursive or empty sub-sheet is skipped with a diagnostic (see KH-447).
+- **Verification:** direct on the two `hackclub/OnBoard` placeholders (2 bytes, `\r\n`): `2498831` rc 1 `ValueError` traceback → `07b7fb1` rc 2 one-line usage error, no output either side. `test_schematic_input_guards.py::test_empty_inputs_are_usage_errors` / `test_whitespace_only_input_is_a_usage_error` GREEN. Gate: both units stay `both_failed` with exit codes 1 / 2, so the `2498831` ledger's `crash_units` identity (`exit_code: 1`) no longer covers them — ruling Q3 treats a changed exit code as a shape change — and they are the two declared "unledgered" skips of the 9b standard gate; the next ledger (`07b7fb1`) records `exit_code: 2`.
+
+### KH-479 (HIGH, new in v3, fixed before release) — analysis-dir manifest run ids and output names could point a write, copy or delete outside the analysis directory (review-period Critical A-C1)
+
+- **File:** `skills/kicad/scripts/analysis_cache.py` (`prune_runs` at `2498831:446-448`: `run_dir = os.path.join(analysis_dir, rid); if os.path.isdir(run_dir): shutil.rmtree(run_dir)` for any manifest-named id; `get_run`, the overwrite-current path, output names), consumers `simulate_subcircuits.py`, `summarize_findings.py`, `review/scripts/deep_review_gate.py`
+- **Root cause:** v3's analysis cache trusted `manifest.json` run ids as path components. The manifest is user-editable (`track_in_git` commits it), so an absolute, dotted, nested or symlinked id resolved outside `analysis/`, and retention pruning `rmtree`'d whatever it named. Not present in any shipped release (v3.0.0 is unreleased); assigned a number for the record at the maintainer's offer.
+- **Fix (`c6f4807` + `cb40957`, refined `cf51839`):** `_run_id_problem` / `_is_run_id` accept only a plain child name whose `realpath` sits directly under the analysis dir (a symlinked run dir resolving elsewhere is not a run); `get_run` is the validated helper every consumer resolves the current run through; output names are restricted to `_CANONICAL_NAMES`; invalid ids are dropped once from the manifest.
+- **Verification:** `test_analysis_cache_containment.py` (15 tests: prune never deletes outside, symlinked run dir rejected, hostile manifest keeps the victim, `spice` / `summarize` / `deep_review_gate` refuse an escaping current, NUL-byte id rejected not raised) GREEN at the tip. Corpus-neutral: no gate profile uses `--analysis-dir`; the fixture lane is the `--analysis-dir` evidence (TH-068).
+
 ## 2026-10-24 — KH-472 / KH-464 / KH-466 / KH-475: the four output-neutral round-8 filings — fixed in v3 round 9 (`ec81ca6`, candidate `2498831`)
 
 Folded into the structural round 9 by the user's "include correctness-fixes" ruling (round-9

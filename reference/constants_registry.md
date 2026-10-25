@@ -2,15 +2,15 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-24T22:11:36.098092+00:00
+**Last scan:** 2026-10-25T05:35:03.926670+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 830 |
+| Total constants | 832 |
 | Verified | 228 |
-| Unverified | 602 |
+| Unverified | 604 |
 | Stale (changed since verification) | 0 |
 | Critical risk | 0 |
 | High risk | 8 |
@@ -221,7 +221,7 @@
 | CONST-295 | `plan` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-296 | `protocol_speeds` | datasheet_lookup | 10 | verified | 0.7 | 0.0 | **low** (0.0) |
 | CONST-297 | `coverage_rules` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-279 | `severity_order` | heuristic_threshold | 5 | verified | 0.4 | 0.0 | **low** (0.0) |
+| CONST-279 | `severity_order` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
 
 ## skills/emc/scripts/emc_spice.py
 
@@ -627,6 +627,7 @@
 |---|---|---|---|---|---|---|---|
 | CONST-517 | `STAGES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-518 | `AUDIENCES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-753 | `_JSON_TYPE_NAMES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/kicad_core/fields.py
 
@@ -845,6 +846,7 @@
 | CONST-733 | `VALID_BOM_GROUP_BY` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-027 | `VALID_DIFF_THRESHOLDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-734 | `DEFAULT_CONFIG` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-754 | `checks` | unknown | 8 | unverified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-735 | `_IPC_CONTEXT_PATTERN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-736 | `VALID_TARGET_MARKETS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-737 | `VALID_PASSIVE_SIZES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
