@@ -7,6 +7,9 @@ waiters never return. Command lines are never matched, so the waiter cannot
 match itself the way `pgrep -f "<pattern>"` does when the pattern sits in the
 waiter's own argv.
 
+Zombie detection needs Linux /proc; where /proc is absent, --pid checks existence only
+(signal 0).
+
 Markers:
   <gate-dir>/manifest.json   run_corpus_gate — done when "finished_at" is non-null
   <out>/done.json            full_chain_baseline — done when the file exists
@@ -23,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -39,10 +43,18 @@ def marker_done(path: Path) -> bool:
         return False  # being rewritten; try again next poll
 
 
-def pid_alive(pid: int) -> bool:
-    """True while the process exists and is not a zombie/dead (Linux /proc)."""
+def pid_alive(pid: int, proc_root: Path = Path("/proc")) -> bool:
+    """True while the process exists and, with /proc, is not a zombie/dead."""
+    if not proc_root.is_dir():
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return False
+        except PermissionError:
+            return True
+        return True
     try:
-        stat = Path(f"/proc/{pid}/stat").read_text()
+        stat = (proc_root / str(pid) / "stat").read_text()
     except OSError:
         return False
     state = stat.rsplit(")", 1)[1].split()[0]  # field after the parenthesised comm

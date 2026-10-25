@@ -37,6 +37,22 @@ def test_pid_alive_self_and_missing():
     assert not wait_for_run.pid_alive(2**22 - 1)
 
 
+def test_pid_alive_without_proc_uses_signal_zero(tmp_path):
+    none = tmp_path / "none"
+    assert wait_for_run.pid_alive(os.getpid(), proc_root=none)
+    child = subprocess.Popen([sys.executable, "-c", "pass"])
+    child.wait()
+    assert not wait_for_run.pid_alive(child.pid, proc_root=none)
+
+
+def test_pid_alive_with_proc_keeps_zombie_detection():
+    child = _zombie()
+    try:
+        assert not wait_for_run.pid_alive(child.pid, proc_root=Path("/proc"))
+    finally:
+        child.wait()
+
+
 def _zombie():
     child = subprocess.Popen([sys.executable, "-c", "pass"])
     for _ in range(200):  # exits quickly; stays a zombie until we wait() on it
