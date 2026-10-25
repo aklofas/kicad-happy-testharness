@@ -46,17 +46,17 @@ def test_build_env_strips_every_credential_prefix():
     assert set(env) == {"PATH", "PYTHONHASHSEED", "KICAD_HAPPY_OFFLINE"}
 
 
-def test_validate_output_checks_json_and_analyzer_type(tmp_path):
+def test_validate_analyzer_envelope_checks_json_and_analyzer_type(tmp_path):
     p = tmp_path / "o.json"
-    assert ex.validate_output(p, "pcb") == (False, "no_output")
+    assert ex.validate_analyzer_envelope(p, "pcb") == (False, "no_output")
     p.write_text("{")
-    assert ex.validate_output(p, "pcb") == (False, "invalid_output: not JSON")
+    assert ex.validate_analyzer_envelope(p, "pcb") == (False, "invalid_output: not JSON")
     p.write_text(json.dumps({"analyzer_type": "thermal"}))
-    assert ex.validate_output(p, "pcb") == (False, "invalid_output: analyzer_type thermal != pcb")
+    assert ex.validate_analyzer_envelope(p, "pcb") == (False, "invalid_output: analyzer_type thermal != pcb")
     p.write_text(json.dumps({"analyzer_type": "pcb"}))
-    assert ex.validate_output(p, "pcb") == (True, "ok")
+    assert ex.validate_analyzer_envelope(p, "pcb") == (True, "ok")
     p.write_text(json.dumps({"summary": {}}))
-    assert ex.validate_output(p, "spice") == (True, "ok")
+    assert ex.validate_analyzer_envelope(p, "spice") == (True, "ok")
 
 
 def test_run_once_ok_publishes_and_hashes(tmp_path):

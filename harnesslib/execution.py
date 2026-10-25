@@ -57,7 +57,7 @@ def recorded_env(env: Mapping[str, str]) -> tuple[tuple[str, str], ...]:
             ("offline", "true" if env.get(OFFLINE_ENV) == "1" else "false"))
 
 
-def validate_output(path: Path, analyzer: str) -> tuple[bool, str]:
+def validate_analyzer_envelope(path: Path, analyzer: str) -> tuple[bool, str]:
     path = Path(path)
     if not path.exists() or path.stat().st_size == 0:
         return False, "no_output"
@@ -147,7 +147,7 @@ def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str
         elapsed = time.time() - t0
         tail = "\n".join((err or b"").decode("utf-8", "replace").strip().splitlines()[-5:])
         rc = proc.returncode
-        ok, detail = validate_output(temp, analyzer)
+        ok, detail = validate_analyzer_envelope(temp, analyzer)
         if not ok:
             status = "crash" if detail == "no_output" and rc != 0 else \
                 ("no_output" if detail == "no_output" else "invalid_output")

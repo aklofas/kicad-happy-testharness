@@ -77,6 +77,21 @@ def test_run_pcb_parallel_validate_json_and_argv(tmp_path):
     assert manifest["totals"]["ok"] == 2 and manifest["expected_census"] == {"pcb": 2}
 
 
+def test_validate_flag_records_validation_failed_for_type_only_output(tmp_path):
+    prod, data = _product(tmp_path), _data(tmp_path, boards=("a.kicad_pcb",))
+    script = prod / "skills" / "kicad" / "scripts" / "analyze_pcb.py"
+    script.write_text("import json, sys\n"
+                      "json.dump({'analyzer_type': 'pcb'}, open(sys.argv[sys.argv.index('-o') + 1], 'w'))\n")
+    r = subprocess.run([sys.executable, str(HARNESS / "run" / "run_pcb.py"), "--repo", "o/r",
+                        "--jobs", "1", "--validate"],
+                       cwd=HARNESS, env=_env(tmp_path, data, prod), capture_output=True, text=True,
+                       timeout=120)
+    assert r.returncode == 1, r.stdout + r.stderr
+    assert "VFAIL" in r.stdout
+    units = (data / "results" / "outputs" / "pcb" / "units.jsonl").read_text().splitlines()
+    assert [json.loads(u)["status"] for u in units] == ["validation_failed"]
+
+
 def test_chained_emc_happy_path(tmp_path):
     prod, data = _product(tmp_path), tmp_path / "data"
     sch = data / "results" / "outputs" / "schematic" / "o" / "r"
