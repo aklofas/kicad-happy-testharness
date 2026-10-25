@@ -3,6 +3,7 @@ apply paths run at all (code A7-F14, A7-F15), and an unresolvable check path is 
 "possibly fixed" (code A7-F11)."""
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -62,3 +63,29 @@ def test_drift_reports_unresolvable_and_skips_dispositioned(tmp_path):
     _run(tmp_path, "regression/cleanup_drift.py", "--apply")
     out = json.loads(_run(tmp_path, "regression/drift.py", "--all", "--json"))
     assert out["counts"]["possibly_fixed"] == 0 and out["counts"]["unresolvable"] == 1
+
+
+FIXTURE = HARNESS / "tests" / "fixtures" / "wave10"
+
+
+def _copy_drift_root(dest):
+    shutil.copytree(FIXTURE / "drift" / "reference", dest / "reference")
+    shutil.copytree(FIXTURE / "drift" / "outputs", dest / "results" / "outputs")
+    return dest / "reference" / "o" / "r" / "p" / "findings.json"
+
+
+def _dispositions(ff):
+    out = {}
+    for f in json.loads(ff.read_text())["findings"]:
+        out[f["id"]] = {t: [i.get("disposition", {}).get("state") for i in f[t]]
+                        for t in ("correct", "incorrect", "missed")}
+    return out
+
+
+@pytest.mark.parametrize("tool", [["regression/cleanup_drift.py", "--apply"],
+                                  ["regression/refresh_findings.py", "--apply"]])
+def test_cleanup_and_refresh_apply_match_golden(tmp_path, tool):
+    ff = _copy_drift_root(tmp_path)
+    _run(tmp_path, *tool)
+    golden = json.loads((FIXTURE / "drift_apply_golden.json").read_text())
+    assert _dispositions(ff) == golden[tool[0]]

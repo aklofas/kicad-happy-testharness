@@ -1,0 +1,177 @@
+{
+  "findings": [
+    {
+      "id": "FND-1",
+      "repo": "o/r",
+      "analyzer_type": "schematic",
+      "source_file": "main.kicad_sch.json",
+      "correct": [
+        {
+          "description": "c ok check",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^R2$"
+          }
+        },
+        {
+          "description": "c regression check",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^R9$"
+          }
+        },
+        {
+          "description": "c ok count",
+          "analyzer_section": "findings"
+        },
+        {
+          "description": "c regression count",
+          "analyzer_section": "gone_section"
+        },
+        {
+          "description": "c no section",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^R9$"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "i fixed check",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^R1$"
+          }
+        },
+        {
+          "description": "i still present",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^R2$"
+          }
+        },
+        {
+          "description": "i fixed count",
+          "analyzer_section": "empty_section"
+        },
+        {
+          "description": "i ok count",
+          "analyzer_section": "findings"
+        },
+        {
+          "description": "i already dispositioned",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^R1$"
+          },
+          "disposition": {
+            "state": "possibly_fixed",
+            "by": "earlier",
+            "date": "2026-01-01"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "m now detected",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^R5$"
+          }
+        },
+        {
+          "description": "m still missing",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^R8$"
+          }
+        },
+        {
+          "description": "m now detected count",
+          "analyzer_section": "findings"
+        },
+        {
+          "description": "m still empty count",
+          "analyzer_section": "empty_section"
+        }
+      ]
+    },
+    {
+      "id": "FND-2",
+      "repo": "o/r",
+      "analyzer_type": "schematic",
+      "source_file": "absent.kicad_sch.json",
+      "correct": [
+        {
+          "description": "c",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^R2$"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "i",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^R1$"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "m",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "detector_filter": "detect_rc_filters",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^R5$"
+          }
+        }
+      ]
+    }
+  ]
+}
