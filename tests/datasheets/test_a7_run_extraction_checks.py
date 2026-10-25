@@ -128,7 +128,10 @@ def test_missing_cache_skipped():
             "--cache-dir", str(cache_dir),
             "--gold-dir", str(gold_root),
         ], cwd=tmp_path)
-        # No cache → skipped → exit 0 (nothing regresses)
+        # No cache → an allowed skip, but zero evaluated pairs is no evidence (ruling R13)
+        assert r.returncode == 2
+        r = _run(["--all", "--cache-dir", str(cache_dir), "--gold-dir", str(gold_root),
+                  "--min-pairs", "0"], cwd=tmp_path)
         assert r.returncode == 0
 
 
@@ -142,7 +145,20 @@ def test_missing_gold_skipped():
             "--cache-dir", str(cache_dir),
             "--gold-dir", str(gold_root),
         ], cwd=tmp_path)
+        assert r.returncode == 2     # nothing evaluated (ruling R13)
+        r = _run(["--all", "--cache-dir", str(cache_dir), "--gold-dir", str(gold_root),
+                  "--min-pairs", "0"], cwd=tmp_path)
         assert r.returncode == 0
+
+
+def test_differ_crash_is_exit_2():
+    """code A7-F3 / arch V7: a crashed differ became `skipped` and the batch exited 0."""
+    with tempfile.TemporaryDirectory() as td:
+        tmp_path = Path(td)
+        cache_dir, gold_root = _seed_gold_and_cache(tmp_path)
+        (cache_dir / "LM2596-ADJ.json").write_text("{not json")
+        r = _run(["--all", "--cache-dir", str(cache_dir), "--gold-dir", str(gold_root)], cwd=tmp_path)
+        assert r.returncode == 2 and "differ failure" in r.stderr
 
 
 def test_score_threshold_override():

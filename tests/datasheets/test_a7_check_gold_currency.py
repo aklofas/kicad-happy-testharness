@@ -370,3 +370,34 @@ if __name__ == "__main__":
             failed += 1
     print(f"{passed} passed, {failed} failed ({len(fn_names)} total)")
     sys.exit(0 if failed == 0 else 1)
+
+
+def _currency(tmp_path, gold_root, pdf_dir):
+    schemas_dir = tmp_path / "skills" / "datasheets" / "schemas"
+    if not schemas_dir.exists():
+        schemas_dir = _write_synth_schemas(tmp_path)
+    return _run(["--all", "--pdf-dir", str(pdf_dir), "--schemas-dir", str(schemas_dir),
+                 "--gold-dir", str(gold_root)], cwd=tmp_path)
+
+
+def test_missing_or_malformed_gold_is_exit_2(tmp_path=None):
+    """code A7-F5: the audit never opened gold_v*.json; a deleted gold read as current."""
+    import tempfile
+    tmp_path = Path(tempfile.mkdtemp())
+    gold_root, slug_dir, pdf_dir, _ = _seed_gold(tmp_path)
+    (slug_dir / "gold_v1.0.json").unlink()
+    r = _currency(tmp_path, gold_root, pdf_dir)
+    assert r.returncode == 2 and "gold_v1.0.json missing" in r.stdout + r.stderr
+    (slug_dir / "gold_v1.0.json").write_text("{broken")
+    assert _currency(tmp_path, gold_root, pdf_dir).returncode == 2
+
+
+def test_gold_disagreeing_with_meta_is_an_error(tmp_path=None):
+    import tempfile
+    tmp_path = Path(tempfile.mkdtemp())
+    gold_root, slug_dir, pdf_dir, _ = _seed_gold(tmp_path)
+    gold = json.loads((slug_dir / "gold_v1.0.json").read_text())
+    gold["source"]["sha256"] = "sha256:" + "0" * 64
+    (slug_dir / "gold_v1.0.json").write_text(json.dumps(gold))
+    r = _currency(tmp_path, gold_root, pdf_dir)
+    assert r.returncode == 1 and "source sha256" in r.stdout

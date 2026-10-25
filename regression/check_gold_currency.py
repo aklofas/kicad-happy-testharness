@@ -134,8 +134,9 @@ def _audit_one(slug_dir: Path, *, pdf_dir: Path, schemas_dir: Path,
                meta_schema: dict) -> list[Finding]:
     """Audit a single gold dir; return a list of findings.
 
-    Checks in order: meta validity, PDF SHA, base schema version,
-    per-category schema versions, extractor version.
+    Checks in order: meta validity, the gold file (present, parseable, same source sha256
+    and schema version as the metadata), PDF SHA, base schema version, per-category schema
+    versions, extractor version.
     """
     slug = slug_dir.name
     meta_path = slug_dir / "meta.json"
@@ -162,6 +163,24 @@ def _audit_one(slug_dir: Path, *, pdf_dir: Path, schemas_dir: Path,
         pass  # tolerate jsonschema absence
 
     findings: list[Finding] = []
+
+    # The gold itself: present, readable, and the extraction the metadata describes
+    gold_path = slug_dir / f"gold_v{meta['schema_version_at_curation']['base']}.json"
+    if not gold_path.exists():
+        return [Finding(slug, Severity.ERROR, "malformed", f"{gold_path.name} missing in {slug_dir}")]
+    try:
+        gold = json.loads(gold_path.read_text())
+    except json.JSONDecodeError as e:
+        return [Finding(slug, Severity.ERROR, "malformed", f"{gold_path.name} malformed: {e}")]
+    gold_sha = str((gold.get("source") or {}).get("sha256", "")).removeprefix("sha256:")
+    if gold_sha != meta["pdf_sha256"]:
+        findings.append(Finding(slug, Severity.ERROR, "gold_meta",
+                                f"{gold_path.name} source sha256 {gold_sha[:8]}… != meta "
+                                f"{meta['pdf_sha256'][:8]}…"))
+    if gold.get("schema_version") != meta["schema_version_at_curation"]:
+        findings.append(Finding(slug, Severity.ERROR, "gold_meta",
+                                f"{gold_path.name} schema_version {gold.get('schema_version')} != "
+                                f"meta {meta['schema_version_at_curation']}"))
 
     # PDF SHA check
     pdf_path = pdf_dir / meta["pdf_filename"]

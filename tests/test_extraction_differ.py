@@ -397,3 +397,16 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {type(e).__name__}: {e}")
     print(f"\n{passed} passed, {failed} failed ({len(tests)} total)")
     sys.exit(1 if failed else 0)
+
+
+def test_present_to_absent_is_reported():
+    """code A7-F9: page/section/confidence/condition were compared only when present on both
+    sides, so a candidate that dropped them read as identical."""
+    from regression.extraction_differ import _diff_specvalue, Severity
+    gold = {"typ": 1.0, "unit": "V", "condition": "Ta=25C",
+            "evidence": {"page": 4, "section": "6.5", "confidence": "high", "method": "table"}}
+    cand = {"typ": 1.0, "unit": "V", "evidence": {"method": "table"}}
+    lost = {e.path: e.severity for e in _diff_specvalue("p", gold, cand)}
+    assert lost == {"p.condition": Severity.INFO, "p.evidence.page": Severity.WARNING,
+                    "p.evidence.section": Severity.INFO, "p.evidence.confidence": Severity.WARNING}
+    assert _diff_specvalue("p", gold, gold) == []

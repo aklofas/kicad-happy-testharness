@@ -213,9 +213,25 @@ def _diff_numeric_field(path: str, gold: Any, cand: Any) -> list[DiffEntry]:
     )]
 
 
+def _lost_fields(path_prefix: str, gold: dict, cand: dict, fields: dict) -> list[DiffEntry]:
+    """A field the gold has and the candidate dropped, at the severity a changed value of
+    that field gets (the pairwise checks below compare only fields present on both sides)."""
+    return [DiffEntry(path=f"{path_prefix}.{key}", category=cat, severity=sev,
+                      summary=f"{key} lost: {gold[key]!r} vs absent",
+                      gold_value=gold[key], candidate_value=None)
+            for key, (cat, sev) in fields.items()
+            if gold.get(key) is not None and cand.get(key) is None]
+
+
 def _diff_evidence(path_prefix: str, gold_ev: dict, cand_ev: dict) -> list[DiffEntry]:
     """Diff an evidence sub-dict per spec §9 lines 627-630."""
     entries = []
+
+    entries.extend(_lost_fields(path_prefix, gold_ev, cand_ev, {
+        "page": (Category.PAGE, Severity.WARNING),
+        "section": (Category.FUZZY, Severity.INFO),
+        "confidence": (Category.CONFIDENCE, Severity.WARNING),
+    }))
 
     g_page = gold_ev.get("page")
     c_page = cand_ev.get("page")
@@ -289,6 +305,7 @@ def _diff_specvalue(path: str, gold: dict, cand: dict) -> list[DiffEntry]:
             gold_value=g_unit, candidate_value=c_unit,
         ))
 
+    entries.extend(_lost_fields(path, gold, cand, {"condition": (Category.FUZZY, Severity.INFO)}))
     g_cond = gold.get("condition")
     c_cond = cand.get("condition")
     if g_cond is not None and c_cond is not None:

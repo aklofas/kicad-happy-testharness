@@ -6,7 +6,9 @@ Spec: docs/superpowers/specs/2026-04-27-a7-gold-set-versioning-design.md §5.3.
 Exit codes:
     0  no regressions (every diff has zero ERROR entries and score >= threshold)
     1  regression on at least one MPN
-    2  malformed inputs
+    2  malformed inputs: the differ crashed or emitted no report for a pair, or fewer than
+       --min-pairs pairs were evaluated (a missing cache or gold file is an allowed skip,
+       but a run that evaluates nothing is no evidence)
 """
 from __future__ import annotations
 
@@ -56,6 +58,7 @@ class MpnReport:
     info_count: int = 0
     skipped: bool = False
     skip_reason: str = ""
+    crashed: bool = False
 
 
 def _diff_one(*, mpn: str, gold_path: Path, cache_path: Path) -> MpnReport:
@@ -82,9 +85,12 @@ def _diff_one(*, mpn: str, gold_path: Path, cache_path: Path) -> MpnReport:
     try:
         payload = json.loads(proc.stdout)
     except json.JSONDecodeError:
-        rep.skipped = True
-        rep.skip_reason = (f"differ produced malformed JSON: "
-                           f"{proc.stderr[:200]}")
+        payload = None
+    if proc.returncode not in (0, 1) or not isinstance(payload, dict):
+        # a crash or an input error is never an allowed skip
+        rep.skipped = rep.crashed = True
+        rep.skip_reason = (f"differ failed (exit {proc.returncode}): "
+                           f"{(proc.stderr or proc.stdout)[:200]}")
         return rep
     rep.score = payload.get("gold_diff_score", 0)
     for entry in payload.get("entries", []):
@@ -213,6 +219,8 @@ def main(argv: Optional[list[str]] = None) -> int:
                              f"{multiprocessing.cpu_count()})")
     parser.add_argument("--score-threshold", type=int, default=90,
                         help="Score below this = regression (default: 90)")
+    parser.add_argument("--min-pairs", type=int, default=1,
+                        help="Fewest evaluated (gold, cache) pairs for a verdict (default: 1)")
     args = parser.parse_args(argv)
 
     if not args.mpn and not args.all:
@@ -230,7 +238,7 @@ def main(argv: Optional[list[str]] = None) -> int:
             }))
         else:
             print("No MPN gold dirs found; nothing to diff.")
-        return 0
+        return 2 if args.min_pairs > 0 else 0
 
     if args.jobs <= 1:
         reports = [_diff_one(mpn=m, gold_path=g, cache_path=c)
@@ -246,6 +254,12 @@ def main(argv: Optional[list[str]] = None) -> int:
     else:
         _print_human(reports, args.score_threshold)
 
+    crashed = [r for r in reports if r.crashed]
+    evaluated = sum(1 for r in reports if not r.skipped)
+    if crashed or evaluated < args.min_pairs:
+        print(f"ERROR: {len(crashed)} differ failure(s), {evaluated} pair(s) evaluated "
+              f"(minimum {args.min_pairs})", file=sys.stderr)
+        return 2
     if any(r.error_count > 0
            or (not r.skipped and r.score < args.score_threshold)
            for r in reports):
