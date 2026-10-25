@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-082: `discover.py --repo` rewrote the global manifests from one repo — a "full" gate then ran and passed on that repo
+
+**Severity:** HIGH (corpus gate false-pass path; live manifests were intact, no past verdict affected).
+**File:** `discover.py` (`rebuild_global_manifests`, `manifests_lock`, `census.json`); `regression/run_corpus_gate.py` (`check_manifest_census`, `--allow-census-drop`); `harnesslib/identity.py` (`manifest_census` in the run manifest); tests `tests/test_discover_global_manifests.py`, `tests/test_gate_preflight.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (code A3-F3).
+**Fixed:** 2026-10-25.
+
+- **Root cause:** with `--repo`, discover wrote all four `all_*.txt` from that repo alone (plain `write_text`). The gate derives both its job list and its expected census from those files, so `census_ok` held over one repo. `tools/add_repos.py` runs discover per repo in a pool, which also raced its own workers.
+- **Fix:** discover always rebuilds the globals from every per-repo manifest (atomic replace, under an flock on Linux), and writes `results/manifests/census.json` (per-file counts, sha256, and the floor of the last full discover; a `--repo` run keeps the floor). The gate, on a full run, refuses (exit 2) a global manifest whose sha256 differs from the census or whose count falls below the floor without `--allow-census-drop` (ruling R4), and records the check as `manifest_census` in the run manifest.
+- **Verification:** rebuilding today's globals from the per-repo manifests reproduces them byte-for-byte (36,465 / 18,660 / 5,502 / 12,554; sha256 unchanged); `census.json` written from them. New tests (repo refresh keeps every repo; floor kept/reset; one-repo rewrite refused; drop needs the flag; census recorded) fail on the old code and pass after.
+
 ## 2026-10-25 — TH-081: a ledgered baseline timeout covered any candidate failure
 
 **Severity:** HIGH (corpus gate false-pass path; no past verdict affected).

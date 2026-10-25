@@ -2904,12 +2904,6 @@ A missing key reads as `""`, which matches `^$`, so the lock fails correctly. JS
 **Discovered:** 2026-10-25, harness external audit round 1 (code A2-F1)
 A malformed tracked assertion file (hand edit, merge conflict) is skipped with no record or warning; its assertions vanish from the totals, and if it was the only file the run exits 0 "No assertions found". Fix: an unreadable file is a structured error and `run_checks` exits non-zero.
 
-### TH-082: `discover.py --repo` rewrites the global manifests from one repo — a "full" gate then runs and passes on that repo
-**Severity:** HIGH (corpus gate false pass)
-**File:** `discover.py:99-147` (`repos=[args.repo]`; all four `all_*.txt` written with plain `write_text`); `regression/run_corpus_gate.py:226-255` (jobs and `expected_census` both derived from those files); `tools/add_repos.py:188, 400` (per-repo discover in a parallel pool)
-**Discovered:** 2026-10-25, harness external audit round 1 (code A3-F3)
-A single-repo discover leaves `all_*.txt` naming only that repo. The gate derives both its job list and its expected census from those files, so `census_ok` holds over one repo. `add_repos` runs discover per repo in a pool, so after a corpus-expansion batch the globals name only the last repo, and concurrent workers see "No schematics found". Live manifests were intact at the audit (36,465 schematics, 2026-10-15). Fix: rebuild the globals from every per-repo manifest with an atomic replace; record a manifest digest + census and refuse a census drop without `--allow-census-drop` (ruling R4).
-
 ### TH-079: `generate_validation_md.py` builds the category table and the total from different denominators
 **Severity:** LOW (generated release document)
 **File:** harness `tools/generate_validation_md.py`; product `VALIDATION.md:82-88`

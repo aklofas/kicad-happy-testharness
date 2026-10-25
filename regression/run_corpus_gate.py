@@ -257,6 +257,41 @@ def build_phase_a_jobs(repos, layout, baseline_dir, candidate_dir, profile):
     return jobs
 
 
+CENSUS_FILE = "census.json"
+
+
+def check_manifest_census(profile, allow_drop=False):
+    """Full-corpus runs only: every global manifest the profile reads must be the one discover.py
+    last described in census.json (same sha256), and its line count must not fall below the
+    census floor of the last full discover unless allow_drop. Returns the census record."""
+    path = MANIFESTS_DIR / CENSUS_FILE
+    try:
+        census = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        raise PreflightError(f"{path} unreadable ({e}); run discover.py before a full gate") from None
+    checked = {}
+    for analyzer in PHASE_A:
+        if analyzer not in profile.analyzers:
+            continue
+        name = MANIFEST_FILE[analyzer]
+        kind = name[len("all_"):-len(".txt")]
+        mpath = MANIFESTS_DIR / name
+        if not mpath.exists():
+            raise PreflightError(f"manifest {mpath} missing for profile analyzer {analyzer}; run discover.py")
+        data = mpath.read_bytes()
+        if hashlib.sha256(data).hexdigest() != (census.get("sha256") or {}).get(kind):
+            raise PreflightError(f"{name} differs from the census discover.py recorded; "
+                                 "re-run discover.py (manifests are written only by discover)")
+        n = sum(1 for ln in data.decode("utf-8").splitlines() if ln.strip())
+        floor = (census.get("floor") or {}).get(kind, 0)
+        if n < floor and not allow_drop:
+            raise PreflightError(f"{name} has {n} units, below the census floor {floor} of the last "
+                                 "full discover; pass --allow-census-drop if the drop is intended")
+        checked[kind] = {"count": n, "floor": floor}
+    return {"written_at": census.get("written_at"), "mode": census.get("mode"),
+            "sha256": census.get("sha256"), "checked": checked, "drop_allowed": bool(allow_drop)}
+
+
 def duplicate_unit_keys(a_jobs) -> list[str]:
     """(analyzer, repo, safe_name) keys shared by more than one input: safe_name flattens
     `/` to `_`, so two such inputs would share one snapshot path and one unit id."""
@@ -767,6 +802,9 @@ def build_arg_parser():
                     help="reuse units from a previous run ONLY if its manifest identity matches")
     ap.add_argument("--budget", default=None, metavar="FILE",
                     help="regression/budgets/<id>.json; enables the budgeted mode verdict")
+    ap.add_argument("--allow-census-drop", action="store_true",
+                    help="full runs: accept global manifests below the census floor of the last "
+                         "full discover (results/manifests/census.json)")
     ap.add_argument("--ledger", default=None, metavar="FILE",
                     help="baseline-debts ledger for skips_ok (default: reference/baseline_debts/"
                          "<baseline sha7>.json when present)")
@@ -974,6 +1012,7 @@ def main(argv=None):
                or getattr(args, "repo", None) or "full").replace("/", "_")
 
     try:
+        census = check_manifest_census(profile, args.allow_census_drop) if repos is None else None
         a_jobs = build_phase_a_jobs(repos, layout, args.baseline_dir, args.candidate_dir, profile)
     except PreflightError as e:
         print(f"Error: {e}", file=sys.stderr)
@@ -1013,7 +1052,8 @@ def main(argv=None):
                 print(f"  archived previous {src.name} -> {name}")
     write_manifest(layout.root, spec, run_id=str(uuid.uuid4()), expected_census=expected_census(a_jobs),
                    input_digest=input_digest(sorted(input_shas_by_unit(a_jobs, input_shas))),
-                   runtime={"python": platform.python_version(), "platform": platform.platform()})
+                   runtime={"python": platform.python_version(), "platform": platform.platform()},
+                   census=census)
     manifest = read_manifest(layout.root)
     log = UnitLog(layout.root)
     n_repos = len(repos) if repos is not None else len(list_repos())

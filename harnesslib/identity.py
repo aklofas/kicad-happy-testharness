@@ -110,7 +110,7 @@ def _now() -> str:
 
 def write_manifest(root: Path, spec: RunSpec, *, run_id: str,
                    expected_census: dict[str, int], input_digest: str,
-                   runtime: dict[str, str]) -> Path:
+                   runtime: dict[str, str], census: dict | None = None) -> Path:
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
     doc = {
@@ -131,6 +131,7 @@ def write_manifest(root: Path, spec: RunSpec, *, run_id: str,
                       "digest": selection_digest(spec.unit_ids)},
         "input_digest": input_digest,
         "expected_census": dict(expected_census),
+        "manifest_census": census,
         "normalization_policy": spec.normalization_policy,
         "identity": identity_key(spec),
         "started_at": _now(),

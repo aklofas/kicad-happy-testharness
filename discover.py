@@ -5,13 +5,23 @@ Scans repos/ for schematic, PCB, project, and Gerber files.
 Writes file lists to results/manifests/ (flat) and per-repo manifests
 to results/manifests/{repo}/.
 
+The flat all_*.txt manifests are always rebuilt from every per-repo manifest
+(a --repo run refreshes one repo, then rebuilds the globals), replaced atomically,
+and described by census.json: per-file line counts and sha256, plus the census
+floor of the last full discover. The corpus gate checks a full run against it.
+
 Usage:
     python3 discover.py
     python3 discover.py --repo OpenMower
 """
 
 import argparse
+import contextlib
+import hashlib
+import json
+import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 from utils import HARNESS_DIR, REPOS_DIR, MANIFESTS_DIR, list_repos, repo_name_from_path
@@ -72,6 +82,65 @@ def discover_in(scan_dir):
     }
 
 
+GLOBAL_KINDS = ("schematics", "pcbs", "gerbers", "projects")
+CENSUS_FILE = "census.json"
+
+
+def _atomic_write(path, text):
+    tmp = path.with_name(f"{path.name}.tmp-{os.getpid()}")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
+@contextlib.contextmanager
+def manifests_lock(manifests_dir):
+    """Serialise discover runs (add_repos runs one per repo in a pool). Linux-only: where
+    fcntl is unavailable the lock is skipped."""
+    try:
+        import fcntl
+    except ImportError:
+        yield
+        return
+    manifests_dir.mkdir(parents=True, exist_ok=True)
+    with open(manifests_dir / ".discover.lock", "w") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh, fcntl.LOCK_UN)
+
+
+def rebuild_global_manifests(manifests_dir, repos, full):
+    """Rebuild all_<kind>.txt from the per-repo manifests of `repos`, replace each atomically,
+    and write census.json. A full discover resets the census floor to the new counts; a
+    --repo rebuild keeps the previous floor. Returns the census dict."""
+    lists = {k: [] for k in GLOBAL_KINDS}
+    for repo in repos:
+        for k in GLOBAL_KINDS:
+            f = manifests_dir / repo / f"{k}.txt"
+            if f.exists():
+                lists[k].extend(ln for ln in f.read_text(encoding="utf-8").splitlines() if ln.strip())
+    counts, digests = {}, {}
+    for k in GLOBAL_KINDS:
+        text = "\n".join(sorted(lists[k])) + "\n" if lists[k] else ""
+        _atomic_write(manifests_dir / f"all_{k}.txt", text)
+        counts[k] = len(lists[k])
+        digests[k] = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    prev = read_census(manifests_dir)
+    floor = counts if full or not prev else prev.get("floor", counts)
+    census = {"counts": counts, "sha256": digests, "floor": floor, "mode": "full" if full else "repo",
+              "written_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+    _atomic_write(manifests_dir / CENSUS_FILE, json.dumps(census, indent=2, sort_keys=True) + "\n")
+    return census
+
+
+def read_census(manifests_dir):
+    try:
+        return json.loads((Path(manifests_dir) / CENSUS_FILE).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
 def write_manifest(out_dir, result):
     """Write manifest files to a directory."""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -107,44 +176,28 @@ def main():
 
     print("=== Discovering KiCad files in repos/ ===")
 
-    # Aggregate totals for flat manifests
-    all_schematics = []
-    all_pcbs = []
-    all_gerbers = []
-    all_projects = []
     total_skipped = 0
+    with manifests_lock(MANIFESTS_DIR):
+        for repo in repos:
+            repo_dir = REPOS_DIR / repo
+            result = discover_in(repo_dir)
 
-    for repo in repos:
-        repo_dir = REPOS_DIR / repo
-        result = discover_in(repo_dir)
+            # Write per-repo manifest
+            repo_manifest_dir = MANIFESTS_DIR / repo
+            write_manifest(repo_manifest_dir, result)
+            total_skipped += result["skipped_sch"]
 
-        # Write per-repo manifest
-        repo_manifest_dir = MANIFESTS_DIR / repo
-        write_manifest(repo_manifest_dir, result)
+            total = len(result["schematics"]) + len(result["pcbs"]) + len(result["gerbers"])
+            if total > 0:
+                print(f"  {repo}: {len(result['schematics'])} sch, {len(result['pcbs'])} pcb, {len(result['gerbers'])} gerber")
 
-        all_schematics.extend(result["schematics"])
-        all_pcbs.extend(result["pcbs"])
-        all_gerbers.extend(result["gerbers"])
-        all_projects.extend(result["projects"])
-        total_skipped += result["skipped_sch"]
-
-        total = len(result["schematics"]) + len(result["pcbs"]) + len(result["gerbers"])
-        if total > 0:
-            print(f"  {repo}: {len(result['schematics'])} sch, {len(result['pcbs'])} pcb, {len(result['gerbers'])} gerber")
-
-    # Write flat manifests (backwards compat)
-    all_schematics.sort()
-    all_pcbs.sort()
-    all_gerbers.sort()
-    all_projects.sort()
-    (MANIFESTS_DIR / "all_schematics.txt").write_text(
-        "\n".join(all_schematics) + "\n" if all_schematics else "", encoding="utf-8")
-    (MANIFESTS_DIR / "all_pcbs.txt").write_text(
-        "\n".join(all_pcbs) + "\n" if all_pcbs else "", encoding="utf-8")
-    (MANIFESTS_DIR / "all_gerbers.txt").write_text(
-        "\n".join(all_gerbers) + "\n" if all_gerbers else "", encoding="utf-8")
-    (MANIFESTS_DIR / "all_projects.txt").write_text(
-        "\n".join(all_projects) + "\n" if all_projects else "", encoding="utf-8")
+        # the flat manifests always cover every repo, never only this run's
+        census = rebuild_global_manifests(MANIFESTS_DIR, list_repos(), full=not args.repo)
+    all_schematics = (MANIFESTS_DIR / "all_schematics.txt").read_text(encoding="utf-8").splitlines()
+    counts = census["counts"]
+    if any(counts[k] < census["floor"].get(k, 0) for k in GLOBAL_KINDS):
+        print(f"WARNING: census {counts} is below the last full discover's floor {census['floor']}",
+              file=sys.stderr)
 
     kicad_sch_count = sum(1 for s in all_schematics if s.endswith(".kicad_sch"))
     legacy_sch_count = len(all_schematics) - kicad_sch_count
@@ -154,9 +207,9 @@ def main():
     print(f"  .sch:       {legacy_sch_count}")
     if total_skipped:
         print(f"  (skipped {total_skipped} non-KiCad .sch files)")
-    print(f"PCBs:       {len(all_pcbs)}")
-    print(f"Gerber dirs: {len(all_gerbers)}")
-    print(f"Projects:   {len(all_projects)}")
+    print(f"PCBs:       {counts['pcbs']}")
+    print(f"Gerber dirs: {counts['gerbers']}")
+    print(f"Projects:   {counts['projects']}")
     print(f"\nManifests written to {MANIFESTS_DIR}/")
     print(f"Per-repo manifests written for {len(repos)} repos")
 
