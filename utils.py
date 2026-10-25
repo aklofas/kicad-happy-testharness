@@ -15,6 +15,7 @@ import sys
 import time
 from pathlib import Path
 
+from harnesslib import cli as _cli
 from harnesslib import batch as _batch
 from harnesslib import corpus as _corpus
 from harnesslib.batch import EXPECTED_KEYS, _print_detector_aggregate, _run_one  # noqa: F401
@@ -539,18 +540,18 @@ def build_batch_parser(type_name):
         description=f"Run {type_name} analysis"
     )
     add_repo_filter_args(parser)
-    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
-                        help=f"Number of parallel analyzer processes (default: {DEFAULT_JOBS})")
+    _cli.add_jobs_arg(parser, default=DEFAULT_JOBS,
+                      help=f"Number of parallel analyzer processes (default: {DEFAULT_JOBS})")
     parser.add_argument("--validate", action="store_true",
                         help="Validate output JSON structure after each run")
     parser.add_argument("--json", action="store_true",
                         help="Print JSON summary line at end of output")
-    parser.add_argument("--resume", action="store_true",
+    _cli.add_resume_arg(parser,
                         help="Skip units whose input and output match the recorded run identity")
     parser.add_argument("--online", action="store_true",
                         help="keep distributor credentials in the analyzer environment")
-    parser.add_argument("--timeout", type=int, default=ANALYZER_TIMEOUT,
-                        help=f"Per-file analyzer cap in seconds (default {ANALYZER_TIMEOUT})")
+    _cli.add_timeout_arg(parser, default=ANALYZER_TIMEOUT, short=False,
+                         help=f"Per-file analyzer cap in seconds (default {ANALYZER_TIMEOUT})")
     return parser
 
 

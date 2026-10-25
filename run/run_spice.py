@@ -41,6 +41,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.execution import build_env
 from harnesslib.profiles import PROFILES
+from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
@@ -179,10 +180,9 @@ def build_parser():
         description="Run SPICE simulations on schematic analysis outputs"
     )
     add_repo_filter_args(parser)
-    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
-                        help=f"Parallel jobs (default: {DEFAULT_JOBS})")
-    parser.add_argument("--timeout", "-t", type=int, default=5,
-                        help="Timeout per subcircuit simulation in seconds (default: 5)")
+    add_jobs_arg(parser, default=DEFAULT_JOBS, help=f"Parallel jobs (default: {DEFAULT_JOBS})")
+    add_timeout_arg(parser, default=5,
+                    help="Timeout per subcircuit simulation in seconds (default: 5)")
     parser.add_argument("--with-parasitics", action="store_true",
                         help="Enable PCB parasitic injection: extract trace R/via L "
                         "from PCB outputs and inject into SPICE testbenches. "
@@ -190,8 +190,7 @@ def build_parser():
     parser.add_argument("--extra-args", type=str, default="",
                         help="Extra arguments to pass through to simulate_subcircuits.py "
                         "(e.g. '--monte-carlo 100 --mc-seed 42')")
-    parser.add_argument("--resume", action="store_true",
-                        help="Skip files that already have valid output JSON")
+    add_resume_arg(parser, help="Skip files that already have valid output JSON")
     parser.add_argument("--workdir", default=None,
                         help="Scratch root for the harness's simulation work files "
                              "(default: results/spice_work/<timestamp>); never inside "

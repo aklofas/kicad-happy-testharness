@@ -28,6 +28,7 @@ from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
@@ -104,20 +105,17 @@ def build_parser():
         description="Run EMC pre-compliance analysis on schematic+PCB outputs"
     )
     add_repo_filter_args(parser)
-    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
-                        help=f"Parallel jobs (default: {DEFAULT_JOBS})")
+    add_jobs_arg(parser, default=DEFAULT_JOBS, help=f"Parallel jobs (default: {DEFAULT_JOBS})")
     parser.add_argument("--standard", default="fcc-class-b",
                         choices=["fcc-class-b", "fcc-class-a",
                                  "cispr-class-b", "cispr-class-a",
                                  "cispr-25", "mil-std-461"],
                         help="Target EMC standard (default: fcc-class-b)")
-    parser.add_argument("--timeout", "-t", type=int, default=30,
-                        help="Timeout per file in seconds (default: 30)")
+    add_timeout_arg(parser, default=30, help="Timeout per file in seconds (default: 30)")
     parser.add_argument("--spice-enhanced", action="store_true",
                         help="Enable SPICE-verified PDN impedance and EMI "
                         "filter checks (requires ngspice)")
-    parser.add_argument("--resume", action="store_true",
-                        help="Skip files that already have valid output JSON")
+    add_resume_arg(parser, help="Skip files that already have valid output JSON")
     parser.add_argument("--compact", action="store_true",
                         help="Pass --compact to analyze_emc.py (strips INFO "
                         "findings; hides GP-001 and other INFO-gated visibility "

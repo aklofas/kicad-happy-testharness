@@ -32,6 +32,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.profiles import PROFILES
+from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
@@ -134,12 +135,10 @@ def build_parser():
         description="Run thermal analysis on schematic+PCB output pairs"
     )
     add_repo_filter_args(parser)
-    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
-                        help=f"Parallel jobs (default: {DEFAULT_JOBS})")
-    parser.add_argument("--timeout", "-t", type=int, default=ANALYZER_TIMEOUT,
-                        help=f"Timeout per file in seconds (default: {ANALYZER_TIMEOUT})")
-    parser.add_argument("--resume", action="store_true",
-                        help="Skip files that already have valid output JSON")
+    add_jobs_arg(parser, default=DEFAULT_JOBS, help=f"Parallel jobs (default: {DEFAULT_JOBS})")
+    add_timeout_arg(parser, default=ANALYZER_TIMEOUT,
+                    help=f"Timeout per file in seconds (default: {ANALYZER_TIMEOUT})")
+    add_resume_arg(parser, help="Skip files that already have valid output JSON")
     return parser
 
 
