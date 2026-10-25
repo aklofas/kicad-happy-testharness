@@ -129,7 +129,7 @@ def _process_one_thermal(sch_json, pcb_json, thermal_out_dir, timeout,
     return sch_json, returncode, summary, output_json, elapsed
 
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser(
         description="Run thermal analysis on schematic+PCB output pairs"
     )
@@ -140,7 +140,11 @@ def main():
                         help=f"Timeout per file in seconds (default: {ANALYZER_TIMEOUT})")
     parser.add_argument("--resume", action="store_true",
                         help="Skip files that already have valid output JSON")
-    args = parser.parse_args()
+    return parser
+
+
+def main():
+    args = build_parser().parse_args()
     if args.resume:
         print("identity-based resume is not implemented for this runner yet (TH-064); "
               "rerun without --resume", file=sys.stderr)

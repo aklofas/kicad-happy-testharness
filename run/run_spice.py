@@ -174,7 +174,7 @@ def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
     return input_json, returncode, summary, output_json, elapsed, did_extract_parasitics
 
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser(
         description="Run SPICE simulations on schematic analysis outputs"
     )
@@ -205,7 +205,11 @@ def main():
                         default=PROFILES["spice-offline"].timeout_s,
                         help="Per-file process cap in seconds (default: "
                              f"{PROFILES['spice-offline'].timeout_s})")
-    args = parser.parse_args()
+    return parser
+
+
+def main():
+    args = build_parser().parse_args()
     if args.resume:
         print("identity-based resume is not implemented for this runner yet (TH-064); "
               "rerun without --resume", file=sys.stderr)

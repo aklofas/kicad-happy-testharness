@@ -99,7 +99,7 @@ def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
     return input_json, returncode, summary, output_json, pcb_json is not None, elapsed
 
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser(
         description="Run EMC pre-compliance analysis on schematic+PCB outputs"
     )
@@ -122,7 +122,11 @@ def main():
                         help="Pass --compact to analyze_emc.py (strips INFO "
                         "findings; hides GP-001 and other INFO-gated visibility "
                         "signals). Default: off (full output).")
-    args = parser.parse_args()
+    return parser
+
+
+def main():
+    args = build_parser().parse_args()
     if args.resume:
         print("identity-based resume is not implemented for this runner yet (TH-064); "
               "rerun without --resume", file=sys.stderr)

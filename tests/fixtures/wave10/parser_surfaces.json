@@ -1,0 +1,556 @@
+{
+ "batch_schematic": {
+  "actions": [
+   [
+    [
+     "-h",
+     "--help"
+    ],
+    "help",
+    "'==SUPPRESS=='",
+    "show this help message and exit",
+    "None",
+    null,
+    false,
+    "_HelpAction"
+   ],
+   [
+    [
+     "--repo"
+    ],
+    "repo",
+    "None",
+    "Process only this repo (owner/repo)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--cross-section"
+    ],
+    "cross_section",
+    "None",
+    "Process repos in a named cross-section (from reference/cross_sections.json)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--repo-list"
+    ],
+    "repo_list",
+    "None",
+    "Process repos listed in a file (one per line)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--all"
+    ],
+    "all_repos",
+    "False",
+    "Process the whole corpus (required for mutating runs)",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--jobs",
+     "-j"
+    ],
+    "jobs",
+    "<DEFAULT_JOBS>",
+    "Number of parallel analyzer processes (default: <DEFAULT_JOBS>)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--validate"
+    ],
+    "validate",
+    "False",
+    "Validate output JSON structure after each run",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--json"
+    ],
+    "json",
+    "False",
+    "Print JSON summary line at end of output",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--resume"
+    ],
+    "resume",
+    "False",
+    "Skip units whose input and output match the recorded run identity",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--online"
+    ],
+    "online",
+    "False",
+    "keep distributor credentials in the analyzer environment",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--timeout"
+    ],
+    "timeout",
+    "120",
+    "Per-file analyzer cap in seconds (default 120)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ]
+  ],
+  "description": "Run schematic analysis"
+ },
+ "emc": {
+  "actions": [
+   [
+    [
+     "-h",
+     "--help"
+    ],
+    "help",
+    "'==SUPPRESS=='",
+    "show this help message and exit",
+    "None",
+    null,
+    false,
+    "_HelpAction"
+   ],
+   [
+    [
+     "--repo"
+    ],
+    "repo",
+    "None",
+    "Process only this repo (owner/repo)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--cross-section"
+    ],
+    "cross_section",
+    "None",
+    "Process repos in a named cross-section (from reference/cross_sections.json)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--repo-list"
+    ],
+    "repo_list",
+    "None",
+    "Process repos listed in a file (one per line)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--all"
+    ],
+    "all_repos",
+    "False",
+    "Process the whole corpus (required for mutating runs)",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--jobs",
+     "-j"
+    ],
+    "jobs",
+    "<DEFAULT_JOBS>",
+    "Parallel jobs (default: <DEFAULT_JOBS>)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--standard"
+    ],
+    "standard",
+    "'fcc-class-b'",
+    "Target EMC standard (default: fcc-class-b)",
+    "None",
+    [
+     "fcc-class-b",
+     "fcc-class-a",
+     "cispr-class-b",
+     "cispr-class-a",
+     "cispr-25",
+     "mil-std-461"
+    ],
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--timeout",
+     "-t"
+    ],
+    "timeout",
+    "30",
+    "Timeout per file in seconds (default: 30)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--spice-enhanced"
+    ],
+    "spice_enhanced",
+    "False",
+    "Enable SPICE-verified PDN impedance and EMI filter checks (requires ngspice)",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--resume"
+    ],
+    "resume",
+    "False",
+    "Skip files that already have valid output JSON",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--compact"
+    ],
+    "compact",
+    "False",
+    "Pass --compact to analyze_emc.py (strips INFO findings; hides GP-001 and other INFO-gated visibility signals). Default: off (full output).",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ]
+  ],
+  "description": "Run EMC pre-compliance analysis on schematic+PCB outputs"
+ },
+ "spice": {
+  "actions": [
+   [
+    [
+     "-h",
+     "--help"
+    ],
+    "help",
+    "'==SUPPRESS=='",
+    "show this help message and exit",
+    "None",
+    null,
+    false,
+    "_HelpAction"
+   ],
+   [
+    [
+     "--repo"
+    ],
+    "repo",
+    "None",
+    "Process only this repo (owner/repo)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--cross-section"
+    ],
+    "cross_section",
+    "None",
+    "Process repos in a named cross-section (from reference/cross_sections.json)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--repo-list"
+    ],
+    "repo_list",
+    "None",
+    "Process repos listed in a file (one per line)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--all"
+    ],
+    "all_repos",
+    "False",
+    "Process the whole corpus (required for mutating runs)",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--jobs",
+     "-j"
+    ],
+    "jobs",
+    "<DEFAULT_JOBS>",
+    "Parallel jobs (default: <DEFAULT_JOBS>)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--timeout",
+     "-t"
+    ],
+    "timeout",
+    "5",
+    "Timeout per subcircuit simulation in seconds (default: 5)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--with-parasitics"
+    ],
+    "with_parasitics",
+    "False",
+    "Enable PCB parasitic injection: extract trace R/via L from PCB outputs and inject into SPICE testbenches. Results go to results/outputs/spice-parasitics/.",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--extra-args"
+    ],
+    "extra_args",
+    "''",
+    "Extra arguments to pass through to simulate_subcircuits.py (e.g. '--monte-carlo 100 --mc-seed 42')",
+    "str",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--resume"
+    ],
+    "resume",
+    "False",
+    "Skip files that already have valid output JSON",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--workdir"
+    ],
+    "workdir",
+    "None",
+    "Scratch root for the harness's simulation work files (default: results/spice_work/<timestamp>); never inside repos/. Each unit's workdir is also the simulator's --model-cache-dir; tools/inventory_spice_caches.py --check detects cache writes under repos/",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--online"
+    ],
+    "online",
+    "False",
+    "Keep distributor credentials in the simulator env (default: stripped, hermetic offline run)",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--outer-timeout"
+    ],
+    "outer_timeout",
+    "60",
+    "Per-file process cap in seconds (default: 60)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ]
+  ],
+  "description": "Run SPICE simulations on schematic analysis outputs"
+ },
+ "thermal": {
+  "actions": [
+   [
+    [
+     "-h",
+     "--help"
+    ],
+    "help",
+    "'==SUPPRESS=='",
+    "show this help message and exit",
+    "None",
+    null,
+    false,
+    "_HelpAction"
+   ],
+   [
+    [
+     "--repo"
+    ],
+    "repo",
+    "None",
+    "Process only this repo (owner/repo)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--cross-section"
+    ],
+    "cross_section",
+    "None",
+    "Process repos in a named cross-section (from reference/cross_sections.json)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--repo-list"
+    ],
+    "repo_list",
+    "None",
+    "Process repos listed in a file (one per line)",
+    "None",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--all"
+    ],
+    "all_repos",
+    "False",
+    "Process the whole corpus (required for mutating runs)",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ],
+   [
+    [
+     "--jobs",
+     "-j"
+    ],
+    "jobs",
+    "<DEFAULT_JOBS>",
+    "Parallel jobs (default: <DEFAULT_JOBS>)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--timeout",
+     "-t"
+    ],
+    "timeout",
+    "120",
+    "Timeout per file in seconds (default: 120)",
+    "int",
+    null,
+    false,
+    "_StoreAction"
+   ],
+   [
+    [
+     "--resume"
+    ],
+    "resume",
+    "False",
+    "Skip files that already have valid output JSON",
+    "None",
+    null,
+    false,
+    "_StoreTrueAction"
+   ]
+  ],
+  "description": "Run thermal analysis on schematic+PCB output pairs"
+ }
+}

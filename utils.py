@@ -531,6 +531,29 @@ def iter_output_files(output_type, repos=None):
 # Shared analyzer runner
 # ---------------------------------------------------------------------------
 
+def build_batch_parser(type_name):
+    """Argument parser shared by the batch analyzer runners."""
+    import argparse as _argparse
+
+    parser = _argparse.ArgumentParser(
+        description=f"Run {type_name} analysis"
+    )
+    add_repo_filter_args(parser)
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Number of parallel analyzer processes (default: {DEFAULT_JOBS})")
+    parser.add_argument("--validate", action="store_true",
+                        help="Validate output JSON structure after each run")
+    parser.add_argument("--json", action="store_true",
+                        help="Print JSON summary line at end of output")
+    parser.add_argument("--resume", action="store_true",
+                        help="Skip units whose input and output match the recorded run identity")
+    parser.add_argument("--online", action="store_true",
+                        help="keep distributor credentials in the analyzer environment")
+    parser.add_argument("--timeout", type=int, default=ANALYZER_TIMEOUT,
+                        help=f"Per-file analyzer cap in seconds (default {ANALYZER_TIMEOUT})")
+    return parser
+
+
 def run_analyzer(config, args=None, argv=None):
     """Shared runner for all analyzer types: parse the CLI, resolve the selection, and run
     harnesslib.batch.run_batch with paths read from this module's globals at call time.
@@ -542,26 +565,8 @@ def run_analyzer(config, args=None, argv=None):
         output_subdir:   Output subdir (e.g., "schematic")
         summarize:       callable(json_data) -> str, extracts summary from output
     """
-    import argparse as _argparse
-
     if args is None:
-        parser = _argparse.ArgumentParser(
-            description=f"Run {config['type_name']} analysis"
-        )
-        add_repo_filter_args(parser)
-        parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
-                            help=f"Number of parallel analyzer processes (default: {DEFAULT_JOBS})")
-        parser.add_argument("--validate", action="store_true",
-                            help="Validate output JSON structure after each run")
-        parser.add_argument("--json", action="store_true",
-                            help="Print JSON summary line at end of output")
-        parser.add_argument("--resume", action="store_true",
-                            help="Skip units whose input and output match the recorded run identity")
-        parser.add_argument("--online", action="store_true",
-                            help="keep distributor credentials in the analyzer environment")
-        parser.add_argument("--timeout", type=int, default=ANALYZER_TIMEOUT,
-                            help=f"Per-file analyzer cap in seconds (default {ANALYZER_TIMEOUT})")
-        args = parser.parse_args()
+        args = build_batch_parser(config["type_name"]).parse_args()
 
     batch_config = _batch.BatchConfig(
         type_name=config["type_name"], analyzer_script=config["analyzer_script"],
