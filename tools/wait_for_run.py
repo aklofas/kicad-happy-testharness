@@ -7,8 +7,9 @@ waiters never return. Command lines are never matched, so the waiter cannot
 match itself the way `pgrep -f "<pattern>"` does when the pattern sits in the
 waiter's own argv.
 
-Zombie detection needs Linux /proc; where /proc is absent, --pid checks existence only
-(signal 0).
+Zombie detection needs Linux /proc; POSIX systems without /proc check existence only
+(signal 0). --pid is not supported on Windows, where signal 0 would send a console
+event to the process instead of probing it.
 
 Markers:
   <gate-dir>/manifest.json   run_corpus_gate — done when "finished_at" is non-null
@@ -20,7 +21,7 @@ Usage:
                                 [--poll 30] [--timeout 43200] [--log results/<gate>.log]
 
 Exit 0: marker satisfied. 1: process gone (dead or zombie) without a marker.
-2: timeout or bad arguments.
+2: timeout or bad arguments (including --pid on Windows).
 """
 from __future__ import annotations
 
@@ -92,6 +93,9 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     if args.poll <= 0 or args.timeout <= 0:
         print("--poll and --timeout must be positive", file=sys.stderr)
+        return 2
+    if args.pid is not None and os.name == "nt":
+        print("--pid is not supported on Windows; use --marker alone", file=sys.stderr)
         return 2
     return wait(args.marker, args.pid, args.poll, args.timeout, args.log)
 

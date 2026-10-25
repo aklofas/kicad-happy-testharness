@@ -3041,7 +3041,7 @@ python3 tools/wait_for_run.py --marker results/<out>/done.json --pid ...   # ful
 
 Exit 0 = marker satisfied (`manifest.json` has `finished_at`; `done.json` exists — both are written
 last). Exit 1 = the process is gone without a marker (it died; read the log). Exit 2 = timeout.
-Zombie detection needs Linux `/proc`; elsewhere `--pid` checks existence only (signal 0).
+Zombie detection needs Linux `/proc`; POSIX systems without `/proc` check existence only (signal 0); `--pid` is not supported on Windows.
 
 Why not the obvious shell loops:
 

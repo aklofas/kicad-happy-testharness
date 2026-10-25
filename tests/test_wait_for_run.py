@@ -92,3 +92,13 @@ def test_wait_returns_0_on_marker_and_prints_log_tail(tmp_path, capsys):
 
 def test_wait_times_out(tmp_path):
     assert wait_for_run.wait(tmp_path / "never.json", None, poll=0.01, timeout=0.05, log=None) == 2
+
+
+def test_pid_refused_on_windows_without_signalling(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(os, "name", "nt")
+    def boom(*a, **k):
+        raise AssertionError("os.kill must not be called")
+    monkeypatch.setattr(os, "kill", boom)
+    rc = wait_for_run.main(["--marker", str(tmp_path / "m"), "--pid", "123"])
+    assert rc == 2
+    assert "not supported on Windows" in capsys.readouterr().err
