@@ -84,10 +84,11 @@ def test_no_gate_skips_gate_runs_sanity(tmp_path=None):
         env={**__import__("os").environ, **env},
         cwd=str(REPO_ROOT),
     )
-    # Sanity-vector diff visible in stdout; sanity passes → not exit 2
+    # Sanity-vector diff visible in stdout; the whole promotion succeeds and writes the gold
     out = r.stdout + r.stderr
     assert "sanity" in out.lower()
-    assert r.returncode != 2  # 2 is sanity-fail, not what we want
+    assert r.returncode == 0, out
+    assert (gold_dir / "lm2596-adj" / "gold_v1.0.json").exists()
 
 
 def test_sanity_vector_mismatch_exits_2(tmp_path=None):

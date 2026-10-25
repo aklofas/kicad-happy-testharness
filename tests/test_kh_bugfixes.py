@@ -83,35 +83,6 @@ def test_kh218_lm317_unchanged():
 
 
 # ===========================================================================
-# 4b. KH-219 — Load switch exclusion from regulators
-# ===========================================================================
-
-def test_kh219_load_switch_pattern_excluded():
-    """TPS229xx and TPS205xx patterns should be in the exclusion list."""
-    _power_mux_exclude = ("power_mux", "load_switch", "tps211", "tps212",
-                          "tps229", "tps205",
-                          "ltc441", "ideal_diode",
-                          "lm6620", "lm6610", "ltc435", "ltc430")
-    test_parts = ["tps22917", "tps22918", "tps2051", "tps2052"]
-    for part in test_parts:
-        assert any(k in part for k in _power_mux_exclude), \
-            f"{part} not matched by exclusion patterns"
-
-
-def test_kh219_load_switch_description_excluded():
-    """Components with 'load switch' in description should be excluded."""
-    desc_exclude = ("load switch", "power switch", "power distribution switch")
-    test_descs = [
-        "1.5A, 5.5V, load switch",
-        "High-Side Power Switch",
-        "Power Distribution Switch",
-    ]
-    for desc in test_descs:
-        assert any(k in desc.lower() for k in desc_exclude), \
-            f"Description '{desc}' not matched by exclusion keywords"
-
-
-# ===========================================================================
 # 4c. KH-220 — Oscillator description-based classification
 # ===========================================================================
 
@@ -177,21 +148,6 @@ def test_kh221_tia_in_corpus():
                         "TIA should have feedback_resistor"
                     return
     _skip("no transimpedance opamps found in available corpus")
-
-
-def test_kh221_tia_vs_compensator_logic():
-    """Verify the ratio-based TIA vs compensator discrimination logic.
-
-    TIA: feedback_R / input_R > 10
-    Compensator: feedback_R / input_R <= 10 (similar values + cap)
-    """
-    # TIA case: rf=10k, ri=100 -> ratio=100 -> transimpedance
-    rf_val, ri_val = 10000, 100
-    assert ri_val > 0 and rf_val / ri_val > 10, "Should be TIA"
-
-    # Compensator case: rf=10k, ri=10k -> ratio=1 -> compensator
-    rf_val, ri_val = 10000, 10000
-    assert not (ri_val > 0 and rf_val / ri_val > 10), "Should be compensator"
 
 
 # ===========================================================================
@@ -304,76 +260,6 @@ def test_kh224_zynq_multiple_power_rails():
             max_rails = max(max_rails, len(rails))
     assert max_rails > 1, \
         f"U200 should have >1 power rail in at least one output, best={max_rails}"
-
-
-# ===========================================================================
-# 4h. KH-225 — Charge pump topology classification
-# ===========================================================================
-
-def test_kh225_charge_pump_patterns():
-    """Verify charge pump part number patterns are in the detector."""
-    _charge_pump_parts = ("lm2664", "max660", "icl7660",
-                          "tc7660", "ltc1044", "ltc3261", "ltc1144")
-    test_values = ["LM2664M6_NOPB", "MAX660", "ICL7660CPA", "TC7660"]
-    for val in test_values:
-        lib_val_lower = val.lower()
-        matched = any(k in lib_val_lower for k in _charge_pump_parts)
-        assert matched, f"{val} not matched by charge pump patterns"
-
-
-def test_kh225_charge_pump_description_keywords():
-    """Verify description-based charge pump detection."""
-    _charge_pump_kw = ("charge_pump", "charge pump", "voltage inverter",
-                       "voltage converter", "switched capacitor")
-    test_descs = [
-        "Charge Pump Voltage Inverter",
-        "Switched Capacitor Voltage Converter",
-    ]
-    for desc in test_descs:
-        assert any(k in desc.lower() for k in _charge_pump_kw), \
-            f"Description '{desc}' not matched by charge pump keywords"
-
-
-# ===========================================================================
-# 4i. KH-227 — Logic gate exclusion from level shifters
-# ===========================================================================
-
-def test_kh227_logic_gate_patterns():
-    """SN74LVC1G14 (Schmitt inverter) should be excluded from level shifters."""
-    _logic_gate_patterns = ("1g00", "1g02", "1g04", "1g08", "1g14", "1g32",
-                            "1g86", "2g00", "2g02", "2g04", "2g08", "2g14",
-                            "2g32", "2g86", "3g14",
-                            "inverter", "nand_gate", "nor_gate", "and_gate",
-                            "or_gate", "xor_gate", "schmitt")
-    excluded_parts = [
-        "SN74LVC1G14DBV",   # Schmitt trigger inverter
-        "SN74LVC1G00DBV",   # NAND gate
-        "SN74LVC2G04",      # Dual inverter
-        "SN74LVC1G08",      # AND gate
-    ]
-    for part in excluded_parts:
-        val_lib = part.lower()
-        assert any(g in val_lib for g in _logic_gate_patterns), \
-            f"{part} should be excluded by logic gate patterns"
-
-
-def test_kh227_real_level_shifters_not_excluded():
-    """Real level shifter parts should NOT be excluded by the gate filter."""
-    _logic_gate_patterns = ("1g00", "1g02", "1g04", "1g08", "1g14", "1g32",
-                            "1g86", "2g00", "2g02", "2g04", "2g08", "2g14",
-                            "2g32", "2g86", "3g14",
-                            "inverter", "nand_gate", "nor_gate", "and_gate",
-                            "or_gate", "xor_gate", "schmitt")
-    allowed_parts = [
-        "TXB0108PWR",        # 8-bit bidirectional level shifter
-        "SN74LVC8T245",      # 8-bit dual-supply level translator
-        "TXS0102DCT",        # 2-bit bidirectional level translator
-        "SN74AVC4T245",      # 4-bit dual-supply bus transceiver
-    ]
-    for part in allowed_parts:
-        val_lib = part.lower()
-        assert not any(g in val_lib for g in _logic_gate_patterns), \
-            f"{part} should NOT be excluded by logic gate patterns"
 
 
 # ---------------------------------------------------------------------------

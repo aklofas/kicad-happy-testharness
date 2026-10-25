@@ -84,6 +84,33 @@ def _seed_gold_and_cache(tmp_path, *, identical=True):
     return cache_dir, gold_root
 
 
+def _add_second_mpn(cache_dir, gold_root, page_shift=3):
+    """A second gold/cache pair (LM2596-ADJ-B) whose gold moves one evidence page by
+    `page_shift`: a WARNING (-5, score 95), no ERROR, so only the score threshold decides."""
+    cache = json.loads((cache_dir / "LM2596-ADJ.json").read_text())
+    (cache_dir / "LM2596-ADJ-B.json").write_text(json.dumps(cache))
+    gold = json.loads(json.dumps(cache))
+
+    def shift(o):
+        if isinstance(o, dict):
+            ev = o.get("evidence")
+            if isinstance(ev, dict) and isinstance(ev.get("page"), int):
+                ev["page"] += page_shift
+                return True
+            return any(shift(v) for v in o.values())
+        if isinstance(o, list):
+            return any(shift(v) for v in o)
+        return False
+    assert shift(gold), "fixture has no evidence page to move"
+    src = gold_root / "lm2596-adj"
+    dst = gold_root / "lm2596-adj-b"
+    dst.mkdir()
+    (dst / "gold_v1.0.json").write_text(json.dumps(gold))
+    meta = json.loads((src / "meta.json").read_text())
+    meta.update(mpn="LM2596-ADJ-B", mpn_slug="lm2596-adj-b")
+    (dst / "meta.json").write_text(json.dumps(meta))
+
+
 def test_help_works():
     r = subprocess.run([sys.executable, str(RUN_CLI), "--help"],
                        capture_output=True, text=True)
@@ -166,12 +193,10 @@ def test_score_threshold_override():
     with tempfile.TemporaryDirectory() as td:
         tmp_path = Path(td)
         cache_dir, gold_root = _seed_gold_and_cache(tmp_path, identical=True)
-        r = _run([
-            "--all", "--score-threshold", "100",
-            "--cache-dir", str(cache_dir),
-            "--gold-dir", str(gold_root),
-        ], cwd=tmp_path)
-        assert r.returncode == 0  # identical → score 100 → meets threshold 100
+        _add_second_mpn(cache_dir, gold_root)   # score 95, warnings only
+        args = ["--all", "--cache-dir", str(cache_dir), "--gold-dir", str(gold_root)]
+        assert _run(args + ["--score-threshold", "90"], cwd=tmp_path).returncode == 0
+        assert _run(args + ["--score-threshold", "100"], cwd=tmp_path).returncode == 1
 
 
 def test_json_output():
@@ -193,12 +218,11 @@ def test_single_mpn_filter():
     with tempfile.TemporaryDirectory() as td:
         tmp_path = Path(td)
         cache_dir, gold_root = _seed_gold_and_cache(tmp_path, identical=True)
-        r = _run([
-            "--mpn", "LM2596-ADJ",
-            "--cache-dir", str(cache_dir),
-            "--gold-dir", str(gold_root),
-        ], cwd=tmp_path)
-        assert r.returncode == 0
+        _add_second_mpn(cache_dir, gold_root)
+        common = ["--cache-dir", str(cache_dir), "--gold-dir", str(gold_root), "--score-threshold", "100"]
+        r = _run(["--mpn", "LM2596-ADJ", *common], cwd=tmp_path)
+        assert r.returncode == 0 and "lm2596-adj-b" not in r.stdout
+        assert _run(["--all", *common], cwd=tmp_path).returncode == 1   # the filter mattered
 
 
 def test_jobs_parallel_runs():
@@ -206,6 +230,7 @@ def test_jobs_parallel_runs():
     with tempfile.TemporaryDirectory() as td:
         tmp_path = Path(td)
         cache_dir, gold_root = _seed_gold_and_cache(tmp_path, identical=True)
+        _add_second_mpn(cache_dir, gold_root)
         r1 = _run([
             "--all", "--jobs", "1",
             "--cache-dir", str(cache_dir),
@@ -219,10 +244,7 @@ def test_jobs_parallel_runs():
         assert r1.returncode == 0
         assert r4.returncode == 0
 
-        def filter_mpn_lines(text):
-            return sorted(l for l in text.splitlines() if "lm2596" in l.lower())
-
-        assert filter_mpn_lines(r1.stdout) == filter_mpn_lines(r4.stdout)
+        assert r1.stdout == r4.stdout   # both MPNs, sorted report rows
 
 
 def test_jobs_default_documented_in_help():

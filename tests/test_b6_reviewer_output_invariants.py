@@ -221,24 +221,6 @@ def test_every_annotation_reason_meets_minlength_20():
         )
 
 
-def test_short_reason_mutation_caught_by_minlength_check():
-    """Mutation: shrink one annotation's reason to <20 chars and verify
-    a behavioral length check would catch it. This proves the assertion
-    above is meaningful, not vacuously true."""
-    annotations, _, _ = _load_trace()
-    if annotations is None:
-        return
-    mutated = copy.deepcopy(annotations)
-    mutated["annotations"][0]["reason"] = "too short"
-    # Re-run the same length predicate; should now flag at least one.
-    failures = [a for a in mutated["annotations"]
-                if not (isinstance(a.get("reason"), str)
-                        and len(a["reason"]) >= 20)]
-    assert len(failures) >= 1, (
-        "deliberate short-reason mutation must be caught by minLength check"
-    )
-
-
 # ---------------------------------------------------------------------------
 # Invariant 4: suggested_severity ↔ status coupling (reviewer.md line 71)
 # ---------------------------------------------------------------------------
@@ -416,7 +398,6 @@ if __name__ == "__main__":
         test_produced_for_run_id_linkage_to_capability_mode,
         test_produced_for_run_id_linkage_to_merge_report,
         test_every_annotation_reason_meets_minlength_20,
-        test_short_reason_mutation_caught_by_minlength_check,
         test_real_trace_obeys_suggested_severity_coupling,
         test_synthetic_escalated_with_severity_passes_coupling,
         test_synthetic_escalated_without_severity_fails_coupling,

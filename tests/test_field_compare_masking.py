@@ -205,7 +205,6 @@ def test_glob_landing_on_container_is_refused():
 
 
 def test_exact_policy_does_not_enumerate_pointers(monkeypatch):
-    import time
     import regression.field_compare as fc
 
     def boom(*a, **k):
@@ -215,9 +214,7 @@ def test_exact_policy_does_not_enumerate_pointers(monkeypatch):
     a, b = _doc(RUN_A), _doc(RUN_B)
     a["findings"] = [{"i": i} for i in range(20000)]
     b["findings"] = [{"i": i} for i in range(20000)]
-    t0 = time.perf_counter()
-    deltas, viol = compare_strict(a, b, pol, **U)
-    assert time.perf_counter() - t0 < 1.0
+    deltas, viol = compare_strict(a, b, pol, **U)   # the boom tripwire is the check
     assert [d.path for d in deltas] == ["/capability_mode_ref/run_id"] and len(viol) == 0
 
 
