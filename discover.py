@@ -19,12 +19,11 @@ import argparse
 import contextlib
 import hashlib
 import json
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from utils import HARNESS_DIR, REPOS_DIR, MANIFESTS_DIR, list_repos, repo_name_from_path
+from utils import HARNESS_DIR, REPOS_DIR, MANIFESTS_DIR, list_repos, repo_name_from_path, atomic_write_text
 
 # Gerber file extensions to look for
 GERBER_EXTENSIONS = {
@@ -86,12 +85,6 @@ GLOBAL_KINDS = ("schematics", "pcbs", "gerbers", "projects")
 CENSUS_FILE = "census.json"
 
 
-def _atomic_write(path, text):
-    tmp = path.with_name(f"{path.name}.tmp-{os.getpid()}")
-    tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
-
-
 @contextlib.contextmanager
 def manifests_lock(manifests_dir):
     """Serialise discover runs (add_repos runs one per repo in a pool). Linux-only: where
@@ -123,14 +116,14 @@ def rebuild_global_manifests(manifests_dir, repos, full):
     counts, digests = {}, {}
     for k in GLOBAL_KINDS:
         text = "\n".join(sorted(lists[k])) + "\n" if lists[k] else ""
-        _atomic_write(manifests_dir / f"all_{k}.txt", text)
+        atomic_write_text(manifests_dir / f"all_{k}.txt", text)
         counts[k] = len(lists[k])
         digests[k] = hashlib.sha256(text.encode("utf-8")).hexdigest()
     prev = read_census(manifests_dir)
     floor = counts if full or not prev else prev.get("floor", counts)
     census = {"counts": counts, "sha256": digests, "floor": floor, "mode": "full" if full else "repo",
               "written_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
-    _atomic_write(manifests_dir / CENSUS_FILE, json.dumps(census, indent=2, sort_keys=True) + "\n")
+    atomic_write_text(manifests_dir / CENSUS_FILE, json.dumps(census, indent=2, sort_keys=True) + "\n")
     return census
 
 

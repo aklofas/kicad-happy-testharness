@@ -111,6 +111,15 @@ def project_prefix(project_path: str) -> str:
     return ""
 
 
+def atomic_write_text(path, text):
+    """Write a tracked source-of-truth file through a temp file and os.replace, so a crash
+    or a concurrent reader never sees a torn file."""
+    path = Path(path)
+    tmp = path.with_name(f"{path.name}.tmp-{os.getpid()}")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
 def safe_load_json(path, default=None):
     """Load JSON from a file path, returning default on any error."""
     try:

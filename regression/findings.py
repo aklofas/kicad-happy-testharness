@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import DATA_DIR, data_dir, project_prefix, _truncate_with_hash
+from utils import DATA_DIR, data_dir, project_prefix, _truncate_with_hash, atomic_write_text
 
 
 def _iter_findings_files(repo_name=None):
@@ -207,14 +207,14 @@ def render_md(repo_name, project_name, data=None):
 
     proj_dir = data_dir(repo_name, project_name)
     proj_dir.mkdir(parents=True, exist_ok=True)
-    (proj_dir / "findings.md").write_text("\n".join(lines), encoding="utf-8")
+    atomic_write_text(proj_dir / "findings.md", "\n".join(lines))
 
 
 def save_findings(repo_name, project_name, data):
     """Save findings.json and auto-regenerate findings.md."""
     proj_dir = data_dir(repo_name, project_name)
     proj_dir.mkdir(parents=True, exist_ok=True)
-    (proj_dir / "findings.json").write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    atomic_write_text(proj_dir / "findings.json", json.dumps(data, indent=2) + "\n")
     render_md(repo_name, project_name, data)
 
 

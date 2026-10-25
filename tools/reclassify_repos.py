@@ -30,6 +30,9 @@ from collections import Counter
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
+from utils import atomic_write_text  # noqa: E402
+
 REPOS_MD = HARNESS_DIR / "repos.md"
 CATALOG_FILE = HARNESS_DIR / "reference" / "repo_catalog.json"
 VALIDATED_FILE = HARNESS_DIR / "results" / "validated.json"
@@ -472,7 +475,7 @@ def reclassify_in_repos_md(moves):
         if insert_at is not None:
             new_lines.insert(insert_at, line_content)
 
-    REPOS_MD.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+    atomic_write_text(REPOS_MD, "\n".join(new_lines) + "\n")
 
 
 def main():

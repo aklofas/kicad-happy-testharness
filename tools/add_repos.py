@@ -33,7 +33,7 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 from checkout import parse_repos_md, _repo_name_from_url, get_remote_head
-from utils import REPOS_DIR, DEFAULT_JOBS, MISC_CATEGORY, run_pipeline_step
+from utils import REPOS_DIR, DEFAULT_JOBS, MISC_CATEGORY, run_pipeline_step, atomic_write_text
 
 REPOS_MD = HARNESS_DIR / "repos.md"
 CANDIDATES_FILE = HARNESS_DIR / "results" / "candidates.json"
@@ -127,7 +127,7 @@ def append_to_repos_md(url, commit_hash, category):
     new_line = f"- {url} @ {commit_hash}"
     insert_at = _find_category_insert_point(lines, category)
     lines.insert(insert_at, new_line)
-    REPOS_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    atomic_write_text(REPOS_MD, "\n".join(lines) + "\n")
 
 
 def remove_from_repos_md(url):
@@ -135,7 +135,7 @@ def remove_from_repos_md(url):
     lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
     filtered = [line for line in lines
                 if not (line.strip().startswith("- ") and url in line)]
-    REPOS_MD.write_text("\n".join(filtered) + "\n", encoding="utf-8")
+    atomic_write_text(REPOS_MD, "\n".join(filtered) + "\n")
 
 
 def _pre_add_repo(candidate):

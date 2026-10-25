@@ -61,3 +61,34 @@ def test_bugfix_path_guesses_are_never_applied(tmp_path, monkeypatch, capsys):
     assert [a["source_file"] for a in got] == ["a.kicad_sch", "b.kicad_sch", "c.kicad_sch"]
     assert [a["project"] for a in got] == ["p", "p", "p"]
     assert "not applied (prefix_adjusted guess" in capsys.readouterr().out
+
+
+def test_atomic_write_replaces_in_one_step(tmp_path, monkeypatch):
+    """code A5-F11 / A7-F10: repos.md and findings.json go through temp + os.replace."""
+    import os
+    import utils
+    target = tmp_path / "repos.md"
+    target.write_text("old\n")
+    seen = []
+    real = os.replace
+    monkeypatch.setattr(utils.os, "replace", lambda a, b: (seen.append((Path(a).name, Path(b).name)), real(a, b)))
+    utils.atomic_write_text(target, "new\n")
+    assert target.read_text() == "new\n" and seen == [(f"repos.md.tmp-{os.getpid()}", "repos.md")]
+    assert not list(tmp_path.glob("*.tmp-*"))
+
+
+def test_save_findings_and_repos_md_use_the_atomic_writer(tmp_path, monkeypatch):
+    import utils
+    calls = []
+    monkeypatch.setattr(utils, "atomic_write_text", lambda p, t: calls.append(Path(p).name))
+    import findings as fnd
+    monkeypatch.setattr(fnd, "atomic_write_text", lambda p, t: calls.append(Path(p).name))
+    monkeypatch.setattr(fnd, "data_dir", lambda *parts: tmp_path)
+    fnd.save_findings("o/r", "p", {"findings": []})
+    sys.path.insert(0, str(HARNESS / "tools"))
+    import add_repos
+    monkeypatch.setattr(add_repos, "atomic_write_text", lambda p, t: calls.append(Path(p).name))
+    monkeypatch.setattr(add_repos, "REPOS_MD", tmp_path / "repos.md")
+    (tmp_path / "repos.md").write_text("## Cat\n- https://github.com/o/r\n")
+    add_repos.remove_from_repos_md("https://github.com/o/r")
+    assert calls[0] == "findings.json" and calls[-1] == "repos.md"
