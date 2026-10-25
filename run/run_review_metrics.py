@@ -125,17 +125,6 @@ def _compute_calibration(annotations, exp_supp_ids):
     return cal, counts
 
 
-def _compute_overlay_violations(loaded):
-    """Escalated annotations must not mutate the raw severity field.
-
-    At v1.4 the reviewer schema has additionalProperties=false and provides
-    no mutation channel, so this always returns 0. The counter is surfaced
-    in per-packet output so v1.5 can replace this body when the schema
-    grows a distinguishable mutation channel.
-    """
-    return 0
-
-
 def _compute_cost_delta(loaded):
     # Cost ledger not present at v1.4 — flagged carry-over for main-repo.
     rec = loaded["review_annotations"]
@@ -191,7 +180,10 @@ def compute_metrics(loaded):
         "expected_correlations": len(exp_corr),
         "calibration_counts": cal_counts,
     }
-    overlay_violations = _compute_overlay_violations(loaded)
+    # Escalated annotations must not mutate the raw severity field. The reviewer schema
+    # (additionalProperties=false) has no mutation channel, so the count is always 0;
+    # it stays in the per-packet output for when the schema grows one.
+    overlay_violations = 0
     return metrics, counts, overlay_violations
 
 

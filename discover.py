@@ -23,7 +23,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from utils import HARNESS_DIR, REPOS_DIR, MANIFESTS_DIR, list_repos, repo_name_from_path, atomic_write_text
+from utils import REPOS_DIR, MANIFESTS_DIR, list_repos, atomic_write_text
 
 # Gerber file extensions to look for
 GERBER_EXTENSIONS = {

@@ -29,7 +29,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
-                   find_schematic_outputs, find_pcb_output, should_skip_resume,
+                   find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
                    retire_orphaned_outputs)
 
@@ -83,16 +83,12 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
 
 
 def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
-                     resume, analyzer, compact):
+                     analyzer, compact):
     """Top-level function for ProcessPoolExecutor (must be picklable)."""
     repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
     out_dir = emc_out_dir / repo_name
     out_dir.mkdir(parents=True, exist_ok=True)
     output_json = out_dir / input_json.name
-
-    # --resume: skip if valid output already exists
-    if should_skip_resume(output_json, resume):
-        return input_json, "SKIPPED", None, output_json, None, 0.0
 
     pcb_json = find_pcb_output(input_json)
     returncode, summary, elapsed = run_one_emc(
@@ -181,7 +177,6 @@ def main():
     # Aggregate stats
     total_files = 0
     errors = 0
-    skipped = 0
     total_findings = 0
     severity_counts = {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0, "INFO": 0}
     category_counts = {}
@@ -195,7 +190,6 @@ def main():
                          standard=args.standard,
                          timeout=args.timeout,
                          spice_enhanced=args.spice_enhanced,
-                         resume=args.resume,
                          analyzer=analyzer,
                          compact=args.compact)
 
@@ -216,10 +210,6 @@ def main():
 
     for i, (input_json, returncode, summary, output_json, had_pcb, elapsed) in results_list:
         rel = f"{input_json.parent.name}/{input_json.name}"
-
-        if returncode == "SKIPPED":
-            skipped += 1
-            continue
 
         timings.append((f"{input_json.parent.name}/{input_json.name}", elapsed))
         total_files += 1
@@ -274,8 +264,6 @@ def main():
     print(f"EMC Analysis Summary")
     print(f"{'='*60}")
     print(f"Files processed:            {total_files}")
-    if skipped:
-        print(f"Skipped (--resume):         {skipped}")
     print(f"Files with PCB paired:      {paired_count}")
     print(f"Files with findings:        {files_with_findings}")
     print(f"Script errors:              {errors}")

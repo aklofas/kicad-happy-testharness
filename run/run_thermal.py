@@ -33,7 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.profiles import PROFILES
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
-                   find_schematic_outputs, find_pcb_output, should_skip_resume,
+                   find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
                    retire_orphaned_outputs)
 
@@ -114,7 +114,7 @@ def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
 
 
 def _process_one_thermal(sch_json, pcb_json, thermal_out_dir, timeout,
-                         resume, analyzer):
+                         analyzer):
     """Top-level function for ProcessPoolExecutor (must be picklable)."""
     repo_name = f"{sch_json.parent.parent.name}/{sch_json.parent.name}"
     out_dir = thermal_out_dir / repo_name
@@ -122,9 +122,6 @@ def _process_one_thermal(sch_json, pcb_json, thermal_out_dir, timeout,
 
     # Output filename: replace .kicad_sch.json / .sch.json with _thermal.json
     output_json = out_dir / f"{thermal_output_stem(sch_json.name)}_thermal.json"
-
-    if should_skip_resume(output_json, resume):
-        return sch_json, "SKIPPED", None, output_json, 0.0
 
     returncode, summary, elapsed = run_one_thermal(
         analyzer, sch_json, pcb_json, output_json, timeout=timeout,
@@ -196,7 +193,6 @@ def main():
     # Aggregate stats
     total_files = 0
     errors = 0
-    skipped = 0
     total_findings = 0
     severity_counts = {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0, "INFO": 0}
     files_with_findings = 0
@@ -206,7 +202,6 @@ def main():
     process_fn = partial(_process_one_thermal,
                          thermal_out_dir=thermal_out_dir,
                          timeout=args.timeout,
-                         resume=args.resume,
                          analyzer=analyzer)
 
     results_list = []
@@ -226,10 +221,6 @@ def main():
 
     for i, (input_json, returncode, summary, output_json, elapsed) in results_list:
         rel = f"{input_json.parent.name}/{input_json.name}"
-
-        if returncode == "SKIPPED":
-            skipped += 1
-            continue
 
         timings.append((rel, elapsed))
         total_files += 1
@@ -269,8 +260,6 @@ def main():
     print(f"Thermal Analysis Summary")
     print(f"{'='*60}")
     print(f"Files processed:            {total_files}")
-    if skipped:
-        print(f"Skipped (--resume):         {skipped}")
     print(f"Retired (upstream gone):    {len(retired)}")
     print(f"Files with findings:        {files_with_findings}")
     print(f"Script errors:              {errors}")
