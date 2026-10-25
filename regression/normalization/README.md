@@ -21,9 +21,9 @@ Leaf entry keys:
 | `verify_values` | `sha256_of_key`, only with `strip_root_prefix_keys`: a value whose key was actually stripped (lay under a slot root) is masked only if it matches `^[0-9a-f]{64}$` AND equals the sha256 of the file the unstripped key names, checked per side; a failure is a policy violation. Values whose keys lie outside the slot roots (repo input files) stay compared |
 
 Changing the leaf list is a **new policy version** (`volatile-leaves-v2.json`); the name
-travels in every field report and per-round record. The list is to be confirmed (pending) by the plan-6 A/A run
-at product 6a91aaa: a leaf that differs in A/A and is not listed here is a determinism
-bug to file, not a mask to add silently.
+travels in every field report and per-round record. Validate the policy with an A/A
+comparison (two runs of identical code): an unlisted leaf that differs between them is a
+determinism bug to investigate and file, not a mask to add silently.
 
 ## Masking semantics
 
@@ -43,14 +43,15 @@ is a policy violation.
 Re-evaluating a historical tree that was MOVED after the gate ran breaks prefix stripping,
 `sha256_of` and `verify_values`, because the envelopes hold the old absolute paths.
 
-## v1 edited in place (2026-10-15)
+## Compatibility of policy versions
 
 `volatile-leaves-v1` gained `verify_values: sha256_of_key` on `/inputs/source_hashes`
 (chained emc/thermal/cross_analysis envelopes key their upstream snaps under the slot
 roots, and those values differ on every run because each upstream snap embeds its own
 run id; without the mask every chained unit failed strict, A/A included). The file was
 edited in place rather than bumped to v2 because no per-round record had consumed v1
-yet (plan 6 pending). From plan 6 on, any change to the leaf list is a new version.
+yet. Once a policy is used in a recorded run, any change to its leaf list requires a new
+version.
 
 The `equals` linkage on `/capability_mode_ref/run_id` (equal to `/inputs/run_id`) holds on
 all six envelope types (reviewer-verified).

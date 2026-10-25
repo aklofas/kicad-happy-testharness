@@ -73,7 +73,8 @@ in the same round, so the next round cannot silently drop what this one added.
 and `validate/audit_equations.py` consume `source_scan.iter_product_sources`, so a
 constant or `EQ-nnn` tag anywhere under `skills/**/scripts/**` (kicad, kicad/review,
 spice, emc, datasheets, bom and the distributor skills) enters both registries and the
-baseline (TH-066; before it the audit tools walked three roots, 58 of 90 files).
+baseline. The audit tools and the coverage check share one source walk so their covered
+file sets cannot diverge.
 
 ## What is frozen regardless of policy
 

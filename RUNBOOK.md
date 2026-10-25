@@ -1,6 +1,6 @@
 # Test Harness Runbook
 
-26 operational checklists for the kicad-happy test harness. Designed for Claude Code
+27 operational checklists for the kicad-happy test harness. Designed for Claude Code
 agents working autonomously or with minimal supervision.
 
 **This is the primary operational reference.** Agents MUST follow the relevant
@@ -52,7 +52,7 @@ A mutating full-corpus run requires `--all`; an empty selection exits 2 (B12/TH-
 Add `--repo {repo}` to test a single repo first before full corpus.
 Add `--cross-section quick_200` to test a balanced ~200-repo subset.
 Add `--validate` to check output JSON structure.
-All tools auto-parallelize (default `--jobs` = cpu count).
+The batch runners parallelize (default `--jobs` = cpu count); not every tool takes `--jobs` or `--resume`, so check its options.
 
 ### 1c. Run assertions
 
@@ -130,7 +130,9 @@ python3 validate/cross_analyzer.py --summary    # if schematic or pcb affected
 python3 validate/validate_schema.py diff
 ```
 
-If new fields appeared, run `auto-seed` to generate assertions for them.
+If new fields appeared, run `auto-seed` to report proposed field assertions and stale
+references. It writes nothing: review the report, then add or update the assertion
+specifications by hand.
 
 ### 1f. File issues for any regressions
 
@@ -157,7 +159,7 @@ merging. New constants without authoritative sources are a hallucination risk.
 
 Record what was tested, pass rates, and any new findings.
 
-### 1i. Scan coverage + API bindings (v3 arc)
+### 1i. Scan coverage + API bindings
 
 `python3 tools/source_scan.py check --product $KICAD_HAPPY_DIR` must print CLEAN (lost emit
 sites / EQ ids / constants / files, a grown per-rule untagged-era count, unresolved emit
@@ -171,9 +173,7 @@ round moved symbols: `python3 tools/api_migration.py apply-map <relocation.json>
 $KICAD_HAPPY_DIR` lists every harness site to edit; `python3 tools/api_migration.py check`
 must then show no violation from this round before the round's response record is
 written. In the same re-baseline, apply the map to the constants registry and rescan both
-audit registries (Checklist 11a; TH-076). **Known FAIL until H1:** `check` reports `finding_schema.normalize_severity is
-retire but still bound at tests/contract/test_action_format_report_v14.py:430`; that
-binding is deleted in H1, and it is the only violation `check` may show until then. An
+audit registries (Checklist 11a; TH-076). An
 `UNVERIFIABLE (dynamic binding; verify with apply-map)` line means a done/retire entry is
 on `reference/product_api/binding_blind_list.json` (shrink-only; pinned by
 `tests/test_api_migration.py`): verify its sites by hand with `apply-map` and teach the
@@ -286,23 +286,24 @@ Agreement should be >90%. Mismatches by check type indicate systematic issues.
 python3 validate/validate_schema.py auto-seed
 ```
 
-New fields should get assertions. Removed fields should trigger cleanup of stale
-assertion references.
+The command reports proposed assertions for new fields and stale references to
+removed fields; it does not write assertions. Review the report, then add or update the
+applicable assertion specifications by hand.
 
-### 3g. Run unit tests
+### 3g. Run the required test tiers
 
 ```bash
-python3 run_tests.py --unit
+KICAD_HAPPY_DIR=<product checkout> .venv/bin/python -m pytest -m "unit or offline_contract"
 ```
 
-Must be 100% pass. If not, fix before doing anything else.
+`run_tests.py --unit` runs only the `unit` tier; the required set is `unit` plus
+`offline_contract` (see pytest.ini). Must be 100% pass. If not, fix before doing anything else.
 
 ### 3h. (Reserved) Gold-standard benchmark
 
 _Planned but not yet implemented._ Harness Checklist 23 documents the intended design
 (`reference_gold/` tree + `validate/run_gold_checks.py` runner). Neither the runner
-nor the curated entries exist. Track A6 in v1.4 roadmap depends on Phase 3 producing
-real extractions before gold curation is meaningful.
+nor the curated entries exist.
 
 ### 3i. Run metamorphic test suite (v1.3+)
 
@@ -338,17 +339,21 @@ are parser bugs — file as KH-* and fix before the next corpus re-seed. Report 
 Use when an analyzer change modifies output structure (new fields, changed counts,
 renamed detections) and existing assertions are failing legitimately.
 
-### A8: schema-era stamping (always on by default)
+### Schema-era stamping (always on by default)
 
 `seed.py` / `seed_structural.py` / `seed_negative.py` auto-stamp `schema_era`
-on emitted assertions whose `detector_filter` is in
-`regression/v14_changed_detectors.json` (the versioned-detector set). Default
-era is `CURRENT_SCHEMA_ERA` from `regression/schema_era.py` (currently
-`"v1.4"`). For documented runs pass it explicitly:
+on emitted assertions whose `detector_filter` is in the changed-detector registry
+for the selected era (currently `regression/v30_changed_detectors.json`). The
+default era is `CURRENT_SCHEMA_ERA` from `regression/schema_era.py`, currently
+`"v3.0"`. For a recorded run pass it explicitly:
 
 ```bash
-python3 regression/seed.py --repo X --schema-era v1.4
+python3 regression/seed.py --repo X --schema-era v3.0
 ```
+
+Never stamp a fresh re-seed with an older era: default `run_checks.py` keeps only
+assertions whose era equals `CURRENT_SCHEMA_ERA` (or that carry no era), so a
+`--schema-era v1.4` re-seed writes assertions that never run by default.
 
 Use `--no-schema-era` only for debug runs where era stamping interferes with
 what you're testing. See `regression/schema_era.py` for the module API and
@@ -368,14 +373,17 @@ new findings are correct, then re-seed.
 ### 4b. Re-run analyzers for affected repos
 
 ```bash
-python3 run/run_{type}.py --jobs 16
+python3 run/run_{type}.py --repo {owner/repo} --jobs 16
 ```
 
+`{type}` is `schematic`, `pcb`, `spice`, `emc` or `thermal`; gerber uses
+`run_gerbers.py`. For a full-corpus regeneration replace `--repo {owner/repo}` with
+`--all` (a run with no selector exits 2).
+
 **After every runner pass, prove the outputs were actually rewritten** — a
-runner's PASS count is NOT evidence (TH-054: `run_emc` reported 36,462 PASS
-twice while rewriting zero files, because an exit-1 analyzer crash was masked
-by a pre-existing stale output). Before the pass, touch a marker file; after
-it, compare:
+runner's PASS count is NOT evidence (a stale pre-existing output can conceal an
+analyzer failure unless rewriting is verified). Before the pass, touch a marker
+file; after it, compare:
 
 ```bash
 find results/outputs/{type} -name '*.json' ! -name capability_mode.json ! -name '_*' -newer <marker> | wc -l   # must ≈ unit count
@@ -606,7 +614,7 @@ For each fix, a self-contained test to run against corpus data:
 
 **Broad verification:**
 1. Pull kicad-happy
-2. Re-run: `python3 run/run_{type}.py --jobs 16` for affected types
+2. Re-run: `python3 run/run_{type}.py --all --jobs 16` for affected types
 3. `python3 regression/run_checks.py --type {type}` — expect pass or legitimate re-seed
 4. Run the targeted tests above against fresh outputs
 5. Consider BUGFIX assertions for: [list specific fixes worth regression-protecting]
@@ -629,12 +637,14 @@ FIXED.md. Work arrives via a handoff prompt from the user.
    - Use targeted repo lists from the issue's blast radius data if available.
 5. **Verify assertions pass:**
    - `python3 regression/run_checks.py --type {analyzer_type}`
-   - If new fields appeared, run `auto-seed` to generate assertions.
+   - If new fields appeared, run `auto-seed` to report proposed assertions, then add
+     the ones that apply by hand (the command writes nothing).
    - If assertion counts changed legitimately, re-seed (Checklist 4).
 6. **Add BUGFIX assertion** if warranted (prevents regression of a specific
    fixed behavior):
    - Add entry to `regression/bugfix_registry.json`
-   - Run `python3 regression/generate_bugfix_assertions.py`
+   - Preview with `python3 regression/generate_bugfix_assertions.py` (dry-run), then
+     write with `python3 regression/generate_bugfix_assertions.py --apply`
 7. **Commit** the ISSUES.md/FIXED.md changes (already edited by main-repo agent)
    along with any new/updated assertions and status.md updates.
 8. **Update memory files** — update `memory/project_issues_kicad_happy.md` or
@@ -841,13 +851,14 @@ MC args: `--monte-carlo N` (trials), `--mc-seed S` (reproducibility),
 
 Do these at the end of every testing session.
 
-### 10a. Run unit tests
+### 10a. Run the required test tiers
 
 ```bash
-python3 run_tests.py --unit
+KICAD_HAPPY_DIR=<product checkout> .venv/bin/python -m pytest -m "unit or offline_contract"
 ```
 
-Must be 304+ passed, 0 failed. If not, fix before ending.
+`run_tests.py --unit` runs only the `unit` tier. Both required tiers must pass; review
+unexpected skips and xfails. If not, fix before ending.
 
 ### 10b. Update documentation
 
@@ -981,7 +992,7 @@ python3 validate/audit_constants.py corpus
 
 This scans all analyzer outputs to determine which constant entries are actually
 exercised by the test corpus. Flags:
-- **Unused entries** — entries that never fire across 5,856 repos. May be dead weight
+- **Unused entries** — entries that never fire across the corpus. May be dead weight
   or may indicate the constant was added for a specific project not in the corpus.
 - **Low-hit entries** — entries exercised by <3 repos. Harder to validate empirically.
 - **High-hit entries** — entries exercised by 100+ repos. High confidence if verified.
@@ -1147,14 +1158,15 @@ descriptions. Each finding item in `correct`, `incorrect`, and `missed` arrays s
 include:
 
 - `claim_type`: `"correct" | "incorrect" | "missed"` (matches the array name)
-- `detector`: analyzer section name (e.g., `"voltage_dividers"`)
+- `detector`: the detector's full function name as it appears in `findings[].detector`
+  (e.g., `"detect_voltage_dividers"`; a short suffix such as `"voltage_dividers"` is
+  mapped to the full name)
 - `subject_refs`: list of component references (e.g., `["R15", "R16"]`)
-- `expected_relation`: `"in_detector" | "not_in_detector" | "field_value_equals" | ...`
+- `expected_relation`: one of the relations `generate_finding_checks.py` implements
+  (see 24a)
 - `why`: short human-readable explanation (does NOT replace the structured fields)
 - `confidence`: 0.0-1.0
 - `evidence_source`: typically `"human_review"` for Layer 3 findings
-- Optional `canonical_check`: explicit machine-checkable form when the auto-generated
-  one would be wrong
 
 **Legacy findings** have only `description` free-text. `generate_finding_checks.py`
 parses those via regex — it works but is fragile (see methodology.md § "Check field
@@ -1242,7 +1254,7 @@ naming specific components (U1, R3) with analyzer_section paths.
   to target underrepresented categories (aerospace, wearables, measurement)
 - Use `--repo X` to generate a prompt for a specific repo (bypasses unreviewed filter)
 
-**Root cause accuracy (lessons from KH-207..217 verification):**
+**Verify root causes:**
 
 When filing issues from Layer 3 findings, the symptom is usually correct but the root
 cause is often wrong. The subagent sees "X is wrong" and infers "the code must not
@@ -1305,9 +1317,13 @@ drift detection and assertion promotion.
 # Promote a specific finding
 python3 regression/findings.py promote FND-00000001
 
-# Promote all eligible findings for a repo
-python3 regression/promote.py --repo {repo} --apply
+# Promote all eligible findings for a repo: preview, then write
+python3 regression/findings.py promote-all --repo {repo}
+python3 regression/findings.py promote-all --repo {repo} --apply
 ```
+
+Do not use `regression/promote.py` here: it promotes baselines (re-snapshots and
+regenerates SEED assertions), not findings.
 
 Promoted findings become FND-* assertions. Items with `incorrect` tags become
 candidates for negative assertions (see Checklist 8).
@@ -1418,7 +1434,7 @@ python3 regression/promote.py --repo {repo} --apply
 
 ### 14h. Update tracking
 
-- Add to priority.md in the appropriate complexity tier
+- Rebuild the repo catalog: `python3 tools/generate_catalog.py`
 - Update corpus count in status.md
 - Update `memory/project_repo_expansion.md` with the new repo count
 
@@ -1496,7 +1512,7 @@ detectors introduced by this analyzer type, so they appear in coverage reports.
 ### 15i. Run full corpus and seed
 
 ```bash
-python3 run/run_{type}.py --jobs 16
+python3 run/run_{type}.py --all --jobs 16
 python3 regression/seed.py --all --type {type}
 python3 regression/seed_structural.py --all --type {type}
 python3 regression/run_checks.py --type {type}
@@ -1545,13 +1561,10 @@ check — it covers everything.
 ### 16a. Pre-flight checks
 
 ```bash
-# Unit tests (must be 100%). run_tests.py is a thin alias over pytest
-# (required tiers `unit` / `offline_contract`, see pytest.ini), so every
-# test file is collected and counted for real; phantom passes (TH-014 /
-# TH-052 class) are gone. The local pre-push hook (.git/hooks/pre-push,
-# untracked) requires KICAD_HAPPY_DIR exported and runs this through
-# .venv/bin/python when present, else python3.
-python3 run_tests.py --unit
+# Required test tiers (must be 100%): unit + offline_contract, see pytest.ini.
+# `run_tests.py --unit` would run only the unit tier. The local pre-push hook
+# (.git/hooks/pre-push, untracked) requires KICAD_HAPPY_DIR exported.
+KICAD_HAPPY_DIR=<product checkout> .venv/bin/python -m pytest -m "unit or offline_contract"
 
 # Check for open issues
 cat ISSUES.md   # should show "No open issues"
@@ -1591,26 +1604,24 @@ python3 regression/run_checks.py --type emc
 Record pass/fail counts. Compare against status.md baselines. Any NEW failures
 must be investigated before release.
 
-#### A8 era-baseline check (post-v1.4 backfill)
+#### Era-baseline check
 
-After the A8 schema-era backfill (or any future era bump), default-mode
-regression assertion count is lower than `--era all` count by the size of the
-historical-era population. To distinguish era-suppression from a real regression:
+Default-mode `run_checks.py` keeps only assertions whose `schema_era` equals
+`CURRENT_SCHEMA_ERA` (or that carry no era); `--era all` includes every era. Assertions
+stamped with the current era run in both modes. To distinguish era-suppression from a
+real regression:
 
 ```bash
-# Full population — must match the pre-backfill baseline (2,364,868 at the
-# 2026-05-17 A8 backfill).
+# Full population — compare against the recorded baseline.
 python3 regression/run_checks.py --era all
 
-# Default mode — count is lower by the size of the pre-v1.4 era population
-# (30,280 at the 2026-05-17 backfill: 20,656 validate_pullups + 5,398
-# validate_led_resistors + 3,614 validate_voltage_levels + 612
-# validate_feedback_stability). PASS rate on the remainder must still be 100%.
+# Default mode — lower by the non-current-era population. PASS rate on the
+# remainder must still be 100%.
 python3 regression/run_checks.py
 ```
 
-The `Tagged: N` line printed by `regression/tag_assertions.py` at the most
-recent backfill is the authoritative delta. Reproduce that number with:
+The difference between the two totals is the number of assertions stamped with a
+non-current era. Reproduce it with (update the era literal at the next era bump):
 
 ```bash
 python3 - <<'EOF'
@@ -1628,15 +1639,18 @@ for dirpath, _, files in os.walk('reference'):
         except Exception:
             continue
         for a in d.get('assertions', []):
-            if 'schema_era' in a:
+            era = a.get('schema_era')
+            if isinstance(era, dict):
+                era = era.get('era')
+            if era not in (None, 'v3.0'):
                 total += 1
-print(f"Tagged assertions: {total:,}")
+print(f"Non-current-era assertions: {total:,}")
 EOF
 ```
 
 A drop in default-mode PASS rate is a real regression unrelated to era
-filtering and must be investigated. A drop in default-mode TOTAL count that
-matches the "Tagged" number is expected era-suppression.
+filtering and must be investigated. A difference in TOTAL count that matches the
+non-current-era number is expected era-suppression.
 
 ### 16d. Cross-validation
 
@@ -1648,15 +1662,16 @@ python3 validate/cross_analyzer.py --summary
 
 Agreement rates should match or exceed status.md baselines.
 
-### 16e. Full validation pipeline
+### 16e. Assertion check through the entry point
 
 ```bash
 python3 harness.py validate
 ```
 
-This runs the orchestrated validation suite including output validation, schema
-checks, cross-validation, and structural checks. For a faster pre-check during
-development, use `python3 harness.py validate --cross-section smoke`.
+This runs only `regression/run_checks.py` against existing outputs (with a 300 s cap,
+reported as a failure when hit). It does not run the tests, output validation, schema
+checks or cross-validation; those are separate steps in this checklist. Use
+`python3 harness.py validate --cross-section smoke` for a smaller assertion check.
 
 ### 16f. Constants and equations audit
 
@@ -1707,11 +1722,16 @@ Mutation catch rate >95%. No detectors with hits but zero assertions.
 **v1.1 tool smoke tests** — verify standalone tools don't crash on corpus data:
 
 ```bash
+# Outputs live at results/outputs/<type>/<owner>/<repo>/<file>.json.
+
 # What-if smoke test (20 files, change a resistor, verify no crashes)
 python3 -c "
 import subprocess, glob, json, sys
-errors = 0
-for f in sorted(glob.glob('results/outputs/schematic/*/*.json'))[:20]:
+files = [f for f in sorted(glob.glob('results/outputs/schematic/*/*/*.json'))
+         if not f.endswith('/capability_mode.json')][:20]
+assert files, 'No schematic outputs selected'
+errors = checked = 0
+for f in files:
     data = json.load(open(f))
     r = next((c['reference'] for c in data.get('components', [])
               if c.get('reference', '').startswith('R')
@@ -1719,23 +1739,32 @@ for f in sorted(glob.glob('results/outputs/schematic/*/*.json'))[:20]:
     if r:
         result = subprocess.run([sys.executable,
             '$KICAD_HAPPY_DIR/skills/kicad/scripts/what_if.py', f, f'{r}=4.7k'],
-            capture_output=True, timeout=10)
+            capture_output=True, text=True, timeout=10)
+        checked += 1
         if result.returncode != 0 and 'cannot parse' not in result.stderr:
             errors += 1
-print(f'What-if smoke: {errors} errors')
+print(f'What-if smoke: {checked} checked, {errors} errors')
+assert checked > 0, 'No inputs exercised'
+assert errors == 0, 'Smoke failures'
 "
 
 # Diff smoke test (20 files, self-diff, verify no crashes)
 python3 -c "
 import subprocess, glob, sys
-errors = 0
-for f in sorted(glob.glob('results/outputs/schematic/*/*.json'))[:20]:
+files = [f for f in sorted(glob.glob('results/outputs/schematic/*/*/*.json'))
+         if not f.endswith('/capability_mode.json')][:20]
+assert files, 'No schematic outputs selected'
+errors = checked = 0
+for f in files:
     result = subprocess.run([sys.executable,
         '$KICAD_HAPPY_DIR/skills/kicad/scripts/diff_analysis.py', f, f],
-        capture_output=True, timeout=10)
+        capture_output=True, text=True, timeout=10)
+    checked += 1
     if result.returncode not in (0, 1):
         errors += 1
-print(f'Diff smoke: {errors} errors')
+print(f'Diff smoke: {checked} checked, {errors} errors')
+assert checked > 0, 'No inputs exercised'
+assert errors == 0, 'Smoke failures'
 "
 ```
 
@@ -1764,11 +1793,15 @@ full-corpus CLEAN. Worked example in v1.4 shared log entries 98-102.
 requirement)" Release Checklist section.**
 
 Procedure: **run Checklist 26** against the candidate tag SHA. Stage
-quick_200 first (~8 min, bails out cheaply on regression); on CLEAN
-proceed to full-corpus (~30-45 min). Pass criteria from 26e are mandatory
-(`disappeared_count == 0` AND `severity_downgrades == 0` AND
-`fail_verdicts == 0`). The full-corpus rollup at
-`results/v14_gate/rollup_<label>_full.json` is the artifact consumed by
+quick_200 first (~8 min, bails out cheaply on regression); on a pass
+proceed to full-corpus (~30-45 min). The verdict is the rollup's
+`gate_pass.pass` (its `criterion` field names the rule applied). It ANDs findings
+`strict_clean` and `strict_field_clean` (structural round) or the budgeted verdict
+(output-changing / relock round, 26i), with `census_ok`, `skips_ok`,
+`candidate_failures == 0`, `worker_exceptions == 0` and `compared_units > 0`. The
+three findings counts alone are not the verdict. Apply 26i's round-kind criteria
+to the exact candidate commit. The full-corpus rollup at
+`results/<label>_gate/rollup_<label>_full.json` is the artifact consumed by
 step 16l VALIDATION.md generation.
 
 If non-CLEAN: **do NOT tag.** Bisect against the prior CLEAN gate result
@@ -1857,8 +1890,8 @@ Before executing, understand:
 - Whether any phases require specific repos, API credentials, or tools (e.g., ngspice)
 - If the plan reports a suite count (e.g., "646 passed"), reproduce it AND run the
   full `tests/` tree — behavior locks live outside `tests/contract/` too (root
-  B-series files, `tests/datasheets/` shape-locks). The 2026-07-11 v2.0 adoption
-  found 9 stale v1.4 cap/shape locks this way that the contract-only count missed.
+  B-series files, `tests/datasheets/` shape-locks). Running only the contract
+  directory can miss behavior locks elsewhere in `tests/`.
 
 ### 17b. Check prerequisites
 
@@ -2030,7 +2063,7 @@ skips already-downloaded files.
 
 For bulk downloading across multiple repos:
 ```bash
-python3 run/run_datasheets.py --jobs 4 --download-only
+python3 run/run_datasheets.py --all --jobs 4 --download-only
 ```
 
 ### 18c. Extraction (interactive only)
@@ -2285,11 +2318,12 @@ scope.
 ### 21a. Run the verifier on a cross-section
 
 ```bash
-python3 validate/verify_parser.py --cross-section smoke --type schematic
-python3 validate/verify_parser.py --cross-section quick_200 --type schematic --jobs 16
+python3 validate/verify_parser.py --cross-section smoke
+python3 validate/verify_parser.py --cross-section quick_200 --jobs 16
 ```
 
-The verifier parses each `.kicad_sch` with an independent S-expression reader (sharing
+The verifier covers schematics only (it has no `--type` option). It parses each
+`.kicad_sch` with an independent S-expression reader (sharing
 no analyzer code) and compares extracted facts against the analyzer output. Scope for
 schematic:
 
@@ -2322,7 +2356,7 @@ diff.
 Only after single-repo and cross-section runs are clean:
 
 ```bash
-python3 validate/verify_parser.py --all --jobs 16 --type schematic
+python3 validate/verify_parser.py --all --jobs 16
 ```
 
 Expected: 100% exact match on component references, 99.9%+ on values. Report to
@@ -2343,77 +2377,51 @@ passes.
 
 ## Checklist 22: Synthetic detector fixtures (v1.3+)
 
-Use when adding, validating, or debugging the synthetic fixture suite under
-`tests/fixtures/detectors/`. Fixtures are hand-built `.kicad_sch` files with correct
-answers known by construction — they test detector semantics on deterministic ground
-truth.
+Use when adding, validating, or debugging the synthetic detector cases. Each case is a
+schematic built in code with its correct answer known by construction — the cases test
+detector semantics on deterministic ground truth.
 
-### 22a. Directory layout
+### 22a. Layout
 
-```
-tests/fixtures/detectors/
-  voltage_divider/
-    positive/{basic_equal,unequal_to_adc,etc.}/case.kicad_sch + expected.json
-    negative/{series_r_pullup,pull_up_no_load}/...
-    near_miss/{three_resistor_ladder}/...
-    regressions/{KH-NNN_*}/... + bug.md
-  rc_filter/
-  power_regulator/
-  protection_device/
-  crystal_circuit/
-```
-
-Each case directory has:
-
-- `case.kicad_sch` (hand-built or generated via `tests/fixtures/_build_sch.py`)
-- `expected.json` (narrow assertions, NOT a full output snapshot)
-- Optional `notes.md` explaining what the case tests
-- For regressions: `bug.md` with the KH-* issue reference and root-cause summary
+Synthetic cases are Python tests in `tests/test_synthetic.py`; metamorphic variants are
+in `tests/test_metamorphic.py`. They use `tests/fixtures/_build_sch.py` to construct
+schematics in temporary directories and assert on the analyzer's JSON directly (the
+`findings` entries for the detector under test). There is no fixture-file tree and no
+`expected.json`. Test names group by family: `test_vd_*` (voltage dividers), `test_rc_*`
+(RC filters), `test_reg_*`, `test_crystal_*`, `test_protection_*`; negative cases carry
+`negative` in the name.
 
 ### 22b. Run the synthetic test suite
 
 ```bash
-python3 tests/test_synthetic.py                              # all fixtures
-python3 tests/test_synthetic.py --detector voltage_divider   # one family
-python3 tests/test_synthetic.py --bucket negative            # negative cases only
+.venv/bin/python -m pytest tests/test_synthetic.py                 # all cases
+.venv/bin/python -m pytest tests/test_synthetic.py -k vd_          # one family
+.venv/bin/python -m pytest tests/test_synthetic.py -k negative     # negative cases only
 ```
 
-Failures classify into five categories:
+When a case fails, classify it: false positive (fires on a negative case), false
+negative (misses a positive case), wrong label, or wrong computed value.
 
-- `fail_false_positive` — detector fires on a negative or near-miss case
-- `fail_false_negative` — detector misses a positive case
-- `fail_wrong_label` — detector fires but with wrong topology
-- `fail_wrong_numeric` — detector fires with wrong computed value
-- `fail_unexpected_confidence` — confidence level doesn't match expected bucket
+### 22c. Add a new case
 
-### 22c. Add a new fixture case
+Add a `test_*` function beside the relevant family in `tests/test_synthetic.py`. Build
+its schematic with `Schematic`, call `run_analyzer`, and assert the expected detector
+findings and numeric fields. Follow `test_vd_equal_divider` for a positive example and
+`test_vd_negative_pullup` for a negative example. Run the selected test:
 
-1. Create the case directory: `tests/fixtures/detectors/{family}/{bucket}/{case_name}/`
-2. Either hand-write `case.kicad_sch` or use the `_build_sch.py` helper
-3. Write `expected.json` with narrow assertions:
-
-```json
-{
-  "assertions": [
-    {"path": "signal_analysis.voltage_dividers", "match": {"count": 1}},
-    {"path": "signal_analysis.voltage_dividers[0].ratio",
-     "match": {"approx": 0.5, "abs_tol": 1e-6}}
-  ]
-}
+```bash
+.venv/bin/python -m pytest tests/test_synthetic.py -k test_vd_equal_divider
 ```
-
-4. Run `tests/test_synthetic.py --detector {family}` to verify it passes
-5. Commit the fixture
 
 ### 22d. Metamorphic variants
 
-For each base fixture, generate variants via `_build_sch.py` helpers:
+Variants are built with the same `_build_sch.py` helpers:
 
 - **Invariance** (output should be identical): reorder symbols, rename neutral labels, add floating component
 - **Covariance** (output should change predictably): change R value, change regulator suffix, delete filter leg
 
-Store expected deltas in `metamorphic.json` alongside the base case. Run via
-`tests/test_metamorphic.py`.
+Add variants and their explicit comparisons in `tests/test_metamorphic.py`. Run
+`.venv/bin/python -m pytest tests/test_metamorphic.py`.
 
 ### 22e. When to re-run
 
@@ -2431,11 +2439,10 @@ synthetic fixture and still fail on real corpus files in an unfamiliar domain.
 
 ## Checklist 23: Gold-standard benchmark (PLANNED — NOT YET IMPLEMENTED)
 
-> **Status (2026-04-19):** `reference_gold/` tree and `validate/run_gold_checks.py`
-> runner do not exist. Track A6 in v1.4 roadmap is waiting on Phase 3 to produce real
-> datasheet extractions before gold curation is meaningful — curating gold against
-> imagined outputs is premature. The sub-sections below document the intended design
-> so whoever builds it has a spec to work from.
+> **Status:** the design-gold tree (`reference_gold/`) and runner
+> (`validate/run_gold_checks.py`) do not exist. The following subsections specify the
+> planned benchmark; they are not executable procedures. The implemented extraction-gold
+> workflow is Checklist 25.
 
 Use when adding, validating, or running the curated gold-standard tier under
 `reference_gold/`. Gold entries are hand-reviewed real designs with structured claim
@@ -2539,13 +2546,16 @@ creating new findings that should use the structured form from day one.
 Each finding item in `correct`, `incorrect`, or `missed` arrays should have:
 
 - `claim_type`: `"correct" | "incorrect" | "missed"` (matches the array name)
-- `detector`: analyzer section name (e.g., `"voltage_dividers"`)
+- `detector`: the detector's full function name (e.g., `"detect_voltage_dividers"`; a
+  short suffix is mapped to the full name)
 - `subject_refs`: list of component references (e.g., `["R15", "R16"]`)
-- `expected_relation`: one of `"in_detector" | "not_in_detector" | "field_value_equals" | "field_value_approx" | "count_equals" | "count_min" | "count_max"`
+- `expected_relation`: one of the relations `generate_finding_checks.py` implements:
+  `"in_detector"`, `"not_in_detector"`, `"field_value_equals"` (with `field` and
+  `expected_value`), `"count_equals"` (with `expected_value`) or `"section_exists"`. Any
+  other relation produces no check.
 - `why`: short human explanation (does NOT replace structured fields)
 - `confidence`: 0.0-1.0
 - `evidence_source`: typically `"human_review"` for Layer 3 findings
-- Optional `canonical_check`: explicit machine-checkable form when auto-generation would be wrong
 
 ### 24b. Migrating a legacy finding
 
@@ -2560,7 +2570,7 @@ For each item in `correct`/`incorrect`/`missed`, extract the structured fields f
 the description:
 
 - Component refs → `subject_refs` list
-- Detector name → `detector` field (match `REF_FIELD_MAP` keys)
+- Detector name → `detector` field (the full function name, as in `REF_FIELD_MAP` keys)
 - "is a X" → `claim_type: "correct"`, `expected_relation: "in_detector"`
 - "is falsely detected as X" → `claim_type: "incorrect"`, `expected_relation: "not_in_detector"`
 - "is missing from X" → `claim_type: "missed"`, `expected_relation: "in_detector"`
@@ -2607,7 +2617,7 @@ just make its downstream representation less fragile and searchable.
 
 ---
 
-## Checklist 25: Promoting an extraction to gold (v1.4+ A7 workflow)
+## Checklist 25: Promoting an extraction to gold (extraction gold workflow)
 
 Use this when a new extraction (or schema bump) needs to land as v1.4+ gold.
 
@@ -2617,19 +2627,23 @@ Use this when a new extraction (or schema bump) needs to land as v1.4+ gold.
      --extract-dir tests/fixtures/datasheets-extracted/
    ```
 
-2. Run the promote tool (interactive — diff-on-promote shows you what's
-   changing before the write). PDF dir + cache dir default to harness-internal:
+2. Run the promote tool (interactive — it shows what changes before anything is
+   written). PDF dir + cache dir default to harness-internal:
    ```bash
    python3 regression/promote_gold.py --mpn <MPN>
    ```
 
    The tool re-runs the gate, runs the sanity-vector diff, validates the
-   cache against `extraction.schema.json`, computes PDF SHA, and shows you
-   either the A5 differ output (if prior gold exists with same PDF SHA) or
-   a content summary (first-time MPN). It then prompts "Promote? [y/N]:".
+   cache against `extraction.schema.json` and checks the PDF SHA. It then prints
+   the A5 differ output against the newest existing gold for the MPN, or a
+   content summary on first curation, and prompts "Promote? [y/N]:". If the diff
+   cannot be produced, the promotion is blocked (exit 2). Nothing moves before you
+   confirm: on a PDF SHA change the existing gold and `meta.json` are archived into
+   `archived_pdf_sha_<old>/` only after a "y", and answering N leaves the gold
+   untouched (exit 1).
 
    For batch seeding (e.g., bulk migration on schema bump), use `--yes` to
-   skip the prompt.
+   skip the prompt (the diff or summary is still printed).
 
 3. Stage + commit:
    ```bash
@@ -2656,62 +2670,66 @@ new `gold_v<new>.json` with `event: "recurate_major_bump"` history entry.
 
 ---
 
-## Checklist 26: v1.4 Layer 1 regression gate
+## Checklist 26: Layer 1 corpus regression gate
 
-Use before tagging a v1.4 release candidate. Proves that v1.4's
-`--only-deterministic` flag strips all v1.4 layering (Layer 2 review +
-schema-driven detectors) and reproduces v1.3.1-equivalent Layer 1 output
-across the corpus. Clean → tag `v1.4.0-rc.1`; any FAIL repo → drives rc.2.
+Use before accepting or tagging a product candidate. `regression/run_corpus_gate.py`
+runs the last accepted baseline and the candidate under one declared execution profile
+and compares their outputs. Section 26i defines the current round kinds and acceptance
+criteria; 26e summarizes them.
 
 ### 26a. Create the two worktrees
 
-Baseline is `v1.3.1` (`968f5c8`) — NOT v1.3.0. The v1.4-dev branch already
-merged v1.3.1 forward, so diffing against v1.3.0 would flag the connectivity
-rewrite / PR #16 / PR #19 / pad-rotation / KH-147 as false regressions.
+Choose the accepted baseline SHA and the candidate SHA from the handoff.
 
 ```bash
-git -C ~/Projects/kicad-happy worktree add /tmp/kh-v131 v1.3.1
-git -C ~/Projects/kicad-happy worktree add /tmp/kh-v14  <v1.4-dev-SHA>
+git -C ~/Projects/kicad-happy worktree add /tmp/kh-baseline <baseline-SHA>
+git -C ~/Projects/kicad-happy worktree add /tmp/kh-candidate <candidate-SHA>
 ```
 
-The v1.4-dev SHA is usually a LOCAL commit not yet on origin — worktree it
-from the user's `~/Projects/kicad-happy` checkout, not a fresh clone.
+The candidate SHA is often a LOCAL commit not yet on origin — worktree it from the
+user's `~/Projects/kicad-happy` checkout, not a fresh clone. A clean local clone at the
+SHA works as well.
 
-### 26b. Confirm `regression_diff.py` rule sets are current
+### 26b. Rule allowlists are closed
 
-`NEW_V14_RULES` must list every rule_id that is a *new finding surface* in
-the candidate SHA (Phase 4c detectors + any migrated audits, e.g. VD-001..
-VD-004 from the voltage_derating → rich-findings migration). A new finding
-surface that is missing from the set shows up as `new_unknown` (WARN).
-`UPGRADED_V14_RULES` should stay ≈0 corpus-wide.
+`NEW_V14_RULES` / `UPGRADED_V14_RULES` in `regression/regression_diff.py` are a closed
+historical allowlist. Do not extend them for new product changes. Declare allowed
+output changes in a tracked field budget (`regression/budgets/`, see its README) and run
+the appropriate round kind from 26i.
 
 ### 26c. Run the gate, staged
 
 ```bash
-python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14 --gate-dir results/<label>_gate --label <label> --cross-section smoke --jobs 16
-python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14 --gate-dir results/<label>_gate --label <label> --cross-section quick_200 --jobs 16
-python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-v131 --candidate-dir /tmp/kh-v14 --gate-dir results/<label>_gate --label <label> --all --jobs 16   # full
+python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-baseline --candidate-dir /tmp/kh-candidate --gate-dir results/<label>_gate_smoke --label <label>_smoke --cross-section smoke --jobs 16
+python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-baseline --candidate-dir /tmp/kh-candidate --gate-dir results/<label>_gate_quick_200 --label <label>_quick_200 --cross-section quick_200 --jobs 16
+python3 regression/run_corpus_gate.py --baseline-dir /tmp/kh-baseline --candidate-dir /tmp/kh-candidate --gate-dir results/<label>_gate --label <label>_full --all --jobs 16   # full
 ```
 
-`regression/run_v14_gate.py` is now only a compatibility wrapper (kept one
-release): it maps `--v131-dir`/`--v14-dir` to `--baseline-dir`/`--candidate-dir`,
-drops `--symmetric` (always symmetric), and maps `--timeout N>120` to
-`--profile long-tail`. Use `run_corpus_gate.py` directly. A non-empty
-`--gate-dir` needs `--resume` or a fresh dir; the full corpus needs `--all`.
-Per-unit outputs live in the `baseline/` and `candidate/` slots. Exit 0 means
-`gate_pass` (strict_clean + census + no both_failed/dependency_missing SKIPs);
-`manifest.json` and `units.jsonl` are part of the evidence.
+Use a fresh `--gate-dir` for each selection: a non-empty gate dir without `--resume`
+exits 2, and `--resume` only continues the same selection and argv (the run identity);
+a different selection is an identity mismatch, also exit 2. Keep the earlier trees until
+adjudication — do not delete one to make a later stage fit. The final rollup is
+`results/<label>_gate/rollup_<label>_full.json`. Add `--kind output-changing --budget
+regression/budgets/<id>.json` (or `--kind relock`) for a budgeted round; the default kind
+is `structural`.
 
-Validate on smoke first (catches driver bugs cheaply), then quick_200, then
-the full corpus. The driver runs each analyzer twice per unit (v1.3.1 plain,
-v1.4 `--only-deterministic`), diffs via `regression/regression_diff.py`, and
-writes a per-section rollup JSON+CSV to `results/v14_gate/`. It pins
-`PYTHONHASHSEED=0` for every analyzer subprocess — several detectors
-(RC-DET, DO-DET) iterate hash-seeded sets and `--only-deterministic` does
-not suppress that; pinning the seed identically on both sides keeps the
-comparison fair. Each unit gets a private output directory so the
-`capability_mode.json` sidecar (non-atomic TOCTOU writer) cannot be raced
-by sibling jobs.
+`regression/run_v14_gate.py` is only a compatibility wrapper: it maps
+`--v131-dir`/`--v14-dir` to `--baseline-dir`/`--candidate-dir`, accepts and ignores the
+legacy `--symmetric`, and maps `--timeout N>120` to `--profile long-tail`. Use
+`run_corpus_gate.py` directly. Per-unit outputs live in the `baseline/` and `candidate/`
+slots. Exit 0 means `gate_pass.pass` (26e); `manifest.json` and `units.jsonl` are part
+of the evidence.
+
+Validate on smoke first (catches driver bugs cheaply), then quick_200, then the full
+corpus. The driver runs the selected profile on both sides (the `standard` profile
+passes `--only-deterministic` and `--no-hierarchy`, and does not enable pcb `--full`),
+diffs findings via `regression/regression_diff.py`, runs the field comparator (26i), and
+writes rollups and field reports under the gate dir. It pins `PYTHONHASHSEED=0` for
+every analyzer subprocess — several detectors (RC-DET, DO-DET) iterate hash-seeded sets
+and `--only-deterministic` does not suppress that; pinning the seed identically on both
+sides keeps the comparison fair. Each unit gets a private output directory so the
+`capability_mode.json` sidecar (non-atomic TOCTOU writer) cannot be raced by sibling
+jobs.
 
 ### 26d. Read the rollup
 
@@ -2719,46 +2737,45 @@ by sibling jobs.
 Analyzer  PASS  WARN  FAIL  SKIP  Disappeared  Downgrades  NewKnown  NewUnknown
 ```
 
-- **FAIL** = a v1.3.1 finding's canonical key absent in v1.4 (`disappeared`),
-  OR a severity downgrade on a shared key, OR the v1.4 analyzer crashed.
-- **SKIP** = both versions failed (logged, excluded) or thermal had no PCB pair.
-- **NewKnown** should concentrate in `NEW_V14_RULES`.
-- **NewUnknown** = surprise rule_ids — audit, WARN not blocking.
+- **FAIL** = a baseline finding's canonical key absent in the candidate (`disappeared`),
+  OR a severity downgrade on a shared key, OR the candidate analyzer crashed.
+- **SKIP** = both versions failed (logged; must be covered by the baseline-debts ledger)
+  or thermal had no PCB pair.
+- **NewKnown** = rule_ids in the closed `NEW_V14_RULES` allowlist.
+- **NewUnknown** = rule_ids not in it. Findings `strict_clean` requires zero.
 - **NewUpgraded** (`UPGRADED_V14_RULES`) should be ≈0 — non-zero means a
-  heuristic path drifted; investigate and report, not auto-fail.
+  heuristic path drifted; investigate and report.
 - **Rewrites** (per-unit `rewrites_count`, rollup `Rewrites`) = a finding whose
   summary changed but whose rule_id and component / net / pin sets did not,
   paired one-to-one with the new wording. It is one row, not a `disappeared` +
   `new_unknown` pair: a pure rewrite is WARN, a rewrite with a severity drop
   counts as a downgrade (FAIL). Ambiguous matches stay `disappeared` + new.
 
+The findings table is the secondary summary; the field comparator's verdicts under
+`rollup["modes"]` (26i) carry the field-level claim.
+
 ### 26e. Pass criteria
 
-Across all 6 analyzers × full corpus:
-1. `disappeared_count == 0` — hard
-2. `severity_downgrades == 0` — hard
-3. `fail_verdicts == 0` — hard
-4. `new_unknown_count == 0` OR each rule_id explained — soft, audit
-5. `new_upgraded_count` low (ideally 0) — sanity check
-
-(1)+(2)+(3) clean → eligible to tag `v1.4.0-rc.1`. Any FAIL → file the FAIL
-repos (rollup JSON `fail_repos[]` has the flagging analyzer + top-5
-disappeared/downgraded findings) for rc.2.
+The verdict is `gate_pass.pass` in the rollup; `gate_pass.criterion` names the rule
+applied. A structural round requires findings `strict_clean` (zero FAIL, NewUnknown and
+WARN) AND `strict_field_clean`. An output-changing or relock round requires a valid
+budget and a clean budgeted verdict instead. Every kind also requires `census_ok`,
+`skips_ok` (every both-failed SKIP covered by the ledger), `candidate_failures == 0`,
+`worker_exceptions == 0` and `compared_units > 0`. Investigate every component that is
+not met before acceptance; the rollup's `fail_repos[]` lists the flagging analyzer and
+findings per repo.
 
 ### 26f. Tear down worktrees
 
 ```bash
-git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v131
-git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-v14
+git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-baseline
+git -C ~/Projects/kicad-happy worktree remove --force /tmp/kh-candidate
 ```
 
-### 26g. Symmetric mode (v1.4-vs-v1.4 / v1.5-vs-v1.4 comparisons)
+### 26g. Symmetric mode and findings-level adjudication
 
-The default mode above (`--v131-dir` plain, `--v14-dir` `--only-deterministic`)
-is hardwired for the **v1.3.1 → v1.4** transition. For any same-era
-comparison — rc.N vs rc.M, rc.M vs final, v1.4 vs v1.5-dev — use
-`--symmetric`: both worktrees run `--only-deterministic`, which is the
-only fair flag setting when both sides have v1.4 layering.
+Both sides of a current corpus gate run the same selected profile; `run_corpus_gate.py`
+has no `--symmetric` option (the `run_v14_gate.py` wrapper accepts and ignores it).
 
 ```bash
 git -C ~/Projects/kicad-happy worktree add /tmp/kh-baseline <baseline-SHA>
@@ -2774,17 +2791,17 @@ python3 regression/run_corpus_gate.py \
 `--candidate-dir` is the candidate (`candidate/`). Old `--v131-dir`/`--v14-dir`
 still work through the `run_v14_gate.py` wrapper.
 
-**Always pair with `--gate-dir`** to keep symmetric runs from clobbering
-the historical `results/v14_gate/` v1.3.1-vs-v1.4 records. The override
-also re-uses the same per-unit caching layout, so `--resume` works.
+`--gate-dir` is required; `--resume` reuses units only when the manifest identity
+matches.
 
-**Per-rule budget adjudication is manual.** The auto-PASS criterion in §26e
-is **too strict** for v1.4-vs-v1.4 because:
+**Historical examples (v1.4 differ era).** Use 26i's tracked field budgets for current
+output-changing rounds. The material below explains findings-level movement from gates
+run before field budgets existed; it does not replace the field comparator or reopen the
+closed allowlist. In that era:
 
-1. Legitimate new rule_ids show as `NewUnknown` until added to
-   `NEW_V14_RULES` in `regression/regression_diff.py:51`. Patch the
-   allowlist when main-repo adds a rule_id, ideally in the same commit
-   window as the gate (rc.2 added `LA-004`, `RS-003`, `LC-007`).
+1. Legitimate new rule_ids showed as `NewUnknown` until added to
+   `NEW_V14_RULES` (rc.2 added `LA-004`, `RS-003`, `LC-007`). The set is now
+   closed.
 2. **Demote-with-summary-rewrite** (e.g. rc.2 PM-002 / PP-001) shifts the
    `_canon_key` (which includes `_norm_summary`) on every reclassified
    finding. The diff engine now pairs the old and new wording one-to-one on
@@ -2797,10 +2814,9 @@ is **too strict** for v1.4-vs-v1.4 because:
 `<gate-dir>/diff/<analyzer>/<owner>/<repo>/<unit>.json` nest the
 regression_diff report under a `_record` key (`verdict`, `disappeared[]`,
 `downgrades[]`, `new_{known,upgraded,unknown}_rule_ids[]`, per-class
-counts) — but the `disappeared[]`/`downgrades[]` LISTS are truncated to 5
-per unit (the `*_count` fields are exact; the v2.1 gate hit this: 948
-counted vs 443 listed). Use the records for class membership and repo
-attribution only. For conditional budgets ("deltas allowed only in repos
+counts). Current per-unit `disappeared[]`/`downgrades[]` lists are complete;
+older retained gates may contain lists truncated to 5 per unit (their `*_count`
+fields are exact). For conditional budgets ("deltas allowed only in repos
 with property X"), walk these records, collect delta repos, and verify the
 property per repo (worked example: the 2026-07-11 mirror-fix gate greps
 each delta repo's `.kicad_sch` for `(at .. 90|270)`+`(mirror x)`; 1,074
@@ -2831,7 +2847,10 @@ rules needing per-segment positions (NR-001, RP-002, TW-001) skip
 corpus-wide in gates — the cross `checks_run` manifest (KH-381+) shows
 this directly (`ran:false, "no PCB track segments present"`); read a
 sample manifest BEFORE assuming a rule was exercised.
-A STRICT-CLEAN verdict only certifies the non-full findings surface.
+The findings-level summary covers findings and assessments. Strict field comparison
+(26i) additionally checks the complete captured JSON under the normalization policy,
+but the standard profile still cannot exercise data the PCB analyzer did not emit; use
+the full-chain profile for full PCB geometry.
 **Reusable --full chain A/B (v2.3 batch):** `results/v23_gate/full_chain_ab.py
 --base <wt> --cand <wt> --out <dir> [--n 300 --seed 23]` samples same-stem
 .kicad_pro/.kicad_sch/.kicad_pcb triples and runs schematic + pcb --full
@@ -2890,7 +2909,7 @@ The trees are reproducible from the pinned SHAs (~35 min full corpus,
 only after adjudication is fully closed. Rationale: eight retained gates
 had accumulated ~434G before the 2026-07-15 cleanup recovered 370G.
 
-### 26i. Field-level modes (H0, spec §3)
+### 26i. Field-level modes
 
 The findings multiset diff (`regression_diff.py`) is the SECONDARY summary. The field-level
 claim is made by `regression/compare_snap_trees.py` over the gate's slot trees:
@@ -2912,7 +2931,8 @@ Three verdicts, never conflated:
   exact leaves only. Chained `/inputs/source_hashes` values keyed under the slot roots are
   masked only after each is verified as the sha256 of the keyed upstream snap.
 - **budgeted** classifies strict deltas against a tracked `regression/budgets/<id>.json`.
-  Any residual means not clean. A budget whose `normalization_policy` or
+  Residuals beyond the budget's `unexplained_deltas_allowed` (0 in every tracked
+  budget) mean not clean. A budget whose `normalization_policy` or
   `baseline_sha`/`candidate_sha` contradict the run (policy in use; gate `manifest.json`
   when present, SHA prefixes allowed) is an error, exit 2.
 
@@ -2943,7 +2963,7 @@ them all in memory. Validate a new budget on a prototype first: a `--repo-list` 
 handful of affected repos under `--kind structural`, then `compare_snap_trees.py --mode
 budgeted --budget <file>` over its slots, before the full run.
 
-**Exit code vs round verdict (maintainer ruling I9).** `gate_pass.pass` depends on `--kind`:
+**Exit code vs round verdict.** `gate_pass.pass` depends on `--kind`:
 
 | `--kind` | `--budget` | `gate_pass.pass` |
 |---|---|---|
@@ -2971,7 +2991,7 @@ absolute paths, so prefix stripping and the sha256 linkage checks fail.
 
 ---
 
-### 26j. distributor-offline profile (product oracle, v3 round 6)
+### 26j. distributor-offline profile (product oracle)
 
 The distributor layer (`skills/{digikey,mouser,lcsc,element14}` sync/fetch CLIs over
 `skills/datasheets/distributor_core/`) emits no analyzer output, so the corpus gate is blind
@@ -3037,7 +3057,7 @@ Why not the obvious shell loops:
 To abort a run, kill the whole group (`kill -TERM -- -$(cat results/<label>.pid)`; under `setsid`
 the PID is the PGID), then check for orphaned analyzer workers before relaunching.
 
-### 26l. spice-offline profile (v3 round 8)
+### 26l. spice-offline profile
 
 `harnesslib.profiles` declares `spice-offline` (`("spice",)`, 60 s per-file cap, hermetic), but
 `run_corpus_gate.py` refuses it (no corpus analyzer, TH-073): run it through `run/run_spice.py`
@@ -3055,6 +3075,7 @@ KICAD_HAPPY_TESTHARNESS_DATA_DIR=/tmp/so/base KICAD_HAPPY_DIR=results/v3_baselin
 KICAD_HAPPY_TESTHARNESS_DATA_DIR=/tmp/so/cand KICAD_HAPPY_DIR=results/v3_baseline/product_<cand> PYTHONHASHSEED=0 \
   python3 run/run_spice.py --cross-section quick_200 --jobs 16 --workdir /tmp/so/cand/spice_work
 python3 tools/inventory_spice_caches.py --repos-root repos --check /tmp/so/caches_before.json   # 0 differences = hermetic
+mkdir -p results/<gate>_aux/spice_offline
 python3 regression/compare_spice_offline.py /tmp/so/base/results/outputs/spice /tmp/so/cand/results/outputs/spice -o results/<gate>_aux/spice_offline/compare.json
 ```
 
@@ -3068,7 +3089,7 @@ is the candidate's. Expect `lookup:` on a part's first use in a unit and `cache:
 uses in the same unit; outputs regenerated before 2026-10-24 carry the old global-cache
 labels.
 
-### 26m. Product text oracle (`tools/check_refactor.py snapshot` / `text-compare`, v3 rounds 7-9)
+### 26m. Product text oracle (`tools/check_refactor.py snapshot` / `text-compare`)
 
 The product's own refactor oracle renders every `--text` / `--help` / JSON / summarize artefact over the
 harness fixtures and compares the two trees byte-for-byte. The maintainer captures the round's baseline
@@ -3096,9 +3117,8 @@ or delete the sidecar afterwards.
 
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 
-When the analyzer ships a new era with material detector behavior changes
-(the next one is v3.0; this checklist was first written for a planned v1.5 bump
-that never shipped), follow this sequence to roll the harness forward.
+When the analyzer ships a new era with material detector behavior changes,
+follow this sequence to roll the harness forward.
 Spec: `docs/superpowers/specs/2026-05-16-a8-schema-era-tagging-design.md` §3.7.
 
 ### 27a. Hand-curate gating notes for the new era
@@ -3152,10 +3172,11 @@ the filter retire it.
 ### 27d. Identify repos where assertions fracture against new analyzer output
 
 ```bash
-python3 regression/run_checks.py --cross-section quick_200 2>&1 | grep FAIL
+python3 regression/run_checks.py --cross-section quick_200 --era all 2>&1 | grep FAIL
 ```
 
-Failures should concentrate in the v3.0-changed-detector set. Anything outside
+Run with `--era all`: after 27c, default mode already hides assertions still stamped with
+the old era, so only an all-era run shows their fractures. Failures should concentrate in the v3.0-changed-detector set. Anything outside
 that set is a true regression and must be investigated separately before
 proceeding.
 
@@ -3197,13 +3218,15 @@ PYTHONHASHSEED=0 python3 regression/run_checks.py --cross-section quick_200 --er
 PYTHONHASHSEED=0 python3 regression/run_checks.py --cross-section quick_200
 ```
 
-`--era all` must still show 100% PASS at the full count. Default mode count
-drops by the size of the freshly-tagged `v1.4` population.
+Run both after re-seeding and investigate failures against the recorded baseline.
+Default mode excludes assertions whose stored era differs from `CURRENT_SCHEMA_ERA`;
+re-seeded current-era assertions stay included. Compare the actual totals rather than
+assuming the backfill's `Tagged` count is the difference.
 
-### 27h. Commit in the same 5-commit pattern as A8
+### 27h. Record the era-update commits
 
-See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
-(infrastructure → read-side → write-side → backfill+RUNBOOK → docs).
+Use five commits covering infrastructure, read-side filtering, write-side stamping,
+assertion backfill with RUNBOOK updates, and public documentation.
 
 ---
 
@@ -3214,7 +3237,7 @@ See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
 | Run all schematic analysis | `python3 run/run_schematic.py --all --jobs 16` |
 | Run all assertions | `python3 regression/run_checks.py` |
 | Run assertions for one type | `python3 regression/run_checks.py --type schematic` |
-| Run assertions for one repo | `python3 regression/run_checks.py --repo OpenMower` |
+| Run assertions for one repo | `python3 regression/run_checks.py --repo {owner/repo}` |
 | Check assertion staleness | `python3 regression/check_staleness.py` |
 | Cross-analyzer consistency | `python3 validate/cross_analyzer.py --summary` |
 | Mutation test effectiveness | `python3 validate/mutation_test.py --repo X --type schematic` |
@@ -3230,12 +3253,13 @@ See git history for SHAs `11f13237d4f..3514d0b3a3a` as a reference template
 | Reset health baseline | `python3 tools/generate_health_report.py --reset-baseline "reason"` |
 | Prune stale seed assertions | `python3 regression/seed.py --all --type {type} --prune-stale` |
 | Audit bugfix paths | `python3 regression/audit_bugfix_paths.py` |
-| Unit tests (thin alias over pytest; required tiers `unit` / `offline_contract`, see `pytest.ini`) | `python3 run_tests.py --unit` |
+| Required test tiers (`unit` + `offline_contract`, see `pytest.ini`) | `KICAD_HAPPY_DIR=<product> .venv/bin/python -m pytest -m "unit or offline_contract"` |
+| Unit tier only | `python3 run_tests.py --unit` |
 | Unit tests (tier filter; `--tier all` = `--all-tiers`) | `python3 run_tests.py --tier unit\|online\|all` |
 | Re-seed assertions | `python3 regression/seed.py --all --type {type}` |
 | Promote to reference | `python3 regression/promote.py --repo {repo} --apply` |
-| Full validation pipeline | `python3 harness.py validate` |
-| Quick validation | `python3 harness.py validate --cross-section smoke` |
+| Assertion check via entry point (run_checks only) | `python3 harness.py validate` |
+| Quick assertion check | `python3 harness.py validate --cross-section smoke` |
 | Bugfix assertion reconcile | `python3 regression/generate_bugfix_assertions.py` (dry-run) then `--apply` |
 | Bugfix coverage audit | `python3 regression/audit_bugfix_coverage.py` |
 | Findings drift | `python3 regression/drift.py --repo {repo}` |

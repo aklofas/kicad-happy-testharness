@@ -1,6 +1,6 @@
 # SPICE Simulation Testing
 
-The test harness validates the kicad-happy SPICE simulation skill (`simulate_subcircuits.py`) against the full 5,822-repo corpus. Full-corpus SPICE run completed 2026-04 with 145,758 simulations (84.8% pass, 12.1% warn, 0.06% fail) across 17 subcircuit types. The SPICE skill reads schematic analyzer JSON outputs, generates ngspice testbenches for detected subcircuits, runs simulations, and produces structured pass/warn/fail/skip results.
+The test harness validates the kicad-happy SPICE simulation skill (`simulate_subcircuits.py`) against the corpus (5,821 repos, the URL count in `repos.md`). The 2026-04 full-corpus SPICE run produced 145,758 simulations (84.8% pass, 12.1% warn, 0.06% fail) across 17 subcircuit types. The SPICE skill reads schematic analyzer JSON outputs, generates ngspice testbenches for detected subcircuits, runs simulations, and produces structured pass/warn/fail/skip results.
 
 ## Requirements
 
@@ -15,10 +15,10 @@ The test harness validates the kicad-happy SPICE simulation skill (`simulate_sub
 ```bash
 # Run SPICE simulations (reads existing schematic JSON outputs)
 python3 run/run_spice.py --repo {repo}       # single repo
-python3 run/run_spice.py --jobs 16           # full corpus
+python3 run/run_spice.py --all --jobs 16     # full corpus (a run with no selector exits 2)
 
 # Run with PCB parasitic injection (trace R, via L from PCB layout)
-python3 run/run_spice.py --jobs 16 --with-parasitics
+python3 run/run_spice.py --all --jobs 16 --with-parasitics
 
 # Check aggregate results
 cat results/outputs/spice/_aggregate.json | python3 -m json.tool
@@ -32,25 +32,25 @@ python3 regression/run_checks.py --type spice
 
 ## Subcircuit types (17)
 
-| Type | Count | Simulation | Source |
+| Type | Count | Simulation | Source (`findings` filtered by detector) |
 |------|-------|------------|--------|
-| `rc_filter` | 7,820 | AC sweep, measure -3dB cutoff frequency | signal_analysis.rc_filters |
-| `decoupling` | 7,296 | AC impedance sweep of parallel cap bank (ESR+ESL model) | signal_analysis.decoupling_analysis |
-| `transistor_circuit` | 4,956 | DC sweep, measure Vth and on-state current | signal_analysis.transistor_circuits |
-| `voltage_divider` | 3,212 | DC operating point, verify Vout = Vin x ratio | signal_analysis.voltage_dividers |
-| `lc_filter` | 1,605 | AC sweep, measure resonant frequency and Q | signal_analysis.lc_filters |
+| `rc_filter` | 7,820 | AC sweep, measure -3dB cutoff frequency | `detect_rc_filters` |
+| `decoupling` | 7,296 | AC impedance sweep of parallel cap bank (ESR+ESL model) | `detect_decoupling` |
+| `transistor_circuit` | 4,956 | DC sweep, measure Vth and on-state current | `detect_transistor_circuits` |
+| `voltage_divider` | 3,212 | DC operating point, verify Vout = Vin x ratio | `detect_voltage_dividers` |
+| `lc_filter` | 1,605 | AC sweep, measure resonant frequency and Q | `detect_lc_filters` |
 | `inrush` | 1,219 | Transient startup, measure peak inrush current | inrush_analysis.rails |
-| `protection_device` | 1,107 | DC sweep, measure clamping onset voltage | signal_analysis.protection_devices |
-| `opamp_circuit` | 1,085 | AC sweep, measure gain at 1kHz and bandwidth | signal_analysis.opamp_circuits |
-| `crystal_circuit` | 547 | Verify load cap presence and effective CL | signal_analysis.crystal_circuits |
-| `current_sense` | 523 | DC sweep, verify I=V/R at 50mV and 100mV | signal_analysis.current_sense |
-| `regulator_feedback` | 386 | DC operating point, verify FB voltage = Vref | signal_analysis.power_regulators |
-| `feedback_network` | 375 | DC operating point, verify divider ratio | signal_analysis.feedback_networks |
-| `rf_matching` | 296 | AC impedance sweep 1kHz-10GHz | signal_analysis.rf_matching |
-| `rf_chain` | 94 | Link budget (heuristic gain/loss per stage) | signal_analysis.rf_chains |
-| `bridge_circuit` | 93 | DC gate sweep, verify FET turn-on | signal_analysis.bridge_circuits |
-| `snubber_circuit` | 26 | AC impedance of RC snubber, verify damping frequency | signal_analysis.transistor_circuits (extracted) |
-| `bms_balance` | 6 | DC operating point, verify balance resistor power | signal_analysis.bms_systems |
+| `protection_device` | 1,107 | DC sweep, measure clamping onset voltage | `detect_protection_devices` |
+| `opamp_circuit` | 1,085 | AC sweep, measure gain at 1kHz and bandwidth | `detect_opamp_circuits` |
+| `crystal_circuit` | 547 | Verify load cap presence and effective CL | `detect_crystal_circuits` |
+| `current_sense` | 523 | DC sweep, verify I=V/R at 50mV and 100mV | `detect_current_sense` |
+| `regulator_feedback` | 386 | DC operating point, verify FB voltage = Vref | `detect_power_regulators`, `detect_integrated_ldos` |
+| `feedback_network` | 375 | DC operating point, verify divider ratio | `detect_feedback_networks` |
+| `rf_matching` | 296 | AC impedance sweep 1kHz-10GHz | `detect_rf_matching` |
+| `rf_chain` | 94 | Link budget (heuristic gain/loss per stage) | `detect_rf_chains` |
+| `bridge_circuit` | 93 | DC gate sweep, verify FET turn-on | `detect_bridge_circuits` |
+| `snubber_circuit` | 26 | AC impedance of RC snubber, verify damping frequency | `detect_transistor_circuits` (entries with `snubber_data`) |
+| `bms_balance` | 6 | DC operating point, verify balance resistor power | `detect_bms_systems` |
 
 ## How it works
 
@@ -61,7 +61,8 @@ Schematic JSON ──> simulate_subcircuits.py ──> ngspice (.cir) ──> Re
      │              (spice_templates.py)                    (spice_results.py)
      │                      │
      │              TEMPLATE_REGISTRY          EVALUATOR_REGISTRY
-     │              (17 signal_analysis        (17 matching evaluators)
+     │              (17 detector groups        (17 matching evaluators)
+     │               from findings
      │               + 1 top-level type)
      │
      └── _context injected for cross-referencing
@@ -104,11 +105,11 @@ The `--with-parasitics` flag enables PCB-aware SPICE simulation. For each schema
 
 **When to use**: High-impedance feedback networks, LC filters, RF circuits, long analog traces. Most digital decoupling and power supply circuits show negligible parasitic impact (0.3-3.8% typical shifts).
 
-**Prerequisite:** PCB analysis must be run with `analyze_pcb.py --full` to include per-trace segment data (`trace_segments` in `net_lengths`). Standard batch PCB runs (`run_pcb.py`) do NOT use `--full` — outputs lack segment data and the extractor will find 0 nets. This is an opt-in feature for when parasitic accuracy matters.
+**Prerequisite:** the PCB output must carry full geometry (per-trace segment data, `trace_segments` in `net_lengths`); without it the extractor finds 0 nets. `run/run_pcb.py` passes `--full --proximity` by default (`--no-full` / `--no-proximity` opt out), so normal batch output qualifies. The corpus gate's `standard` profile is different: it does not enable full PCB geometry, so its PCB snapshots lack segment data; use batch output or the gate's `full-chain` profile when geometry-dependent coverage is required.
 
 ```bash
-# Step 1: Run PCB analysis with --full (includes per-trace segment data)
-python3 run/run_pcb.py --repo {repo} --jobs 4 --full
+# Step 1: Run PCB analysis (full geometry is the runner default)
+python3 run/run_pcb.py --repo {repo} --jobs 4
 
 # Step 2: Run SPICE with parasitic injection
 python3 run/run_spice.py --repo {repo} --jobs 16 --with-parasitics
@@ -161,7 +162,10 @@ python3 regression/run_checks.py --type spice
 | `reference/{repo}/{project}/baselines/spice.json` | SPICE baselines (git-tracked) |
 | `reference/{repo}/{project}/assertions/spice/` | SPICE assertions (git-tracked) |
 
-## Current stats
+## Historical sample statistics
+
+These totals come from an earlier run and are kept for context; they are not the current
+full-corpus coverage. Use the `_aggregate.json` of the run being reported.
 
 - 30,646 subcircuit simulations across 17 types
 - 94.1% pass rate (28,853 pass, 857 warn, 14 fail, 922 skip)

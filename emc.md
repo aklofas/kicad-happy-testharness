@@ -1,6 +1,6 @@
 # EMC Pre-Compliance Testing
 
-The test harness validates the kicad-happy EMC pre-compliance analyzer (`analyze_emc.py`) against the full 5,822-repo corpus. Full-corpus EMC run completed 2026-04 with 192,000+ findings across 15 rule categories. The EMC skill reads schematic and/or PCB analyzer JSON outputs, applies geometric rule checks and analytical formulas, and produces a structured risk report with findings, severity scores, and recommendations.
+The test harness validates the kicad-happy EMC pre-compliance analyzer (`analyze_emc.py`) against the corpus (5,821 repos, the URL count in `repos.md`). The 2026-04 full-corpus EMC run produced 192,000+ findings across 15 rule categories. The EMC skill reads schematic and/or PCB analyzer JSON outputs, applies geometric rule checks and analytical formulas, and produces a structured risk report with findings, severity scores, and recommendations.
 
 Unlike SPICE (which runs simulations), EMC is purely analytical — all estimates come from textbook formulas (Ott, Paul, Bogatin) and geometric heuristics on the PCB layout. No external tools are required.
 
@@ -9,8 +9,8 @@ Unlike SPICE (which runs simulations), EMC is purely analytical — all estimate
 ```bash
 # Run EMC analysis (reads existing schematic + PCB JSON outputs)
 python3 run/run_emc.py --repo {repo}       # single repo
-python3 run/run_emc.py --jobs 16           # full corpus
-python3 run/run_emc.py --standard cispr-class-b  # non-default standard
+python3 run/run_emc.py --all --jobs 16     # full corpus (a run with no selector exits 2)
+python3 run/run_emc.py --repo {repo} --standard cispr-class-b  # non-default standard
 
 # Check aggregate results
 cat results/outputs/emc/_aggregate.json | python3 -m json.tool
@@ -83,11 +83,16 @@ EMC equations with their verification status and sources.
 
 ## Risk scoring
 
+Group findings by rule ID. For each rule, take at most the three findings with the
+highest severity. Each contributes a penalty of 12 for `error`, 3 for `warning` or 0 for
+`info`, multiplied by 0.5 for `heuristic` confidence and 1 otherwise:
+
 ```
-score = 100 - (CRITICAL × 15) - (HIGH × 8) - (MEDIUM × 3) - (LOW × 1)
+score = max(0, min(100, 100 - total_penalty))
 ```
 
-Clamped to [0, 100]. A score of 100 means no EMC findings; scores below 50 indicate significant EMC risk.
+A score of 100 can still include INFO findings (and findings beyond the per-rule cap
+do not lower it further); read the findings and categories alongside the score.
 
 ## Cross-validation
 
@@ -128,7 +133,10 @@ python3 regression/run_checks.py --type emc
 | `reference/{repo}/{project}/baselines/emc.json` | EMC baselines (git-tracked) |
 | `reference/{repo}/{project}/assertions/emc/` | EMC assertions (git-tracked) |
 
-## Current stats
+## Historical sample statistics
+
+These totals come from an earlier run and are kept for context; they are not the current
+full-corpus coverage. Use the `_aggregate.json` of the run being reported.
 
 - 6,853 files processed, 0 script errors
 - 3,165 paired with PCB (46%), 6,838 files with findings

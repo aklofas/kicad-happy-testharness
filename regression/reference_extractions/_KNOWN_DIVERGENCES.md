@@ -1,8 +1,8 @@
 # Known divergences in v1.4 gold set
 
 Narrative context for INFO-class currency-check findings. Each entry maps to a
-schema or convention awkwardness flagged during Phase 3b that didn't gate
-acceptance but is candidate for v1.5 cleanup. When `check_gold_currency.py`
+schema or convention awkwardness found while curating the gold set that did not
+gate acceptance but is a candidate for cleanup. When `check_gold_currency.py`
 reports a minor schema bump or convention shift, look here first to understand
 what the bump means and whether it should drive a re-curation now.
 
@@ -17,7 +17,7 @@ attached.
 currency check reports INFO. Re-curation recommended at that point — the new
 shape will lift the unit explicitly.
 
-**Source:** Phase 3b session 9, STM32F103C8T6 vector realignment (LOG #62).
+**Source:** STM32F103C8T6 sanity-vector realignment.
 
 ## opamp/mcu cross-category TOPR-vs-T_A divergence
 
@@ -30,33 +30,34 @@ makes uniform consumer-API access awkward.
 `recommended_operating.TOPR` (or `absolute_max.TOPR`) convention, currency
 check reports INFO. Re-curation recommended.
 
-**Source:** Phase 3b session 9, LM358 vector realignment (LOG #62).
+**Source:** LM358 sanity-vector realignment.
 
 ## `body_mm` shape — already canonical
 
-**Symptom:** Originally proposed as scalar `body_mm`; revised in Phase 3b
-session 9 to nested `{length_mm, width_mm, height_mm}` (option A — main-repo
-LOG #59). Already canonical across all 5 Phase 3b categories.
+**Canonical shape:** `body_mm` is a nested object with `length`, `width` and
+`height`, each in millimeters (originally proposed as a scalar). The base, opamp
+and mcu schemas reject additional keys such as `length_mm`.
 
 **Currency-check signal:** none active. Listed for completeness; if a future
 shape variant emerges (e.g., per-orientation dimensions, BGA pitch separate
 from body), bump entry to active divergence.
 
-**Source:** Phase 3b session 9, ABM8G crystal vector (LOG #59, #60).
+**Source:** ABM8G crystal sanity vector.
 
 ## `datasheet_lookup.sanitize_mpn` dot-stripping (consumer-API bug)
 
-**Symptom:** v1.3 consumer-API `datasheet_lookup.sanitize_mpn` still uses
-dot-replacing regex; cache files for crystal-style MPNs preserve dots
-(e.g. `ABM8G-106-12.000MHZ-T`). Detector code calling `lookup()` won't find
-the cache file.
+**Symptom (historical):** the old consumer-API `sanitize_mpn` replaced dots,
+while cache files for crystal-style MPNs preserve them (e.g.
+`ABM8G-106-12.000MHZ-T`), so a detector lookup missed the cache file.
 
-**Currency-check signal:** none — this is a detector-side path-realignment
-bug, NOT a cache-shape change. Listed here so reviewers don't conflate the
-fix with a schema bump.
+**Currency-check signal:** none — this was a filename-resolution bug, NOT a
+cache-shape change. Listed here so reviewers don't conflate it with a schema
+bump.
 
-**Resolution:** v1.5 consumer-API hardening item — align
-`datasheet_lookup.sanitize_mpn` with the verify flag-mode regex (or remove
-sanitization entirely since `merge_results.py` writes literal MPN).
+**Resolution:** resolved. The consumer now lives in
+`skills/datasheets/datasheet_types/cache_reader.py`, whose `sanitize_mpn`
+preserves dots and hyphens, so `ABM8G-106-12.000MHZ-T` resolves to a cache
+filename containing the same MPN. If that lookup fails, inspect cache presence
+and validity rather than applying the former dot-stripping workaround.
 
-**Source:** Phase 3b session 9, ABM8G crystal gate run (LOG #62).
+**Source:** ABM8G crystal gate run.

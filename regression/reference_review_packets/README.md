@@ -1,8 +1,8 @@
 # Reference Review Packets
 
-Curated input packets for `run/run_review_metrics.py` (B9). Each packet
-exercises one scenario from spec §15.1 and supports v1.4 measurement-only
-Layer 2 reviewer-quality metrics. v1.5 calibrates target gates.
+Curated inputs for replaying recorded reviewer output with
+`run/run_review_metrics.py`. Each packet exercises one scenario. The runner
+measures Layer 2 reviewer quality; it does not enforce target metrics.
 
 ## Packet shape
 
@@ -17,9 +17,12 @@ Each packet is a directory `packet_NN_<scenario>/` containing 6 files:
 | `expected_annotations.json` | Curator's ground truth (suppressions/confirmations/escalations/correlations) |
 | `notes.md` | Free-form curator notes — what scenario, why, what to look for |
 
-Validated against `packet_schema.json` at runtime.
+The runner validates packets against `packet_schema.json` when `jsonschema` is
+installed; otherwise that validation is skipped. Install it before curating
+packets: `python3 -m pip install jsonschema`. A packet that fails to load or
+validate is reported as `skipped`, not as an error.
 
-## Scenarios (per spec §15.1)
+## Scenarios
 
 | # | Scenario | Status |
 |---|---|---|
@@ -35,7 +38,10 @@ Validated against `packet_schema.json` at runtime.
 1. Create `packet_NN_<scenario>/` with all 6 files.
 2. Run `python3 run/run_review_metrics.py --packet packet_NN_<scenario>` to
    verify it loads and metrics compute.
-3. Pre-push gate (`make smoke`) will exercise it automatically.
+3. Run `python3 run/run_review_metrics.py --json` over all packets and inspect
+   `packets_run` and `packets_skipped`: the new packet must be included and
+   nothing may be skipped unexpectedly. The exit code is 0 even when packets
+   were skipped, so it is not proof that every packet validated.
 
 ## Running
 

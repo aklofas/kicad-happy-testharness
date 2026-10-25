@@ -1,6 +1,6 @@
 # Methodology
 
-How we validate a suite of KiCad analyzers against 5,822 real-world open-source hardware designs, and why the system is built the way it is.
+How we validate a suite of KiCad analyzers against 5,821 real-world open-source hardware repositories (the URL count in `repos.md`), and why the system is built the way it is.
 
 ---
 
@@ -8,7 +8,7 @@ How we validate a suite of KiCad analyzers against 5,822 real-world open-source 
 
 kicad-happy includes three deterministic Python analyzers that parse KiCad schematics, PCB layouts, and Gerber files. They extract components, nets, and signal paths, then run 42 signal detectors (voltage dividers, regulators, filters, bus protocols, opamp circuits, etc.) to produce structured JSON output. A fourth tool, `simulate_subcircuits.py`, generates ngspice testbenches from detector output to validate circuit behavior via SPICE simulation (see [spice.md](spice.md)).
 
-These analyzers contain 335 hardcoded constants: voltage reference tables sourced from datasheets, component classification keyword lists, regex patterns for net name matching, and numeric thresholds for detection heuristics. A single wrong entry — a hallucinated Vref value, an overly broad regex, a misclassified component prefix — can silently produce incorrect results across hundreds of projects.
+These analyzers contain several hundred hardcoded constants: voltage reference tables sourced from datasheets, component classification keyword lists, regex patterns for net name matching, and numeric thresholds for detection heuristics. A single wrong entry — a hallucinated Vref value, an overly broad regex, a misclassified component prefix — can silently produce incorrect results across hundreds of projects.
 
 The problem is: **how do you know the analyzers are correct?**
 
@@ -22,7 +22,7 @@ Several constraints shaped the architecture:
 
 1. **No ground truth exists.** There is no authoritative database of "correct" signal analysis results for arbitrary KiCad projects. The analyzers are producing novel observations — voltage divider ratios, regulator configurations, filter topologies — that no prior tool has computed.
 
-2. **The corpus is too large for a single session.** 5,822 repos with 36,500+ schematics. Cross-sections (`--cross-section quick_200`) enable targeted testing of representative subsets. All tools auto-parallelize with `--jobs` and support `--resume` for interrupted runs.
+2. **The corpus is too large for a single session.** 5,821 repos with 36,500+ schematics. Cross-sections (`--cross-section quick_200`) enable targeted testing of representative subsets. Batch tools parallelize with `--jobs`; resume support varies by tool.
 
 3. **Analyzer changes are frequent.** Bug fixes, new detectors, and constant table updates happen regularly. Each change can affect outputs across the entire corpus. Regression detection must be fast and precise enough to distinguish intentional improvements from unintended breakage.
 
@@ -30,13 +30,15 @@ Several constraints shaped the architecture:
 
 5. **LLM review is expensive.** Generating findings requires reading source schematics, cross-referencing with analyzer output, and understanding circuit intent. This is the highest-quality validation layer but also the slowest. Insights from LLM review must be preserved permanently, not lost between sessions.
 
-6. **Pure Python, no dependencies.** The analyzers and test harness use only Python 3.8+ stdlib. No numpy, no testing frameworks, no external tools beyond git.
+6. **Python tooling.** Core harness runners use the standard library and require Python 3.10 or later. Tests use pytest. Git is required for checkout; SPICE simulation additionally requires ngspice.
 
 ---
 
 ## The 3-layer approach
 
 We use three complementary regression layers, each catching different classes of problems at different cost/precision tradeoffs.
+
+Candidate acceptance also uses `regression/run_corpus_gate.py`. It runs the baseline and candidate product under one declared profile, compares the complete captured JSON with exact-leaf normalization, and evaluates declared field budgets for output-changing rounds. See RUNBOOK Checklist 26 (criteria in 26e and 26i) for the acceptance criteria and limits. The three regression layers described here remain complementary evidence.
 
 ### Layer 1: Baselines — broad structural change detection
 
@@ -54,7 +56,13 @@ We use three complementary regression layers, each catching different classes of
 
 **How it works:** Assertions are machine-checkable JSON facts about what an analyzer should find in a specific file. Each assertion has a `check` object with a JSON path, an operator, and expected values. `run_checks.py` evaluates all assertions against current outputs and reports pass/fail.
 
-**Example:** "In `hackrf/marzipan.kicad_sch`, the `signal_analysis.crystal_circuits` section should contain an item where `reference` matches `^Y1$`." This assertion survives analyzer refactoring, constant table changes, and output format evolution — as long as the analyzer still correctly identifies Y1 as a crystal circuit.
+**Example:** "In `hackrf/marzipan.kicad_sch`, `findings` filtered to `detector == "detect_crystal_circuits"` should contain an item whose `reference` matches `^Y1$`." As a check:
+
+```json
+{"path": "findings", "detector_filter": "detect_crystal_circuits", "op": "contains_match", "field": "reference", "pattern": "^Y1$"}
+```
+
+This assertion survives analyzer refactoring and constant table changes as long as the analyzer still identifies Y1 as a crystal circuit; a change to the output path itself means the assertion has to be regenerated.
 
 **Operators:** The assertion engine supports 12 operators chosen to cover the kinds of facts we need to express:
 
@@ -85,7 +93,7 @@ The `not_contains_match` and `count_matches` operators were added specifically t
 
 ## Assertion categories
 
-Not all assertions serve the same purpose. We maintain four categories, each generated differently and serving a distinct role in the regression pipeline.
+Not all assertions serve the same purpose. We maintain five categories, each generated differently and serving a distinct role in the regression pipeline: SEED, STRUCT, FND and BUGFIX below, plus NEG assertions (`seed_negative.py`), which turn false-positive findings into "this component must not appear in this detector" checks.
 
 ### SEED assertions (~116K)
 
@@ -105,7 +113,7 @@ Not all assertions serve the same purpose. We maintain four categories, each gen
 
 **Purpose:** Per-detection structural verification. For each signal detection (schematic) and PCB analysis section, assert the exact count AND the presence of specific component references.
 
-**How they're generated:** For each signal analysis section (schematic) or PCB analysis section (decoupling_placement, thermal_pad_vias, thermal_analysis.thermal_pads, tombstoning_risk), extract every unique component reference mentioned in the detection results. Generate a `contains_match` assertion for each reference (e.g., "R15 appears in voltage_dividers") and an `equals` assertion for the total count. Uses `refextract.py` to navigate the different field paths where references appear across detector types (voltage dividers store refs in `r_top.ref`/`r_bottom.ref`, crystal circuits in `reference`, PCB sections in `ic`/`component`, etc.).
+**How they're generated:** For each detector group in `findings` (and any retained auxiliary PCB sections such as decoupling_placement, thermal_pad_vias, thermal_analysis.thermal_pads, tombstoning_risk), extract every unique component reference mentioned in the detection results. Generate a `contains_match` assertion for each reference (e.g., "R15 appears in voltage_dividers") and an `equals` assertion for the total count. Uses `refextract.py` to navigate the different field paths where references appear across detector types (voltage dividers store refs in `r_top.ref`/`r_bottom.ref`, crystal circuits in `reference`, PCB sections in `ic`/`component`, etc.).
 
 **Why REF_FIELD_MAP exists:** Each signal detector stores component references in different fields. Voltage dividers have `r_top.ref` and `r_bottom.ref`. Crystal circuits have `reference`. Opamp circuits have `reference`. PCB sections use `ic` (decoupling) or `component` (thermal/tombstoning). The `REF_FIELD_MAP` and `PCB_REF_FIELD_MAP` in `refextract.py` map detector/section names to their reference field paths, allowing `seed_structural.py` and `generate_finding_checks.py` to write correct assertions without hardcoding detector-specific logic everywhere.
 
@@ -263,7 +271,7 @@ LLM review discovers bug → KH-NNN filed in ISSUES.md
 
 ### Selection criteria
 
-The corpus started at 1,052 repos curated from publicly available GitHub repositories containing KiCad project files. 87 repos were purged after audit (18 Eagle-only, 14 tool/library repos, 22 PCB-only, 33 with fewer than 3 components). In April 2026, the corpus was expanded via automated discovery across GitHub, GitLab, and Codeberg using `search_repos.py`, `validate_candidates.py`, and `add_repos.py`, then refined through additional audit passes to the current 5,822 repos.
+The corpus started at 1,052 repos curated from publicly available GitHub repositories containing KiCad project files. 87 repos were purged after audit (18 Eagle-only, 14 tool/library repos, 22 PCB-only, 33 with fewer than 3 components). In April 2026, the corpus was expanded via automated discovery across GitHub, GitLab, and Codeberg using `search_repos.py`, `validate_candidates.py`, and `add_repos.py`, then refined through additional audit passes to the current 5,821 repos (the URL count in `repos.md`).
 
 ### Reproducibility
 
@@ -301,9 +309,9 @@ This separation means the git repository tracks only curated regression data (~5
 
 ---
 
-## Current state
+## State at v1.2
 
-As of 2026-04-10 (v1.2 released, TH-013 fixed):
+Historical snapshot as of 2026-04-10 (v1.2 released, TH-013 fixed); later totals are in `status.md` and the health log:
 
 | Metric | Value |
 |--------|-------|
@@ -331,7 +339,7 @@ All repos have been tested at Layers 1-2 with baselines and assertions. Layer 3 
 
 ---
 
-## Toward correctness (v1.3 direction)
+## Toward correctness
 
 The methodology above describes a **consistency** testing system. It catches when outputs change unexpectedly and preserves insights from LLM review. It does not, and cannot, prove that the captured state is actually right. The "Weaknesses and limitations" section below enumerates this gap in detail — v1.3 is the first attempt in this codebase to narrow part of it, and this section is honest about how much it actually changes.
 
@@ -342,16 +350,16 @@ v1.3 adds correctness-testing infrastructure that tests analyzer outputs against
 - **Synthetic fixtures**: ~30-60 hand-built `.kicad_sch` files with known-correct answers. Deterministic but artificial — they don't exercise real-world parser edge cases, messy library resolution, or hierarchical designs.
 - **Gold-standard tier**: ~10 real repos initially, hand-reviewed with structured claim files. Target growth: 1-3/month. At that rate, meaningful corpus coverage is years away.
 - **Metamorphic variants**: ~30 transforms across the synthetic fixtures, not applied to real corpus files in v1.3.
-- **Parser verification**: applies to all 5,822 repos, but only verifies *extraction* (component refs, nets, labels). Semantic interpretation bugs are out of scope.
+- **Parser verification**: applies to every corpus repo with `.kicad_sch` files, but only verifies *extraction* (component refs, nets, labels). Semantic interpretation bugs are out of scope.
 - **Property invariants**: ~5 universal rules applied to all outputs. Catches structural violations but can't verify whether any specific detection is right.
 
-**Coverage math:** Of the 5,822 repos, ~5,812 will still have zero direct correctness evidence after v1.3 ships. Their assertions remain consistency-only. The new layers give independent ground truth for the specific corners they cover — that's a meaningful improvement over zero, but it's not corpus-wide correctness.
+**Coverage math:** Of the 5,821 repos, ~5,811 will still have zero direct correctness evidence after v1.3 ships. Their assertions remain consistency-only. The new layers give independent ground truth for the specific corners they cover — that's a meaningful improvement over zero, but it's not corpus-wide correctness.
 
 ### Five kinds of evidence, five different oracles
 
 Different questions need different oracles. Each oracle has its own limitations.
 
-1. **Parse correctness** — Did we extract the right facts from the KiCad source file? Oracle: an independent S-expression reader (`validate/verify_parser.py`) that walks the raw `.kicad_sch`/`.kicad_pcb` and compares extracted component references, nets, and labels against the analyzer output. **Limitation:** catches extraction bugs, not interpretation bugs. If the parser correctly extracts R15 but the signal detector misclassifies its role, parser verification passes.
+1. **Parse correctness** — Did we extract the right facts from the KiCad source file? Oracle: an independent S-expression reader (`validate/verify_parser.py`) that walks the raw `.kicad_sch` (schematics only; there is no PCB parser verifier) and compares extracted component references, nets, and labels against the analyzer output. **Limitation:** catches extraction bugs, not interpretation bugs. If the parser correctly extracts R15 but the signal detector misclassifies its role, parser verification passes.
 
 2. **Numeric correctness** — Given a correctly identified subcircuit, is the computed value right? Oracle: SPICE simulation. **Limitation:** SPICE models are approximations. SPICE can tell you a divider ratio is wrong, but can't tell you the analyzer should not have called the circuit a divider in the first place. Also: if the analyzer misses a subcircuit entirely, SPICE can't flag the miss.
 
@@ -375,13 +383,13 @@ Every fixed KH-* bug produces a minimal reproducer fixture in `tests/fixtures/re
 
 ### Property-based invariants
 
-Universal structural rules that should hold for every analyzer run — examples: `voltage_dividers[].ratio ∈ (0, 1)`, `rc_filters[].cutoff_hz > 0` when R > 0 and C > 0, no duplicate refs in `components[]`. These catch structural violations that SEED/STRUCT assertions miss (because SEED/STRUCT encode current behavior, including wrong current behavior). **Limitation:** invariants catch bugs in output *shape*, not in output *content*. A detector that reports a consistent but wrong `ratio = 0.5` for every divider passes every invariant.
+Universal structural rules that should hold for every analyzer run — examples: `ratio ∈ (0, 1)` on `detect_voltage_dividers` findings, `cutoff_hz > 0` on `detect_rc_filters` findings when R > 0 and C > 0, no duplicate refs in `components[]`. These catch structural violations that SEED/STRUCT assertions miss (because SEED/STRUCT encode current behavior, including wrong current behavior). **Limitation:** invariants catch bugs in output *shape*, not in output *content*. A detector that reports a consistent but wrong `ratio = 0.5` for every divider passes every invariant.
 
 ### What v1.3 does not achieve
 
 To be blunt about the limits:
 
-- **Corpus-wide correctness is still not tested.** ~99.8% of the corpus (~5,812 of 5,822 repos) has no direct correctness evidence after v1.3. Those assertions remain pure consistency checks against auto-seeded prior output.
+- **Corpus-wide correctness is still not tested.** ~99.8% of the corpus (~5,811 of 5,821 repos) has no direct correctness evidence after v1.3. Those assertions remain pure consistency checks against auto-seeded prior output.
 - **Systematic analyzer errors remain invisible.** If the analyzer has a structural bug that affects every file in the same way, every consistency layer happily locks it in as the "expected" answer. Parser verification catches this for extraction bugs; the other layers only catch it for cases covered by fixtures, gold entries, or metamorphic tests.
 - **Reviewer fallibility is not reduced.** Gold tier entries, Layer 3 findings, and the bug cemetery all depend on a human or LLM correctly interpreting a circuit. Nothing in v1.3 adds a second reviewer, so errors in review propagate into the "correctness" layers just as they do into FND assertions today.
 - **Coverage is narrow by design.** v1.3 deliberately starts with a small number of fixtures and gold entries rather than racing toward breadth. The tradeoff is that a narrow benchmark can actually be maintained and trusted; a broad benchmark that nobody has time to curate becomes a liability. But the tradeoff is real — a lot of the corpus stays outside the correctness testing envelope.
@@ -444,9 +452,9 @@ This bias also affects the constants audit: corpus cross-referencing can only va
 
 ### Single-file analysis limits what assertions can express
 
-The schematic analyzer processes each `.kicad_sch` file independently. In hierarchical designs, a power regulator on one sheet drives decoupling capacitors on another, but the analyzer can't associate them across files. This is a limitation of the analyzer, not the test harness — but the test harness inherits it, because assertions can only check what the per-file analyzer produces.
+Coverage depends on the execution profile. The batch runners and the standard corpus gate check standalone-sheet output (the gate passes `--no-hierarchy`), so in a hierarchical design a regulator on one sheet and the decoupling capacitors it drives on another are analyzed separately. The analyzer can take project context (the gate's `hierarchy` profile enables it), but cross-sheet claims need hierarchy-enabled output and assertions on the corresponding findings; a clean standalone-sheet gate does not establish them.
 
-This means certain classes of correctness can never be asserted: "the 3.3V regulator on the power sheet correctly associates with the 47uF output cap on the MCU sheet" is not expressible. Findings can note this as a missed detection, but the resulting aspirational assertion can only check whether the section exists on the individual sheet, not whether the cross-sheet association is correct.
+Assertions seeded from standalone-sheet output therefore cannot express "the 3.3V regulator on the power sheet correctly associates with the 47uF output cap on the MCU sheet". A finding can note this as a missed detection, but an aspirational assertion over standalone output can only check what that single sheet produces.
 
 ### Check field generation is fragile
 

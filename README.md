@@ -1,34 +1,35 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,822 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 2.1M+ machine-checkable assertions, 1,745 unit tests collected under -m unit (1,744 passed + 1 xfailed), 42 auto-discovered signal detectors, 145,000+ SPICE simulations across 17 subcircuit types, and 192,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,821 public KiCad repositories (the URL count in `repos.md`), organized as `owner/repo`. The recorded corpus baseline carries about 2.7 million machine-checkable assertions. The harness combines baseline snapshots, assertions, review findings, fixture tests and candidate gates. Run the reporting commands (`python3 harness.py status`, `python3 tools/generate_health_report.py`) for current execution and coverage totals.
 
 **The system primarily tests consistency, not correctness.** A 100% assertion pass rate means outputs haven't drifted since they were last seeded — it does not mean the analyzers are right. See [philosophy.md](philosophy.md) for the distinction and [methodology.md](methodology.md) § "Weaknesses and limitations" for the full accounting of what this harness cannot verify.
 
-v1.2 released 2026-04-10. v1.3 is in progress and begins adding correctness-testing infrastructure (parser verification, synthetic detector fixtures, a small curated gold-standard tier, metamorphic tests, property invariants) for a narrow subset of the corpus — see [methodology.md](methodology.md) § "Toward correctness" for the scope and explicit limitations.
+Parser verification, synthetic cases, metamorphic tests and property invariants add correctness evidence for specific cases — see [methodology.md](methodology.md) § "Toward correctness" for the scope and explicit limitations. The separate curated design benchmark (RUNBOOK Checklist 23) remains planned; the implemented extraction-gold workflow is Checklist 25.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
 
-**For operational procedures, see [RUNBOOK.md](RUNBOOK.md)** — 20 checklists covering
+**For operational procedures, see [RUNBOOK.md](RUNBOOK.md)** — 27 checklists covering
 code change validation, feature testing, corpus health, issue management, constants
-verification, Layer 3 reviews, release preparation, domain detector testing, and more. Agents should follow
+verification, Layer 3 reviews, release preparation, candidate gates, and more. Agents should follow
 the relevant checklist rather than improvising workflows.
 
 ## Project layout
 
-This repo mixes a small Python codebase (~130 scripts) with a very large data tree
+This repo mixes a small Python codebase with a very large data tree
 (~470,000 directories). **Never run recursive tools on `.`** — scope to code directories
 or they will spend minutes traversing data. For example:
-`python3 -m compileall *.py regression/ run/ tests/ tools/ validate/ integration/`.
+`python3 -m compileall *.py harnesslib/ regression/ run/ tests/ tools/ validate/ integration/`.
 
 | Directory | Type | Contents |
 |-----------|------|----------|
-| `*.py` (root) | **Code** | 5 entry points (harness, checkout, discover, run_tests, utils) |
-| `regression/` | **Code** | 23 scripts — 3-layer regression testing system |
-| `run/` | **Code** | 7 scripts — batch-run analyzers |
-| `tests/` | **Code** | 44 files — unit tests (489 tests) |
-| `tools/` | **Code** | 17 scripts — standalone tools and reports |
-| `validate/` | **Code** | 25 scripts — output quality, constants/equation audit |
-| `integration/` | **Code** | 5 scripts — end-to-end tests (need API keys) |
+| `*.py` (root) | **Code** | Entry points, shared utilities and pytest configuration (harness, checkout, discover, run_tests, utils, conftest) |
+| `harnesslib/` | **Code** | Shared selection, execution, identity and profile modules |
+| `regression/` | **Code** | Assertions, snapshots, findings and candidate gates |
+| `run/` | **Code** | Batch analyzers and reviewer metrics |
+| `tests/` | **Code** | Unit and contract suites |
+| `tools/` | **Code** | Corpus and gate utilities |
+| `validate/` | **Code** | Output and correctness validators, constants/equation audit |
+| `integration/` | **Code** | End-to-end tests (need API keys) |
 | `repos/` | **Data** | 290k dirs — cloned test repos (git-ignored) |
 | `reference/` | **Data** | 114k dirs — known-good baselines + assertions (tracked) |
 | `results/` | **Data** | 65k dirs — working outputs (git-ignored) |
@@ -84,17 +85,19 @@ python3 validate/validate_outputs.py --repo {repo}
 # 8. Promote improvements
 python3 regression/promote.py --repo {repo} --apply
 
-# Or use the unified orchestrator (runs unit tests + assertions + validators)
-python3 harness.py validate                        # full validation
-python3 harness.py validate --cross-section smoke  # smoke pack subset
-python3 harness.py run --smoke                     # generate + validate smoke pack
+# Use the unified entry point for assertion checking or the generation pipeline
+python3 harness.py validate                        # check existing assertions (run_checks only)
+python3 harness.py validate --cross-section smoke  # smoke subset
+python3 harness.py run --smoke                     # generate + check smoke cross-section
 ```
 
-A mutating full-corpus run requires `--all`; an empty selection exits 2 (B12/TH-049).
+A mutating full-corpus run requires `--all`; a run with no selection exits 2 (`harness.py run`
+too: it needs `--all`, `--smoke`, `--cross-section` or `--repo`). `checkout.py` exits 1 when a
+clone or pin failed; pass `--best-effort` to accept partial results.
 
 ### Requirements
 
-- **Python 3.8+** (stdlib only -- no external dependencies for core scripts)
+- **Python 3.10+**. Install `pytest` (≥ 9.0, see `requirements-dev.txt`) for the test suite and the `harness.py test` / `harness.py run` pipeline. The core runner code uses the standard library; individual optional validators may need extra packages (e.g. `jsonschema`).
 - **Git** (for cloning test repos)
 - **ngspice** (optional, for SPICE simulations -- `apt install ngspice` / `brew install ngspice` / [ngspice.sourceforge.io](https://ngspice.sourceforge.io) for Windows, or set `NGSPICE_PATH` env var)
 
@@ -122,7 +125,7 @@ export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
 | `diff_analysis.py` | Two analyzer JSONs | Diff-aware design reviews (components, signals, findings, SPICE status) |
 | `what_if.py` | Schematic JSON + changes | Interactive parameter sweep with optional SPICE re-simulation |
 
-All analyzers are pure Python 3.8+ stdlib. They produce JSON output and support KiCad versions 5 through 9.
+The analyzers produce JSON and support KiCad versions 5 through 10; consult the product's requirements for their runtime and optional dependencies.
 
 For details on the SPICE simulation system, see [spice.md](spice.md).
 For details on the EMC pre-compliance system, see [emc.md](emc.md).
@@ -145,7 +148,7 @@ python3 regression/compare.py --all --only-changes
 
 ### Layer 2: Assertions
 
-Machine-checkable facts about what an analyzer should find in a specific file. Stored in `reference/{repo}/{project}/assertions/`. Four categories of assertions work together:
+Machine-checkable facts about what an analyzer should find in a specific file. Stored in `reference/{repo}/{project}/assertions/`. Five categories of assertions work together:
 
 | Prefix | Source | Description |
 |--------|--------|-------------|
@@ -213,11 +216,14 @@ LLM review --> findings (with check fields)
 - **Findings** capture context that can't be automated (why something is wrong, what's missing)
 - **Bugfix registry** prevents fixed bugs from returning with targeted assertions per KH-* issue
 
+Candidate acceptance also uses `regression/run_corpus_gate.py`. It runs the baseline and candidate product under one declared profile, compares the complete captured JSON with exact-leaf normalization, and evaluates declared field budgets for output-changing rounds. See RUNBOOK Checklist 26 (criteria in 26e and 26i). The three regression layers remain complementary evidence.
+
 `drift.py` closes the loop by re-checking findings against current outputs, using the `check` fields for precise comparison rather than just section-level counts. It surfaces regressions, improvements, and possibly-fixed bugs.
 
 ```bash
 python3 regression/drift.py --repo {repo}
-python3 regression/cleanup_drift.py                   # remove stale drift items
+python3 regression/cleanup_drift.py --dry-run         # preview drifted items
+python3 regression/cleanup_drift.py --apply           # record a disposition on them (nothing is deleted)
 ```
 
 ### Bugfix registry
@@ -239,7 +245,7 @@ python3 regression/promote.py --repo {repo} --apply   # promote
 
 ## Constants audit
 
-The analyzer scripts contain 335 hardcoded constants: lookup tables, keyword lists, numeric thresholds, and regex patterns. `audit_constants.py` scans analyzer source using Python AST, builds a registry of all constants, and tracks verification status.
+The analyzer scripts contain several hundred hardcoded constants (`audit_constants.py stats` gives the current count): lookup tables, keyword lists, numeric thresholds, and regex patterns. `audit_constants.py` scans analyzer source using Python AST, builds a registry of all constants, and tracks verification status.
 
 ```bash
 python3 validate/audit_constants.py scan                # scan scripts, update registry
@@ -283,7 +289,7 @@ These combine into a **risk score**: `max(impact * (1 - verified_fraction), over
 
 - **`_REGULATOR_VREF`** -- traces `vref_source: "lookup"` in power_regulators to identify which prefix keys match real parts. Per-entry hit counts show which entries are exercised vs dead weight.
 - **`type_map`** -- counts which reference designator prefixes appear across all components.
-- **Signal detector keywords** -- maps keyword lists to their signal_analysis sections and counts repos with non-empty results.
+- **Signal detector keywords** -- maps keyword lists to their detector groups in `findings` and counts repos with non-empty results.
 
 Entries with zero corpus hits get flagged (`corpus_unused_entries`) and increase the overfit score. This surfaces constants that were potentially added for one project and never exercised again.
 
@@ -303,7 +309,7 @@ The registry (`reference/constants_registry.json`) tracks stable IDs, content ha
 
 ## Equation tracking
 
-The analyzer scripts use 86 engineering formulas — radiation calculations, impedance estimates, filter frequencies, harmonic analysis, and more. Unlike constants, equations can't be detected by AST alone, so they use structured comment tags (`# EQ-NNN:`) placed at each formula, with a scanner that detects changes via function body hashing.
+The analyzer scripts use about a hundred engineering formulas — radiation calculations, impedance estimates, filter frequencies, harmonic analysis, and more. Unlike constants, equations can't be detected by AST alone, so they use structured comment tags (`# EQ-NNN:`) placed at each formula, with a scanner that detects changes via function body hashing.
 
 ```bash
 python3 validate/audit_equations.py scan                # scan for EQ tags, update registry
@@ -333,10 +339,11 @@ The registry (`reference/equation_registry.json`) tracks each equation's ID, for
 ## Validation and reporting
 
 ```bash
-# Unified orchestrator (recommended)
-python3 harness.py validate                             # full pipeline
-python3 harness.py validate --cross-section smoke       # smoke pack subset
-python3 harness.py run --smoke                          # generate + validate smoke pack
+# Unified entry point (validate = regression/run_checks.py only; the
+# validators below are separate)
+python3 harness.py validate                             # check existing assertions
+python3 harness.py validate --cross-section smoke       # smoke subset
+python3 harness.py run --smoke                          # generate + check smoke cross-section
 
 # Individual validators
 python3 validate/validate_outputs.py --repo {repo}      # structural invariants (--json)
@@ -345,7 +352,7 @@ python3 validate/validate_emc.py --repo {repo}          # EMC cross-validation (
 python3 validate/cross_analyzer.py --summary            # schematic↔PCB↔EMC↔SPICE consistency
 python3 validate/validate_schema.py scan                # build field inventory
 python3 validate/validate_schema.py diff                # detect schema drift
-python3 validate/validate_schema.py auto-seed           # generate assertions for new fields
+python3 validate/validate_schema.py auto-seed           # report proposed assertions for new fields (writes nothing)
 python3 validate/extract_mpns.py --repo {repo}          # extract MPNs from outputs
 python3 validate/analyze_bom_mismatch.py --repo {repo}  # BOM qty vs component count
 python3 tools/datasheet_db.py fetch-missing             # download missing datasheets
@@ -380,8 +387,8 @@ python3 tools/generate_catalog.py --query "category=ESP32"    # query by categor
 python3 tools/generate_catalog.py --query "tags contains rf"  # query by tag
 
 # Testing
-python3 run_tests.py --unit                             # unit tests (1,745 collected: 1,744 pass + 1 xfail; thin alias over pytest, see pytest.ini)
-python3 run_tests.py --tier unit                        # same as --unit (required tiers: unit / offline_contract)
+KICAD_HAPPY_DIR=<product> .venv/bin/python -m pytest -m "unit or offline_contract"   # required tiers (see pytest.ini)
+python3 run_tests.py --unit                             # unit tier only (thin alias over pytest)
 python3 run_tests.py --tier online                      # integration tests (need API keys)
 python3 run_tests.py --quick-sanity                     # assertions on smoke pack repos
 ```
@@ -391,7 +398,7 @@ python3 run_tests.py --quick-sanity                     # assertions on smoke pa
 - **repos.md** -- Master list of all repos with URLs, pinned commit hashes, and categories (via `## Section` headers)
 - **status.md** -- Operational log of batch testing progress
 - **reference/repo_catalog.json** -- Searchable metadata catalog (KiCad versions, complexity, quality scores, design domains, tags)
-- **reference/smoke_pack.md** -- Curated ~20 repos for `--smoke` mode, tagged by capability
+- **reference/smoke_pack.md** -- Curated smoke repos, tagged by capability (`--smoke` selects the `smoke` cross-section)
 
 ### Adding test repos
 
@@ -424,7 +431,7 @@ Prefixes: `KH-*` for analyzer bugs, `TH-*` for harness issues. Numbers are globa
 ```
 spice.md                    # SPICE simulation documentation
 emc.md                      # EMC pre-compliance testing documentation
-repos.md                    # Master repo list (5,822 repos, categories via ## headers)
+repos.md                    # Master repo list (5,821 repo URLs, categories via ## headers)
 status.md                   # Batch testing progress log
 ISSUES.md                   # Open issues (KH-* analyzer, TH-* harness)
 FIXED.md                    # Closed issues with fix details
@@ -433,7 +440,11 @@ discover.py                 # Find KiCad files, write manifests
 harness.py                  # Unified entry point (test, validate, run, health, status)
 run_tests.py                # Thin alias over pytest (--unit, --tier unit|online|all = --all-tiers, --json via junit)
 utils.py                    # Shared utilities (path resolution, unified runner, output validation)
-RUNBOOK.md                  # 20 operational checklists for agents
+conftest.py                 # pytest tier markers and default selection (unit or offline_contract)
+RUNBOOK.md                  # 27 operational checklists for agents
+
+# Selected entry points below; the listing is not exhaustive.
+harnesslib/                 # Selection, execution, identity, declared profiles
 
 tools/                      # Standalone tools and reports
   add_repos.py              #   Batch-add validated repos to corpus (--batch-size, --resume)
@@ -450,17 +461,22 @@ tools/                      # Standalone tools and reports
   search_repos.py           #   GitHub/GitLab/Codeberg discovery (--all, --source)
   validate_candidates.py    #   Clone + check KiCad files + score quality (--jobs, --min-components)
 
-run/                        # Batch-run analyzers (all support --repo, --jobs)
-  run_schematic.py
+run/                        # Batch-run analyzers (selection: --repo / --cross-section / --repo-list / --all)
+  run_schematic.py          #   schematic/pcb/gerbers also take --validate and --json
   run_pcb.py
   run_gerbers.py
   run_spice.py              #   SPICE simulations (--extra-args for MC, requires ngspice)
   run_emc.py                #   EMC pre-compliance analysis (reads schematic + PCB)
+  run_thermal.py            #   Thermal analysis (reads schematic + PCB)
   run_datasheets.py         #   Download datasheets + validate extractions
-  # All runners support --validate, --json, and write _timing.json
+  run_review_metrics.py     #   Replay reviewer packets, compute review metrics
 
-regression/                 # 3-layer regression testing
-  _differ.py                #   Semantic JSON diff engine
+regression/                 # 3-layer regression testing + candidate gates
+  run_corpus_gate.py        #   Candidate gate: baseline vs candidate under one profile (RUNBOOK 26)
+  regression_diff.py        #   Findings-level diff (the gate's secondary summary)
+  field_compare.py          #   Field-level comparator: raw / strict / budgeted modes
+  compare_snap_trees.py     #   CLI over field_compare for two gate slot trees
+  _differ.py                #   Compact baseline projection used by snapshot.py / compare.py
   checks.py                 #   Assertion data model + evaluation engine (12 operators)
   refextract.py             #   Component ref extraction from descriptions
   snapshot.py               #   Snapshot outputs to reference/ baselines
@@ -473,7 +489,7 @@ regression/                 # 3-layer regression testing
   findings.py               #   Manage LLM review findings + promote to assertions
   generate_finding_checks.py #  Auto-generate check fields for finding items
   drift.py                  #   Detect findings drift against outputs
-  cleanup_drift.py          #   Remove stale drift items
+  cleanup_drift.py          #   Record a disposition on drifted finding items
   packet.py                 #   Generate review packets for LLM analysis
   review.py                 #   LLM review workflow
   promote.py                #   Promote improved results/ to reference/
@@ -495,48 +511,48 @@ validate/                   # Output quality + constants audit
   validate_mpns.py          #   Validate MPNs against distributor APIs
   analyze_bom_mismatch.py   #   BOM qty vs component count analysis
   datasheet_db/             #   Content-addressed datasheet store (storage, manifest, fetcher, cli)
-  audit_constants.py        #   AST-based constant registry + verification (335 constants)
-  audit_equations.py        #   EQ-tag equation tracking + verification (86 equations)
+  audit_constants.py        #   AST-based constant registry + verification
+  audit_equations.py        #   EQ-tag equation tracking + verification
 
-tests/                      # Tests (1,744 passed + 1 xfailed under -m unit; pytest collection, see pytest.ini)
-  test_analysis_cache.py    #   Analysis cache correctness (26 tests)
+tests/                      # Unit and contract suites (pytest; selected files, see pytest.ini)
+  test_analysis_cache.py    #   Analysis cache correctness
   test_batch_review.py      #   Batch review prefix extraction
-  test_checks.py            #   Assertion evaluation engine (43 tests)
-  test_datasheet_verify.py  #   Datasheet extraction verification (27 tests)
-  test_design_intent.py     #   design_intent schema + auto-detection (9 tests)
-  test_detect_sub_sheet.py  #   Sub-sheet detection 5-tier strategy (10 tests)
+  test_checks.py            #   Assertion evaluation engine
+  test_datasheet_verify.py  #   Datasheet extraction verification
+  test_design_intent.py     #   design_intent schema + auto-detection
+  test_detect_sub_sheet.py  #   Sub-sheet detection 5-tier strategy
   test_detection_schema.py  #   Stable detection_id field validation
   test_diff_analysis.py     #   Diff-aware design review output
-  test_differ.py            #   Baseline diff engine (13 tests)
-  test_emc.py               #   EMC seed + structural + cross-val (35 tests)
+  test_differ.py            #   Baseline diff engine
+  test_emc.py               #   EMC seed + structural + cross-val
   test_enrichment_fields.py #   Bus params, power dissipation, ESD, proximity
-  test_invariants.py        #   Property-based invariants (12 tests)
-  test_kh_bugfixes.py       #   KH-* regression tests (19 tests, 1 skipped)
-  test_protocol_checks.py   #   I2C/SPI/UART/USB/Ethernet/HDMI/LVDS checks (18 tests)
-  test_refextract.py        #   Reference extraction (33 tests)
-  test_safe_names.py        #   TH-013 filename-length helpers (22 tests)
-  test_schema.py            #   Schema validation + KNOWN_OPS (24 tests)
-  test_seed.py              #   Seed assertion generation (23 tests)
-  test_spice.py             #   SPICE seed + structural + cross-val (28 tests)
+  test_invariants.py        #   Property-based invariants
+  test_kh_bugfixes.py       #   KH-* regression tests
+  test_protocol_checks.py   #   I2C/SPI/UART/USB/Ethernet/HDMI/LVDS checks
+  test_refextract.py        #   Reference extraction
+  test_safe_names.py        #   TH-013 filename-length helpers
+  test_schema.py            #   Schema validation + KNOWN_OPS
+  test_seed.py              #   Seed assertion generation
+  test_spice.py             #   SPICE seed + structural + cross-val
   test_switching_loop.py    #   Switching loop area pre-computation
-  test_utils.py             #   Path utilities + bracket notation (22 tests)
-  test_validate_outputs.py  #   Output validation (27 tests)
-  test_validate_spice.py    #   SPICE cross-validation (28 tests)
+  test_utils.py             #   Path utilities + bracket notation
+  test_validate_outputs.py  #   Output validation
+  test_validate_spice.py    #   SPICE cross-validation
 
 integration/                # End-to-end tests
   test_datasheet_extraction.py # Datasheet download + extraction pipeline
 
 reference/                  # Tracked in git -- known-good regression data
-  constants_registry.json   #   Constant audit registry (335 constants)
+  constants_registry.json   #   Constant audit registry
   constants_registry.md     #   Auto-generated constant summary
-  equation_registry.json    #   Equation tracking registry (86 equations)
+  equation_registry.json    #   Equation tracking registry
   equation_registry.md      #   Auto-generated equation summary
   schema_inventory.json     #   Field inventory for all 5 output types
   health_log.jsonl          #   Health metrics over time (append-only)
   health_baseline.json      #   Health comparison baseline (after intentional changes)
   repo_catalog.json         #   Searchable metadata catalog (KiCad versions, quality, tags)
   repo_catalog.md           #   Human-readable catalog summary
-  smoke_pack.md             #   Curated ~20 repos for --smoke mode
+  smoke_pack.md             #   Curated smoke repos
   test_mpns.json            #   Curated test MPNs
   {owner}/{repo}/{project}/ #   Per-repo, per-project reference data
     baselines/              #     Compact baseline manifests
@@ -555,4 +571,4 @@ results/                    # Git-ignored -- outputs, manifests, review packets
 
 ## Usage warning
 
-The test corpus has 5,822 repos. Use `--cross-section smoke` (20 repos) or `--cross-section quick_200` (~200 repos) for targeted testing instead of full corpus runs. All tools auto-parallelize with `--jobs` (default: cpu_count) and support `--resume` to skip completed files after interruption.
+The test corpus has 5,821 repos (the URL count in `repos.md`). Use `--cross-section smoke` (27 repos) or `--cross-section quick_200` (257 repos) for targeted testing instead of full corpus runs. Parallelism and resume support vary by tool; check that runner's options before restarting a run.
