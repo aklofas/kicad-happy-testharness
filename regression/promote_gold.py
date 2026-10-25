@@ -29,7 +29,7 @@ from typing import Any, Optional
 _HARNESS_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_HARNESS_ROOT))
 
-from regression._mpn_slug import mpn_slug  # noqa: E402
+from regression._mpn_slug import cache_key, mpn_slug  # noqa: E402
 
 
 def _resolve_kicad_happy_dir() -> Path:
@@ -204,18 +204,18 @@ def _resolve_pdf_dir(arg: Optional[str]) -> Path:
 def _validate_cache_schema(cache: dict, kicad_happy_dir: Path) -> tuple[bool, str]:
     """Validate cache against extraction.schema.json.
 
-    Returns (ok, summary). Tolerates jsonschema absence (returns ok=True with
-    'skipping' message) and tolerates a missing schema file (same).
+    Returns (ok, summary). A validation that cannot run (no schema in the product checkout,
+    no jsonschema/referencing) is a failure: promotion needs the evidence, not a skip.
     """
     schema_path = (kicad_happy_dir / "skills" / "datasheets" / "schemas"
                    / "extraction.schema.json")
     if not schema_path.exists():
-        return True, "extraction.schema.json not found, skipping validation"
+        return False, f"extraction.schema.json not found at {schema_path}; cannot validate"
     try:
         from jsonschema import Draft202012Validator
         from referencing import Registry, Resource
     except ImportError as e:
-        return True, f"jsonschema not available, skipping ({e})"
+        return False, f"jsonschema/referencing not installed ({e}); cannot validate"
     try:
         schema = json.loads(schema_path.read_text())
         registry = Registry()
@@ -244,6 +244,48 @@ def _compute_pdf_sha(pdf_path: Path) -> str:
 def _now_iso() -> str:
     """Return current UTC time in ISO-8601 with Z suffix."""
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _check_pdf_sha(cache: dict, pdf_dir: Path) -> tuple[Optional[str], str, str]:
+    """(pdf_sha or None on mismatch, pdf_filename, message). The PDF on disk must hash to
+    the cache's recorded source sha256; without a local PDF the cache sha is used."""
+    local_path = cache["source"].get("local_path") or ""
+    pdf_filename = Path(local_path).name if local_path else ""
+    cache_pdf_sha = cache["source"]["sha256"].removeprefix("sha256:")
+    pdf_path = pdf_dir / pdf_filename if pdf_filename else None
+    if pdf_path is None or not pdf_path.exists():
+        msg = f"WARNING: PDF not found at {pdf_path}; using cache sha256" if pdf_path else ""
+        return cache_pdf_sha, pdf_filename, msg
+    pdf_sha = _compute_pdf_sha(pdf_path)
+    if pdf_sha != cache_pdf_sha:
+        return None, pdf_filename, (f"ERROR: PDF SHA mismatch — cache says {cache_pdf_sha}, "
+                                    f"PDF on disk has {pdf_sha}")
+    return pdf_sha, pdf_filename, ""
+
+
+def _show_content_diff(slug_dir: Path, cache: dict, cache_path: Path) -> bool:
+    """Print what the promotion changes before the operator confirms: the A5 differ against
+    the newest existing gold, or a content summary on first curation. False when the
+    review evidence cannot be produced (the promotion is then blocked)."""
+    golds = sorted(slug_dir.glob("gold_v*.json")) if slug_dir.is_dir() else []
+    if not golds:
+        print("\n=== First curation: content summary ===")
+        for key in sorted(cache):
+            val = cache[key]
+            size = len(val) if isinstance(val, (dict, list)) else 1
+            print(f"  {key}: {type(val).__name__} ({size})")
+        return True
+    prior = golds[-1]
+    print(f"\n=== Content diff: {prior.name} -> candidate ===")
+    differ_cli = _HARNESS_ROOT / "regression" / "extraction_differ.py"
+    proc = subprocess.run([sys.executable, str(differ_cli), "--gold", str(prior),
+                           "--candidate", str(cache_path)], capture_output=True, text=True)
+    print(proc.stdout)
+    if proc.returncode not in (0, 1):
+        print(f"ERROR: content diff failed (exit {proc.returncode}): {proc.stderr.strip()}",
+              file=sys.stderr)
+        return False
+    return True
 
 
 def _archive_existing(slug_dir: Path, old_pdf_sha: str) -> None:
@@ -415,6 +457,13 @@ def _do_recurate_from(*, args, cache: dict, cache_path: Path) -> int:
         return 2
     print(f"[ok] cache schema validation: {schema_summary}")
 
+    # The PDF the metadata will name must be the extraction's source, checked before anything moves
+    pdf_sha, pdf_filename, msg = _check_pdf_sha(cache, _resolve_pdf_dir(args.pdf_dir))
+    if msg:
+        print(msg, file=sys.stderr if pdf_sha is None else sys.stdout)
+    if pdf_sha is None:
+        return 2
+
     # Show A5 differ output (best-effort; non-fatal if differ fails)
     print(f"\n=== Re-curation diff: schema {prior_base} → {new_base} ===")
     differ_cli = _HARNESS_ROOT / "regression" / "extraction_differ.py"
@@ -442,17 +491,6 @@ def _do_recurate_from(*, args, cache: dict, cache_path: Path) -> int:
 
     # Write new gold
     _write_gold(slug_dir, new_base, cache)
-
-    # Compute pdf_sha for meta
-    pdf_dir = _resolve_pdf_dir(args.pdf_dir)
-    local_path = cache["source"].get("local_path") or ""
-    pdf_filename = Path(local_path).name if local_path else ""
-    cache_pdf_sha = cache["source"]["sha256"].removeprefix("sha256:")
-    pdf_path = pdf_dir / pdf_filename if pdf_filename else None
-    if pdf_path is None or not pdf_path.exists():
-        pdf_sha = cache_pdf_sha
-    else:
-        pdf_sha = _compute_pdf_sha(pdf_path)
 
     sanity_vector_path = sanity_dir / f"{mpn_slug(args.mpn)}.json"
     sanity_field_count = len(json.loads(sanity_vector_path.read_text())["fields"])
@@ -495,7 +533,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     args = parser.parse_args(argv)
 
     cache_dir = _resolve_cache_dir(args.cache_dir)
-    cache_path = cache_dir / f"{args.mpn}.json"
+    cache_path = cache_dir / f"{cache_key(args.mpn)}.json"
     cache = _load_cache(cache_path)
 
     # ─── Re-curate-from mode (Q4 main-repo addition; spec §5.1.1)
@@ -536,23 +574,11 @@ def main(argv: Optional[list[str]] = None) -> int:
     print(f"[ok] cache schema validation: {schema_summary}")
 
     # ─── PDF SHA verification
-    pdf_dir = _resolve_pdf_dir(args.pdf_dir)
-    local_path = cache["source"].get("local_path") or ""
-    pdf_filename = Path(local_path).name if local_path else ""
-    cache_sha256_raw = cache["source"]["sha256"]  # "sha256:<hex64>"
-    cache_pdf_sha = cache_sha256_raw.removeprefix("sha256:")
-    pdf_path = pdf_dir / pdf_filename if pdf_filename else None
-    if pdf_path is None or not pdf_path.exists():
-        if pdf_path is not None:
-            print(f"WARNING: PDF not found at {pdf_path}; using cache sha256")
-        pdf_sha = cache_pdf_sha
-    else:
-        pdf_sha = _compute_pdf_sha(pdf_path)
-        if pdf_sha != cache_pdf_sha:
-            print(f"ERROR: PDF SHA mismatch — cache says "
-                  f"{cache_pdf_sha}, "
-                  f"PDF on disk has {pdf_sha}", file=sys.stderr)
-            return 2
+    pdf_sha, pdf_filename, msg = _check_pdf_sha(cache, _resolve_pdf_dir(args.pdf_dir))
+    if msg:
+        print(msg, file=sys.stderr if pdf_sha is None else sys.stdout)
+    if pdf_sha is None:
+        return 2
 
     # ─── Resolve gold dir + classify event
     gold_root = _resolve_gold_dir()
@@ -567,20 +593,20 @@ def main(argv: Optional[list[str]] = None) -> int:
     event = "initial"
     if (slug_dir / "meta.json").exists():
         prior_meta = json.loads((slug_dir / "meta.json").read_text())
-        if prior_meta["pdf_sha256"] != pdf_sha:
-            event = "pdf_sha_change"
-            _archive_existing(slug_dir, prior_meta["pdf_sha256"])
-            prior_meta = None  # archived → next write starts fresh history
-        else:
-            event = "update"
+        event = "pdf_sha_change" if prior_meta["pdf_sha256"] != pdf_sha else "update"
 
-    # ─── Confirmation prompt
+    # ─── Review evidence, then confirmation; nothing moves before the operator agrees
+    if not _show_content_diff(slug_dir, cache, cache_path):
+        return 2
     if not args.yes:
         print(f"\nReady to write {gold_path} (event: {event})")
         ans = input("Promote? [y/N]: ").strip().lower()
         if ans != "y":
             print("Aborted.")
             return 1
+    if event == "pdf_sha_change":
+        _archive_existing(slug_dir, prior_meta["pdf_sha256"])
+        prior_meta = None  # archived → next write starts fresh history
 
     # ─── Write gold + meta
     _write_gold(slug_dir, base_version, cache)

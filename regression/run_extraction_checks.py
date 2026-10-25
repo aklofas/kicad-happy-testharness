@@ -24,7 +24,7 @@ from typing import Optional
 _HARNESS_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_HARNESS_ROOT))
 
-from regression._mpn_slug import mpn_slug  # noqa: E402
+from regression._mpn_slug import cache_key, mpn_slug  # noqa: E402
 
 
 def _resolve_cache_dir(arg: Optional[str]) -> Path:
@@ -113,9 +113,9 @@ def _discover_mpns(*, mpn: Optional[str], cache_dir: Path,
                       if slug_dir.exists() else [])
         if not gold_files:
             return [(mpn, slug_dir / "gold_v?.json",
-                     cache_dir / f"{mpn}.json")]
+                     cache_dir / f"{cache_key(mpn)}.json")]
         gold_path = sorted(gold_files)[-1]  # highest version wins
-        out.append((mpn, gold_path, cache_dir / f"{mpn}.json"))
+        out.append((mpn, gold_path, cache_dir / f"{cache_key(mpn)}.json"))
         return out
     if not gold_root.exists():
         return out
@@ -136,7 +136,7 @@ def _discover_mpns(*, mpn: Optional[str], cache_dir: Path,
                 mpn_label = slug_dir.name
         else:
             mpn_label = slug_dir.name
-        out.append((mpn_label, gold_path, cache_dir / f"{mpn_label}.json"))
+        out.append((mpn_label, gold_path, cache_dir / f"{cache_key(mpn_label)}.json"))
     return out
 
 

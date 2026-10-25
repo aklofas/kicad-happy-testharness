@@ -20,3 +20,12 @@ def mpn_slug(mpn: str) -> str:
         Some/Bad MPN → some_bad_mpn
     """
     return _SLUG_RE.sub("_", mpn.strip().lower())
+
+
+_CACHE_KEY_RE = re.compile(r"[^A-Za-z0-9_\-.]")
+
+
+def cache_key(mpn: str) -> str:
+    """Case-preserving extraction-cache filename key, the acceptance gate's rule
+    (validate/check_acceptance_gate.py:_sanitize_mpn): LM358/NOPB -> LM358_NOPB."""
+    return _CACHE_KEY_RE.sub("_", mpn.strip())

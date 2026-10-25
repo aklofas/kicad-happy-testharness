@@ -275,3 +275,79 @@ if __name__ == "__main__":
             failed += 1
     print(f"{passed} passed, {failed} failed ({len(fn_names)} total)")
     sys.exit(0 if failed == 0 else 1)
+
+
+# ---- promotion integrity: evidence before the write, nothing moved before confirmation ----
+
+sys.path.insert(0, str(REPO_ROOT))
+from regression import promote_gold as pg  # noqa: E402
+from regression._mpn_slug import cache_key  # noqa: E402
+
+
+def _promotable(tmp_path, pdf_bytes=b"synthetic-pdf-bytes"):
+    cache_dir = _setup_cache_dir(tmp_path)
+    sanity_dir = _setup_sanity_dir(tmp_path)
+    gold_dir = _setup_gold_dir(tmp_path)
+    pdf_dir = tmp_path / "pdfs"
+    pdf_sha = _write_pdf_with_sha(pdf_dir, "lm2596-adj.pdf", pdf_bytes)
+    cache_path = cache_dir / "LM2596-ADJ.json"
+    cache = json.loads(cache_path.read_text())
+    cache["source"]["sha256"] = f"sha256:{pdf_sha}"
+    cache["source"]["local_path"] = "datasheets/lm2596-adj.pdf"
+    cache_path.write_text(json.dumps(cache))
+    env = {**__import__("os").environ, "HARNESS_SANITY_DIR_OVERRIDE": str(sanity_dir),
+           "HARNESS_GOLD_DIR_OVERRIDE": str(gold_dir)}
+    argv = [sys.executable, str(PROMOTE_CLI), "--mpn", "LM2596-ADJ", "--cache-dir", str(cache_dir),
+            "--pdf-dir", str(pdf_dir), "--no-gate"]
+    return cache_path, gold_dir / "lm2596-adj", pdf_dir, env, argv
+
+
+def test_schema_validation_that_cannot_run_blocks(tmp_path):
+    """code A7-F7: a missing schema was reported '[ok] ... skipping'."""
+    ok, msg = pg._validate_cache_schema({}, tmp_path)
+    assert ok is False and "cannot validate" in msg
+
+
+def test_update_shows_the_content_diff_before_writing(tmp_path):
+    """code A7-F6: an ordinary update overwrote gold without showing what changed."""
+    cache_path, slug, _, env, argv = _promotable(tmp_path)
+    assert subprocess.run(argv + ["--yes"], capture_output=True, text=True, env=env).returncode == 0
+    cache = json.loads(cache_path.read_text())
+    cache["base"]["description"] = "changed outside the sanity vector"
+    cache_path.write_text(json.dumps(cache))
+    r = subprocess.run(argv + ["--yes"], capture_output=True, text=True, env=env)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "Content diff: gold_v1.0.json -> candidate" in r.stdout
+
+
+def test_pdf_change_archives_only_after_confirmation(tmp_path):
+    """arch V6 / code A7-F6: a declined pdf_sha_change promotion had already archived the gold."""
+    cache_path, slug, pdf_dir, env, argv = _promotable(tmp_path)
+    assert subprocess.run(argv + ["--yes"], capture_output=True, text=True, env=env).returncode == 0
+    new_sha = _write_pdf_with_sha(pdf_dir, "lm2596-adj.pdf", b"revised-pdf-bytes")
+    cache = json.loads(cache_path.read_text())
+    cache["source"]["sha256"] = f"sha256:{new_sha}"
+    cache_path.write_text(json.dumps(cache))
+    r = subprocess.run(argv, input="n\n", capture_output=True, text=True, env=env)
+    assert r.returncode == 1 and "Aborted" in r.stdout
+    assert (slug / "gold_v1.0.json").exists() and (slug / "meta.json").exists()
+    assert not list(slug.glob("archived_pdf_sha_*"))
+
+
+def test_recuration_checks_the_pdf_hash(tmp_path):
+    """code A7-F8: re-curation recorded the on-disk PDF hash without comparing it to the cache."""
+    cache = {"source": {"sha256": "sha256:" + "0" * 64, "local_path": "datasheets/x.pdf"}}
+    _write_pdf_with_sha(tmp_path, "x.pdf", b"other bytes")
+    sha, name, msg = pg._check_pdf_sha(cache, tmp_path)
+    assert sha is None and name == "x.pdf" and "PDF SHA mismatch" in msg
+    src = (REPO_ROOT / "regression" / "promote_gold.py").read_text()
+    body = src[src.index("def _do_recurate_from"):src.index("def main(")]
+    assert body.index("_check_pdf_sha(") < body.index(".rename(archived_path)")
+
+
+def test_cache_files_use_the_gate_cache_key():
+    """code A7-F19: promotion and batch discovery looked up raw MPNs as filenames."""
+    assert cache_key("LM358/NOPB") == "LM358_NOPB"
+    assert cache_key("ABM8G-106-12.000MHZ-T") == "ABM8G-106-12.000MHZ-T"
+    src = (REPO_ROOT / "regression" / "run_extraction_checks.py").read_text()
+    assert 'f"{mpn}.json"' not in src and 'f"{mpn_label}.json"' not in src
