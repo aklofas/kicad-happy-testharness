@@ -257,7 +257,7 @@ def test_cross_validate_voltage_divider():
             "subcircuit_type": "voltage_divider",
             "components": ["R3", "R4"],
             "simulated": {"vout_V": 1.65},
-            "expected": {"vout_V": 1.65},
+            "expected": {"ratio": 0.5, "vout_V": 1.65},
         }],
     }
     results = cross_validate_file(schematic, spice)

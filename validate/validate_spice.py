@@ -27,6 +27,34 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import OUTPUTS_DIR, list_repos, add_repo_filter_args, resolve_repos
 
 
+
+def _is_num(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def _append(results, row):
+    if row is not None:
+        results.append(row)
+
+
+def _ratio_row(kind, comps, analyzer_ratio, sr, vkey, tol_pct):
+    """Compare the analyzer's divider ratio with the ratio SPICE simulated: the simulated
+    node voltage over the drive voltage the testbench used (expected vin_V, else
+    expected voltage / expected ratio). None when a side is missing."""
+    exp, sim = sr.get("expected", {}) or {}, sr.get("simulated", {}) or {}
+    sim_v, exp_v, exp_ratio = sim.get(vkey), exp.get(vkey), exp.get("ratio")
+    vin = exp.get("vin_V")
+    if not _is_num(vin) and _is_num(exp_v) and _is_num(exp_ratio) and exp_ratio:
+        vin = exp_v / exp_ratio
+    if not (_is_num(analyzer_ratio) and analyzer_ratio and _is_num(sim_v) and _is_num(vin) and vin):
+        return None   # nothing to compare (like the rc/lc rows); a None ratio no longer crashes
+    sim_ratio = sim_v / vin
+    delta = abs(sim_ratio - analyzer_ratio) / abs(analyzer_ratio) * 100
+    return {"type": kind, "components": list(comps),
+            "analyzer_value": f"ratio={analyzer_ratio:.4f}",
+            "spice_value": f"ratio={sim_ratio:.4f} ({vkey}={sim_v:.4f}V)",
+            "delta_pct": round(delta, 3), "status": "match" if delta < tol_pct else "mismatch"}
+
 def cross_validate_file(schematic_json, spice_json):
     """Cross-validate one file's SPICE results against analyzer values.
 
@@ -60,20 +88,7 @@ def cross_validate_file(schematic_json, spice_json):
         if not sr:
             continue
 
-        analyzer_ratio = det.get("ratio")
-        sim_vout = sr.get("simulated", {}).get("vout_V")
-        expected_vout = sr.get("expected", {}).get("vout_V")
-
-        if sim_vout is not None and expected_vout is not None and expected_vout != 0:
-            delta = abs(sim_vout - expected_vout) / expected_vout * 100
-            results.append({
-                "type": "voltage_divider",
-                "components": list(comps),
-                "analyzer_value": f"ratio={analyzer_ratio:.4f}",
-                "spice_value": f"vout={sim_vout:.4f}V",
-                "delta_pct": round(delta, 3),
-                "status": "match" if delta < 0.1 else "mismatch",
-            })
+        _append(results, _ratio_row("voltage_divider", comps, det.get("ratio"), sr, "vout_V", 0.1))
 
     # rc_filters: compare cutoff frequency
     for det in grouped.get("detect_rc_filters", []):
@@ -136,20 +151,8 @@ def cross_validate_file(schematic_json, spice_json):
         if not sr:
             continue
 
-        analyzer_ratio = det.get("ratio")
-        sim_vfb = sr.get("simulated", {}).get("fb_voltage_V")
-        expected_vfb = sr.get("expected", {}).get("fb_voltage_V")
-
-        if sim_vfb is not None and expected_vfb is not None and expected_vfb != 0:
-            delta = abs(sim_vfb - expected_vfb) / abs(expected_vfb) * 100
-            results.append({
-                "type": "feedback_network",
-                "components": list(comps),
-                "analyzer_value": f"ratio={analyzer_ratio:.4f}" if analyzer_ratio else "ratio=?",
-                "spice_value": f"vfb={sim_vfb:.4f}V",
-                "delta_pct": round(delta, 3),
-                "status": "match" if delta < 1 else "mismatch",
-            })
+        _append(results, _ratio_row("feedback_network", comps, det.get("ratio"), sr,
+                                    "fb_voltage_V", 1))
 
     # opamp_circuits: compare gain
     for det in grouped.get("detect_opamp_circuits", []):
@@ -161,19 +164,19 @@ def cross_validate_file(schematic_json, spice_json):
         if not sr:
             continue
 
-        expected_gain = sr.get("expected", {}).get("gain_dB")
+        analyzer_gain = det.get("gain_dB")
         sim_gain = sr.get("simulated", {}).get("gain_dB")
-
-        if sim_gain is not None and expected_gain is not None and expected_gain != 0:
-            delta = abs(sim_gain - expected_gain) / abs(expected_gain) * 100
-            results.append({
-                "type": "opamp_circuit",
-                "components": list(comps),
-                "analyzer_value": f"gain={expected_gain:.1f}dB",
-                "spice_value": f"gain={sim_gain:.1f}dB",
-                "delta_pct": round(delta, 3),
-                "status": "match" if delta < 5 else "mismatch",
-            })
+        if not _is_num(analyzer_gain) or not _is_num(sim_gain) or analyzer_gain == 0:
+            continue
+        delta = abs(sim_gain - analyzer_gain) / abs(analyzer_gain) * 100
+        results.append({
+            "type": "opamp_circuit",
+            "components": list(comps),
+            "analyzer_value": f"gain={analyzer_gain:.1f}dB",
+            "spice_value": f"gain={sim_gain:.1f}dB",
+            "delta_pct": round(delta, 3),
+            "status": "match" if delta < 5 else "mismatch",
+        })
 
     # regulator_feedback: compare feedback voltage
     for det in grouped.get("detect_power_regulators", []):
@@ -189,19 +192,7 @@ def cross_validate_file(schematic_json, spice_json):
         if not sr:
             continue
 
-        expected_vfb = sr.get("expected", {}).get("vfb_V")
-        sim_vfb = sr.get("simulated", {}).get("vfb_V")
-
-        if sim_vfb is not None and expected_vfb is not None and expected_vfb != 0:
-            delta = abs(sim_vfb - expected_vfb) / abs(expected_vfb) * 100
-            results.append({
-                "type": "regulator_feedback",
-                "components": list(comps),
-                "analyzer_value": f"vfb={expected_vfb:.4f}V",
-                "spice_value": f"vfb={sim_vfb:.4f}V",
-                "delta_pct": round(delta, 3),
-                "status": "match" if delta < 1 else "mismatch",
-            })
+        _append(results, _ratio_row("regulator_feedback", comps, fb.get("ratio"), sr, "vfb_V", 1))
 
     # current_sense: compare I at 50mV
     for det in grouped.get("detect_current_sense", []):

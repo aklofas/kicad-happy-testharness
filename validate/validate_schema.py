@@ -80,6 +80,40 @@ def scan_schematic_outputs(repos):
     return dict({k: dict(v) for k, v in inventory.items()}), file_count
 
 
+def _inventory_findings(data, inventory, prefix=""):
+    """Add the flat findings[] items of one output to `inventory`, keyed per detector."""
+    findings = data.get("findings", [])
+    if not isinstance(findings, list):
+        return
+    for item in findings:
+        if isinstance(item, dict) and item.get("detector"):
+            for key in item:
+                inventory[prefix + item["detector"]][key] += 1
+
+
+def scan_thermal_outputs(repos):
+    """Scan thermal outputs: findings[] fields per detector.
+
+    Returns {detector_name: {field_name: count}}.
+    """
+    inventory = defaultdict(lambda: defaultdict(int))
+    file_count = 0
+    for repo in repos:
+        repo_dir = OUTPUTS_DIR / "thermal" / repo
+        if not repo_dir.exists():
+            continue
+        for f in repo_dir.glob("*.json"):
+            if f.name.startswith("_") or f.name == "capability_mode.json":
+                continue
+            try:
+                data = json.loads(f.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                continue
+            file_count += 1
+            _inventory_findings(data, inventory)
+    return dict({k: dict(v) for k, v in inventory.items()}), file_count
+
+
 def scan_pcb_outputs(repos):
     """Scan PCB outputs and build field inventory for key sections.
 
@@ -99,6 +133,7 @@ def scan_pcb_outputs(repos):
                 continue
 
             file_count += 1
+            _inventory_findings(data, inventory, prefix="findings.")
             for section in PCB_SECTIONS:
                 sec_data = data.get(section, {})
                 if isinstance(sec_data, dict):
@@ -232,12 +267,14 @@ def _scan_one_repo(repo):
     spice_inv, spice_count = scan_spice_outputs([repo])
     emc_inv, emc_count = scan_emc_outputs([repo])
     gerber_inv, gerber_count = scan_gerber_outputs([repo])
+    thermal_inv, thermal_count = scan_thermal_outputs([repo])
     return {
         "schematic": (sch_inv, sch_count),
         "pcb": (pcb_inv, pcb_count),
         "spice": (spice_inv, spice_count),
         "emc": (emc_inv, emc_count),
         "gerber": (gerber_inv, gerber_count),
+        "thermal": (thermal_inv, thermal_count),
     }
 
 
@@ -255,7 +292,7 @@ def build_inventory(repos, jobs=1):
 
     Returns dict with metadata and per-type field inventories.
     """
-    type_names = ["schematic", "pcb", "spice", "emc", "gerber"]
+    type_names = ["schematic", "pcb", "spice", "emc", "gerber", "thermal"]
     merged = {t: ({}, 0) for t in type_names}
 
     if jobs > 1 and len(repos) > 1:
@@ -282,6 +319,7 @@ def build_inventory(repos, jobs=1):
     spice_inv, spice_count = merged["spice"]
     emc_inv, emc_count = merged["emc"]
     gerber_inv, gerber_count = merged["gerber"]
+    thermal_inv, thermal_count = merged["thermal"]
 
     return {
         "metadata": {
@@ -290,17 +328,20 @@ def build_inventory(repos, jobs=1):
             "spice_files_scanned": spice_count,
             "emc_files_scanned": emc_count,
             "gerber_files_scanned": gerber_count,
+            "thermal_files_scanned": thermal_count,
             "schematic_detectors": len(sch_inv),
             "pcb_sections": len(pcb_inv),
             "spice_sections": len(spice_inv),
             "emc_sections": len(emc_inv),
             "gerber_sections": len(gerber_inv),
+            "thermal_detectors": len(thermal_inv),
         },
         "schematic": sch_inv,
         "pcb": pcb_inv,
         "spice": spice_inv,
         "emc": emc_inv,
         "gerber": gerber_inv,
+        "thermal": thermal_inv,
     }
 
 
@@ -312,7 +353,7 @@ def diff_inventories(saved, current):
     """
     changes = []
 
-    for category in ("schematic", "pcb", "spice", "emc", "gerber"):
+    for category in ("schematic", "pcb", "spice", "emc", "gerber", "thermal"):
         saved_cat = saved.get(category, {})
         current_cat = current.get(category, {})
 
@@ -411,7 +452,7 @@ def cmd_scan(args):
               f"{meta.get('gerber_sections', 0)} gerber sections")
         print()
 
-        for category in ("schematic", "pcb", "spice", "emc", "gerber"):
+        for category in ("schematic", "pcb", "spice", "emc", "gerber", "thermal"):
             cat_data = inventory.get(category, {})
             if not cat_data:
                 continue
@@ -463,7 +504,8 @@ def cmd_diff(args):
                               ("pcb_files_scanned", "pcb"),
                               ("spice_files_scanned", "spice"),
                               ("emc_files_scanned", "emc"),
-                              ("gerber_files_scanned", "gerber")]:
+                              ("gerber_files_scanned", "gerber"),
+                              ("thermal_files_scanned", "thermal")]:
                 val = meta.get(key, 0)
                 if val:
                     parts.append(f"{val} {name}")

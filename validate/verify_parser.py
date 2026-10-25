@@ -352,7 +352,13 @@ def compare_facts(sexp_facts: dict, analyzer_facts: dict) -> list:
     for ref in sorted(shared_refs):
         sv = sexp_facts["component_values"].get(ref)
         av = analyzer_facts["component_values"].get(ref)
-        if sv is not None and av is not None and sv != av:
+        if sv is not None and av is None:   # a value the analyzer lost
+            mismatches.append({
+                "kind": "missing_item",
+                "field": "component_values",
+                "detail": f"{ref}: sexp={sv!r}, analyzer has no value",
+            })
+        elif sv is not None and av is not None and sv != av:
             mismatches.append({
                 "kind": "wrong_value",
                 "field": "component_values",
@@ -363,7 +369,13 @@ def compare_facts(sexp_facts: dict, analyzer_facts: dict) -> list:
     for ref in sorted(shared_refs):
         sf = sexp_facts["component_footprints"].get(ref)
         af = analyzer_facts["component_footprints"].get(ref)
-        if sf is not None and af is not None and sf != af:
+        if sf is not None and af is None:
+            mismatches.append({
+                "kind": "missing_item",
+                "field": "component_footprints",
+                "detail": f"{ref}: sexp={sf!r}, analyzer has no footprint",
+            })
+        elif sf is not None and af is not None and sf != af:
             mismatches.append({
                 "kind": "wrong_value",
                 "field": "component_footprints",

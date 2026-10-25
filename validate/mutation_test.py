@@ -332,6 +332,9 @@ def run_mutation_test(original_data, assertions, mutations):
 
     Returns dict with {total, caught, missed, catch_rate, by_type, missed_details}.
     """
+    # Only assertions that pass on the unmutated output can witness a mutation: an
+    # already-failing (aspirational, FND debt) assertion would "catch" every mutation
+    assertions = [a for a in assertions if evaluate_assertion(a, original_data)["passed"]]
     total = len(mutations)
     caught = 0
     missed_details = []

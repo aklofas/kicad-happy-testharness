@@ -673,3 +673,16 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {type(e).__name__}: {e}")
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+def test_value_or_footprint_lost_by_the_analyzer_is_a_mismatch():
+    """code A4-F5: a value/footprint present in the sexp but dropped by the analyzer was
+    compared as None vs value and skipped."""
+    from validate.verify_parser import compare_facts
+    base = {"component_refs": {"R1"}, "component_count": 1, "label_count": 0, "label_names": set(),
+            "hierarchical_label_count": 0, "no_connect_count": 0}
+    sexp = {**base, "component_values": {"R1": "10k"}, "component_footprints": {"R1": "R_0603"}}
+    ana = {**base, "component_values": {}, "component_footprints": {}}
+    fields = sorted(m["field"] for m in compare_facts(sexp, ana))
+    assert fields == ["component_footprints", "component_values"]
+    assert compare_facts(sexp, sexp) == []

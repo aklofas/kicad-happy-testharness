@@ -48,7 +48,7 @@ def test_voltage_divider_match():
     spice = _make_spice([{
         "subcircuit_type": "voltage_divider",
         "components": ["R1", "R2"],
-        "expected": {"vout_V": 1.65},
+        "expected": {"ratio": 0.5, "vout_V": 1.65},
         "simulated": {"vout_V": 1.65},
     }])
     results = cross_validate_file(sch, spice)
@@ -63,7 +63,7 @@ def test_voltage_divider_mismatch():
     spice = _make_spice([{
         "subcircuit_type": "voltage_divider",
         "components": ["R1", "R2"],
-        "expected": {"vout_V": 1.65},
+        "expected": {"ratio": 0.5, "vout_V": 1.65},
         "simulated": {"vout_V": 2.5},
     }])
     results = cross_validate_file(sch, spice)
@@ -215,7 +215,7 @@ def test_feedback_network_mismatch():
     spice = _make_spice([{
         "subcircuit_type": "feedback_network",
         "components": ["R1", "R2"],
-        "expected": {"fb_voltage_V": 0.825},
+        "expected": {"ratio": 0.25, "fb_voltage_V": 0.825},
         "simulated": {"fb_voltage_V": 1.5},
     }])
     results = cross_validate_file(sch, spice)
@@ -240,7 +240,7 @@ def test_feedback_network_zero_expected():
 
 def test_opamp_circuit_match():
     sch = _make_sch({"opamp_circuits": [{
-        "reference": "U1", "configuration": "non-inverting",
+        "reference": "U1", "configuration": "non-inverting", "gain_dB": 20.0,
     }]})
     spice = _make_spice([{
         "subcircuit_type": "opamp_circuit",
@@ -256,7 +256,7 @@ def test_opamp_circuit_match():
 
 def test_opamp_circuit_mismatch():
     sch = _make_sch({"opamp_circuits": [{
-        "reference": "U1", "configuration": "inverting",
+        "reference": "U1", "configuration": "inverting", "gain_dB": 20.0,
     }]})
     spice = _make_spice([{
         "subcircuit_type": "opamp_circuit",
@@ -331,7 +331,7 @@ def test_regulator_feedback_mismatch():
     spice = _make_spice([{
         "subcircuit_type": "regulator_feedback",
         "components": ["R1", "R2"],
-        "expected": {"vfb_V": 0.6},
+        "expected": {"vfb_V": 0.6, "ratio": 0.18},
         "simulated": {"vfb_V": 1.2},
     }])
     results = cross_validate_file(sch, spice)
@@ -379,14 +379,14 @@ def test_all_seven_types():
         "lc_filters": [{"inductor": {"ref": "L1"}, "capacitor": {"ref": "C2"}, "resonant_hz": 50000.0}],
         "current_sense": [{"shunt": {"ref": "R4"}, "max_current_50mV_A": 0.5}],
         "feedback_networks": [{"r_top": {"ref": "R5"}, "r_bottom": {"ref": "R6"}, "ratio": 0.25}],
-        "opamp_circuits": [{"reference": "U1", "configuration": "non-inverting"}],
+        "opamp_circuits": [{"reference": "U1", "configuration": "non-inverting", "gain_dB": 20.0}],
         "power_regulators": [{"ref": "U2", "feedback_divider": {
             "r_top": {"ref": "R7"}, "r_bottom": {"ref": "R8"}, "ratio": 0.18,
         }}],
     })
     spice = _make_spice([
         {"subcircuit_type": "voltage_divider", "components": ["R1", "R2"],
-         "expected": {"vout_V": 1.65}, "simulated": {"vout_V": 1.65}},
+         "expected": {"ratio": 0.5, "vout_V": 1.65}, "simulated": {"vout_V": 1.65}},
         {"subcircuit_type": "rc_filter", "components": ["C1", "R3"],
          "simulated": {"fc_hz": 1005.0}},
         {"subcircuit_type": "lc_filter", "components": ["C2", "L1"],
@@ -394,11 +394,11 @@ def test_all_seven_types():
         {"subcircuit_type": "current_sense", "components": ["R4"],
          "simulated": {"i_at_50mV_A": 0.5001}},
         {"subcircuit_type": "feedback_network", "components": ["R5", "R6"],
-         "expected": {"fb_voltage_V": 0.825}, "simulated": {"fb_voltage_V": 0.826}},
+         "expected": {"ratio": 0.25, "fb_voltage_V": 0.825}, "simulated": {"fb_voltage_V": 0.826}},
         {"subcircuit_type": "opamp_circuit", "components": ["U1"],
          "expected": {"gain_dB": 20.0}, "simulated": {"gain_dB": 20.1}},
         {"subcircuit_type": "regulator_feedback", "components": ["R7", "R8"],
-         "expected": {"vfb_V": 0.6}, "simulated": {"vfb_V": 0.6001}},
+         "expected": {"vfb_V": 0.6, "ratio": 0.18}, "simulated": {"vfb_V": 0.6001}},
     ])
     results = cross_validate_file(sch, spice)
     types = {r["type"] for r in results}
@@ -444,7 +444,7 @@ def test_component_order_independence():
     spice = _make_spice([{
         "subcircuit_type": "voltage_divider",
         "components": ["R1", "R2"],
-        "expected": {"vout_V": 1.65},
+        "expected": {"ratio": 0.5, "vout_V": 1.65},
         "simulated": {"vout_V": 1.65},
     }])
     results = cross_validate_file(sch, spice)
@@ -473,7 +473,7 @@ def test_multiple_types_combined():
     })
     spice = _make_spice([
         {"subcircuit_type": "voltage_divider", "components": ["R1", "R2"],
-         "expected": {"vout_V": 1.65}, "simulated": {"vout_V": 1.65}},
+         "expected": {"ratio": 0.5, "vout_V": 1.65}, "simulated": {"vout_V": 1.65}},
         {"subcircuit_type": "rc_filter", "components": ["C1", "R3"],
          "simulated": {"fc_hz": 1005.0}},
     ])
@@ -499,3 +499,31 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {e}")
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+# === the analyzer, not SPICE's own expectation, is the reference (code A4-F6) ===
+
+def test_divider_compares_analyzer_ratio_with_simulation():
+    """SPICE simulated == SPICE expected, but the analyzer's ratio is wrong: a mismatch."""
+    sch = _make_sch({"voltage_dividers": [{"r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"},
+                                            "ratio": 0.33}]})
+    spice = _make_spice([{"subcircuit_type": "voltage_divider", "components": ["R1", "R2"],
+                          "expected": {"ratio": 0.5, "vout_V": 1.65}, "simulated": {"vout_V": 1.65}}])
+    (r,) = cross_validate_file(sch, spice)
+    assert r["status"] == "mismatch" and "ratio=0.3300" in r["analyzer_value"]
+
+
+def test_none_analyzer_ratio_does_not_crash():
+    sch = _make_sch({"voltage_dividers": [{"r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"},
+                                            "ratio": None}]})
+    spice = _make_spice([{"subcircuit_type": "voltage_divider", "components": ["R1", "R2"],
+                          "expected": {"ratio": 0.5, "vout_V": 1.65}, "simulated": {"vout_V": 1.65}}])
+    assert cross_validate_file(sch, spice) == []
+
+
+def test_opamp_compares_analyzer_gain_with_simulation():
+    sch = _make_sch({"opamp_circuits": [{"reference": "U1", "gain_dB": 6.0}]})
+    spice = _make_spice([{"subcircuit_type": "opamp_circuit", "components": ["U1"],
+                          "expected": {"gain_dB": 20.0}, "simulated": {"gain_dB": 20.0}}])
+    (r,) = cross_validate_file(sch, spice)
+    assert r["status"] == "mismatch" and r["analyzer_value"] == "gain=6.0dB"
