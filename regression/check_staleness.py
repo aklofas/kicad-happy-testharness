@@ -86,18 +86,27 @@ def check_staleness(data_dir, repo_name=None, analyzer_type=None, target_era=Non
     return stale, missing_output, total_sets
 
 
-def find_uncovered_outputs(data_dir, repo_name=None, analyzer_type=None):
-    """Find output files that have no assertions at all."""
-    # Build set of (repo, type, file_pattern) that have assertions
+def find_uncovered_outputs(data_dir, repo_name=None, analyzer_type=None, target_era=None):
+    """Find output files that no executable assertion checks.
+
+    An output is covered only by an assertion set that run_checks would evaluate against
+    that same file (resolved through the set's project path, like run_checks) and that
+    holds at least one non-aspirational assertion of the target era."""
+    target_era = target_era or CURRENT_SCHEMA_ERA
     assertion_sets = load_assertions(
         data_dir, repo_name=repo_name, analyzer_type=analyzer_type,
     )
     covered = set()
     for aset in assertion_sets:
-        repo = aset.get("_repo", "")
-        atype = aset.get("analyzer_type", "schematic")
-        fp = aset.get("file_pattern", "")
-        covered.add((repo, atype, fp))
+        executable = [a for a in aset.get("assertions", [])
+                      if not a.get("aspirational")
+                      and (target_era == "all" or era_filter(a, target_era))]
+        if not executable:
+            continue
+        out = find_output_file(aset.get("file_pattern", ""), aset.get("_repo", ""),
+                               aset.get("_project_path"), aset.get("analyzer_type", "schematic"))
+        if out is not None:
+            covered.add(Path(out).resolve())
 
     # Scan outputs
     uncovered = []
@@ -118,14 +127,7 @@ def find_uncovered_outputs(data_dir, repo_name=None, analyzer_type=None):
                 for json_file in sorted(repo_dir.glob("*.json")):
                     if json_file.name.startswith("_"):
                         continue
-                    # Check if any assertion covers this output
-                    stem = json_file.stem  # e.g. "foo.kicad_sch"
-                    is_covered = any(
-                        stem.endswith(fp) or stem == fp
-                        for r, t, fp in covered
-                        if r == repo and t == atype
-                    )
-                    if not is_covered:
+                    if json_file.resolve() not in covered:
                         uncovered.append({
                             "repo": repo,
                             "type": atype,
@@ -165,7 +167,7 @@ def main():
             DATA_DIR, repo_name=None, analyzer_type=args.type, target_era=target_era,
         )
         uncovered_all = find_uncovered_outputs(
-            DATA_DIR, repo_name=None, analyzer_type=args.type,
+            DATA_DIR, repo_name=None, analyzer_type=args.type, target_era=target_era,
         )
     else:
         for repo_name in repos:
@@ -177,7 +179,7 @@ def main():
             missing_all.extend(m)
             total_sets += t
             uncovered_all.extend(find_uncovered_outputs(
-                DATA_DIR, repo_name=repo_name, analyzer_type=args.type,
+                DATA_DIR, repo_name=repo_name, analyzer_type=args.type, target_era=target_era,
             ))
 
     stale = stale_all
