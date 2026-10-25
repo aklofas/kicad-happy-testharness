@@ -28,7 +28,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import source_scan  # noqa: E402  (harness sibling module)
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.source_audit import sources  # noqa: E402
 
 

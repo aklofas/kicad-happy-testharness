@@ -27,7 +27,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from regression.reference_io import write_assertion_file
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from reference_io import write_assertion_file
 from utils import DATA_DIR, data_dir, project_prefix, _truncate_with_hash, atomic_write_text
 
 

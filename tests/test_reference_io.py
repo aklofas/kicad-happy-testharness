@@ -3,6 +3,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "regression"))
 
@@ -60,6 +62,17 @@ def test_no_regression_module_imports_find_output_file_from_run_checks():
 def test_checks_importable_package_style_with_only_root_on_path(tmp_path):
     code = ("import sys; sys.path.insert(0, %r); "
             "from regression.checks import evaluate_assertion" % str(ROOT))
+    r = subprocess.run([sys.executable, "-c", code], cwd=tmp_path,
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+
+
+@pytest.mark.parametrize("module", ["findings", "seed", "seed_structural", "seed_negative"])
+def test_writers_share_one_reference_io_module_package_style(tmp_path, module):
+    code = ("import sys; sys.path.insert(0, %r); "
+            "import regression.%s as m; import reference_io; "
+            "assert m.write_assertion_file is reference_io.write_assertion_file; "
+            "assert 'regression.reference_io' not in sys.modules" % (str(ROOT), module))
     r = subprocess.run([sys.executable, "-c", code], cwd=tmp_path,
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
