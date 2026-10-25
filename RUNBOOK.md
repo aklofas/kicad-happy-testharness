@@ -373,6 +373,14 @@ it, compare:
 find results/outputs/{type} -name '*.json' ! -name capability_mode.json ! -name '_*' -newer <marker> | wc -l   # must ≈ unit count
 ```
 
+The chained runners (emc / spice / thermal) retire a downstream output whose schematic (or,
+for thermal, schematic or PCB) output is missing or `.stale`: they rename it `<name>.stale`,
+print `RETIRED ...`, and count `retired` in `_aggregate.json`, so an output built from an
+upstream that has since timed out or vanished stops feeding `run_checks`. Expect a one-time
+retirement of the orphans at the first full pass after this rule (2026-10-25: EMC 127,
+SPICE 46, thermal 23); assertions on them then report "output file not found" — reseed or
+recover the upstream.
+
 Any shortfall beyond the known timeout class means the analyzer is failing
 silently — run it by hand on one unit (the runner's exact command) and read
 stderr before doing anything else. For a release regen, also run the chain

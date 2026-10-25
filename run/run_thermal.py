@@ -34,7 +34,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harnesslib.profiles import PROFILES
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output, should_skip_resume,
-                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS)
+                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
+                   retire_orphaned_outputs)
 
 # TH-055: the cap comes from the declared standard profile.
 ANALYZER_TIMEOUT = PROFILES["standard"].timeout_s
@@ -166,6 +167,16 @@ def main():
     else:
         pairs = find_thermal_pairs(None)
 
+    # Output directory
+    thermal_out_dir = OUTPUTS_DIR / "thermal"
+    expected = {}
+    for sch, _pcb in pairs:
+        expected.setdefault(f"{sch.parent.parent.name}/{sch.parent.name}", set()).add(
+            f"{thermal_output_stem(sch.name)}_thermal.json")
+    retired = retire_orphaned_outputs(thermal_out_dir, repo_list, expected)
+    for f in retired:
+        print(f"RETIRED {f.parent.parent.name}/{f.parent.name}/{f.name} (schematic or PCB output missing/stale)")
+
     if not pairs:
         if repo_list is not None:
             print("No matching schematic+PCB output pairs found for specified repos",
@@ -175,9 +186,6 @@ def main():
                   "Run run/run_schematic.py and run/run_pcb.py first.",
                   file=sys.stderr)
         sys.exit(1)
-
-    # Output directory
-    thermal_out_dir = OUTPUTS_DIR / "thermal"
 
     print(f"=== Running Thermal Analysis ===")
     print(f"Analyzer: {analyzer}")
@@ -263,6 +271,7 @@ def main():
     print(f"Files processed:            {total_files}")
     if skipped:
         print(f"Skipped (--resume):         {skipped}")
+    print(f"Retired (upstream gone):    {len(retired)}")
     print(f"Files with findings:        {files_with_findings}")
     print(f"Script errors:              {errors}")
     print(f"{'='*60}")
@@ -286,6 +295,7 @@ def main():
         "total_files": total_files,
         "files_with_findings": files_with_findings,
         "errors": errors,
+        "retired": len(retired),
         "total_findings": total_findings,
         "severity": severity_counts,
     }

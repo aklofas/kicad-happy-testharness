@@ -504,6 +504,29 @@ def find_schematic_outputs(repo_filter=None):
     return outputs
 
 
+def retire_orphaned_outputs(out_dir, repo_list, expected):
+    """Quarantine (rename to .stale) every downstream output in the run's scope whose upstream
+    no longer exists. A chained runner walks its upstream outputs and never submits a unit
+    whose schematic/PCB output is missing or quarantined, so without this the old downstream
+    output stayed live for run_checks. `expected` maps repo -> output names that have a
+    current upstream; `repo_list` None means every repo under out_dir. Returns the retired
+    paths."""
+    out_dir = Path(out_dir)
+    if repo_list is None:
+        repo_list = sorted(f"{o.name}/{r.name}" for o in out_dir.iterdir() if o.is_dir()
+                           for r in o.iterdir() if r.is_dir()) if out_dir.is_dir() else []
+    retired = []
+    for repo in repo_list:
+        keep = expected.get(repo, set())
+        for f in sorted((out_dir / repo).glob("*.json")):
+            if (f.name.startswith("_") or f.name == "capability_mode.json"
+                    or f.name.endswith(".parasitics.json") or f.name in keep):
+                continue
+            os.replace(f, f.with_name(f.name + ".stale"))
+            retired.append(f)
+    return retired
+
+
 def find_pcb_output(schematic_json):
     """Find matching PCB output for a schematic output.
 

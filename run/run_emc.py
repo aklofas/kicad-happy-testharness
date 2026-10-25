@@ -30,7 +30,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output, should_skip_resume,
-                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS)
+                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
+                   retire_orphaned_outputs)
 
 
 def _err_first_line(err_file):
@@ -148,6 +149,16 @@ def main():
             inputs.extend(find_schematic_outputs(rn))
     else:
         inputs = find_schematic_outputs(None)
+
+    # Output directory; an EMC output whose schematic output is gone is retired
+    emc_out_dir = OUTPUTS_DIR / "emc"
+    expected = {}
+    for inp in inputs:
+        expected.setdefault(f"{inp.parent.parent.name}/{inp.parent.name}", set()).add(inp.name)
+    retired = retire_orphaned_outputs(emc_out_dir, repo_list, expected)
+    for f in retired:
+        print(f"RETIRED {f.parent.parent.name}/{f.parent.name}/{f.name} (schematic output missing/stale)")
+
     if not inputs:
         if repo_list is not None:
             print(f"No schematic outputs found for specified repos",
@@ -156,9 +167,6 @@ def main():
             print("No schematic outputs found. Run run/run_schematic.py first.",
                   file=sys.stderr)
         sys.exit(1)
-
-    # Output directory
-    emc_out_dir = OUTPUTS_DIR / "emc"
 
     # Count PCB matches
     pcb_matches = sum(1 for inp in inputs if find_pcb_output(inp))
@@ -271,6 +279,7 @@ def main():
     print(f"Files with PCB paired:      {paired_count}")
     print(f"Files with findings:        {files_with_findings}")
     print(f"Script errors:              {errors}")
+    print(f"Retired (upstream gone):    {len(retired)}")
     print(f"{'='*60}")
     print(f"Total findings:             {total_findings}")
     for sev in ("CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"):
@@ -297,6 +306,7 @@ def main():
         "files_with_findings": files_with_findings,
         "paired_with_pcb": paired_count,
         "errors": errors,
+        "retired": len(retired),
         "total_findings": total_findings,
         "severity": severity_counts,
         "by_category": category_counts,

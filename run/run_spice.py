@@ -43,7 +43,8 @@ from harnesslib.execution import build_env
 from harnesslib.profiles import PROFILES
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output, should_skip_resume,
-                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS)
+                   add_repo_filter_args, resolve_repos_with_source, DEFAULT_JOBS,
+                   retire_orphaned_outputs)
 
 
 def run_extract_parasitics(extractor_script, pcb_json, parasitics_json):
@@ -255,18 +256,25 @@ def main():
             inputs.extend(find_schematic_outputs(rn))
     else:
         inputs = find_schematic_outputs(None)
+
+    # Output directory; a SPICE output whose schematic output is gone is retired
+    if args.with_parasitics:
+        spice_out_dir = OUTPUTS_DIR / "spice-parasitics"
+    else:
+        spice_out_dir = OUTPUTS_DIR / "spice"
+    expected = {}
+    for inp in inputs:
+        expected.setdefault(f"{inp.parent.parent.name}/{inp.parent.name}", set()).add(inp.name)
+    retired = retire_orphaned_outputs(spice_out_dir, repo_list, expected)
+    for f in retired:
+        print(f"RETIRED {f.parent.parent.name}/{f.parent.name}/{f.name} (schematic output missing/stale)")
+
     if not inputs:
         if repo_list is not None:
             print(f"No schematic outputs found for specified repos", file=sys.stderr)
         else:
             print("No schematic outputs found. Run run/run_schematic.py first.", file=sys.stderr)
         sys.exit(1)
-
-    # Output directory
-    if args.with_parasitics:
-        spice_out_dir = OUTPUTS_DIR / "spice-parasitics"
-    else:
-        spice_out_dir = OUTPUTS_DIR / "spice"
 
     mode_label = "SPICE + PCB Parasitics" if args.with_parasitics else "SPICE simulation"
     print(f"=== Running {mode_label} ===")
@@ -394,6 +402,7 @@ def main():
         print(f"Parasitics extracted:       {parasitics_extracted}")
     print(f"Files with simulations:     {files_with_sims}")
     print(f"Script errors:              {errors}")
+    print(f"Retired (upstream gone):    {len(retired)}")
     print(f"{'='*60}")
     print(f"Total subcircuit sims:      {total_sims}")
     print(f"  Pass:                     {total_pass}")
@@ -434,6 +443,7 @@ def main():
         "total_files": total_files,
         "files_with_sims": files_with_sims,
         "errors": errors,
+        "retired": len(retired),
         "total_sims": total_sims,
         "pass": total_pass,
         "warn": total_warn,
