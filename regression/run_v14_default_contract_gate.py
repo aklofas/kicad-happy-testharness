@@ -29,15 +29,15 @@ Contracts validated per envelope:
 
 Design — POST-HOC over existing snapshots:
 
-This driver does NOT run analyzers. It walks the snapshot tree produced
-by ``regression/run_v14_gate.py`` under ``results/v14_gate/v14/`` and
-validates the on-disk envelopes. That keeps the runtime fast (~10 s for
-quick_200, ~2 min for full corpus) and avoids re-running analyzers that
-already produced output in the comparison-gate phase.
+This driver does NOT run analyzers. It walks the candidate snapshot tree of
+a finished corpus gate (``--gate-dir``; ``<gate>/candidate/``, or the legacy
+``<gate>/v14/`` slot of a pre-v3 gate) and validates the on-disk envelopes.
+That keeps the runtime fast (~10 s for quick_200, ~2 min for full corpus)
+and avoids re-running analyzers that already produced output in the
+comparison-gate phase.
 
-Pre-requisite: ``regression/run_v14_gate.py`` must have run first to
-populate ``results/v14_gate/v14/``. If the tree is missing the gate
-exits with ``--no-snapshots`` and a pointer to the prerequisite.
+Pre-requisite: a corpus gate (``regression/run_corpus_gate.py``) must have
+populated the gate dir. If neither slot exists the driver exits 2.
 
 Deferred for follow-up commit (LOG 8b):
 
@@ -71,7 +71,6 @@ sys.path.insert(0, str(HARNESS_DIR))
 from utils import DEFAULT_JOBS  # noqa: E402
 
 GATE_DIR = HARNESS_DIR / "results" / "v14_gate"
-V14_SNAP_DIR = GATE_DIR / "v14"
 OUT_DIR = HARNESS_DIR / "results" / "v14_default_contract_gate"
 
 ALLOWED_SEVERITIES = {"error", "warning", "info"}
@@ -263,12 +262,20 @@ def _validate_one(args):
 # Snapshot tree walker
 # ---------------------------------------------------------------------------
 
-def _enumerate_snapshots(repo_filter):
-    """Walk results/v14_gate/v14/{analyzer}/{owner}/{repo}/{key}/snap.json
+def candidate_snap_dir(gate_dir):
+    """<gate>/candidate (run_corpus_gate), else the legacy <gate>/v14, else None."""
+    for slot in ("candidate", "v14"):
+        if (Path(gate_dir) / slot).is_dir():
+            return Path(gate_dir) / slot
+    return None
+
+
+def _enumerate_snapshots(repo_filter, snap_dir):
+    """Walk <snap_dir>/{analyzer}/{owner}/{repo}/{key}/snap.json
     and yield (analyzer, repo, identity, snap_path)."""
-    if not V14_SNAP_DIR.is_dir():
+    if snap_dir is None or not snap_dir.is_dir():
         return
-    for analyzer_dir in sorted(V14_SNAP_DIR.iterdir()):
+    for analyzer_dir in sorted(snap_dir.iterdir()):
         if not analyzer_dir.is_dir():
             continue
         analyzer = analyzer_dir.name
@@ -299,16 +306,22 @@ def _aggregate(records):
     plus contract-level pass/skip/fail counts."""
     by_analyzer = defaultdict(lambda: {
         "PASS": 0, "FAIL": 0, "SKIP": 0,
-        "contract_fails": Counter(),
+        "contract_fails": Counter(), "contract_skips": Counter(),
         "fail_repos": [],
     })
-    corpus = {"PASS": 0, "FAIL": 0, "SKIP": 0, "contract_fails": Counter()}
+    corpus = {"PASS": 0, "FAIL": 0, "SKIP": 0, "contract_fails": Counter(),
+              "contract_skips": Counter()}
 
     for rec in records:
         a = rec["analyzer"]
         v = rec["verdict"]
         by_analyzer[a][v] += 1
         corpus[v] += 1
+        # a skipped contract leaves the envelope PASS but is reported, never hidden
+        for cname, (cv, _) in rec["contracts"].items():
+            if cv == "SKIP":
+                by_analyzer[a]["contract_skips"][cname] += 1
+                corpus["contract_skips"][cname] += 1
         if v == "FAIL":
             for cname, (cv, _) in rec["contracts"].items():
                 if cv == "FAIL":
@@ -327,9 +340,11 @@ def _aggregate(records):
     # Convert Counters to dicts for JSON serialization
     for a in by_analyzer:
         by_analyzer[a]["contract_fails"] = dict(by_analyzer[a]["contract_fails"])
+        by_analyzer[a]["contract_skips"] = dict(by_analyzer[a]["contract_skips"])
     return {
         "by_analyzer": dict(by_analyzer),
-        "corpus": {**corpus, "contract_fails": dict(corpus["contract_fails"])},
+        "corpus": {**corpus, "contract_fails": dict(corpus["contract_fails"]),
+                   "contract_skips": dict(corpus["contract_skips"])},
     }
 
 
@@ -347,6 +362,9 @@ def _print_summary(rollup):
         print(f"  {analyzer:<14}  {t:>5} snaps  "
               f"PASS={b['PASS']:<5} FAIL={b['FAIL']:<3} SKIP={b['SKIP']:<3}  "
               f"contract fails: {cf}")
+    if corpus["contract_skips"]:
+        print("Skipped contracts: " + ", ".join(
+            f"{k}:{v}" for k, v in sorted(corpus["contract_skips"].items())))
     if corpus["FAIL"] == 0:
         print("\nCLEAN — all contracts pass corpus-wide")
     else:
@@ -381,11 +399,15 @@ def main(argv=None):
     )
     ap.add_argument("--no-schema", action="store_true",
                     help="skip schema-validates contract (still runs the other 3)")
+    ap.add_argument("--gate-dir", default=str(GATE_DIR),
+                    help="finished corpus gate dir; reads its candidate/ slot "
+                         "(legacy v14/ accepted)")
     args = ap.parse_args(argv)
 
-    if not V14_SNAP_DIR.is_dir():
-        print(f"ERROR: {V14_SNAP_DIR} does not exist. "
-              "Run regression/run_v14_gate.py first.", file=sys.stderr)
+    snap_dir = candidate_snap_dir(args.gate_dir)
+    if snap_dir is None:
+        print(f"ERROR: {args.gate_dir} has no candidate/ (or legacy v14/) snapshot tree. "
+              "Run regression/run_corpus_gate.py first.", file=sys.stderr)
         return 2
 
     kh_dir = Path(args.kicad_happy_dir)
@@ -397,7 +419,7 @@ def main(argv=None):
             schemas[analyzer] = _load_schema(analyzer, kh_dir)
 
     jobs = []
-    for analyzer, repo, identity, snap in _enumerate_snapshots(args.repo):
+    for analyzer, repo, identity, snap in _enumerate_snapshots(args.repo, snap_dir):
         if args.analyzer and analyzer != args.analyzer:
             continue
         jobs.append((analyzer, repo, identity, snap,

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Per-rule net-delta aggregation from raw gate snap.json pairs (RUNBOOK 26g).
 
-Walks <gate-dir>/v131 and <gate-dir>/v14, counts findings[] rule_ids per unit
-on both sides, prints global per-(analyzer, rule_id) baseline/candidate/net
-and writes a per-unit delta JSON for repo attribution.
+Walks <gate-dir>/baseline and <gate-dir>/candidate (the legacy v131/v14 slots of a
+pre-v3 gate are accepted), counts findings[] rule_ids per unit on both sides, prints
+global per-(analyzer, rule_id) baseline/candidate/net and writes a per-unit delta JSON
+for repo attribution. Exits 2 when the gate dir has neither slot pair.
 """
 import json
 import os
@@ -33,8 +34,15 @@ def collect(side):
     return units
 
 
-base = collect('v131')
-cand = collect('v14')
+SLOT_PAIRS = (('baseline', 'candidate'), ('v131', 'v14'))
+slots = next((pair for pair in SLOT_PAIRS
+              if all(os.path.isdir(os.path.join(gate_dir, s)) for s in pair)), None)
+if slots is None:
+    print(f"error: {gate_dir} has no baseline/+candidate/ (or legacy v131/+v14/) slots",
+          file=sys.stderr)
+    sys.exit(2)
+base = collect(slots[0])
+cand = collect(slots[1])
 
 global_base = defaultdict(Counter)
 global_cand = defaultdict(Counter)

@@ -329,8 +329,11 @@ def main(argv=None):
     d = diff(before_obs, after_obs)
     result, reason = verdict(d)
 
-    downgrades = [c for c in d['severity_changes'] if c['kind'] == 'downgrade']
-    upgrades = [c for c in d['severity_changes'] if c['kind'] == 'upgrade']
+    # a rewrite (same finding, summary changed) carries its own severity change
+    downgrades = ([c for c in d['severity_changes'] if c['kind'] == 'downgrade']
+                  + [r for r in d['rewrites'] if r['severity_kind'] == 'downgrade'])
+    upgrades = ([c for c in d['severity_changes'] if c['kind'] == 'upgrade']
+                + [r for r in d['rewrites'] if r['severity_kind'] == 'upgrade'])
 
     report = {
         'verdict': result,
