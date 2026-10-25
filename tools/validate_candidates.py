@@ -219,18 +219,32 @@ def _score_quality(scan_result, candidate):
     return min(score, 100)
 
 
+_NAME_SEGMENT = re.compile(r"[A-Za-z0-9._-]+")
+
+
+def candidate_rejection(candidate):
+    """Why a search result must not be cloned, or None. Owner is one name segment; repo is
+    one or more (GitLab subgroups), each [A-Za-z0-9._-]+ and never "." or ".."; the URL is
+    https. Search API responses are untrusted input to a path join and to git clone."""
+    owner, repo, url = candidate.get("owner"), candidate.get("repo"), candidate.get("url")
+    for part in [owner] + (repo.split("/") if isinstance(repo, str) else [None]):
+        if not isinstance(part, str) or not _NAME_SEGMENT.fullmatch(part) or part in (".", ".."):
+            return f"bad owner/repo name {owner!r}/{repo!r}"
+    if not isinstance(url, str) or not url.startswith("https://"):
+        return f"not an https URL: {url!r}"
+    return None
+
+
 def validate_one(candidate, temp_base, min_components):
     """Validate a single candidate. Returns (candidate, scan_result, status) or None.
 
-    Clones into temp dir, scans, classifies, then deletes the clone.
+    Clones into a scratch dir this job owns, scans, classifies, then deletes that dir.
     """
-    owner = candidate["owner"]
-    repo = candidate["repo"]
+    if candidate_rejection(candidate):
+        return candidate, None, "invalid_candidate"
     url = candidate["url"]
-    repo_name = f"{owner}/{repo}"
-
-    dest = Path(temp_base) / owner / repo
-    dest.parent.mkdir(parents=True, exist_ok=True)
+    job_dir = Path(tempfile.mkdtemp(prefix="job_", dir=temp_base))
+    dest = job_dir / "clone"
 
     try:
         # Clone
@@ -260,12 +274,8 @@ def validate_one(candidate, temp_base, min_components):
         return candidate, scan, "pass"
 
     finally:
-        # Always clean up
-        if dest.exists():
-            shutil.rmtree(dest, ignore_errors=True)
-        # Clean empty owner dir
-        if dest.parent.exists() and not any(dest.parent.iterdir()):
-            dest.parent.rmdir()
+        # Always clean up: only the dir this job created
+        shutil.rmtree(job_dir, ignore_errors=True)
 
 
 def main():
@@ -326,7 +336,7 @@ def main():
     # Track results
     passed = []
     stats = {"pass": 0, "clone_failed": 0, "no_kicad_files": 0,
-             "library": 0, "trivial": 0, "below_threshold": 0}
+             "library": 0, "trivial": 0, "below_threshold": 0, "invalid_candidate": 0}
     t0 = time.time()
     save_interval = 100  # incremental save every N repos
 
