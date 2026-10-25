@@ -40,7 +40,8 @@ def _scan_repos_and_ingest(args, now: str) -> int:
     """
     from pathlib import Path
     from validate.datasheet_db.storage import (
-        compute_sha256, write_blob_atomic, store_path, REPOS_DIR, BlobSha256Mismatch
+        compute_sha256, write_blob_atomic, store_path, REPOS_DIR, BlobSha256Mismatch,
+        corpus_pdf_rejection,
     )
     from validate.datasheet_db.manifest import (
         load_record, save_record, merge_record
@@ -53,6 +54,11 @@ def _scan_repos_and_ingest(args, now: str) -> int:
     ingested = merged = skipped = 0
 
     for pdf in sorted(REPOS_DIR.rglob("*.pdf")):
+        reason = corpus_pdf_rejection(pdf, REPOS_DIR)
+        if reason:
+            print(f"skip {pdf}: {reason}", file=sys.stderr)
+            skipped += 1
+            continue
         # Filter: must look like a datasheet (path mentions datasheet OR > 50KB)
         path_str = str(pdf).lower()
         try:

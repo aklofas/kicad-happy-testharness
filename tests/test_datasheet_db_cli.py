@@ -600,3 +600,19 @@ def test_scan_repos_dry_run_writes_nothing_on_merge():
         assert {p: p.read_bytes() for p in manifest.rglob("*.json")} == before
         rec = json.loads(next(iter(before.values())))
         assert not any(f.get("type") == "repo" for f in rec.get("found_in", []))
+
+
+def test_corpus_pdf_rejection_policy(tmp_path=None):
+    """sec A1-F3 (ruling R20): scans refuse symlinks, files resolving outside the root, and
+    non-PDF bytes; the private file a symlink names is never hashed into a tracked record."""
+    from validate.datasheet_db.storage import corpus_pdf_rejection
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); root = tmp / "corpus"; root.mkdir()
+        good = root / "a.pdf"; good.write_bytes(b"%PDF-1.4 data")
+        fake = root / "b.pdf"; fake.write_bytes(b"<html>")
+        private = tmp / "private.pdf"; private.write_bytes(b"%PDF-1.4 secret")
+        link = root / "c.pdf"; link.symlink_to(private)
+        assert corpus_pdf_rejection(good, root) is None
+        assert corpus_pdf_rejection(fake, root) == "not a PDF"
+        assert corpus_pdf_rejection(link, root) == "symlink"
+        assert corpus_pdf_rejection(private, root) == "outside the scanned root"

@@ -239,7 +239,7 @@ def _register_repo_pdfs_in_datasheet_db(repo_name):
     try:
         from datetime import datetime, timezone
         from validate.datasheet_db.storage import (
-            compute_sha256, write_blob_atomic, store_path
+            compute_sha256, write_blob_atomic, store_path, corpus_pdf_rejection
         )
         from validate.datasheet_db.manifest import (
             load_record, save_record, merge_record
@@ -255,6 +255,8 @@ def _register_repo_pdfs_in_datasheet_db(repo_name):
     ingested = merged_count = 0
 
     for pdf in datasheets_dir.rglob("*.pdf"):
+        if corpus_pdf_rejection(pdf, datasheets_dir):
+            continue
         try:
             size = pdf.stat().st_size
             if size == 0:

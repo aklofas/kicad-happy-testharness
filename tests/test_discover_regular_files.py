@@ -28,3 +28,22 @@ def test_discover_in_skips_directories_named_like_units(tmp_path):
     assert [Path(p).name for p in found["schematics"]] == ["board.kicad_sch"]
     assert [Path(p).name for p in found["projects"]] == ["board.kicad_pro"]
     assert found["gerbers"] == [str(tmp_path / "board 2.kicad_pcb")]
+
+
+def test_discover_rejects_line_delimiters_and_escaping_symlinks(tmp_path, capsys):
+    """sec A1-F6 / A1-F3 (ruling R20): a filename with a line delimiter split into two
+    manifest rows and aborted the batch; a symlink out of the clone was discovered."""
+    clone, outside = tmp_path / "clone", tmp_path / "outside"
+    clone.mkdir(); outside.mkdir()
+    (clone / "ok.kicad_sch").write_text("(kicad_sch)")
+    (clone / "evil\nx.kicad_sch").write_text("(kicad_sch)")
+    (clone / "form\x0cfeed.kicad_pcb").write_text("(kicad_pcb)")
+    (outside / "secret.kicad_pcb").write_text("(kicad_pcb)")
+    (clone / "leak.kicad_pcb").symlink_to(outside / "secret.kicad_pcb")
+    (clone / "inner.kicad_pcb").symlink_to(clone / "real.kicad_pcb")
+    (clone / "real.kicad_pcb").write_text("(kicad_pcb)")
+    found = discover.discover_in(clone)
+    assert [Path(p).name for p in found["schematics"]] == ["ok.kicad_sch"]
+    assert [Path(p).name for p in found["pcbs"]] == ["inner.kicad_pcb", "real.kicad_pcb"]
+    err = capsys.readouterr().err
+    assert "line delimiter" in err and "outside the clone" in err

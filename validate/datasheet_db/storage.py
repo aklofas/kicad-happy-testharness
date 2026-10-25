@@ -169,6 +169,27 @@ REPOS_DIR = Path(os.environ.get(
 ))
 
 
+def corpus_pdf_rejection(pdf: Path, root: Path) -> str | None:
+    """Why a PDF found by a scan of `root` must not be ingested, or None. A scan reads
+    attacker-shaped clone content: symlinks are refused outright, so is anything resolving
+    outside `root`, and the bytes must start with the PDF magic."""
+    if pdf.is_symlink():
+        return "symlink"
+    try:
+        real, base = pdf.resolve(), Path(root).resolve()
+    except OSError as e:
+        return f"unresolvable: {e}"
+    if base not in real.parents:
+        return "outside the scanned root"
+    try:
+        with open(real, "rb") as fh:
+            if fh.read(5) != b"%PDF-":
+                return "not a PDF"
+    except OSError as e:
+        return f"unreadable: {e}"
+    return None
+
+
 def store_path(record: dict) -> Path:
     """Return the on-disk path for a record's blob."""
     return STORE_DIR / canonical_filename(record)
