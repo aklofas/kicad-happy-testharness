@@ -32,6 +32,7 @@ def _compile(pattern):
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import resolve_path, load_project_metadata
+from reference_io import resolve_project_path
 from regression.schema_era import normalize_schema_era
 
 # All supported assertion operators — validated at load time
@@ -349,18 +350,7 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
             # Resolve project_path for output file mapping.
             # Try baselines metadata first, then discover from repo.
             repo_key = f"{repo_dir.parent.name}/{repo_dir.name}"
-            project_path = load_project_metadata(
-                repo_key, proj_dir.name).get("project_path")
-            if project_path is None:
-                # Fallback: look up from discover_projects if repo is checked out
-                try:
-                    from utils import discover_projects
-                    for p in discover_projects(repo_key):
-                        if p["name"] == proj_dir.name:
-                            project_path = p["path"]
-                            break
-                except (ImportError, OSError):
-                    pass
+            project_path = resolve_project_path(repo_key, proj_dir.name)
 
             # Stray-directory guard: a project dir with assertions/ but no
             # baselines/metadata.json AND no resolvable project_path in the

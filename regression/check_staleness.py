@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import load_assertions
-from run_checks import find_output_file
+from reference_io import find_output_file
 from utils import OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES, add_repo_filter_args, resolve_repos
 from regression.schema_era import era_filter, CURRENT_SCHEMA_ERA
 

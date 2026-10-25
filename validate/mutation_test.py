@@ -23,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "regression"))
 from checks import evaluate_assertion, load_assertions
-from run_checks import find_output_file
+from reference_io import find_output_file
 from utils import (OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES, resolve_path,
                    DEFAULT_JOBS, load_cross_section)
 

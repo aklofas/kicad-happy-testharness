@@ -1127,7 +1127,7 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
 
     Returns (pruned_count, checked_count).
     """
-    from run_checks import find_output_file
+    from reference_io import find_output_file
 
     repo_dir = DATA_DIR / repo_name
     if not repo_dir.exists():
@@ -1141,17 +1141,8 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
         if not type_dir.exists():
             continue
 
-        # Resolve project_path for output file lookup
-        from checks import load_project_metadata
-        pp = load_project_metadata(repo_name, proj_dir.name).get("project_path")
-        if pp is None:
-            try:
-                for p in discover_projects(repo_name):
-                    if p["name"] == proj_dir.name:
-                        pp = p["path"]
-                        break
-            except (ImportError, OSError):
-                pass
+        from reference_io import resolve_project_path
+        pp = resolve_project_path(repo_name, proj_dir.name)
 
         for af in sorted(type_dir.glob("*.json")):
             # Only prune SEED assertions

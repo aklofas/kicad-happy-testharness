@@ -19,24 +19,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import load_assertions, load_project_metadata
-from run_checks import find_output_file
+from reference_io import find_output_file, resolve_project_path
 from utils import OUTPUTS_DIR, DATA_DIR, project_prefix, discover_projects, _truncate_with_hash
 
 REGISTRY_FILE = Path(__file__).resolve().parent / "bugfix_registry.json"
-
-
-def _resolve_project_path(repo, project_name):
-    """Resolve project_path the same way load_assertions does."""
-    pp = load_project_metadata(repo, project_name).get("project_path")
-    if pp is not None:
-        return pp
-    try:
-        for p in discover_projects(repo):
-            if p["name"] == project_name:
-                return p["path"]
-    except (ImportError, OSError):
-        pass
-    return None
 
 
 def _list_outputs(repo, atype):
@@ -183,7 +169,7 @@ def audit(fix=False):
                     atype = "schematic"
 
             # Resolve project_path the same way assertions do at runtime
-            pp = _resolve_project_path(repo, project)
+            pp = resolve_project_path(repo, project)
             safe_sf = _truncate_with_hash(source_file.replace("/", "_").replace("\\", "_"))
             out = find_output_file(safe_sf, repo, pp, atype)
 

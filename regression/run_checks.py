@@ -23,6 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import evaluate_assertion, load_assertions
+from reference_io import find_output_file, load_set_output  # noqa: F401  (find_output_file re-exported)
 from utils import (OUTPUTS_DIR, DATA_DIR, project_prefix, ANALYZER_TYPES,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
                    resolve_kicad_happy_dir, HARNESS_DIR)
@@ -36,26 +37,13 @@ def check_assertions(data_dir, repo_name=None, analyzer_type=None):
     )
     total = passed = failed = errors = 0
     for aset in assertion_sets:
-        atype = aset.get("analyzer_type", "schematic")
-        file_pattern = aset.get("file_pattern", "")
-        repo = aset.get("_repo", "")
-        project_path = aset.get("_project_path")
         assertions = aset.get("assertions", [])
         if aset.get("_load_error"):   # an unreadable assertion file
             errors += 1
             continue
 
-        output_file = find_output_file(file_pattern, repo, project_path, atype)
-
-        if not output_file:
-            n = sum(1 for a in assertions if not a.get("aspirational"))
-            errors += n
-            total += n
-            continue
-
-        try:
-            data = json.loads(output_file.read_text(encoding="utf-8"))
-        except Exception:
+        data, load_error = load_set_output(aset)
+        if load_error:
             n = sum(1 for a in assertions if not a.get("aspirational"))
             errors += n
             total += n
@@ -72,41 +60,6 @@ def check_assertions(data_dir, repo_name=None, analyzer_type=None):
                 failed += 1
 
     return {"total": total, "passed": passed, "failed": failed, "errors": errors}
-
-
-def find_output_file(file_pattern, repo_name, project_path, analyzer_type):
-    """Find the output JSON file for an assertion.
-
-    Reconstructs the output safe_name from project_path + file_pattern.
-    For root-level projects (project_path is "." or None), no prefix is added.
-    """
-    type_dir = OUTPUTS_DIR / analyzer_type / repo_name
-    if not type_dir.exists():
-        return None
-
-    # Build prefix from project_path (not project_name)
-    prefix = project_prefix(project_path)
-
-    safe_name = prefix + file_pattern
-
-    # Try exact match first
-    candidate = type_dir / (safe_name + ".json")
-    if candidate.exists():
-        return candidate
-
-    # Try with .json already in pattern
-    candidate = type_dir / safe_name
-    if candidate.exists():
-        return candidate
-
-    # Fallback: glob match
-    for json_file in type_dir.glob("*.json"):
-        if fnmatch.fnmatch(json_file.name, safe_name + ".json"):
-            return json_file
-        if fnmatch.fnmatch(json_file.stem, safe_name):
-            return json_file
-
-    return None
 
 
 def _check_one_set(aset):
@@ -138,9 +91,9 @@ def _check_one_set(aset):
         })
         return result
 
-    output_file = find_output_file(file_pattern, repo_name, project_path, atype)
+    data, load_error = load_set_output(aset)
 
-    if not output_file:
+    if load_error == "output file not found":
         for assertion in aset.get("assertions", []):
             if assertion.get("aspirational"):
                 result["aspirational_total"] += 1
@@ -158,9 +111,7 @@ def _check_one_set(aset):
             })
         return result
 
-    try:
-        data = json.loads(output_file.read_text(encoding="utf-8"))
-    except Exception as e:
+    if load_error:
         for assertion in aset.get("assertions", []):
             if assertion.get("aspirational"):
                 result["aspirational_total"] += 1
@@ -171,7 +122,7 @@ def _check_one_set(aset):
             result["results"].append({
                 "file": file_pattern,
                 "id": assertion.get("id", "?"),
-                "passed": False, "error": f"JSON parse error: {e}",
+                "passed": False, "error": load_error,
                 "aspirational": assertion.get("aspirational", False),
             })
         return result
