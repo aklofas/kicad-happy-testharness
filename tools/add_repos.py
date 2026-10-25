@@ -33,7 +33,8 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 from checkout import parse_repos_md, _repo_name_from_url, get_remote_head
-from utils import REPOS_DIR, DEFAULT_JOBS, MISC_CATEGORY, run_pipeline_step, atomic_write_text
+from utils import (REPOS_DIR, DATA_DIR, MANIFESTS_DIR, DEFAULT_JOBS, MISC_CATEGORY,
+                   run_pipeline_step, atomic_write_text)
 
 REPOS_MD = HARNESS_DIR / "repos.md"
 CANDIDATES_FILE = HARNESS_DIR / "results" / "candidates.json"
@@ -130,11 +131,17 @@ def append_to_repos_md(url, commit_hash, category):
     atomic_write_text(REPOS_MD, "\n".join(lines) + "\n")
 
 
+def line_url(line):
+    """The URL of a repos.md entry line (`- URL [@ hash] [(shallow)]`), or None."""
+    parts = line.strip().split()
+    return parts[1] if len(parts) >= 2 and parts[0] == "-" else None
+
+
 def remove_from_repos_md(url):
-    """Remove a repo entry from repos.md by URL."""
+    """Remove a repo entry from repos.md by its exact URL (a substring would also remove
+    a prefix peer such as owner/OtterPill-CAN-Adapter for owner/OtterPill)."""
     lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
-    filtered = [line for line in lines
-                if not (line.strip().startswith("- ") and url in line)]
+    filtered = [line for line in lines if line_url(line) != url]
     atomic_write_text(REPOS_MD, "\n".join(filtered) + "\n")
 
 
@@ -190,73 +197,56 @@ def _pipeline_one_repo(repo_name, skip_spice, skip_emc):
     result["steps"].append("discover")
 
     # Check if any KiCad files were found
-    manifest_dir = HARNESS_DIR / "results" / "manifests" / owner / repo
-    has_files = False
-    for mf in ["schematics.txt", "pcbs.txt"]:
-        mf_path = manifest_dir / mf
-        if mf_path.exists():
-            lines = [l.strip() for l in mf_path.read_text(encoding="utf-8").splitlines() if l.strip()]
-            if lines:
-                has_files = True
-                break
+    manifest_dir = MANIFESTS_DIR / owner / repo
 
-    if not has_files:
-        log_step("PURGE: no KiCad files found")
+    def manifest_lines(name):
+        mf = manifest_dir / name
+        return ([l for l in mf.read_text(encoding="utf-8").splitlines() if l.strip()]
+                if mf.exists() else [])
+
+    has_sch, has_pcb, has_gerber = (bool(manifest_lines(n))
+                                    for n in ("schematics.txt", "pcbs.txt", "gerbers.txt"))
+    if not ok or not (has_sch or has_pcb):
+        log_step("PURGE: no KiCad files found" if ok else "discover failed")
         clone_dir = REPOS_DIR / owner / repo
         if clone_dir.exists():
             shutil.rmtree(clone_dir)
         owner_dir = REPOS_DIR / owner
         if owner_dir.exists() and not any(owner_dir.iterdir()):
             owner_dir.rmdir()
-        result["status"] = "purged"
-        result["error"] = "no KiCad files"
+        result["status"] = "purged" if ok else "failed"
+        result["error"] = "no KiCad files" if ok else "discover failed"
         result["purge"] = True
         return result
 
-    ok, detail = run_pipeline_step("Schematic analysis",
-                           [py, "run/run_schematic.py", "--repo", repo_name, "--jobs", "4"],
-                           timeout=300)
-    log_step(detail)
-    result["steps"].append("schematic")
-
-    ok, detail = run_pipeline_step("PCB analysis",
-                           [py, "run/run_pcb.py", "--repo", repo_name, "--jobs", "4"],
-                           timeout=300)
-    log_step(detail)
-    result["steps"].append("pcb")
-
-    ok, detail = run_pipeline_step("Gerber analysis",
-                           [py, "run/run_gerbers.py", "--repo", repo_name, "--jobs", "4"],
-                           timeout=300)
-    log_step(detail)
-    result["steps"].append("gerber")
-
-    if not skip_spice:
-        ok, detail = run_pipeline_step("SPICE simulations",
-                               [py, "run/run_spice.py", "--repo", repo_name, "--jobs", "16"],
-                               timeout=300)
+    # Each stage the repo's files call for must succeed; a runner with nothing to do
+    # (no PCB in the repo, say) is not run, so its "nothing found" exit cannot pass as success
+    stages = [
+        ("schematic", "Schematic analysis", ["run/run_schematic.py", "--jobs", "4"], has_sch),
+        ("pcb", "PCB analysis", ["run/run_pcb.py", "--jobs", "4"], has_pcb),
+        ("gerber", "Gerber analysis", ["run/run_gerbers.py", "--jobs", "4"], has_gerber),
+        ("spice", "SPICE simulations", ["run/run_spice.py", "--jobs", "16"], has_sch and not skip_spice),
+        ("emc", "EMC analysis", ["run/run_emc.py", "--jobs", "8"], has_sch and not skip_emc),
+        ("snapshot", "Snapshot", ["regression/snapshot.py"], True),
+        ("seed", "Seed SEED-*", ["regression/seed.py"], True),
+        ("seed_structural", "Seed STRUCT-*", ["regression/seed_structural.py"], True),
+    ]
+    for step, label, argv, wanted in stages:
+        if not wanted:
+            continue
+        ok, detail = run_pipeline_step(label, [py, argv[0], "--repo", repo_name, *argv[1:]],
+                                       timeout=300)
         log_step(detail)
-        result["steps"].append("spice")
+        result["steps"].append(step)
+        if not ok:
+            result["status"] = "failed"
+            result["error"] = f"{step} failed"
+            return result
 
-    if not skip_emc:
-        ok, detail = run_pipeline_step("EMC analysis",
-                               [py, "run/run_emc.py", "--repo", repo_name, "--jobs", "8"],
-                               timeout=300)
-        log_step(detail)
-        result["steps"].append("emc")
-
-    ok, detail = run_pipeline_step("Snapshot", [py, "regression/snapshot.py", "--repo", repo_name])
-    log_step(detail)
-    result["steps"].append("snapshot")
-
-    ok, detail = run_pipeline_step("Seed SEED-*", [py, "regression/seed.py", "--repo", repo_name])
-    log_step(detail)
-    result["steps"].append("seed")
-
-    ok, detail = run_pipeline_step("Seed STRUCT-*",
-                           [py, "regression/seed_structural.py", "--repo", repo_name])
-    log_step(detail)
-    result["steps"].append("seed_structural")
+    if not list((DATA_DIR / owner / repo).glob("*/assertions/*/*.json")):
+        result["status"] = "failed"
+        result["error"] = "no assertions seeded"
+        return result
 
     ok, detail = run_pipeline_step("Run checks",
                            [py, "regression/run_checks.py", "--repo", repo_name])

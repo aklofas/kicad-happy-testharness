@@ -36,3 +36,12 @@ def test_failed_clone_cleans_only_its_own_job_dir(tmp_path, monkeypatch):
     assert (keep / "precious.txt").exists()
     assert not list(tmp_path.glob("job_*"))
     assert vc.validate_one({**OK, "repo": "/etc"}, str(tmp_path), 10)[2] == "invalid_candidate"
+
+
+def test_resume_merge_dedupes_by_owner_repo():
+    """code A5-F9: the incremental save wrote this run's passes, then the final merge added
+    them again (existing + passed)."""
+    old = [{"owner": "a", "repo": "x", "v": 1}, {"owner": "b", "repo": "y", "v": 1}]
+    new = [{"owner": "b", "repo": "y", "v": 2}, {"owner": "c", "repo": "z", "v": 2}]
+    merged = vc.merge_validated(old + new[:1], new)
+    assert [(c["owner"], c["v"]) for c in merged] == [("a", 1), ("b", 2), ("c", 2)]

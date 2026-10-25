@@ -417,6 +417,14 @@ def classify_repo(repo_entry, validated_entry, min_score=1):
     return None
 
 
+def _url_repo(entry_line):
+    """owner/repo (GitLab subgroups kept) of a `- URL [@ hash]` repos.md line."""
+    parts = entry_line.split()
+    url = parts[1] if len(parts) >= 2 else ""
+    path = url.split("://", 1)[-1].split("/", 1)[-1].rstrip("/")
+    return path[:-4] if path.endswith(".git") else path
+
+
 def reclassify_in_repos_md(moves):
     """Apply reclassifications to repos.md.
 
@@ -433,6 +441,13 @@ def reclassify_in_repos_md(moves):
             current_cat = stripped[3:].strip()
         elif current_cat and stripped.startswith("- http"):
             category_ends[current_cat] = i
+
+    # Every destination must exist before any line is removed (a missing header used to
+    # drop the removed lines)
+    headers = {l.strip()[3:].strip() for l in lines if l.strip().startswith("## ")}
+    missing = sorted({new_cat for *_x, new_cat in moves if new_cat not in headers})
+    if missing:
+        raise ValueError(f"repos.md has no section for: {', '.join(missing)}")
 
     # Group moves by (old_category, new_category)
     # Process removals first, then insertions
@@ -585,15 +600,14 @@ def main():
         # Need to find the URL line for each repo
         lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
         repo_to_url = {}
+        wanted = {repo for repo, _cat, _score, _reasons in moves}
         for line in lines:
             stripped = line.strip()
             if stripped.startswith("- http"):
-                for repo, new_cat, score, reasons in moves:
-                    # Match by owner/repo in URL
-                    owner, name = repo.split("/", 1)
-                    if f"/{owner}/{name}" in stripped:
-                        repo_to_url[repo] = stripped
-                        break
+                # exact owner/repo of the parsed URL: a substring match also took prefix peers
+                repo = _url_repo(stripped)
+                if repo in wanted:
+                    repo_to_url[repo] = stripped
 
         md_moves = []
         for repo, new_cat, score, reasons in moves:

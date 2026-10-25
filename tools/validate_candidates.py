@@ -236,6 +236,13 @@ def candidate_rejection(candidate):
     return None
 
 
+def merge_validated(existing, new):
+    """existing + new, one entry per owner/repo (a new entry replaces an old one)."""
+    key = lambda c: f"{c['owner']}/{c['repo']}"  # noqa: E731
+    fresh = {key(c) for c in new}
+    return [c for c in existing if key(c) not in fresh] + list(new)
+
+
 def validate_one(candidate, temp_base, min_components):
     """Validate a single candidate. Returns (candidate, scan_result, status) or None.
 
@@ -365,12 +372,8 @@ def main():
             all_passed = passed
             if args.resume and args.output.exists():
                 try:
-                    existing = json.loads(args.output.read_text(encoding="utf-8"))
-                    # Merge: existing + new, dedup by owner/repo
-                    seen = {f"{c['owner']}/{c['repo']}" for c in existing}
-                    merged = existing + [c for c in passed
-                                         if f"{c['owner']}/{c['repo']}" not in seen]
-                    all_passed = merged
+                    all_passed = merge_validated(
+                        json.loads(args.output.read_text(encoding="utf-8")), passed)
                 except (json.JSONDecodeError, KeyError):
                     all_passed = passed
             args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -414,10 +417,11 @@ def main():
         if Path(temp_base).exists():
             shutil.rmtree(temp_base, ignore_errors=True)
 
-    # Merge with previously validated if resuming
+    # Merge with previously validated if resuming; the incremental saves already wrote this
+    # run's passes into the file, so the merge dedupes by owner/repo
     if args.resume and args.output.exists():
         existing = json.loads(args.output.read_text(encoding="utf-8"))
-        passed = existing + passed
+        passed = merge_validated(existing, passed)
 
     # Apply min-score filter
     if args.min_score > 0:
