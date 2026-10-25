@@ -55,3 +55,11 @@ def test_no_regression_module_imports_find_output_file_from_run_checks():
     own = [l for l in out.splitlines()
            if not l.startswith("tests/test_reference_io.py")]
     assert own == []
+
+
+def test_checks_importable_package_style_with_only_root_on_path(tmp_path):
+    code = ("import sys; sys.path.insert(0, %r); "
+            "from regression.checks import evaluate_assertion" % str(ROOT))
+    r = subprocess.run([sys.executable, "-c", code], cwd=tmp_path,
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr

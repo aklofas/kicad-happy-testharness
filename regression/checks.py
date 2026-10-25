@@ -31,7 +31,8 @@ def _compile(pattern):
     return re.compile(pattern, re.IGNORECASE)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import resolve_path, load_project_metadata
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from utils import resolve_path
 from reference_io import resolve_project_path
 from regression.schema_era import normalize_schema_era
 

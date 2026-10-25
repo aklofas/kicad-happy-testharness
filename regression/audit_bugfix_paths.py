@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from checks import load_assertions, load_project_metadata
+from checks import load_assertions
 from reference_io import find_output_file, resolve_project_path
 from utils import OUTPUTS_DIR, DATA_DIR, project_prefix, discover_projects, _truncate_with_hash
 

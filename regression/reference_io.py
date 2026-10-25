@@ -13,6 +13,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from utils import OUTPUTS_DIR, project_prefix, discover_projects, load_project_metadata
 
 
+OUTPUT_NOT_FOUND = "output file not found"
+
+
 def find_output_file(file_pattern, repo_name, project_path, analyzer_type):
     """Find the output JSON file for an assertion.
 
@@ -65,14 +68,14 @@ def resolve_project_path(repo_name, project_name):
 def load_set_output(aset):
     """Load the analyzer output for an assertion set.
 
-    Returns (data, None), (None, "output file not found") or
+    Returns (data, None), (None, OUTPUT_NOT_FOUND) or
     (None, "JSON parse error: <e>").
     """
     output_file = find_output_file(
         aset.get("file_pattern", ""), aset.get("_repo", ""),
         aset.get("_project_path"), aset.get("analyzer_type", "schematic"))
     if not output_file:
-        return None, "output file not found"
+        return None, OUTPUT_NOT_FOUND
     try:
         return json.loads(output_file.read_text(encoding="utf-8")), None
     except Exception as e:

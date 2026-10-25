@@ -14,7 +14,6 @@ Usage:
 """
 
 import argparse
-import fnmatch
 import json
 import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -23,8 +22,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import evaluate_assertion, load_assertions
-from reference_io import find_output_file, load_set_output  # noqa: F401  (find_output_file re-exported)
-from utils import (OUTPUTS_DIR, DATA_DIR, project_prefix, ANALYZER_TYPES,
+from reference_io import find_output_file, load_set_output, OUTPUT_NOT_FOUND  # noqa: F401  (find_output_file re-exported)
+from utils import (DATA_DIR, ANALYZER_TYPES,
                    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
                    resolve_kicad_happy_dir, HARNESS_DIR)
 from regression.schema_era import era_filter, CURRENT_SCHEMA_ERA
@@ -93,7 +92,7 @@ def _check_one_set(aset):
 
     data, load_error = load_set_output(aset)
 
-    if load_error == "output file not found":
+    if load_error == OUTPUT_NOT_FOUND:
         for assertion in aset.get("assertions", []):
             if assertion.get("aspirational"):
                 result["aspirational_total"] += 1
