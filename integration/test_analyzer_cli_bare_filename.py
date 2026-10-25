@@ -10,9 +10,10 @@ tripped on ad-hoc invocations from inside a project directory. Main-repo fix
 landed in kicad-happy commit 9693347 (status as of 2026-04-11: unpushed —
 this test will stay in FAIL state until the fix is pulled, then flip to PASS).
 
-This test walks real corpus projects, chdir's into each project directory,
-invokes each analyzer with a BARE filename (no `./`, no absolute path), and
-asserts exit 0 + non-empty JSON output.
+This test copies real corpus projects into a temp directory, chdir's into each
+copy, invokes each analyzer with a BARE filename (no `./`, no absolute path), and
+asserts exit 0 + non-empty JSON output. The copy keeps the analyzers' default
+`analysis/` sidecars out of the corpus checkouts.
 
 Covers:
 - analyze_pcb.py (the originally reported bug)
@@ -32,8 +33,10 @@ TIER = "online"
 
 import json
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
@@ -59,19 +62,26 @@ PROJECTS = [
 ]
 
 
-def _run_analyzer_from_dir(analyzer_path, project_dir, bare_arg):
+def _run_analyzer_from_dir(analyzer_path, project_dir, bare_arg, copy_only_arg=False):
     """Invoke analyzer_path with bare_arg while cwd is project_dir.
 
     Returns (returncode, stdout, stderr). On success, stdout should be valid
     JSON; on failure, stderr will contain the Python traceback.
     """
-    result = subprocess.run(
-        [sys.executable, str(analyzer_path), bare_arg],
-        cwd=str(project_dir),
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
+    with tempfile.TemporaryDirectory(prefix="bare-filename-") as td:
+        work = Path(td) / Path(project_dir).name
+        if copy_only_arg:   # a gerber directory: its parent may be a whole repo
+            shutil.copytree(Path(project_dir) / bare_arg, work / bare_arg, symlinks=True)
+        else:
+            shutil.copytree(project_dir, work, symlinks=True)
+        result = subprocess.run(
+            [sys.executable, str(analyzer_path), bare_arg],
+            cwd=str(work),
+            capture_output=True,
+            text=True,
+            timeout=120,
+            env={**os.environ, "PYTHONHASHSEED": "0"},
+        )
     return result.returncode, result.stdout, result.stderr
 
 
@@ -141,7 +151,7 @@ def test_analyze_gerbers_bare_dirname():
                 parent = gerber_dir.parent
                 bare_name = gerber_dir.name
                 rc, stdout, stderr = _run_analyzer_from_dir(
-                    ANALYZE_GERBERS, parent, bare_name
+                    ANALYZE_GERBERS, parent, bare_name, copy_only_arg=True
                 )
                 if rc != 0:
                     failures.append(

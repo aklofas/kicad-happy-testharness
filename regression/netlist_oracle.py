@@ -40,15 +40,17 @@ NODE_RE = re.compile(
 )
 
 
-def export_netlist(sch_path: str, out_path: str, kicad_cli: str = "kicad-cli") -> None:
+def export_netlist(sch_path: str, out_path: str, kicad_cli: str = "kicad-cli",
+                   timeout: float | None = None) -> None:
     """Export a fully-resolved netlist for sch_path via kicad-cli.
 
-    Raises subprocess.CalledProcessError on failure (check=True).
+    Raises subprocess.CalledProcessError on failure (check=True), TimeoutExpired past timeout.
     """
     subprocess.run(
         [kicad_cli, "sch", "export", "netlist", sch_path, "-o", out_path],
         check=True,
         capture_output=True,
+        timeout=timeout,
     )
 
 

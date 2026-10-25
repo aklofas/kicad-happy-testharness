@@ -66,7 +66,8 @@ def run_bom_manager(args: list[str], timeout: int = 60) -> dict:
     cmd = [sys.executable, str(BOM_MANAGER)] + args
     start = time.time()
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
+                                env={**os.environ, "PYTHONHASHSEED": "0"})
         elapsed = time.time() - start
         return {
             "success": result.returncode == 0,

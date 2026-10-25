@@ -110,7 +110,8 @@ def run_fetch(distributor: str, mpn: str, output_path: str,
 
     start = time.time()
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
+                                env={**os.environ, "PYTHONHASHSEED": "0"})
         elapsed = time.time() - start
 
         json_output = {}

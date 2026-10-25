@@ -16,7 +16,7 @@ Usage:
     python3 regression/run_netlist_oracle.py --board incrementer --debug-unresolved
 
 Environment:
-    KICAD_HAPPY_DIR  Path to kicad-happy repo (default ~/Projects/kicad-happy;
+    KICAD_HAPPY_DIR  Path to kicad-happy repo (default the sibling ../kicad-happy;
                       overridden by --kicad-happy)
 """
 
@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import subprocess
 import sys
@@ -76,6 +75,12 @@ def _apply_nc_divergence(result: dict) -> None:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from regression.netlist_oracle import analyzer_nets, compare, export_netlist, parse_netlist
+from harnesslib.execution import build_env  # noqa: E402
+from utils import resolve_kicad_happy_dir  # noqa: E402
+
+# whole-hierarchy parse plus a kicad-cli export per board; generous, but never unbounded
+ANALYZER_TIMEOUT_S = 600
+EXPORT_TIMEOUT_S = 300
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
@@ -95,10 +100,6 @@ GOLDEN = {
     # four are all KiCad 7.
     "older-era": "repos/circuitly/kicad-demos/video/video.kicad_sch",
 }
-
-
-def _default_kicad_happy_dir() -> Path:
-    return Path.home() / "Projects" / "kicad-happy"
 
 
 def _verify_golden_paths() -> None:
@@ -128,11 +129,15 @@ def run_board(name: str, kicad_happy_dir: Path) -> dict:
         analysis_json = tmp / "analysis.json"
         oracle_net = tmp / "oracle.net"
 
-        proc = subprocess.run(
-            [sys.executable, str(analyzer_script), str(sch_path), "--output", str(analysis_json)],
-            capture_output=True,
-            text=True,
-        )
+        try:
+            proc = subprocess.run(
+                [sys.executable, str(analyzer_script), str(sch_path), "--output", str(analysis_json)],
+                capture_output=True, text=True, cwd=tmp,
+                env=build_env(offline=True), timeout=ANALYZER_TIMEOUT_S,
+            )
+        except subprocess.TimeoutExpired:
+            return {"board": name, "sch_path": str(sch_path),
+                    "error": f"analyze_schematic.py timed out after {ANALYZER_TIMEOUT_S}s"}
         if proc.returncode != 0:
             return {
                 "board": name,
@@ -141,7 +146,10 @@ def run_board(name: str, kicad_happy_dir: Path) -> dict:
             }
 
         try:
-            export_netlist(str(sch_path), str(oracle_net))
+            export_netlist(str(sch_path), str(oracle_net), timeout=EXPORT_TIMEOUT_S)
+        except subprocess.TimeoutExpired:
+            return {"board": name, "sch_path": str(sch_path),
+                    "error": f"kicad-cli export timed out after {EXPORT_TIMEOUT_S}s"}
         except subprocess.CalledProcessError as e:
             stderr = e.stderr.decode("utf-8", "replace") if isinstance(e.stderr, bytes) else str(e.stderr)
             return {
@@ -218,16 +226,11 @@ def main() -> int:
     group.add_argument("--all", action="store_true", help="run all GOLDEN boards")
     parser.add_argument("--strict", action="store_true", help="exit 1 if any board fails (or errors)")
     parser.add_argument("--json", action="store_true", help="emit machine-readable JSON instead of the text report")
-    parser.add_argument("--kicad-happy", default=None, help="path to kicad-happy repo (default: $KICAD_HAPPY_DIR or ~/Projects/kicad-happy)")
+    parser.add_argument("--kicad-happy", default=None, help="path to kicad-happy repo (default: $KICAD_HAPPY_DIR, else the sibling ../kicad-happy)")
     parser.add_argument("--debug-unresolved", action="store_true", help="print full analyzer_only/oracle_only net-name lists")
     args = parser.parse_args()
 
-    if args.kicad_happy:
-        kicad_happy_dir = Path(args.kicad_happy)
-    elif os.environ.get("KICAD_HAPPY_DIR"):
-        kicad_happy_dir = Path(os.environ["KICAD_HAPPY_DIR"])
-    else:
-        kicad_happy_dir = _default_kicad_happy_dir()
+    kicad_happy_dir = Path(args.kicad_happy) if args.kicad_happy else resolve_kicad_happy_dir()
 
     if not kicad_happy_dir.exists():
         print(f"Error: kicad-happy dir not found: {kicad_happy_dir}", file=sys.stderr)
