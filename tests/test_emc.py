@@ -449,6 +449,7 @@ def test_crossval_test_plan_bands():
     tp_r = [r for r in results if r["check"] == "test_plan_frequency_bands"]
     assert len(tp_r) == 1
     assert tp_r[0]["emc_value"] == 1  # 1 band with sources
+    assert tp_r[0]["status"] == "match"   # U1 and Y1 are both in the schematic
 
 
 # ---------------------------------------------------------------------------
@@ -529,3 +530,17 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {e}")
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+def test_band_sources_are_compared_with_the_schematic():
+    """code A4-F11: the bands row was always "match" (sch_refs unused)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "validate"))
+    from validate_emc import cross_validate_file as xv
+    sch = {"findings": [{"detector": "detect_power_regulators", "ref": "U1"}]}
+    def emc(sources):
+        return {"test_plan": {"frequency_bands": [{"band": "30-88 MHz", "source_count": len(sources),
+                                                   "sources": sources}]}}
+    row = lambda e: next(r for r in xv(sch, None, e) if r["check"] == "test_plan_frequency_bands")
+    assert row(emc(["U1 (MT3608) harmonics 25-73"]))["status"] == "match"
+    assert row(emc(["U9 (MT3608) harmonics 25-73"]))["status"] == "mismatch"
+    assert row(emc(["switching edge harmonics"]))["status"] == "not_compared"

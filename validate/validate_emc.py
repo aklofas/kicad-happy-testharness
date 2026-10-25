@@ -4,6 +4,9 @@
 Compares EMC board_info fields against their source analyzer outputs to catch
 stale inputs, pairing errors, or extraction bugs.
 
+Exit policy: advisory. It reports findings for a person to adjudicate and exits 0 after a
+complete run; only a setup error exits non-zero.
+
 Checks:
   - crystal_frequencies: EMC board_info vs schematic crystal_circuits
   - layer_count: EMC board_info vs PCB statistics.copper_layers_used
@@ -19,11 +22,15 @@ Usage:
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import OUTPUTS_DIR, add_repo_filter_args, resolve_repos
+
+
+_REF_RE = re.compile(r"^[A-Z]+[0-9]+[A-Z]?$")
 
 
 def cross_validate_file(schematic_data, pcb_data, emc_data):
@@ -137,12 +144,20 @@ def cross_validate_file(schematic_data, pcb_data, emc_data):
 
         sourced_bands = [b for b in bands if b.get("source_count", 0) > 0]
         if sourced_bands:
+            # a band source reads "U1 (MT3608) harmonics 25-73": compare its leading ref with
+            # the schematic's crystals/regulators; a source without a ref proves nothing
+            band_refs = {src.split()[0] for b in sourced_bands for src in b.get("sources", [])
+                         if isinstance(src, str) and src.split() and _REF_RE.match(src.split()[0])}
+            unknown = sorted(band_refs - sch_refs)
+            status = ("not_compared" if not band_refs else "mismatch" if unknown else "match")
             results.append({
                 "check": "test_plan_frequency_bands",
                 "emc_value": len(sourced_bands),
                 "source_value": len(bands),
-                "status": "match",
-                "detail": f"{len(sourced_bands)}/{len(bands)} bands have emission sources",
+                "status": status,
+                "detail": (f"{len(sourced_bands)}/{len(bands)} bands have emission sources; "
+                           + (f"refs not in schematic: {unknown}" if unknown else
+                              "no source names a ref" if not band_refs else "all source refs found")),
             })
 
     # 7. Regulatory market consistency with target standard
@@ -250,20 +265,21 @@ def main():
                 results = cross_validate_file(schematic_data, pcb_data, emc_data)
 
                 for r in results:
+                    check_name = r["check"]
+                    if check_name not in by_check:
+                        by_check[check_name] = {"match": 0, "mismatch": 0, "not_compared": 0}
+                    by_check[check_name][r["status"]] += 1
+                    if r["status"] == "not_compared":
+                        continue
                     total_checks += 1
                     if r["status"] == "match":
                         total_match += 1
                     else:
                         total_mismatch += 1
 
-                    check_name = r["check"]
-                    if check_name not in by_check:
-                        by_check[check_name] = {"match": 0, "mismatch": 0}
-                    by_check[check_name][r["status"]] += 1
-
                     if not args.summary:
                         rel = f"{repo_key}/{emc_file.name}"
-                        status_str = "OK" if r["status"] == "match" else "MISMATCH"
+                        status_str = {"match": "OK", "not_compared": "N/C"}.get(r["status"], "MISMATCH")
                         if args.json:
                             r["file"] = rel
                             all_results.append(r)

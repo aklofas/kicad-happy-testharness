@@ -15,6 +15,8 @@ Usage:
     python3 validate/verify_parser.py --repo owner/repo
     python3 validate/verify_parser.py --all --jobs 16
     python3 validate/verify_parser.py --report reports/parser_verification/latest.md
+
+Exit policy: enforcing. Exits 2 when any mismatch is found, in text and --json mode.
 """
 
 import argparse
@@ -635,7 +637,7 @@ def main():
             "mismatches": all_findings,
         }
         print(json.dumps(output, indent=2))
-        return
+        sys.exit(0 if not all_findings else 2)   # same exit as the text report
 
     # Write the markdown report. Pass `len(by_repo)` as total_repos so the
     # Summary section can distinguish "how many repos were checked" from

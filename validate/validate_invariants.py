@@ -2,6 +2,9 @@
 """Property-based invariant checker for analyzer outputs.
 
 Checks mathematical and structural invariants that must always hold:
+
+Exit policy: advisory. It reports findings for a person to adjudicate and exits 0 after a
+complete run; only a setup error exits non-zero.
 - Voltage divider ratio: 0 < ratio < 1
 - RC filter cutoff: cutoff_hz > 0 (when R > 0 and C > 0)
 - LC filter resonance: resonant_hz > 0 (when L > 0 and C > 0)

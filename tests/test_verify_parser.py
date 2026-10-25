@@ -686,3 +686,11 @@ def test_value_or_footprint_lost_by_the_analyzer_is_a_mismatch():
     fields = sorted(m["field"] for m in compare_facts(sexp, ana))
     assert fields == ["component_footprints", "component_values"]
     assert compare_facts(sexp, sexp) == []
+
+
+def test_json_mode_exit_matches_text_mode():
+    """code A4-F4 (ruling R8): verify_parser is enforcing; --json exited 0 on mismatches."""
+    src = (Path(__file__).resolve().parent.parent / "validate" / "verify_parser.py").read_text()
+    json_branch = src[src.index("    if args.json:\n        output = {"):]
+    json_branch = json_branch[:json_branch.index("\n\n")]
+    assert "sys.exit(0 if not all_findings else 2)" in json_branch and "return\n" not in json_branch

@@ -5,6 +5,9 @@ Compares SPICE-computed values (from simulate_subcircuits.py) against the
 analyzer's calculated values (from analyze_schematic.py) to catch bugs in
 both directions.
 
+Exit policy: advisory. It reports findings for a person to adjudicate and exits 0 after a
+complete run; only a setup error exits non-zero.
+
 Checks:
   - voltage_dividers: SPICE vout vs analyzer ratio × inferred Vin
   - rc_filters: SPICE fc vs analyzer cutoff_hz

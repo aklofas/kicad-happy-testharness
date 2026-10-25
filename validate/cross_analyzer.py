@@ -4,6 +4,9 @@
 Compares shared data across schematic, PCB, EMC, and SPICE outputs to catch
 pairing errors, stale outputs, or extraction bugs.
 
+Exit policy: advisory. It reports findings for a person to adjudicate and exits 0 after a
+complete run; only a setup error exits non-zero.
+
 Checks:
   schematic↔PCB:  component vs footprint count, net count
   PCB↔EMC:        via count, layer count (exact)

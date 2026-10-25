@@ -94,6 +94,12 @@ Universal structural rules (e.g., divider ratio ∈ (0, 1), filter cutoff > 0 wh
 R > 0 and C > 0, no duplicate component refs). Invariant failures are shape bugs,
 always investigate before any re-seed.
 
+**Validator exit policy** (stated in each tool's docstring): `verify_parser.py` is
+*enforcing* — exit 2 on any mismatch, text and `--json` alike. `validate_invariants.py`,
+`validate_outputs.py`, `cross_analyzer.py`, `validate_emc.py` and `validate_spice.py` are
+*advisory* — they exit 0 after a complete run (the corpus carries known violations, e.g.
+thousands of invariant hits on smoke), so read their counts, never their exit status.
+
 **Limitation:** invariants catch bugs in output *shape*, not *content*. A detector
 that consistently reports a wrong `ratio = 0.5` for every divider still passes every
 invariant.

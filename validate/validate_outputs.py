@@ -3,6 +3,9 @@
 
 Checks structural invariants, cross-references, and flags anomalies.
 
+Exit policy: advisory. It reports findings for a person to adjudicate and exits 0 after a
+complete run; only a setup error exits non-zero.
+
 Usage:
     python3 validate/validate_outputs.py
     python3 validate/validate_outputs.py --repo owner/repo
