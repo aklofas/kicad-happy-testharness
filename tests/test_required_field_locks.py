@@ -1,0 +1,54 @@
+"""Generator -> evaluator round trip for required-field SEED locks: the lock seeded from good
+detections passes on them and fails when the field goes missing, null or empty (code A2-F4)."""
+import copy
+import sys
+from pathlib import Path
+
+import pytest
+
+HARNESS = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS))
+sys.path.insert(0, str(HARNESS / "regression"))
+from regression import seed  # noqa: E402
+from regression.checks import evaluate_assertion  # noqa: E402
+
+pytestmark = pytest.mark.unit
+
+DET = "detect_battery_chargers"
+GOOD = [{"detector": DET, "charger_reference": "U3", "charger_type": "single_cell_linear"},
+        {"detector": DET, "charger_reference": "U7", "charger_type": "single_cell_switching"}]
+
+
+def _lock():
+    assertions, _ = seed._field_spec_assertions(DET, GOOD, 1)
+    locks = [a for a in assertions if a["check"]["op"] == "not_contains_match"]
+    assert [a["check"]["field"] for a in locks] == ["charger_reference"]
+    return locks[0]
+
+
+def _passes(findings):
+    return evaluate_assertion(copy.deepcopy(_lock()), {"findings": findings})["passed"]
+
+
+def test_lock_passes_on_the_detections_it_was_seeded_from():
+    assert _passes(GOOD)
+
+
+@pytest.mark.parametrize("bad", ["", None, []], ids=["empty", "null", "empty_list"])
+def test_lock_fails_when_the_field_regresses(bad):
+    findings = copy.deepcopy(GOOD)
+    findings[1]["charger_reference"] = bad
+    assert not _passes(findings)
+
+
+def test_lock_fails_when_the_field_disappears():
+    findings = copy.deepcopy(GOOD)
+    del findings[0]["charger_reference"]
+    assert not _passes(findings)
+
+
+def test_non_empty_patterns_unaffected_by_null():
+    """A NEG-style `not_contains_match pattern=^R5$` still passes over a null field."""
+    a = {"id": "N", "check": {"path": "findings", "op": "not_contains_match", "field": "ref",
+                              "pattern": "^R5$"}}
+    assert evaluate_assertion(a, {"findings": [{"ref": None}, {"ref": []}, {"ref": "R6"}]})["passed"]

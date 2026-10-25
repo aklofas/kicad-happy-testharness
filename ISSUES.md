@@ -2892,12 +2892,6 @@ The output walk globs `outputs_dir/<dir>/*.json`, but schematic outputs live at 
 **Discovered:** 2026-10-25, harness external audit round 1 (arch O6; code A4-F12, A4-F13)
 `section_hits` is built from `findings[].detector`, which carries full names (`detect_power_regulators`); the same file compares the full name at :1637. The short keys never match, so every constant mapped through this table gets 0 corpus hits. Separately the overfit score is accumulated onto the stored value on every `corpus` run instead of being recomputed. Fix: key the table by full detector names; recompute the score idempotently.
 
-### TH-084: required-field SEED locks pass on JSON `null` and `[]`
-**Severity:** HIGH (assertions that cannot fail on the most likely field regression)
-**File:** `regression/seed.py:214-233` (generator: `not_contains_match field=<f> pattern=^$`); `regression/checks.py:76-87, 99-101, 241-256` (`_item_field` / `_field_strings`)
-**Discovered:** 2026-10-25, harness external audit round 1 (code A2-F4)
-A missing key reads as `""`, which matches `^$`, so the lock fails correctly. JSON `null` stringifies to `"None"` and `[]` yields no strings, so neither matches and the lock passes. A field regressing to null — the most likely shape of a field regression — is invisible to every required-field lock on every domain detector. Fix: the required-field form rejects null and empty lists; measure the corpus effect before landing (corpus-semantics change).
-
 ### TH-079: `generate_validation_md.py` builds the category table and the total from different denominators
 **Severity:** LOW (generated release document)
 **File:** harness `tools/generate_validation_md.py`; product `VALIDATION.md:82-88`

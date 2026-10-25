@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-25 — TH-084: required-field SEED locks passed on JSON `null` and `[]`
+
+**Severity:** HIGH (assertions that could not fail on the most likely field regression; the corpus had no such regression).
+**File:** `regression/checks.py` (`not_contains_match` via `_empty_aware_strings`); test `tests/test_required_field_locks.py`.
+**Discovered:** 2026-10-25, harness external audit round 1 (code A2-F4).
+**Fixed:** 2026-10-25 (declared corpus-semantics change).
+
+- **Root cause:** the required-field lock is `not_contains_match field=<f> pattern=^$`. A missing key read as `""` and failed the lock, but `null` stringified to `"None"` and `[]` produced no strings, so neither matched `^$` and the lock passed.
+- **Fix:** `not_contains_match` reads `null` and `[]` as the empty string, the same as a missing key. Only patterns that match the empty string change behaviour; `contains_match` / `count_matches` are untouched.
+- **Verification (measured before landing):** 38,431 `^$` locks in 22,506 tracked assertion files are governed by the change. Full-corpus `run_checks --all --era all` before/after: identical, 2,714,062 / 7 failed / 2 errors, non-passing set unchanged — **0 new failures**, so no null field exists today and no lock needed a reseed or a KH. Round-trip test (seed a lock from good detections; it passes on them and fails on empty, null, `[]` and a removed key) fails on the old code for null and `[]`, passes after.
+
 ## 2026-10-25 — TH-083: `run_checks` silently dropped an unreadable assertion file
 
 **Severity:** HIGH (silent assertion loss; no corpus file was affected).

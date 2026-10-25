@@ -101,6 +101,15 @@ def _field_strings(field_val):
     return [str(field_val)]
 
 
+def _empty_aware_strings(field_val):
+    """Like _field_strings, but null and [] read as the empty string, the same as a missing
+    key: a required-field lock (`not_contains_match pattern=^$`) must fail on a field that
+    regressed to null or to an empty list."""
+    if field_val is None or field_val == []:
+        return [""]
+    return _field_strings(field_val)
+
+
 def _countable(val):
     if val is None:
         return 0
@@ -247,7 +256,7 @@ def evaluate_assertion(assertion, data):
         pat = _compile(pattern)
         for item in val:
             if isinstance(item, dict):
-                for s in _field_strings(_item_field(item, field)):
+                for s in _empty_aware_strings(_item_field(item, field)):
                     if pat.search(s):
                         result["passed"] = False
                         result["actual"] = s
