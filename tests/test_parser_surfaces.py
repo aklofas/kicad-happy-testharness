@@ -25,17 +25,22 @@ BUILDERS = {
 
 
 def surface(parser):
-    # The parallel-jobs default is the host CPU count; keep the golden machine-independent.
+    # The parallel-jobs default is the host CPU count; mask it in the --jobs action only,
+    # so the golden is machine-independent without touching other values.
     jobs = str(utils.DEFAULT_JOBS)
 
-    def norm(v):
-        return v.replace(jobs, "<DEFAULT_JOBS>") if isinstance(v, str) else v
-
-    actions = [[a.option_strings, a.dest, norm(repr(a.default)), norm(a.help),
+    def row(a):
+        default, help_ = repr(a.default), a.help
+        if a.dest == "jobs" and a.default == utils.DEFAULT_JOBS:
+            default = "<DEFAULT_JOBS>"
+            help_ = help_.replace(jobs, "<DEFAULT_JOBS>")
+        return [a.option_strings, a.dest, default, help_,
                 getattr(a.type, "__name__", repr(a.type)),
                 list(a.choices) if a.choices is not None else None,
-                a.required, type(a).__name__] for a in parser._actions]
-    return {"description": parser.description, "actions": actions}
+                a.required, type(a).__name__,
+                repr(a.metavar), repr(a.nargs), repr(a.const)]
+
+    return {"description": parser.description, "actions": [row(a) for a in parser._actions]}
 
 
 def test_parser_surfaces_match_golden():
