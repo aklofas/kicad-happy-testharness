@@ -410,13 +410,15 @@ def generate_schematic_assertions(data, tolerance=0.10, include_empty=False):
     # Empty-detector assertions: detectors with 0 items stay at 0
     # Only for schematics with enough components to be meaningful
     if include_empty and total_comps >= 50:
-        # sa is keyed by full detector names; known detectors may be short
+        # sa is keyed by full detector names; the schema inventory lists full names too,
+        # the fallback list may hold short ones
         present_detectors = set(sa.keys())
+        prefixes = ("detect_", "validate_", "audit_", "analyze_")
         for det in _load_known_detectors():
             # Find the full name matching this short name
             full_name = det
-            if det not in present_detectors:
-                for prefix in ("detect_", "validate_", "audit_", "analyze_"):
+            if det not in present_detectors and not det.startswith(prefixes):
+                for prefix in prefixes:
                     candidate = f"{prefix}{det}"
                     if candidate in present_detectors:
                         full_name = candidate

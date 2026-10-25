@@ -52,3 +52,19 @@ def test_non_empty_patterns_unaffected_by_null():
     a = {"id": "N", "check": {"path": "findings", "op": "not_contains_match", "field": "ref",
                               "pattern": "^R5$"}}
     assert evaluate_assertion(a, {"findings": [{"ref": None}, {"ref": []}, {"ref": "R6"}]})["passed"]
+
+
+def test_include_empty_locks_use_full_detector_names(monkeypatch):
+    """--include-empty: an absent detector gets a max_count 0 lock on its real name, never
+    detect_<full name> (code A2-F3)."""
+    monkeypatch.setattr(seed, "_known_detectors_cache",
+                        ["detect_power_regulators", "audit_esd_protection", "led_drivers"])
+    data = {"statistics": {"total_components": 60}, "findings": [], "bom": []}
+    got = [a["check"]["detector_filter"] for a in
+           seed.generate_schematic_assertions(data, include_empty=True)
+           if a["check"].get("op") == "max_count"]
+    assert got == ["detect_power_regulators", "audit_esd_protection", "detect_led_drivers"]
+    lock = next(a for a in seed.generate_schematic_assertions(data, include_empty=True)
+                if a["check"].get("detector_filter") == "detect_power_regulators")
+    present = {"findings": [{"detector": "detect_power_regulators"}]}
+    assert not evaluate_assertion(copy.deepcopy(lock), present)["passed"]
