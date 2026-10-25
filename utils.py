@@ -23,7 +23,6 @@ from harnesslib.corpus import (  # noqa: F401
     NAME_MAX_BYTES, _NAME_HASH_LEN, _truncate_with_hash, filter_manifest_by_repo,
     project_key, project_prefix,
 )
-from harnesslib.profiles import PROFILES as _PROFILES
 
 HARNESS_DIR = Path(__file__).resolve().parent
 # KICAD_HAPPY_TESTHARNESS_DATA_DIR moves every corpus data path at once (checkouts,
@@ -39,7 +38,7 @@ MISC_CATEGORY = "Miscellaneous KiCad projects"
 
 # Timeout constants (seconds). ANALYZER_TIMEOUT is the standard profile's cap;
 # runners take an explicit --timeout and pass it down (TH-055).
-ANALYZER_TIMEOUT = _PROFILES["standard"].timeout_s
+ANALYZER_TIMEOUT = _batch.ANALYZER_TIMEOUT
 
 # Default parallelism — use all available CPUs for max throughput
 DEFAULT_JOBS = os.cpu_count() or 4
