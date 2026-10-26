@@ -5,6 +5,8 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
+Last updated: 2026-10-26 latest (3) — **TH-098 FIXED (local, unpushed):** product CI pin `f54f2cd462a` still exited 1 on GitHub's runner (skip guard: 3 unlisted tool-gated skips, pdftotext / ngspice). Listed in `tests/known_skips.json` as external-tool skips (decision: per-test entries, no reason-pattern exemption). Tiers with pdftotext / ngspice / kicad-cli hidden: 3,493 / 0 / 11 / 4, exit 0. The product now installs ngspice + poppler-utils in that job (`622d348`), so the pin is green without this. Next TH-099.
+
 Last updated: 2026-10-26 latest (2) — **TH-097 FIXED:** pin `bd551df5b41` was red on product CI (GitHub runner has no ngspice; `test_unqualified_run_exits_2_without_all` got exit 1 from the ngspice check). `run_spice.py` now validates the selection first; new env-independent test; tiers with ngspice / kicad-cli stripped from PATH 3,495 / 0 / 9 / 4. Next TH-098.
 
 Last updated: 2026-10-26 latest — **PUSHED: origin/v2.2-dev = `bd551df5b41` (hook 2,789 / 0 / 1 xf vs product_d2b9e72); harness branch now `v3.0.x-dev` (created at `bd551df5b41`, pushed, matches the product branch); `v2.2-dev` frozen at the same commit, old CI pins stay reachable.** LOG `[harness] 2026-10-26 — HARNESS BRANCH RENAMED FOR 3.0`.

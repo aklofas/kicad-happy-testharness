@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-26 — TH-098: the required-tier skip guard fails a run when an external tool (pdftotext, ngspice) is missing
+
+**Severity:** MEDIUM (product CI harness-smoke exited 1 at pin `f54f2cd462a` with every test passing)
+**File:** `conftest.py` (`pytest_runtest_makereport` / `pytest_sessionfinish`, the unlisted-skip guard); `tests/known_skips.json`
+**Discovered:** 2026-10-26, by the main-repo agent on GitHub's runner (product v3.0.x-dev `022361b`): three tool-gated skips were not in the allowlist. The TH-097 sweep (PATH stripped of ngspice / kicad-cli) missed it because its exit code was not checked — the guard fails the session after the summary line. **Fixed:** harness, same day.
+
+- **Root cause:** `tests/contract/test_deep_review_gate.py::test_datasheet_quote_check`, `tests/test_kh384_385_gate.py::test_kh385_elided_quote_passes_fabricated_quote_quarantines_with_nearest_match` (pdftotext) and `tests/contract/test_kh345_spice_text_flag.py::test_text_output_is_not_json` (ngspice) skip when their tool is absent, and the guard treats every unlisted skip in `unit` / `offline_contract` as a failure.
+- **Fix (decision):** list the three in `tests/known_skips.json` with reason "external tool: … not installed", rather than let the guard accept skips by reason text: the guard exists to catch quiet skips, and a reason-pattern exemption would pass any test that wrongly reports a missing tool. A new tool-gated test must be listed the same way. The product also installs ngspice + poppler-utils in that CI job (`622d348`), so on CI the tests run.
+- **Verification:** `unit or offline_contract` vs product_d2b9e72 with pdftotext, ngspice, kicad-cli, ltspice and xyce removed from PATH: 3,493 passed / 11 skipped / 4 xfailed, **exit 0** (before: exit 1, "unlisted skips in required tiers (3)").
+
 ## 2026-10-26 — TH-097: `run/run_spice.py` checks for ngspice before validating the selection, so `test_unqualified_run_exits_2_without_all` fails on runners without ngspice
 
 **Severity:** MEDIUM (product CI harness-smoke red at pin `bd551df5b41`: product v3.0.x-dev run 40414345709, 1 failed / 3,491 passed)
