@@ -229,7 +229,10 @@ def main():
             print(f"Error: {extractor} not found", file=sys.stderr)
             sys.exit(1)
 
-    # Check ngspice availability for early feedback
+    # Find schematic outputs (usage errors exit 2 here, whatever the environment)
+    repo_list, inputs = expand_selection(args, find_schematic_outputs)
+
+    # Check ngspice before any output is retired or written
     import shutil
     ngspice_path = os.environ.get("NGSPICE_PATH") or shutil.which("ngspice")
     if not ngspice_path:
@@ -237,9 +240,6 @@ def main():
         print("  Install: apt install ngspice  (or brew install ngspice)", file=sys.stderr)
         print("  Or set NGSPICE_PATH env var.", file=sys.stderr)
         sys.exit(1)
-
-    # Find schematic outputs
-    repo_list, inputs = expand_selection(args, find_schematic_outputs)
 
     # Output directory; a SPICE output whose schematic output is gone is retired
     if args.with_parasitics:

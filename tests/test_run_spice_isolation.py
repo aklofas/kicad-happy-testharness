@@ -144,3 +144,14 @@ def test_failed_extraction_never_reuses_or_simulates(tmp_path):
     assert rc == 1 and summary is None and extracted is False
     assert not stale.exists() and not out_json.exists()
     assert out_json.with_suffix(".err").read_text().startswith("parasitics_failed")
+
+
+def test_usage_error_does_not_depend_on_ngspice(tmp_path):
+    """A missing selection is a usage error (exit 2) even where ngspice is not installed;
+    the simulator check ran first and exited 1 on CI runners without ngspice."""
+    env = {k: v for k, v in os.environ.items() if k != "NGSPICE_PATH"}
+    env.update(KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(tmp_path), PATH=str(tmp_path / "empty-bin"))
+    r = subprocess.run([sys.executable, str(ROOT / "run" / "run_spice.py")],
+                       capture_output=True, text=True, env=env, timeout=60)
+    assert r.returncode == 2, (r.returncode, r.stdout, r.stderr)
+    assert "ngspice not found" not in r.stderr

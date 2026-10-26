@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-26 — TH-097: `run/run_spice.py` checks for ngspice before validating the selection, so `test_unqualified_run_exits_2_without_all` fails on runners without ngspice
+
+**Severity:** MEDIUM (product CI harness-smoke red at pin `bd551df5b41`: product v3.0.x-dev run 40414345709, 1 failed / 3,491 passed)
+**File:** `run/run_spice.py` (`main`: the ngspice check at :236 ran before `expand_selection`)
+**Discovered:** 2026-10-26, by the main-repo agent on GitHub's runner (no ngspice); the ordering dates from the wave 10 runner refactor (`9acba65938f`). Locally green only because ngspice is installed. **Fixed:** harness, same day.
+
+- **Root cause:** a run with no selection is a usage error that `expand_selection` reports with exit 2, but the simulator check ran first and exited 1 when ngspice was missing, so the usage error's exit code depended on the environment.
+- **Fix:** `expand_selection` runs first; the ngspice check follows it, still before `retire_orphaned_outputs`, so a missing simulator writes nothing. New `test_usage_error_does_not_depend_on_ngspice` runs the runner with an empty PATH and no `NGSPICE_PATH`.
+- **Verification:** the new test is red without the fix and green with it; `unit or offline_contract` vs product_d2b9e72 with `ngspice`, `kicad-cli`, `ltspice` and `xyce` removed from PATH: 3,495 passed / 0 failed / 9 skipped / 4 xfailed (the extra skip is `tests/contract/test_kh345_spice_text_flag.py`, a deliberate "ngspice not installed" skip; no test needs kicad-cli in these tiers).
+
 ## 2026-10-26 — TH-095: `run_netlist_oracle.py` with a relative `--kicad-happy` reports every board as ERROR and still exits 0
 
 **Severity:** LOW

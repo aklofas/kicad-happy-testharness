@@ -5,6 +5,8 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
+Last updated: 2026-10-26 latest (2) — **TH-097 FIXED:** pin `bd551df5b41` was red on product CI (GitHub runner has no ngspice; `test_unqualified_run_exits_2_without_all` got exit 1 from the ngspice check). `run_spice.py` now validates the selection first; new env-independent test; tiers with ngspice / kicad-cli stripped from PATH 3,495 / 0 / 9 / 4. Next TH-098.
+
 Last updated: 2026-10-26 latest — **PUSHED: origin/v2.2-dev = `bd551df5b41` (hook 2,789 / 0 / 1 xf vs product_d2b9e72); harness branch now `v3.0.x-dev` (created at `bd551df5b41`, pushed, matches the product branch); `v2.2-dev` frozen at the same commit, old CI pins stay reachable.** LOG `[harness] 2026-10-26 — HARNESS BRANCH RENAMED FOR 3.0`.
 
 Last updated: 2026-10-26 later — **WAVE 3 ACCEPTED WITH FILINGS at `d2b9e72` (main repo).** Dispositions: KH-675 + new KH-678 (`/HVIL/HVIL_N` promoted to power by a same-named `#PWR` net elsewhere) → Wave 4 rail identity (group 1); KH-676 → Wave 4 SPICE (group 10); KH-677 open for KiCad-5 triage; KH-404 open as amended; PM-002 +7,046 accepted as correct courtyard geometry (part is the bounding-rectangle measurement, audit 06 kf/A11-F2, Wave 3b group C10). Next KH-679 / TH-097. Pruned on the user's OK: `results/v30x_w2_proto`, `results/v30x_w1_gate`, Wave 2 snap trees (records kept). NEXT: Wave 3b (KiCad conformance, base `d2b9e72`) — expect harness test changes (test_kh359_kh360_netmap, test_bus_resolver, test_kh362_discovery, contract/test_xv002_value_footprint, ...) and KH-664 closed as conformant.
