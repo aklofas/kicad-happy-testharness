@@ -234,7 +234,8 @@ def main() -> int:
     parser.add_argument("--debug-unresolved", action="store_true", help="print full analyzer_only/oracle_only net-name lists")
     args = parser.parse_args()
 
-    kicad_happy_dir = Path(args.kicad_happy) if args.kicad_happy else resolve_kicad_happy_dir()
+    # absolute: the analyzer child runs with a private temporary cwd
+    kicad_happy_dir = (Path(args.kicad_happy) if args.kicad_happy else resolve_kicad_happy_dir()).resolve()
 
     if not kicad_happy_dir.exists():
         print(f"Error: kicad-happy dir not found: {kicad_happy_dir}", file=sys.stderr)

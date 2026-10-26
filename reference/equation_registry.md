@@ -2,20 +2,20 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-25T05:35:06.173716+00:00
+**Last scan:** 2026-10-26T21:50:47.180431+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 105 |
-| Verified | 105 |
+| Total equations | 104 |
+| Verified | 85 |
 | Unverified | 0 |
-| Stale | 0 |
+| Stale | 19 |
 | Critical impact | 11 |
 | High impact | 34 |
 | Medium impact | 38 |
-| Low impact | 22 |
+| Low impact | 21 |
 
 ## skills/emc/scripts/emc_formulas.py
 
@@ -48,7 +48,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-091 | `trace_inductance_h` | L = Z₀/v_phase × length (Wheeler microstrip inductance) | parasitic | high | **verified** |
 | EQ-092 | `distributed_pdn_impedance_sweep` | Z_IC = Z_local \|\| (Z_reg + Z_trace) (distributed PDN impedance) | impedance | high | **verified** |
 | EQ-105 | `estimate_inductor_h_field` | H = (m · sin θ) / (4π · r³), with m = N · I · A (magnetic moment) | unknown | medium | **verified** |
-| EQ-108 | `None` | R_trace = rho * L / (W * T) — DC trace resistance | emc_radiation | critical | **verified** |
+| EQ-108 | `None` | R_trace = rho * L / (W * T) — DC trace resistance | emc_radiation | critical | **stale** |
 
 ## skills/emc/scripts/emc_rules.py
 
@@ -71,7 +71,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-094 | `estimate_switching_emissions` | V_n = V_peak × 2/(nπ) × sin(nπD) (trapezoidal harmonic envelope) | emc_radiation | critical | **verified** |
 | EQ-095 | `check_switching_node_area` | A_track = Σ(width_mm × length_mm) (switching node copper area) | emc_radiation | medium | **verified** |
 | EQ-096 | `check_pdn_distributed` | I_reflected = P_downstream / V_upstream (reflected transient current) | impedance | medium | **verified** |
-| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **verified** |
+| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **stale** |
 
 ## skills/kicad/scripts/kicad_core/passives.py
 
@@ -84,8 +84,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-068 | `parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **verified** |
-| EQ-107 | `snap_to_e_series` | Log-decade snapping — normalize v into [1, 10) via | unknown | medium | **verified** |
+| EQ-068 | `parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **stale** |
+| EQ-107 | `snap_to_e_series` | Log-decade snapping — normalize v into [1, 10) via | unknown | medium | **stale** |
 
 ## skills/kicad/scripts/pcb/assembly.py
 
@@ -103,8 +103,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-055 | `analyze_thermal_vias` | density = count / area_cm² (thermal via density) | thermal | medium | **verified** |
 | EQ-058 | `analyze_vias` | area = π(d/2)² (via annular ring) | geometry | low | **verified** |
 | EQ-102 | `_nearest_zone_copper_distance` | d = √((px-zx)² + (py-zy)²) for point-to-zone-pour proximity. | geometry | low | **verified** |
-| EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from via center to any Edge.Cuts line segment. | geometry | low | **verified** |
-| EQ-104 | `_pt_seg_dist` | Helper — same 2D point-to-segment distance as EQ-098. | geometry | low | **verified** |
+| EQ-103 | `analyze_board_edge_via_clearance` | d = min distance from the via centre to any Edge.Cuts edge (lines, rects, | geometry | low | **stale** |
 
 ## skills/kicad/scripts/pcb/dfm.py
 
@@ -119,7 +118,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-044 | `_arc_length_3pt` | arc = R × θ from circumcircle (3-point arc length) | geometry | low | **verified** |
 | EQ-047 | `_norm` | Angle normalization to [0, 2π) | geometry | low | **verified** |
 | EQ-098 | `_dist_point_to_segment` | d = min(\|\|P - (A + t(B-A))\|\|) with t clamped to [0,1] | geometry | low | **verified** |
-| EQ-099 | `None` | Perimeter sample at (x + r·cos(iπ/4), y + r·sin(iπ/4)) for i=0..7 | geometry | low | **verified** |
+| EQ-099 | `None` | Perimeter sample at (x + r·cos(iπ/4), y + r·sin(iπ/4)) for i=0..7 | geometry | low | **stale** |
 
 ## skills/kicad/scripts/pcb/presentation.py
 
@@ -131,8 +130,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **verified** |
-| EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **verified** |
+| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **stale** |
+| EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **stale** |
 
 ## skills/kicad/scripts/pcb/routing.py
 
@@ -166,7 +165,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 |---|---|---|---|---|---|
 | EQ-061 | `_cap_impedance` | \|Z\| = √(ESR²+(2πfL-1/(2πfC))²) at given frequency | filter_design | high | **verified** |
 | EQ-062 | `analyze_pdn_impedance` | \|Z\| = √(ESR²+(ωL-1/ωC)²) swept over frequency | impedance | high | **verified** |
-| EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **verified** |
+| EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **stale** |
 
 ## skills/kicad/scripts/signal_detectors.py
 
@@ -176,8 +175,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-021 | `detect_lc_filters` | f₀ = 1/(2π√(LC)) (LC resonant frequency) | filter_design | high | **verified** |
 | EQ-022 | `detect_lc_filters` | Z₀ = √(L/C) (LC characteristic impedance) | filter_design | high | **verified** |
 | EQ-069 | `detect_decoupling` | f_SRF = 1/(2π√(ESL×C)) (decoupling SRF) | filter_design | high | **verified** |
-| EQ-070 | `detect_design_observations` | Threshold comparisons for design quality metrics | filter_design | high | **verified** |
-| EQ-071 | `detect_opamp_circuits` | G = 1+Rf/Ri or -Rf/Ri; G_dB = 20log₁₀\|G\| (opamp gain) | opamp | medium | **verified** |
+| EQ-070 | `detect_design_observations` | Threshold comparisons for design quality metrics | filter_design | high | **stale** |
+| EQ-071 | `detect_opamp_circuits` | G = 1+Rf/Ri or -Rf/Ri; G_dB = 20log₁₀\|G\| (opamp gain) | opamp | medium | **stale** |
 
 ## skills/spice/scripts/extract_parasitics.py
 
@@ -193,8 +192,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-073 | `generate_comparator_model` | V_out = Aol × (V+ - V-) clamped (comparator model) | spice_model | medium | **verified** |
-| EQ-074 | `generate_opamp_model` | GBW = Aol × f_pole (opamp behavioral SPICE model) | spice_model | medium | **verified** |
+| EQ-073 | `generate_comparator_model` | V_out = Aol × (V+ - V-) clamped (comparator model) | spice_model | medium | **stale** |
+| EQ-074 | `generate_opamp_model` | GBW = Aol × f_pole (opamp behavioral SPICE model) | spice_model | medium | **stale** |
 
 ## skills/spice/scripts/spice_models.py
 
@@ -215,9 +214,9 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
 | EQ-079 | `_get_parasitic_lines` | R_trace + L_via parasitic element injection | spice_model | medium | **verified** |
-| EQ-080 | `generate_crystal_circuit` | C_L = 1/(1/C₁+1/C₂) + C_stray (crystal load cap) | spice_model | medium | **verified** |
-| EQ-081 | `generate_decoupling` | \|Z\| at target freq from ESR+ESL cap model | spice_model | medium | **verified** |
-| EQ-082 | `generate_inrush` | I_peak = V/R at t=0 (startup inrush current) | spice_model | medium | **verified** |
-| EQ-083 | `generate_lc_filter` | f₀ = 1/(2π√(LC)) testbench (validates EQ-021) | spice_model | medium | **verified** |
-| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **verified** |
-| EQ-085 | `generate_snubber` | f_damp = 1/(2πRC) (snubber damping frequency) | spice_model | medium | **verified** |
+| EQ-080 | `generate_crystal_circuit` | C_L = 1/(1/C₁+1/C₂) + C_stray (crystal load cap) | spice_model | medium | **stale** |
+| EQ-081 | `generate_decoupling` | \|Z\| at target freq from ESR+ESL cap model | spice_model | medium | **stale** |
+| EQ-082 | `generate_inrush` | I_peak = V/R at t=0 (startup inrush current) | spice_model | medium | **stale** |
+| EQ-083 | `generate_lc_filter` | f₀ = 1/(2π√(LC)) testbench (validates EQ-021) | spice_model | medium | **stale** |
+| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **stale** |
+| EQ-085 | `generate_snubber` | f_damp = 1/(2πRC) (snubber damping frequency) | spice_model | medium | **stale** |

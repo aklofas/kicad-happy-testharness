@@ -137,8 +137,8 @@ def test_net_id_map_reset_before_footprint_extraction(tmp_path):
     captured = []
     real_extract = pcb_reader.extract_footprints
 
-    def spy(root):
-        fps = real_extract(root)
+    def spy(root, *args, **kwargs):
+        fps = real_extract(root, *args, **kwargs)
         captured.append(fps)
         return fps
 

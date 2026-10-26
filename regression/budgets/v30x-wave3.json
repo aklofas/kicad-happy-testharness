@@ -1,0 +1,39 @@
+{
+  "budget_id": "v30x-wave3",
+  "baseline_sha": "004bba5",
+  "candidate_sha": "d2b9e72",
+  "profile": "standard",
+  "normalization_policy": "volatile-leaves-v1",
+  "classes": [
+    {
+      "id": "L-legacy-schematic",
+      "analyzer": "schematic",
+      "path_glob": "/**",
+      "predicate": "v30x_wave3:legacy",
+      "evidence": "L1-L4: KiCad-5 .sch units regroup \u2014 KH-511 pin transform + snap (L1), KH-512/515 hidden power pins + one body style (L2), KH-513 hierarchy: sheet pins, namespaced HLabels, AR references, recursion diagnostic (L3), KH-662 sym-lib-table (L4); every block may move except the header blocks (analyzer_type/schema_version/kicad_version/file_version/title_block/compat); derived blocks recomputed both sides. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave3/handoff-wave3.md"
+    },
+    {
+      "id": "M-modern-schematic",
+      "analyzer": "schematic",
+      "path_glob": "/**",
+      "predicate": "v30x_wave3:modern_schematic",
+      "evidence": "M1-M8 on .kicad_sch units, triggers read off both outputs: M1 KH-510 lone quoted bracket in the source; M2 KH-515 De Morgan duplicate pin slots; M3 KH-668 LB-001 changed, count not grown; M4 KH-514/670 buses; M5 KH-516/517 parsed_value; M6 KH-518 names the two products' is_power_net_name classify differently (stats rails, #PWR/#FLG context rails, none); M7 KH-519 sign flips and negative-rail consumers; M8 KH-560 CoordinateNearMiss or point_count only. Connectivity triggers (M1/M2/M4/M8) open every non-header block; the others open only their blocks and findings. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave3/handoff-wave3.md"
+    },
+    {
+      "id": "P-pcb",
+      "analyzer": "pcb",
+      "path_glob": "/**",
+      "predicate": "v30x_wave3:pcb",
+      "evidence": "P1 KH-575 KiCad-5 outline arcs (board size, DFM, density, design_intent signals, PM-002/BV-001), P2 KH-575 courtyards (footprints courtyard/courtyard_poly, PM-001/PM-002, via fanout, malformed-courtyard diagnostic), P3 KH-576 silkscreen (no findings), P4 BV-001, P5 KH-574/364 connectivity_graph (full-chain), M1 KH-510 tokenizer, M6 KH-518 power-net blocks (power_net_routing/resolution, layer_transitions, CC-DET/CC-002). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave3/handoff-wave3.md"
+    },
+    {
+      "id": "D-downstream",
+      "path_glob": "/**",
+      "predicate": "v30x_wave3:downstream",
+      "evidence": "Chained emc/thermal/cross_analysis units whose upstream schematic or pcb unit has strict deltas, claimed only when that upstream unit is itself explained by L/M/P (EMC PDN recommendation text M5, EE-001/BE-002 P1, cross PS-002/RP-002 P5, ...). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-25-v3.0.x-wave3/handoff-wave3.md"
+    }
+  ],
+  "unexplained_deltas_allowed": 0,
+  "unexplained_missing_units_allowed": 0,
+  "relock": false
+}

@@ -67,3 +67,14 @@ def test_dropped_real_pin_on_a_multi_pin_net_fails_the_oracle():
     assert not r["split"] and not r["merged"]
     assert r["missing_pins"] == ["R1.1"] and r["pass"] is False
     assert compare(oracle, oracle)["pass"] is True
+
+
+def test_relative_kicad_happy_dir_is_resolved_before_the_private_cwd(tmp_path, monkeypatch):
+    """A relative --kicad-happy was joined under the child's temporary cwd, so every board
+    reported ERROR "can't open file" while the run still exited 0."""
+    kh, seen = _setup(tmp_path, monkeypatch, RECORDER)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(o, "_verify_golden_paths", lambda: None)
+    monkeypatch.setattr(sys, "argv", ["run_netlist_oracle.py", "--board", "b", "--kicad-happy", "kh", "--strict", "--json"])
+    assert o.main() == 0
+    assert seen["seed"] == "0"
