@@ -11,6 +11,176 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-26 — TH-095: `run_netlist_oracle.py` with a relative `--kicad-happy` reports every board as ERROR and still exits 0
+
+**Severity:** LOW
+**File:** `regression/run_netlist_oracle.py` (`main`)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 gate (golden-board oracle run against both product clones) **Fixed:** harness, same day.
+
+- **Root cause:** `main` passed the product path through unresolved; `run_board` starts `analyze_schematic.py` with `cwd` = a private temporary directory, so a relative `results/v3_baseline/product_<sha>` resolved under `/tmp/netlist-oracle-*` and every board reported "can't open file" — exit 0 without `--strict`.
+- **Fix:** `main` resolves the product path (`--kicad-happy` or `$KICAD_HAPPY_DIR`) to absolute before the boards run.
+- **Verification:** new `tests/test_netlist_oracle_children.py::test_relative_kicad_happy_dir_is_resolved_before_the_private_cwd` (red without the fix, green with it); the live run with the relative path gives incrementer PASS 80 / 80.
+
+## 2026-10-26 — KH-510: `_tokenize` gives a quoted `")"` / `"("` the same token as punctuation, so valid files with a lone bracket in a string swallow the following symbols
+
+**Severity:** HIGH (valid input; every parser consumer, schematic and PCB)
+**File:** `kicad_core/sexp.py:77` (`_tokenize`, quoted string appended as a bare `str`); compared as punctuation at `:94` / `:97` (`parse`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F1) **Fixed:** product v3.0.x-dev `e79b849` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** `parse('(kicad_sch (text ")") (symbol (lib_id "Device:R")))')` → `['kicad_sch', ['text']]`. On `ccadic/TI92-revive/ti92revive/keyboard.kicad_sch` (keycap values `(property "Value" "(")` at :1461 and `")"` at :1583) the file has 86 placed `(symbol (lib_id` blocks but parsing yields 78 top-level `symbol` lists; the ones in between are nested into a bogus list. About 26 corpus `.kicad_sch` / `.kicad_pcb` files hold a lone quoted `"("` / `")"` (a few false hits on escaped quotes). Distinct from KH-482, which is malformed input.
+- **Fix:** Punctuation tokens are sentinels (`_LPAREN` / `_RPAREN`), so a quoted `"("` / `")"` stays a plain string; the parser's list-of-str output is unchanged. Corpus (class M1): schematic 2 units / 1 repo, pcb 13 units / 8 repos carry a lone quoted bracket and moved.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-511: legacy `.sch` pin positions invert Y twice under a raw TRANSFORM matrix and skip matrices starting with `-`; `_snap_pins_to_wires` then moves correctly placed pins to the nearest wire end
+
+**Severity:** HIGH (default path, every legacy KiCad 5 schematic)
+**File:** `schematic/reader.py:205-228` (`compute_pin_positions`: raw-matrix branch `rpy = c*px + d*py` at :208, then `abs_y = cy - rpy` at :228); `schematic/legacy_reader.py:664` (`_parse_legacy_single_sheet`, `cl[0].isdigit()` drops matrix lines like `\t-1 0 0 1`); `schematic/legacy_reader.py:465-541` (`_snap_pins_to_wires`, sole caller `schematic/pipeline.py:970`, passes every component)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R2-F1, kc/R2-F2) **Fixed:** product v3.0.x-dev `562706a, 81a13b7, fd17ee3` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** KiCad legacy applies TRANSFORM as pos + T·p (default `1 0 0 -1` already flips Y); the code flips again. Share of pins landing on a wire endpoint before snapping, current code vs corrected convention: ltc3331.sch 79/110 vs 109/110; dtnking STM32F401CCT6.sch 99/150 vs 141/150 (74 matrix lines, several starting `-1`); clock.sch 32/68 vs 38/68; TemperatureHumidityEPD 60/66 vs 64/66. The snap pass hides much of this: its docstring (:468-471) says it exists for built-in fallback offsets, but it has no `_pin_source` guard and skips only power/flag types (:492), so any pin not on a wire endpoint (on an NC marker, a label, or another pin) is moved to the nearest endpoint within 12 mm in the pin direction (:528-539).
+- **Fix:** TRANSFORM applied once as KiCad does, matrix lines starting with `-` read, angle / mirror recomputed from the matrix; `_snap_pins_to_wires` moves only built-in fallback pins onto free wire ends (`_pin_source` gains `builtin`, `pin_source_coverage.builtin_fallback`). Corpus (class L1): all 10,845 legacy schematic units / 2,209 repos moved (label L); pin positions or `_pin_source` moved on 9,303, net grouping on 9,064. Against the KiCad-5 netlists shipped beside 2,233 legacy roots whose ref set matches: clean boards 100 -> 1,855, split rows 76,416 -> 2,516, merged rows 55,585 -> 571; 6 boards score worse (KH-677).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-512: the legacy library parser drops the pin visibility and De Morgan `convert` fields — hidden power pins never join their rail and both body styles merge
+
+**Severity:** HIGH (default path, legacy schematics with hidden power pins or De Morgan symbols)
+**File:** `schematic/legacy_reader.py:266-289` (`_parse_legacy_lib`: pin dicts carry no `hidden` key, `parts[12]` (shape/visibility, `N` = invisible) is never read, `parts[10]` (convert) is discarded); consumer `schematic/connectivity.py:529-540` (`build_net_map` legacy implicit-power pass, which therefore never fires)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R2-F6, kc/R2-F3 legacy half) **Fixed:** product v3.0.x-dev `1c0e975, 15d23b4` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** the corpus `*-cache.lib` files hold 6,756 hidden VCC/GND/VDD/VSS `power_in` pins (`W N`); the implicit-power pass, whose comment names exactly this case, joins none of them to their rail. A De Morgan symbol's two body styles both contribute pins, giving duplicate pin entries per unit (the modern twin is KH-515).
+- **Fix:** The legacy library parser reads pin visibility (`hidden: true`) and the `convert` field; one body style per placed symbol; legacy hidden power pins join their rail. Corpus (class L2): 1,424 legacy units gain `hidden` pins or lose body-2 duplicates (inside label L).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-513: legacy `$Sheet` blocks drop their F2+ sheet-pin records and child HLabels are keyed by bare name — legacy hierarchies never join parent to child, and same-named HLabels in different children short
+
+**Severity:** HIGH (default path, every hierarchical legacy schematic)
+**File:** `schematic/legacy_reader.py:707-720`, `:775-783` (`_parse_legacy_single_sheet`, the `$Sheet` loop keeps only F1 = the file name); `schematic/connectivity.py:489-491` (`build_net_map`, HLabels into `label_keys` under the bare name with no namespace; the legacy caller `schematic/pipeline.py:885-896` adds only `_sheet`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R2-F5) **Fixed:** product v3.0.x-dev `042d04f, 0dbd6ec` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** a legacy parent's sheet pins produce no port point, so a child's `HLabel VOUT` never reaches the parent net; two children each with an `HLabel EN` are merged into one net.
+- **Fix:** Legacy `$Sheet` F2+ records become sheet pins, child HLabels are namespaced per instance, repeated sheets take per-instance `AR` references (ruling 6), and a recursive sheet reference stops with a `diagnostics` record. Corpus (class L3): 184 legacy units change `sheets_parsed` / `sheet_files` / component count (+8,317 components net over all legacy units); legacy LB-001 1,618 -> 6,202 as hierarchical ports now join (inside label L).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-514: same-name global bus labels never union their members — `global_label` on a bus falls to role `local` in the bus pass
+
+**Severity:** HIGH (default path, designs that carry a bus across sheets on global labels)
+**File:** `schematic/connectivity.py:456-463`, `:473-474` (`build_net_map`: a `global_label` gets role `"local"` and goes into `bus_label_idx`, skipping the global branch at :487); `:607-622` (`bus_slot`: members joined only via `label_keys.get((member, s))` / `member_rep[(s, member)]`, per sheet)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R2-F4) **Fixed:** product v3.0.x-dev `756339b, 9a5c90c, 5f6a734` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** a `D[0..7]` global bus label on two sheets leaves `D0`…`D7` as separate per-sheet nets; KiCad connects bus members across same-name global bus labels. No global-scope member union exists anywhere in the bus pass (:485-744).
+- **Fix:** Global bus labels union their members across sheets (variant C); bus-entry tap lookup fixed (KH-670). Corpus (class M4): M4 (with KH-670): 753 modern units / 186 repos (bus_topology moved, or nets moved on a design with a global bus label).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-515: modern sub-symbol names `Name_<unit>_<bodystyle>` keep only the unit — De Morgan symbols get both body styles' pins
+
+**Severity:** HIGH (default path, modern schematics with De Morgan symbols)
+**File:** `schematic/reader.py:98-104` (`_extract_pins_from_node`, :100 keeps the unit only), `:187-195` (`compute_pin_positions`); no `convert` / `body_style` read anywhere in `schematic/` or `kicad_core/`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R2-F3 modern half) **Fixed:** product v3.0.x-dev `1c0e975, 15d23b4` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** `VCAR.kicad_sch` `4xxx:4001` units each carry duplicate pins 1/2/3, 4/5/6 … (six entries for three pins); the alternate-body pins sit at other coordinates and can join wrong nets. Legacy twin: KH-512.
+- **Fix:** Modern sub-symbol names keep the body style; only the placed symbol's body style contributes pins. Corpus (class M2): M2: 1,801 modern units / 375 repos; 56,346 duplicate (component, pin) net slots removed.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-516: `parse_value` rescales explicit-farad capacitor values as legacy pF/µF — `1F` → 1e-12, `120F` supercaps mis-scaled
+
+**Severity:** HIGH (default path, every schematic with a farad-unit value)
+**File:** `kicad_core/values.py:61` (`parse_value`: the unit strip loses the explicit `F`) → `:104-112` (legacy pF/µF rescale); docstring `:36-37` says only bare integers are rescaled
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F2) **Fixed:** product v3.0.x-dev `6ad8fee, af31634` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** with `component_type="capacitor"`: `1F` → 1e-12, `0.1F` → 1e-7, `1e-6F` → 1e-12, `1 F` → 1e-12, `0.47F 5.5V` → 4.7e-7. The corpus has `120F` ×40, `1F` ×11, `40F` ×4, `0.3F`, `0.10F`, `1.5F`, `2.5F`, `20F`, `50F` (about 80 values); each one is off by 1e-12 or 1e-6 and feeds `parsed_values` → RC / derating / power math.
+- **Fix:** An explicit (upper-case) `F` and a bare exponent are SI farads (ruling 8); only bare integers keep the legacy pF/µF rescale. Corpus (class M5): M5 (with KH-517): 29 modern units / 16 repos, 98 component `parsed_value` changes; EMC PDN recommendation text follows (downstream class D).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-517: `snap_to_e_series` uses linear distance within the decade and the table has no 10.0 — values just under a decade snap down by up to 17 %
+
+**Severity:** HIGH (what_if `--suggest-fixes` E-series suggestions and EMC cap recommendations)
+**File:** `kicad_core/values.py:197-201` (`snap_to_e_series`; the comment at :190-196 says log-scale nearest neighbour); consumers `what_if.py:832`, `skills/emc/scripts/emc_formulas.py:574` (`round_to_e12`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F5) **Fixed:** product v3.0.x-dev `6ad8fee, af31634` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** `snap_to_e_series(9900,'E12')` → (8200, −17.17 %) where 10 k is nearer; `(9.6,'E24')` → 9.1 (10 is nearer); `(9.9,'E96')` → 9.76. The EMC skill bundle has the sibling note `round_to_e12(9.9 nF)` → 8.2 nF.
+- **Fix:** `snap_to_e_series` picks the nearest value by log distance with the next decade's first value as a candidate. Corpus (class M5): M5 (with KH-516): 29 modern units / 16 repos, 98 `parsed_value` changes.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-518: `is_power_net_name` treats `VCC_EN`, `5V_EN`, `VDD_PG`, `3V3_PG` as power rails — the control-suffix veto runs only on the no-underscore branch
+
+**Severity:** HIGH (default path, rail classification corpus-wide)
+**File:** `kicad_core/netnames.py:114` (`5V_EN`), `:119-126` (first-segment list) in `is_power_net_name`; the `_VOLTAGE_SIGNAL_SUFFIXES` veto (:55) is applied only at :105; consumer `validation_detectors.py:270` (`validate_pullups` skips power nets before checking the pin)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F3) **Fixed:** product v3.0.x-dev `8ea2d18, 505e2c5` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** `VCC_EN`, `VBUS_DET`, `5V_EN`, `VDD_PG`, `VIN_EN`, `3V3_PG` → True; `5VEN` → False. PU-001 then never checks an open-drain PG / EN net named this way (it also needs extraction facts, :266, which narrows reach); rail statistics and the power tree count the control nets as rails.
+- **Fix:** A rail name followed by a control suffix after an underscore (`_RAIL_SIGNAL_SUFFIXES`: EN, PG, PGOOD, SNS, MON, CTRL, SHDN, RST, ...) is a signal; a configured power rail keeps precedence under a sheet path (the leaf name is matched against the rail set). Corpus (class M6): M6: schematic 735 units / 263 repos (1,396 net / rail names classified differently by the two products, demotions and sheet-path promotions), pcb 466 units / 273 repos (power-net blocks, layer_transitions, CC-DET / CC-002).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-519: `parse_voltage_from_net_name` drops the sign — `-5V`, `NEG5V`, `-12V` parse as +5 / +12 V, and an unstripped sheet path is read as the voltage
+
+**Severity:** MEDIUM (wrong polarity in rail facts; magnitude-based checks unaffected)
+**File:** `kicad_core/netnames.py:14-20` (`parse_voltage_from_net_name`); 21 callers, including `schematic/net_analysis.py:369` (`_rails_voltage_compatible`) and `schematic/bom_stats.py:95`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F4) **Fixed:** product v3.0.x-dev `3d51779, 589083e` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** `-5V` → 5.0, `NEG5V` → 5.0, `-12V` → 12.0, `/5V_sheet/VCC` → 5.0. `statistics.power_rails[].voltage` shows the wrong polarity, and a ±5 V pair counts as voltage-compatible. `bom_stats.py:94` strips the sheet path first, so the path sub-case does not reach `statistics.power_rails`, but it reaches the other callers. Feeds KH-530 and KH-532's negative-rail cases.
+- **Fix:** `parse_voltage_from_net_name` returns a signed value (leading `-` / `NEG`); its callers take the magnitude or skip negative rails where the check is about a positive supply. Corpus (class M7): M7: 1,187 modern units / 277 repos, 2,591 rail sign flips; 21 more units where a negative rail's consumers moved (KH-675 is the pre-existing bad-estimate case this exposes).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-560: schematic connectivity quantizes keys to 0.01 mm and joins points within 0.05 mm of a segment — off-lattice points can join wrongly or straddle a bucket and split
+
+**Severity:** MEDIUM (realistic but uncommon; `net-tracing.md:50` documents exact coordinates)
+**File:** `schematic/connectivity.py:322-323` (`build_net_map` → `key`), `:391-407` (`point_on_segment`, tol 0.05)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R2-F7) **Fixed:** product v3.0.x-dev `076e56c, 9a69add` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** on-grid drawings never hit it (computed pin positions are rounded to 4 dp, `schematic/reader.py:227-228`); a point off the 0.01 mm lattice by less than its pitch can merge with a neighbour, and two points 0.002 mm apart can fall into different buckets and stay unconnected.
+- **Fix:** Schematic connectivity keys are exact integer coordinates (100 nm IU, `kicad_core/coords.py`); near misses become `CoordinateNearMiss` diagnostics instead of joins (ruling 7); `COORD_EPSILON` and EQ-104 retired. Corpus (class M8): M8: 24 units / 15 repos with 114 new `CoordinateNearMiss` diagnostics; 130 units / 56 repos where only `point_count` moved.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-575: legacy KiCad-5 `gr_arc` outlines are read with the wrong endpoints (zero-height bbox), and circular courtyards and curved board edges are dropped from geometry
+
+**Severity:** HIGH (default path; 2,037 corpus boards carry KiCad-5 Edge.Cuts `gr_arc … (angle …)`)
+**File:** `skills/kicad/scripts/pcb/reader.py:889`, `:1001-1006`, `:1025-1026` (legacy arc parsing and outline bbox); `:430-437`, `:434`, `:494-500` (courtyard fallback ignores `fp_circle`; consumer `assembly.py:223-226`); `skills/kicad/scripts/pcb/copper.py:1300-1316` (BV-001 converts only `line` / `rect` edges); `skills/kicad/scripts/cross_analysis.py:540` (NR-001 measures a `mid`-less arc as a chord); `skills/kicad/scripts/pcb/assembly.py:1045-1059` (KO-001 via keepout loop has no layer test)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R8-F6, kc/R8-F5, kc/R9-F5, kc/R9-LT-KO) **Fixed:** product v3.0.x-dev `78799c4, 6aa0ab1, a78022d, 43e692e, 2e1fd20, fe6c9af, 0ccaa47, 95ffabb` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** - **Legacy arc outline:** in KiCad 5 `gr_arc`, `start` is the centre, `end` is the arc's first point and `angle` is the sweep. A two-arc KiCad-5 board reads as bbox width 20 / height 0, `height_mm 0.0`. In a 298-board sample the bbox is wrong by more than 0.05 mm on 28 boards and by more than 1 mm on 15. NR-001 then measures a fake chord edge inside the board. **Circular courtyard:** an `fp_circle (center 0 0)(end 3 0)` courtyard on a footprint at (110,100) yields `{min_x 110, min_y 100, max_x 113, max_y 100}`, so PM-001 misses the overlap. **Curved edges and BV-001:** a circle outline r = 10 with a via at (9.8, 0) gives no BV-001. 75 of 3,023 sampled PCB outputs (2.5 %) have no line/rect edge at all, so BV-001 can never fire on them. **Keepout:** KO-001 never checks a keepout's layers against the via span.
+- **Fix:** KiCad-5 `gr_arc` (centre / start / sweep) converted to start / mid / end at read time; circle and arc courtyards become polygons (`courtyard_poly`) with a per-side "drawn twice" malformed rule and diagnostic; BV-001 measures curved edges. Corpus (class P1 / P2 / P4): P1 outline arcs 2,201 pcb units / 835 repos; P2 courtyards 8,057 units / 3,432 repos. PM-001 -5,290 / +6,404; PM-002 -2,410 / +9,456 (net +7,046, mostly info; +6,541 on 2,817 courtyard-only units — far above the handoff's ~182-file sample; three sampled error-level additions checked geometrically correct). Full-chain (300-board sample): BV-001 57 -> 85 on 11 units (P4); NR-001 1 -> 3.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-576: silkscreen visibility ignores the bare `hide` flag and `(hide yes)` on reference properties, so hidden refs count as visible
+
+**Severity:** MEDIUM (default path; any KiCad 6+ board with hidden reference text)
+**File:** `skills/kicad/scripts/pcb/reader.py:1094,1111,1134,1149,1164` (five branches in `extract_silkscreen`); the shared helper `kicad_core/sexp.py:209` (`has_flag`) already handles both forms
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R8-F8) **Fixed:** product v3.0.x-dev `b3325d0` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** corpus files carry `(property "Reference" "LOGO2" … (layer "F.SilkS") hide (tstamp …` (e.g. JustinHsu845/PiEDB-Y15). Both the bare-`hide` form and the `(hide yes)` form give `refs_visible_on_silk 2, refs_hidden_on_silk 0`.
+- **Fix:** Silkscreen visibility reads the bare `hide` flag and `(hide yes)` where KiCad writes them. Corpus (class P3): P3: 11,318 pcb units / 4,223 repos, `silkscreen` block only, no finding movement.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-662: a KiCad 5 project's `sym-lib-table` libraries are ignored when a `<project>-cache.lib` exists, so `nick:Name` parts fall back to the cache copy or the built-in R/C/L pins
+
+**Severity:** MEDIUM (legacy projects with a project library table)
+**File:** `schematic/legacy_reader.py` (library resolution)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (fixed on discovery, filed fixed-direct at the handoff) **Fixed:** product v3.0.x-dev `26a01c3, 56c4833` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** The legacy reader resolved symbols from the cache lib and the built-in table only; a project `sym-lib-table` was read only when no cache lib existed.
+- **Fix:** The legacy `sym-lib-table` is read alongside the cache lib and the table's library wins. Corpus (class L4): L4: `parsed_lib_count` / `sym_lib_table_used` moved on 1,270 legacy units (inside label L).
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-668: LB-001 counts every instance-qualified label name, so a net reaching one hierarchical label through several sheet instances is reported as multiply labelled
+
+**Severity:** MEDIUM (false LB-001 on repeated hierarchical sheets)
+**File:** `signal_detectors.py` (`detect_label_aliases`)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (fixed on discovery, filed fixed-direct at the handoff) **Fixed:** product v3.0.x-dev `6224552` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** `detect_label_aliases` built its alias set from instance-qualified names (`/A/SIG`, `/B/SIG`), which are one drawn label.
+- **Fix:** LB-001 counts one alias per drawn label name (`_bare_name`) across sheet instances. Corpus (class M3): M3: 1,686 modern units / 755 repos; modern LB-001 30,081 -> 15,045 over moved units. 11 modern units gain LB-001, all through M6 (rails such as `12V_OFF`, `VBAT_EN` are now signals, so the power-rail alias skip no longer applies) or M2 connectivity.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+## 2026-10-26 — KH-670: a bus entry onto a net that an earlier entry already joined to its member is reported as an unlabelled tap and does not join
+
+**Severity:** LOW (false `bus_topology.unresolved` notes; missing joins on a few designs)
+**File:** `schematic/connectivity.py` (bus-entry tap lookup)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (fixed on discovery, filed fixed-direct at the handoff) **Fixed:** product v3.0.x-dev `756339b, 9a5c90c, 5f6a734` (3.0.x Wave 3, unreleased).
+
+- **Root cause:** The tap lookup looked for an unjoined label at the entry; once a first entry had joined the net to its bus member, later entries onto the same net found nothing and were reported `unlabeled_entry_tap`.
+- **Fix:** The bus-entry tap lookup finds the bus at the entry's bus end, so false `unlabeled_entry_tap` notes go and real taps join. Corpus (class M4): M4 (with KH-514): 753 modern units / 186 repos; bus_topology.unresolved notes net -541 over the first-pass M4 set.
+- **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
 ## 2026-10-25 — KH-563: `fab_release_gate` reads producer keys that no longer exist, so missing layers and EMC errors pass, and a mistyped optional input path still gives PASS under `--strict`
 
 **Severity:** HIGH (the release GO signal; every real gerber and EMC input)
