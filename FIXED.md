@@ -11,6 +11,35 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-27 — KH-403: schematic connectivity over-union on label-only sheets — MAXI030 collapses all power symbols + 367 components into one 723-pin `__unnamed_0` net
+
+**Severity:** HIGH (correctness floor; refuted by the kicad-cli netlist oracle)
+**File:** `schematic/connectivity.py` (power symbols naming nets)
+**Discovered:** 2026-09-10 (S47), PR #43 SH-001 sample sweep. **Fixed:** product v3.0.x-dev `7dc775f` (3.0.x Wave 3b Part A, unreleased), with the instance-identity work in `949efe0`.
+
+- **Root cause:** every power-symbol-like part joined nets by its value, including `PWR_FLAG` and other `power_out`-only symbols, so `#FLG` parts and the power symbols they touched fused into one net.
+- **Fix:** only power-input symbols name nets (KiCad's rule); `PWR_FLAG` and other `power_out` symbols join no net by name. Corpus: class N1d (see status.md for the gate count); most of the movement landed inside H1 (instance values).
+- **Evidence:** kh_bisect14 (MAXI030, Olivetti M20 and the KH-404 addendum boards): 13/14 boards without a merged net vs kicad-cli; MAXI030 matches kicad-cli on membership.
+- **Verification:** Product-side: `tools/tests` 850 OK (4 skips); `check_refactor.py quick` 8/8 per task against rolling baselines; `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / hierbom oracles (handoff-wave3b-A.md). Harness: Wave 3b Part A gate `d2b9e72`..`6c488c2` — see status.md; per-unit labels `results/v30x_w3b_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w3b_gate_aux/class_summary.json`.
+
+## 2026-10-27 — KH-404: schematic connectivity over-union — Olivetti M20 L1 builds a 1,679-pin GND; 140 capacitors read as both-pins-on-GND
+
+**Severity:** HIGH (same class as KH-403)
+**File:** `schematic/connectivity.py`, `kicad_core/instances.py`
+**Discovered:** 2026-09-10 (S47); addendum 2026-09-12 (eleven more boards). **Fixed:** product v3.0.x-dev `7dc775f` + `949efe0` (3.0.x Wave 3b Part A, unreleased).
+
+- **Root cause:** as KH-403, plus stale KiCad 6 per-instance values (`symbol_instances`) putting parts on the wrong rail.
+- **Fix:** power-input-only net naming (`7dc775f`) and KiCad's instance resolution (`949efe0`). Olivetti M20 matches kicad-cli on membership and keeps one separate `AAA00..AAA15` bus split. Of the addendum boards, Queens-Rocket Sensors_Module and spork-8 Programmer were already clean at `949efe0`; only axello Brasilia remains, and its 3 split / 2 merged are the KH-483 `U?` artefact.
+- **Verification:** Product-side: `tools/tests` 850 OK (4 skips); `check_refactor.py quick` 8/8 per task against rolling baselines; `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / hierbom oracles (handoff-wave3b-A.md). Harness: Wave 3b Part A gate `d2b9e72`..`6c488c2` — see status.md; per-unit labels `results/v30x_w3b_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w3b_gate_aux/class_summary.json`.
+
+## 2026-10-27 — KH-664: values with `E` as the decimal mark (`4E7`, `0E12`) parse as exponents — CLOSED as conformant
+
+**Severity:** LOW
+**File:** `kicad_core/values.py` (`parse_value`)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (handoff §Asks 4). **Closed:** 2026-10-27, product 3.0.x Wave 3b Part A (ruling entry 31).
+
+- **Disposition:** not a defect. KiCad reads `4E7` as an exponent too (ruling entry 31, checked against KiCad source); the analyzer agrees with KiCad, and a product test pins the behaviour.
+
 ## 2026-10-26 — TH-098: the required-tier skip guard fails a run when an external tool (pdftotext, ngspice) is missing
 
 **Severity:** MEDIUM (product CI harness-smoke exited 1 at pin `f54f2cd462a` with every test passing)
@@ -180,6 +209,8 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 - **Root cause:** The legacy reader resolved symbols from the cache lib and the built-in table only; a project `sym-lib-table` was read only when no cache lib existed.
 - **Fix:** The legacy `sym-lib-table` is read alongside the cache lib and the table's library wins. Corpus (class L4): L4: `parsed_lib_count` / `sym_lib_table_used` moved on 1,270 legacy units (inside label L).
 - **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+**Addendum (2026-10-27, product 3.0.x Wave 3b Part A — completion):** `2320a55` + `e683919` complete the legacy library work: table nicknames, no-cache table rows, `$(KIPRJMOD)`, `~` in lib ids, `DEF … P` global power, one diagnostic per library a placed symbol could not get, and a cache/library conflict judged by KiCad's one-way pin test (kf/A5-F1, A5-F2, A5-F3, A5-F5; rulings 24, 30). Harness class V1 (see status.md).
 
 ## 2026-10-26 — KH-668: LB-001 counts every instance-qualified label name, so a net reaching one hierarchical label through several sheet instances is reported as multiply labelled
 
