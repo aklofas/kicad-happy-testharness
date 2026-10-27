@@ -16,8 +16,10 @@ from schematic.connectivity import expand_bus_name, BusGraph, match_ports
 
 def test_vector_ascending_descending_and_singleton():
     assert expand_bus_name("D[0..3]") == ["D0", "D1", "D2", "D3"]
-    assert expand_bus_name("A[15..13]") == ["A15", "A14", "A13"]
-    assert expand_bus_name("D[3..3]") == ["D3"]
+    # KiCad's vector parser orders members low to high whatever the written
+    # direction, and a one-member range is not a bus.
+    assert expand_bus_name("A[15..13]") == ["A13", "A14", "A15"]
+    assert expand_bus_name("D[3..3]") is None
 
 
 def test_vector_prefix_may_contain_dots():
@@ -119,18 +121,19 @@ def test_label_off_bus_returns_false():
     assert not g.add_bus_label("D[0..3]", 99, 99)
 
 
-def test_mid_sheet_relabel_shares_member_names_only():
-    # Two labels on ONE cluster: members union by NAME (KiCad rule 4 —
-    # no positional relabel mid-sheet).
+def test_mid_sheet_relabel_aliases_onto_the_driver():
+    # Two labels on ONE cluster: KiCad aliases the other label onto the driver
+    # by position; the superset bus drives, and cluster_ordered returns the
+    # driver's members at any width.
     g = _bg([{"x1": 0, "y1": 0, "x2": 10, "y2": 0}])
     assert g.add_bus_label("D[0..3]", 2, 0)
     assert g.add_bus_label("X[0..1]", 8, 0)
     g.finalize()
     cid = g.cluster_at(0, 0)
     assert g.cluster_member_set(cid) == {"D0", "D1", "D2", "D3", "X0", "X1"}
-    assert g.cluster_ordered(cid, 4) == ["D0", "D1", "D2", "D3"]
-    assert g.cluster_ordered(cid, 2) == ["X0", "X1"]
-    assert g.cluster_ordered(cid, 8) is None
+    for width in (2, 4, 8):
+        assert g.cluster_ordered(cid, width) == ["D0", "D1", "D2", "D3"]
+    assert g.unresolved == []
 
 
 def test_cluster_ordered_falls_back_to_hier_label():
@@ -173,31 +176,29 @@ def test_duplicate_identical_bus_labels_are_not_ambiguous():
     assert g.unresolved == []
 
 
-def test_different_same_width_labels_are_ambiguous():
+def test_different_same_width_labels_pick_the_alphabetical_driver():
+    # KiCad's driver choice: global, then superset, then alphabetical; two
+    # different same-width local labels are not ambiguous.
     g = _bg([{"x1": 0, "y1": 0, "x2": 10, "y2": 0}])
     assert g.add_bus_label("D[0..3]", 2, 0)
     assert g.add_bus_label("A[0..3]", 8, 0)
     g.finalize()
     cid = g.cluster_at(0, 0)
-    assert g.cluster_ordered(cid, 4) is None
-    assert {"reason": "ambiguous_bus_width", "name": "4"} in g.unresolved
+    assert g.cluster_ordered(cid, 4) == ["A0", "A1", "A2", "A3"]
+    assert g.unresolved == []
 
 
-def test_ambiguous_width_note_is_deduped_across_repeated_calls():
-    # cluster_ordered() is called once per co-clustered sheet pin — several
-    # pins sharing one ambiguous cluster+width must not each add their own
-    # duplicate note (roadmap item 11 dedup requirement).
+def test_repeated_cluster_ordered_calls_add_no_notes():
+    # cluster_ordered() is called once per co-clustered sheet pin; repeated
+    # calls return the same driver and record nothing.
     g = _bg([{"x1": 0, "y1": 0, "x2": 10, "y2": 0}])
     assert g.add_bus_label("D[0..3]", 2, 0)
     assert g.add_bus_label("A[0..3]", 8, 0)
     g.finalize()
     cid = g.cluster_at(0, 0)
     for _ in range(3):
-        assert g.cluster_ordered(cid, 4) is None
-    matches = [u for u in g.unresolved
-               if u == {"reason": "ambiguous_bus_width", "name": "4"}]
-    assert len(matches) == 1
-    assert len(g.unresolved) == len(set(tuple(sorted(u.items())) for u in g.unresolved))
+        assert g.cluster_ordered(cid, 4) == ["A0", "A1", "A2", "A3"]
+    assert g.unresolved == []
 
 
 def test_cluster_ordered_excludes_pin_role_attachments():
@@ -260,14 +261,15 @@ def test_per_instance_ports_do_not_cross():
     assert not any(a[0] == 1 and b[0] == 2 for a, b in pairs)
 
 
-def test_width_mismatch_flags_no_partial_map():
+def test_width_mismatch_maps_up_to_the_narrower_bus():
+    # KiCad pairs members by position up to the narrower bus, with no note.
     pin = _port("pin", "/X", "D[0..7]", [f"D{i}" for i in range(8)], 0, 1,
                 parent_ordered=["A0", "A1"])   # parent bus is 2 wide
     hier = _port("hier", "/X", "D[0..7]", [f"D{i}" for i in range(8)], 1, 1)
     unresolved = []
-    assert match_ports([pin], [hier], unresolved) == []
-    assert unresolved and unresolved[0]["reason"] == "bus_width_mismatch"
-    assert unresolved[0]["name"] == "D[0..7]"
+    assert match_ports([pin], [hier], unresolved) == [
+        ((0, 1, "A0"), (1, 1, "D0")), ((0, 1, "A1"), (1, 1, "D1"))]
+    assert unresolved == []
 
 
 def test_missing_counterpart_flags():

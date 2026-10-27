@@ -2,17 +2,17 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-26T21:50:47.770783+00:00
+**Last scan:** 2026-10-27T07:31:18.742897+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 847 |
-| Verified | 222 |
-| Unverified | 620 |
-| Stale (changed since verification) | 5 |
-| Critical risk | 2 |
+| Total constants | 867 |
+| Verified | 219 |
+| Unverified | 641 |
+| Stale (changed since verification) | 7 |
+| Critical risk | 3 |
 | High risk | 8 |
 
 ## skills/bom/scripts/bom_manager.py
@@ -185,7 +185,7 @@
 | CONST-181 | `sev_order` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-281 | `cat_labels` | keyword_classification | 17 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-389 | `config` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-282 | `counts` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
+| CONST-282 | `counts` | heuristic_threshold | 3 | stale | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-390 | `active_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-395 | `_sev_order` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-287 | `_final_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
@@ -650,6 +650,7 @@
 | CONST-456 | `MPN_FIELD_ALIASES_PRIMARY` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-457 | `MPN_FIELD_ALIASES_GENERIC` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-826 | `DIGIKEY_FIELD_ALIASES` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-798 | `_MANDATORY_FIELDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/kicad_core/netnames.py
 
@@ -707,15 +708,32 @@
 |---|---|---|---|---|---|---|---|
 | CONST-361 | `_BRACE_ESCAPES` | keyword_classification | 14 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-362 | `_BRACE_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-845 | `_KICAD_UNESCAPE` | keyword_classification | 14 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-850 | `_C_ESCAPES` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-851 | `_C_ESCAPE_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+
+## skills/kicad/scripts/kicad_core/textvars.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-852 | `MAX_DEPTH` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-853 | `_ERC_DRC` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/kicad_core/values.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-846 | `_MIL_MM` | physics | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
-| CONST-847 | `multipliers` | standard | 11 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-854 | `_MANTISSA` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-855 | `multipliers` | standard | 10 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-848 | `_E_SERIES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-849 | `_RATED_V_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+
+## skills/kicad/scripts/kicad_types.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-856 | `_AMBIGUOUS_RECORD_CAP` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 
 ## skills/kicad/scripts/lifecycle_audit.py
 
@@ -911,26 +929,35 @@
 | CONST-602 | `classify_ground_domains:kw3` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-616 | `classify_ground_domains:kw4` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 
+## skills/kicad/scripts/schematic/bom_stats.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-857 | `_NON_PARTS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-858 | `_PACKAGE_FIELDS` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+
 ## skills/kicad/scripts/schematic/connectivity.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
-| CONST-400 | `_VECTOR_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-401 | `_GROUP_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-402 | `_MAX_DEPTH` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-859 | `_MARKUP` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-403 | `_EPSILON` | physics | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-860 | `_DRIVER_RANK` | datasheet_lookup | 3 | unverified | 0.7 | 0.0 | **critical** (0.7) |
 | CONST-764 | `_NEAR_MISS_CAP` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-765 | `_NEAR_MISS_IU` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-001 | `_WIRE_GRID_SIZE` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
-| CONST-766 | `lbl_info` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-766 | `lbl_info` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-767 | `ps_info` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-002 | `_NET_NAME_PRIORITY` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-002 | `_NET_NAME_PRIORITY` | keyword_classification | 6 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-339 | `_INTERNAL_LABEL_KEYS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/schematic/hierarchy.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-861 | `_POWER_RENAME_BEFORE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-862 | `_SYMBOL_INSTANCES_BEFORE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-122 | `merged_bus` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/schematic/ic_analysis.py
@@ -952,12 +979,12 @@
 | CONST-007 | `_LEGACY_PIN_TYPE_MAP` | standard | 11 | verified | 0.6 | 0.0 | **low** (0.0) |
 | CONST-008 | `_M` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
 | CONST-009 | `_STANDARD_LIB_PINS` | keyword_classification | 34 | verified | 0.5 | 0.0 | **low** (0.0) |
+| CONST-863 | `_FIELD_HEAD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-768 | `_MATRIX_LINE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-019 | `sym_def` | keyword_classification | 7 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-019 | `sym_def` | keyword_classification | 8 | stale | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-020 | `resolution_info` | keyword_classification | 5 | unverified | 0.3 | 0.3 | **medium** (0.3) |
 | CONST-011 | `_MAX_SNAP_DIST` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
 | CONST-782 | `_AR_LINE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-785 | `_SHEET_PIN_LINE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-036 | `_parse_legacy_single_sheet:kw1` | standard | 3 | unverified | 0.1 | 0.2 | **low** (0.2) |
 
 ## skills/kicad/scripts/schematic/net_analysis.py
@@ -1006,6 +1033,7 @@
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-337 | `MAX_TESTED_FORMAT_VERSION` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-864 | `_LIBRARY_RECORD_CAP` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-117 | `ps` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-118 | `_sev_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 
@@ -1026,7 +1054,14 @@
 | CONST-013 | `_MOUSER_KEYS` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-016 | `_LCSC_KEYS` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-017 | `_ELEMENT14_KEYS` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-865 | `parsed` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-338 | `_ANGLE_TRANSFORM` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-866 | `_MANDATORY_FIELDS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-867 | `_SIM_FIELDS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-868 | `_TITLE_BLOCK_KEYS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-869 | `_SHEET_NAME_FIELDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-870 | `_FLAG_TEXT` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-871 | `flags` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/schematic/system_analyses.py
 

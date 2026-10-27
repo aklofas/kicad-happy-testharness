@@ -53,18 +53,20 @@ def test_kh359_same_name_local_labels_stay_split_across_sheets():
 
 
 def test_kh359_local_label_does_not_merge_into_global_power_net():
-    # GND power symbol net + a disconnected wire carrying a LOCAL "GND" label.
-    wires = [{"x1": 0, "y1": 0, "x2": 10, "y2": 0},
-             {"x1": 0, "y1": 20, "x2": 10, "y2": 20}]
+    # GND power symbol net on one sheet + a disconnected wire carrying a LOCAL
+    # "GND" label on ANOTHER sheet: they stay apart (kicad-cli). On the same
+    # sheet KiCad joins them.
+    wires = [{"x1": 0, "y1": 0, "x2": 10, "y2": 0, "_sheet": 0},
+             {"x1": 0, "y1": 20, "x2": 10, "y2": 20, "_sheet": 1}]
     power = [{"net_name": "GND", "x": 0, "y": 0, "_sheet": 0}]
-    labels = [_label("GND", 5, 20)]
-    comps = [_comp("U1", 10, 0), _comp("J1", 10, 20)]
+    labels = [dict(_label("GND", 5, 20), _sheet=1)]
+    comps = [_comp("U1", 10, 0, sheet=0), _comp("J1", 10, 20, sheet=1)]
     nets = build_net_map(comps, wires, labels, power, [], [],
-                         sheet_names=["main"])
-    assert set(nets) == {"GND", "/main/GND"}
+                         sheet_names=["main", "sub"])
+    assert set(nets) == {"GND", "/sub/GND"}
     assert [p["component"] for p in nets["GND"]["pins"]] == ["U1"]
-    assert [p["component"] for p in nets["/main/GND"]["pins"]] == ["J1"]
-    assert nets["/main/GND"]["display_name"] == "GND"
+    assert [p["component"] for p in nets["/sub/GND"]["pins"]] == ["J1"]
+    assert nets["/sub/GND"]["display_name"] == "GND"
 
 
 def test_kh359_no_collision_is_untouched():
@@ -441,10 +443,12 @@ def test_bus_member_does_not_fuse_with_unrelated_global_label():
     # parent has NO local B0 member wire, but an unrelated GLOBAL label "B0"
     # sits on U9 elsewhere. Child sheet 1: hier P[0..3], member P0 -> U2. Bus
     # member B0 is local-scoped and must NOT fuse with the global B0/U9 — the
-    # pre-guard bare-key fallback wrongly merged U2 + U9 into net "B0".
+    # pre-guard bare-key fallback wrongly merged U2 + U9 into net "B0". The
+    # global B0 sits on a third sheet: on the parent's own sheet KiCad joins a
+    # local name to a same-name global label, so the two would fuse there.
     wires = [
         {"x1": 18, "y1": 2, "x2": 38, "y2": 2, "_sheet": 1},   # child member P0 -> U2
-        {"x1": 0, "y1": 50, "x2": 10, "y2": 50, "_sheet": 0},  # parent global-B0 wire -> U9
+        {"x1": 0, "y1": 50, "x2": 10, "y2": 50, "_sheet": 2},  # other sheet's global-B0 wire -> U9
     ]
     labels = [
         {"name": "B[0..3]", "type": "label", "x": 15, "y": 0, "_sheet": 0},
@@ -454,7 +458,7 @@ def test_bus_member_does_not_fuse_with_unrelated_global_label():
         {"name": "/X/P[0..3]", "type": "hierarchical_label", "x": 20, "y": 0,
          "_sheet": 1, "_bare_name": "P[0..3]", "_hier_ns": "/X"},
         {"name": "P0", "type": "label", "x": 30, "y": 2, "_sheet": 1},
-        {"name": "B0", "type": "global_label", "x": 5, "y": 50, "_sheet": 0},
+        {"name": "B0", "type": "global_label", "x": 5, "y": 50, "_sheet": 2},
     ]
     bus = {
         "bus_wires": [
@@ -466,9 +470,9 @@ def test_bus_member_does_not_fuse_with_unrelated_global_label():
         ],
         "bus_aliases": [],
     }
-    comps = [_comp("U9", 0, 50, sheet=0), _comp("U2", 38, 2, sheet=1)]
+    comps = [_comp("U9", 0, 50, sheet=2), _comp("U2", 38, 2, sheet=1)]
     nets = build_net_map(comps, wires, labels, [], [], [],
-                         sheet_names=["top", "child"], bus_elements=bus)
+                         sheet_names=["top", "child", "other"], bus_elements=bus)
     # Global "B0" keeps ONLY U9; U2 (bus member) is a separate net, not fused.
     assert {p["component"] for p in nets["B0"]["pins"]} == {"U9"}
     u2_nets = [k for k, v in nets.items()

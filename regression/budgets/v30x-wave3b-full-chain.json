@@ -1,0 +1,32 @@
+{
+ "budget_id": "v30x-wave3b-full-chain",
+ "baseline_sha": "d2b9e72",
+ "candidate_sha": "6c488c2",
+ "profile": "full-chain",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-wave3b-A",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave3b:schematic",
+   "evidence": "N1a/N1b/N1c/N1d/N6d/N6e/S1/S3-S7/H1-H7/V1-V4 on schematic units; one unit label per trigger set (commit order). Connectivity triggers (N1a-d, N6, S3, S4, S5, H1, V1 pins) open every block outside the fixed header; the narrow ones (H2-H7, S1, S6, S7, V1 records, V2, V4) never move the netlist blocks, and their findings either keep the per-rule count or name a changed ref/value or a declared rule. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-26-v3.0.x-wave3b/handoff-wave3b-A.md"
+  },
+  {
+   "id": "PCB-wave3b-A",
+   "analyzer": "pcb",
+   "path_glob": "/**",
+   "predicate": "v30x_wave3b:pcb",
+   "evidence": "S2 board net names kept as written (every new name decodes to an old one; per-rule finding counts unchanged), T1 tokenizer (footprint count / value / reference text, segment counts, silkscreen). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-26-v3.0.x-wave3b/handoff-wave3b-A.md"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave3b:downstream",
+   "evidence": "Chained emc/thermal/cross_analysis units whose upstream schematic or pcb snap moved, claimed only when that upstream unit is itself explained by the schematic / pcb classes. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-26-v3.0.x-wave3b/handoff-wave3b-A.md"
+  }
+ ]
+}

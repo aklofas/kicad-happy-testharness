@@ -2,7 +2,7 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-26T21:50:47.180431+00:00
+**Last scan:** 2026-10-27T07:31:21.356120+00:00
 
 ## Summary
 
@@ -84,7 +84,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-068 | `parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **stale** |
+| EQ-068 | `_parse_value` | SI prefix: p=1e-12 n=1e-9 u=1e-6 m=1e-3 k=1e3 M=1e6 | unknown | medium | **stale** |
 | EQ-107 | `snap_to_e_series` | Log-decade snapping — normalize v into [1, 10) via | unknown | medium | **stale** |
 
 ## skills/kicad/scripts/pcb/assembly.py
