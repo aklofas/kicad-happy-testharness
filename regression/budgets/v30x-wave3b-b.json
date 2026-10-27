@@ -1,0 +1,39 @@
+{
+ "budget_id": "v30x-wave3b-b",
+ "baseline_sha": "6c488c2",
+ "candidate_sha": "0683d01",
+ "profile": "standard",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-X1",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave3b_b:schematic",
+   "evidence": "X1: components[].instance_path added; with it removed the two outputs are equal (findings, every other block). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-26-v3.0.x-wave3b/handoff-wave3b-B.md"
+  },
+  {
+   "id": "PCB-wave3b-B",
+   "analyzer": "pcb",
+   "path_glob": "/**",
+   "predicate": "v30x_wave3b_b:pcb",
+   "evidence": "P1/P1h/P2/P2d/P3-P10 keyed to constructs in the source board (renamed KiCad 5 copper layers, hide, polygon arcs, duplicate points, netted graphics, plural-layer tracks, custom pads, stroked fills, vias, drill-less vias, arc tracks, copper NPTH); each trigger opens the blocks and rules its handoff row names. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-26-v3.0.x-wave3b/handoff-wave3b-B.md"
+  },
+  {
+   "id": "CROSS-wave3b-B",
+   "analyzer": "cross_analysis",
+   "path_glob": "/**",
+   "predicate": "v30x_wave3b_b:cross",
+   "evidence": "X2 checks_run gains XV-004; X3-X8 XV-001..004 / DA-001 findings; any other cross movement only behind a moved, explained upstream pcb (D). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-26-v3.0.x-wave3b/handoff-wave3b-B.md"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave3b_b:downstream",
+   "evidence": "emc / thermal units whose upstream pcb snap moved and is explained by PCB-wave3b-B (a schematic-only upstream move explains nothing). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-26-v3.0.x-wave3b/handoff-wave3b-B.md"
+  }
+ ]
+}

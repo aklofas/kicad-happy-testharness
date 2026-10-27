@@ -28,7 +28,7 @@ BODY = f"""  (net 0 "")
   )
   (zone (net {GND}) (net_name "GND") (layer "F.Cu") (hatch edge 0.5)
     (connect_pads (clearance 0.5))
-    (min_thickness 0.25)
+    (min_thickness 0.25) (filled_areas_thickness no)
     (fill yes (thermal_gap 0.5) (thermal_bridge_width 0.5))
     (polygon (pts (xy {X0} {Y0}) (xy {X1} {Y0}) (xy {X1} {Y1}) (xy {X0} {Y1})))
 {rect(X0, Y0, X1, BAND_LO)}

@@ -54,7 +54,7 @@ BODY = f"""  (net 0 "")
   (via (at {CX + 7.3} {CY + 2.5}) (size 0.6) (drill 0.3) (layers "F.Cu" "B.Cu") (net {TOUCH}))
   (zone (net {GND}) (net_name "GND") (layer "F.Cu") (hatch edge 0.5)
     (connect_pads (clearance 1.0))
-    (min_thickness 0.25)
+    (min_thickness 0.25) (filled_areas_thickness no)
     (fill yes (thermal_gap 0.5) (thermal_bridge_width 0.5))
     (polygon (pts (xy {X0} {Y0}) (xy {X1} {Y0}) (xy {X1} {Y1}) (xy {X0} {Y1})))
 {poly(keyhole_ring())}

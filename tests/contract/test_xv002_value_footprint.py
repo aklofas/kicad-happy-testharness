@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Regression test: XV-002 should not fire when PCB 'value' is just the footprint name.
+"""Regression test: XV-002 when the PCB 'value' is just the footprint name.
 
-Adopted from anyasabo/kicad-happy @ 0a2b1c7 (ported 2026-07-15).
+Adopted from anyasabo/kicad-happy @ 0a2b1c7 (ported 2026-07-15). Since 3.0.x such a value is
+reported as never synchronised: KiCad's Update PCB would overwrite it with the symbol's value
+(board_netlist_updater.cpp, kf/A13-F8).
 """
 
 import sys
@@ -20,8 +22,8 @@ def make_pcb(footprints):
     return {"footprints": footprints}
 
 
-def test_no_false_positive_when_pcb_value_equals_footprint():
-    """PCB value == footprint name means value was never synced — skip XV-002."""
+def test_never_synced_when_pcb_value_equals_footprint():
+    """PCB value == footprint name means the value was never synced — XV-002 reports each part."""
     sch = make_schematic([
         {"reference": "C1", "value": "10uF"},
         {"reference": "R1", "value": "5.1k"},
@@ -34,11 +36,12 @@ def test_no_false_positive_when_pcb_value_equals_footprint():
     ])
     findings = check_cross_validation(sch, pcb)
     xv002 = [f for f in findings if f.get("rule_id") == "XV-002"]
-    assert not xv002, f"Expected no XV-002 findings, got: {[f['summary'] for f in xv002]}"
+    assert sorted(c for f in xv002 for c in f["components"]) == ["C1", "R1", "U1"]
+    assert all("never synchronised" in f["summary"] for f in xv002)
 
 
-def test_no_false_positive_when_pcb_value_matches_lib_suffix():
-    """PCB footprint may include library prefix (e.g. 'Lib:Name') — still skip."""
+def test_never_synced_when_pcb_value_matches_lib_suffix():
+    """PCB footprint may include a library prefix (e.g. 'Lib:Name') — still a never-synced value."""
     sch = make_schematic([
         {"reference": "J1", "value": "USB4105-GF-A"},
     ])
@@ -47,7 +50,8 @@ def test_no_false_positive_when_pcb_value_matches_lib_suffix():
     ])
     findings = check_cross_validation(sch, pcb)
     xv002 = [f for f in findings if f.get("rule_id") == "XV-002"]
-    assert not xv002, f"Expected no XV-002 findings, got: {[f['summary'] for f in xv002]}"
+    assert [f["components"] for f in xv002] == [["J1"]]
+    assert "never synchronised" in xv002[0]["summary"]
 
 
 def test_real_mismatch_still_detected():
@@ -77,8 +81,8 @@ def test_whitespace_normalization_still_works():
 
 
 if __name__ == "__main__":
-    test_no_false_positive_when_pcb_value_equals_footprint()
-    test_no_false_positive_when_pcb_value_matches_lib_suffix()
+    test_never_synced_when_pcb_value_equals_footprint()
+    test_never_synced_when_pcb_value_matches_lib_suffix()
     test_real_mismatch_still_detected()
     test_whitespace_normalization_still_works()
     print("All XV-002 tests passed.")

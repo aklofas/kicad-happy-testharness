@@ -2,15 +2,15 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-10-27T07:31:18.742897+00:00
+**Last scan:** 2026-10-27T16:56:09.666103+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 867 |
+| Total constants | 884 |
 | Verified | 219 |
-| Unverified | 641 |
+| Unverified | 658 |
 | Stale (changed since verification) | 7 |
 | Critical risk | 3 |
 | High risk | 8 |
@@ -26,7 +26,9 @@
 | CONST-188 | `_BOM_COMMENT_NAMES` | keyword_classification | 16 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-189 | `_REF_TYPE` | keyword_classification | 24 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-277 | `_SUPPLIER_NAME_MAP` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-278 | `stats` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-400 | `_VERSION` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-401 | `_SYMBOL_INSTANCES_BEFORE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-785 | `stats` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-283 | `_CSV_BASE_COLUMNS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-284 | `_CSV_TAIL_COLUMNS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-298 | `_DIST_CSV_MAP` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -41,6 +43,7 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-847 | `_HIDE_YES_MIN_VERSION` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-358 | `pattern` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
 ## skills/bom/scripts/kicad_sexp.py
@@ -48,6 +51,11 @@
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-365 | `pattern` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-872 | `_SCH_VERSION_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-873 | `pattern` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-874 | `head` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-875 | `_SHEET_FILE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-876 | `_AT` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
 ## skills/bom/scripts/sync_datasheet_urls.py
 
@@ -652,6 +660,13 @@
 | CONST-826 | `DIGIKEY_FIELD_ALIASES` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-798 | `_MANDATORY_FIELDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
+## skills/kicad/scripts/kicad_core/instances.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-877 | `_VARIANT_FLAGS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-878 | `_VARIANT_IN_BOM_FIXED` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+
 ## skills/kicad/scripts/kicad_core/netnames.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
@@ -823,6 +838,7 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-879 | `main` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-761 | `corners` | unknown | 4 | unverified | 0.0 | 0.0 | **low** (0.0) |
 
 ## skills/kicad/scripts/pcb/pipeline.py
@@ -842,6 +858,8 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-880 | `_CANONICAL_CU` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-881 | `_CU_LAYER_TYPES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-322 | `_NUMERIC_STACKUP_KEYS` | keyword_classification | 3 | verified | 0.3 | 0.1 | **low** (0.1) |
 | CONST-079 | `_float_keys` | keyword_classification | 3 | verified | 0.3 | 0.1 | **low** (0.1) |
 | CONST-762 | `_CIRCLE_SIDES` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
@@ -850,6 +868,8 @@
 | CONST-081 | `fp_entry` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-101 | `seg_info` | keyword_classification | 7 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-102 | `arc_info` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-882 | `_FILL_ON` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-883 | `_DEFAULT_LINE_WIDTH` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-082 | `via_info` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-083 | `zone_info` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-084 | `bbox` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -985,6 +1005,7 @@
 | CONST-020 | `resolution_info` | keyword_classification | 5 | unverified | 0.3 | 0.3 | **medium** (0.3) |
 | CONST-011 | `_MAX_SNAP_DIST` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
 | CONST-782 | `_AR_LINE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-884 | `_STANDARD_FIELDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-036 | `_parse_legacy_single_sheet:kw1` | standard | 3 | unverified | 0.1 | 0.2 | **low** (0.2) |
 
 ## skills/kicad/scripts/schematic/net_analysis.py
@@ -1060,6 +1081,7 @@
 | CONST-867 | `_SIM_FIELDS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-868 | `_TITLE_BLOCK_KEYS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-869 | `_SHEET_NAME_FIELDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-885 | `flags` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-870 | `_FLAG_TEXT` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-871 | `flags` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 

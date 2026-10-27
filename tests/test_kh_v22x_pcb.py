@@ -63,9 +63,14 @@ def _via(x, net_id, tented):
 
 
 def _vp001_board():
-    """One tented via-in-pad (U1/N1) and one untented control (U2/N2)."""
+    """One tented via-in-pad (U1/N1) and one untented control (U2/N2).
+
+    The board setup leaves vias untented: without it a via with no tenting token
+    inherits KiCad 10's tented default.
+    """
     return (
         _HEADER
+        + '  (setup (tenting none))\n'
         + '  (net 0 "")\n  (net 1 "N1")\n  (net 2 "N2")\n'
         + _pad_footprint("U1", 100, 1, "N1")
         + _pad_footprint("U2", 110, 2, "N2")
