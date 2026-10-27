@@ -11,6 +11,27 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-27 — KH-417: `_pad_on_layer` treats `np_thru_hole` pads carrying a `*.Cu` layer wildcard as copper
+
+**Severity:** LOW
+**File:** `pcb/geometry.py` (`npth_flashes_copper`, `_pad_on_layer`), `pcb/connectivity.py`
+**Discovered:** 2026-10-04, main-repo agent, v2.3.1 Task 6 review; filed by the harness 2026-10-05. **Fixed:** product v3.0.x-dev `cc23155` (3.0.x Wave 3b Part B, unreleased).
+
+- **Root cause:** an NPTH pad was copper whenever its layer list carried a `*.Cu` wildcard; KiCad decides by the pad shape against the hole (`PAD::IsOnCopperLayer`, pad.cpp:1619).
+- **Fix:** an NPTH pad is copper unless KiCad's rule says the hole removes it, and an annulus connects on its first copper layer only (`CN_LIST::Add`; confirmed by DRC). Corpus: class P10 (9 boards / 40 netted copper-annulus NPTH pads; `--full` graph only).
+- **Evidence:** DRC oracle on the 9 boards: islands agreement 98.9 → 99.5 %, 0 merges.
+- **Verification:** Product-side: `tools/tests` 999 OK (4 skips); `check_refactor.py quick` OK 8/8 over the range with the union budget; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave3b-B.md). Harness: Wave 3b Part B gate `6c488c2`..`0683d01` — see status.md; per-unit labels `results/v30x_w3bB_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w3bB_gate_aux/class_summary.json`.
+
+## 2026-10-27 — KH-426: XV-001..003 never compare MPN schematic ↔ PCB — 17 stale footprint MPNs and `BSS138LT1G` vs `BSS138` on the SacMap board produce 0 findings
+
+**Severity:** MEDIUM
+**File:** `cross_analysis.py` (`check_mpn_parity`, `check_cross_validation`), `kicad_core/pairing.py`
+**Discovered:** 2026-10-05, SacMap rev2 run-8 soak; filed by the harness 2026-10-06. **Fixed:** product v3.0.x-dev `b43a818` / `0520727` (3.0.x Wave 3b Part B, unreleased).
+
+- **Correction to the entry:** the fix is a new rule **XV-004** (`check_mpn_parity`, its own `checks_run` entry). **XV-003** is footprint parity: documented since v1.3, never emitted before `b43a818`. The compare is exact after `strip()` on both sides (KiCad copies fields exactly, `board_netlist_updater.cpp:523-548`), not case-insensitive as the fix direction suggested (no case-only drift in 569 drifted refs), and fires only when both MPNs are non-blank (ruling 47). A symbol MPN with a blank board MPN on a KiCad 6+ board is not reported.
+- **Fix:** parts pair by schematic path, as Update PCB does (R31), with a reference fallback for footprints whose path names no symbol; XV-004 compares MPNs. The SacMap `BSS138` vs `BSS138LT1G` case is a product test. Corpus: classes X2 / X4 (and X3 for XV-003).
+- **Verification:** Product-side: `tools/tests` 999 OK (4 skips); `check_refactor.py quick` OK 8/8 over the range with the union budget; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave3b-B.md). Harness: Wave 3b Part B gate `6c488c2`..`0683d01` — see status.md; per-unit labels `results/v30x_w3bB_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w3bB_gate_aux/class_summary.json`.
+
 ## 2026-10-27 — KH-403: schematic connectivity over-union on label-only sheets — MAXI030 collapses all power symbols + 367 components into one 723-pin `__unnamed_0` net
 
 **Severity:** HIGH (correctness floor; refuted by the kicad-cli netlist oracle)
