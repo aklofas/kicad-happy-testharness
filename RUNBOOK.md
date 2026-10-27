@@ -3090,6 +3090,15 @@ is the candidate's. Expect `lookup:` on a part's first use in a unit and `cache:
 uses in the same unit; outputs regenerated before 2026-10-24 carry the old global-cache
 labels.
 
+**When the round changes schematic output** (connectivity, values), the shared corpus
+schematic outputs above hide it: both sides simulate the same input. Point each data dir at its
+own side of the standard gate instead, by symlinking every `<gate>/<slot>/schematic/<owner>/<repo>/<file>/snap.json`
+to `<DATA_DIR>/results/outputs/schematic/<owner>/<repo>/<file>.json` (quick_200 repos only;
+`results/v30x_w3_gate_aux/so/` is the Wave 3 instance). Differences are then expected: adjudicate by
+mapping each differing report to its schematic unit's budget label (every one must be a moved,
+explained unit), and treat any runner FAIL / timeout on the candidate side as a finding (Wave 3:
+KH-676, a zero-step DC sweep that took one file past the 60 s cap).
+
 ### 26m. Product text oracle (`tools/check_refactor.py snapshot` / `text-compare`)
 
 The product's own refactor oracle renders every `--text` / `--help` / JSON / summarize artefact over the
@@ -3115,6 +3124,46 @@ name; run the base side with no allow list. Keep both logs under `results/<gate>
 Any analyzer invoked with the product clone as cwd and no `-o` writes `analysis/capability_mode.json`
 into the clone and dirties it (26i preflight); run the product's own `tools/tests` from the harness cwd
 or delete the sidecar afterwards.
+
+### 26n. Very large output-changing rounds (tens of millions of deltas)
+
+The comparator (`run_modes` in the gate, `compare_snap_trees.py`) holds every delta in memory and
+writes them all (TH-096). Wave 3 (`004bba5..d2b9e72`, ~36 M strict deltas) drove the gate's 32
+comparator workers to ~67 GB with swap rising; the run was stopped by hand after phase B (the snap
+trees were complete). Before a round you expect to be large, sample it: run `compare_strict` on ~150
+random moved units of the first finished analyzer and multiply out. Watch `free -m` once phase B
+ends, and if memory runs away stop the gate's process group (`kill -TERM -<pid>`; the trees stay).
+
+Interim verdict path until TH-096 is fixed: `results/v30x_w3_gate_aux/stream_budgeted.py GATE_DIR
+BUDGET OUT_PREFIX --jobs 8` runs the same `compare_strict` / `evaluate_budget` per unit and keeps
+counts only (summary, claimed counts / units per class, residual units, verdict with the ruling-R3
+zero-compared rule), plus a `units.jsonl` of per-unit labels for `class_summary.py`. It is valid only
+when no budget class carries `unit_bound` or `expected_magnitude` (those aggregate across units).
+Record it as the verdict and say in the reply that the in-gate report was not produced.
+
+### 26o. Legacy `.sch` connectivity oracle (shipped KiCad-5 netlists)
+
+kicad-cli 10 loads legacy `.sch` files with zero symbols, so the kicad-cli oracle cannot check
+KiCad-5 designs. Many corpus projects ship the `<stem>.net` KiCad 5 wrote beside the root sheet; it
+is ground truth when its ref set equals the analyzer's (otherwise it is stale). The comparison runs
+straight off both gate trees, no reruns: for every legacy `snap.json` whose source has a sibling
+`.net`, parse the netlist (KiCad 5 writes unquoted `(name GND)`, which `regression/netlist_oracle.NET_RE`
+misses; the product's `oracle-scripts/legacy/tools/netparse.py` handles both) and compare with
+`regression.netlist_oracle.compare`. Report clean boards / split rows / merged rows per side and
+list every board that gets worse (Wave 3: 2,233 fresh boards, clean 100 → 1,855; six worse → KH-677;
+`results/v30x_w3_gate_aux/legacy_oracle.json`).
+
+### 26p. Before proposing a CI pin
+
+Product CI clones the harness at a pinned SHA and runs `unit or offline_contract` on a runner
+without ngspice, pdftotext or kicad-cli unless the job installs them. Before naming a pin, run the
+two tiers against the product commit the pin will serve with those tools removed from PATH
+(symlink every other PATH binary into a scratch dir and use it as PATH), and check pytest's
+**exit code**, not the summary line: the root conftest fails a session with unlisted skips in the
+required tiers after the summary prints. A tool-gated test must be listed in
+`tests/known_skips.json` with reason `external tool: <tool> not installed` (TH-098); a usage error
+must not depend on a tool being present (TH-097). A pin that re-keys baselines (scan coverage,
+test adoptions) is valid only for product bases at or after the gated candidate.
 
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 

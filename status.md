@@ -5,6 +5,8 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
+Last updated: 2026-10-26 latest (4) — **HOUSEKEEPING (user OK):** pruned `results/v3_baseline/4701c26/standard/{baseline,candidate}` (v2.3.2 shipped; ledger-cited records kept), `results/wave10/aa` + `results/wave10/chained` snap trees (logs, captures, replay script kept), `results/spice_work` scratch; retired clones `product_0490c49` / `_a0df172` / `_2498831` / `_63f6a20` (clean). Remaining clones `product_07b7fb1`, `_004bba5`, `_d2b9e72`. Disk 189 G free. Held: round-9 / 9b trees until v3.0.0 is tagged; Wave 3 trees until Wave 3b is accepted.
+
 Last updated: 2026-10-26 latest (3) — **TH-098 FIXED (local, unpushed):** product CI pin `f54f2cd462a` still exited 1 on GitHub's runner (skip guard: 3 unlisted tool-gated skips, pdftotext / ngspice). Listed in `tests/known_skips.json` as external-tool skips (decision: per-test entries, no reason-pattern exemption). Tiers with pdftotext / ngspice / kicad-cli hidden: 3,493 / 0 / 11 / 4, exit 0. The product now installs ngspice + poppler-utils in that job (`622d348`), so the pin is green without this. Next TH-099.
 
 Last updated: 2026-10-26 latest (2) — **TH-097 FIXED:** pin `bd551df5b41` was red on product CI (GitHub runner has no ngspice; `test_unqualified_run_exits_2_without_all` got exit 1 from the ngspice check). `run_spice.py` now validates the selection first; new env-independent test; tiers with ngspice / kicad-cli stripped from PATH 3,495 / 0 / 9 / 4. Next TH-098.
