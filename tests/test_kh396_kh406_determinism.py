@@ -52,7 +52,7 @@ def _norm(path, seed):
 def test_esd_protection_order_is_seed_independent():
     runs = [_norm(FIX, s) for s in (1, 7, 123)]
     pairs = runs[0]["design_analysis"]["differential_pairs"]
-    assert pairs and pairs[0].get("esd_protection"), "fixture must yield a diff pair with 2 ESD ICs"
+    assert pairs and pairs[0].get("esd_protection"), "fixture must yield a diff pair with ESD protection"
     assert pairs[0]["esd_protection"] == sorted(pairs[0]["esd_protection"])
     assert json.dumps(runs[0], sort_keys=True) == json.dumps(runs[1], sort_keys=True) == json.dumps(runs[2], sort_keys=True)
 

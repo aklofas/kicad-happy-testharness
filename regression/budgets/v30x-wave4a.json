@@ -1,0 +1,32 @@
+{
+ "budget_id": "v30x-wave4a",
+ "baseline_sha": "0683d01",
+ "candidate_sha": "b31d4ff",
+ "profile": "standard",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-wave4a",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave4a:schematic",
+   "evidence": "A1 (KH-708 trim, read off component texts; echoes in findings/blocks, BOM merges, DNP-by-value), PWR (A3-A9/S3b/C4: power_rails / net classification / rail voltages / PR-DET moved, or a net name the two products' is_power_net_name / parse_voltage_from_net_name read differently; findings naming such a net), K1 (led -> diode), B1-B7 / V1-V6 / C1-C3 / C5 by their own blocks and rules; components move only in A1 texts, K1 type and DNP-by-value; nets / labels / sheets / header blocks never move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-27-v3.0.x-wave4/handoff-wave4-A.md (consolidated product budget budget-wave4-A.json in the same directory)"
+  },
+  {
+   "id": "PCB-A4d",
+   "analyzer": "pcb",
+   "path_glob": "/**",
+   "predicate": "v30x_wave4a:pcb_power_nets",
+   "evidence": "A4d: pcb units where a net name in the moved blocks is re-read as power by the candidate's is_power_net_name (ruling 62; the pcb analyzer classifies by name) or, in full-chain, whose upstream schematic moved under PWR: power_net_resolution/routing, layer_transitions, return_path_continuity, current_capacity, CC-DET / CC-002 follow the new power nets. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-27-v3.0.x-wave4/handoff-wave4-A.md (consolidated product budget budget-wave4-A.json in the same directory)"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave4a:downstream",
+   "evidence": "emc / thermal / cross_analysis units whose upstream schematic (or pcb) snap moved and is explained (D; cross XV-001..003 on A1 trimmed values, A4d / A8 / A9 EMC PDN and thermal regulator dissipation). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-27-v3.0.x-wave4/handoff-wave4-A.md (consolidated product budget budget-wave4-A.json in the same directory)"
+  }
+ ]
+}

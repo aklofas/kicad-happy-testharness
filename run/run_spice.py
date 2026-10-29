@@ -73,10 +73,12 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
     `timeout` is the per-subcircuit cap passed to the simulator; `outer_timeout`
     is this process's cap (TH-055 class). `workdir` is forwarded as --workdir so
     simulation files never land in the corpus checkout (TH-059); `env` defaults
-    to the hermetic offline environment (credentials stripped).
+    to the hermetic offline environment (credentials stripped, --offline passed).
 
     Returns (returncode, summary_dict_or_None, elapsed_s)."""
-    from harnesslib.execution import run_once, build_env
+    from harnesslib.execution import OFFLINE_ENV, run_once, build_env
+
+    env = env or build_env(offline=True)
 
     def make_cmd(out_path):
         cmd = [sys.executable, str(simulator_script), str(input_json),
@@ -88,6 +90,9 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
             # batch output and falls back to one global /tmp cache shared by every
             # worker, project and run — a manifest race and a cross-project leak (TH-077).
             cmd.extend(["--workdir", str(workdir), "--model-cache-dir", str(workdir)])
+        if env.get(OFFLINE_ENV) == "1":
+            # stripped credentials do not stop the LCSC tier, which needs none
+            cmd.append("--offline")
         if parasitics_json and Path(parasitics_json).exists():
             cmd.extend(["--parasitics", str(parasitics_json)])
         if extra_args:
@@ -96,8 +101,7 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
         return cmd
 
     output_json = Path(output_json)
-    res = run_once(make_cmd, output_json, analyzer="spice", timeout=outer_timeout,
-                   env=env or build_env(offline=True))
+    res = run_once(make_cmd, output_json, analyzer="spice", timeout=outer_timeout, env=env)
     if res.status == "ok":
         output_json.with_suffix(".err").unlink(missing_ok=True)
         with open(output_json) as f:

@@ -96,18 +96,19 @@ def test_i2c_vol_compatibility_field_structure():
     vc = finding["checks"]["vol_compatibility"]
     assert vc["status"] == "warning", f"expected warning status, got {vc['status']}"
     assert "pull_up_ohms" in vc, "missing pull_up_ohms"
-    assert "max_for_vol" in vc, "missing max_for_vol"
+    assert "min_for_vol" in vc, "missing min_for_vol"
+    assert "pull_up_voltage" in vc, "missing pull_up_voltage"
     assert "iol_ma" in vc, "missing iol_ma"
     assert "speed_mode" in vc, "missing speed_mode"
     assert isinstance(vc["pull_up_ohms"], (int, float))
-    assert isinstance(vc["max_for_vol"], (int, float))
+    assert isinstance(vc["min_for_vol"], (int, float))
     assert vc["iol_ma"] > 0, "iol_ma must be positive"
     assert vc["speed_mode"] in ("standard", "fast", "fast_plus", "high_speed")
 
 
 @pytest.mark.corpus
-def test_i2c_vol_pullup_exceeds_max():
-    """When vol_compatibility triggers, pull_up_ohms > max_for_vol."""
+def test_i2c_vol_pullup_below_min():
+    """When vol_compatibility triggers, pull_up_ohms < min_for_vol (too strong for IOL 3 mA)."""
     def check(data):
         return _get_protocol_finding(data, "i2c", "vol_compatibility") is not None
 
@@ -116,9 +117,9 @@ def test_i2c_vol_pullup_exceeds_max():
         return
     finding = _get_protocol_finding(data, "i2c", "vol_compatibility")
     vc = finding["checks"]["vol_compatibility"]
-    # The check fires when pull_up_ohms > max_for_vol
-    assert vc["pull_up_ohms"] > vc["max_for_vol"], \
-        f"pull_up {vc['pull_up_ohms']} should exceed max {vc['max_for_vol']}"
+    # The check fires when the pull-up is too strong to reach VOL at IOL: pull_up_ohms < min_for_vol
+    assert vc["pull_up_ohms"] < vc["min_for_vol"], \
+        f"pull_up {vc['pull_up_ohms']} should be below min {vc['min_for_vol']}"
 
 
 # ===========================================================================

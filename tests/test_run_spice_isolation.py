@@ -19,6 +19,7 @@ out = argv[argv.index('--output') + 1]
 wd = argv[argv.index('--workdir') + 1] if '--workdir' in argv else None
 mc = argv[argv.index('--model-cache-dir') + 1] if '--model-cache-dir' in argv else None
 json.dump({"summary": {"total": 1, "pass": 1}, "workdir": wd, "model_cache_dir": mc,
+           "offline_flag": "--offline" in argv,
            "has_creds": "DIGIKEY_CLIENT_ID" in os.environ,
            "offline": os.environ.get("KICAD_HAPPY_OFFLINE")}, open(out, "w"))
 """
@@ -36,6 +37,16 @@ def test_workdir_and_offline_env_reach_simulator(tmp_path, monkeypatch):
     assert doc["workdir"] == str(wd) and doc["has_creds"] is False and doc["offline"] == "1"
 
 
+def test_offline_run_passes_offline_flag(tmp_path):
+    """Stripping credentials is not enough: the LCSC tier needs none and still
+    queries jlcsearch unless the simulator is given --offline."""
+    sim = tmp_path / "sim.py"; sim.write_text(RECORDER)
+    inp = tmp_path / "x.kicad_sch.json"; inp.write_text("{}")
+    out = tmp_path / "out.json"
+    rc, _, _ = run_one_spice(sim, inp, out, workdir=tmp_path / "w")
+    assert rc == 0 and json.loads(out.read_text())["offline_flag"] is True
+
+
 def test_online_opt_in_keeps_credentials(tmp_path, monkeypatch):
     monkeypatch.setenv("DIGIKEY_CLIENT_ID", "secret")
     from harnesslib.execution import build_env
@@ -43,7 +54,8 @@ def test_online_opt_in_keeps_credentials(tmp_path, monkeypatch):
     inp = tmp_path / "x.kicad_sch.json"; inp.write_text("{}")
     out = tmp_path / "out.json"
     rc, _, _ = run_one_spice(sim, inp, out, workdir=tmp_path / "w", env=build_env(offline=False))
-    assert rc == 0 and json.loads(out.read_text())["has_creds"] is True
+    doc = json.loads(out.read_text())
+    assert rc == 0 and doc["has_creds"] is True and doc["offline_flag"] is False
 
 
 def test_crash_leaves_no_output(tmp_path):
