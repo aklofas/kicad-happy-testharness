@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~50 (tolerance 10%)",
+      "description": "Component count ~51 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 45,
-        "max": 56
+        "min": 48,
+        "max": 54
       }
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "16 audit_esd_protection detected",
+      "description": "15 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -101,7 +101,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 16
+        "value": 15
       }
     },
     {
@@ -113,7 +113,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 16
+        "value": 15
       }
     },
     {
@@ -173,7 +173,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "2 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -183,7 +183,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -240,7 +240,7 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "6 detect_label_aliases detected",
+      "description": "3 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -314,7 +314,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
@@ -340,13 +340,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
       "id": "SEED-00000032",
-      "description": "2 validate_pullups detected",
+      "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -370,6 +370,15 @@
         "path": "statistics.component_types.connector",
         "op": "min_count",
         "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000035",
+      "description": "Has 5 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 3
       }
     }
   ]

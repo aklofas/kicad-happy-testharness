@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -210,13 +210,13 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "U12 in detect_power_regulators",
+      "description": "U3 in detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U12$"
+        "pattern": "^U3$"
       }
     },
     {
@@ -294,22 +294,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-003",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (PR-003; 1 site)"
       }
     },
     {
       "id": "STRUCT-00000028",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
       "description": "Exactly 9 validate_voltage_levels",
       "check": {
         "path": "findings",

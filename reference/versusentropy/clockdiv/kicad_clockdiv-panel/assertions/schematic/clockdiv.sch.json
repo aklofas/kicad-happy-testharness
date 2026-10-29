@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~44 (tolerance 10%)",
+      "description": "Component count ~110 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 39,
-        "max": 49
+        "min": 104,
+        "max": 116
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~43 (tolerance 10%)",
+      "description": "Net count ~84 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 38,
-        "max": 48
+        "min": 79,
+        "max": 89
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "7 audit_esd_protection detected",
+      "description": "19 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -71,7 +71,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 7
+        "value": 19
       }
     },
     {
@@ -83,11 +83,56 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 7
+        "value": 19
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "7 audit_led_circuits detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All audit_led_circuits have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All audit_led_circuits type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All audit_led_circuits drive_method values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_led_circuits",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
@@ -97,7 +142,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000014",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -108,12 +153,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000015",
       "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -123,8 +168,8 @@
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "3 detect_design_observations detected",
+      "id": "SEED-00000016",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -133,17 +178,17 @@
       }
     },
     {
-      "id": "SEED-00000013",
-      "description": "1 detect_led_drivers detected",
+      "id": "SEED-00000017",
+      "description": "7 detect_label_aliases detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_led_drivers",
+        "detector_filter": "detect_label_aliases",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000018",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -153,7 +198,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000019",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -164,17 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
-      "description": "4 detect_pwm_led_dimming detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_pwm_led_dimming",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000017",
+      "id": "SEED-00000020",
       "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -184,7 +219,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000021",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -195,8 +230,8 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "4 detect_transistor_circuits detected",
+      "id": "SEED-00000022",
+      "description": "11 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -205,7 +240,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000023",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -216,17 +251,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -235,39 +260,48 @@
       }
     },
     {
-      "id": "SEED-00000023",
-      "description": "Has 7 connector(s)",
+      "id": "SEED-00000025",
+      "description": "Has 19 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 14
+      }
+    },
+    {
+      "id": "SEED-00000026",
+      "description": "Has 12 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000027",
+      "description": "Has 7 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
         "op": "min_count",
         "value": 5
       }
     },
     {
-      "id": "SEED-00000024",
-      "description": "Has 6 diode(s)",
-      "check": {
-        "path": "statistics.component_types.diode",
-        "op": "min_count",
-        "value": 4
-      }
-    },
-    {
-      "id": "SEED-00000025",
-      "description": "Has 16 resistor(s)",
+      "id": "SEED-00000028",
+      "description": "Has 52 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 12
+        "value": 39
       }
     },
     {
-      "id": "SEED-00000026",
-      "description": "Has 5 transistor(s)",
+      "id": "SEED-00000029",
+      "description": "Has 11 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 3
+        "value": 8
       }
     }
   ]

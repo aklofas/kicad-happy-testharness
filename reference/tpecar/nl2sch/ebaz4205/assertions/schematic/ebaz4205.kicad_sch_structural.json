@@ -76,7 +76,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -92,7 +92,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -256,12 +256,12 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "Exactly 11 detect_voltage_dividers",
+      "description": "Exactly 10 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 11
+        "value": 10
       }
     },
     {
@@ -376,17 +376,6 @@
     },
     {
       "id": "STRUCT-00000035",
-      "description": "R2558 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R2558$"
-      }
-    },
-    {
-      "id": "STRUCT-00000036",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
@@ -396,7 +385,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000036",
       "description": "Exactly 10 validate_pullups",
       "check": {
         "path": "findings",

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~119 (tolerance 10%)",
+      "description": "Component count ~21 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 113,
-        "max": 125
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -144,7 +144,17 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "2 detect_design_observations detected",
+      "description": "1 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -153,8 +163,8 @@
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "46 detect_label_aliases detected",
+      "id": "SEED-00000016",
+      "description": "40 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -163,7 +173,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "65 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -173,57 +183,21 @@
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "Has 8 capacitor(s)",
+      "id": "SEED-00000018",
+      "description": "Has 9 jumper(s)",
       "check": {
-        "path": "statistics.component_types.capacitor",
+        "path": "statistics.component_types.jumper",
         "op": "min_count",
         "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000018",
-      "description": "Has 16 connector(s)",
-      "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 12
       }
     },
     {
       "id": "SEED-00000019",
-      "description": "Has 65 jumper(s)",
-      "check": {
-        "path": "statistics.component_types.jumper",
-        "op": "min_count",
-        "value": 48
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "Has 8 other(s)",
-      "check": {
-        "path": "statistics.component_types.other",
-        "op": "min_count",
-        "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "Has 12 resistor(s)",
+      "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 9
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "Has 9 resistor_network(s)",
-      "check": {
-        "path": "statistics.component_types.resistor_network",
-        "op": "min_count",
-        "value": 6
+        "value": 3
       }
     }
   ]

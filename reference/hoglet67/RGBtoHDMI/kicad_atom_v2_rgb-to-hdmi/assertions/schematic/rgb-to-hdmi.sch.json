@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~137 (tolerance 10%)",
+      "description": "Net count ~93 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 130,
-        "max": 144
+        "min": 88,
+        "max": 98
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_connector_ground_distribution detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -153,38 +153,39 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 audit_power_pin_dc_paths detected",
+      "description": "1 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "detect_debug_interfaces",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000016",
-      "description": "6 audit_rail_sources detected",
+      "description": "All detect_debug_interfaces have connector_ref",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
+        "detector_filter": "detect_debug_interfaces",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
       }
     },
     {
       "id": "SEED-00000017",
+      "description": "All detect_debug_interfaces interface_type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "count_matches",
+        "field": "interface_type",
+        "pattern": "^(swd|jtag|debug)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
       "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -194,8 +195,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "4 detect_design_observations detected",
+      "id": "SEED-00000019",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -204,7 +205,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -214,7 +215,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -225,8 +226,8 @@
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "5 detect_rc_filters detected",
+      "id": "SEED-00000022",
+      "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -235,7 +236,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -246,8 +247,8 @@
       }
     },
     {
-      "id": "SEED-00000023",
-      "description": "4 detect_voltage_dividers detected",
+      "id": "SEED-00000024",
+      "description": "5 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -256,7 +257,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -264,16 +265,6 @@
         "op": "not_contains_match",
         "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000025",
-      "description": "2 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
       }
     },
     {

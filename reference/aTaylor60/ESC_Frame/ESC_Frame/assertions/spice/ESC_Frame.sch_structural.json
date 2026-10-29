@@ -6,28 +6,148 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling simulation(s)",
+      "description": "Exactly 1 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 6 transistor_circuit simulation(s)",
+      "description": "Exactly 24 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 6
+        "value": 24
       }
     },
     {
       "id": "STRUCT-00000003",
+      "description": "FET201 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET201\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "FET202 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET202\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "FET203 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET203\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "FET204 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET204\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "FET205 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET205\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "FET206 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET206\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "FET301 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET301\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "FET302 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET302\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "FET303 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET303\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "FET304 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET304\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "FET305 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET305\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "FET306 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET306\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "FET401 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -37,7 +157,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000016",
       "description": "FET402 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -47,7 +167,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000017",
       "description": "FET403 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -57,7 +177,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000018",
       "description": "FET404 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -67,7 +187,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000019",
       "description": "FET405 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -77,7 +197,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000020",
       "description": "FET406 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -87,7 +207,67 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000021",
+      "description": "FET501 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET501\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "FET502 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET502\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "FET503 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET503\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "FET504 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET504\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "FET505 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET505\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "FET506 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFET506\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
       "description": "C1000 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -97,23 +277,43 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "C401 simulated as decoupling",
+      "id": "STRUCT-00000028",
+      "description": "C201 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC401\\b"
+        "pattern": "\\bC201\\b"
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "C402 simulated as decoupling",
+      "id": "STRUCT-00000029",
+      "description": "C202 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC402\\b"
+        "pattern": "\\bC202\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "C301 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC301\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
+      "description": "C302 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC302\\b"
       }
     }
   ]

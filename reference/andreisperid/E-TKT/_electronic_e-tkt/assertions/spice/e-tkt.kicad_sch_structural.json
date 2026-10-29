@@ -28,17 +28,39 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 6 rc_filter simulation(s)",
+      "description": "Exactly 5 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 6
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "R_DFU1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -48,7 +70,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "C_DFU1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -58,7 +80,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "R_ENA1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -68,33 +90,13 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "C_ENA1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC_ENA1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "R_POW_FFB1 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR_POW_FFB1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "C_POW_6V_FF1 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC_POW_6V_FF1\\b"
       }
     },
     {
@@ -159,46 +161,26 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "C_NEMA2 simulated as decoupling",
+      "description": "R_POW_FBT1 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC_NEMA2\\b"
+        "pattern": "\\bR_POW_FBT1\\b"
       }
     },
     {
       "id": "STRUCT-00000017",
-      "description": "C_POW2 simulated as decoupling",
+      "description": "R_POW_FFB1 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC_POW2\\b"
+        "pattern": "\\bR_POW_FFB1\\b"
       }
     },
     {
       "id": "STRUCT-00000018",
-      "description": "C_MCU2 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC_MCU2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "C_MCU1 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC_MCU1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
       "description": "C_NEMA1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -208,17 +190,47 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
-      "description": "C_STP1 simulated as decoupling",
+      "id": "STRUCT-00000019",
+      "description": "C_POW_IN1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC_STP1\\b"
+        "pattern": "\\bC_POW_IN1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "C_ALT6V_1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ALT6V_1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "C_POW_IN2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_IN2\\b"
       }
     },
     {
       "id": "STRUCT-00000022",
+      "description": "C_POW_IN3 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_IN3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
       "description": "C_POW1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -228,7 +240,87 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
+      "description": "C_POW_OUT1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "C_POW_OUT3 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "C_ALT6V_2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ALT6V_2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "C_POW_OUT5 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
+      "description": "C_NEMA2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_NEMA2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "C_POW2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "C_MCU2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_MCU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
+      "description": "C_MCU1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_MCU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000032",
       "description": "C_SER5 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -238,7 +330,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000033",
       "description": "C_SER4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -248,7 +340,27 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000034",
+      "description": "R_POW_FBT1 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR_POW_FBT1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000035",
+      "description": "R_POW_FFB1 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR_POW_FFB1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000036",
       "description": "C_NEMA2 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -258,7 +370,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000037",
       "description": "C_POW2 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -268,7 +380,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000038",
       "description": "C_MCU2 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -278,7 +390,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000039",
       "description": "C_MCU1 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -288,13 +400,53 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000040",
       "description": "C_POW1 simulated as inrush",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC_POW1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000041",
+      "description": "C_POW_OUT1 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000042",
+      "description": "C_POW_OUT3 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000043",
+      "description": "C_ALT6V_2 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ALT6V_2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000044",
+      "description": "C_POW_OUT5 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT5\\b"
       }
     }
   ]

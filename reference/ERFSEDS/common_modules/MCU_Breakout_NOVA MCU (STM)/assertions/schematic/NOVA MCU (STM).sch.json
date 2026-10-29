@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~38 (tolerance 10%)",
+      "description": "Component count ~35 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 34,
-        "max": 42
+        "min": 31,
+        "max": 39
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~116 (tolerance 10%)",
+      "description": "Net count ~60 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 110,
-        "max": 122
+        "min": 57,
+        "max": 63
       }
     },
     {
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -100,7 +100,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "4 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -110,15 +110,25 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 21 capacitor(s)",
+      "description": "48 detect_label_aliases detected",
       "check": {
-        "path": "statistics.component_types.capacitor",
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
         "op": "min_count",
-        "value": 15
+        "value": 1
       }
     },
     {
       "id": "SEED-00000012",
+      "description": "Has 18 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 13
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

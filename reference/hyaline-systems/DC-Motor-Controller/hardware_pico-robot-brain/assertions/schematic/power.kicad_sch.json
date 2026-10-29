@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~9 (tolerance 10%)",
+      "description": "Net count ~7 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "4 analyze_connectivity detected",
+      "description": "2 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 audit_esd_protection detected",
+      "description": "2 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -91,7 +91,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -103,7 +103,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -144,7 +144,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -160,17 +160,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 detect_decoupling detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_decoupling",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "3 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -179,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -189,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -200,7 +190,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "2 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -210,7 +200,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",

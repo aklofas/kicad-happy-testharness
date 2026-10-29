@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~15 (tolerance 10%)",
+      "description": "Net count ~14 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 12,
+        "max": 16
       }
     },
     {
@@ -53,6 +53,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "12 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "Has 32 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -61,7 +71,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "Has 14 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",

@@ -6,33 +6,33 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 crystal_circuit simulation(s)",
+      "description": "Exactly 1 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^crystal_circuit$",
-        "value": 2
+        "pattern": "^rc_filter$",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "X1 simulated as crystal_circuit",
+      "description": "R2 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bX1\\b"
+        "pattern": "\\bR2\\b"
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "X2 simulated as crystal_circuit",
+      "description": "C2 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bX2\\b"
+        "pattern": "\\bC2\\b"
       }
     }
   ]

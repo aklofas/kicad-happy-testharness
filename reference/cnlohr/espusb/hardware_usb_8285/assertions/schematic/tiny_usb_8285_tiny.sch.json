@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~31 (tolerance 10%)",
+      "description": "Net count ~26 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 23,
+        "max": 29
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "9 audit_esd_protection detected",
+      "description": "6 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -71,7 +71,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 9
+        "value": 6
       }
     },
     {
@@ -83,7 +83,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 9
+        "value": 6
       }
     },
     {
@@ -98,7 +98,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -108,7 +108,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -155,22 +155,27 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 detect_shorted_two_pin_components detected",
+      "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {
       "id": "SEED-00000016",
+      "description": "All detect_power_regulators have ref present",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
@@ -180,7 +185,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -190,7 +195,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:09Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -83,22 +83,22 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 3 detect_decoupling",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 5 detect_design_observations",
+      "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -208,22 +208,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "Exactly 1 detect_shorted_two_pin_components",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "Exactly 3 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -233,7 +217,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "Q4 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -244,7 +228,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Q5 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -255,7 +239,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "Q6 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -266,7 +250,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -276,7 +260,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "R32 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -284,6 +268,17 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R32$"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "R40 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R40$"
       }
     },
     {
@@ -310,17 +305,6 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "R40 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R40$"
-      }
-    },
-    {
-      "id": "STRUCT-00000030",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -331,12 +315,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:09Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

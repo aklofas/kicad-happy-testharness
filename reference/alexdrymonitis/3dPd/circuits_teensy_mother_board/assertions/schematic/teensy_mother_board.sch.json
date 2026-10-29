@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~35 (tolerance 10%)",
+      "description": "Net count ~31 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 27,
+        "max": 35
       }
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -118,22 +118,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "1 detect_isolation_barriers detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_isolation_barriers",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "Has 13 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

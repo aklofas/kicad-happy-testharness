@@ -46,28 +46,28 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 detect_design_observations",
+      "description": "Exactly 4 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 2 detect_voltage_dividers",
+      "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -83,6 +83,17 @@
     },
     {
       "id": "STRUCT-00000008",
+      "description": "R501 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R501$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "R502 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -93,7 +104,18 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
+      "description": "R503 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R503$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -103,23 +125,13 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
         "detector_filter": "suggest_certifications",
         "op": "equals",
         "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 2 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 2
       }
     }
   ]

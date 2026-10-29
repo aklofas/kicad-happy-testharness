@@ -36,22 +36,32 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 audit_rail_sources",
+      "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 2
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 1 detect_clock_distribution",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_clock_distribution",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -61,7 +71,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "X1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Exactly 2 detect_design_observations",
       "check": {
         "path": "findings",
@@ -92,23 +102,23 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 1 detect_voltage_dividers",
+      "id": "STRUCT-00000010",
+      "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "RV1 in detect_voltage_dividers",
+      "id": "STRUCT-00000011",
+      "description": "RV1 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
-        "field": "r_top.ref",
+        "field": "resistor.ref",
         "pattern": "^RV1$"
       }
     }

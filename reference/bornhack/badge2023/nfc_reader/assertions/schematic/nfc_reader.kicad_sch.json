@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~63 (tolerance 10%)",
+      "description": "Component count ~68 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 59,
-        "max": 67
+        "min": 64,
+        "max": 72
       }
     },
     {
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -124,7 +124,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 audit_led_circuits detected",
+      "description": "3 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -152,7 +152,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -164,7 +164,7 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -189,7 +189,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -205,7 +205,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -305,6 +305,27 @@
     },
     {
       "id": "SEED-00000028",
+      "description": "4 detect_lc_filters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000029",
+      "description": "All detect_lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000030",
       "description": "1 detect_memory_interfaces detected",
       "check": {
         "path": "findings",
@@ -314,7 +335,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000031",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -324,7 +345,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000032",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -335,7 +356,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000033",
       "description": "4 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -345,7 +366,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000034",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -356,7 +377,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000035",
       "description": "1 validate_crystal_load_caps detected",
       "check": {
         "path": "findings",
@@ -366,7 +387,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000036",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -377,12 +398,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000037",
       "description": "Has 32 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -391,12 +412,12 @@
       }
     },
     {
-      "id": "SEED-00000036",
-      "description": "Has 16 resistor(s)",
+      "id": "SEED-00000038",
+      "description": "Has 18 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 12
+        "value": 13
       }
     }
   ]

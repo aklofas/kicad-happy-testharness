@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~150 (tolerance 10%)",
+      "description": "Net count ~105 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 142,
-        "max": 158
+        "min": 99,
+        "max": 111
       }
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "23 audit_esd_protection detected",
+      "description": "22 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 23
+        "value": 22
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 23
+        "value": 22
       }
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "4 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -118,12 +118,22 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000012",
+      "description": "2 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "1 detect_motor_drivers detected",
       "check": {
         "path": "findings",
@@ -133,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "All detect_motor_drivers have driver_reference",
       "check": {
         "path": "findings",
@@ -144,7 +154,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "All detect_motor_drivers driver_type values are valid",
       "check": {
         "path": "findings",
@@ -156,7 +166,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -166,7 +176,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "Has 23 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

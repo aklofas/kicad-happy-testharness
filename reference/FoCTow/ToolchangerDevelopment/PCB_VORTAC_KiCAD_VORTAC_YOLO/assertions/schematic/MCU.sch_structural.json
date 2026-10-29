@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:09Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -82,18 +82,23 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 detect_shorted_two_pin_components",
+      "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R31 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R31$"
       }
     }
   ]

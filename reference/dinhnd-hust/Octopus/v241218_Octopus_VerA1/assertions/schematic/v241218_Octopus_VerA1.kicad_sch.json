@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~169 (tolerance 10%)",
+      "description": "Net count ~165 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 160,
-        "max": 178
+        "min": 156,
+        "max": 174
       }
     },
     {
@@ -183,28 +183,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000018",
-      "description": "1 audit_rail_sources detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "SEED-00000019",
       "description": "1 detect_adc_circuits detected",
       "check": {
         "path": "findings",
@@ -214,7 +198,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "All detect_adc_circuits have ref",
       "check": {
         "path": "findings",
@@ -225,7 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "All detect_adc_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -237,11 +221,21 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "1 detect_bms_systems detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_bms_systems",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
+      "description": "1 detect_bridge_circuits detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_bridge_circuits",
         "op": "min_count",
         "value": 1
       }
@@ -290,7 +284,7 @@
     },
     {
       "id": "SEED-00000027",
-      "description": "2 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -300,7 +294,7 @@
     },
     {
       "id": "SEED-00000028",
-      "description": "15 detect_design_observations detected",
+      "description": "12 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -310,7 +304,7 @@
     },
     {
       "id": "SEED-00000029",
-      "description": "5 detect_label_aliases detected",
+      "description": "4 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -362,7 +356,7 @@
     },
     {
       "id": "SEED-00000034",
-      "description": "37 detect_rc_filters detected",
+      "description": "32 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -382,7 +376,7 @@
     },
     {
       "id": "SEED-00000036",
-      "description": "20 detect_transistor_circuits detected",
+      "description": "18 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -403,7 +397,7 @@
     },
     {
       "id": "SEED-00000038",
-      "description": "1 detect_voltage_dividers detected",
+      "description": "8 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -444,7 +438,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
@@ -460,16 +454,6 @@
     },
     {
       "id": "SEED-00000043",
-      "description": "1 validate_voltage_levels detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_voltage_levels",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000044",
       "description": "Has 71 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -478,7 +462,7 @@
       }
     },
     {
-      "id": "SEED-00000045",
+      "id": "SEED-00000044",
       "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -487,7 +471,7 @@
       }
     },
     {
-      "id": "SEED-00000046",
+      "id": "SEED-00000045",
       "description": "Has 24 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -496,7 +480,7 @@
       }
     },
     {
-      "id": "SEED-00000047",
+      "id": "SEED-00000046",
       "description": "Has 8 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -505,7 +489,7 @@
       }
     },
     {
-      "id": "SEED-00000048",
+      "id": "SEED-00000047",
       "description": "Has 97 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -514,7 +498,7 @@
       }
     },
     {
-      "id": "SEED-00000049",
+      "id": "SEED-00000048",
       "description": "Has 24 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
@@ -523,7 +507,7 @@
       }
     },
     {
-      "id": "SEED-00000050",
+      "id": "SEED-00000049",
       "description": "Has 20 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

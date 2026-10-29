@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 2 rc_filter simulation(s)",
+      "description": "Exactly 1 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -59,16 +59,6 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "C47 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC47\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "C46 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -78,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000007",
       "description": "C43 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -88,13 +78,23 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "C41 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC41\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C47 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC47\\b"
       }
     },
     {

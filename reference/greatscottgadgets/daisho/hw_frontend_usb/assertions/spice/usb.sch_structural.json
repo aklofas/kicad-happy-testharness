@@ -17,28 +17,48 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 transistor_circuit simulation(s)",
+      "description": "Exactly 2 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 11 voltage_divider simulation(s)",
+      "description": "Exactly 10 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 11
+        "value": 10
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "R65 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR65\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R14 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR14\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "R17 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -48,33 +68,13 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "R16 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bR16\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "R22 simulated as voltage_divider",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR22\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R18 simulated as voltage_divider",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR18\\b"
       }
     },
     {
@@ -219,16 +219,6 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "R65 simulated as voltage_divider",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR65\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
       "description": "R9 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -238,13 +228,23 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "R8 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bR8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "Q1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1\\b"
       }
     },
     {

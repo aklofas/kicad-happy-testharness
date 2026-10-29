@@ -36,7 +36,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:09Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -73,37 +73,26 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 4 detect_design_observations",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 3 detect_lc_filters",
+      "description": "Exactly 2 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "L6 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L6$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
       "description": "L5 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -111,6 +100,17 @@
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "L6 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L6$"
       }
     },
     {
@@ -180,16 +180,6 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 1 detect_rf_matching",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rf_matching",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
       "description": "Exactly 1 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -199,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "Exactly 6 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -209,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "R15 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -220,7 +210,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "R19 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -231,7 +221,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "R21 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -242,7 +232,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "R53 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -253,7 +243,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "R92 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -264,7 +254,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "R90 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -275,13 +265,13 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
-      "description": "Exactly 2 validate_pullups",
+      "id": "STRUCT-00000025",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     }
   ]

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~721 (tolerance 10%)",
+      "description": "Net count ~493 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 699,
-        "max": 743
+        "min": 478,
+        "max": 508
       }
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "8 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -118,7 +118,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -165,6 +165,16 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "12 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "17 detect_lc_filters detected",
       "check": {
         "path": "findings",
@@ -174,7 +184,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
@@ -185,8 +195,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "43 detect_rc_filters detected",
+      "id": "SEED-00000019",
+      "description": "39 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -195,7 +205,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -206,7 +216,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "9 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -216,7 +226,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -227,8 +237,8 @@
       }
     },
     {
-      "id": "SEED-00000022",
-      "description": "13 detect_voltage_dividers detected",
+      "id": "SEED-00000023",
+      "description": "9 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -237,7 +247,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -245,16 +255,6 @@
         "op": "not_contains_match",
         "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000024",
-      "description": "8 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
       }
     },
     {

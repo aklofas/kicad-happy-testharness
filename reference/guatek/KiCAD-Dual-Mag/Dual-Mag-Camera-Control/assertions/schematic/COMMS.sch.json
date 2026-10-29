@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~54 (tolerance 10%)",
+      "description": "Net count ~42 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 51,
-        "max": 57
+        "min": 37,
+        "max": 47
       }
     },
     {
@@ -108,6 +108,32 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "1 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "RS-001",
+        "tagged_at": "2026-10-29T21:55:56Z",
+        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "2 detect_design_observations detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "16 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -117,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000014",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -126,7 +152,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "Has 16 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -135,7 +161,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "Has 16 fuse(s)",
       "check": {
         "path": "statistics.component_types.fuse",

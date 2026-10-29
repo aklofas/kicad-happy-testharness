@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~19 (tolerance 10%)",
+      "description": "Component count ~23 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 20,
+        "max": 26
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 analyze_usb_compliance detected",
+      "description": "1 analyze_usb_compliance detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_usb_compliance",
@@ -53,7 +53,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -206,11 +206,20 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "Has 8 resistor(s)",
+      "description": "Has 5 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 6
+        "value": 7
       }
     }
   ]

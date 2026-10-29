@@ -65,12 +65,12 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "SMD count ~24 (tolerance 10%)",
+      "description": "SMD count ~18 (tolerance 10%)",
       "check": {
         "path": "statistics.smd_count",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 16,
+        "max": 20
       }
     },
     {
@@ -95,6 +95,15 @@
       "description": "1 decoupling placement(s) analyzed",
       "check": {
         "path": "decoupling_placement",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 power net(s) analyzed",
+      "check": {
+        "path": "power_net_routing",
         "op": "min_count",
         "value": 1
       }

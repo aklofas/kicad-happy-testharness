@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~23 (tolerance 10%)",
+      "description": "Net count ~22 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 19,
+        "max": 25
       }
     },
     {
@@ -118,13 +118,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "2 detect_decoupling detected",
+      "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -134,7 +134,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "3 detect_design_observations detected",
+      "description": "4 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -175,7 +175,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "6 detect_rc_filters detected",
+      "description": "5 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -217,6 +217,16 @@
     },
     {
       "id": "SEED-00000021",
+      "description": "1 validate_feedback_stability detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_feedback_stability",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
       "description": "Has 12 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -225,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -234,7 +244,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

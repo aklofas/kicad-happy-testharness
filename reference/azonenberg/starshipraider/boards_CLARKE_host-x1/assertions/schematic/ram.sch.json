@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~166 (tolerance 10%)",
+      "description": "Net count ~80 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 157,
-        "max": 175
+        "min": 76,
+        "max": 84
       }
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "6 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -79,7 +79,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "2 detect_design_observations detected",
+      "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -89,16 +89,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "2 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "Has 16 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -107,7 +97,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

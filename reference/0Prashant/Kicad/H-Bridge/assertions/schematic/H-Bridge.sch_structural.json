@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 audit_esd_protection",
+      "description": "Exactly 2 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -36,7 +36,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -72,36 +72,26 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 3 detect_led_drivers",
+      "description": "Exactly 1 detect_led_drivers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_led_drivers",
         "op": "equals",
-        "value": 3
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 detect_pwm_led_dimming",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_pwm_led_dimming",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 5 detect_transistor_circuits",
+      "description": "Exactly 7 detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "equals",
-        "value": 5
+        "value": 7
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -112,7 +102,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "Q10 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -123,7 +113,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -131,6 +121,17 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Q4 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
       }
     },
     {
@@ -146,6 +147,17 @@
     },
     {
       "id": "STRUCT-00000014",
+      "description": "Q8 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "Q9 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -156,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -166,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "R8 in detect_voltage_dividers",
       "check": {
         "path": "findings",

@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~152 (tolerance 10%)",
+      "description": "Component count ~560 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 144,
-        "max": 160
+        "min": 543,
+        "max": 577
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~12 (tolerance 10%)",
+      "description": "Net count ~20 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 18,
+        "max": 22
       }
     },
     {
@@ -63,13 +63,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "72 detect_addressable_leds detected",
+      "description": "276 detect_addressable_leds detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_addressable_leds",
@@ -99,20 +99,30 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 73 capacitor(s)",
+      "description": "10 detect_label_aliases detected",
       "check": {
-        "path": "statistics.component_types.capacitor",
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
         "op": "min_count",
-        "value": 54
+        "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 72 led(s)",
+      "description": "Has 277 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 207
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 276 led(s)",
       "check": {
         "path": "statistics.component_types.led",
         "op": "min_count",
-        "value": 54
+        "value": 207
       }
     }
   ]

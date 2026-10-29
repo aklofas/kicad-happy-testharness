@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~111 (tolerance 10%)",
+      "description": "Component count ~117 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 105,
-        "max": 117
+        "min": 111,
+        "max": 123
       }
     },
     {
@@ -98,7 +98,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 audit_led_circuits detected",
+      "description": "4 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -126,7 +126,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -138,7 +138,7 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -163,7 +163,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -179,7 +179,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "5 detect_decoupling detected",
+      "description": "6 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -189,7 +189,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "11 detect_design_observations detected",
+      "description": "12 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -388,11 +388,11 @@
     },
     {
       "id": "SEED-00000037",
-      "description": "Has 39 capacitor(s)",
+      "description": "Has 40 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 29
+        "value": 30
       }
     },
     {
@@ -424,11 +424,20 @@
     },
     {
       "id": "SEED-00000041",
-      "description": "Has 22 resistor(s)",
+      "description": "Has 5 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000042",
+      "description": "Has 24 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 16
+        "value": 18
       }
     }
   ]

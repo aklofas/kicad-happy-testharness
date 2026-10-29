@@ -17,17 +17,6 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 lc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
       "description": "Exactly 8 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -35,6 +24,17 @@
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
         "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
       }
     },
     {
@@ -190,26 +190,6 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "L1 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bL1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
-      "description": "C2 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "R5 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -219,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000020",
       "description": "R3 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -229,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000021",
       "description": "C1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -239,7 +219,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000022",
       "description": "C15 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -249,7 +229,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000023",
       "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -259,7 +239,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000024",
       "description": "C13 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -269,7 +249,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000025",
       "description": "C12 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -279,7 +259,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000026",
       "description": "C11 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -289,7 +269,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000027",
       "description": "C16 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -299,13 +279,33 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000028",
       "description": "C20 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC20\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "R5 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "R3 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR3\\b"
       }
     }
   ]

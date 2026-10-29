@@ -6,18 +6,40 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 rc_filter simulation(s)",
+      "description": "Exactly 1 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
-        "value": 2
+        "pattern": "^inrush$",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R_POW_FBT1 simulated as rc_filter",
+      "description": "Exactly 1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R_POW_FBT1 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -26,18 +48,8 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "C_ALT6V_2 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC_ALT6V_2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "R_POW_FFB1 simulated as rc_filter",
+      "id": "STRUCT-00000005",
+      "description": "R_POW_FFB1 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -46,13 +58,73 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "C_POW_6V_FF1 simulated as rc_filter",
+      "id": "STRUCT-00000006",
+      "description": "R_POW_FBT1 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC_POW_6V_FF1\\b"
+        "pattern": "\\bR_POW_FBT1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R_POW_FFB1 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR_POW_FFB1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C_POW_OUT1 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C_POW_OUT3 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C_ALT6V_2 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ALT6V_2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C_POW_OUT5 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C_POW_OUT2 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_POW_OUT2\\b"
       }
     }
   ]

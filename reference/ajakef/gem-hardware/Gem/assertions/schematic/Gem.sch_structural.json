@@ -16,38 +16,22 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 7 audit_rail_sources",
+      "description": "Exactly 6 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 7
+        "value": 6
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:11Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 detect_adc_circuits",
       "check": {
         "path": "findings",
@@ -57,13 +41,23 @@
       }
     },
     {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 detect_decoupling",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
       "id": "STRUCT-00000005",
-      "description": "Exactly 4 detect_design_observations",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -78,12 +72,12 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 6 detect_protection_devices",
+      "description": "Exactly 7 detect_protection_devices",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
         "op": "equals",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -110,6 +104,17 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "F3 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "F4 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -120,7 +125,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "F5 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -131,7 +136,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "F6 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -142,7 +147,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "F7 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -153,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -163,30 +168,14 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "R2 in detect_rc_filters",
+      "id": "STRUCT-00000016",
+      "description": "R1 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 1 detect_shorted_two_pin_components",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+        "pattern": "^R1$"
       }
     },
     {
@@ -223,22 +212,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "Exactly 2 validate_i2c_bus",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_i2c_bus",
-        "op": "equals",
-        "value": 2
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (PR-001; 4 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

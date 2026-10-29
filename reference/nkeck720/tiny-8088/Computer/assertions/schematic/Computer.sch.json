@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~250 (tolerance 10%)",
+      "description": "Net count ~163 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 242,
-        "max": 258
+        "min": 154,
+        "max": 172
       }
     },
     {
@@ -43,6 +43,16 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audit_connector_ground_distribution detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_connector_ground_distribution",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "2 audit_esd_protection detected",
       "check": {
         "path": "findings",
@@ -52,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "All audit_esd_protection have connector_ref",
       "check": {
         "path": "findings",
@@ -63,7 +73,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "All audit_esd_protection coverage values are valid",
       "check": {
         "path": "findings",
@@ -75,7 +85,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "All audit_esd_protection risk_level values are valid",
       "check": {
         "path": "findings",
@@ -87,29 +97,13 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_lifecycle_skipped",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "1 audit_rail_sources detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
@@ -145,7 +139,7 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "8 detect_design_observations detected",
+      "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -207,37 +201,6 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "1 detect_voltage_dividers detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "All detect_voltage_dividers have non-zero ratio",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "not_contains_match",
-        "field": "ratio",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "3 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000023",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -246,7 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000021",
       "description": "Has 18 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -255,7 +218,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000022",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

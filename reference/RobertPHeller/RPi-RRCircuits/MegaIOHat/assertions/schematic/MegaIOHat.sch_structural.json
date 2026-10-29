@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 audit_connector_ground_distribution",
+      "description": "Exactly 4 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -46,7 +46,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:11Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -62,38 +62,54 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 detect_design_observations",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 3
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 4 validate_i2c_bus",
+      "description": "Exactly 1 detect_i2c_address_conflicts",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_i2c_bus",
+        "detector_filter": "detect_i2c_address_conflicts",
         "op": "equals",
-        "value": 4
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
-        "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (PR-001; 4 sites)"
+        "tagged_by_rule": "IA-001",
+        "tagged_at": "2026-10-29T21:56:11Z",
+        "tagged_reason": "schema_era key added (IA-001; 1 site)"
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 8 validate_pullups",
+      "description": "Exactly 3 validate_i2c_bus",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_i2c_bus",
+        "op": "equals",
+        "value": 3
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PR-001",
+        "tagged_at": "2026-10-29T21:56:11Z",
+        "tagged_reason": "schema_era key added (PR-001; 4 sites)"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Exactly 4 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 8
+        "value": 4
       }
     }
   ]

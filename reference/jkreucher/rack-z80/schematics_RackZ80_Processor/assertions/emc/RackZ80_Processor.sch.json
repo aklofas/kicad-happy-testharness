@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~114 (tolerance 10%)",
+      "description": "Finding count ~116 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 108,
-        "max": 120
+        "min": 110,
+        "max": 122
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~51",
+      "description": "by_severity.error ~80",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 48,
-        "max": 54
+        "min": 76,
+        "max": 84
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~60",
+      "description": "by_severity.warning ~33",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 57,
-        "max": 63
+        "min": 29,
+        "max": 37
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "80 ground_plane finding(s)",
+      "description": "82 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 80
+        "value": 82
       }
     },
     {
@@ -167,11 +167,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~80 net(s) with EMC scores",
+      "description": "~82 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 76
+        "value": 77
       }
     }
   ]

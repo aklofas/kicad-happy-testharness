@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -124,12 +124,12 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 10 detect_label_aliases",
+      "description": "Exactly 3 detect_label_aliases",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
         "op": "equals",
-        "value": 10
+        "value": 3
       }
     },
     {
@@ -144,13 +144,13 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U4 in detect_power_regulators",
+      "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U4$"
+        "pattern": "^U2$"
       }
     },
     {
@@ -196,13 +196,13 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "R18 in detect_voltage_dividers",
+      "description": "R6 in detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
-        "pattern": "^R18$"
+        "pattern": "^R6$"
       }
     },
     {

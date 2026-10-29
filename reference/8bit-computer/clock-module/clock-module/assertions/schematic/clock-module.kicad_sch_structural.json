@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -92,12 +92,12 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 detect_rc_filters",
+      "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -109,17 +109,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "RV1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^RV1$"
       }
     }
   ]

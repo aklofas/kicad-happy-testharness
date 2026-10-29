@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~50 (tolerance 10%)",
+      "description": "Component count ~59 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 45,
-        "max": 56
+        "min": 56,
+        "max": 62
       }
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "4 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -165,7 +165,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "2 detect_current_sense detected",
+      "description": "1 detect_current_sense detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_current_sense",
@@ -268,7 +268,7 @@
     },
     {
       "id": "SEED-00000026",
-      "description": "1 detect_voltage_dividers detected",
+      "description": "2 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -299,21 +299,30 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
       "id": "SEED-00000029",
-      "description": "Has 18 capacitor(s)",
+      "description": "Has 19 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 13
+        "value": 14
       }
     },
     {
       "id": "SEED-00000030",
+      "description": "Has 5 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000031",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -322,16 +331,16 @@
       }
     },
     {
-      "id": "SEED-00000031",
-      "description": "Has 9 resistor(s)",
+      "id": "SEED-00000032",
+      "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000033",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

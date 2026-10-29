@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~105 (tolerance 10%)",
+      "description": "Component count ~106 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 99,
-        "max": 111
+        "min": 100,
+        "max": 112
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -333,7 +333,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
@@ -358,6 +358,15 @@
     },
     {
       "id": "SEED-00000034",
+      "description": "Has 5 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000035",
       "description": "Has 38 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -366,7 +375,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000036",
       "description": "Has 11 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -375,7 +384,7 @@
       }
     },
     {
-      "id": "SEED-00000036",
+      "id": "SEED-00000037",
       "description": "Has 41 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

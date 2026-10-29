@@ -16,12 +16,21 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "1 rc_filter simulation(s)",
+      "description": "At least 1 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
+        "pattern": "^voltage_divider$",
         "value": 1
       }
     }

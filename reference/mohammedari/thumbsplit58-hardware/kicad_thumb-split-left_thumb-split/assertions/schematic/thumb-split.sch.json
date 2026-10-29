@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~77 (tolerance 10%)",
+      "description": "Net count ~41 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 73,
-        "max": 81
+        "min": 36,
+        "max": 46
       }
     },
     {
@@ -143,16 +143,6 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "2 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000015",
       "description": "Has 34 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

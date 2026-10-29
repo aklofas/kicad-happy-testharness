@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~451 (tolerance 10%)",
+      "description": "Component count ~467 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 437,
-        "max": 465
+        "min": 452,
+        "max": 482
       }
     },
     {
@@ -163,7 +163,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "9 audit_rail_sources detected",
+      "description": "10 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -173,7 +173,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -220,7 +220,7 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "11 detect_design_observations detected",
+      "description": "12 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -230,7 +230,7 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "3 detect_label_aliases detected",
+      "description": "2 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -428,22 +428,32 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
       "id": "SEED-00000041",
-      "description": "Has 80 capacitor(s)",
+      "description": "6 validate_voltage_levels detected",
       "check": {
-        "path": "statistics.component_types.capacitor",
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
         "op": "min_count",
-        "value": 60
+        "value": 1
       }
     },
     {
       "id": "SEED-00000042",
-      "description": "Has 80 connector(s)",
+      "description": "Has 92 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 69
+      }
+    },
+    {
+      "id": "SEED-00000043",
+      "description": "Has 81 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
@@ -451,7 +461,7 @@
       }
     },
     {
-      "id": "SEED-00000043",
+      "id": "SEED-00000044",
       "description": "Has 5 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -460,7 +470,7 @@
       }
     },
     {
-      "id": "SEED-00000044",
+      "id": "SEED-00000045",
       "description": "Has 14 ferrite_bead(s)",
       "check": {
         "path": "statistics.component_types.ferrite_bead",
@@ -469,16 +479,16 @@
       }
     },
     {
-      "id": "SEED-00000045",
-      "description": "Has 160 ic(s)",
+      "id": "SEED-00000046",
+      "description": "Has 162 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 120
+        "value": 121
       }
     },
     {
-      "id": "SEED-00000046",
+      "id": "SEED-00000047",
       "description": "Has 32 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
@@ -487,7 +497,7 @@
       }
     },
     {
-      "id": "SEED-00000047",
+      "id": "SEED-00000048",
       "description": "Has 5 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -496,16 +506,16 @@
       }
     },
     {
-      "id": "SEED-00000048",
-      "description": "Has 53 resistor(s)",
+      "id": "SEED-00000049",
+      "description": "Has 54 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 39
+        "value": 40
       }
     },
     {
-      "id": "SEED-00000049",
+      "id": "SEED-00000050",
       "description": "Has 6 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
@@ -514,7 +524,7 @@
       }
     },
     {
-      "id": "SEED-00000050",
+      "id": "SEED-00000051",
       "description": "Has 5 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",

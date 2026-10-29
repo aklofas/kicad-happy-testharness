@@ -26,12 +26,12 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 audit_led_circuits",
+      "description": "Exactly 72 audit_led_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
         "op": "equals",
-        "value": 1
+        "value": 72
       }
     },
     {
@@ -56,23 +56,23 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 audit_rail_sources",
+      "description": "Exactly 2 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 3
+        "value": 2
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -98,6 +98,26 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "Exactly 1 detect_key_matrices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_key_matrices",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Exactly 23 detect_label_aliases",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "equals",
+        "value": 23
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "Exactly 2 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -107,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -118,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -129,17 +149,17 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 3 detect_rc_filters",
+      "id": "STRUCT-00000014",
+      "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 1
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
       "description": "R1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -150,35 +170,24 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "R3 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "RV1 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^RV1$"
-      }
-    },
-    {
       "id": "STRUCT-00000016",
-      "description": "Exactly 1 validate_led_resistors",
+      "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_led_resistors",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
         "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R3 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R3$"
       }
     }
   ]

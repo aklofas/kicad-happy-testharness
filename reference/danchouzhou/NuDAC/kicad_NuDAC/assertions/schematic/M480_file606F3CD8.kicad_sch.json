@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~31 (tolerance 10%)",
+      "description": "Net count ~33 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 29,
+        "max": 37
       }
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "7 audit_rail_sources detected",
+      "description": "8 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -83,7 +83,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -109,22 +109,6 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 detect_shorted_two_pin_components detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -133,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~36 (tolerance 10%)",
+      "description": "Component count ~42 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 32,
-        "max": 40
+        "min": 37,
+        "max": 47
       }
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 audit_led_circuits detected",
+      "description": "4 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -136,7 +136,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -189,11 +189,11 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "Has 19 resistor(s)",
+      "description": "Has 22 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 14
+        "value": 16
       }
     }
   ]

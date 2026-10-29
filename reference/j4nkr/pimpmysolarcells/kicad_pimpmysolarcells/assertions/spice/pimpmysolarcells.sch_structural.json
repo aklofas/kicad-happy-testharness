@@ -6,17 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 bridge_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^bridge_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 1 crystal_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -27,7 +16,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -38,7 +27,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 3 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -49,14 +38,25 @@
       }
     },
     {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
+      }
+    },
+    {
       "id": "STRUCT-00000005",
-      "description": "Exactly 3 transistor_circuit simulation(s)",
+      "description": "Exactly 7 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 3
+        "value": 7
       }
     },
     {
@@ -242,6 +242,46 @@
     },
     {
       "id": "STRUCT-00000024",
+      "description": "Q1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "Q2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "Q3 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "Q4 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
       "description": "Q5 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -251,7 +291,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000029",
       "description": "Q6 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -261,7 +301,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000030",
       "description": "Q7 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -271,7 +311,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000031",
       "description": "C5 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -281,7 +321,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000032",
       "description": "C6 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -291,7 +331,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000033",
       "description": "C7 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -301,7 +341,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000034",
       "description": "C8 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -311,7 +351,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000035",
       "description": "C9 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -321,23 +361,23 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
-      "description": "Q4 simulated as bridge_circuit",
+      "id": "STRUCT-00000036",
+      "description": "R41 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ4\\b"
+        "pattern": "\\bR41\\b"
       }
     },
     {
-      "id": "STRUCT-00000033",
-      "description": "Q2 simulated as bridge_circuit",
+      "id": "STRUCT-00000037",
+      "description": "R40 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ2\\b"
+        "pattern": "\\bR40\\b"
       }
     }
   ]

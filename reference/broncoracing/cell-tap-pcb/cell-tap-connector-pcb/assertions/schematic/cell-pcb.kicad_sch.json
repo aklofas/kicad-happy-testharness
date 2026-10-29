@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~105 (tolerance 10%)",
+      "description": "Component count ~53 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 99,
-        "max": 111
+        "min": 50,
+        "max": 56
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 audit_connector_ground_distribution detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "13 audit_led_circuits detected",
+      "description": "2 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -136,7 +136,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 13
+        "value": 2
       }
     },
     {
@@ -148,7 +148,7 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 13
+        "value": 2
       }
     },
     {
@@ -194,7 +194,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "2 detect_debug_interfaces detected",
+      "description": "1 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_debug_interfaces",
@@ -222,12 +222,22 @@
         "op": "count_matches",
         "field": "interface_type",
         "pattern": "^(swd|jtag|debug)$",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "SEED-00000022",
-      "description": "1 detect_design_observations detected",
+      "description": "2 detect_decoupling detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000023",
+      "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -236,7 +246,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "27 detect_label_aliases detected",
       "check": {
         "path": "findings",
@@ -246,8 +256,8 @@
       }
     },
     {
-      "id": "SEED-00000024",
-      "description": "14 detect_rc_filters detected",
+      "id": "SEED-00000025",
+      "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -256,7 +266,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -267,7 +277,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "1 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -277,7 +287,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -287,48 +297,30 @@
       }
     },
     {
-      "id": "SEED-00000028",
-      "description": "Has 15 capacitor(s)",
+      "id": "SEED-00000029",
+      "description": "Has 10 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 11
-      }
-    },
-    {
-      "id": "SEED-00000029",
-      "description": "Has 28 connector(s)",
-      "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 21
+        "value": 7
       }
     },
     {
       "id": "SEED-00000030",
+      "description": "Has 18 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 13
+      }
+    },
+    {
+      "id": "SEED-00000031",
       "description": "Has 13 fuse(s)",
       "check": {
         "path": "statistics.component_types.fuse",
         "op": "min_count",
         "value": 9
-      }
-    },
-    {
-      "id": "SEED-00000031",
-      "description": "Has 13 led(s)",
-      "check": {
-        "path": "statistics.component_types.led",
-        "op": "min_count",
-        "value": 9
-      }
-    },
-    {
-      "id": "SEED-00000032",
-      "description": "Has 28 resistor(s)",
-      "check": {
-        "path": "statistics.component_types.resistor",
-        "op": "min_count",
-        "value": 21
       }
     }
   ]

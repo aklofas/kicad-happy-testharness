@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~134 (tolerance 10%)",
+      "description": "Net count ~95 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 127,
-        "max": 141
+        "min": 90,
+        "max": 100
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "7 audit_connector_ground_distribution detected",
+      "description": "2 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -163,7 +163,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -223,27 +223,6 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "1 detect_lc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "All detect_lc_filters have non-zero resonant_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "not_contains_match",
-        "field": "resonant_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000023",
       "description": "1 detect_memory_interfaces detected",
       "check": {
         "path": "findings",
@@ -253,28 +232,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
-      "description": "1 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000025",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000026",
+      "id": "SEED-00000022",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -284,17 +242,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
-      "description": "5 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000028",
+      "id": "SEED-00000023",
       "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -304,7 +252,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000024",
       "description": "1 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -315,7 +263,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     }

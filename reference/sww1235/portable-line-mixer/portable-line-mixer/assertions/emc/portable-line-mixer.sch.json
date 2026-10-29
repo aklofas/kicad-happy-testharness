@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~126 (tolerance 10%)",
+      "description": "Finding count ~94 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 119,
-        "max": 133
+        "min": 89,
+        "max": 99
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~77",
+      "description": "by_severity.error ~44",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 73,
-        "max": 81
+        "min": 39,
+        "max": 49
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~30",
+      "description": "by_severity.warning ~31",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
         "min": 27,
-        "max": 33
+        "max": 35
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "79 ground_plane finding(s)",
+      "description": "46 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 79
+        "value": 46
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "6 return_path finding(s)",
+      "description": "7 return_path finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^return_path$",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -167,11 +167,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~75 net(s) with EMC scores",
+      "description": "~48 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 71
+        "value": 43
       }
     }
   ]

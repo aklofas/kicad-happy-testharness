@@ -36,33 +36,22 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 detect_rc_filters",
+      "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "R314 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R314$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
       "description": "R321 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -73,17 +62,61 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 2 detect_voltage_dividers",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 6 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 2
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R305 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R305$"
       }
     },
     {
       "id": "STRUCT-00000008",
+      "description": "R307 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R307$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R310 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R310$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R312 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R312$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R317 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -94,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
       "description": "R319 in detect_voltage_dividers",
       "check": {
         "path": "findings",

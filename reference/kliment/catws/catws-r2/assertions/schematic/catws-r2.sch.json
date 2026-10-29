@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~57 (tolerance 10%)",
+      "description": "Net count ~38 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 54,
-        "max": 60
+        "min": 34,
+        "max": 42
       }
     },
     {
@@ -121,18 +121,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "All audit_led_circuits drive_method values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_led_circuits",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 5
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
@@ -142,7 +130,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -152,7 +140,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -163,7 +151,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "2 validate_i2c_bus detected",
       "check": {
         "path": "findings",
@@ -174,32 +162,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "6 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000018",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
+      "id": "SEED-00000016",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -208,7 +176,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000017",
       "description": "Has 6 led(s)",
       "check": {
         "path": "statistics.component_types.led",

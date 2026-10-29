@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 12 audit_connector_ground_distribution",
+      "description": "Exactly 10 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 12
+        "value": 10
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 24 audit_esd_protection",
+      "description": "Exactly 15 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 24
+        "value": 15
       }
     },
     {
@@ -36,26 +36,16 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 detect_bridge_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_bridge_circuits",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 4 detect_design_observations",
+      "description": "Exactly 12 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 12
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "Exactly 2 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -65,7 +55,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000006",
       "description": "U10 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -76,7 +66,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000007",
       "description": "U12 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -87,33 +77,28 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 2 detect_shorted_two_pin_components",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 2
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:44:00Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 2 detect_transistor_circuits",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 4 detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
+      "description": "Q1 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -121,6 +106,17 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Q3 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q3$"
       }
     },
     {

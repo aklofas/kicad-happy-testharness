@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~34 (tolerance 10%)",
+      "description": "Net count ~32 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 30,
-        "max": 38
+        "min": 28,
+        "max": 36
       }
     },
     {
@@ -149,6 +149,16 @@
     },
     {
       "id": "SEED-00000015",
+      "description": "2 validate_pullups detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "Has 8 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",

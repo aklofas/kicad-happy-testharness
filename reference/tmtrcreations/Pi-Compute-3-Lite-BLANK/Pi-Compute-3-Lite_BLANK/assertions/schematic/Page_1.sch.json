@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "2 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -63,13 +63,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "2 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -79,7 +79,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "4 detect_design_observations detected",
+      "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -89,7 +89,7 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "2 detect_label_aliases detected",
+      "description": "1 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -99,28 +99,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 detect_lc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "All detect_lc_filters have non-zero resonant_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "not_contains_match",
-        "field": "resonant_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "2 detect_rc_filters detected",
+      "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -129,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000011",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -140,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
       "description": "Has 18 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -149,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000013",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

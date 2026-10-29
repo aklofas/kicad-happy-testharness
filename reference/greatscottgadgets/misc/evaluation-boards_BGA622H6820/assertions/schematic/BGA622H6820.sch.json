@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~19 (tolerance 10%)",
+      "description": "Net count ~10 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "7 audit_esd_protection detected",
+      "description": "5 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -71,7 +71,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 7
+        "value": 5
       }
     },
     {
@@ -83,7 +83,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 7
+        "value": 5
       }
     },
     {
@@ -98,18 +98,18 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_power_pin_dc_paths detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
+        "detector_filter": "audit_rail_sources",
         "op": "min_count",
         "value": 1
       },
       "schema_era": {
         "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
+        "tagged_by_rule": "RS-001",
+        "tagged_at": "2026-10-29T21:55:56Z",
+        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
@@ -155,27 +155,6 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 detect_power_regulators detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "All detect_power_regulators have ref present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000017",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -184,7 +163,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000016",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

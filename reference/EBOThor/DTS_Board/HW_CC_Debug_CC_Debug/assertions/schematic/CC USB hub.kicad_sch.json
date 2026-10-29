@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "8 analyze_voltage_derating detected",
+      "description": "7 analyze_voltage_derating detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_voltage_derating",
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -99,13 +99,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -115,7 +115,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -185,7 +185,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "6 detect_design_observations detected",
+      "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -258,6 +258,16 @@
     },
     {
       "id": "SEED-00000024",
+      "description": "1 validate_pullups detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000025",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -266,7 +276,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 18 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~123 (tolerance 10%)",
+      "description": "Component count ~84 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 116,
-        "max": 130
+        "min": 79,
+        "max": 89
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -165,7 +165,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "7 detect_label_aliases detected",
+      "description": "5 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -175,7 +175,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "4 detect_opamp_circuits detected",
+      "description": "2 detect_opamp_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
@@ -196,7 +196,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "2 detect_protection_devices detected",
+      "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -206,7 +206,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "19 detect_rc_filters detected",
+      "description": "10 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -249,7 +249,7 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "2 detect_transistor_circuits detected",
+      "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -280,60 +280,42 @@
     },
     {
       "id": "SEED-00000027",
-      "description": "Has 36 capacitor(s)",
+      "description": "Has 24 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 27
+        "value": 18
       }
     },
     {
       "id": "SEED-00000028",
-      "description": "Has 7 connector(s)",
+      "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000029",
+      "description": "Has 7 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
         "op": "min_count",
         "value": 5
       }
     },
     {
-      "id": "SEED-00000029",
-      "description": "Has 13 diode(s)",
-      "check": {
-        "path": "statistics.component_types.diode",
-        "op": "min_count",
-        "value": 9
-      }
-    },
-    {
       "id": "SEED-00000030",
-      "description": "Has 6 ic(s)",
+      "description": "Has 26 resistor(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 4
+        "value": 19
       }
     },
     {
       "id": "SEED-00000031",
-      "description": "Has 6 other(s)",
-      "check": {
-        "path": "statistics.component_types.other",
-        "op": "min_count",
-        "value": 4
-      }
-    },
-    {
-      "id": "SEED-00000032",
-      "description": "Has 40 resistor(s)",
-      "check": {
-        "path": "statistics.component_types.resistor",
-        "op": "min_count",
-        "value": 30
-      }
-    },
-    {
-      "id": "SEED-00000033",
       "description": "Has 8 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

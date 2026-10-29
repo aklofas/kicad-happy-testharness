@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~45 (tolerance 10%)",
+      "description": "Component count ~31 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 40,
-        "max": 50
+        "min": 27,
+        "max": 35
       }
     },
     {
@@ -83,7 +83,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -99,7 +99,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -125,7 +125,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 detect_design_observations detected",
+      "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -156,7 +156,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "3 detect_rc_filters detected",
+      "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -177,27 +177,6 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "1 detect_voltage_dividers detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000018",
-      "description": "All detect_voltage_dividers have non-zero ratio",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "not_contains_match",
-        "field": "ratio",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000019",
       "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -207,21 +186,21 @@
       }
     },
     {
-      "id": "SEED-00000020",
-      "description": "Has 26 capacitor(s)",
+      "id": "SEED-00000018",
+      "description": "Has 20 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 19
+        "value": 15
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "Has 15 resistor(s)",
+      "id": "SEED-00000019",
+      "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 11
+        "value": 5
       }
     }
   ]

@@ -76,7 +76,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -92,6 +92,16 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "Exactly 1 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 4 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -101,7 +111,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R39 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -112,7 +122,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R40 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -123,7 +133,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R41 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -131,16 +141,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R41$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
       }
     }
   ]

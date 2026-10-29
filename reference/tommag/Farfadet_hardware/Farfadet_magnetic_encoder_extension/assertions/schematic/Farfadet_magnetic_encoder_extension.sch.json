@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~27 (tolerance 10%)",
+      "description": "Net count ~21 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 24,
-        "max": 30
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -153,28 +153,22 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "2 detect_design_observations detected",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000016",
-      "description": "2 detect_shorted_two_pin_components detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {

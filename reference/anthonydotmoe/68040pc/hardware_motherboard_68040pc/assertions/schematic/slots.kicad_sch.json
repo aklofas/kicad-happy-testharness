@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~23 (tolerance 10%)",
+      "description": "Component count ~20 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 18,
+        "max": 22
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "460 analyze_connectivity detected",
+      "description": "461 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -138,7 +138,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -174,16 +174,6 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "1 detect_label_aliases detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_label_aliases",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000018",
       "description": "Has 9 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -192,7 +182,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "Has 9 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

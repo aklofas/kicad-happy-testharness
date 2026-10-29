@@ -6,35 +6,35 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 7 current_sense simulation(s)",
+      "description": "Exactly 14 current_sense simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^current_sense$",
-        "value": 7
+        "value": 14
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 3 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 22 voltage_divider simulation(s)",
+      "description": "Exactly 11 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 22
+        "value": 11
       }
     },
     {
@@ -59,22 +59,22 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "C53 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC53\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "C7 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C53 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC53\\b"
       }
     }
   ]

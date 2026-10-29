@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~225 (tolerance 10%)",
+      "description": "Component count ~253 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 218,
-        "max": 232
+        "min": 245,
+        "max": 261
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~452 (tolerance 10%)",
+      "description": "Net count ~323 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 438,
-        "max": 466
+        "min": 313,
+        "max": 333
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 audit_connector_ground_distribution detected",
+      "description": "4 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "7 audit_esd_protection detected",
+      "description": "9 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 7
+        "value": 9
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 7
+        "value": 9
       }
     },
     {
@@ -153,7 +153,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "14 audit_rail_sources detected",
+      "description": "7 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -163,7 +163,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -190,7 +190,40 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "12 detect_decoupling detected",
+      "description": "1 detect_debug_interfaces detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "All detect_debug_interfaces have connector_ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000020",
+      "description": "All detect_debug_interfaces interface_type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "count_matches",
+        "field": "interface_type",
+        "pattern": "^(swd|jtag|debug)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "11 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -199,8 +232,8 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "23 detect_design_observations detected",
+      "id": "SEED-00000022",
+      "description": "22 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -209,7 +242,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000023",
       "description": "1 detect_ethernet_interfaces detected",
       "check": {
         "path": "findings",
@@ -219,7 +252,17 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000024",
+      "description": "10 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000025",
       "description": "2 detect_lc_filters detected",
       "check": {
         "path": "findings",
@@ -229,7 +272,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000026",
       "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
@@ -240,7 +283,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000027",
       "description": "2 detect_level_shifters detected",
       "check": {
         "path": "findings",
@@ -250,7 +293,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000028",
       "description": "All detect_level_shifters have ref",
       "check": {
         "path": "findings",
@@ -261,7 +304,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000029",
       "description": "All detect_level_shifters type values are valid",
       "check": {
         "path": "findings",
@@ -273,7 +316,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000030",
       "description": "3 detect_memory_interfaces detected",
       "check": {
         "path": "findings",
@@ -283,8 +326,8 @@
       }
     },
     {
-      "id": "SEED-00000027",
-      "description": "7 detect_power_regulators detected",
+      "id": "SEED-00000031",
+      "description": "9 detect_power_regulators detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
@@ -293,7 +336,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000032",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -304,8 +347,8 @@
       }
     },
     {
-      "id": "SEED-00000029",
-      "description": "3 detect_rc_filters detected",
+      "id": "SEED-00000033",
+      "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -314,7 +357,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000034",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -325,8 +368,8 @@
       }
     },
     {
-      "id": "SEED-00000031",
-      "description": "7 detect_voltage_dividers detected",
+      "id": "SEED-00000035",
+      "description": "17 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -335,7 +378,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000036",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -346,7 +389,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000037",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -356,8 +399,24 @@
       }
     },
     {
-      "id": "SEED-00000034",
-      "description": "4 validate_pullups detected",
+      "id": "SEED-00000038",
+      "description": "4 validate_power_sequencing detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_power_sequencing",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PS-001",
+        "tagged_at": "2026-10-29T21:55:54Z",
+        "tagged_reason": "schema_era key added (PS-001; 3 sites)"
+      }
+    },
+    {
+      "id": "SEED-00000039",
+      "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -366,8 +425,8 @@
       }
     },
     {
-      "id": "SEED-00000035",
-      "description": "20 validate_voltage_levels detected",
+      "id": "SEED-00000040",
+      "description": "26 validate_voltage_levels detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
@@ -376,34 +435,34 @@
       }
     },
     {
-      "id": "SEED-00000036",
-      "description": "Has 92 capacitor(s)",
+      "id": "SEED-00000041",
+      "description": "Has 100 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 69
+        "value": 75
       }
     },
     {
-      "id": "SEED-00000037",
-      "description": "Has 7 connector(s)",
+      "id": "SEED-00000042",
+      "description": "Has 9 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 5
+        "value": 6
       }
     },
     {
-      "id": "SEED-00000038",
-      "description": "Has 18 ic(s)",
+      "id": "SEED-00000043",
+      "description": "Has 22 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 13
+        "value": 16
       }
     },
     {
-      "id": "SEED-00000039",
+      "id": "SEED-00000044",
       "description": "Has 9 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -412,21 +471,21 @@
       }
     },
     {
-      "id": "SEED-00000040",
-      "description": "Has 66 resistor(s)",
+      "id": "SEED-00000045",
+      "description": "Has 76 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 49
+        "value": 57
       }
     },
     {
-      "id": "SEED-00000041",
-      "description": "Has 26 test_point(s)",
+      "id": "SEED-00000046",
+      "description": "Has 30 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 19
+        "value": 22
       }
     }
   ]

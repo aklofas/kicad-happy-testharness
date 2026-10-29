@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~135 (tolerance 10%)",
+      "description": "Net count ~127 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 128,
-        "max": 142
+        "min": 120,
+        "max": 134
       }
     },
     {
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -89,6 +89,16 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "2 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "2 detect_led_driver_ics detected",
       "check": {
         "path": "findings",
@@ -98,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "All detect_led_driver_ics have ref",
       "check": {
         "path": "findings",
@@ -109,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "All detect_led_driver_ics type values are valid",
       "check": {
         "path": "findings",
@@ -121,7 +131,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -130,7 +140,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "Has 20 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

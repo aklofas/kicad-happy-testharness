@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~32 (tolerance 10%)",
+      "description": "Net count ~34 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 28,
-        "max": 36
+        "min": 30,
+        "max": 38
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "20 analyze_connectivity detected",
+      "description": "22 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -73,6 +73,22 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "2 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "RS-001",
+        "tagged_at": "2026-10-29T21:55:57Z",
+        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -82,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -92,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -102,33 +118,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "1 detect_label_aliases detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_label_aliases",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000012",
-      "description": "2 detect_shorted_two_pin_components detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

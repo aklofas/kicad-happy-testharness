@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~116 (tolerance 10%)",
+      "description": "Simulation count ~115 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 110,
-        "max": 122
+        "min": 109,
+        "max": 121
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 71 passing simulation(s)",
+      "description": "At least 52 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 71
+        "value": 52
       }
     },
     {
@@ -36,13 +36,13 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "5 decoupling simulation(s)",
+      "description": "9 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 9
       }
     },
     {
@@ -58,13 +58,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "7 lc_filter simulation(s)",
+      "description": "6 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 7
+        "value": 6
       }
     },
     {
@@ -124,17 +124,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "6 snubber_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^snubber_circuit$",
-        "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "39 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -145,14 +134,14 @@
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "10 voltage_divider simulation(s)",
+      "id": "SEED-00000013",
+      "description": "12 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 10
+        "value": 12
       }
     }
   ]

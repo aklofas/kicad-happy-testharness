@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~98 (tolerance 10%)",
+      "description": "Finding count ~55 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 93,
-        "max": 103
+        "min": 52,
+        "max": 58
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~63",
+      "description": "by_severity.error ~21",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 59,
-        "max": 67
+        "min": 18,
+        "max": 24
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~18",
+      "description": "by_severity.warning ~17",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 16,
-        "max": 20
+        "min": 15,
+        "max": 19
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~10.0 (+-10)",
+      "description": "EMC risk score ~13.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 20.0
+        "min": 3.0,
+        "max": 23.0
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "51 ground_plane finding(s)",
+      "description": "8 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 51
+        "value": 8
       }
     },
     {
@@ -156,11 +156,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~50 net(s) with EMC scores",
+      "description": "~17 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 45
+        "value": 15
       }
     }
   ]

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~16 (tolerance 10%)",
+      "description": "Net count ~39 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 14,
-        "max": 18
+        "min": 35,
+        "max": 43
       }
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "7 analyze_connectivity detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
-        "detector_filter": "analyze_connectivity",
+        "detector_filter": "audit_connector_ground_distribution",
         "op": "min_count",
         "value": 1
       }
@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 audit_esd_protection detected",
+      "description": "4 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -91,7 +91,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -103,7 +103,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -161,16 +161,6 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "3 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000017",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

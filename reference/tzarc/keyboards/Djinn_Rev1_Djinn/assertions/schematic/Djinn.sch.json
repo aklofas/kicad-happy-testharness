@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~195 (tolerance 10%)",
+      "description": "Net count ~171 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 185,
-        "max": 205
+        "min": 162,
+        "max": 180
       }
     },
     {
@@ -118,13 +118,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "8 audit_rail_sources detected",
+      "description": "4 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -134,13 +134,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000013",
-      "description": "5 detect_addressable_leds detected",
+      "description": "1 detect_addressable_leds detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_addressable_leds",
@@ -193,7 +193,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "3 detect_decoupling detected",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -203,7 +203,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "9 detect_design_observations detected",
+      "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -266,6 +266,16 @@
     },
     {
       "id": "SEED-00000025",
+      "description": "1 detect_memory_interfaces detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000026",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -275,7 +285,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -286,21 +296,11 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "7 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000028",
-      "description": "1 detect_pwm_led_dimming detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_pwm_led_dimming",
         "op": "min_count",
         "value": 1
       }
@@ -390,7 +390,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
@@ -406,7 +406,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },

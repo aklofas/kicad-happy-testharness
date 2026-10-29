@@ -16,13 +16,13 @@
     },
     {
       "id": "BUGFIX-KH-033-01",
-      "description": "KH-033: At least 1 DNP part detected (C49 value=DNP)",
+      "description": "KH-033: C49 (value DNP) carries (dnp no), so it is populated: KiCad reads the dnp attribute and the value text only when the attribute is absent. Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was >= 1.",
       "issue": "KH-033",
       "fix_type": "detection_fix",
       "check": {
         "path": "statistics.dnp_parts",
-        "op": "min_count",
-        "value": 1
+        "op": "equals",
+        "value": 0
       }
     }
   ]

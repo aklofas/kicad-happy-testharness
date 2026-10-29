@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -124,16 +124,58 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 5 detect_design_observations",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 5
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000013",
+      "description": "Exactly 7 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "Exactly 3 detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "L3 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "L1 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -143,7 +185,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000018",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -154,7 +196,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000019",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -164,11 +206,21 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000020",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
         "detector_filter": "suggest_certifications",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "Exactly 1 validate_crystal_load_caps",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_crystal_load_caps",
         "op": "equals",
         "value": 1
       }

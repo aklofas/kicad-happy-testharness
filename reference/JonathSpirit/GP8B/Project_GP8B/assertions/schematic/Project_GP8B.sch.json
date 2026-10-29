@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~683 (tolerance 10%)",
+      "description": "Net count ~443 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 662,
-        "max": 704
+        "min": 429,
+        "max": 457
       }
     },
     {
@@ -194,6 +194,16 @@
     },
     {
       "id": "SEED-00000019",
+      "description": "1 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "2 detect_level_shifters detected",
       "check": {
         "path": "findings",
@@ -203,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "All detect_level_shifters have ref",
       "check": {
         "path": "findings",
@@ -214,7 +224,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "All detect_level_shifters type values are valid",
       "check": {
         "path": "findings",
@@ -226,7 +236,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -236,7 +246,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -247,8 +257,8 @@
       }
     },
     {
-      "id": "SEED-00000024",
-      "description": "3 validate_pullups detected",
+      "id": "SEED-00000025",
+      "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -257,7 +267,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "6 validate_voltage_levels detected",
       "check": {
         "path": "findings",
@@ -267,7 +277,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 49 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -276,7 +286,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -285,7 +295,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000029",
       "description": "Has 40 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -294,7 +304,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000030",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

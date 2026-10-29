@@ -87,26 +87,16 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 11 detect_design_observations",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 11
+        "value": 8
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 1 detect_label_aliases",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_label_aliases",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "Exactly 1 detect_motor_drivers",
       "check": {
         "path": "findings",
@@ -116,23 +106,83 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 3 detect_shorted_two_pin_components",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 6 detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 3
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R10 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R10$"
       }
     },
     {
       "id": "STRUCT-00000013",
+      "description": "R13 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R13$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R2 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R30 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R30$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R33 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R33$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R5 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "Exactly 3 validate_voltage_levels",
       "check": {
         "path": "findings",

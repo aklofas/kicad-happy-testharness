@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "3 ground_plane finding(s)",
+      "description": "11 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 3
+        "value": 11
       }
     },
     {
@@ -183,12 +183,12 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Rule SW-002 present",
+      "description": "Rule SW-003 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^SW\\-002$"
+        "pattern": "^SW\\-003$"
       }
     },
     {
@@ -229,6 +229,26 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ401\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "L401 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL401\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "C401 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC401\\b"
       }
     }
   ]

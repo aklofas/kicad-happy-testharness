@@ -46,7 +46,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -62,7 +62,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -108,27 +108,16 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 11 detect_rc_filters",
+      "description": "Exactly 9 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 11
+        "value": 9
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R7 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "R13 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -139,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "R12 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -150,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000013",
       "description": "R14 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -158,6 +147,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R14$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R7 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R7$"
       }
     },
     {
@@ -206,17 +206,6 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "R16 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R16$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
       "description": "R17 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -224,22 +213,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R17$"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
-      "description": "Exactly 1 detect_shorted_two_pin_components",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     }
   ]

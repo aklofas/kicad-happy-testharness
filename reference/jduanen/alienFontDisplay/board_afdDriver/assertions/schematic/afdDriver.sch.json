@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~23 (tolerance 10%)",
+      "description": "Component count ~58 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 55,
+        "max": 61
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~27 (tolerance 10%)",
+      "description": "Net count ~25 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 24,
-        "max": 30
+        "min": 22,
+        "max": 28
       }
     },
     {
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -88,11 +88,29 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 6 resistor(s)",
+      "description": "Has 9 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 9 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 27 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 4
+        "value": 20
       }
     }
   ]

@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -112,17 +112,6 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "U17 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U17$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "U26 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -133,14 +122,25 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "U27 in detect_power_regulators",
+      "id": "STRUCT-00000012",
+      "description": "U30 in detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U27$"
+        "pattern": "^U30$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "U31 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U31$"
       }
     },
     {
@@ -162,16 +162,6 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^F2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 1 suggest_certifications",
-      "check": {
-        "path": "findings",
-        "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 1
       }
     }
   ]

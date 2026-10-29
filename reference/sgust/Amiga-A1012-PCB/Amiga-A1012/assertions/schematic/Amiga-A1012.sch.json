@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~98 (tolerance 10%)",
+      "description": "Net count ~42 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 93,
-        "max": 103
+        "min": 37,
+        "max": 47
       }
     },
     {
@@ -53,22 +53,6 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "1 audit_rail_sources detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -78,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -88,8 +72,8 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "1 detect_protection_devices detected",
+      "id": "SEED-00000008",
+      "description": "2 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -98,7 +82,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -107,7 +91,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~26 (tolerance 10%)",
+      "description": "Simulation count ~52 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 23,
-        "max": 29
+        "min": 49,
+        "max": 55
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 4 passing simulation(s)",
+      "description": "At least 32 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 4
+        "value": 32
       }
     },
     {
@@ -47,24 +47,24 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "13 lc_filter simulation(s)",
+      "description": "33 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 13
+        "value": 33
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "2 rc_filter simulation(s)",
+      "description": "4 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -80,23 +80,23 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "2 rf_matching simulation(s)",
+      "description": "6 rf_matching simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rf_matching$",
-        "value": 2
+        "value": 6
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "1 transistor_circuit simulation(s)",
+      "description": "1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
+        "pattern": "^voltage_divider$",
         "value": 1
       }
     }

@@ -1,0 +1,94 @@
+{
+  "file_pattern": "plate_alps.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~35 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 31,
+        "max": 39
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~70 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 66,
+        "max": 74
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Findings section exists",
+      "check": {
+        "path": "findings",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "70 analyze_connectivity detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_connectivity",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 audit_datasheet_coverage detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_datasheet_coverage",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 audit_sourcing_gate detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_sourcing_gate",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Has 35 switch(s)",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "min_count",
+        "value": 26
+      }
+    }
+  ]
+}

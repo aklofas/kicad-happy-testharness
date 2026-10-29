@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:00Z",
+        "tagged_at": "2026-10-29T21:56:15Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -42,12 +42,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 detect_opamp_circuits",
+      "description": "Exactly 4 detect_opamp_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
         "op": "equals",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -63,12 +63,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 15 detect_rc_filters",
+      "description": "Exactly 12 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 15
+        "value": 12
       }
     },
     {
@@ -106,6 +106,17 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "R322 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R322$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R323 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -113,17 +124,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R323$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "R329 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R329$"
       }
     },
     {
@@ -139,28 +139,6 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R339 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R339$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "R333 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R333$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R337 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -171,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000014",
       "description": "R326 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -182,7 +160,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "R336 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -193,7 +171,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
       "description": "R349 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -204,7 +182,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
       "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",

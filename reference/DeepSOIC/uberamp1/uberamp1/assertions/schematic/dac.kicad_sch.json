@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~69 (tolerance 10%)",
+      "description": "Component count ~48 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 65,
-        "max": 73
+        "min": 43,
+        "max": 53
       }
     },
     {
@@ -83,7 +83,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -99,7 +99,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -168,7 +168,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "5 detect_label_aliases detected",
+      "description": "2 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -178,7 +178,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "6 detect_opamp_circuits detected",
+      "description": "3 detect_opamp_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
@@ -220,7 +220,7 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "9 detect_rc_filters detected",
+      "description": "3 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -251,20 +251,20 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "Has 23 capacitor(s)",
+      "description": "Has 15 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 17
+        "value": 11
       }
     },
     {
       "id": "SEED-00000025",
-      "description": "Has 39 resistor(s)",
+      "description": "Has 27 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 29
+        "value": 20
       }
     }
   ]

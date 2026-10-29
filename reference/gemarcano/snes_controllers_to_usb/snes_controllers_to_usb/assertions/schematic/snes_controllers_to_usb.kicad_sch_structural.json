@@ -76,22 +76,22 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 detect_pwm_led_dimming",
+      "description": "Exactly 4 detect_pwm_led_dimming",
       "check": {
         "path": "findings",
         "detector_filter": "detect_pwm_led_dimming",
         "op": "equals",
-        "value": 1
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 1 detect_transistor_circuits",
+      "description": "Exactly 4 detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "equals",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -107,6 +107,39 @@
     },
     {
       "id": "STRUCT-00000011",
+      "description": "Q2 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Q3 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Q4 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
       "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -116,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000015",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -127,7 +160,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000016",
       "description": "R11 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -138,7 +171,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000017",
       "description": "R12 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -149,7 +182,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000018",
       "description": "R9 in detect_voltage_dividers",
       "check": {
         "path": "findings",

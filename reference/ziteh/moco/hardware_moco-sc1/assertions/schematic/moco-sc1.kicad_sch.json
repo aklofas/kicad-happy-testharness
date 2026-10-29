@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~99 (tolerance 10%)",
+      "description": "Component count ~117 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 94,
-        "max": 104
+        "min": 111,
+        "max": 123
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "23 analyze_voltage_derating detected",
+      "description": "24 analyze_voltage_derating detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_voltage_derating",
@@ -53,7 +53,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:59Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -69,7 +69,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "8 audit_esd_protection detected",
+      "description": "6 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -97,7 +97,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 8
+        "value": 6
       }
     },
     {
@@ -109,7 +109,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 8
+        "value": 6
       }
     },
     {
@@ -134,7 +134,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:59Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -171,7 +171,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "5 detect_debug_interfaces detected",
+      "description": "1 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_debug_interfaces",
@@ -199,12 +199,12 @@
         "op": "count_matches",
         "field": "interface_type",
         "pattern": "^(swd|jtag|debug)$",
-        "value": 5
+        "value": 1
       }
     },
     {
       "id": "SEED-00000019",
-      "description": "2 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -276,7 +276,7 @@
     },
     {
       "id": "SEED-00000026",
-      "description": "7 detect_voltage_dividers detected",
+      "description": "8 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -297,15 +297,24 @@
     },
     {
       "id": "SEED-00000028",
-      "description": "Has 44 capacitor(s)",
+      "description": "Has 46 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 33
+        "value": 34
       }
     },
     {
       "id": "SEED-00000029",
+      "description": "Has 8 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000030",
       "description": "Has 6 net_tie(s)",
       "check": {
         "path": "statistics.component_types.net_tie",
@@ -314,12 +323,21 @@
       }
     },
     {
-      "id": "SEED-00000030",
-      "description": "Has 31 resistor(s)",
+      "id": "SEED-00000031",
+      "description": "Has 35 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 23
+        "value": 26
+      }
+    },
+    {
+      "id": "SEED-00000032",
+      "description": "Has 5 test_point(s)",
+      "check": {
+        "path": "statistics.component_types.test_point",
+        "op": "min_count",
+        "value": 3
       }
     }
   ]

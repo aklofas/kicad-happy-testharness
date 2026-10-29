@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~174 (tolerance 10%)",
+      "description": "Net count ~117 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 165,
-        "max": 183
+        "min": 111,
+        "max": 123
       }
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "96 audit_esd_protection detected",
+      "description": "94 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 96
+        "value": 94
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 96
+        "value": 94
       }
     },
     {
@@ -118,13 +118,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "1 detect_debug_interfaces detected",
+      "description": "2 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_debug_interfaces",
@@ -152,7 +152,7 @@
         "op": "count_matches",
         "field": "interface_type",
         "pattern": "^(swd|jtag|debug)$",
-        "value": 1
+        "value": 2
       }
     },
     {

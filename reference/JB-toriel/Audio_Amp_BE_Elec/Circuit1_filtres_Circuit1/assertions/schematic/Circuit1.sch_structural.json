@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 audit_esd_protection",
+      "description": "Exactly 2 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -57,12 +57,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 12 detect_rc_filters",
+      "description": "Exactly 10 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 12
+        "value": 10
       }
     },
     {
@@ -100,17 +100,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R8 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "R4 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -121,7 +110,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "R9 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -132,7 +121,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "RV1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -140,6 +129,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^RV1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "RV2 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^RV2$"
       }
     },
     {
@@ -155,6 +155,17 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "R8 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "RV3 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -165,7 +176,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",

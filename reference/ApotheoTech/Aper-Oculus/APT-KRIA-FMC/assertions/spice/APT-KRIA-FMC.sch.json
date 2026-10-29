@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~52 (tolerance 10%)",
+      "description": "Simulation count ~57 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 49,
-        "max": 55
+        "min": 54,
+        "max": 60
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 37 passing simulation(s)",
+      "description": "At least 36 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 37
+        "value": 36
       }
     },
     {
@@ -47,13 +47,13 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 lc_filter simulation(s)",
+      "description": "1 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -69,35 +69,35 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "12 rc_filter simulation(s)",
+      "description": "11 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 12
+        "value": 11
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "1 regulator_feedback simulation(s)",
+      "description": "10 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^regulator_feedback$",
-        "value": 1
+        "value": 10
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "3 transistor_circuit simulation(s)",
+      "description": "1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 3
+        "value": 1
       }
     },
     {

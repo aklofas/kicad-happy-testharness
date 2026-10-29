@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~15 (tolerance 10%)",
+      "description": "Component count ~17 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 15,
+        "max": 19
       }
     },
     {
@@ -118,7 +118,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -155,7 +155,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 detect_decoupling detected",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -206,7 +206,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
@@ -222,28 +222,27 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
       "id": "SEED-00000021",
-      "description": "1 validate_pullups detected",
+      "description": "2 validate_voltage_levels detected",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "validate_voltage_levels",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000022",
-      "description": "3 validate_voltage_levels detected",
+      "description": "Has 5 capacitor(s)",
       "check": {
-        "path": "findings",
-        "detector_filter": "validate_voltage_levels",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 1
+        "value": 3
       }
     }
   ]

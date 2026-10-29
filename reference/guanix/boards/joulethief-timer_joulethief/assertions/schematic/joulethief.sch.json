@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~22 (tolerance 10%)",
+      "description": "Net count ~13 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 19,
-        "max": 25
+        "min": 11,
+        "max": 15
       }
     },
     {
@@ -108,13 +108,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "3 audit_rail_sources detected",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -124,7 +124,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -140,7 +140,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -171,10 +171,10 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "1 detect_led_drivers detected",
+      "description": "1 detect_pwm_led_dimming detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_led_drivers",
+        "detector_filter": "detect_pwm_led_dimming",
         "op": "min_count",
         "value": 1
       }
@@ -202,7 +202,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "2 detect_transistor_circuits detected",
+      "description": "3 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -223,16 +223,6 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

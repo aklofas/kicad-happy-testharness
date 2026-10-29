@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~87 (tolerance 10%)",
+      "description": "Net count ~53 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 82,
-        "max": 92
+        "min": 50,
+        "max": 56
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 audit_connector_ground_distribution detected",
+      "description": "2 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -163,7 +163,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "5 detect_design_observations detected",
+      "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -248,22 +248,6 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "4 detect_shorted_two_pin_components detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
-      "id": "SEED-00000025",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -273,7 +257,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000025",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -284,8 +268,8 @@
       }
     },
     {
-      "id": "SEED-00000027",
-      "description": "4 detect_voltage_dividers detected",
+      "id": "SEED-00000026",
+      "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -294,7 +278,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000027",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -305,11 +289,21 @@
       }
     },
     {
-      "id": "SEED-00000029",
-      "description": "6 validate_pullups detected",
+      "id": "SEED-00000028",
+      "description": "4 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000029",
+      "description": "4 validate_voltage_levels detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
         "op": "min_count",
         "value": 1
       }

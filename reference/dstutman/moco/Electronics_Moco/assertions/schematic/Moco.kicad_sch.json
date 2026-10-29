@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~53 (tolerance 10%)",
+      "description": "Net count ~52 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 50,
-        "max": 56
+        "min": 49,
+        "max": 55
       }
     },
     {
@@ -53,7 +53,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -69,7 +69,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -140,7 +140,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "3 audit_rail_sources detected",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -150,7 +150,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -187,7 +187,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "4 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -197,7 +197,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "7 detect_design_observations detected",
+      "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -279,12 +279,28 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-003",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (PR-003; 1 site)"
       }
     },
     {
       "id": "SEED-00000026",
+      "description": "1 validate_power_sequencing detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_power_sequencing",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PS-001",
+        "tagged_at": "2026-10-29T21:55:55Z",
+        "tagged_reason": "schema_era key added (PS-001; 3 sites)"
+      }
+    },
+    {
+      "id": "SEED-00000027",
       "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -294,7 +310,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "3 validate_voltage_levels detected",
       "check": {
         "path": "findings",
@@ -304,7 +320,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000029",
       "description": "Has 26 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -313,7 +329,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000030",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -322,7 +338,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000031",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -331,7 +347,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000032",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

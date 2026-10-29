@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -124,27 +124,16 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 3 detect_rc_filters",
+      "description": "Exactly 2 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R10 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R10$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "R1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -155,18 +144,18 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "R4 in detect_rc_filters",
+      "id": "STRUCT-00000014",
+      "description": "R10 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R4$"
+        "pattern": "^R10$"
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -176,7 +165,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "R11 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -187,7 +176,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -197,7 +186,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
@@ -207,7 +196,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -218,12 +207,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

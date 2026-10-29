@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~12 (tolerance 10%)",
+      "description": "Component count ~15 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 13,
+        "max": 17
       }
     },
     {
@@ -184,21 +184,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "1 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
-      "description": "Has 5 connector(s)",
+      "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

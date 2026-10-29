@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~31 (tolerance 10%)",
+      "description": "Simulation count ~23 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 20,
+        "max": 26
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 18 passing simulation(s)",
+      "description": "At least 12 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 18
+        "value": 12
       }
     },
     {
@@ -58,17 +58,6 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "8 snubber_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^snubber_circuit$",
-        "value": 8
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "8 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",

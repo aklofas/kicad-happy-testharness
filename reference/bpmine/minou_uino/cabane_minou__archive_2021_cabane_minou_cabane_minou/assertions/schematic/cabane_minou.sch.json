@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~49 (tolerance 10%)",
+      "description": "Net count ~30 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 44,
-        "max": 54
+        "min": 27,
+        "max": 33
       }
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "1 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -149,16 +149,6 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

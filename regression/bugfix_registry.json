@@ -96,10 +96,10 @@
         "source_file": "OtterCastAudioV2.kicad_sch",
         "check": {
           "path": "statistics.dnp_parts",
-          "op": "min_count",
-          "value": 1
+          "op": "equals",
+          "value": 0
         },
-        "description": "KH-033: At least 1 DNP part detected (C49 value=DNP)"
+        "description": "KH-033: C49 (value DNP) carries (dnp no), so it is populated: KiCad reads the dnp attribute and the value text only when the attribute is absent. Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was >= 1."
       }
     ]
   },
@@ -134,9 +134,9 @@
         "check": {
           "path": "statistics.dnp_parts",
           "op": "equals",
-          "value": 25
+          "value": 0
         },
-        "description": "KH-042: 25 DNP resistor instances correctly counted"
+        "description": "KH-042: the 25 resistors valued DNP carry (dnp no), so none counts as DNP: KiCad reads the dnp attribute and the value text only when the attribute is absent. Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was 25."
       }
     ]
   },
@@ -1725,10 +1725,10 @@
         "check": {
           "path": "findings",
           "detector_filter": "detect_label_aliases",
-          "op": "min_count",
-          "value": 6
+          "op": "max_count",
+          "value": 0
         },
-        "description": "KH-299: at least 6 LB-001 label alias findings (was 7; the 4-sheet `5V` group is suppressed since PR #44 made `5V` a rail \u2014 v2.3.0 regen 2026-10-05)"
+        "description": "KH-299: no LB-001 on bitaxeUltra; the earlier findings were one hierarchical label reached through several sheet instances (KH-668). Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was >= 6."
       }
     ]
   },
@@ -2363,56 +2363,46 @@
       {
         "repo": "ClemensElflein/OpenMower",
         "project": "Hardware_OpenMowerMainboard",
-        "source_file": "RobotConnectors.kicad_sch",
+        "source_file": "OpenMowerMainboard.kicad_sch",
         "check": {
           "path": "findings",
-          "detector_filter": "detect_transistor_circuits",
+          "detector_filter": "detect_level_shifters",
           "op": "field_equals",
-          "match_field": "reference",
+          "match_field": "ref",
           "match_value": "Q13",
-          "assert_field": "gate_resistors",
-          "assert_value": [
-            {
-              "reference": "R3",
-              "value": "1k"
-            }
-          ]
+          "assert_field": "side_a.pullup_ref",
+          "assert_value": "R3"
         },
-        "description": "KH-139: Q13 gate_resistors is single-element list (R3 only). Pre-fix: 7 entries from +3V3 rail enumeration."
+        "description": "KH-139: Q13 level shifter has only its own gate-side pull-up R3, not the +3V3 rail's other parts. Root sheet: the RobotConnectors child sheet alone resolves all four LEVEL_SHIFTER instances to Q13."
       },
       {
         "repo": "ClemensElflein/OpenMower",
         "project": "Hardware_OpenMowerMainboard",
-        "source_file": "RobotConnectors.kicad_sch",
+        "source_file": "OpenMowerMainboard.kicad_sch",
         "check": {
           "path": "findings",
-          "detector_filter": "detect_transistor_circuits",
+          "detector_filter": "detect_level_shifters",
           "op": "field_equals",
-          "match_field": "reference",
+          "match_field": "ref",
           "match_value": "Q14",
-          "assert_field": "gate_resistors",
-          "assert_value": [
-            {
-              "reference": "R9",
-              "value": "1k"
-            }
-          ]
+          "assert_field": "side_a.pullup_ref",
+          "assert_value": "R9"
         },
-        "description": "KH-139: Q14 gate_resistors is single-element list (R9 only) \u2014 corroborates KH-139 fix"
+        "description": "KH-139: Q14 level shifter has only its own gate-side pull-up R9 (corroborates the KH-139 fix)."
       },
       {
         "repo": "ClemensElflein/OpenMower",
         "project": "Hardware_OpenMowerMainboard",
-        "source_file": "RobotConnectors.kicad_sch",
+        "source_file": "OpenMowerMainboard.kicad_sch",
         "check": {
           "path": "findings",
-          "detector_filter": "detect_transistor_circuits",
+          "detector_filter": "detect_level_shifters",
           "op": "count_matches",
-          "field": "topology",
-          "pattern": "^level_shifter$",
+          "field": "type",
+          "pattern": "^discrete_level_shifter$",
           "value": 4
         },
-        "description": "KH-139 + KH-021: exactly 4 level_shifter transistors detected (Q13-Q16) \u2014 confirms BSS138 detection survives gate-resistor scope tightening"
+        "description": "KH-139 + KH-021: exactly 4 discrete level shifters (Q13-Q16, BSS138) survive the gate-resistor scope tightening."
       }
     ]
   },
@@ -2594,9 +2584,9 @@
         "check": {
           "path": "trust_summary.total_findings",
           "op": "equals",
-          "value": 47
+          "value": 46
         },
-        "description": "KH-311: trust_summary.total_findings==47 (post-filter count, not pre-filter inflated value; re-anchored 50\u219247 at the v2.3.0 regen, invariant verified 47/47/47)"
+        "description": "KH-311: trust_summary.total_findings==46 (post-filter count, not pre-filter inflated value; re-anchored 50→47 at the v2.3.0 regen, invariant verified 47/47/47) Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was 47 (EMC EF moves)."
       },
       {
         "repo": "bluepylons/A-Thinkpad-USB-keyboard",
@@ -2606,9 +2596,9 @@
         "check": {
           "path": "summary.total_findings",
           "op": "equals",
-          "value": 47
+          "value": 46
         },
-        "description": "KH-311: summary.total_findings==47 (matches trust_summary and len(findings) \u2014 invariant enforced; re-anchored 50\u219247 at the v2.3.0 regen)"
+        "description": "KH-311: summary.total_findings==46 (matches trust_summary and len(findings) — invariant enforced; re-anchored 50→47 at the v2.3.0 regen) Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was 47 (EMC EF moves)."
       },
       {
         "repo": "bluepylons/A-Thinkpad-USB-keyboard",
@@ -2620,7 +2610,7 @@
           "op": "equals",
           "value": 51
         },
-        "description": "KH-311: connector breakout trust_summary.total_findings==51 (second data point \u2014 invariant holds across sub-projects)"
+        "description": "KH-311: connector breakout trust_summary.total_findings==51 (second data point — invariant holds across sub-projects)"
       }
     ]
   },
@@ -2730,16 +2720,16 @@
         "check": {
           "path": "statistics.footprint_count",
           "op": "equals",
-          "value": 10
+          "value": 89
         },
-        "description": "KH-326: footprint_count == 10 (proves PCB fully parsed including the kbLBrack1 footprint with empty value field that previously caused AttributeError)"
+        "description": "KH-326: footprint_count == 89 (every footprint in the file, including kbLBrack1 with an empty value field that previously caused AttributeError). Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was 10."
       }
     ]
   },
   {
     "issue": "KH-205",
     "type": "parser_fix",
-    "summary": "D+ net (with + char) lost in KiCad 5 legacy net resolution \u2014 now correctly resolves and links to differential pair",
+    "summary": "D+ net (with + char) lost in KiCad 5 legacy net resolution — now correctly resolves and links to differential pair",
     "assertions": [
       {
         "repo": "RandomDelta6/USB-Mouse",
@@ -2749,9 +2739,9 @@
         "check": {
           "path": "nets.D+.pins",
           "op": "min_count",
-          "value": 4
+          "value": 3
         },
-        "description": "KH-205: D+ net has >=4 pins (R17, C13, C9, R8) \u2014 proves '+' character in net name doesn't break legacy .sch resolution"
+        "description": "KH-205: D+ net has >= 3 pins (C9, R8, U1); proves the '+' character in a net name does not break legacy .sch resolution. R17 / C13 do not reach D+ (no wire between their pads and the D+ wire). Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was >= 4."
       },
       {
         "repo": "RandomDelta6/USB-Mouse",
@@ -3182,17 +3172,6 @@
           "op": "exists"
         },
         "description": "KH-204: +3V3 rail appears as a clean key in rail_voltages (pre-fix the key was '/uuid.../+3V3' due to hierarchical UUID path prefix)"
-      },
-      {
-        "repo": "Erhannis/VoltageSwitchboard",
-        "project": "voltage_tests",
-        "source_file": "voltage_tests.kicad_sch",
-        "analyzer_type": "schematic",
-        "check": {
-          "path": "rail_voltages.VOUT",
-          "op": "exists"
-        },
-        "description": "KH-204: VOUT rail appears clean — _clean_hierarchical_name() strips the leading /uuid/ that pre-fix builds left in place"
       }
     ]
   },

@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -72,7 +72,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -88,7 +88,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -114,12 +114,12 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 6 detect_decoupling",
+      "description": "Exactly 7 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -284,12 +284,12 @@
     },
     {
       "id": "STRUCT-00000026",
-      "description": "Exactly 2 detect_rc_filters",
+      "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -305,17 +305,6 @@
     },
     {
       "id": "STRUCT-00000028",
-      "description": "R9 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
       "description": "Exactly 1 detect_sensor_interfaces",
       "check": {
         "path": "findings",
@@ -325,7 +314,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000029",
       "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -335,7 +324,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "R13 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -346,7 +335,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000031",
       "description": "R3 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -357,7 +346,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000032",
       "description": "Exactly 2 validate_pullups",
       "check": {
         "path": "findings",
@@ -367,13 +356,13 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
-      "description": "Exactly 22 validate_voltage_levels",
+      "id": "STRUCT-00000033",
+      "description": "Exactly 21 validate_voltage_levels",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
         "op": "equals",
-        "value": 22
+        "value": 21
       }
     }
   ]

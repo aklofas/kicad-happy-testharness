@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~87 (tolerance 10%)",
+      "description": "Component count ~101 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 82,
-        "max": 92
+        "min": 95,
+        "max": 107
       }
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "15 analyze_voltage_derating detected",
+      "description": "16 analyze_voltage_derating detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_voltage_derating",
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -79,7 +79,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "8 audit_esd_protection detected",
+      "description": "6 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -107,7 +107,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 8
+        "value": 6
       }
     },
     {
@@ -119,7 +119,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 8
+        "value": 6
       }
     },
     {
@@ -144,7 +144,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -191,7 +191,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "5 detect_debug_interfaces detected",
+      "description": "1 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_debug_interfaces",
@@ -219,12 +219,12 @@
         "op": "count_matches",
         "field": "interface_type",
         "pattern": "^(swd|jtag|debug)$",
-        "value": 5
+        "value": 1
       }
     },
     {
       "id": "SEED-00000021",
-      "description": "2 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -286,7 +286,7 @@
     },
     {
       "id": "SEED-00000027",
-      "description": "7 detect_voltage_dividers detected",
+      "description": "8 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -317,15 +317,24 @@
     },
     {
       "id": "SEED-00000030",
-      "description": "Has 33 capacitor(s)",
+      "description": "Has 35 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 24
+        "value": 26
       }
     },
     {
       "id": "SEED-00000031",
+      "description": "Has 8 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000032",
       "description": "Has 6 net_tie(s)",
       "check": {
         "path": "statistics.component_types.net_tie",
@@ -334,16 +343,16 @@
       }
     },
     {
-      "id": "SEED-00000032",
-      "description": "Has 28 resistor(s)",
+      "id": "SEED-00000033",
+      "description": "Has 32 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 21
+        "value": 24
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000034",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

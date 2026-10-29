@@ -39,17 +39,6 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "8 emi_filter finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^emi_filter$",
-        "value": 8
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
       "description": "9 emission_estimate finding(s)",
       "check": {
         "path": "findings",
@@ -60,7 +49,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "5 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -71,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000006",
       "description": "13 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -79,6 +68,17 @@
         "field": "category",
         "pattern": "^io_filtering$",
         "value": 13
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "1 pdn finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^pdn$",
+        "value": 1
       }
     },
     {
@@ -216,16 +216,6 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "Rule EF-002 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^EF\\-002$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "Rule GP-001 present",
       "check": {
         "path": "findings",
@@ -235,7 +225,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -245,13 +235,23 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "Rule PD-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^PD\\-001$"
       }
     },
     {

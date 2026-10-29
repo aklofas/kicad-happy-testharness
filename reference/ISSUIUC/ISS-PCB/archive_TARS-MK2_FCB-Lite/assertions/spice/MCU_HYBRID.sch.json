@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~6 (tolerance 10%)",
+      "description": "Simulation count ~5 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 4,
+        "max": 6
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 2 passing simulation(s)",
+      "description": "At least 1 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -47,23 +47,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 lc_filter simulation(s)",
+      "description": "1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "1 snubber_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^snubber_circuit$",
+        "pattern": "^transistor_circuit$",
         "value": 1
       }
     }

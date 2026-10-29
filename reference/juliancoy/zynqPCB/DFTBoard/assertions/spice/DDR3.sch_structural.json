@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -299,22 +299,22 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "C104 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC104\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000031",
       "description": "C99 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC99\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
+      "description": "C104 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC104\\b"
       }
     },
     {
@@ -345,6 +345,16 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000035",
+      "description": "C127 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC127\\b"
       }
     }
   ]

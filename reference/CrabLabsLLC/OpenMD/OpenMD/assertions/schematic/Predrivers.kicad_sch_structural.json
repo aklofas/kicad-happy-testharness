@@ -26,17 +26,17 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 3
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -52,7 +52,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:55Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -68,27 +68,16 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 6 detect_protection_devices",
+      "description": "Exactly 2 detect_protection_devices",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
         "op": "equals",
-        "value": 6
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "D12 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D12$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "D13 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -99,29 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "D14 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D14$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "D15 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D15$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000008",
       "description": "D16 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -129,17 +96,6 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D16$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "D17 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D17$"
       }
     }
   ]

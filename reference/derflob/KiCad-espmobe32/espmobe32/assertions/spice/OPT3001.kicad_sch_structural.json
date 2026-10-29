@@ -6,18 +6,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 1 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^decoupling$",
+        "pattern": "^rc_filter$",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "C12 simulated as decoupling",
+      "description": "R20 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR20\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "C12 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",

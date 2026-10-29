@@ -36,7 +36,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -52,12 +52,12 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 detect_current_sense",
+      "description": "Exactly 8 detect_current_sense",
       "check": {
         "path": "findings",
         "detector_filter": "detect_current_sense",
         "op": "equals",
-        "value": 1
+        "value": 8
       }
     },
     {
@@ -73,22 +73,99 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 5 detect_design_observations",
+      "description": "R301 in detect_current_sense",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "equals",
-        "value": 5
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R301$"
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 validate_pullups",
+      "description": "R401 in detect_current_sense",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R401$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R501 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R501$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R601 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R601$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R701 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R701$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R801 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R801$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R901 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R901$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "Exactly 11 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 2
+        "value": 11
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 16 detect_label_aliases",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "equals",
+        "value": 16
       }
     }
   ]

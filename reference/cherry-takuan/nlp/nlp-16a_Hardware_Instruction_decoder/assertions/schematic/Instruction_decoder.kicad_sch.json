@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~346 (tolerance 10%)",
+      "description": "Net count ~340 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 335,
-        "max": 357
+        "min": 329,
+        "max": 351
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "8 analyze_connectivity detected",
+      "description": "2 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -151,18 +151,6 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "All audit_led_circuits drive_method values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_led_circuits",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000016",
       "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
@@ -172,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -182,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "40 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -192,7 +180,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "Has 30 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -201,7 +189,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "Has 9 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -210,7 +198,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "Has 88 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

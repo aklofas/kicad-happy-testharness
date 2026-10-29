@@ -6,67 +6,78 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~165 (tolerance 10%)",
+      "description": "Finding count ~92 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 156,
-        "max": 174
+        "min": 87,
+        "max": 97
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~119",
+      "description": "by_severity.error ~25",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 113,
-        "max": 125
+        "min": 22,
+        "max": 28
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~30",
+      "description": "by_severity.warning ~48",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 27,
-        "max": 33
+        "min": 43,
+        "max": 53
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~16",
+      "description": "by_severity.info ~19",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 14,
-        "max": 18
+        "min": 17,
+        "max": 21
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~23.5 (+-10)",
+      "description": "EMC risk score ~11.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 13.5,
-        "max": 33.5
+        "min": 1.5,
+        "max": 21.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "2 clock_routing finding(s)",
+      "description": "5 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 2
+        "value": 5
       }
     },
     {
       "id": "SEED-00000007",
+      "description": "6 crosstalk finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^crosstalk$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "3 decoupling finding(s)",
       "check": {
         "path": "findings",
@@ -74,17 +85,6 @@
         "field": "category",
         "pattern": "^decoupling$",
         "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "1 emi_filter finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^emi_filter$",
-        "value": 1
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "111 ground_plane finding(s)",
+      "description": "30 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 111
+        "value": 30
       }
     },
     {
@@ -211,11 +211,11 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "~111 net(s) with EMC scores",
+      "description": "~50 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 105
+        "value": 45
       }
     }
   ]

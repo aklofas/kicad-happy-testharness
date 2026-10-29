@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "6 io_filtering finding(s)",
+      "description": "5 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -203,16 +203,6 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "INPUT1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bINPUT1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
       "description": "GND1 in EMC findings",
       "check": {
         "path": "findings",
@@ -222,13 +212,23 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "5V1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\b5V1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "INPUT1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bINPUT1\\b"
       }
     }
   ]

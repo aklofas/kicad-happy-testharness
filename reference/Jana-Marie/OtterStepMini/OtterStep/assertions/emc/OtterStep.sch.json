@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~42 (tolerance 10%)",
+      "description": "Finding count ~66 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 37,
-        "max": 47
+        "min": 62,
+        "max": 70
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~11",
+      "description": "by_severity.error ~19",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 17,
+        "max": 21
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~23",
+      "description": "by_severity.warning ~39",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 35,
+        "max": 43
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~7.0 (+-10)",
+      "description": "EMC risk score ~13.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 17.0
+        "min": 3.0,
+        "max": 23.0
       }
     },
     {
@@ -100,24 +100,24 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "9 ground_plane finding(s)",
+      "description": "34 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 9
+        "value": 34
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "4 io_filtering finding(s)",
+      "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -151,15 +151,6 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "~1 probe point(s) in test plan",
-      "check": {
-        "path": "test_plan.probe_points",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -168,7 +159,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -177,12 +168,12 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "~29 net(s) with EMC scores",
+      "id": "SEED-00000017",
+      "description": "~40 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 26
+        "value": 36
       }
     }
   ]

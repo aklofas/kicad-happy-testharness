@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~71 (tolerance 10%)",
+      "description": "Component count ~77 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 67,
-        "max": 75
+        "min": 73,
+        "max": 81
       }
     },
     {
@@ -53,7 +53,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -189,7 +189,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -437,22 +437,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-003",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (PR-003; 1 site)"
       }
     },
     {
       "id": "SEED-00000041",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000042",
       "description": "9 validate_voltage_levels detected",
       "check": {
         "path": "findings",
@@ -462,17 +452,17 @@
       }
     },
     {
-      "id": "SEED-00000043",
-      "description": "Has 24 capacitor(s)",
+      "id": "SEED-00000042",
+      "description": "Has 27 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 18
+        "value": 20
       }
     },
     {
-      "id": "SEED-00000044",
-      "description": "Has 12 ic(s)",
+      "id": "SEED-00000043",
+      "description": "Has 13 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
@@ -480,7 +470,7 @@
       }
     },
     {
-      "id": "SEED-00000045",
+      "id": "SEED-00000044",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -489,7 +479,7 @@
       }
     },
     {
-      "id": "SEED-00000046",
+      "id": "SEED-00000045",
       "description": "Has 7 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

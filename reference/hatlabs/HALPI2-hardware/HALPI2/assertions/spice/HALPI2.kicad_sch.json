@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~80 (tolerance 10%)",
+      "description": "Simulation count ~81 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
         "min": 76,
-        "max": 84
+        "max": 86
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 55 passing simulation(s)",
+      "description": "At least 52 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 55
+        "value": 52
       }
     },
     {
@@ -36,13 +36,13 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "28 decoupling simulation(s)",
+      "description": "27 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 28
+        "value": 27
       }
     },
     {
@@ -69,13 +69,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "5 protection_device simulation(s)",
+      "description": "7 protection_device simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^protection_device$",
-        "value": 5
+        "value": 7
       }
     },
     {

@@ -18,13 +18,13 @@
     },
     {
       "id": "BUGFIX-KH-042-01",
-      "description": "KH-042: 25 DNP resistor instances correctly counted",
+      "description": "KH-042: the 25 resistors valued DNP carry (dnp no), so none counts as DNP: KiCad reads the dnp attribute and the value text only when the attribute is absent. Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was 25.",
       "issue": "KH-042",
       "fix_type": "count_change_fix",
       "check": {
         "path": "statistics.dnp_parts",
         "op": "equals",
-        "value": 25
+        "value": 0
       }
     }
   ]

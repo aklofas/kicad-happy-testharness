@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 11 audit_esd_protection",
+      "description": "Exactly 9 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 11
+        "value": 9
       }
     },
     {
@@ -26,6 +26,22 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 audit_power_pin_dc_paths",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "equals",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PP-001",
+        "tagged_at": "2026-10-29T21:56:15Z",
+        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -35,7 +51,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "R101 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -46,7 +62,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "R103 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -57,7 +73,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "R104 in detect_rc_filters",
       "check": {
         "path": "findings",

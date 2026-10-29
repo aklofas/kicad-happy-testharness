@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 audit_connector_ground_distribution",
+      "description": "Exactly 2 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 5
+        "value": 2
       }
     },
     {
@@ -46,22 +46,6 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 audit_rail_sources",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "equals",
-        "value": 2
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
       "description": "Exactly 1 detect_bridge_circuits",
       "check": {
         "path": "findings",
@@ -71,37 +55,37 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 6 detect_decoupling",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 5 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 6
+        "value": 5
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 10 detect_design_observations",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 11 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 10
+        "value": 11
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 3 detect_power_regulators",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 4 detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -112,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "U2 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -123,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "U3 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -134,13 +118,24 @@
       }
     },
     {
+      "id": "STRUCT-00000012",
+      "description": "U4 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U4$"
+      }
+    },
+    {
       "id": "STRUCT-00000013",
-      "description": "Exactly 2 detect_voltage_dividers",
+      "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -167,26 +162,16 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 1 validate_led_resistors",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_led_resistors",
+        "detector_filter": "validate_pullups",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 3 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
       "description": "Exactly 4 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -197,7 +182,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     }

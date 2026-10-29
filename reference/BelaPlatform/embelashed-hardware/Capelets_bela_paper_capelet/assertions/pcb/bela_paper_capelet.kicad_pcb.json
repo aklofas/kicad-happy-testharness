@@ -26,6 +26,15 @@
     },
     {
       "id": "SEED-00000003",
+      "description": "2 copper layer(s) used",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000004",
       "description": "Track segments ~200 (tolerance 10%)",
       "check": {
         "path": "statistics.track_segments",
@@ -35,23 +44,13 @@
       }
     },
     {
-      "id": "SEED-00000004",
-      "description": "SMD count ~1 (tolerance 10%)",
-      "check": {
-        "path": "statistics.smd_count",
-        "op": "range",
-        "min": 0,
-        "max": 2
-      }
-    },
-    {
       "id": "SEED-00000005",
-      "description": "THT count ~9 (tolerance 10%)",
+      "description": "THT count ~10 (tolerance 10%)",
       "check": {
         "path": "statistics.tht_count",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -60,7 +59,7 @@
       "check": {
         "path": "statistics.routing_complete",
         "op": "equals",
-        "value": true
+        "value": false
       }
     },
     {

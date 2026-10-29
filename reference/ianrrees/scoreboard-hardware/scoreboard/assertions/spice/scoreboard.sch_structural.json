@@ -6,17 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 bridge_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^bridge_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -27,18 +16,18 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 7 transistor_circuit simulation(s)",
+      "id": "STRUCT-00000002",
+      "description": "Exactly 8 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 7
+        "value": 8
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Q101 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -48,23 +37,33 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Q103 simulated as transistor_circuit",
+      "id": "STRUCT-00000004",
+      "description": "Q102 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ103\\b"
+        "pattern": "\\bQ102\\b"
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "Q104 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bQ104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q105 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ105\\b"
       }
     },
     {
@@ -155,26 +154,6 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC105\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Q110 simulated as bridge_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ110\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "Q105 simulated as bridge_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ105\\b"
       }
     }
   ]

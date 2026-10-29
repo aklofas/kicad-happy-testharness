@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 audit_connector_ground_distribution",
+      "description": "Exactly 2 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -36,16 +36,37 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 detect_crystal_circuits",
+      "description": "Exactly 1 detect_clock_distribution",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
+        "detector_filter": "detect_clock_distribution",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 2 detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U1 in detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "X1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -56,50 +77,23 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R4 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R4$"
-      }
-    },
-    {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 validate_pullups",
+      "description": "Exactly 1 detect_decoupling",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 1 validate_usb_bus",
+      "description": "Exactly 2 detect_design_observations",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_usb_bus",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:44:00Z",
-        "tagged_reason": "schema_era key added (PR-004; 1 site)"
+        "value": 2
       }
     }
   ]

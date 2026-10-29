@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -62,23 +62,23 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 8 audit_rail_sources",
+      "description": "Exactly 7 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 8
+        "value": 7
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -136,32 +136,32 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 26 detect_decoupling",
+      "description": "Exactly 27 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 26
+        "value": 27
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 49 detect_design_observations",
+      "description": "Exactly 45 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 49
+        "value": 45
       }
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 21 detect_label_aliases",
+      "description": "Exactly 18 detect_label_aliases",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
         "op": "equals",
-        "value": 21
+        "value": 18
       }
     },
     {
@@ -580,12 +580,12 @@
     },
     {
       "id": "STRUCT-00000053",
-      "description": "Exactly 11 detect_voltage_dividers",
+      "description": "Exactly 12 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 11
+        "value": 12
       }
     },
     {
@@ -612,6 +612,17 @@
     },
     {
       "id": "STRUCT-00000056",
+      "description": "R93 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R93$"
+      }
+    },
+    {
+      "id": "STRUCT-00000057",
       "description": "R111 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -622,7 +633,7 @@
       }
     },
     {
-      "id": "STRUCT-00000057",
+      "id": "STRUCT-00000058",
       "description": "R112 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -633,7 +644,7 @@
       }
     },
     {
-      "id": "STRUCT-00000058",
+      "id": "STRUCT-00000059",
       "description": "R124 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -644,7 +655,7 @@
       }
     },
     {
-      "id": "STRUCT-00000059",
+      "id": "STRUCT-00000060",
       "description": "R129 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -655,7 +666,7 @@
       }
     },
     {
-      "id": "STRUCT-00000060",
+      "id": "STRUCT-00000061",
       "description": "R16 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -666,7 +677,7 @@
       }
     },
     {
-      "id": "STRUCT-00000061",
+      "id": "STRUCT-00000062",
       "description": "R21 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -677,7 +688,7 @@
       }
     },
     {
-      "id": "STRUCT-00000062",
+      "id": "STRUCT-00000063",
       "description": "R6 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -688,7 +699,7 @@
       }
     },
     {
-      "id": "STRUCT-00000063",
+      "id": "STRUCT-00000064",
       "description": "R63 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -699,7 +710,7 @@
       }
     },
     {
-      "id": "STRUCT-00000064",
+      "id": "STRUCT-00000065",
       "description": "R88 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -710,7 +721,7 @@
       }
     },
     {
-      "id": "STRUCT-00000065",
+      "id": "STRUCT-00000066",
       "description": "Exactly 1 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -721,12 +732,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
     {
-      "id": "STRUCT-00000066",
+      "id": "STRUCT-00000067",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -737,8 +748,18 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
+      }
+    },
+    {
+      "id": "STRUCT-00000068",
+      "description": "Exactly 1 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

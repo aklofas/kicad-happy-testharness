@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~42 (tolerance 10%)",
+      "description": "Simulation count ~39 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 37,
-        "max": 47
+        "min": 35,
+        "max": 43
       }
     },
     {
@@ -47,6 +47,17 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "2 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -57,18 +68,18 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "4 lc_filter simulation(s)",
+      "id": "SEED-00000007",
+      "description": "2 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 4
+        "value": 2
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "1 opamp_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -79,18 +90,18 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "20 rc_filter simulation(s)",
+      "id": "SEED-00000009",
+      "description": "18 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 20
+        "value": 18
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "2 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -101,7 +112,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -112,7 +123,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "8 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

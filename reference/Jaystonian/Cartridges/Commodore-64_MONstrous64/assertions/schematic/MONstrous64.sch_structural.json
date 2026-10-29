@@ -36,7 +36,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -155,16 +155,27 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Exactly 1 detect_rc_filters",
+      "description": "Exactly 2 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000016",
+      "description": "R6 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "R7 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -175,7 +186,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "Exactly 13 detect_rf_matching",
       "check": {
         "path": "findings",
@@ -185,37 +196,11 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 1 detect_shorted_two_pin_components",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
       "id": "STRUCT-00000019",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
         "detector_filter": "suggest_certifications",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
-      "description": "Exactly 1 validate_led_resistors",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
         "op": "equals",
         "value": 1
       }

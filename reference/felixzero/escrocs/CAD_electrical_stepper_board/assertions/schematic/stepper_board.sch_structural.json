@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 10 audit_esd_protection",
+      "description": "Exactly 11 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 10
+        "value": 11
       }
     },
     {
@@ -67,12 +67,12 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 6 detect_design_observations",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 6
+        "value": 8
       }
     },
     {
@@ -87,53 +87,16 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "R9 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 3 detect_shorted_two_pin_components",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 3
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "Exactly 1 detect_voltage_dividers",
+      "description": "Exactly 6 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 6
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000010",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -144,17 +107,62 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "Exactly 2 validate_pullups",
+      "id": "STRUCT-00000011",
+      "description": "R13 in detect_voltage_dividers",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R13$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R2 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R30 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R30$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R33 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R33$"
       }
     },
     {
       "id": "STRUCT-00000015",
+      "description": "R5 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "Exactly 3 validate_voltage_levels",
       "check": {
         "path": "findings",

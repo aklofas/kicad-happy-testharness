@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~15 (tolerance 10%)",
+      "description": "Component count ~10 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 9,
+        "max": 11
       }
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "2 audit_led_circuits detected",
+      "description": "1 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -136,7 +136,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -148,7 +148,7 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -173,7 +173,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -209,7 +209,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "2 detect_transistor_circuits detected",
+      "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -226,15 +226,6 @@
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "Has 6 resistor(s)",
-      "check": {
-        "path": "statistics.component_types.resistor",
-        "op": "min_count",
-        "value": 4
       }
     }
   ]

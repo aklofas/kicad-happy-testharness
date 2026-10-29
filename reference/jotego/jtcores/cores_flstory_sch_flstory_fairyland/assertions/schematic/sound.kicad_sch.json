@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~333 (tolerance 10%)",
+      "description": "Net count ~326 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 323,
-        "max": 343
+        "min": 316,
+        "max": 336
       }
     },
     {
@@ -128,7 +128,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "5 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -138,7 +138,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -164,7 +164,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "24 detect_label_aliases detected",
+      "description": "8 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -184,6 +184,22 @@
     },
     {
       "id": "SEED-00000018",
+      "description": "1 detect_shorted_two_pin_components detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_shorted_two_pin_components",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "SP-001",
+        "tagged_at": "2026-10-29T21:55:58Z",
+        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "2 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -193,7 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "Has 7 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -202,7 +218,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 174 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -211,7 +227,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 9 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

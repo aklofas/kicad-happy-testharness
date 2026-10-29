@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~67 (tolerance 10%)",
+      "description": "Finding count ~32 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 63,
-        "max": 71
+        "min": 28,
+        "max": 36
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~40",
+      "description": "by_severity.error ~3",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 36,
-        "max": 44
+        "min": 2,
+        "max": 4
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~19",
+      "description": "by_severity.warning ~21",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~61.0 (+-10)",
+      "description": "EMC risk score ~65.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 51.0,
-        "max": 71.0
+        "min": 55.5,
+        "max": 75.5
       }
     },
     {
@@ -100,13 +100,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "39 ground_plane finding(s)",
+      "description": "4 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 39
+        "value": 4
       }
     },
     {
@@ -178,11 +178,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "~39 net(s) with EMC scores",
+      "description": "~31 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 35
+        "value": 27
       }
     }
   ]

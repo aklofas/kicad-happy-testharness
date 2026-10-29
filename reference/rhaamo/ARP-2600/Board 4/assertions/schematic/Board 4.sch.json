@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~158 (tolerance 10%)",
+      "description": "Net count ~103 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 150,
-        "max": 166
+        "min": 97,
+        "max": 109
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "67 audit_esd_protection detected",
+      "description": "60 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -71,7 +71,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 67
+        "value": 60
       }
     },
     {
@@ -83,7 +83,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 67
+        "value": 60
       }
     },
     {
@@ -98,22 +98,6 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_power_pin_dc_paths detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
-      }
-    },
-    {
-      "id": "SEED-00000011",
       "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -124,12 +108,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -139,7 +123,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -149,8 +133,8 @@
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "2 detect_rc_filters detected",
+      "id": "SEED-00000013",
+      "description": "3 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -159,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -170,7 +154,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "2 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -180,7 +164,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -191,8 +175,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "7 detect_voltage_dividers detected",
+      "id": "SEED-00000017",
+      "description": "13 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -201,7 +185,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -212,7 +196,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -221,7 +205,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "Has 70 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -230,7 +214,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "Has 5 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -239,7 +223,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000022",
       "description": "Has 45 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

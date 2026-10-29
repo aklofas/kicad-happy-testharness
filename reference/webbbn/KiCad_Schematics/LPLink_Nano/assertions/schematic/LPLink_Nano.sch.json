@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~84 (tolerance 10%)",
+      "description": "Net count ~57 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 79,
-        "max": 89
+        "min": 54,
+        "max": 60
       }
     },
     {
@@ -153,13 +153,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000015",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -169,7 +169,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -195,7 +195,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "6 validate_pullups detected",
+      "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -205,22 +205,6 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "2 validate_usb_bus detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_usb_bus",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:46Z",
-        "tagged_reason": "schema_era key added (PR-004; 1 site)"
-      }
-    },
-    {
-      "id": "SEED-00000020",
       "description": "Has 10 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -229,7 +213,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -238,7 +222,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

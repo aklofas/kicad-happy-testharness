@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~70 (tolerance 10%)",
+      "description": "Component count ~46 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 66,
-        "max": 74
+        "min": 41,
+        "max": 51
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~88 (tolerance 10%)",
+      "description": "Net count ~87 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 83,
-        "max": 93
+        "min": 82,
+        "max": 92
       }
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "3 audit_rail_sources detected",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -165,7 +165,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "1 detect_decoupling detected",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -175,7 +175,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "18 detect_design_observations detected",
+      "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -226,11 +226,11 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "Has 23 capacitor(s)",
+      "description": "Has 11 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 17
+        "value": 8
       }
     },
     {
@@ -244,15 +244,6 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "Has 14 ic(s)",
-      "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 10
-      }
-    },
-    {
-      "id": "SEED-00000025",
       "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -261,7 +252,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000025",
       "description": "Has 8 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

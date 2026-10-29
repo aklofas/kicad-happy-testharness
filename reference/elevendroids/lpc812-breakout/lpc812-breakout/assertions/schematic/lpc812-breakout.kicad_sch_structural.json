@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 audit_connector_ground_distribution",
+      "description": "Exactly 2 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -56,6 +56,37 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 audit_sourcing_gate",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_sourcing_gate",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 1 detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Y1 in detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "Exactly 2 detect_debug_interfaces",
       "check": {
         "path": "findings",
@@ -65,29 +96,76 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 1 detect_design_observations",
+      "id": "STRUCT-00000010",
+      "description": "Exactly 2 detect_decoupling",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Exactly 3 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Exactly 1 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 4 detect_shorted_two_pin_components",
+      "id": "STRUCT-00000013",
+      "description": "R11 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "Exactly 2 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 4
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R5 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R8 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R8$"
       }
     }
   ]

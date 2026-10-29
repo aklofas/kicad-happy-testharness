@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~97 (tolerance 10%)",
+      "description": "Finding count ~85 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 92,
-        "max": 102
+        "min": 80,
+        "max": 90
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~47",
+      "description": "by_severity.error ~33",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 42,
-        "max": 52
+        "min": 29,
+        "max": 37
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~39",
+      "description": "by_severity.warning ~41",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 35,
-        "max": 43
+        "min": 36,
+        "max": 46
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~43.0 (+-10)",
+      "description": "EMC risk score ~46.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 33.0,
-        "max": 53.0
+        "min": 36.0,
+        "max": 56.0
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "60 ground_plane finding(s)",
+      "description": "48 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 60
+        "value": 48
       }
     },
     {
@@ -156,11 +156,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~58 net(s) with EMC scores",
+      "description": "~51 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 55
+        "value": 48
       }
     }
   ]

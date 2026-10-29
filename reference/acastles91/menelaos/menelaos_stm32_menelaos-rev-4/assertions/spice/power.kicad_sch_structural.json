@@ -6,6 +6,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -16,13 +38,53 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000004",
       "description": "Q201 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bQ201\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C204 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC204\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C207 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC207\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C210 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC210\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C205 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC205\\b"
       }
     }
   ]

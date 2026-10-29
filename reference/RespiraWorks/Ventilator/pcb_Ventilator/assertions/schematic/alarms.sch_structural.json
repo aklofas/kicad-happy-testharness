@@ -16,17 +16,17 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 4 audit_rail_sources",
+      "description": "Exactly 3 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 4
+        "value": 3
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -62,12 +62,12 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 detect_rc_filters",
+      "description": "Exactly 2 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -94,33 +94,22 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "R69 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R69$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 2 detect_shorted_two_pin_components",
+      "description": "Exactly 3 detect_shorted_two_pin_components",
       "check": {
         "path": "findings",
         "detector_filter": "detect_shorted_two_pin_components",
         "op": "equals",
-        "value": 2
+        "value": 3
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "Exactly 10 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -130,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "Q10 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -141,7 +130,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "Q11 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -152,7 +141,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000013",
       "description": "Q12 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -163,7 +152,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000014",
       "description": "Q13 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -174,7 +163,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "Q4 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -185,7 +174,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "Q5 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -196,7 +185,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "Q6 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -207,7 +196,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "Q7 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -218,7 +207,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Q8 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -229,7 +218,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "Q9 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -240,17 +229,50 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "Exactly 3 detect_voltage_dividers",
+      "id": "STRUCT-00000021",
+      "description": "Exactly 6 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "R55 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R55$"
       }
     },
     {
       "id": "STRUCT-00000023",
+      "description": "R59 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R59$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "R60 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R60$"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
       "description": "R66 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -261,7 +283,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000026",
       "description": "R71 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -272,7 +294,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000027",
       "description": "R77 in detect_voltage_dividers",
       "check": {
         "path": "findings",

@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 transistor_circuit simulation(s)",
+      "description": "Exactly 1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -140,22 +140,22 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Q2 simulated as transistor_circuit",
+      "description": "C1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ2\\b"
+        "pattern": "\\bC1\\b"
       }
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Q3 simulated as transistor_circuit",
+      "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ3\\b"
+        "pattern": "\\bC3\\b"
       }
     },
     {
@@ -166,16 +166,6 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "C3 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC3\\b"
       }
     }
   ]

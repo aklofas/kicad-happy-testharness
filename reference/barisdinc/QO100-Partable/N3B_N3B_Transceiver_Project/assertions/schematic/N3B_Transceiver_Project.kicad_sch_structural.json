@@ -46,7 +46,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:11Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -62,7 +62,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:11Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -369,12 +369,12 @@
     },
     {
       "id": "STRUCT-00000034",
-      "description": "Exactly 17 detect_rc_filters",
+      "description": "Exactly 21 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 17
+        "value": 21
       }
     },
     {
@@ -478,6 +478,28 @@
     },
     {
       "id": "STRUCT-00000044",
+      "description": "RV501 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^RV501$"
+      }
+    },
+    {
+      "id": "STRUCT-00000045",
+      "description": "RV502 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^RV502$"
+      }
+    },
+    {
+      "id": "STRUCT-00000046",
       "description": "R509 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -488,7 +510,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000047",
       "description": "R508 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -499,7 +521,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000048",
       "description": "R513 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -510,7 +532,7 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000049",
       "description": "R517 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -521,7 +543,7 @@
       }
     },
     {
-      "id": "STRUCT-00000048",
+      "id": "STRUCT-00000050",
       "description": "R518 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -532,7 +554,7 @@
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000051",
       "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -542,7 +564,7 @@
       }
     },
     {
-      "id": "STRUCT-00000050",
+      "id": "STRUCT-00000052",
       "description": "R201 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -553,7 +575,7 @@
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000053",
       "description": "R403 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -564,7 +586,7 @@
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000054",
       "description": "R405 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -575,7 +597,7 @@
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000055",
       "description": "R515 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -586,7 +608,7 @@
       }
     },
     {
-      "id": "STRUCT-00000054",
+      "id": "STRUCT-00000056",
       "description": "Exactly 6 validate_pullups",
       "check": {
         "path": "findings",
@@ -596,7 +618,7 @@
       }
     },
     {
-      "id": "STRUCT-00000055",
+      "id": "STRUCT-00000057",
       "description": "Exactly 4 validate_voltage_levels",
       "check": {
         "path": "findings",

@@ -66,7 +66,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -108,12 +108,12 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 3 detect_lc_filters",
+      "description": "Exactly 4 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -194,16 +194,27 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 15 detect_rc_filters",
+      "description": "Exactly 18 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 15
+        "value": 18
       }
     },
     {
       "id": "STRUCT-00000019",
+      "description": "R3 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
       "description": "R2 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -214,7 +225,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "R1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -225,7 +236,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "Exactly 3 validate_pullups",
       "check": {
         "path": "findings",

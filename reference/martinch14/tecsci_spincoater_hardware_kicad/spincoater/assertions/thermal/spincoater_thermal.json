@@ -6,52 +6,62 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~10 (tolerance 10%)",
+      "description": "Finding count ~9 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 8,
+        "max": 10
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.warning ~4",
+      "description": "by_severity.error ~1",
       "check": {
-        "path": "summary.by_severity.warning",
+        "path": "summary.by_severity.error",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.info ~6",
+      "description": "by_severity.warning ~1",
       "check": {
-        "path": "summary.by_severity.info",
+        "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "Components analyzed ~3 (tolerance 10%)",
+      "description": "by_severity.info ~7",
       "check": {
-        "path": "summary.components_analyzed",
+        "path": "summary.by_severity.info",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 6,
+        "max": 8
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "Thermal score ~88 (+-10)",
+      "description": "Components analyzed ~1 (tolerance 10%)",
+      "check": {
+        "path": "summary.components_analyzed",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Thermal score ~82 (+-10)",
       "check": {
         "path": "summary.thermal_score",
         "op": "range",
-        "min": 78,
-        "max": 98
+        "min": 72,
+        "max": 92
       }
     }
   ]

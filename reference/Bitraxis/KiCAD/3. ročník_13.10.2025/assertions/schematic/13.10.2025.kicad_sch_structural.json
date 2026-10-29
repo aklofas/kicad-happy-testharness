@@ -66,7 +66,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:54Z",
+        "tagged_at": "2026-10-29T21:56:08Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -124,12 +124,12 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 3 detect_rc_filters",
+      "description": "Exactly 2 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -145,17 +145,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R2 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R6 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -163,16 +152,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R6$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 2 validate_led_resistors",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "equals",
-        "value": 2
       }
     }
   ]

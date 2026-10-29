@@ -43,14 +43,14 @@
     },
     {
       "id": "BUGFIX-KH-299-01",
-      "description": "KH-299: at least 6 LB-001 label alias findings (was 7; the 4-sheet `5V` group is suppressed since PR #44 made `5V` a rail \u2014 v2.3.0 regen 2026-10-05)",
+      "description": "KH-299: no LB-001 on bitaxeUltra; the earlier findings were one hierarchical label reached through several sheet instances (KH-668). Re-anchored at the 3.0.x relock (40b8ff3, 2026-10-29): was >= 6.",
       "issue": "KH-299",
       "fix_type": "detection_fix",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
-        "op": "min_count",
-        "value": 6
+        "op": "max_count",
+        "value": 0
       }
     },
     {

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~23 (tolerance 10%)",
+      "description": "Net count ~17 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 15,
+        "max": 19
       }
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "4 audit_esd_protection detected",
+      "description": "10 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 4
+        "value": 10
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 4
+        "value": 10
       }
     },
     {
@@ -108,6 +108,27 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "8 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -116,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000014",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~214 (tolerance 10%)",
+      "description": "Component count ~187 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 207,
-        "max": 221
+        "min": 177,
+        "max": 197
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -144,7 +144,7 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "9 detect_design_observations detected",
+      "description": "8 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -164,7 +164,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "6 detect_label_aliases detected",
+      "description": "2 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -216,7 +216,7 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "23 detect_rc_filters detected",
+      "description": "16 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -247,6 +247,16 @@
     },
     {
       "id": "SEED-00000024",
+      "description": "1 detect_rf_matching detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rf_matching",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000025",
       "description": "2 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -256,16 +266,16 @@
       }
     },
     {
-      "id": "SEED-00000025",
-      "description": "Has 113 capacitor(s)",
+      "id": "SEED-00000026",
+      "description": "Has 98 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 84
+        "value": 73
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -274,7 +284,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 6 filter(s)",
       "check": {
         "path": "statistics.component_types.filter",
@@ -283,34 +293,34 @@
       }
     },
     {
-      "id": "SEED-00000028",
-      "description": "Has 8 ic(s)",
+      "id": "SEED-00000029",
+      "description": "Has 7 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000029",
-      "description": "Has 14 inductor(s)",
-      "check": {
-        "path": "statistics.component_types.inductor",
-        "op": "min_count",
-        "value": 10
+        "value": 5
       }
     },
     {
       "id": "SEED-00000030",
-      "description": "Has 55 resistor(s)",
+      "description": "Has 10 inductor(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.inductor",
         "op": "min_count",
-        "value": 41
+        "value": 7
       }
     },
     {
       "id": "SEED-00000031",
+      "description": "Has 48 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 36
+      }
+    },
+    {
+      "id": "SEED-00000032",
       "description": "Has 5 resistor_network(s)",
       "check": {
         "path": "statistics.component_types.resistor_network",
@@ -319,7 +329,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000033",
       "description": "Has 5 transformer(s)",
       "check": {
         "path": "statistics.component_types.transformer",

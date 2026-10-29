@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~16 (tolerance 10%)",
+      "description": "Component count ~25 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 14,
-        "max": 18
+        "min": 22,
+        "max": 28
       }
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "14 audit_esd_protection detected",
+      "description": "15 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -101,7 +101,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 14
+        "value": 15
       }
     },
     {
@@ -113,7 +113,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 14
+        "value": 15
       }
     },
     {
@@ -183,7 +183,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -199,6 +199,16 @@
     },
     {
       "id": "SEED-00000019",
+      "description": "1 detect_protection_devices detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "1 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -208,16 +218,16 @@
       }
     },
     {
-      "id": "SEED-00000020",
-      "description": "Has 8 connector(s)",
+      "id": "SEED-00000021",
+      "description": "Has 16 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 6
+        "value": 12
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "Has 6 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",

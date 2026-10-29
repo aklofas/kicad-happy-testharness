@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~105 (tolerance 10%)",
+      "description": "Net count ~98 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 99,
-        "max": 111
+        "min": 93,
+        "max": 103
       }
     },
     {
@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -123,7 +123,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "8 detect_decoupling detected",
+      "description": "11 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -133,7 +133,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "8 detect_design_observations detected",
+      "description": "11 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -143,6 +143,16 @@
     },
     {
       "id": "SEED-00000014",
+      "description": "4 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 detect_lvds_interfaces detected",
       "check": {
         "path": "findings",
@@ -152,8 +162,8 @@
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "6 detect_rc_filters detected",
+      "id": "SEED-00000016",
+      "description": "9 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -162,7 +172,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -173,24 +183,8 @@
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "3 detect_shorted_two_pin_components detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
       "id": "SEED-00000018",
-      "description": "11 detect_voltage_dividers detected",
+      "description": "10 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",

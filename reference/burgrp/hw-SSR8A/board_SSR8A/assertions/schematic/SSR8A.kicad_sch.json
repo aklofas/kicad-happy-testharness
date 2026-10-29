@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~34 (tolerance 10%)",
+      "description": "Component count ~35 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 30,
-        "max": 38
+        "min": 31,
+        "max": 39
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~33 (tolerance 10%)",
+      "description": "Net count ~30 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 29,
-        "max": 37
+        "min": 27,
+        "max": 33
       }
     },
     {
@@ -153,7 +153,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "3 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -163,7 +163,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -199,16 +199,6 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "2 detect_label_aliases detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_label_aliases",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000020",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -218,7 +208,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -229,7 +219,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -239,7 +229,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000022",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -249,7 +239,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000023",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -260,7 +250,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000024",
       "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
@@ -270,7 +260,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000025",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -280,7 +270,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000026",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -291,12 +281,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000027",
       "description": "8 validate_voltage_levels detected",
       "check": {
         "path": "findings",
@@ -306,8 +296,8 @@
       }
     },
     {
-      "id": "SEED-00000029",
-      "description": "Has 12 connector(s)",
+      "id": "SEED-00000028",
+      "description": "Has 13 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
@@ -315,7 +305,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000029",
       "description": "Has 11 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

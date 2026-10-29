@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "3 clock_routing finding(s)",
+      "description": "4 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -171,6 +171,16 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "U1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "X1 in EMC findings",
       "check": {
         "path": "findings",

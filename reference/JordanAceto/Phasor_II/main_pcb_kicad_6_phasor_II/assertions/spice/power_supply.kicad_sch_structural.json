@@ -28,6 +28,17 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 2 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 opamp_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -38,7 +49,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -49,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -60,7 +71,37 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
+      "description": "L1 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C1 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C4 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "R3 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -70,7 +111,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000011",
       "description": "R4 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -80,7 +121,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000012",
       "description": "U9 simulated as opamp_circuit",
       "check": {
         "path": "simulation_results",
@@ -90,7 +131,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000013",
       "description": "C822 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -100,7 +141,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000014",
       "description": "C816 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -110,7 +151,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000015",
       "description": "C826 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -120,7 +161,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000016",
       "description": "C7 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -130,7 +171,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000017",
       "description": "C814 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -140,7 +181,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000018",
       "description": "C8 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -150,7 +191,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000019",
       "description": "C821 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -160,7 +201,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000020",
       "description": "C825 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -170,7 +211,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000021",
       "description": "C9 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -180,7 +221,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000022",
       "description": "C827 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -190,7 +231,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000023",
       "description": "C831 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -200,7 +241,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000024",
       "description": "R3 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -210,7 +251,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000025",
       "description": "R4 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -220,13 +261,13 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "C1 simulated as inrush",
+      "id": "STRUCT-00000026",
+      "description": "C6 simulated as inrush",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC1\\b"
+        "pattern": "\\bC6\\b"
       }
     }
   ]

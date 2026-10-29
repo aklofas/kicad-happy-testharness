@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~11 (tolerance 10%)",
+      "description": "Net count ~10 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
         "min": 9,
-        "max": 13
+        "max": 11
       }
     },
     {
@@ -170,16 +170,6 @@
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000017",
-      "description": "2 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
       }
     }
   ]

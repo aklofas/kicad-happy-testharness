@@ -6,13 +6,184 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 rc_filter simulation(s)",
+      "description": "Exactly 6 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
+        "pattern": "^decoupling$",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
         "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "CD4 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "CD1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "CD2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "CD3 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "CP8 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCP8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "CD21 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD21\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "CD17 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD17\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "CP3 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCP3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "CD35 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD35\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "CD9 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD9\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "CP2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCP2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "CP1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCP1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "CP9 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCP9\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "CP10 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCP10\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "CP3 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCP3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "CD35 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCD35\\b"
       }
     }
   ]

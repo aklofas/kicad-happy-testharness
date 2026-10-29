@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 11 rc_filter simulation(s)",
+      "description": "Exactly 13 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 11
+        "value": 13
       }
     },
     {
@@ -177,6 +177,16 @@
     },
     {
       "id": "STRUCT-00000018",
+      "description": "CC3 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCC3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "R2 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -186,7 +196,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "CC5 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -196,7 +206,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "R4 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -206,13 +216,23 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "CC8 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bCC8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "CC9 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCC9\\b"
       }
     }
   ]

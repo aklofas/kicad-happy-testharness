@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~86 (tolerance 10%)",
+      "description": "Component count ~94 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 81,
-        "max": 91
+        "min": 89,
+        "max": 99
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~97 (tolerance 10%)",
+      "description": "Net count ~99 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 92,
-        "max": 102
+        "min": 94,
+        "max": 104
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "28 analyze_connectivity detected",
+      "description": "22 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "17 audit_esd_protection detected",
+      "description": "18 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -91,7 +91,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 17
+        "value": 18
       }
     },
     {
@@ -103,7 +103,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 17
+        "value": 18
       }
     },
     {
@@ -151,7 +151,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "3 audit_rail_sources detected",
+      "description": "4 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -161,7 +161,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -228,7 +228,7 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "15 detect_label_aliases detected",
+      "description": "11 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -330,7 +330,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
@@ -356,11 +356,11 @@
     },
     {
       "id": "SEED-00000034",
-      "description": "Has 19 capacitor(s)",
+      "description": "Has 21 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 14
+        "value": 15
       }
     },
     {
@@ -374,11 +374,11 @@
     },
     {
       "id": "SEED-00000036",
-      "description": "Has 21 resistor(s)",
+      "description": "Has 27 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 15
+        "value": 20
       }
     },
     {

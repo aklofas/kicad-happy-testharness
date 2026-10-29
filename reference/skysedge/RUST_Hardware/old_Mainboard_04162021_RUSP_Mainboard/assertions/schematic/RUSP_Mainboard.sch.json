@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~473 (tolerance 10%)",
+      "description": "Net count ~290 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 458,
-        "max": 488
+        "min": 281,
+        "max": 299
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "4 audit_connector_ground_distribution detected",
+      "description": "3 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -98,7 +98,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "3 audit_led_circuits detected",
+      "description": "4 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -126,7 +126,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -138,7 +138,7 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -153,7 +153,23 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "13 audit_rail_sources detected",
+      "description": "3 audit_power_pin_dc_paths detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PP-001",
+        "tagged_at": "2026-10-29T21:55:59Z",
+        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "5 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -163,12 +179,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:59Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "1 detect_audio_circuits detected",
       "check": {
         "path": "findings",
@@ -178,7 +194,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "All detect_audio_circuits have ref",
       "check": {
         "path": "findings",
@@ -189,7 +205,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "All detect_audio_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -201,7 +217,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "2 detect_battery_chargers detected",
       "check": {
         "path": "findings",
@@ -211,7 +227,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "All detect_battery_chargers charger_type values are valid",
       "check": {
         "path": "findings",
@@ -223,7 +239,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "1 detect_buzzer_speakers detected",
       "check": {
         "path": "findings",
@@ -233,7 +249,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -243,7 +259,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -254,8 +270,8 @@
       }
     },
     {
-      "id": "SEED-00000024",
-      "description": "6 detect_decoupling detected",
+      "id": "SEED-00000025",
+      "description": "7 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -264,8 +280,8 @@
       }
     },
     {
-      "id": "SEED-00000025",
-      "description": "18 detect_design_observations detected",
+      "id": "SEED-00000026",
+      "description": "11 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -274,7 +290,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "1 detect_headphone_jack detected",
       "check": {
         "path": "findings",
@@ -284,7 +300,17 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
+      "description": "9 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000029",
       "description": "1 detect_lc_filters detected",
       "check": {
         "path": "findings",
@@ -294,7 +320,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000030",
       "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
@@ -305,17 +331,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
-      "description": "1 detect_led_drivers detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_led_drivers",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000030",
+      "id": "SEED-00000031",
       "description": "3 detect_level_shifters detected",
       "check": {
         "path": "findings",
@@ -325,7 +341,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000032",
       "description": "All detect_level_shifters have ref",
       "check": {
         "path": "findings",
@@ -336,7 +352,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000033",
       "description": "All detect_level_shifters type values are valid",
       "check": {
         "path": "findings",
@@ -348,7 +364,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000034",
       "description": "3 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -358,7 +374,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000035",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -369,7 +385,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000036",
       "description": "4 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -379,18 +395,8 @@
       }
     },
     {
-      "id": "SEED-00000036",
-      "description": "4 detect_pwm_led_dimming detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_pwm_led_dimming",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000037",
-      "description": "9 detect_rc_filters detected",
+      "description": "10 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -411,7 +417,7 @@
     },
     {
       "id": "SEED-00000039",
-      "description": "6 detect_transistor_circuits detected",
+      "description": "7 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -432,7 +438,7 @@
     },
     {
       "id": "SEED-00000041",
-      "description": "5 detect_voltage_dividers detected",
+      "description": "2 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -473,23 +479,7 @@
     },
     {
       "id": "SEED-00000045",
-      "description": "1 validate_power_sequencing detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_power_sequencing",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
-        "tagged_reason": "schema_era key added (PS-001; 3 sites)"
-      }
-    },
-    {
-      "id": "SEED-00000046",
-      "description": "10 validate_pullups detected",
+      "description": "6 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -498,7 +488,7 @@
       }
     },
     {
-      "id": "SEED-00000047",
+      "id": "SEED-00000046",
       "description": "Has 65 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -507,7 +497,7 @@
       }
     },
     {
-      "id": "SEED-00000048",
+      "id": "SEED-00000047",
       "description": "Has 12 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -516,7 +506,7 @@
       }
     },
     {
-      "id": "SEED-00000049",
+      "id": "SEED-00000048",
       "description": "Has 10 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -525,7 +515,7 @@
       }
     },
     {
-      "id": "SEED-00000050",
+      "id": "SEED-00000049",
       "description": "Has 5 ferrite_bead(s)",
       "check": {
         "path": "statistics.component_types.ferrite_bead",
@@ -534,7 +524,7 @@
       }
     },
     {
-      "id": "SEED-00000051",
+      "id": "SEED-00000050",
       "description": "Has 7 fiducial(s)",
       "check": {
         "path": "statistics.component_types.fiducial",
@@ -543,7 +533,7 @@
       }
     },
     {
-      "id": "SEED-00000052",
+      "id": "SEED-00000051",
       "description": "Has 11 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -552,7 +542,7 @@
       }
     },
     {
-      "id": "SEED-00000053",
+      "id": "SEED-00000052",
       "description": "Has 14 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -561,7 +551,7 @@
       }
     },
     {
-      "id": "SEED-00000054",
+      "id": "SEED-00000053",
       "description": "Has 10 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -570,7 +560,7 @@
       }
     },
     {
-      "id": "SEED-00000055",
+      "id": "SEED-00000054",
       "description": "Has 71 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -579,7 +569,7 @@
       }
     },
     {
-      "id": "SEED-00000056",
+      "id": "SEED-00000055",
       "description": "Has 10 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
@@ -588,7 +578,7 @@
       }
     },
     {
-      "id": "SEED-00000057",
+      "id": "SEED-00000056",
       "description": "Has 26 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
@@ -597,7 +587,7 @@
       }
     },
     {
-      "id": "SEED-00000058",
+      "id": "SEED-00000057",
       "description": "Has 7 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

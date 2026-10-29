@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -129,37 +129,26 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 6 detect_design_observations",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 6
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 3 detect_lc_filters",
+      "description": "Exactly 1 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 3
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000014",
-      "description": "L4 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "L3 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -170,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "Exactly 2 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -180,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -191,7 +180,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "U4 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -202,13 +191,24 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "Exactly 4 detect_rc_filters",
+      "id": "STRUCT-00000018",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R4 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R4$"
       }
     },
     {
@@ -224,17 +224,6 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "R4 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "R3 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -245,7 +234,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -255,7 +244,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
@@ -265,7 +254,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -276,7 +265,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     }

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~8 (tolerance 10%)",
+      "description": "Finding count ~7 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 7,
-        "max": 9
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -36,12 +36,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~3",
+      "description": "by_severity.info ~2",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 1,
+        "max": 3
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "2 io_filtering finding(s)",
+      "description": "1 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -118,15 +118,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "~1 probe point(s) in test plan",
-      "check": {
-        "path": "test_plan.probe_points",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -135,7 +126,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",

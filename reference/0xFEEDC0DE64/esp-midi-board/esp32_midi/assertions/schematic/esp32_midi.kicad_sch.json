@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~420 (tolerance 10%)",
+      "description": "Component count ~422 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 407,
-        "max": 433
+        "min": 409,
+        "max": 435
       }
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "1 audit_led_circuits detected",
+      "description": "2 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -146,7 +146,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -158,7 +158,7 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -183,7 +183,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -199,7 +199,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -245,7 +245,7 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "10 detect_label_aliases detected",
+      "description": "3 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -389,7 +389,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
@@ -431,20 +431,20 @@
     },
     {
       "id": "SEED-00000041",
-      "description": "Has 137 led(s)",
+      "description": "Has 138 led(s)",
       "check": {
         "path": "statistics.component_types.led",
         "op": "min_count",
-        "value": 102
+        "value": 103
       }
     },
     {
       "id": "SEED-00000042",
-      "description": "Has 43 resistor(s)",
+      "description": "Has 44 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 32
+        "value": 33
       }
     },
     {

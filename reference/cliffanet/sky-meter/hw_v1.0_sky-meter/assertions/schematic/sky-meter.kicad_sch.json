@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~55 (tolerance 10%)",
+      "description": "Component count ~65 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 52,
-        "max": 58
+        "min": 61,
+        "max": 69
       }
     },
     {
@@ -183,7 +183,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -199,7 +199,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -312,7 +312,7 @@
     },
     {
       "id": "SEED-00000029",
-      "description": "5 detect_design_observations detected",
+      "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -376,7 +376,7 @@
     },
     {
       "id": "SEED-00000035",
-      "description": "2 detect_transistor_circuits detected",
+      "description": "3 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -397,6 +397,27 @@
     },
     {
       "id": "SEED-00000037",
+      "description": "1 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000038",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000039",
       "description": "2 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -406,7 +427,7 @@
       }
     },
     {
-      "id": "SEED-00000038",
+      "id": "SEED-00000040",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -417,21 +438,21 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "SEED-00000039",
-      "description": "Has 19 capacitor(s)",
+      "id": "SEED-00000041",
+      "description": "Has 23 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 14
+        "value": 17
       }
     },
     {
-      "id": "SEED-00000040",
+      "id": "SEED-00000042",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -440,12 +461,12 @@
       }
     },
     {
-      "id": "SEED-00000041",
-      "description": "Has 12 resistor(s)",
+      "id": "SEED-00000043",
+      "description": "Has 15 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 9
+        "value": 11
       }
     }
   ]

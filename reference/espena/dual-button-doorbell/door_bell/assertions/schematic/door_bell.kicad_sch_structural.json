@@ -322,6 +322,27 @@
     },
     {
       "id": "STRUCT-00000031",
+      "description": "Exactly 1 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000032",
+      "description": "R8 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -331,7 +352,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000034",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
@@ -341,7 +362,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000035",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -352,12 +373,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000036",
       "description": "Exactly 4 validate_voltage_levels",
       "check": {
         "path": "findings",

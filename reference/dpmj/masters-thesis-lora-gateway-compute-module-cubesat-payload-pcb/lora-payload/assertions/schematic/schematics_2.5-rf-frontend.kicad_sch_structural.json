@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -92,33 +92,33 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 5 detect_label_aliases",
+      "description": "Exactly 2 detect_label_aliases",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
         "op": "equals",
-        "value": 5
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 10 detect_lc_filters",
+      "description": "Exactly 6 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 10
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "L1302 in detect_lc_filters",
+      "description": "L1502 in detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L1302$"
+        "pattern": "^L1502$"
       }
     },
     {
@@ -134,28 +134,6 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "L1502 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1502$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "L1301 in detect_lc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1301$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "L1403 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -166,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000014",
       "description": "L1402 in detect_lc_filters",
       "check": {
         "path": "findings",
@@ -177,7 +155,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 detect_power_path",
       "check": {
         "path": "findings",
@@ -187,7 +165,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
       "description": "Exactly 1 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -197,7 +175,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
       "description": "D1101 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -208,7 +186,17 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000018",
+      "description": "Exactly 1 detect_rf_chains",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rf_chains",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -218,7 +206,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "R1201 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -229,7 +217,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "R1202 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -237,6 +225,16 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R1202$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "Exactly 2 suggest_certifications",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "equals",
+        "value": 2
       }
     },
     {

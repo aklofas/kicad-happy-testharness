@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~11 (tolerance 10%)",
+      "description": "Component count ~114 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 108,
+        "max": 120
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~37 (tolerance 10%)",
+      "description": "Net count ~82 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 33,
-        "max": 41
+        "min": 77,
+        "max": 87
       }
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 audit_rail_sources detected",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -118,13 +118,23 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "3 detect_rc_filters detected",
+      "description": "24 detect_label_aliases detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "40 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -133,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -144,33 +154,21 @@
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "1 detect_voltage_dividers detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000015",
-      "description": "All detect_voltage_dividers have non-zero ratio",
+      "description": "Has 40 capacitor(s)",
       "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "not_contains_match",
-        "field": "ratio",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 30
       }
     },
     {
       "id": "SEED-00000016",
-      "description": "Has 6 resistor(s)",
+      "description": "Has 72 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 4
+        "value": 54
       }
     }
   ]

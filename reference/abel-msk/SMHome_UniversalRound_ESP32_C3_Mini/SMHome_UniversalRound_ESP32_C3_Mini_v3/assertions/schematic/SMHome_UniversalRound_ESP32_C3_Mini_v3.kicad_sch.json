@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -199,7 +199,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -248,6 +248,27 @@
     },
     {
       "id": "SEED-00000023",
+      "description": "1 detect_current_sense detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000024",
+      "description": "All detect_current_sense have shunt ref present",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "not_contains_match",
+        "field": "shunt.ref",
+        "pattern": "^(None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000025",
       "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -257,7 +278,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000026",
       "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -267,7 +288,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000027",
       "description": "1 detect_label_aliases detected",
       "check": {
         "path": "findings",
@@ -277,7 +298,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000028",
       "description": "1 detect_lc_filters detected",
       "check": {
         "path": "findings",
@@ -287,7 +308,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000029",
       "description": "All detect_lc_filters have non-zero resonant_hz",
       "check": {
         "path": "findings",
@@ -298,7 +319,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000030",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -308,7 +329,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000031",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -319,7 +340,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000032",
       "description": "6 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -329,7 +350,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000033",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -339,7 +360,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000034",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -350,7 +371,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000035",
       "description": "3 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -360,7 +381,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000036",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -370,7 +391,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000037",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -381,7 +402,7 @@
       }
     },
     {
-      "id": "SEED-00000036",
+      "id": "SEED-00000038",
       "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
@@ -391,7 +412,7 @@
       }
     },
     {
-      "id": "SEED-00000037",
+      "id": "SEED-00000039",
       "description": "3 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -401,7 +422,7 @@
       }
     },
     {
-      "id": "SEED-00000038",
+      "id": "SEED-00000040",
       "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
@@ -412,12 +433,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "SEED-00000039",
+      "id": "SEED-00000041",
       "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -427,7 +448,7 @@
       }
     },
     {
-      "id": "SEED-00000040",
+      "id": "SEED-00000042",
       "description": "Has 10 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -436,7 +457,7 @@
       }
     },
     {
-      "id": "SEED-00000041",
+      "id": "SEED-00000043",
       "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -445,7 +466,7 @@
       }
     },
     {
-      "id": "SEED-00000042",
+      "id": "SEED-00000044",
       "description": "Has 11 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -454,7 +475,7 @@
       }
     },
     {
-      "id": "SEED-00000043",
+      "id": "SEED-00000045",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -109,12 +109,12 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 1 detect_voltage_dividers",
+      "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -126,6 +126,16 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Exactly 1 validate_pullups",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_pullups",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

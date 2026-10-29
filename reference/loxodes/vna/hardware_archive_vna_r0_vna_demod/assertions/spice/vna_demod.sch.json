@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~47 (tolerance 10%)",
+      "description": "Simulation count ~152 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 42,
-        "max": 52
+        "min": 144,
+        "max": 160
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 32 passing simulation(s)",
+      "description": "At least 120 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 32
+        "value": 120
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "30 current_sense simulation(s)",
+      "description": "114 current_sense simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^current_sense$",
-        "value": 30
+        "value": 114
       }
     },
     {
@@ -47,24 +47,24 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "7 lc_filter simulation(s)",
+      "description": "19 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 7
+        "value": 19
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "5 rc_filter simulation(s)",
+      "description": "14 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 5
+        "value": 14
       }
     },
     {

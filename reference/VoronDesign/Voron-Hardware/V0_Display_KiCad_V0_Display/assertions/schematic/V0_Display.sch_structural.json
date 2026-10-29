@@ -26,22 +26,6 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 2 audit_rail_sources",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "equals",
-        "value": 2
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
       "description": "Exactly 1 detect_addressable_leds",
       "check": {
         "path": "findings",
@@ -51,7 +35,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 detect_debug_interfaces",
       "check": {
         "path": "findings",
@@ -61,7 +45,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
@@ -71,29 +55,34 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 4 detect_design_observations",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 1 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "equals",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 detect_shorted_two_pin_components",
+      "description": "U1 in detect_power_regulators",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 2
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1$"
       }
     },
     {
@@ -108,12 +97,18 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 1 validate_pullups",
+      "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "validate_power_sequencing",
         "op": "equals",
         "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PS-001",
+        "tagged_at": "2026-10-29T21:56:10Z",
+        "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
@@ -128,7 +123,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     }

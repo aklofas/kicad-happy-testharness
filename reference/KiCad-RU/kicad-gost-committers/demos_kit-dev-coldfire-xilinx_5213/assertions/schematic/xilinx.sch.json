@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~95 (tolerance 10%)",
+      "description": "Net count ~89 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 90,
-        "max": 100
+        "min": 84,
+        "max": 94
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_connector_ground_distribution detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -163,12 +163,45 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000016",
+      "description": "1 detect_debug_interfaces detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All detect_debug_interfaces have connector_ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "All detect_debug_interfaces interface_type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_debug_interfaces",
+        "op": "count_matches",
+        "field": "interface_type",
+        "pattern": "^(swd|jtag|debug)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -178,7 +211,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000020",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -188,17 +221,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "2 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "Has 11 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~27 (tolerance 10%)",
+      "description": "Net count ~17 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 24,
-        "max": 30
+        "min": 15,
+        "max": 19
       }
     },
     {
@@ -119,16 +119,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -138,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

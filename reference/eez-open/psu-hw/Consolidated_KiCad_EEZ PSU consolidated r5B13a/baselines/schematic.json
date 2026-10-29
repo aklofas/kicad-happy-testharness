@@ -16,7 +16,7 @@
       "transistor": 4,
       "varistor": 2
     },
-    "erc_warning_count": 0,
+    "erc_warning_count": 8,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -59,13 +59,13 @@
       "detect_isolation_barriers": 1,
       "detect_lc_filters": 2,
       "detect_protection_devices": 3,
-      "detect_rc_filters": 3,
+      "detect_rc_filters": 2,
       "detect_transistor_circuits": 2,
       "detect_voltage_dividers": 2
     },
     "total_components": 48,
     "total_labels": 0,
-    "total_nets": 49,
+    "total_nets": 37,
     "total_power_symbols": 0
   },
   "Bias_power.sch.json": {
@@ -77,7 +77,7 @@
       "ic": 3,
       "resistor": 9
     },
-    "erc_warning_count": 1,
+    "erc_warning_count": 22,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -113,16 +113,17 @@
     ],
     "signal_counts": {
       "audit_lifecycle_skipped": 1,
-      "audit_rail_sources": 4,
-      "detect_design_observations": 2,
+      "audit_power_pin_dc_paths": 1,
+      "audit_rail_sources": 5,
+      "detect_decoupling": 1,
+      "detect_design_observations": 5,
       "detect_power_regulators": 2,
       "detect_rc_filters": 2,
-      "detect_voltage_dividers": 3,
-      "validate_pullups": 2
+      "detect_voltage_dividers": 3
     },
     "total_components": 28,
     "total_labels": 0,
-    "total_nets": 39,
+    "total_nets": 26,
     "total_power_symbols": 0
   },
   "Binding_posts_relays,_LED_driver.sch.json": {
@@ -139,7 +140,7 @@
       "resistor": 9,
       "transistor": 4
     },
-    "erc_warning_count": 0,
+    "erc_warning_count": 12,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -179,14 +180,12 @@
       "audit_lifecycle_skipped": 1,
       "audit_rail_sources": 4,
       "detect_decoupling": 1,
-      "detect_design_observations": 1,
-      "detect_pwm_led_dimming": 3,
-      "detect_shorted_two_pin_components": 5,
+      "detect_design_observations": 2,
       "detect_transistor_circuits": 4
     },
     "total_components": 63,
     "total_labels": 0,
-    "total_nets": 67,
+    "total_nets": 54,
     "total_power_symbols": 0
   },
   "CC%2fCV,_Remote_sense_protection.sch.json": {
@@ -197,7 +196,7 @@
       "resistor": 21,
       "transistor": 4
     },
-    "erc_warning_count": 1,
+    "erc_warning_count": 4,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -238,11 +237,11 @@
       "detect_design_observations": 1,
       "detect_rc_filters": 3,
       "detect_transistor_circuits": 4,
-      "detect_voltage_dividers": 4
+      "detect_voltage_dividers": 2
     },
     "total_components": 31,
     "total_labels": 0,
-    "total_nets": 39,
+    "total_nets": 29,
     "total_power_symbols": 0
   },
   "Digital_control,_voltage_reference.sch.json": {
@@ -256,7 +255,7 @@
       "resistor": 10,
       "transistor": 2
     },
-    "erc_warning_count": 3,
+    "erc_warning_count": 15,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -293,8 +292,8 @@
     "signal_counts": {
       "audit_esd_protection": 13,
       "audit_lifecycle_skipped": 1,
-      "audit_power_pin_dc_paths": 4,
-      "audit_rail_sources": 4,
+      "audit_power_pin_dc_paths": 1,
+      "audit_rail_sources": 2,
       "detect_adc_circuits": 1,
       "detect_decoupling": 3,
       "detect_design_observations": 4,
@@ -302,11 +301,11 @@
       "detect_rc_filters": 6,
       "detect_solder_jumpers": 1,
       "detect_transistor_circuits": 2,
-      "validate_pullups": 3
+      "validate_pullups": 4
     },
     "total_components": 36,
     "total_labels": 0,
-    "total_nets": 70,
+    "total_nets": 52,
     "total_power_symbols": 0
   },
   "EEZ PSU consolidated r5B13a.sch.json": {
@@ -336,7 +335,7 @@
       "transistor": 34,
       "varistor": 4
     },
-    "erc_warning_count": 22,
+    "erc_warning_count": 186,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -371,41 +370,40 @@
       "trust_summary"
     ],
     "signal_counts": {
-      "audit_connector_ground_distribution": 111,
+      "audit_connector_ground_distribution": 106,
       "audit_esd_protection": 178,
-      "audit_led_circuits": 12,
+      "audit_led_circuits": 11,
       "audit_lifecycle_skipped": 1,
-      "audit_power_pin_dc_paths": 10,
-      "audit_rail_sources": 19,
+      "audit_power_pin_dc_paths": 5,
+      "audit_rail_sources": 16,
       "detect_adc_circuits": 1,
       "detect_audio_circuits": 1,
-      "detect_buzzer_speakers": 1,
+      "detect_bridge_circuits": 1,
+      "detect_buzzer_speakers": 2,
       "detect_crystal_circuits": 2,
       "detect_current_sense": 1,
-      "detect_decoupling": 9,
-      "detect_design_observations": 16,
+      "detect_decoupling": 10,
+      "detect_design_observations": 19,
       "detect_energy_harvesting": 1,
       "detect_ethernet_interfaces": 1,
       "detect_isolation_barriers": 1,
-      "detect_key_matrices": 1,
-      "detect_lc_filters": 4,
+      "detect_lc_filters": 3,
+      "detect_led_drivers": 1,
       "detect_level_shifters": 1,
       "detect_opamp_circuits": 6,
       "detect_power_regulators": 5,
-      "detect_protection_devices": 8,
-      "detect_pwm_led_dimming": 4,
+      "detect_protection_devices": 9,
       "detect_rc_filters": 54,
       "detect_reset_supervisors": 1,
-      "detect_shorted_two_pin_components": 7,
       "detect_solder_jumpers": 6,
-      "detect_transistor_circuits": 32,
-      "detect_voltage_dividers": 13,
+      "detect_transistor_circuits": 29,
+      "detect_voltage_dividers": 11,
       "suggest_certifications": 1,
-      "validate_pullups": 17
+      "validate_pullups": 12
     },
     "total_components": 549,
     "total_labels": 0,
-    "total_nets": 757,
+    "total_nets": 500,
     "total_power_symbols": 0
   },
   "EEZ_PSU_consolidated_r5B13a_12.sch.json": {
@@ -419,7 +417,7 @@
       "resistor": 9,
       "speaker": 1
     },
-    "erc_warning_count": 1,
+    "erc_warning_count": 9,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -460,12 +458,12 @@
       "detect_buzzer_speakers": 1,
       "detect_decoupling": 1,
       "detect_design_observations": 1,
-      "detect_rc_filters": 6,
+      "detect_rc_filters": 7,
       "validate_pullups": 1
     },
     "total_components": 34,
     "total_labels": 0,
-    "total_nets": 49,
+    "total_nets": 32,
     "total_power_symbols": 0
   },
   "Ethernet,_USB,_Fan.sch.json": {
@@ -483,7 +481,7 @@
       "transistor": 1,
       "varistor": 2
     },
-    "erc_warning_count": 1,
+    "erc_warning_count": 20,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -517,11 +515,11 @@
       "trust_summary"
     ],
     "signal_counts": {
-      "audit_connector_ground_distribution": 13,
+      "audit_connector_ground_distribution": 8,
       "audit_esd_protection": 22,
       "audit_lifecycle_skipped": 1,
       "audit_power_pin_dc_paths": 2,
-      "audit_rail_sources": 3,
+      "audit_rail_sources": 2,
       "detect_decoupling": 2,
       "detect_design_observations": 4,
       "detect_isolation_barriers": 1,
@@ -532,7 +530,7 @@
     },
     "total_components": 30,
     "total_labels": 0,
-    "total_nets": 53,
+    "total_nets": 35,
     "total_power_symbols": 0
   },
   "Isolators,_Arduino.sch.json": {
@@ -545,7 +543,7 @@
       "other": 8,
       "switch": 1
     },
-    "erc_warning_count": 6,
+    "erc_warning_count": 34,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -590,7 +588,7 @@
     },
     "total_components": 22,
     "total_labels": 0,
-    "total_nets": 196,
+    "total_nets": 117,
     "total_power_symbols": 0
   },
   "Post-regulator.sch.json": {
@@ -604,7 +602,7 @@
       "resistor": 51,
       "transistor": 12
     },
-    "erc_warning_count": 5,
+    "erc_warning_count": 8,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -645,16 +643,15 @@
       "audit_rail_sources": 5,
       "detect_decoupling": 1,
       "detect_design_observations": 1,
-      "detect_opamp_circuits": 2,
-      "detect_rc_filters": 14,
-      "detect_shorted_two_pin_components": 1,
+      "detect_opamp_circuits": 6,
+      "detect_rc_filters": 16,
       "detect_solder_jumpers": 1,
       "detect_transistor_circuits": 12,
-      "detect_voltage_dividers": 3
+      "detect_voltage_dividers": 1
     },
     "total_components": 100,
     "total_labels": 0,
-    "total_nets": 82,
+    "total_nets": 75,
     "total_power_symbols": 0
   },
   "Power_pre-regulator.sch.json": {
@@ -673,7 +670,7 @@
       "thermistor": 1,
       "transistor": 3
     },
-    "erc_warning_count": 0,
+    "erc_warning_count": 7,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -711,18 +708,19 @@
       "audit_lifecycle_skipped": 1,
       "audit_rail_sources": 1,
       "detect_current_sense": 1,
-      "detect_design_observations": 1,
-      "detect_lc_filters": 2,
+      "detect_design_observations": 2,
+      "detect_lc_filters": 1,
       "detect_power_regulators": 1,
-      "detect_rc_filters": 8,
-      "detect_shorted_two_pin_components": 1,
+      "detect_protection_devices": 1,
+      "detect_rc_filters": 7,
       "detect_solder_jumpers": 1,
       "detect_transistor_circuits": 3,
+      "detect_voltage_dividers": 2,
       "validate_pullups": 1
     },
     "total_components": 53,
     "total_labels": 0,
-    "total_nets": 45,
+    "total_nets": 36,
     "total_power_symbols": 0
   },
   "Reset,_load_temp,_digital_input.sch.json": {
@@ -740,7 +738,7 @@
       "switch": 3,
       "transistor": 2
     },
-    "erc_warning_count": 3,
+    "erc_warning_count": 14,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -785,11 +783,11 @@
       "detect_reset_supervisors": 1,
       "detect_transistor_circuits": 2,
       "detect_voltage_dividers": 1,
-      "validate_pullups": 4
+      "validate_pullups": 3
     },
     "total_components": 56,
     "total_labels": 0,
-    "total_nets": 72,
+    "total_nets": 56,
     "total_power_symbols": 0
   },
   "SPI_peripherals,_TFT_display.sch.json": {
@@ -808,7 +806,7 @@
       "switch": 1,
       "transistor": 2
     },
-    "erc_warning_count": 1,
+    "erc_warning_count": 26,
     "sections": [
       "analyzer_type",
       "annotation_issues",
@@ -846,7 +844,9 @@
       "audit_connector_ground_distribution": 8,
       "audit_esd_protection": 12,
       "audit_lifecycle_skipped": 1,
-      "audit_rail_sources": 4,
+      "audit_power_pin_dc_paths": 1,
+      "audit_rail_sources": 3,
+      "detect_buzzer_speakers": 1,
       "detect_crystal_circuits": 2,
       "detect_decoupling": 2,
       "detect_design_observations": 4,
@@ -856,11 +856,11 @@
       "detect_solder_jumpers": 1,
       "detect_transistor_circuits": 2,
       "suggest_certifications": 1,
-      "validate_pullups": 5
+      "validate_pullups": 3
     },
     "total_components": 60,
     "total_labels": 0,
-    "total_nets": 147,
+    "total_nets": 102,
     "total_power_symbols": 0
   }
 }

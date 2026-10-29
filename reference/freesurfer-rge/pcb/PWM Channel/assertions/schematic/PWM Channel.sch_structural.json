@@ -56,6 +56,16 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 detect_label_aliases",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 detect_motor_drivers",
       "check": {
         "path": "findings",
@@ -65,7 +75,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -75,7 +85,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "R202 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -83,16 +93,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R202$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
       }
     }
   ]

@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~43 (tolerance 10%)",
+      "description": "Component count ~120 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 38,
-        "max": 48
+        "min": 114,
+        "max": 126
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~79 (tolerance 10%)",
+      "description": "Net count ~110 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 75,
-        "max": 83
+        "min": 104,
+        "max": 116
       }
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 audit_power_pin_dc_paths detected",
+      "description": "8 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
@@ -118,7 +118,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -134,7 +134,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -150,7 +150,7 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "3 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -160,7 +160,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 detect_label_aliases detected",
+      "description": "29 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -170,7 +170,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "2 detect_rc_filters detected",
+      "description": "16 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -212,11 +212,11 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "Has 10 capacitor(s)",
+      "description": "Has 52 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 7
+        "value": 39
       }
     },
     {
@@ -230,11 +230,20 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "Has 21 resistor(s)",
+      "description": "Has 9 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000023",
+      "description": "Has 49 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 15
+        "value": 36
       }
     }
   ]

@@ -65,35 +65,25 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "SMD count ~134 (tolerance 10%)",
+      "description": "THT count ~160 (tolerance 10%)",
       "check": {
-        "path": "statistics.smd_count",
+        "path": "statistics.tht_count",
         "op": "range",
-        "min": 127,
-        "max": 141
+        "min": 152,
+        "max": 168
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "THT count ~26 (tolerance 10%)",
-      "check": {
-        "path": "statistics.tht_count",
-        "op": "range",
-        "min": 23,
-        "max": 29
-      }
-    },
-    {
-      "id": "SEED-00000009",
       "description": "Routing completeness status",
       "check": {
         "path": "statistics.routing_complete",
         "op": "equals",
-        "value": true
+        "value": false
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "Connectivity analysis present",
       "check": {
         "path": "connectivity",
@@ -101,7 +91,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "1 power net(s) analyzed",
       "check": {
         "path": "power_net_routing",

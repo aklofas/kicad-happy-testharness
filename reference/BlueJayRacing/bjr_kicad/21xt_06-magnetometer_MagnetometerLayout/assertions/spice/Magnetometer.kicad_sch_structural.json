@@ -28,6 +28,27 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 protection_device simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^protection_device$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "CR2 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCR2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -37,7 +58,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -47,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "C6 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -57,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "C4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -67,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "C2 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -77,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "C3 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -87,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "C6 simulated as inrush",
       "check": {
         "path": "simulation_results",

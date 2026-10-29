@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~20 (tolerance 10%)",
+      "description": "Component count ~25 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 22,
+        "max": 28
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~12 (tolerance 10%)",
+      "description": "Net count ~13 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 11,
+        "max": 15
       }
     },
     {
@@ -163,28 +163,22 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "2 detect_design_observations detected",
+      "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
+        "detector_filter": "detect_decoupling",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000017",
-      "description": "1 detect_shorted_two_pin_components detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
+        "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {

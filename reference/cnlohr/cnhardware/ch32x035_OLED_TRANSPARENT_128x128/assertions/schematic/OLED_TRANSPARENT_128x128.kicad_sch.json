@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -134,7 +134,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 audit_rail_sources detected",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -144,7 +144,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -160,7 +160,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "2 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -170,7 +170,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "7 detect_design_observations detected",
+      "description": "8 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -201,27 +201,6 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "1 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000021",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -231,7 +210,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000020",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -242,7 +221,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000021",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -251,7 +230,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000022",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

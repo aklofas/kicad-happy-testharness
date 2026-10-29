@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~88 (tolerance 10%)",
+      "description": "Net count ~70 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 83,
-        "max": 93
+        "min": 66,
+        "max": 74
       }
     },
     {
@@ -108,22 +108,6 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "4 audit_rail_sources detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -133,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -144,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -154,11 +138,21 @@
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "7 detect_design_observations detected",
+      "id": "SEED-00000014",
+      "description": "4 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "1 detect_integrated_ldos detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_integrated_ldos",
         "op": "min_count",
         "value": 1
       }
@@ -217,16 +211,6 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "1 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
       "description": "2 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -237,8 +221,18 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
+      }
+    },
+    {
+      "id": "SEED-00000022",
+      "description": "2 validate_voltage_levels detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

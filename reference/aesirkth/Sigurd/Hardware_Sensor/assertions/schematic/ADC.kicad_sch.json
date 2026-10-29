@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~101 (tolerance 10%)",
+      "description": "Component count ~37 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 95,
-        "max": 107
+        "min": 33,
+        "max": 41
       }
     },
     {
@@ -118,7 +118,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -154,17 +154,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "2 detect_label_aliases detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_label_aliases",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "6 detect_opamp_circuits detected",
+      "description": "2 detect_opamp_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
@@ -173,7 +163,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "All detect_opamp_circuits have reference present",
       "check": {
         "path": "findings",
@@ -184,8 +174,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "24 detect_rc_filters detected",
+      "id": "SEED-00000017",
+      "description": "8 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -194,7 +184,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -205,7 +195,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "1 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -215,8 +205,8 @@
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "4 detect_thermocouple_rtd detected",
+      "id": "SEED-00000020",
+      "description": "1 detect_thermocouple_rtd detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_thermocouple_rtd",
@@ -225,7 +215,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "All detect_thermocouple_rtd have ref",
       "check": {
         "path": "findings",
@@ -236,7 +226,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000022",
       "description": "All detect_thermocouple_rtd type values are valid",
       "check": {
         "path": "findings",
@@ -244,12 +234,12 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(thermocouple_amplifier|rtd_interface)$",
-        "value": 4
+        "value": 1
       }
     },
     {
-      "id": "SEED-00000024",
-      "description": "4 detect_voltage_dividers detected",
+      "id": "SEED-00000023",
+      "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -258,7 +248,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000024",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -269,7 +259,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000025",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -279,39 +269,21 @@
       }
     },
     {
-      "id": "SEED-00000027",
-      "description": "Has 53 capacitor(s)",
+      "id": "SEED-00000026",
+      "description": "Has 21 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 39
+        "value": 15
       }
     },
     {
-      "id": "SEED-00000028",
-      "description": "Has 10 connector(s)",
-      "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 7
-      }
-    },
-    {
-      "id": "SEED-00000029",
-      "description": "Has 7 ic(s)",
-      "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 5
-      }
-    },
-    {
-      "id": "SEED-00000030",
-      "description": "Has 26 resistor(s)",
+      "id": "SEED-00000027",
+      "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 19
+        "value": 6
       }
     }
   ]

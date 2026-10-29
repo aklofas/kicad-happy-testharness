@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~12 (tolerance 10%)",
+      "description": "Net count ~7 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 audit_esd_protection detected",
+      "description": "2 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -71,7 +71,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -83,7 +83,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -98,6 +98,38 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "1 audit_power_pin_dc_paths detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PP-001",
+        "tagged_at": "2026-10-29T21:55:50Z",
+        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 audit_rail_sources detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "RS-001",
+        "tagged_at": "2026-10-29T21:55:50Z",
+        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -107,7 +139,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -117,7 +149,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000014",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -128,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "1 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -138,7 +170,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -148,7 +180,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -159,7 +191,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

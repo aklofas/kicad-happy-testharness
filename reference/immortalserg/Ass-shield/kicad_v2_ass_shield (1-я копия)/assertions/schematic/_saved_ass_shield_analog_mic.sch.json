@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~265 (tolerance 10%)",
+      "description": "Net count ~167 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 257,
-        "max": 273
+        "min": 158,
+        "max": 176
       }
     },
     {
@@ -98,7 +98,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_power_pin_dc_paths detected",
+      "description": "11 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
@@ -108,13 +108,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "7 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -124,13 +124,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "12 detect_addressable_leds detected",
+      "description": "1 detect_addressable_leds detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_addressable_leds",
@@ -204,7 +204,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "9 detect_design_observations detected",
+      "description": "10 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -214,7 +214,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "3 detect_lc_filters detected",
+      "description": "21 detect_lc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
@@ -235,7 +235,7 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "3 detect_rc_filters detected",
+      "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -289,7 +289,7 @@
     },
     {
       "id": "SEED-00000027",
-      "description": "2 detect_shorted_two_pin_components detected",
+      "description": "1 detect_shorted_two_pin_components detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_shorted_two_pin_components",
@@ -299,12 +299,33 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {
       "id": "SEED-00000028",
+      "description": "2 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000029",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000030",
       "description": "2 validate_i2c_bus detected",
       "check": {
         "path": "findings",
@@ -315,13 +336,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
     {
-      "id": "SEED-00000029",
-      "description": "2 validate_pullups detected",
+      "id": "SEED-00000031",
+      "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -330,7 +351,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000032",
       "description": "4 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -341,12 +362,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000033",
       "description": "Has 61 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -355,7 +376,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000034",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -364,7 +385,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000035",
       "description": "Has 7 crystal(s)",
       "check": {
         "path": "statistics.component_types.crystal",
@@ -373,7 +394,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000036",
       "description": "Has 11 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -382,7 +403,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000037",
       "description": "Has 10 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -391,7 +412,7 @@
       }
     },
     {
-      "id": "SEED-00000036",
+      "id": "SEED-00000038",
       "description": "Has 18 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
@@ -400,7 +421,7 @@
       }
     },
     {
-      "id": "SEED-00000037",
+      "id": "SEED-00000039",
       "description": "Has 16 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -409,7 +430,7 @@
       }
     },
     {
-      "id": "SEED-00000038",
+      "id": "SEED-00000040",
       "description": "Has 15 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

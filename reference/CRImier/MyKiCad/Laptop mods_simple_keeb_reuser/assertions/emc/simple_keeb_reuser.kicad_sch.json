@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~59 (tolerance 10%)",
+      "description": "Finding count ~105 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 56,
-        "max": 62
+        "min": 99,
+        "max": 111
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~4",
+      "description": "by_severity.error ~46",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 41,
+        "max": 51
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~23",
+      "description": "by_severity.warning ~27",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 24,
+        "max": 30
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~32.5 (+-10)",
+      "description": "EMC risk score ~16.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 22.5,
-        "max": 42.5
+        "min": 6.0,
+        "max": 26.0
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 ground_plane finding(s)",
+      "description": "47 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 1
+        "value": 47
       }
     },
     {
@@ -200,11 +200,11 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "~29 net(s) with EMC scores",
+      "description": "~48 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 26
+        "value": 43
       }
     }
   ]

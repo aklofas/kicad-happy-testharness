@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~55 (tolerance 10%)",
+      "description": "Finding count ~53 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 52,
-        "max": 58
+        "min": 50,
+        "max": 56
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~25",
+      "description": "by_severity.error ~22",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 22,
-        "max": 28
+        "min": 19,
+        "max": 25
       }
     },
     {
@@ -36,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~14",
+      "description": "by_severity.info ~15",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 13,
+        "max": 17
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~4.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
         "min": 0,
-        "max": 10
+        "max": 14.0
       }
     },
     {
@@ -122,13 +122,13 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "3 pdn finding(s)",
+      "description": "1 pdn finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^pdn$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -200,11 +200,11 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "~26 net(s) with EMC scores",
+      "description": "~24 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 23
+        "value": 21
       }
     }
   ]

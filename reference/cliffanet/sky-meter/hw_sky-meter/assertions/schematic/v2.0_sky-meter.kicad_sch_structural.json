@@ -76,7 +76,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -92,7 +92,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -160,22 +160,22 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Exactly 2 detect_decoupling",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 4 detect_design_observations",
+      "description": "Exactly 5 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -212,6 +212,38 @@
     },
     {
       "id": "STRUCT-00000020",
+      "description": "Exactly 2 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "R41 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R41$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "R42 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R42$"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
       "description": "Exactly 1 detect_sensor_interfaces",
       "check": {
         "path": "findings",
@@ -221,28 +253,60 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
-      "description": "Exactly 1 detect_transistor_circuits",
+      "id": "STRUCT-00000024",
+      "description": "Exactly 2 detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "Q111 in detect_transistor_circuits",
+      "id": "STRUCT-00000025",
+      "description": "Q31 in detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "contains_match",
         "field": "reference",
-        "pattern": "^Q111$"
+        "pattern": "^Q31$"
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000026",
+      "description": "Q61 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q61$"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "Exactly 1 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
+      "description": "R61 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R61$"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
       "description": "Exactly 2 suggest_certifications",
       "check": {
         "path": "findings",
@@ -252,7 +316,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000030",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -263,7 +327,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     }

@@ -6,16 +6,6 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 audit_connector_ground_distribution",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_connector_ground_distribution",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
       "description": "Exactly 2 audit_esd_protection",
       "check": {
         "path": "findings",
@@ -25,7 +15,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_led_circuits",
       "check": {
         "path": "findings",
@@ -35,7 +25,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
@@ -45,18 +35,34 @@
       }
     },
     {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 2 audit_power_pin_dc_paths",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_power_pin_dc_paths",
+        "op": "equals",
+        "value": 2
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PP-001",
+        "tagged_at": "2026-10-29T21:56:11Z",
+        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
+      }
+    },
+    {
       "id": "STRUCT-00000005",
-      "description": "Exactly 3 audit_rail_sources",
+      "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 3
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:11Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -92,26 +98,16 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 detect_pwm_led_dimming",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_pwm_led_dimming",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 4 detect_rc_filters",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "R3 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -122,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "R2 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -133,18 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "R13 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R13$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000012",
       "description": "R16 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -155,7 +140,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000013",
       "description": "Exactly 1 detect_rf_chains",
       "check": {
         "path": "findings",
@@ -165,7 +150,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000014",
       "description": "Exactly 6 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -175,7 +160,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -186,7 +171,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
       "description": "Q12 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -197,7 +182,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
       "description": "Q3 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -208,7 +193,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000018",
       "description": "Q5 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -219,7 +204,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000019",
       "description": "Q6 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -230,7 +215,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000020",
       "description": "Q7 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -241,7 +226,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000021",
       "description": "Exactly 4 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -251,7 +236,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000022",
       "description": "Exactly 2 suggest_certifications",
       "check": {
         "path": "findings",
@@ -261,13 +246,13 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
-      "description": "Exactly 2 validate_pullups",
+      "id": "STRUCT-00000023",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     }
   ]

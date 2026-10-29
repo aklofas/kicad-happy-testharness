@@ -108,7 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 audit_power_pin_dc_paths detected",
+      "description": "3 audit_power_pin_dc_paths detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
@@ -118,13 +118,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "5 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -134,7 +134,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -202,7 +202,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "10 detect_rf_matching detected",
+      "description": "11 detect_rf_matching detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rf_matching",
@@ -232,6 +232,22 @@
     },
     {
       "id": "SEED-00000022",
+      "description": "1 validate_spi_bus detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_spi_bus",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "PR-002",
+        "tagged_at": "2026-10-29T21:55:52Z",
+        "tagged_reason": "schema_era key added (PR-002; 1 site)"
+      }
+    },
+    {
+      "id": "SEED-00000023",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

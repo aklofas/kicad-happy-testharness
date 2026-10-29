@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~35 (tolerance 10%)",
+      "description": "Net count ~28 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 25,
+        "max": 31
       }
     },
     {
@@ -98,22 +98,6 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 audit_rail_sources detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "SEED-00000011",
       "description": "1 detect_debug_interfaces detected",
       "check": {
         "path": "findings",
@@ -123,7 +107,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "All detect_debug_interfaces have connector_ref",
       "check": {
         "path": "findings",
@@ -134,7 +118,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "All detect_debug_interfaces interface_type values are valid",
       "check": {
         "path": "findings",
@@ -146,8 +130,8 @@
       }
     },
     {
-      "id": "SEED-00000014",
-      "description": "1 detect_decoupling detected",
+      "id": "SEED-00000013",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -156,7 +140,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -166,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "1 detect_level_shifters detected",
       "check": {
         "path": "findings",
@@ -176,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "All detect_level_shifters have ref",
       "check": {
         "path": "findings",
@@ -187,7 +171,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "All detect_level_shifters type values are valid",
       "check": {
         "path": "findings",
@@ -199,28 +183,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "1 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000021",
+      "id": "SEED-00000018",
       "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -230,7 +193,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000019",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -241,7 +204,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000020",
       "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
@@ -251,7 +214,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000021",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",

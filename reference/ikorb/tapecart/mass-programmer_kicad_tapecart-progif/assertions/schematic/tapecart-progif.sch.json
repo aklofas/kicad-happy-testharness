@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~39 (tolerance 10%)",
+      "description": "Net count ~37 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 35,
-        "max": 43
+        "min": 33,
+        "max": 41
       }
     },
     {
@@ -206,7 +206,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "2 detect_led_drivers detected",
+      "description": "1 detect_led_drivers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_led_drivers",
@@ -216,7 +216,17 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "1 detect_transistor_circuits detected",
+      "description": "1 detect_pwm_led_dimming detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_pwm_led_dimming",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
+      "description": "2 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -225,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -236,7 +246,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

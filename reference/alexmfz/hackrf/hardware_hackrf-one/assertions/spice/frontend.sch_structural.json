@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 transistor_circuit simulation(s)",
+      "description": "Exactly 3 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -261,6 +261,26 @@
     },
     {
       "id": "STRUCT-00000026",
+      "description": "Q2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "Q4 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
       "description": "D1 simulated as protection_device",
       "check": {
         "path": "simulation_results",
@@ -270,7 +290,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000029",
       "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -280,7 +300,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000030",
       "description": "C1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -290,7 +310,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000031",
       "description": "C53 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -300,7 +320,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000032",
       "description": "C161 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -310,7 +330,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000033",
       "description": "C19 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -320,7 +340,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000034",
       "description": "C10 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -330,7 +350,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000035",
       "description": "C54 simulated as decoupling",
       "check": {
         "path": "simulation_results",

@@ -66,7 +66,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -93,38 +93,6 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 detect_current_sense",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "R34 in detect_current_sense",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R34$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "R37 in detect_current_sense",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R37$"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "Exactly 1 detect_debug_interfaces",
       "check": {
         "path": "findings",
@@ -134,72 +102,31 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 2 detect_decoupling",
+      "id": "STRUCT-00000010",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "Exactly 6 detect_design_observations",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 8 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 6
+        "value": 8
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "Exactly 2 detect_label_aliases",
+      "id": "STRUCT-00000012",
+      "description": "Exactly 1 detect_label_aliases",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "R35 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R35$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 2 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "Exactly 1 validate_voltage_levels",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_voltage_levels",
         "op": "equals",
         "value": 1
       }

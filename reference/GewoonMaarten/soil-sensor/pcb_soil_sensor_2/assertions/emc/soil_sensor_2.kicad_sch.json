@@ -16,6 +16,16 @@
     },
     {
       "id": "SEED-00000002",
+      "description": "by_severity.error ~2",
+      "check": {
+        "path": "summary.by_severity.error",
+        "op": "range",
+        "min": 1,
+        "max": 3
+      }
+    },
+    {
+      "id": "SEED-00000003",
       "description": "by_severity.warning ~10",
       "check": {
         "path": "summary.by_severity.warning",
@@ -25,27 +35,27 @@
       }
     },
     {
-      "id": "SEED-00000003",
-      "description": "by_severity.info ~17",
+      "id": "SEED-00000004",
+      "description": "by_severity.info ~15",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 15,
-        "max": 19
-      }
-    },
-    {
-      "id": "SEED-00000004",
-      "description": "EMC risk score ~86.5 (+-10)",
-      "check": {
-        "path": "summary.emc_risk_score",
-        "op": "range",
-        "min": 76.5,
-        "max": 96.5
+        "min": 13,
+        "max": 17
       }
     },
     {
       "id": "SEED-00000005",
+      "description": "EMC risk score ~74.5 (+-10)",
+      "check": {
+        "path": "summary.emc_risk_score",
+        "op": "range",
+        "min": 64.5,
+        "max": 84.5
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "8 board_edge finding(s)",
       "check": {
         "path": "findings",
@@ -56,7 +66,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "2 crosstalk finding(s)",
       "check": {
         "path": "findings",
@@ -64,17 +74,6 @@
         "field": "category",
         "pattern": "^crosstalk$",
         "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000007",
-      "description": "1 emi_filter finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^emi_filter$",
-        "value": 1
       }
     },
     {
@@ -90,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "2 ground_plane finding(s)",
+      "description": "3 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -190,11 +189,11 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "~13 net(s) with EMC scores",
+      "description": "~12 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 11
+        "value": 10
       }
     }
   ]

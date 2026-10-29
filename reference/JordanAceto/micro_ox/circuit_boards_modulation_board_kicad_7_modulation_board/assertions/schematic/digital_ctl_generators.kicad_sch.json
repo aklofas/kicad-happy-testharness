@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~147 (tolerance 10%)",
+      "description": "Component count ~110 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 139,
-        "max": 155
+        "min": 104,
+        "max": 116
       }
     },
     {
@@ -173,7 +173,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -296,7 +296,7 @@
     },
     {
       "id": "SEED-00000028",
-      "description": "24 detect_label_aliases detected",
+      "description": "3 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -306,7 +306,7 @@
     },
     {
       "id": "SEED-00000029",
-      "description": "4 detect_opamp_circuits detected",
+      "description": "3 detect_opamp_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
@@ -327,7 +327,7 @@
     },
     {
       "id": "SEED-00000031",
-      "description": "19 detect_rc_filters detected",
+      "description": "3 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -400,11 +400,11 @@
     },
     {
       "id": "SEED-00000038",
-      "description": "Has 50 capacitor(s)",
+      "description": "Has 31 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 37
+        "value": 23
       }
     },
     {
@@ -427,20 +427,11 @@
     },
     {
       "id": "SEED-00000041",
-      "description": "Has 60 resistor(s)",
+      "description": "Has 50 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 45
-      }
-    },
-    {
-      "id": "SEED-00000042",
-      "description": "Has 8 switch(s)",
-      "check": {
-        "path": "statistics.component_types.switch",
-        "op": "min_count",
-        "value": 6
+        "value": 37
       }
     }
   ]

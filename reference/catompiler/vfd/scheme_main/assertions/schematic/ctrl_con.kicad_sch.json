@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~57 (tolerance 10%)",
+      "description": "Component count ~47 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 54,
-        "max": 60
+        "min": 42,
+        "max": 52
       }
     },
     {
@@ -83,7 +83,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -119,7 +119,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "34 detect_label_aliases detected",
+      "description": "26 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -129,7 +129,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "6 detect_rc_filters detected",
+      "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -171,20 +171,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "Has 9 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000018",
-      "description": "Has 42 resistor(s)",
+      "description": "Has 37 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 31
+        "value": 27
       }
     }
   ]

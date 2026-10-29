@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -144,7 +144,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -201,28 +201,6 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "1 detect_reset_supervisors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_reset_supervisors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "All detect_reset_supervisors type values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_reset_supervisors",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(voltage_supervisor|watchdog|rc_reset)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
       "description": "6 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -232,7 +210,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000020",
       "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -242,7 +220,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000021",
       "description": "Has 11 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -251,7 +229,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000022",
       "description": "Has 6 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",

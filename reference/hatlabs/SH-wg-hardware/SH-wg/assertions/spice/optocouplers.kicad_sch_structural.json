@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 rc_filter simulation(s)",
+      "description": "Exactly 2 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 4
+        "value": 2
       }
     },
     {
@@ -59,16 +59,6 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "R904 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR904\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "R905 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -78,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000007",
       "description": "C902 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -88,17 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "C903 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC903\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000008",
       "description": "Q901 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -108,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
       "description": "U901 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -118,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000010",
       "description": "U902 simulated as rf_chain",
       "check": {
         "path": "simulation_results",

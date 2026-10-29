@@ -39,17 +39,28 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 transistor_circuit simulation(s)",
+      "description": "Exactly 1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 9 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 2
+        "value": 9
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -60,7 +71,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "R74 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -70,7 +81,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "C26 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -80,7 +91,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "R25 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -90,7 +101,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "C5 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -100,7 +111,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "L2 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -110,7 +121,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "C9 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -120,7 +131,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R15 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -130,7 +141,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "R16 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -140,17 +151,77 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "Q21 simulated as transistor_circuit",
+      "id": "STRUCT-00000015",
+      "description": "QLOAD1 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ21\\b"
+        "pattern": "\\bQLOAD1\\b"
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
+      "description": "QLOAD2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQLOAD2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "QLOAD3 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQLOAD3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "QLOAD4 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQLOAD4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "QLOAD5 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQLOAD5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "QLOAD6 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQLOAD6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "QLOAD7 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQLOAD7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
       "description": "QLOAD8 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -160,7 +231,17 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000023",
+      "description": "QLOAD9 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQLOAD9\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
       "description": "C1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -170,7 +251,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000025",
       "description": "C4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -180,7 +261,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000026",
       "description": "C11 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -190,7 +271,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000027",
       "description": "C12 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -200,7 +281,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000028",
       "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -210,7 +291,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000029",
       "description": "C6 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -220,7 +301,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000030",
       "description": "C28 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -230,7 +311,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000031",
       "description": "C32 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -240,7 +321,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000032",
       "description": "C30 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -250,7 +331,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000033",
       "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -260,7 +341,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000034",
       "description": "C33 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -270,13 +351,33 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000035",
       "description": "C34 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC34\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000036",
+      "description": "R15 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR15\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000037",
+      "description": "R16 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR16\\b"
       }
     }
   ]

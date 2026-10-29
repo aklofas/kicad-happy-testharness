@@ -36,7 +36,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -63,22 +63,22 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 detect_design_observations",
+      "description": "Exactly 2 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 2 detect_lc_filters",
+      "description": "Exactly 1 detect_lc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_lc_filters",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -104,34 +104,33 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 8 detect_rc_filters",
+      "description": "Exactly 1 detect_protection_devices",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_protection_devices",
         "op": "equals",
-        "value": 8
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "R11 in detect_rc_filters",
+      "description": "D1 in detect_protection_devices",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
+        "detector_filter": "detect_protection_devices",
         "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R11$"
+        "field": "ref",
+        "pattern": "^D1$"
       }
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R12 in detect_rc_filters",
+      "description": "Exactly 7 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R12$"
+        "op": "equals",
+        "value": 7
       }
     },
     {
@@ -180,6 +179,17 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "R12 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "R15 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -187,22 +197,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R15$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 1 detect_shorted_two_pin_components",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {
@@ -260,6 +254,27 @@
     },
     {
       "id": "STRUCT-00000024",
+      "description": "Exactly 2 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "R13 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R13$"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

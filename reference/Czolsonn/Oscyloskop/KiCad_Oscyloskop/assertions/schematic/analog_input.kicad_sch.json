@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~37 (tolerance 10%)",
+      "description": "Component count ~47 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 33,
-        "max": 41
+        "min": 42,
+        "max": 52
       }
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 audit_rail_sources detected",
+      "description": "3 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -154,7 +154,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "3 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -216,7 +216,7 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "3 detect_transistor_circuits detected",
+      "description": "4 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -237,7 +237,7 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "2 detect_voltage_dividers detected",
+      "description": "3 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -258,29 +258,20 @@
     },
     {
       "id": "SEED-00000025",
-      "description": "Has 8 capacitor(s)",
+      "description": "Has 10 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 6
+        "value": 7
       }
     },
     {
       "id": "SEED-00000026",
-      "description": "Has 5 relay(s)",
-      "check": {
-        "path": "statistics.component_types.relay",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000027",
-      "description": "Has 13 resistor(s)",
+      "description": "Has 20 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 9
+        "value": 15
       }
     }
   ]

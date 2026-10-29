@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -92,7 +92,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -179,6 +179,27 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "Exactly 1 detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "L1 in detect_lc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "Exactly 2 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -188,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "F1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -199,7 +220,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
       "description": "RV1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -210,7 +231,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000022",
       "description": "Exactly 2 detect_pwm_led_dimming",
       "check": {
         "path": "findings",
@@ -220,7 +241,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000023",
       "description": "Exactly 6 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -230,7 +251,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000024",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -241,7 +262,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000025",
       "description": "Q10 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -252,7 +273,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000026",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -263,7 +284,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000027",
       "description": "Q4 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -274,7 +295,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000028",
       "description": "Q6 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -285,7 +306,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000029",
       "description": "Q8 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -296,7 +317,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000030",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

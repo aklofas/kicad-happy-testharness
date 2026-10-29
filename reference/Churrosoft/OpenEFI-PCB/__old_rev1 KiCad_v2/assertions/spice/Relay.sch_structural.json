@@ -6,6 +6,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 opamp_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^opamp_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 6 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -16,7 +27,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -27,7 +38,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "R28 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -37,7 +48,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "R29 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -47,7 +58,17 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
+      "description": "IC5 simulated as opamp_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bIC5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Q14 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -57,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "Q15 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -67,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "Q16 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -77,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "Q17 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -87,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "Q18 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -97,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "Q19 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",

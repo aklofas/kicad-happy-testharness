@@ -16,22 +16,6 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 9 audit_power_pin_dc_paths",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "equals",
-        "value": 9
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
       "description": "Exactly 4 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -42,12 +26,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -57,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "Y1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -68,17 +52,17 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 3 detect_rc_filters",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000006",
       "description": "R7 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -89,25 +73,14 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "R34 in detect_rc_filters",
+      "id": "STRUCT-00000007",
+      "description": "R15 in detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
-        "pattern": "^R34$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "R35 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R35$"
+        "pattern": "^R15$"
       }
     }
   ]

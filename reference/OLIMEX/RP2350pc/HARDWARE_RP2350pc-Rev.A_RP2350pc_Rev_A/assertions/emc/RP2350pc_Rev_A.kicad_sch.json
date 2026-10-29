@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~85 (tolerance 10%)",
+      "description": "Finding count ~110 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 80,
-        "max": 90
+        "min": 104,
+        "max": 116
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~16",
+      "description": "by_severity.error ~23",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 14,
-        "max": 18
+        "min": 20,
+        "max": 26
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~50",
+      "description": "by_severity.warning ~68",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 45,
-        "max": 56
+        "min": 64,
+        "max": 72
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "4 ground_plane finding(s)",
+      "description": "27 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 4
+        "value": 27
       }
     },
     {
@@ -144,13 +144,13 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "3 thermal_emc finding(s)",
+      "description": "5 thermal_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^thermal_emc$",
-        "value": 3
+        "value": 5
       }
     },
     {
@@ -200,11 +200,11 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "~39 net(s) with EMC scores",
+      "description": "~51 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 35
+        "value": 48
       }
     }
   ]

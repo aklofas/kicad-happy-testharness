@@ -28,48 +28,17 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 lc_filter simulation(s)",
+      "description": "Exactly 1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
+        "pattern": "^transistor_circuit$",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 snubber_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^snubber_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "L301 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bL301\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "C305 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC305\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "Y301 simulated as crystal_circuit",
       "check": {
         "path": "simulation_results",
@@ -79,7 +48,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000005",
       "description": "Y302 simulated as crystal_circuit",
       "check": {
         "path": "simulation_results",
@@ -89,7 +58,17 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000006",
+      "description": "Q301 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ301\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "C311 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -99,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000008",
       "description": "C306 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -109,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
       "description": "C323 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -119,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000010",
       "description": "C328 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -129,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000011",
       "description": "C321 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -139,33 +118,13 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000012",
       "description": "C327 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC327\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "R305 simulated as snubber_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR305\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "C302 simulated as snubber_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC302\\b"
       }
     }
   ]

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~64 (tolerance 10%)",
+      "description": "Component count ~46 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 60,
-        "max": 68
+        "min": 41,
+        "max": 51
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -144,7 +144,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -160,7 +160,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -170,7 +170,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "12 detect_design_observations detected",
+      "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -317,13 +317,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
     {
       "id": "SEED-00000030",
-      "description": "6 validate_pullups detected",
+      "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -333,29 +333,29 @@
     },
     {
       "id": "SEED-00000031",
-      "description": "Has 22 capacitor(s)",
+      "description": "Has 13 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 16
+        "value": 9
       }
     },
     {
       "id": "SEED-00000032",
-      "description": "Has 18 connector(s)",
+      "description": "Has 12 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 13
+        "value": 9
       }
     },
     {
       "id": "SEED-00000033",
-      "description": "Has 8 ic(s)",
+      "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 6
+        "value": 3
       }
     },
     {

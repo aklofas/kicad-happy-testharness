@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~65 (tolerance 10%)",
+      "description": "Net count ~62 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 61,
-        "max": 69
+        "min": 58,
+        "max": 66
       }
     },
     {
@@ -108,22 +108,6 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 audit_rail_sources detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "1 detect_adc_circuits detected",
       "check": {
         "path": "findings",
@@ -133,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "All detect_adc_circuits have ref",
       "check": {
         "path": "findings",
@@ -144,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "All detect_adc_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -156,8 +140,8 @@
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "1 detect_design_observations detected",
+      "id": "SEED-00000014",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -166,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -176,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -185,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "Has 9 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -194,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "Has 11 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

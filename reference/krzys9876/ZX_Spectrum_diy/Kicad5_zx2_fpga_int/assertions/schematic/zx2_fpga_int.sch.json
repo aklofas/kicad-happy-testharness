@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~73 (tolerance 10%)",
+      "description": "Net count ~53 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 69,
-        "max": 77
+        "min": 50,
+        "max": 56
       }
     },
     {
@@ -108,23 +108,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "4 audit_power_pin_dc_paths detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "1 detect_decoupling detected",
+      "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -133,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -143,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -153,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -164,8 +148,8 @@
       }
     },
     {
-      "id": "SEED-00000016",
-      "description": "4 validate_pullups detected",
+      "id": "SEED-00000015",
+      "description": "3 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
@@ -174,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -183,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

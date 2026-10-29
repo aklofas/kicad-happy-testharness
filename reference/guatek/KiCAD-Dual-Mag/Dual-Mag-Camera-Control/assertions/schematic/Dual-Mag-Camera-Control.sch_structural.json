@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 audit_connector_ground_distribution",
+      "description": "Exactly 2 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 6
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 14 audit_esd_protection",
+      "description": "Exactly 12 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 14
+        "value": 12
       }
     },
     {
@@ -46,68 +46,68 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 4 audit_rail_sources",
+      "description": "Exactly 11 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 4
+        "value": 11
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 1 detect_bridge_circuits",
+      "description": "Exactly 6 detect_decoupling",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_bridge_circuits",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 16 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 16
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 detect_label_aliases",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_label_aliases",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 2 detect_decoupling",
+      "id": "STRUCT-00000009",
+      "description": "Exactly 5 detect_power_path",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_decoupling",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 5 detect_design_observations",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
+        "detector_filter": "detect_power_path",
         "op": "equals",
         "value": 5
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 2 detect_power_path",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_path",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
       "id": "STRUCT-00000010",
-      "description": "Exactly 30 detect_protection_devices",
+      "description": "Exactly 31 detect_protection_devices",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
         "op": "equals",
-        "value": 30
+        "value": 31
       }
     },
     {
@@ -442,16 +442,49 @@
     },
     {
       "id": "STRUCT-00000041",
-      "description": "Exactly 2 detect_rc_filters",
+      "description": "F31 in detect_protection_devices",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 2
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F31$"
       }
     },
     {
       "id": "STRUCT-00000042",
+      "description": "Exactly 4 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000043",
+      "description": "R15 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R15$"
+      }
+    },
+    {
+      "id": "STRUCT-00000044",
+      "description": "R16 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R16$"
+      }
+    },
+    {
+      "id": "STRUCT-00000045",
       "description": "R12 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -462,7 +495,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000046",
       "description": "R13 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -473,7 +506,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000047",
       "description": "Exactly 1 detect_sensor_interfaces",
       "check": {
         "path": "findings",
@@ -483,17 +516,61 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
-      "description": "Exactly 2 detect_transistor_circuits",
+      "id": "STRUCT-00000048",
+      "description": "Exactly 8 detect_transistor_circuits",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
         "op": "equals",
-        "value": 2
+        "value": 8
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000049",
+      "description": "Q1 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000050",
+      "description": "Q2 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000051",
+      "description": "Q3 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000052",
+      "description": "Q4 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000053",
       "description": "Q5 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -504,7 +581,18 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000054",
+      "description": "Q7 in detect_transistor_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000055",
       "description": "Q9 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -515,29 +603,39 @@
       }
     },
     {
-      "id": "STRUCT-00000048",
-      "description": "Exactly 4 validate_i2c_bus",
+      "id": "STRUCT-00000056",
+      "description": "Exactly 1 validate_i2c_bus",
       "check": {
         "path": "findings",
         "detector_filter": "validate_i2c_bus",
         "op": "equals",
-        "value": 4
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
     {
-      "id": "STRUCT-00000049",
-      "description": "Exactly 8 validate_pullups",
+      "id": "STRUCT-00000057",
+      "description": "Exactly 4 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 8
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000058",
+      "description": "Exactly 9 validate_voltage_levels",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_voltage_levels",
+        "op": "equals",
+        "value": 9
       }
     }
   ]

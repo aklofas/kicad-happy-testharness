@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~49 (tolerance 10%)",
+      "description": "Finding count ~48 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 44,
-        "max": 54
+        "min": 43,
+        "max": 53
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~7",
+      "description": "by_severity.error ~4",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 3,
+        "max": 5
       }
     },
     {
@@ -36,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~22",
+      "description": "by_severity.info ~24",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 19,
-        "max": 25
+        "min": 21,
+        "max": 27
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~17.5 (+-10)",
+      "description": "EMC risk score ~35.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 7.5,
-        "max": 27.5
+        "min": 25.5,
+        "max": 45.5
       }
     },
     {
@@ -144,13 +144,13 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "4 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -200,11 +200,11 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "~20 net(s) with EMC scores",
+      "description": "~19 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 18
+        "value": 17
       }
     }
   ]

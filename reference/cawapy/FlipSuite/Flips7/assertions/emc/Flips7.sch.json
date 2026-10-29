@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~81 (tolerance 10%)",
+      "description": "Finding count ~114 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 76,
-        "max": 86
+        "min": 108,
+        "max": 120
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~1",
+      "description": "by_severity.error ~45",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 0,
-        "max": 2
+        "min": 40,
+        "max": 50
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~71",
+      "description": "by_severity.warning ~60",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 67,
-        "max": 75
+        "min": 57,
+        "max": 63
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~77.5 (+-10)",
+      "description": "EMC risk score ~67.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 67.5,
-        "max": 87.5
+        "min": 57.0,
+        "max": 77.0
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "49 ground_plane finding(s)",
+      "description": "82 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 49
+        "value": 82
       }
     },
     {
@@ -167,11 +167,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~64 net(s) with EMC scores",
+      "description": "~82 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 60
+        "value": 77
       }
     }
   ]

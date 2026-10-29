@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~22 (tolerance 10%)",
+      "description": "Net count ~18 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 19,
-        "max": 25
+        "min": 16,
+        "max": 20
       }
     },
     {
@@ -146,6 +146,16 @@
         "op": "not_contains_match",
         "field": "resonant_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "1 detect_rf_matching detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rf_matching",
+        "op": "min_count",
+        "value": 1
       }
     }
   ]

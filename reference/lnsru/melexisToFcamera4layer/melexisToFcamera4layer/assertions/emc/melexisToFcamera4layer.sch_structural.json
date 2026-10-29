@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "14 switching_emc finding(s)",
+      "description": "16 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 14
+        "value": 16
       }
     },
     {
@@ -342,6 +342,46 @@
     },
     {
       "id": "STRUCT-00000034",
+      "description": "L3 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000035",
+      "description": "C27 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC27\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000036",
+      "description": "L4 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000037",
+      "description": "C2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000038",
       "description": "L5 in EMC findings",
       "check": {
         "path": "findings",
@@ -351,33 +391,13 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
-      "description": "C22 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC22\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000039",
       "description": "L6 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bL6\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000037",
-      "description": "C29 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC29\\b"
       }
     }
   ]

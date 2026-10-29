@@ -6,17 +6,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "13 clock_routing finding(s)",
+      "description": "15 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 13
+        "value": 15
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "8 crosstalk finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^crosstalk$",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
@@ -24,17 +35,6 @@
         "field": "category",
         "pattern": "^decoupling$",
         "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "1 emi_filter finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^emi_filter$",
-        "value": 1
       }
     },
     {
@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "224 ground_plane finding(s)",
+      "description": "115 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 224
+        "value": 115
       }
     },
     {
@@ -83,17 +83,27 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "4 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 4
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000009",
+      "description": "Rule CK-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^CK\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Rule CK-002 present",
       "check": {
         "path": "findings",
@@ -103,7 +113,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Rule CK-003 present",
       "check": {
         "path": "findings",
@@ -113,7 +123,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
@@ -123,7 +133,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Rule EE-001 present",
       "check": {
         "path": "findings",
@@ -133,23 +143,13 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "Rule EE-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^EE\\-002$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
-      "description": "Rule EF-002 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^EF\\-002$"
       }
     },
     {
@@ -224,12 +224,12 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "Rule SW-002 present",
+      "description": "Rule XT-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^SW\\-002$"
+        "pattern": "^XT\\-001$"
       }
     },
     {

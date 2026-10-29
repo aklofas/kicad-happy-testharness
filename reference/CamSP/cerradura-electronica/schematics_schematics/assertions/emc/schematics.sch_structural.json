@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "28 ground_plane finding(s)",
+      "description": "31 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 28
+        "value": 31
       }
     },
     {
@@ -83,13 +83,13 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "3 switching_emc finding(s)",
+      "description": "4 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -194,6 +194,16 @@
     },
     {
       "id": "STRUCT-00000019",
+      "description": "Rule SW-003 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^SW\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
       "description": "Rule XT-001 present",
       "check": {
         "path": "findings",
@@ -203,7 +213,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "U3 in EMC findings",
       "check": {
         "path": "findings",
@@ -213,7 +223,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "BTR1 in EMC findings",
       "check": {
         "path": "findings",
@@ -223,7 +233,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "Cerradura1 in EMC findings",
       "check": {
         "path": "findings",
@@ -233,7 +243,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "PRGMER1 in EMC findings",
       "check": {
         "path": "findings",
@@ -243,7 +253,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000025",
       "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
@@ -253,13 +263,33 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "U4 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "L1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
+      "description": "C7 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC7\\b"
       }
     }
   ]

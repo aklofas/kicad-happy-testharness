@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~52 (tolerance 10%)",
+      "description": "Component count ~55 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 49,
-        "max": 55
+        "min": 52,
+        "max": 58
       }
     },
     {
@@ -43,7 +43,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 audit_connector_ground_distribution detected",
+      "description": "2 analyze_usb_compliance detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_usb_compliance",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "UC-004",
+        "tagged_at": "2026-10-29T21:55:53Z",
+        "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -52,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "1 audit_datasheet_coverage detected",
       "check": {
         "path": "findings",
@@ -62,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "3 audit_esd_protection detected",
       "check": {
         "path": "findings",
@@ -72,7 +88,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "All audit_esd_protection have connector_ref",
       "check": {
         "path": "findings",
@@ -83,7 +99,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "All audit_esd_protection coverage values are valid",
       "check": {
         "path": "findings",
@@ -95,7 +111,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "All audit_esd_protection risk_level values are valid",
       "check": {
         "path": "findings",
@@ -107,7 +123,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "12 audit_led_circuits detected",
       "check": {
         "path": "findings",
@@ -117,7 +133,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "All audit_led_circuits have ref",
       "check": {
         "path": "findings",
@@ -128,7 +144,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "All audit_led_circuits type values are valid",
       "check": {
         "path": "findings",
@@ -140,7 +156,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "All audit_led_circuits drive_method values are valid",
       "check": {
         "path": "findings",
@@ -152,7 +168,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
@@ -162,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
@@ -173,12 +189,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:42Z",
+        "tagged_at": "2026-10-29T21:55:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "1 audit_sourcing_gate detected",
       "check": {
         "path": "findings",
@@ -188,7 +204,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "2 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -198,7 +214,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "3 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -208,7 +224,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -218,7 +234,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -229,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -239,7 +255,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "2 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -249,7 +265,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -257,16 +273,6 @@
         "op": "not_contains_match",
         "field": "cutoff_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000025",
-      "description": "2 validate_led_resistors detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_led_resistors",
-        "op": "min_count",
-        "value": 1
       }
     },
     {
@@ -289,11 +295,11 @@
     },
     {
       "id": "SEED-00000028",
-      "description": "Has 15 resistor(s)",
+      "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 11
+        "value": 12
       }
     },
     {

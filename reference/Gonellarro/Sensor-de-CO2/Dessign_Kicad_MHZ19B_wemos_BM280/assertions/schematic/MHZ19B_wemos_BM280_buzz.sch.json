@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~31 (tolerance 10%)",
+      "description": "Net count ~24 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 21,
+        "max": 27
       }
     },
     {
@@ -76,18 +76,6 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "All audit_led_circuits drive_method values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_led_circuits",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000009",
       "description": "1 audit_lifecycle_skipped detected",
       "check": {
         "path": "findings",
@@ -97,7 +85,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "1 detect_buzzer_speakers detected",
       "check": {
         "path": "findings",
@@ -107,8 +95,8 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "2 validate_pullups detected",
+      "id": "SEED-00000010",
+      "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",

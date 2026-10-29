@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~21 (tolerance 10%)",
+      "description": "Simulation count ~23 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 18,
-        "max": 24
+        "min": 20,
+        "max": 26
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 12 passing simulation(s)",
+      "description": "At least 16 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 12
+        "value": 16
       }
     },
     {
@@ -36,13 +36,13 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "8 decoupling simulation(s)",
+      "description": "6 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 8
+        "value": 6
       }
     },
     {
@@ -80,6 +80,17 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "2 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "2 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -90,14 +101,14 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "1 voltage_divider simulation(s)",
+      "id": "SEED-00000010",
+      "description": "3 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 1
+        "value": 3
       }
     }
   ]

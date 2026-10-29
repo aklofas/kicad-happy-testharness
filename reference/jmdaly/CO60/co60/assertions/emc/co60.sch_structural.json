@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "160 ground_plane finding(s)",
+      "description": "173 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 160
+        "value": 173
       }
     },
     {
@@ -209,6 +209,16 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "U1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
       }
     }
   ]

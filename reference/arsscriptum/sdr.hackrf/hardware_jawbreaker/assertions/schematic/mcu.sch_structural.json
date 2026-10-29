@@ -16,12 +16,12 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 26 audit_esd_protection",
+      "description": "Exactly 25 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 26
+        "value": 25
       }
     },
     {
@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:11Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -198,12 +198,12 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "Exactly 6 detect_voltage_dividers",
+      "description": "Exactly 7 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -252,6 +252,17 @@
     },
     {
       "id": "STRUCT-00000024",
+      "description": "R76 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R76$"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
       "description": "R56 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -262,7 +273,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "R82 in detect_voltage_dividers",
       "check": {
         "path": "findings",

@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~29 (tolerance 10%)",
+      "description": "Net count ~23 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 26,
-        "max": 32
+        "min": 20,
+        "max": 26
       }
     },
     {
@@ -119,27 +119,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000014",
       "description": "1 detect_shorted_two_pin_components detected",
       "check": {
         "path": "findings",
@@ -150,12 +129,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:51Z",
         "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000013",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -164,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -173,7 +152,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "Has 6 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

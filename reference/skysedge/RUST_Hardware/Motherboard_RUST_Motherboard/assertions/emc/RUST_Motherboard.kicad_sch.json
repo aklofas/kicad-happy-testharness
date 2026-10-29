@@ -6,42 +6,42 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~121 (tolerance 10%)",
+      "description": "Finding count ~186 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 114,
-        "max": 128
+        "min": 176,
+        "max": 196
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~20",
+      "description": "by_severity.error ~63",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 59,
+        "max": 67
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~79",
+      "description": "by_severity.warning ~100",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 75,
-        "max": 83
+        "min": 95,
+        "max": 105
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~22",
+      "description": "by_severity.info ~23",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 19,
-        "max": 25
+        "min": 20,
+        "max": 26
       }
     },
     {
@@ -89,17 +89,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "1 emi_filter finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^emi_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "2 emission_estimate finding(s)",
       "check": {
         "path": "findings",
@@ -110,18 +99,18 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "46 ground_plane finding(s)",
+      "id": "SEED-00000010",
+      "description": "110 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 46
+        "value": 110
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "1 inductor_leakage finding(s)",
       "check": {
         "path": "findings",
@@ -132,7 +121,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "9 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -140,6 +129,17 @@
         "field": "category",
         "pattern": "^io_filtering$",
         "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "2 pdn finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^pdn$",
+        "value": 2
       }
     },
     {
@@ -222,11 +222,11 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "~71 net(s) with EMC scores",
+      "description": "~120 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 67
+        "value": 114
       }
     }
   ]

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~32 (tolerance 10%)",
+      "description": "Component count ~122 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 28,
-        "max": 36
+        "min": 115,
+        "max": 129
       }
     },
     {
@@ -138,7 +138,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:47Z",
+        "tagged_at": "2026-10-29T21:55:59Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -194,7 +194,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "16 detect_transistor_circuits detected",
+      "description": "78 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -215,20 +215,20 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "Has 10 ic(s)",
+      "description": "Has 20 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 7
+        "value": 15
       }
     },
     {
       "id": "SEED-00000022",
-      "description": "Has 18 transistor(s)",
+      "description": "Has 96 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 13
+        "value": 72
       }
     }
   ]

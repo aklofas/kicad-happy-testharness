@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 7 audit_esd_protection",
+      "description": "Exactly 6 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 7
+        "value": 6
       }
     },
     {
@@ -36,17 +36,17 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 8 audit_rail_sources",
+      "description": "Exactly 13 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 8
+        "value": 13
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -72,12 +72,23 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 6 validate_pullups",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "detect_power_regulators",
         "op": "equals",
-        "value": 6
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "U2 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
       }
     }
   ]

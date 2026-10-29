@@ -66,7 +66,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:11Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -102,16 +102,38 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 9 detect_protection_devices",
+      "description": "Exactly 11 detect_protection_devices",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
         "op": "equals",
-        "value": 9
+        "value": 11
       }
     },
     {
       "id": "STRUCT-00000011",
+      "description": "D400 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D400$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "D401 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D401$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "D402 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -122,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "D403 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -133,7 +155,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
       "description": "D404 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -144,7 +166,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000016",
       "description": "D405 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -155,7 +177,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000017",
       "description": "D406 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -166,7 +188,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "D407 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -177,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "D408 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -188,7 +210,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "D409 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -199,7 +221,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
       "description": "D410 in detect_protection_devices",
       "check": {
         "path": "findings",

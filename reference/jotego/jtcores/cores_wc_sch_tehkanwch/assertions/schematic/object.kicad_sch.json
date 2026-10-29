@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~89 (tolerance 10%)",
+      "description": "Component count ~78 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 84,
-        "max": 94
+        "min": 74,
+        "max": 82
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~361 (tolerance 10%)",
+      "description": "Net count ~335 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 350,
-        "max": 372
+        "min": 324,
+        "max": 346
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "56 analyze_connectivity detected",
+      "description": "42 analyze_connectivity detected",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_connectivity",
@@ -73,7 +73,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "5 audit_rail_sources detected",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -83,7 +83,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:48Z",
+        "tagged_at": "2026-10-29T21:56:02Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -109,7 +109,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "42 detect_label_aliases detected",
+      "description": "11 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -119,7 +119,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "76 detect_protection_devices detected",
+      "description": "65 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -138,11 +138,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "Has 76 varistor(s)",
+      "description": "Has 65 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",
         "op": "min_count",
-        "value": 57
+        "value": 48
       }
     }
   ]

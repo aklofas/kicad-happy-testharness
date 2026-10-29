@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:58Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -94,16 +94,27 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 2 detect_rc_filters",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000010",
+      "description": "R69 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R69$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R73 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -111,38 +122,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R73$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 2 detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "R70 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R70$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "R71 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R71$"
       }
     }
   ]

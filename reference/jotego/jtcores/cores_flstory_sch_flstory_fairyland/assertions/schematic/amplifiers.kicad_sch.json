@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~114 (tolerance 10%)",
+      "description": "Net count ~112 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 108,
-        "max": 120
+        "min": 106,
+        "max": 118
       }
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "3 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
+        "tagged_at": "2026-10-29T21:55:58Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -154,6 +154,22 @@
     },
     {
       "id": "SEED-00000015",
+      "description": "1 detect_shorted_two_pin_components detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_shorted_two_pin_components",
+        "op": "min_count",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "SP-001",
+        "tagged_at": "2026-10-29T21:55:58Z",
+        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "1 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
@@ -163,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "Has 129 other(s)",
       "check": {
         "path": "statistics.component_types.other",

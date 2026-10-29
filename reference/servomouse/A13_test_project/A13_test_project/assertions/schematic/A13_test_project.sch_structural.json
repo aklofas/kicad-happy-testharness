@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 audit_connector_ground_distribution",
+      "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
         "op": "equals",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -46,18 +46,18 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 7 audit_rail_sources",
+      "description": "Exactly 2 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
-        "detector_filter": "audit_rail_sources",
+        "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 7
+        "value": 2
       },
       "schema_era": {
         "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
+        "tagged_by_rule": "PP-001",
+        "tagged_at": "2026-10-29T21:56:16Z",
+        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
@@ -93,12 +93,12 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 17 detect_design_observations",
+      "description": "Exactly 16 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 17
+        "value": 16
       }
     },
     {
@@ -221,12 +221,12 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "Exactly 7 detect_voltage_dividers",
+      "description": "Exactly 11 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 7
+        "value": 11
       }
     },
     {
@@ -308,32 +308,16 @@
     },
     {
       "id": "STRUCT-00000029",
-      "description": "Exactly 1 validate_i2c_bus",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_i2c_bus",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
-        "tagged_reason": "schema_era key added (PR-001; 4 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000030",
-      "description": "Exactly 5 validate_pullups",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 5
+        "value": 1
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "Exactly 4 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -344,18 +328,18 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },
     {
-      "id": "STRUCT-00000032",
-      "description": "Exactly 18 validate_voltage_levels",
+      "id": "STRUCT-00000031",
+      "description": "Exactly 50 validate_voltage_levels",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
         "op": "equals",
-        "value": 18
+        "value": 50
       }
     }
   ]

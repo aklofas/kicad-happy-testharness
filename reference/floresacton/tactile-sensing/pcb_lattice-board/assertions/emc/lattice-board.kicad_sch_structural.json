@@ -28,17 +28,28 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "2 emission_estimate finding(s)",
+      "description": "1 emission_estimate finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^emission_estimate$",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "1 esd_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^esd_path$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "3 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -49,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "2 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -60,7 +71,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "22 return_path finding(s)",
       "check": {
         "path": "findings",
@@ -68,17 +79,6 @@
         "field": "category",
         "pattern": "^return_path$",
         "value": 22
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "3 switching_emc finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^switching_emc$",
-        "value": 3
       }
     },
     {
@@ -123,12 +123,12 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Rule EE-002 present",
+      "description": "Rule ES-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^EE\\-002$"
+        "pattern": "^ES\\-002$"
       }
     },
     {
@@ -183,16 +183,6 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Rule SW-001 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^SW\\-001$"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
       "description": "Rule XT-001 present",
       "check": {
         "path": "findings",
@@ -202,7 +192,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
@@ -212,7 +202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
@@ -222,13 +212,13 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "U8 in EMC findings",
+      "id": "STRUCT-00000021",
+      "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU8\\b"
+        "pattern": "\\bU1\\b"
       }
     }
   ]

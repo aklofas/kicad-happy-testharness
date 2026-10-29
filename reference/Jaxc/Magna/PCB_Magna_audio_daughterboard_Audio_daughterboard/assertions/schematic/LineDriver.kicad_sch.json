@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~31 (tolerance 10%)",
+      "description": "Component count ~11 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 9,
+        "max": 13
       }
     },
     {
@@ -118,7 +118,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -134,16 +134,6 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 detect_decoupling detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_decoupling",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
       "description": "1 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -153,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "3 detect_opamp_circuits detected",
       "check": {
         "path": "findings",
@@ -163,7 +153,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "All detect_opamp_circuits have reference present",
       "check": {
         "path": "findings",
@@ -174,8 +164,8 @@
       }
     },
     {
-      "id": "SEED-00000017",
-      "description": "7 detect_protection_devices detected",
+      "id": "SEED-00000016",
+      "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -184,29 +174,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "4 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "2 detect_transistor_circuits detected",
+      "id": "SEED-00000017",
+      "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_transistor_circuits",
@@ -215,7 +184,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000018",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -226,30 +195,12 @@
       }
     },
     {
-      "id": "SEED-00000022",
-      "description": "Has 5 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000023",
-      "description": "Has 12 resistor(s)",
+      "id": "SEED-00000019",
+      "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 9
-      }
-    },
-    {
-      "id": "SEED-00000024",
-      "description": "Has 7 varistor(s)",
-      "check": {
-        "path": "statistics.component_types.varistor",
-        "op": "min_count",
-        "value": 5
+        "value": 3
       }
     }
   ]

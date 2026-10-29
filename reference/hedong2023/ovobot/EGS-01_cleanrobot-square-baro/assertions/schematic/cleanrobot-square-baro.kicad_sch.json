@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~12 (tolerance 10%)",
+      "description": "Component count ~22 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 19,
+        "max": 25
       }
     },
     {
@@ -212,6 +212,15 @@
         "detector_filter": "detect_design_observations",
         "op": "min_count",
         "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "Has 11 test_point(s)",
+      "check": {
+        "path": "statistics.component_types.test_point",
+        "op": "min_count",
+        "value": 8
       }
     }
   ]

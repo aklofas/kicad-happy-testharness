@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~261 (tolerance 10%)",
+      "description": "Net count ~189 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 253,
-        "max": 269
+        "min": 179,
+        "max": 199
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 audit_connector_ground_distribution detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -153,7 +153,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "3 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -163,12 +163,45 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "SEED-00000016",
+      "description": "1 detect_clock_distribution detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_clock_distribution",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All detect_clock_distribution have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_clock_distribution",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "All detect_clock_distribution type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_clock_distribution",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(clock_generator|pll|oscillator_output)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -178,7 +211,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000020",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -189,7 +222,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000021",
       "description": "1 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -199,7 +232,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000022",
       "description": "4 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -209,7 +242,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000023",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -219,7 +252,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000024",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -230,17 +263,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
-      "description": "5 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000023",
+      "id": "SEED-00000025",
       "description": "Has 18 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -249,7 +272,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000026",
       "description": "Has 11 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -258,7 +281,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000027",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

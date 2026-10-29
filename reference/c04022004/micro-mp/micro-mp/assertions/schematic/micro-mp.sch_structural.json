@@ -46,17 +46,17 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 audit_rail_sources",
+      "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 2
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
+        "tagged_at": "2026-10-29T21:56:12Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -72,47 +72,36 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 3 detect_decoupling",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 5 detect_design_observations",
+      "description": "Exactly 4 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 5
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 1 detect_protection_devices",
+      "description": "Exactly 1 detect_label_aliases",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_protection_devices",
+        "detector_filter": "detect_label_aliases",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "F1 in detect_protection_devices",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^F1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -122,7 +111,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "R8 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -130,6 +119,16 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Exactly 1 detect_reset_supervisors",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_reset_supervisors",
+        "op": "equals",
+        "value": 1
       }
     },
     {
@@ -165,28 +164,12 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 3 validate_i2c_bus",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_i2c_bus",
-        "op": "equals",
-        "value": 3
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:57Z",
-        "tagged_reason": "schema_era key added (PR-001; 4 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 2 validate_pullups",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     }
   ]

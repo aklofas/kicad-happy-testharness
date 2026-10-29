@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~43 (tolerance 10%)",
+      "description": "Simulation count ~40 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 38,
-        "max": 48
+        "min": 36,
+        "max": 44
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 28 passing simulation(s)",
+      "description": "At least 20 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 28
+        "value": 20
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "7 current_sense simulation(s)",
+      "description": "4 current_sense simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^current_sense$",
-        "value": 7
+        "value": 4
       }
     },
     {

@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~141 (tolerance 10%)",
+      "description": "Finding count ~108 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 133,
-        "max": 149
+        "min": 102,
+        "max": 114
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~110",
+      "description": "by_severity.error ~2",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 104,
-        "max": 116
+        "min": 1,
+        "max": 3
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~9",
+      "description": "by_severity.warning ~84",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 79,
+        "max": 89
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~61.0 (+-10)",
+      "description": "EMC risk score ~65.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 51.0,
-        "max": 71.0
+        "min": 55.5,
+        "max": 75.5
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "111 ground_plane finding(s)",
+      "description": "78 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 111
+        "value": 78
       }
     },
     {
@@ -156,11 +156,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~111 net(s) with EMC scores",
+      "description": "~80 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 105
+        "value": 76
       }
     }
   ]

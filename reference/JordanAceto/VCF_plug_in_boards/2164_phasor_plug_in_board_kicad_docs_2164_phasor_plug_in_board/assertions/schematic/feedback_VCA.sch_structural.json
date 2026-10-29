@@ -16,6 +16,22 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 audit_rail_sources",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_rail_sources",
+        "op": "equals",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "RS-001",
+        "tagged_at": "2026-10-29T21:56:10Z",
+        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 detect_audio_circuits",
       "check": {
         "path": "findings",
@@ -25,7 +41,17 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -35,7 +61,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "U6 in detect_opamp_circuits",
       "check": {
         "path": "findings",
@@ -46,28 +72,17 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 6 detect_rc_filters",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 4 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 6
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "R38 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R38$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "R39 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -78,7 +93,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "R41 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -86,17 +101,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R41$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "R42 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R42$"
       }
     },
     {

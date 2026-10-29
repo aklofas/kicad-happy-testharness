@@ -216,12 +216,12 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "Exactly 7 detect_rc_filters",
+      "description": "Exactly 9 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 7
+        "value": 9
       }
     },
     {
@@ -270,6 +270,28 @@
     },
     {
       "id": "STRUCT-00000026",
+      "description": "R6 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "R8 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
       "description": "R26 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -280,7 +302,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000029",
       "description": "Exactly 2 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -290,7 +312,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000030",
       "description": "Exactly 1 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -300,7 +322,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000031",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -311,7 +333,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000032",
       "description": "Exactly 2 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -321,7 +343,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000033",
       "description": "R24 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -332,7 +354,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000034",
       "description": "R5 in detect_voltage_dividers",
       "check": {
         "path": "findings",

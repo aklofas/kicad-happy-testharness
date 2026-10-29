@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~20 (tolerance 10%)",
+      "description": "Simulation count ~26 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 23,
+        "max": 29
       }
     },
     {
@@ -80,12 +80,23 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "3 transistor_circuit simulation(s)",
+      "description": "6 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "3 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
         "value": 3
       }
     }

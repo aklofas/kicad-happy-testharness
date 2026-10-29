@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~24 (tolerance 10%)",
+      "description": "Net count ~21 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -236,7 +236,7 @@
     },
     {
       "id": "SEED-00000023",
-      "description": "2 detect_voltage_dividers detected",
+      "description": "4 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -257,6 +257,16 @@
     },
     {
       "id": "SEED-00000025",
+      "description": "1 validate_feedback_stability detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "validate_feedback_stability",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000026",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -265,7 +275,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 6 fiducial(s)",
       "check": {
         "path": "statistics.component_types.fiducial",
@@ -274,7 +284,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

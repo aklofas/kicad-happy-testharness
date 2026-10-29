@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling simulation(s)",
+      "description": "Exactly 3 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -99,26 +99,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Cfeed2 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bCfeed2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Cfeed1 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bCfeed1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "Cbl1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -128,13 +108,33 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000011",
       "description": "Cbl2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bCbl2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Cfeed2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCfeed2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Cfeed1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCfeed1\\b"
       }
     },
     {
@@ -155,26 +155,6 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bCfeed1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Cbl1 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bCbl1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "Cbl2 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bCbl2\\b"
       }
     }
   ]

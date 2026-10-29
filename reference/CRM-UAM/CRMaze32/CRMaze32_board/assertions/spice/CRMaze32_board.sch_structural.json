@@ -28,6 +28,37 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R101 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R102 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Q101 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -37,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000007",
       "description": "Q102 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -47,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
       "description": "Q103 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -57,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000009",
       "description": "Q104 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -67,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "Q105 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -77,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000011",
       "description": "C101 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -87,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
       "description": "C102 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -97,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000013",
       "description": "C103 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -107,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000014",
       "description": "C104 simulated as decoupling",
       "check": {
         "path": "simulation_results",

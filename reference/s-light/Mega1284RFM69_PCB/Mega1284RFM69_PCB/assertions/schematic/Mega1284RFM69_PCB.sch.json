@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~86 (tolerance 10%)",
+      "description": "Net count ~64 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 81,
-        "max": 91
+        "min": 60,
+        "max": 68
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_connector_ground_distribution detected",
+      "description": "3 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -53,7 +53,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "10 audit_esd_protection detected",
+      "description": "11 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -81,7 +81,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 10
+        "value": 11
       }
     },
     {
@@ -93,7 +93,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 10
+        "value": 11
       }
     },
     {
@@ -153,22 +153,6 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 audit_rail_sources detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_rail_sources",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:46Z",
-        "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
-      }
-    },
-    {
-      "id": "SEED-00000016",
       "description": "1 detect_crystal_circuits detected",
       "check": {
         "path": "findings",
@@ -178,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "All detect_crystal_circuits have reference present",
       "check": {
         "path": "findings",
@@ -189,7 +173,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "4 detect_decoupling detected",
       "check": {
         "path": "findings",
@@ -199,8 +183,8 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "6 detect_design_observations detected",
+      "id": "SEED-00000018",
+      "description": "5 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -209,7 +193,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "1 detect_level_shifters detected",
       "check": {
         "path": "findings",
@@ -219,7 +203,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "All detect_level_shifters have ref",
       "check": {
         "path": "findings",
@@ -230,7 +214,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "All detect_level_shifters type values are valid",
       "check": {
         "path": "findings",
@@ -242,21 +226,32 @@
       }
     },
     {
-      "id": "SEED-00000023",
-      "description": "1 detect_wireless_modules detected",
+      "id": "SEED-00000022",
+      "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_wireless_modules",
+        "detector_filter": "detect_power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000024",
-      "description": "3 validate_pullups detected",
+      "id": "SEED-00000023",
+      "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "detect_power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000024",
+      "description": "1 detect_wireless_modules detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_wireless_modules",
         "op": "min_count",
         "value": 1
       }

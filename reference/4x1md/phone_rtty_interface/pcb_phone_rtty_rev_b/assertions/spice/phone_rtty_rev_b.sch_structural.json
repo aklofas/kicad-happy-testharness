@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 rc_filter simulation(s)",
+      "description": "Exactly 7 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 5
+        "value": 7
       }
     },
     {
@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 voltage_divider simulation(s)",
+      "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -119,7 +119,7 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "R13 simulated as voltage_divider",
+      "description": "R13 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -129,17 +129,17 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "R10 simulated as voltage_divider",
+      "description": "C7 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR10\\b"
+        "pattern": "\\bC7\\b"
       }
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R14 simulated as voltage_divider",
+      "description": "R14 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -149,12 +149,12 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R11 simulated as voltage_divider",
+      "description": "C8 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR11\\b"
+        "pattern": "\\bC8\\b"
       }
     },
     {

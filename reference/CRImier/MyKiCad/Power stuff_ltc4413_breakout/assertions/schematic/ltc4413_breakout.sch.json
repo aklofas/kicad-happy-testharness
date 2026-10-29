@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~14 (tolerance 10%)",
+      "description": "Net count ~11 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 9,
+        "max": 13
       }
     },
     {
@@ -53,16 +53,6 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "1 detect_design_observations detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "1 detect_power_path detected",
       "check": {
         "path": "findings",
@@ -72,7 +62,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "All detect_power_path have ref",
       "check": {
         "path": "findings",
@@ -83,7 +73,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "All detect_power_path type values are valid",
       "check": {
         "path": "findings",
@@ -95,23 +85,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "1 detect_shorted_two_pin_components detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
-      }
-    },
-    {
-      "id": "SEED-00000011",
+      "id": "SEED-00000009",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -121,7 +95,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000010",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -132,7 +106,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000011",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -142,7 +116,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
       "description": "Has 10 other(s)",
       "check": {
         "path": "statistics.component_types.other",

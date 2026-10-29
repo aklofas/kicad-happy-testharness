@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~97 (tolerance 10%)",
+      "description": "Finding count ~101 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 92,
-        "max": 102
+        "min": 95,
+        "max": 107
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~30",
+      "description": "by_severity.error ~51",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 27,
-        "max": 33
+        "min": 48,
+        "max": 54
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~61",
+      "description": "by_severity.warning ~44",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 57,
-        "max": 65
+        "min": 39,
+        "max": 49
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~49.0 (+-10)",
+      "description": "EMC risk score ~52.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 39.0,
-        "max": 59.0
+        "min": 42.0,
+        "max": 62.0
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "66 ground_plane finding(s)",
+      "description": "70 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 66
+        "value": 70
       }
     },
     {
@@ -156,11 +156,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~71 net(s) with EMC scores",
+      "description": "~72 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 67
+        "value": 68
       }
     }
   ]

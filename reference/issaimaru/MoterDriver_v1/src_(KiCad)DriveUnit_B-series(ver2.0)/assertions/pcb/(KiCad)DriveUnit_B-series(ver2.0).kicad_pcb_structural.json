@@ -1,0 +1,29 @@
+{
+  "file_pattern": "(KiCad)DriveUnit_B-series(ver2.0).kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "A3921 in analyze_thermal_pad_vias",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^A3921$"
+      }
+    }
+  ]
+}

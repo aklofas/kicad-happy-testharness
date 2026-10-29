@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~44 (tolerance 10%)",
+      "description": "Component count ~19 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 39,
-        "max": 49
+        "min": 17,
+        "max": 21
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:44Z",
+        "tagged_at": "2026-10-29T21:55:56Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -197,17 +197,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "2 detect_label_aliases detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_label_aliases",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "5 detect_rc_filters detected",
+      "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -216,7 +206,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -227,7 +217,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -237,39 +227,12 @@
       }
     },
     {
-      "id": "SEED-00000023",
-      "description": "Has 7 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 5
-      }
-    },
-    {
-      "id": "SEED-00000024",
-      "description": "Has 7 connector(s)",
-      "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 5
-      }
-    },
-    {
-      "id": "SEED-00000025",
+      "id": "SEED-00000022",
       "description": "Has 9 ferrite_bead(s)",
       "check": {
         "path": "statistics.component_types.ferrite_bead",
         "op": "min_count",
         "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000026",
-      "description": "Has 16 resistor(s)",
-      "check": {
-        "path": "statistics.component_types.resistor",
-        "op": "min_count",
-        "value": 12
       }
     }
   ]

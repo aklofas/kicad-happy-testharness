@@ -55,25 +55,35 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "SMD count ~21 (tolerance 10%)",
+      "description": "SMD count ~20 (tolerance 10%)",
       "check": {
         "path": "statistics.smd_count",
         "op": "range",
         "min": 18,
-        "max": 24
+        "max": 22
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "Routing completeness status",
+      "description": "THT count ~1 (tolerance 10%)",
       "check": {
-        "path": "statistics.routing_complete",
-        "op": "equals",
-        "value": true
+        "path": "statistics.tht_count",
+        "op": "range",
+        "min": 0,
+        "max": 2
       }
     },
     {
       "id": "SEED-00000008",
+      "description": "Routing completeness status",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Connectivity analysis present",
       "check": {
         "path": "connectivity",

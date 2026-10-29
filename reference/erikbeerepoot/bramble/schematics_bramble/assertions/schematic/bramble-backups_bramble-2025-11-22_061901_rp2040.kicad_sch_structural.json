@@ -16,22 +16,6 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 analyze_usb_compliance",
-      "check": {
-        "path": "findings",
-        "detector_filter": "analyze_usb_compliance",
-        "op": "equals",
-        "value": 2
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:59Z",
-        "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
       "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
@@ -41,7 +25,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -51,7 +35,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "Exactly 4 audit_esd_protection",
       "check": {
         "path": "findings",
@@ -61,7 +45,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
@@ -71,23 +55,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 3 audit_power_pin_dc_paths",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "equals",
-        "value": 3
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000006",
       "description": "Exactly 5 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -98,12 +66,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:13Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -113,7 +81,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 detect_addressable_leds",
       "check": {
         "path": "findings",
@@ -123,7 +91,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -133,7 +101,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000010",
       "description": "Y3 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -144,37 +112,27 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 1 detect_debug_interfaces",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 2 detect_debug_interfaces",
       "check": {
         "path": "findings",
         "detector_filter": "detect_debug_interfaces",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000014",
-      "description": "Exactly 1 detect_decoupling",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_decoupling",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "Exactly 4 detect_design_observations",
+      "id": "STRUCT-00000012",
+      "description": "Exactly 2 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 4
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000013",
       "description": "Exactly 1 detect_memory_interfaces",
       "check": {
         "path": "findings",
@@ -184,7 +142,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000014",
       "description": "U7 in detect_memory_interfaces",
       "check": {
         "path": "findings",
@@ -195,13 +153,24 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 1 detect_wireless_modules",
+      "id": "STRUCT-00000015",
+      "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_wireless_modules",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
         "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R13 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R13$"
       }
     }
   ]

@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling simulation(s)",
+      "description": "Exactly 3 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -139,6 +139,26 @@
     },
     {
       "id": "STRUCT-00000014",
+      "description": "Cbl1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCbl1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Cbl2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCbl2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "CReg2 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -148,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000017",
       "description": "Camp1 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -158,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "Camp2 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -168,7 +188,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "Cfeed2 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -178,7 +198,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "Cfeed1 simulated as inrush",
       "check": {
         "path": "simulation_results",

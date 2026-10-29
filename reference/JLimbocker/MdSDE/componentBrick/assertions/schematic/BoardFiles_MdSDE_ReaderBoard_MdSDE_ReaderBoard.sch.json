@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~11 (tolerance 10%)",
+      "description": "Component count ~32 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 28,
+        "max": 36
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~40 (tolerance 10%)",
+      "description": "Net count ~33 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 36,
-        "max": 44
+        "min": 29,
+        "max": 37
       }
     },
     {
@@ -108,7 +108,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:40Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -147,7 +147,7 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "1 detect_current_sense detected",
+      "description": "8 detect_current_sense detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_current_sense",
@@ -168,7 +168,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "5 detect_design_observations detected",
+      "description": "11 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -178,12 +178,39 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "2 validate_pullups detected",
+      "description": "16 detect_label_aliases detected",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "detect_label_aliases",
         "op": "min_count",
         "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "Has 8 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "Has 11 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000020",
+      "description": "Has 8 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 6
       }
     }
   ]

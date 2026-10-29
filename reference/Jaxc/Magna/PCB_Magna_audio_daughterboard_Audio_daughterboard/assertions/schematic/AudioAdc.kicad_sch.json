@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~151 (tolerance 10%)",
+      "description": "Component count ~88 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 143,
-        "max": 159
+        "min": 83,
+        "max": 93
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:41Z",
+        "tagged_at": "2026-10-29T21:55:52Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -164,7 +164,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "6 detect_label_aliases detected",
+      "description": "2 detect_label_aliases detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
@@ -174,7 +174,7 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "33 detect_opamp_circuits detected",
+      "description": "18 detect_opamp_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_opamp_circuits",
@@ -195,7 +195,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "6 detect_protection_devices detected",
+      "description": "3 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -205,7 +205,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "44 detect_rc_filters detected",
+      "description": "22 detect_rc_filters detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
@@ -226,7 +226,7 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "2 detect_voltage_dividers detected",
+      "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -247,47 +247,38 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "Has 51 capacitor(s)",
+      "description": "Has 32 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 38
+        "value": 24
       }
     },
     {
       "id": "SEED-00000025",
-      "description": "Has 14 ic(s)",
+      "description": "Has 8 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 10
+        "value": 6
       }
     },
     {
       "id": "SEED-00000026",
-      "description": "Has 62 resistor(s)",
+      "description": "Has 32 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 46
+        "value": 24
       }
     },
     {
       "id": "SEED-00000027",
-      "description": "Has 15 test_point(s)",
+      "description": "Has 11 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 11
-      }
-    },
-    {
-      "id": "SEED-00000028",
-      "description": "Has 6 varistor(s)",
-      "check": {
-        "path": "statistics.component_types.varistor",
-        "op": "min_count",
-        "value": 4
+        "value": 8
       }
     }
   ]

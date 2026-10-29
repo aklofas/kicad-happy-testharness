@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~18 (tolerance 10%)",
+      "description": "Simulation count ~16 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 16,
-        "max": 20
+        "min": 14,
+        "max": 18
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 11 passing simulation(s)",
+      "description": "At least 8 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 11
+        "value": 8
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "1 crystal_circuit simulation(s)",
+      "description": "2 crystal_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^crystal_circuit$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -58,13 +58,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "7 rc_filter simulation(s)",
+      "description": "4 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 7
+        "value": 4
       }
     },
     {

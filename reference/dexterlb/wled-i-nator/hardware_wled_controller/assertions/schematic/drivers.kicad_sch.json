@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~34 (tolerance 10%)",
+      "description": "Component count ~17 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 30,
-        "max": 38
+        "min": 15,
+        "max": 19
       }
     },
     {
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -144,7 +144,7 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "5 detect_design_observations detected",
+      "description": "2 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -164,18 +164,19 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "Has 15 connector(s)",
+      "description": "1 validate_pullups detected",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "findings",
+        "detector_filter": "validate_pullups",
         "op": "min_count",
-        "value": 11
+        "value": 1
       }
     },
     {
       "id": "SEED-00000017",
-      "description": "Has 15 resistor(s)",
+      "description": "Has 15 connector(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
         "value": 11
       }

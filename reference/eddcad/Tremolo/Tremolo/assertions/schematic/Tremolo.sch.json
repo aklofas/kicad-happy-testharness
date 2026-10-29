@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~90 (tolerance 10%)",
+      "description": "Net count ~76 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 85,
-        "max": 95
+        "min": 72,
+        "max": 80
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "27 audit_esd_protection detected",
+      "description": "24 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -71,7 +71,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 27
+        "value": 24
       }
     },
     {
@@ -83,7 +83,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 27
+        "value": 24
       }
     },
     {
@@ -153,7 +153,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -169,7 +169,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "7 detect_design_observations detected",
+      "description": "6 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -189,6 +189,16 @@
     },
     {
       "id": "SEED-00000018",
+      "description": "2 detect_pwm_led_dimming detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_pwm_led_dimming",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "26 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -198,7 +208,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -209,7 +219,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "6 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -219,7 +229,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -230,7 +240,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "2 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -240,7 +250,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -251,7 +261,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "Has 22 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -260,7 +270,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 31 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -269,7 +279,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 45 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -278,7 +288,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

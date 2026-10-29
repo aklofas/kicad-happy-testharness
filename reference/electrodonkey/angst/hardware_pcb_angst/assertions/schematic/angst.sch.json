@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~170 (tolerance 10%)",
+      "description": "Net count ~89 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 161,
-        "max": 179
+        "min": 84,
+        "max": 94
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_connector_ground_distribution detected",
+      "description": "1 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -163,13 +163,13 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
       "id": "SEED-00000016",
-      "description": "2 audit_rail_sources detected",
+      "description": "1 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -179,7 +179,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
+        "tagged_at": "2026-10-29T21:55:55Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -206,7 +206,7 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "4 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -216,7 +216,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "11 detect_design_observations detected",
+      "description": "9 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -226,6 +226,16 @@
     },
     {
       "id": "SEED-00000021",
+      "description": "1 detect_memory_interfaces detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
       "description": "2 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -235,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -246,7 +256,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "2 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -256,7 +266,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "8 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -266,7 +276,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -277,33 +287,29 @@
       }
     },
     {
-      "id": "SEED-00000026",
-      "description": "1 detect_rf_matching detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rf_matching",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000027",
-      "description": "3 detect_shorted_two_pin_components detected",
+      "description": "1 detect_reset_supervisors detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
+        "detector_filter": "detect_reset_supervisors",
         "op": "min_count",
         "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
       }
     },
     {
       "id": "SEED-00000028",
+      "description": "All detect_reset_supervisors type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_reset_supervisors",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(voltage_supervisor|watchdog|rc_reset)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000029",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -313,7 +319,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000030",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -324,8 +330,8 @@
       }
     },
     {
-      "id": "SEED-00000030",
-      "description": "3 detect_voltage_dividers detected",
+      "id": "SEED-00000031",
+      "description": "6 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
@@ -334,7 +340,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000032",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -345,29 +351,19 @@
       }
     },
     {
-      "id": "SEED-00000032",
-      "description": "1 validate_i2c_bus detected",
+      "id": "SEED-00000033",
+      "description": "1 validate_power_sequencing detected",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_i2c_bus",
+        "detector_filter": "validate_power_sequencing",
         "op": "min_count",
         "value": 1
       },
       "schema_era": {
         "era": "v3.0",
-        "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-10-24T06:43:43Z",
-        "tagged_reason": "schema_era key added (PR-001; 4 sites)"
-      }
-    },
-    {
-      "id": "SEED-00000033",
-      "description": "6 validate_pullups detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "min_count",
-        "value": 1
+        "tagged_by_rule": "PS-001",
+        "tagged_at": "2026-10-29T21:55:55Z",
+        "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {

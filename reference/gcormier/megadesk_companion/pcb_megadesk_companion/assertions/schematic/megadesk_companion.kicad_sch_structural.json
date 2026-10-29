@@ -6,17 +6,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 analyze_usb_compliance",
+      "description": "Exactly 2 analyze_usb_compliance",
       "check": {
         "path": "findings",
         "detector_filter": "analyze_usb_compliance",
         "op": "equals",
-        "value": 3
+        "value": 2
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -62,7 +62,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -88,12 +88,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 5 detect_design_observations",
+      "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -172,6 +172,59 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "Exactly 1 detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R6 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "Exactly 2 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R10 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R10$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "R2 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -181,7 +234,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000022",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
@@ -191,7 +244,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000023",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -202,7 +255,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-10-24T06:43:59Z",
+        "tagged_at": "2026-10-29T21:56:14Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     }

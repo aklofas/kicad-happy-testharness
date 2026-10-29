@@ -6,6 +6,22 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 11 analyze_voltage_derating",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_voltage_derating",
+        "op": "equals",
+        "value": 11
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "VD-001",
+        "tagged_at": "2026-10-29T21:56:16Z",
+        "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 audit_connector_ground_distribution",
       "check": {
         "path": "findings",
@@ -15,7 +31,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -25,17 +41,17 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 6 audit_esd_protection",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 4 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 6
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 audit_led_circuits",
       "check": {
         "path": "findings",
@@ -45,7 +61,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
@@ -55,7 +71,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 2 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
@@ -66,12 +82,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 3 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -82,12 +98,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:01Z",
+        "tagged_at": "2026-10-29T21:56:16Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -97,41 +113,74 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 1 detect_adc_circuits",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_adc_circuits",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
       "id": "STRUCT-00000010",
-      "description": "Exactly 1 detect_design_observations",
+      "description": "Exactly 3 detect_decoupling",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 1 detect_solder_jumpers",
+      "description": "Exactly 3 detect_design_observations",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_solder_jumpers",
+        "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 1 validate_pullups",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "detect_rc_filters",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R6 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R4 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R5 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "Exactly 1 detect_solder_jumpers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_solder_jumpers",
         "op": "equals",
         "value": 1
       }

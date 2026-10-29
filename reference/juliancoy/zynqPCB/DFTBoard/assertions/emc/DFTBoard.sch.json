@@ -6,42 +6,42 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~375 (tolerance 10%)",
+      "description": "Finding count ~144 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 363,
-        "max": 387
+        "min": 136,
+        "max": 152
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~334",
+      "description": "by_severity.error ~66",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 323,
-        "max": 345
+        "min": 62,
+        "max": 70
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~24",
+      "description": "by_severity.warning ~58",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 55,
+        "max": 61
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~17",
+      "description": "by_severity.info ~20",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 15,
-        "max": 19
+        "min": 18,
+        "max": 22
       }
     },
     {
@@ -56,24 +56,24 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "1 board_edge finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^board_edge$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
-      "description": "10 clock_routing finding(s)",
+      "description": "15 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 10
+        "value": 15
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "5 crosstalk finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^crosstalk$",
+        "value": 5
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "32 diff_pair finding(s)",
+      "description": "38 diff_pair finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^diff_pair$",
-        "value": 32
+        "value": 38
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "283 ground_plane finding(s)",
+      "description": "37 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 283
+        "value": 37
       }
     },
     {
@@ -211,11 +211,11 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "~283 net(s) with EMC scores",
+      "description": "~91 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 274
+        "value": 86
       }
     }
   ]

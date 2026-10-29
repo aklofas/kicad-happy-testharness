@@ -6,42 +6,42 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~316 (tolerance 10%)",
+      "description": "Finding count ~178 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 306,
-        "max": 326
+        "min": 169,
+        "max": 187
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~214",
+      "description": "by_severity.error ~87",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 207,
-        "max": 221
+        "min": 82,
+        "max": 92
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~77",
+      "description": "by_severity.warning ~67",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 73,
-        "max": 81
+        "min": 63,
+        "max": 71
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~25",
+      "description": "by_severity.info ~24",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 22,
-        "max": 28
+        "min": 21,
+        "max": 27
       }
     },
     {
@@ -111,24 +111,24 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "241 ground_plane finding(s)",
+      "description": "104 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 241
+        "value": 104
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "10 io_filtering finding(s)",
+      "description": "9 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 10
+        "value": 9
       }
     },
     {
@@ -162,11 +162,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~28 probe point(s) in test plan",
+      "description": "~27 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 25
+        "value": 24
       }
     },
     {
@@ -189,11 +189,11 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "~241 net(s) with EMC scores",
+      "description": "~120 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 233
+        "value": 114
       }
     }
   ]

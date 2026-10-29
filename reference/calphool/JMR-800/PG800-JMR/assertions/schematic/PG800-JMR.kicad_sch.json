@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "9 audit_connector_ground_distribution detected",
+      "description": "8 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -63,7 +63,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "15 audit_esd_protection detected",
+      "description": "10 audit_esd_protection detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
@@ -91,7 +91,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 15
+        "value": 10
       }
     },
     {
@@ -103,7 +103,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 15
+        "value": 10
       }
     },
     {
@@ -128,7 +128,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "2 detect_decoupling detected",
+      "description": "3 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -148,6 +148,39 @@
     },
     {
       "id": "SEED-00000015",
+      "description": "3 detect_level_shifters detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "All detect_level_shifters have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All detect_level_shifters type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000018",
       "description": "2 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -157,7 +190,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000019",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -168,7 +201,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000020",
       "description": "3 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -178,7 +211,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000021",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -189,7 +222,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000022",
       "description": "1 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -199,7 +232,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000023",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -210,7 +243,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000024",
       "description": "1 validate_feedback_stability detected",
       "check": {
         "path": "findings",
@@ -220,7 +253,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000025",
       "description": "Has 12 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -229,7 +262,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000026",
       "description": "Has 17 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -238,7 +271,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000027",
       "description": "Has 7 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -247,7 +280,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000028",
       "description": "Has 15 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

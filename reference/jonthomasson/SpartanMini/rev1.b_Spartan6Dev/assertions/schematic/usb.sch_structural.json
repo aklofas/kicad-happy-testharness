@@ -26,22 +26,43 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 audit_rail_sources",
+      "description": "Exactly 1 audit_rail_sources",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
         "op": "equals",
-        "value": 3
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:44:00Z",
+        "tagged_at": "2026-10-29T21:56:15Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 1 detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U4 in detect_crystal_circuits",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
@@ -51,27 +72,37 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 3 detect_design_observations",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 4 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 2 validate_pullups",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 detect_integrated_ldos",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_integrated_ldos",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
         "detector_filter": "validate_pullups",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -82,7 +113,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:44:00Z",
+        "tagged_at": "2026-10-29T21:56:15Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     }

@@ -46,7 +46,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -62,7 +62,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:56Z",
+        "tagged_at": "2026-10-29T21:56:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -118,12 +118,12 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 43 detect_label_aliases",
+      "description": "Exactly 22 detect_label_aliases",
       "check": {
         "path": "findings",
         "detector_filter": "detect_label_aliases",
         "op": "equals",
-        "value": 43
+        "value": 22
       }
     },
     {
@@ -1576,12 +1576,12 @@
     },
     {
       "id": "STRUCT-00000144",
-      "description": "Exactly 58 detect_voltage_dividers",
+      "description": "Exactly 59 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 58
+        "value": 59
       }
     },
     {
@@ -2103,6 +2103,17 @@
     },
     {
       "id": "STRUCT-00000192",
+      "description": "R362 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R362$"
+      }
+    },
+    {
+      "id": "STRUCT-00000193",
       "description": "R380 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2113,7 +2124,7 @@
       }
     },
     {
-      "id": "STRUCT-00000193",
+      "id": "STRUCT-00000194",
       "description": "R381 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2124,7 +2135,7 @@
       }
     },
     {
-      "id": "STRUCT-00000194",
+      "id": "STRUCT-00000195",
       "description": "R39 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2135,7 +2146,7 @@
       }
     },
     {
-      "id": "STRUCT-00000195",
+      "id": "STRUCT-00000196",
       "description": "R44 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2146,7 +2157,7 @@
       }
     },
     {
-      "id": "STRUCT-00000196",
+      "id": "STRUCT-00000197",
       "description": "R47 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2157,7 +2168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000197",
+      "id": "STRUCT-00000198",
       "description": "R49 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2168,7 +2179,7 @@
       }
     },
     {
-      "id": "STRUCT-00000198",
+      "id": "STRUCT-00000199",
       "description": "R68 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2179,7 +2190,7 @@
       }
     },
     {
-      "id": "STRUCT-00000199",
+      "id": "STRUCT-00000200",
       "description": "R69 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2190,7 +2201,7 @@
       }
     },
     {
-      "id": "STRUCT-00000200",
+      "id": "STRUCT-00000201",
       "description": "R78 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2201,7 +2212,7 @@
       }
     },
     {
-      "id": "STRUCT-00000201",
+      "id": "STRUCT-00000202",
       "description": "R80 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -2212,7 +2223,7 @@
       }
     },
     {
-      "id": "STRUCT-00000202",
+      "id": "STRUCT-00000203",
       "description": "RV20 in detect_voltage_dividers",
       "check": {
         "path": "findings",

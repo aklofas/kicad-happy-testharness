@@ -16,12 +16,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~141 (tolerance 10%)",
+      "description": "Net count ~124 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 133,
-        "max": 149
+        "min": 117,
+        "max": 131
       }
     },
     {
@@ -98,7 +98,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "7 audit_led_circuits detected",
+      "description": "8 audit_led_circuits detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_led_circuits",
@@ -126,7 +126,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -138,7 +138,7 @@
         "op": "count_matches",
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -163,7 +163,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
+        "tagged_at": "2026-10-29T21:55:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -179,38 +179,33 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "6 detect_led_drivers detected",
+      "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_led_drivers",
+        "detector_filter": "detect_protection_devices",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000018",
-      "description": "6 detect_pwm_led_dimming detected",
+      "description": "6 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_pwm_led_dimming",
+        "detector_filter": "detect_transistor_circuits",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000019",
-      "description": "1 detect_shorted_two_pin_components detected",
+      "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_shorted_two_pin_components",
-        "op": "min_count",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "SP-001",
-        "tagged_at": "2026-10-24T06:43:39Z",
-        "tagged_reason": "schema_era key added (SP-001; 2 sites)"
+        "detector_filter": "detect_transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {

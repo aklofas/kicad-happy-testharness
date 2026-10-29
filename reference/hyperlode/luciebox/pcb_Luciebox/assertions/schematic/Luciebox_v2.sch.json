@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~83 (tolerance 10%)",
+      "description": "Component count ~95 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 78,
-        "max": 88
+        "min": 90,
+        "max": 100
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~184 (tolerance 10%)",
+      "description": "Net count ~108 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 174,
-        "max": 194
+        "min": 102,
+        "max": 114
       }
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 audit_connector_ground_distribution detected",
+      "description": "3 audit_connector_ground_distribution detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_connector_ground_distribution",
@@ -118,7 +118,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -155,7 +155,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "5 detect_design_observations detected",
+      "description": "4 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -250,7 +250,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-10-24T06:43:45Z",
+        "tagged_at": "2026-10-29T21:55:57Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },
@@ -274,20 +274,20 @@
     },
     {
       "id": "SEED-00000026",
-      "description": "Has 37 resistor(s)",
+      "description": "Has 46 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 27
+        "value": 34
       }
     },
     {
       "id": "SEED-00000027",
-      "description": "Has 9 transformer(s)",
+      "description": "Has 12 transformer(s)",
       "check": {
         "path": "statistics.component_types.transformer",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     }
   ]
