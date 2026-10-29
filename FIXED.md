@@ -11,6 +11,164 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-28 — KH-675: `rail_voltages` takes a negative regulator estimate for a positive-named rail; since KH-519 its consumers use the wrong magnitude
+
+**Severity:** MEDIUM
+**File:** `signal_detectors.py` regulator detection (inverting decision, Vref source, estimate provenance) → `rail_voltages`
+**Discovered:** 2026-10-26, harness, Wave 3 gate adjudication. **Fixed (partly):** product v3.0.x-dev `6ecc059` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff, they change if the user rewords commits before the push, the tip tree stays `b31d4ff`'s).
+
+- **Root cause:** the regulator was taken as inverting without reference to the rail's own name, so a positive-named rail received a negative `estimated_vout`, which KH-519's consumers then read by magnitude.
+- **Fix:** the regulator is inverting by the rail's own name; Vref comes from the part number, an extraction or the rail name, with provenance (kc/R5-F7). Corpus: class A8 (product sample: inverting −9 flags / 7 of 220; KH-675 units Faradworks −3.964 → +3.303, brrastak −2.019 → +2.019).
+- **Remainder → KH-719:** a fixed 79xx estimates +5 V on `-5V` (james-l-key U204 LM7905), the mirror case, which no task covered.
+- **Commit-message correction:** `6b671a0` cites KH-675 but is not this fix. It is kc/R7-F7, R7-F4 (the Task 20 follow-up: regulator PG/PGOOD/PWRGD/nPG and `NSHDN` endpoints compatible for VM-001; 8 more min-load ADJ parts skip FS-001 impedance).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md; per-unit labels `results/v30x_w4a_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w4a_gate_aux/class_summary_std.json`.
+
+## 2026-10-28 — KH-678: a sheet net is classified as a power rail when its leaf name matches a same-named rail elsewhere in the design
+
+**Severity:** MEDIUM
+**File:** `kicad_core/netnames.py` (`is_power_net_name`, rail-set match)
+**Discovered:** 2026-10-26, harness, Wave 3 gate adjudication. **Fixed:** product v3.0.x-dev `f8ad5e5` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff, they change if the user rewords commits before the push, the tip tree stays `b31d4ff`'s).
+
+- **Root cause:** the leaf of a sheet path was matched against the rail set, so a local sheet net took power status from a different net with the same name.
+- **Fix:** power rails match by full net name, not by leaf. Corpus: class A3 (product samples 220 + 80: 0 boards moved).
+- **Harness census at `b31d4ff`** (Ask 9, `results/v30x_w4a_gate_aux/kh678_census.json`, 36,463 schematic units): 2 units / 3 names moved, not 0 — FEASTorg/Slice_DCMT `/motor_driver_lmd18500/VS` ×2 (class unchanged) and Gherkin/logix-core `/fpga-pg5/VCCINT` power → interrupt (the leaf match was the only thing keeping a real supply net power; filed as KH-750).
+- **Commit-message correction:** `9b2f77f` cites KH-678 but is not this fix. It is the VM-001 USB D+/D- data-net exemption (close triage row 46), a pre-existing VM-001 class that ruling 62 grew; cite ruling 62 / kc/R7-F7, no KH.
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md; per-unit labels `results/v30x_w4a_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w4a_gate_aux/class_summary_std.json`.
+
+## 2026-10-28 — KH-699: a `D_Zener` from a library nickname containing "LED" is typed `led`, so LR-001 fires on a zener clamp
+
+**Severity:** LOW
+**File:** `kicad_core/classify.py` (component type classification)
+**Discovered:** 2026-10-27, harness, Wave 3b Part A gate adjudication. **Fixed:** product v3.0.x-dev `8be3103` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** the type test matched a substring of the library nickname (`LED_driver-rescue`) before the symbol name (`D_Zener`).
+- **Fix:** a diode from a rescue/LED-named library is typed by its symbol (K1). Corpus: class V4 K1 (product sample: led → diode 21 parts / 7 files; ZEN: LA-AUD −23, LR-001 −19, PD-DET +2).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md; per-unit labels `results/v30x_w4a_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w4a_gate_aux/class_summary_std.json`.
+
+## 2026-10-28 — KH-705: analyzer sheet-file property read by exact case; KiCad 6 value settle skipped on single-value uuids
+
+**Severity:** LOW
+**File:** `schematic/reader.py`, `schematic/hierarchy.py`
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part B; filed by the harness. **Fixed:** product v3.0.x-dev `7ddbee9` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** (a) the sheet-file property was read by exact case; (b) the KiCad 6 value settle ran only with an exact-path entry and returned early when a symbol uuid had ≤ 1 distinct non-empty value.
+- **Fix:** sheet-file property by any case; KiCad 6 values settled on every instance. Corpus: class A2 (product sample 0/130; survey 0 of 2,948 roots; the removed early return can also move footprints).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md; per-unit labels `results/v30x_w4a_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w4a_gate_aux/class_summary_std.json`.
+
+## 2026-10-28 — KH-708: KiCad 10 trims whitespace from the five mandatory fields; we keep it
+
+**Severity:** LOW
+**File:** `schematic/reader.py`, `schematic/legacy_reader.py`, `kicad_core/fields.py` (`MANDATORY_STRIP`)
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part B (ruling R34; KH-700 (c)); filed by the harness. **Fixed (residue open):** product v3.0.x-dev `7ddbee9`, completed by `9970b2f` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** mandatory fields were kept with their leading/trailing whitespace; KiCad 10 trims them in `SCH_FIELD::SetText` after the raw `~` test.
+- **Fix:** `7ddbee9` trims the five mandatory fields; close fix `9970b2f` puts one strip set in `kicad_core.fields.MANDATORY_STRIP`, including `\v` / `\f`. Corpus: classes A1 (product sample 118/130 biased units: 10,007 whitespace-only deltas, `" ~"` → `~`, 1 BOM merge, 0 findings ±) and C7 (`\v\f`: 0).
+- **Residue → KH-723:** a KiCad 6 instance `(value " ")`, KiCad 10 variant override texts.
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md; per-unit labels `results/v30x_w4a_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w4a_gate_aux/class_summary_std.json`.
+
+## 2026-10-28 — KH-672: LR-001 `validate_led_resistors` counts resistors on the LED's GND net whose far end is a rail, and misses a series resistor on a signal net
+
+**Severity:** MEDIUM
+**File:** `validation_detectors.py` (`validate_led_resistors`), LED audit
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (handoff §Asks 4). **Fixed:** product v3.0.x-dev `8be3103` `16be104` `5a5359d` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** the series-resistor search accepted any resistor on the cathode net whose other end was a rail and did not follow a resistor to its drive net.
+- **Fix:** the LED series resistor is taken from its own path; string Vf; rescue-library diodes typed by symbol (kc/R7-F2, R6-F1; rulings R25, R26). Corpus: class V4 (product samples LR-001 −29 / −13 / −25 / −45, +1 true; LA-AUD records).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md; per-unit labels `results/v30x_w4a_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w4a_gate_aux/class_summary_std.json`.
+
+## 2026-10-28 — KH-442: SPICE behavioral opamp model (DigiKey/cache-sourced GBW) yields gain_linear 0.0 / −520 dB in the inverting testbench — false SP-WARN wherever a part number resolves to a behavioral model
+
+**Severity:** MEDIUM
+**File:** `skills/spice/scripts/spice_templates.py` (op-amp benches, `_infer_voltage` / `_infer_opamp_rails`)
+**Discovered:** 2026-10-06, v2.3.1 corpus regen; root cause in the 2026-10-25 audit addendum (sk/R2-F6, sk/R2-N1). **Fixed:** product v3.0.x-dev `75679e7` `ad4bffc` `869eaa5` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** the inverting bench grounded the reference input with a 0 V DC stimulus, so on a single supply the non-RRO clamp pinned the output; negative rail names were not parsed, so dual-supply op-amps were simulated single-supply.
+- **Fix:** op-amp benches bias at mid-supply; negative rails are parsed; a bench below the part's minimum supply never passes — it warns (named rails) or reports info (assumed rails) (rulings R31-R33). The near-zero-gain warns are gone. Corpus: class S2.
+- **Harness spice-offline (quick_200, `--offline`, both sides, `results/v30x_w4a_gate_aux/spice_transitions.json`):** op-amp warn → pass 422, warn → info 160.
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals, spice-offline above — see status.md.
+
+## 2026-10-28 — KH-676: SPICE transistor testbench writes a zero-step DC sweep when the emitter rail voltage is unknown, and ngspice spins until the per-simulation timeout
+
+**Severity:** MEDIUM
+**File:** `skills/spice/scripts/` transistor testbench generator
+**Discovered:** 2026-10-26, harness, Wave 3 spice-offline profile. **Fixed:** product v3.0.x-dev `159cf8c` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff, they change if the user rewords commits before the push, the tip tree stays `b31d4ff`'s).
+
+- **Root cause:** with an unknown emitter rail the bench was emitted with `VCC … DC 0.0` / `dc Vbase 0.0 0.0 0.0`, a zero-span sweep on which ngspice spins until the per-simulation timeout.
+- **Fix:** no zero-span sweep on a 0 V supply. Corpus: class S5 (jonathan-tooley/903 `Display.sch`: 60 s FAIL → 0.38 s, 91 info + 45 skip).
+- **Harness spice-offline:** the baseline `Display.sch` hits the runner's 60 s timeout; the candidate runs it.
+- **Commit-message correction:** `c9374d6` cites KH-676 but is not this fix. It is sk/R2-N4 (ruling R35) and the PNP-bench defect filed as KH-714 (PNP bench labelled PNP, warns "not measured" without values).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals, spice-offline above — see status.md.
+
+## 2026-10-28 — KH-709: should KiCad 5 `.sch` fields follow KiCad 5's `IsVoid` (`~` = empty) instead of KiCad 10's literal `~`? — CLOSED as answered
+
+**Severity:** LOW
+**File:** `schematic/legacy_reader.py`, `schematic/bom_stats.py`, `cross_analysis.py`
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part B (ruling R33); filed by the harness. **Closed:** 2026-10-28, product 3.0.x Wave 4 Part A (ruling entry 54).
+
+- **Disposition:** answered by ruling entry 54: a legacy `~` stays literal, as KiCad 10 loads it. No code change.
+
+## 2026-10-28 — KH-611: SPICE LC-filter bench fixes Q=100 by construction and then warns that Q is high — a spurious SP-WARN on every LC filter
+
+**Severity:** HIGH
+**File:** `skills/spice/scripts/spice_templates.py`, `spice_results.py`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R2-F5). **Fixed:** product v3.0.x-dev `6a9f745` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** the bench's series R was set for Q=100 and the result then warned on that assumed Q.
+- **Fix:** the LC Q is reported as an assumption (ruling R37). Corpus: class S4 (product sample: lc warn → pass 550; E 8,186).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals; spice-offline `results/v30x_w4a_gate_aux/spice_transitions.json` — see status.md.
+
+## 2026-10-28 — KH-612: SPICE crystal bench wires the motional branch in parallel and drives no current, so every passive crystal with two load caps warns "Series resonance 0.000 MHz deviates 100 %"
+
+**Severity:** HIGH
+**File:** `skills/spice/scripts/spice_templates.py`, `spice_results.py`, `detection_schema.py`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R2-F3). **Fixed:** product v3.0.x-dev `6a9f745` `8452e34` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** the motional branch was a parallel RLC with no driving current, so `f_series` echoed 0 and every passive crystal warned.
+- **Fix:** crystal series and load resonance, Monte Carlo pulling (`detection_schema` crystal `primary_metric` → `pulling_ppm`, `a5aafdd`); an unmeasured load resonance warns (ruling R38). Corpus: class S4 (product sample: crystal info 124 / warn 7).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals; spice-offline `results/v30x_w4a_gate_aux/spice_transitions.json` — see status.md.
+
+## 2026-10-28 — KH-618: SPICE reports `pass` without measuring the quantity — inrush never measures current, the regulator feedback check is a tautology, RF matching networks are chained in series, and the half-bridge bench cannot conduct
+
+**Severity:** MEDIUM
+**File:** `skills/spice/scripts/spice_templates.py`, `spice_results.py`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R2-N4, R2-F1, R2-F2, R2-F4). **Fixed (partly):** product v3.0.x-dev `8773b64` `6e50694` `404f719` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** inrush had no current measurement, the regulator bench compared the ideal divider with itself, RF matching parts were chained in series to ground, and the half-bridge low side had no supply path.
+- **Fix:** pass only on a measurement (rulings R34-R36): regulator Vref measured against the part (key must cover the part number), RF series chains skipped, the half bridge conducts, inrush measures its current; transistor generic model → info. Corpus: classes S3a (regulator pass → info ≈ 81 %), S3c (rf skip/info, bridge skip → info, inrush values), S3d.
+- **Remainder → KH-716:** inrush now measures `i_peak` but still passes without comparing it with `estimated_inrush_A`.
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals; spice-offline `results/v30x_w4a_gate_aux/spice_transitions.json` — see status.md.
+
+## 2026-10-28 — KH-619: SPICE `phase_at_fc_deg` carries radians, and inrush `t_peak` indexes with a value
+
+**Severity:** MEDIUM
+**File:** `skills/spice/scripts/spice_results.py`, `spice_templates.py`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R2-F11). **Fixed:** product v3.0.x-dev `65715b9` `24f8b11` (phase in degrees at the ngspice read) and `8773b64` (inrush `t_peak`) (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** ngspice `vp()` returns radians and the value was published under `*_deg`; `t_peak` indexed the time vector with a magnitude.
+- **Fix:** phases converted to degrees at the ngspice read only (alternate backends: KH-743); `t_peak` from the time vector. Corpus: class S1 (product sample: RC phase degrees 1,800; E ≈ 36,141).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals; spice-offline `results/v30x_w4a_gate_aux/spice_transitions.json` — see status.md.
+
+## 2026-10-28 — KH-539: parallel resistors and capacitors are handled as separate parts — a 10k / (10k‖10k) feedback divider reads 1.6 V (2.4 V correct), crystal CL uses the first two caps on any leg
+
+**Severity:** HIGH (divider half; crystal half MEDIUM)
+**File:** `signal_detectors.py` (`detect_voltage_dividers`, `postfilter_vd_and_dedup`, op-amp feedback, `detect_crystal_circuits`), `detector_helpers.py` (`parallel_groups`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R5-F3, kc/R5-F6). **Fixed:** product v3.0.x-dev `c7d200d` `6e09e9a` `12a10dd` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** parallel parts sharing two nets were skipped or taken one at a time instead of as one equivalent; crystal CL took the first two caps whatever their leg.
+- **Fix:** parallel parts as one equivalent; what_if recomputes groups and chains; degenerate dividers dropped (ruling R20); crystal CL per leg. Corpus: class V1 (product samples VD-DET ±4..±18, PR-DET 9 units, 12 degenerate dividers / 6 units dropped; jabr-control-v1 `+1V0` 1.0 → 1.4 V with a true `vout_net_mismatch`, two TPS62290 FB nets shorted, kicad-cli confirmed).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (29 claimed in 7 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md; per-unit labels `results/v30x_w4a_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w4a_gate_aux/class_summary_std.json`.
+
+## 2026-10-28 — KH-669: `detect_current_sense` iterates a set, so CS-DET `finding_id`s move between shunt/sense pairs across hash seeds
+
+**Severity:** LOW
+**File:** `signal_detectors.py` (`detect_current_sense`)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (handoff §Asks 4). **Fixed:** product v3.0.x-dev `c7d200d` (3.0.x Wave 4 Part A, unreleased; SHAs local and unpushed at the handoff).
+
+- **Root cause:** sense candidates were paired in set-iteration order, so the `finding_id` ↔ pair binding (and, per the Wave 3b Part A addendum, the `sense_ic` choice) followed `PYTHONHASHSEED`.
+- **Fix:** CS-DET sense candidates are taken in reference order; CS-DET is seed-independent (handoff Ask 12). Corpus: class V1 (product sample CS-DET +1/−6).
+- **CHANGELOG note:** the CHANGELOG line added in `c7d200d` ("Current-sense records … (KH-509)") cites KH-509 by mistake; the tracker item is KH-669 (KH-509 was closed in Wave 2).
+- **Verification:** Product-side: `tools/tests` 1,391 OK (4 skips); `PYTHONHASHSEED` 0 and 1 identical on every task's survey sample; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-A.md). Harness: Wave 4 Part A gate `0683d01`..`b31d4ff` (2026-10-28), standard + full-chain budgeted clean, 0 residuals — see status.md.
+
 ## 2026-10-27 — KH-417: `_pad_on_layer` treats `np_thru_hole` pads carrying a `*.Cu` layer wildcard as copper
 
 **Severity:** LOW
