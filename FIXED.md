@@ -11,6 +11,28 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-29 — KH-427: `design_rule_compliance` applies the `.kicad_pro` global min drill without honouring an UNCONDITIONAL `.kicad_dru` `hole_size` override — reports a violation native DRC does not
+
+**Severity:** MEDIUM (false design-rule violation on boards that relax/tighten drills via `.kicad_dru`; the KH-383/412 pad-drill work made the drill check more visible)
+**File:** `pcb/dfm.py`, `pcb/presentation.py` (design-rule compliance, custom rules; filed against `analyze_pcb.py` before the v3 split)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26; filed by the harness 2026-10-06. **Fixed:** product v3.0.x-dev `716b2fb` `fd71261`, pinned by kicad-cli in `9a66c58` (3.0.x Wave 4 Part B, unreleased).
+
+- **Root cause:** the compliance check evaluated the `.kicad_pro` global minimum drill even where an unconditional `.kicad_dru` `hole_size` rule supersedes it (KiCad precedence: `.kicad_dru` > netclass > global).
+- **Fix:** custom rules with max bounds, layers, units and KiCad precedence; an unconditional `.kicad_dru` `hole_size` overrides the project minimum, as KiCad (kf/A6-F1, A6-F3, A6-F8, A8-F5; ruling R47). `9a66c58` pins the behaviour from kicad-cli (custom `via_diameter` min/max and a layer rule on holes). Corpus: class P4 (product sample: +1 max bound PXN-X9 = kicad-cli, −6 rythm_card layer rule, −2 `min_track_width`); whole-range compliance vs KiCad on the pcbchecks 300 (YY/Yn/nY) hole_min 5/14/15 → 20/0/0.
+- **Verification:** Product-side: `tools/tests` 1,592 OK at `40b8ff3`; `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (181 claimed in 8 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-B.md). Harness: Wave 4 Part B gate `d5c500e`..`40b8ff3` (2026-10-29; candidate `40b8ff3` pushed, origin/v3.0.x-dev = `40b8ff3`), FULL standard budgeted clean (149,633 compared, 30,964 moved, 3.74 M deltas, 0 residuals, 0 candidate failures); full-chain: see LOG [harness] 2026-10-29; spice-offline identical 8,830/8,830; text oracle 916 / 26 allowed; `--schema` x6 identical; distributor-offline 184/184 — see status.md.
+
+## 2026-10-29 — KH-750: sheet-local power net named like a global rail is classed `interrupt` once KH-678 drops its rail match (`VCCINT` contains `INT`)
+
+**Severity:** LOW
+**File:** `schematic/net_analysis.py` net classification (~:205-227 at `b31d4ff`; `("INT", "IRQ", "ALERT", "DRDY")` substring test after `is_power_net`)
+**Discovered:** 2026-10-28, harness, Wave 4 Part A gate (KH-678 census, `results/v30x_w4a_gate_aux/kh678_census.json`). **Fixed:** product v3.0.x-dev `71764a1` `4a491c7` (3.0.x Wave 4 Part B plan Task 116, ruling R43; unreleased).
+
+- **Root cause:** once the KH-678 fix removed the leaf match to the global rail, net classification fell through to a substring keyword test, so `INT` inside `VCCINT` made a supply net `interrupt`.
+- **Fix:** power-input-only nets with supply-like pin names are power (after the keyword chain); class keywords match tokens, without supply stems; lane TX/RX suffixes are data; `0V`, `VIN-` returns and a driver's `VS` are not supply inputs (rulings R61, R62). Corpus: class P16 (`design_analysis.net_classification` values only, no product reader; product sample 363 of 21,115 nets on 677 schematics; corpus ≈7.2k nets in 28 directions on ~2,751 units).
+- **Harness note:** logix-core `/fpga-pg5/VCCINT` interrupt → power.
+- **Remainder → KH-771:** sheet-path and UUID tokens still match keywords; `DOUTXBee`, `~{UCSE*}`-class names lose their class.
+- **Verification:** Product-side: `tools/tests` 1,592 OK at `40b8ff3`; `check_refactor quick` OK per task against rolling baselines, whole-range `budget-compare` OK (181 claimed in 8 fixture classes, 0 unclaimed); `--schema` x6 byte-identical to `07b7fb1` (handoff-wave4-B.md). Harness: Wave 4 Part B gate `d5c500e`..`40b8ff3` (2026-10-29; candidate `40b8ff3` pushed, origin/v3.0.x-dev = `40b8ff3`), FULL standard budgeted clean (149,633 compared, 30,964 moved, 3.74 M deltas, 0 residuals, 0 candidate failures); full-chain: see LOG [harness] 2026-10-29; spice-offline identical 8,830/8,830; text oracle 916 / 26 allowed; `--schema` x6 identical; distributor-offline 184/184 — see status.md.
+
 ## 2026-10-28 — KH-675: `rail_voltages` takes a negative regulator estimate for a positive-named rail; since KH-519 its consumers use the wrong magnitude
 
 **Severity:** MEDIUM
@@ -179,6 +201,8 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 - **Fix:** an NPTH pad is copper unless KiCad's rule says the hole removes it, and an annulus connects on its first copper layer only (`CN_LIST::Add`; confirmed by DRC). Corpus: class P10 (9 boards / 40 netted copper-annulus NPTH pads; `--full` graph only).
 - **Evidence:** DRC oracle on the 9 boards: islands agreement 98.9 → 99.5 %, 0 merges.
 - **Verification:** Product-side: `tools/tests` 999 OK (4 skips); `check_refactor.py quick` OK 8/8 over the range with the union budget; `--schema` x6 byte-identical to `07b7fb1` (handoff-wave3b-B.md). Harness: Wave 3b Part B gate `6c488c2`..`0683d01` — see status.md; per-unit labels `results/v30x_w3bB_gate_aux/std_streamed.units.jsonl`, class summary `results/v30x_w3bB_gate_aux/class_summary.json`.
+
+**Addendum 2026-10-29 (3.0.x Wave 4 Part B):** the return-path half is closed by construction in `1bf4512` (the reference is ground/power zone fill copper only; tracks and pads are no return path)
 
 ## 2026-10-27 — KH-426: XV-001..003 never compare MPN schematic ↔ PCB — 17 stale footprint MPNs and `BSS138LT1G` vs `BSS138` on the SacMap board produce 0 findings
 
@@ -368,6 +392,8 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 - **Root cause:** - **Legacy arc outline:** in KiCad 5 `gr_arc`, `start` is the centre, `end` is the arc's first point and `angle` is the sweep. A two-arc KiCad-5 board reads as bbox width 20 / height 0, `height_mm 0.0`. In a 298-board sample the bbox is wrong by more than 0.05 mm on 28 boards and by more than 1 mm on 15. NR-001 then measures a fake chord edge inside the board. **Circular courtyard:** an `fp_circle (center 0 0)(end 3 0)` courtyard on a footprint at (110,100) yields `{min_x 110, min_y 100, max_x 113, max_y 100}`, so PM-001 misses the overlap. **Curved edges and BV-001:** a circle outline r = 10 with a via at (9.8, 0) gives no BV-001. 75 of 3,023 sampled PCB outputs (2.5 %) have no line/rect edge at all, so BV-001 can never fire on them. **Keepout:** KO-001 never checks a keepout's layers against the via span.
 - **Fix:** KiCad-5 `gr_arc` (centre / start / sweep) converted to start / mid / end at read time; circle and arc courtyards become polygons (`courtyard_poly`) with a per-side "drawn twice" malformed rule and diagnostic; BV-001 measures curved edges. Corpus (class P1 / P2 / P4): P1 outline arcs 2,201 pcb units / 835 repos; P2 courtyards 8,057 units / 3,432 repos. PM-001 -5,290 / +6,404; PM-002 -2,410 / +9,456 (net +7,046, mostly info; +6,541 on 2,817 courtyard-only units — far above the handoff's ~182-file sample; three sampled error-level additions checked geometrically correct). Full-chain (300-board sample): BV-001 57 -> 85 on 11 units (P4); NR-001 1 -> 3.
 - **Verification:** Product-side: `tools/tests` 664 OK (8 skips); `check_refactor.py quick` vs the `79420eb` snapshot 8/8 OK (fixture JSON deltas only in the declared classes, 2 allowed text artefacts); `--schema` x6 byte-identical to `07b7fb1`; kicad-cli / KiCad-5 netlist / DRC oracles (handoff-wave3.md). Harness: Wave 3 gate `004bba5`..`d2b9e72` — see status.md; per-unit labels `results/v30x_w3_gate/field_report_budgeted_v30x-wave3_streamed.units.jsonl`, class summary `results/v30x_w3_gate/class_summary.json`.
+
+**Addendum 2026-10-29 (3.0.x Wave 4 Part B, close-triage rider):** residue, still open: KO-001 judges a footprint by its bounding box, KiCad by courtyard/pad shape. Boards 27, 89, 148, 239, 261, 278 and 284 of the pcbchecks 300 still flag where kicad-cli reports none. Filed as KH-778.
 
 ## 2026-10-26 — KH-576: silkscreen visibility ignores the bare `hide` flag and `(hide yes)` on reference properties, so hidden refs count as visible
 
