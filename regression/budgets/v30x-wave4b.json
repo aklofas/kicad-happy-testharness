@@ -1,0 +1,39 @@
+{
+ "budget_id": "v30x-wave4b",
+ "baseline_sha": "d5c500e",
+ "candidate_sha": "40b8ff3",
+ "profile": "standard",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "PCB-wave4b",
+   "analyzer": "pcb",
+   "path_glob": "/**",
+   "predicate": "v30x_wave4b:pcb",
+   "evidence": "P1-P12 (KO-001 permissions, own project/rules files, design-rule minima / micro vias / custom rules / ignored checks, courtyards, footprint attributes, stackup, outline, thermal vias, copper graph routing, return path): each class opens its blocks and rules; footprints move only in courtyard / attribute fields; diagnostics only by the Part B records (open courtyard, outline, routing note, graph). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-27-v3.0.x-wave4/handoff-wave4-B.md (consolidated product budget budget-wave4-B.json in the same directory)"
+  },
+  {
+   "id": "SCH-wave4b",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave4b:schematic",
+   "evidence": "P14b pdn_impedance (complex parallel PDN), P16 design_analysis.net_classification (KH-750 token match, power-input-only nets); nothing else moves. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-27-v3.0.x-wave4/handoff-wave4-B.md (consolidated product budget budget-wave4-B.json in the same directory)"
+  },
+  {
+   "id": "EMC-wave4b",
+   "analyzer": "emc",
+   "path_glob": "/**",
+   "predicate": "v30x_wave4b:emc",
+   "evidence": "P8b SU-002, P12 GP-001 / per_net_scores / category_summary, P13 DP-001 / IO-001 / test_plan, P14a PD-001, P15 EF-001 / EF-002 move on their own; anything else only behind an explained upstream move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-27-v3.0.x-wave4/handoff-wave4-B.md (consolidated product budget budget-wave4-B.json in the same directory)"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave4b:downstream",
+   "evidence": "thermal (P10) and cross_analysis (P11c PS-002 / RP-002 / checks_run, P12) units behind an explained upstream pcb or schematic move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-27-v3.0.x-wave4/handoff-wave4-B.md (consolidated product budget budget-wave4-B.json in the same directory)"
+  }
+ ]
+}

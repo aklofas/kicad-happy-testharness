@@ -2,7 +2,7 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-10-29T00:56:21.134037+00:00
+**Last scan:** 2026-10-29T15:56:39.295036+00:00
 
 ## Summary
 
@@ -33,7 +33,6 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-010 | `via_inductance_nh` | L = 0.2h(ln(4h/d)+1) nH (via self-inductance) | parasitic | high | **verified** |
 | EQ-011 | `interplane_capacitance_pf_per_cm2` | C = ε₀εr/d (interplane capacitance per unit area) | parasitic | high | **verified** |
 | EQ-012 | `cap_self_resonant_freq` | f_SRF = 1/(2π√(LC)) (capacitor self-resonant frequency) | emc_radiation | critical | **verified** |
-| EQ-013 | `cap_impedance_at_freq` | \|Z\| = √(ESR² + (ωL - 1/ωC)²) (series RLC impedance) | impedance | high | **verified** |
 | EQ-025 | `cm_max_current_a` | I_max = E_limit × r / (µ₀ × f × L) (max CM current) | unknown | medium | **verified** |
 | EQ-026 | `cm_radiation_dbuv_m` | dBµV/m = 20 × log₁₀(E × 10⁶) (CM radiation in dBuV/m) | emc_radiation | critical | **verified** |
 | EQ-027 | `dm_max_loop_area_m2` | A = E_limit × r / (K × f² × I) (max allowable loop area) | unknown | medium | **verified** |
@@ -79,6 +78,12 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 |---|---|---|---|---|---|
 | EQ-066 | `estimate_cap_esl` | ESL estimate from package size (empirical table) | unknown | medium | **verified** |
 | EQ-067 | `estimate_cap_esr` | ESR estimate from package size + capacitance (empirical) | unknown | medium | **verified** |
+
+## skills/kicad/scripts/kicad_core/pdn.py
+
+| ID | Function | Formula | Category | Impact | Status |
+|---|---|---|---|---|---|
+| EQ-013 | `cap_branch_z` | Z = ESR + j(ωL - 1/ωC) (series RLC impedance) | impedance | high | **verified** |
 
 ## skills/kicad/scripts/kicad_core/values.py
 
@@ -163,7 +168,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-061 | `_cap_impedance` | \|Z\| = √(ESR²+(2πfL-1/(2πfC))²) at given frequency | filter_design | high | **verified** |
+| EQ-061 | `analyze_pdn_impedance` | Z = ESR + j(2πfL - 1/(2πfC)) per cap, branches in parallel | filter_design | high | **verified** |
 | EQ-062 | `analyze_pdn_impedance` | \|Z\| = √(ESR²+(ωL-1/ωC)²) swept over frequency | impedance | high | **verified** |
 | EQ-063 | `analyze_protocol_compliance` | t_rise = 0.8473 × R × C (I2C rise time estimation) | filter_design | high | **stale** |
 

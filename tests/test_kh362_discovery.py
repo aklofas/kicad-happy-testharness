@@ -85,6 +85,15 @@ def test_pro_ambiguous_no_match_warns_and_falls_back(tmp_path, capsys):
     assert "target" in capsys.readouterr().err
 
 
+def test_pro_board_reads_only_its_own_project(tmp_path):
+    # the schematic default above still falls back; a board (exact) never borrows a sibling's
+    _write_pro(tmp_path / "onlyone.kicad_pro", "only")
+    _write_pro(tmp_path / "other.kicad_pro", "other")
+    (tmp_path / "target.kicad_pcb").touch()
+
+    assert load_kicad_pro(str(tmp_path / "target.kicad_pcb"), exact=True) is None
+
+
 def test_pro_tolerates_commented_json(tmp_path):
     (tmp_path / "commented.kicad_pro").write_text(
         '{\n// a comment\n"_marker": "c",\n}'
@@ -111,23 +120,27 @@ def test_dru_stem_match_picks_correct_ruleset(tmp_path):
     assert result[0]["name"] == "Rule B"
 
 
-def test_dru_single_non_matching_stem_still_returned(tmp_path, capsys):
+def test_dru_single_non_matching_stem_not_borrowed(tmp_path):
+    # KiCad loads only the rules file named after the board: a sibling's is foreign
     _write_dru(tmp_path / "onlyone.kicad_dru", _DRU_A)
     (tmp_path / "target.kicad_pcb").touch()
 
-    result = load_kicad_dru(str(tmp_path / "target.kicad_pcb"))
-    assert result[0]["name"] == "Rule A"
-    assert capsys.readouterr().err == ""
+    assert load_kicad_dru(str(tmp_path / "target.kicad_pcb")) is None
 
 
-def test_dru_ambiguous_no_match_warns_and_falls_back(tmp_path, capsys):
+def test_dru_ambiguous_no_match_not_borrowed(tmp_path):
     _write_dru(tmp_path / "other1.kicad_dru", _DRU_A)
     _write_dru(tmp_path / "other2.kicad_dru", _DRU_B)
     (tmp_path / "target.kicad_pcb").touch()
 
-    result = load_kicad_dru(str(tmp_path / "target.kicad_pcb"))
-    assert result[0]["name"] == "Rule A"  # sorted first candidate
-    assert "target" in capsys.readouterr().err
+    assert load_kicad_dru(str(tmp_path / "target.kicad_pcb")) is None
+
+
+def test_dru_case_only_stem_difference_still_loads(tmp_path):
+    _write_dru(tmp_path / "Target.kicad_dru", _DRU_A)
+    (tmp_path / "target.kicad_pcb").touch()
+
+    assert load_kicad_dru(str(tmp_path / "target.kicad_pcb"))[0]["name"] == "Rule A"
 
 
 def test_dru_no_candidates_returns_none(tmp_path):
