@@ -57,16 +57,12 @@
       "created_from": "FND-00001959",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "rail": "+5V",
-          "cap_count": 3
-        },
+        "op": "max_count",
+        "value": 0,
         "detector_filter": "detect_decoupling"
       },
       "aspirational": false,
-      "aspirational_reason": "contains_match does not support dict value matching",
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "3.0.x relock at 40b8ff3, product ruling (2026-10-29, KiCad 10.0.7): the cache GND symbol's hidden pin is +5V; KiCad renames it and the .net has no GND net; was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"+5V\", \"cap_count\": 3}, \"detector_filter\": \"detect_decoupling\"}"
     },
     {
       "id": "FND-00001959-AST-05",

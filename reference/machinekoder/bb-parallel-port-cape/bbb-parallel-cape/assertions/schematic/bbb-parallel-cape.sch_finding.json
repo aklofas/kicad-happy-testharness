@@ -32,11 +32,11 @@
       "created_from": "FND-00001967",
       "check": {
         "path": "findings",
-        "op": "min_count",
-        "value": 5,
+        "op": "max_count",
+        "value": 0,
         "detector_filter": "detect_design_observations"
       },
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "3.0.x relock at 40b8ff3, product ruling (2026-10-29, KiCad 10.0.7): GTL2003PW has no VCC pin; +3V3 reaches it only via R20x to SREF; pin_nets match the .net; was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 5, \"detector_filter\": \"detect_design_observations\"}"
     },
     {
       "id": "FND-00001967-AST-04",
@@ -44,9 +44,10 @@
       "created_from": "FND-00001967",
       "check": {
         "path": "design_analysis.erc_warnings",
-        "op": "min_count",
-        "value": 1
-      }
+        "op": "max_count",
+        "value": 0
+      },
+      "migration_note": "3.0.x relock at 40b8ff3, product ruling (2026-10-29, KiCad 10.0.7): a passive P103 pin drives STATUS_LED; was {\"path\": \"design_analysis.erc_warnings\", \"op\": \"min_count\", \"value\": 1}"
     },
     {
       "id": "FND-00001967-AST-05",
