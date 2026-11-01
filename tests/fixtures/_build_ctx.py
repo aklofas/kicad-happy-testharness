@@ -105,8 +105,7 @@ def connector(ref: str, value: str, pins: list[tuple[str, str]]) -> dict:
 def build_ctx(components: list[dict],
               nets: dict[str, list[tuple[str, str]]],
               known_power_rails: set[str] | None = None,
-              lib_symbols: dict | None = None,
-              generator_version: str = "9.0.1"):
+              lib_symbols: dict | None = None):
     """Construct a minimal AnalysisContext.
 
     components: list of component dicts (use ic(), resistor(), etc.)
@@ -148,7 +147,6 @@ def build_ctx(components: list[dict],
     return build_analysis_context(
         components, nets_full, lib_symbols,
         known_power_rails=known_power_rails,
-        generator_version=generator_version,
     )
 
 

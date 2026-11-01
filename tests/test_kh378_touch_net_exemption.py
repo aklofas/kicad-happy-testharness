@@ -95,7 +95,7 @@ def test_touch_nets_excludes_real_testpoint_library():
 # ---------------------------------------------------------------------------
 
 def test_touch_net_gp001_is_info():
-    # _make_finding runs severity through _normalize_severity: CRITICAL/HIGH -> 'error',
+    # _make_finding runs severity through normalize_severity: CRITICAL/HIGH -> 'error',
     # MEDIUM -> 'warning', LOW/INFO -> 'info'. Assert on the normalized (lowercase) values.
     out = {f["signal_net"]: f for f in emc_rules.check_return_path_coverage(PCB)}
     assert out["TOUCH_1"]["severity"] == "info"

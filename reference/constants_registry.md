@@ -2,15 +2,15 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-01T05:48:25.774892+00:00
+**Last scan:** 2026-11-01T17:05:20.634111+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 961 |
-| Verified | 200 |
-| Unverified | 738 |
+| Total constants | 946 |
+| Verified | 197 |
+| Unverified | 726 |
 | Stale (changed since verification) | 23 |
 | Critical risk | 4 |
 | High risk | 10 |
@@ -112,7 +112,6 @@
 | CONST-429 | `DEFAULT_MAX_AGE_DAYS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-430 | `MIN_SCORE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-431 | `MAX_RETRIES` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-432 | `_V2_STRUCTURE` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/datasheets/scripts/datasheet_features.py
 
@@ -182,7 +181,6 @@
 | CONST-666 | `KEY_PRIORITY` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-667 | `RENAME_PRESENT` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-668 | `FAILED_DETAIL_WITH_URL` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-669 | `NORMALIZE_REDIRECTS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-670 | `LABELS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-938 | `_RATE_LIMIT_RETRIES` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 
@@ -195,7 +193,6 @@
 | CONST-673 | `KEY_PRIORITY` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-674 | `RENAME_PRESENT` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-675 | `FAILED_DETAIL_WITH_URL` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-676 | `NORMALIZE_REDIRECTS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-680 | `LABELS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-681 | `params` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
@@ -240,7 +237,6 @@
 | CONST-015 | `_SUPERSPEED_LANE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-113 | `_TX_RX_LANE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-241 | `_USB_OR_SS_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-280 | `_EMC_SEVERITY_MAP` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-460 | `finding` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-005 | `check_missing_decoupling:kw1` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-012 | `check_connector_filtering:kw1` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
@@ -622,7 +618,6 @@
 | CONST-640 | `VALID_SEVERITIES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-641 | `VALID_CONFIDENCES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-642 | `VALID_EVIDENCE_SOURCES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-643 | `VALID_FIX_TYPES` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-644 | `_RULE_CODE_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-646 | `finding` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-647 | `bom_coverage` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -768,7 +763,6 @@
 | CONST-836 | `_CAP_PKG_RE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
 | CONST-837 | `_CAP_PKG_EIA_RE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
 | CONST-838 | `_CAP_ESR_TABLE` | unknown | 16 | verified | 0.0 | 0.0 | **low** (0.0) |
-| CONST-839 | `_CAP_ESL` | datasheet_lookup | 7 | verified | 0.8 | 0.0 | **low** (0.0) |
 | CONST-840 | `eia_to_imperial` | keyword_classification | 7 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-841 | `_DC_BIAS_DERATING` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-842 | `_SHIELDED_PATTERNS` | keyword_classification | 15 | unverified | 0.4 | 0.0 | **medium** (0.4) |
@@ -989,9 +983,6 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
-| CONST-729 | `VALID_MARKETS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-730 | `VALID_DERATING_PROFILES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-731 | `VALID_BOARD_CLASSES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-732 | `VALID_SUPPLIERS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-733 | `VALID_BOM_GROUP_BY` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-027 | `VALID_DIFF_THRESHOLDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -999,7 +990,6 @@
 | CONST-754 | `checks` | unknown | 8 | unverified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-735 | `_IPC_CONTEXT_PATTERN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-736 | `VALID_TARGET_MARKETS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-737 | `VALID_PASSIVE_SIZES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-028 | `resolve_design_intent:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-029 | `resolve_design_intent:kw2` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-740 | `defaults` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -1347,7 +1337,6 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
-| CONST-809 | `_VALUE_UNITS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-810 | `_DEFAULT_TOL` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-811 | `_RHO_CU` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-812 | `_CU_THICKNESS_1OZ` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
@@ -1364,7 +1353,6 @@
 | CONST-694 | `KEY_PRIORITY` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-695 | `RENAME_PRESENT` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-696 | `FAILED_DETAIL_WITH_URL` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-697 | `NORMALIZE_REDIRECTS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-698 | `LABELS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/lcsc/scripts/search_lcsc.py
@@ -1390,7 +1378,6 @@
 | CONST-705 | `ID_KEYS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-713 | `RENAME_PRESENT` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-738 | `FAILED_DETAIL_WITH_URL` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
-| CONST-739 | `NORMALIZE_REDIRECTS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-750 | `LABELS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-751 | `headers` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-752 | `patterns` | keyword_classification | 4 | unverified | 0.3 | 0.1 | **medium** (0.3) |
@@ -1420,8 +1407,6 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
-| CONST-047 | `ELEMENT_PREFIX` | keyword_classification | 12 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-048 | `DEFAULT_MODEL` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-185 | `suffixes` | unknown | 10 | verified | 0.0 | 0.0 | **low** (0.0) |
 
 ## skills/spice/scripts/spice_part_library.py

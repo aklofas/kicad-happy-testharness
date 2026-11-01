@@ -21,6 +21,15 @@ import diff_engine
 from detection_schema import compute_detection_id
 
 
+def _init_analysis_dir(project_dir, project_file=""):
+    """analysis/ with the empty manifest output_io.write_primary_run starts from."""
+    analysis_dir = os.path.join(os.path.abspath(project_dir), "analysis")
+    os.makedirs(analysis_dir, exist_ok=True)
+    analysis_cache.save_manifest(analysis_dir, {"version": 1, "project": project_file,
+                                                "current": None, "runs": {}})
+    return analysis_dir
+
+
 # ============================================================
 # Helper: create a temp analysis dir with N runs
 # ============================================================
@@ -35,7 +44,7 @@ def _make_analysis_dir_with_runs(n_runs, output_type="schematic",
     """
     tmpdir = tempfile.mkdtemp(prefix="test_da_")
     project_dir = tmpdir
-    analysis_dir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+    analysis_dir = _init_analysis_dir(project_dir, "test.kicad_pro")
 
     run_ids = []
     for i in range(n_runs):
@@ -127,7 +136,7 @@ def test_output_type_selects_correct_file():
     tmpdir = tempfile.mkdtemp(prefix="test_da_")
     try:
         project_dir = tmpdir
-        analysis_dir = analysis_cache.ensure_analysis_dir(
+        analysis_dir = _init_analysis_dir(
             project_dir, "test.kicad_pro")
         # Create run with both schematic.json and pcb.json
         outputs_dir = tempfile.mkdtemp(prefix="test_da_out_")

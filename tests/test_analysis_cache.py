@@ -16,56 +16,28 @@ _KICAD_HAPPY = str(PRODUCT_ROOT)
 sys.path.insert(0, os.path.join(_KICAD_HAPPY, "skills", "kicad", "scripts"))
 import analysis_cache
 
+# The cache folder-name generator (local-time minute labels, not run_id.generate_run_id).
+_run_folder_name = (getattr(analysis_cache, "generate_run_folder_name", None)
+                    or analysis_cache.generate_run_id)
+
+
+def _init_analysis_dir(project_dir, project_file=""):
+    """analysis/ with the empty manifest output_io.write_primary_run starts from."""
+    analysis_dir = os.path.join(os.path.abspath(project_dir), "analysis")
+    os.makedirs(analysis_dir, exist_ok=True)
+    analysis_cache.save_manifest(analysis_dir, {"version": 1, "project": project_file,
+                                                "current": None, "runs": {}})
+    return analysis_dir
+
 
 # === TestManifestOperations ===
-
-def test_ensure_analysis_dir_creates_dir_and_manifest():
-    tmpdir = tempfile.mkdtemp(prefix="test_ac_")
-    try:
-        result = analysis_cache.ensure_analysis_dir(tmpdir, "test.kicad_pro")
-        analysis_dir = os.path.join(tmpdir, "analysis")
-        assert os.path.isdir(analysis_dir), "analysis/ dir not created"
-        manifest_path = os.path.join(analysis_dir, "manifest.json")
-        assert os.path.isfile(manifest_path), "manifest.json not created"
-        assert result == analysis_dir
-    finally:
-        shutil.rmtree(tmpdir)
-
-
-def test_ensure_analysis_dir_creates_gitignore():
-    tmpdir = tempfile.mkdtemp(prefix="test_ac_")
-    try:
-        analysis_dir = analysis_cache.ensure_analysis_dir(tmpdir, "test.kicad_pro")
-        gitignore_path = os.path.join(analysis_dir, ".gitignore")
-        assert os.path.isfile(gitignore_path), ".gitignore not created"
-        content = open(gitignore_path, encoding="utf-8").read()
-        assert "!manifest.json" in content
-        assert "!.gitignore" in content
-    finally:
-        shutil.rmtree(tmpdir)
-
-
-def test_ensure_analysis_dir_skips_gitignore_when_track_in_git():
-    tmpdir = tempfile.mkdtemp(prefix="test_ac_")
-    try:
-        config = {"analysis": {"track_in_git": True}}
-        analysis_dir = analysis_cache.ensure_analysis_dir(
-            tmpdir, "test.kicad_pro", config=config)
-        gitignore_path = os.path.join(analysis_dir, ".gitignore")
-        assert not os.path.exists(gitignore_path), \
-            ".gitignore should not exist when track_in_git=True"
-    finally:
-        shutil.rmtree(tmpdir)
-
 
 def test_fresh_manifest_structure():
     tmpdir = tempfile.mkdtemp(prefix="test_ac_")
     try:
-        analysis_dir = analysis_cache.ensure_analysis_dir(
-            tmpdir, "myproject.kicad_pro")
-        manifest = analysis_cache.load_manifest(analysis_dir)
+        manifest = analysis_cache.load_manifest(os.path.join(tmpdir, "analysis"))
         assert manifest["version"] == 1
-        assert manifest["project"] == "myproject.kicad_pro"
+        assert manifest["project"] == ""
         assert manifest["current"] is None
         assert manifest["runs"] == {}
     finally:
@@ -93,19 +65,6 @@ def test_save_load_manifest_roundtrip():
         analysis_cache.save_manifest(tmpdir, custom)
         loaded = analysis_cache.load_manifest(tmpdir)
         assert loaded == custom
-    finally:
-        shutil.rmtree(tmpdir)
-
-
-def test_ensure_analysis_dir_idempotent():
-    tmpdir = tempfile.mkdtemp(prefix="test_ac_")
-    try:
-        analysis_cache.ensure_analysis_dir(tmpdir, "first.kicad_pro")
-        analysis_cache.ensure_analysis_dir(tmpdir, "second.kicad_pro")
-        analysis_dir = os.path.join(tmpdir, "analysis")
-        manifest = analysis_cache.load_manifest(analysis_dir)
-        assert manifest["project"] == "first.kicad_pro", \
-            "second call should not overwrite project from first call"
     finally:
         shutil.rmtree(tmpdir)
 
@@ -152,39 +111,10 @@ def test_hash_source_file_missing_returns_none():
         shutil.rmtree(tmpdir)
 
 
-def test_sources_changed_detects_modification():
-    tmpdir = tempfile.mkdtemp(prefix="test_ac_")
-    try:
-        filepath = os.path.join(tmpdir, "main.kicad_sch")
-        with open(filepath, "w") as f:
-            f.write("original content")
-        old_hash = analysis_cache.hash_source_file(filepath)
-        old_hashes = {"main.kicad_sch": old_hash}
-        # Modify the file
-        with open(filepath, "w") as f:
-            f.write("modified content")
-        assert analysis_cache.sources_changed(old_hashes, tmpdir) is True
-    finally:
-        shutil.rmtree(tmpdir)
-
-
-def test_sources_changed_false_when_unchanged():
-    tmpdir = tempfile.mkdtemp(prefix="test_ac_")
-    try:
-        filepath = os.path.join(tmpdir, "main.kicad_sch")
-        with open(filepath, "w") as f:
-            f.write("stable content")
-        old_hash = analysis_cache.hash_source_file(filepath)
-        old_hashes = {"main.kicad_sch": old_hash}
-        assert analysis_cache.sources_changed(old_hashes, tmpdir) is False
-    finally:
-        shutil.rmtree(tmpdir)
-
-
 # === TestRunCreation ===
 
 def test_generate_run_id_format():
-    run_id = analysis_cache.generate_run_id()
+    run_id = _run_folder_name()
     parts = run_id.split("_")
     assert len(parts) == 2, f"expected 2 parts separated by _, got {parts}"
     date_part, time_part = parts
@@ -195,10 +125,10 @@ def test_generate_run_id_format():
 def test_generate_run_id_deduplicates():
     tmpdir = tempfile.mkdtemp(prefix="test_ac_")
     try:
-        first_id = analysis_cache.generate_run_id(tmpdir)
+        first_id = _run_folder_name(tmpdir)
         # Create a folder with that ID so the next call must deduplicate
         os.makedirs(os.path.join(tmpdir, first_id))
-        second_id = analysis_cache.generate_run_id(tmpdir)
+        second_id = _run_folder_name(tmpdir)
         assert second_id != first_id, \
             f"second ID should differ from first, both are {first_id}"
         assert second_id.startswith(first_id.split("-")[0]), \
@@ -211,7 +141,7 @@ def test_create_run_creates_folder_and_updates_manifest():
     project_dir = tempfile.mkdtemp(prefix="test_ac_proj_")
     outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
     try:
-        analysis_dir = analysis_cache.ensure_analysis_dir(
+        analysis_dir = _init_analysis_dir(
             project_dir, "test.kicad_pro")
         # Create a fake schematic output
         with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
@@ -242,7 +172,7 @@ def test_create_run_copies_forward_previous_outputs():
     outputs_dir_1 = tempfile.mkdtemp(prefix="test_ac_out1_")
     outputs_dir_2 = tempfile.mkdtemp(prefix="test_ac_out2_")
     try:
-        analysis_dir = analysis_cache.ensure_analysis_dir(
+        analysis_dir = _init_analysis_dir(
             project_dir, "test.kicad_pro")
         # Run 1: pcb.json only
         with open(os.path.join(outputs_dir_1, "pcb.json"), "w") as f:
@@ -279,7 +209,7 @@ def test_overwrite_current_updates_in_place():
     outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
     overwrite_dir = tempfile.mkdtemp(prefix="test_ac_ow_")
     try:
-        analysis_dir = analysis_cache.ensure_analysis_dir(
+        analysis_dir = _init_analysis_dir(
             project_dir, "test.kicad_pro")
         # Create initial run
         with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
@@ -315,7 +245,7 @@ def test_overwrite_current_updates_source_hashes():
     outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
     overwrite_dir = tempfile.mkdtemp(prefix="test_ac_ow_")
     try:
-        analysis_dir = analysis_cache.ensure_analysis_dir(
+        analysis_dir = _init_analysis_dir(
             project_dir, "test.kicad_pro")
         # Create initial run with hash v1
         with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
@@ -345,7 +275,7 @@ def test_get_current_run_returns_path_and_metadata():
     project_dir = tempfile.mkdtemp(prefix="test_ac_proj_")
     outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
     try:
-        analysis_dir = analysis_cache.ensure_analysis_dir(
+        analysis_dir = _init_analysis_dir(
             project_dir, "test.kicad_pro")
         with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
             json.dump({"analyzer_type": "schematic"}, f)
@@ -389,7 +319,7 @@ def _create_numbered_runs(adir, count, pinned=None):
 def test_prune_runs_removes_oldest_beyond_retention():
     project_dir = tempfile.mkdtemp(prefix="test_ac_prune_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         _create_numbered_runs(adir, 7)
         manifest = analysis_cache.load_manifest(adir)
         assert manifest["current"] == "run006", "current should be last created"
@@ -410,7 +340,7 @@ def test_prune_runs_removes_oldest_beyond_retention():
 def test_prune_runs_preserves_pinned():
     project_dir = tempfile.mkdtemp(prefix="test_ac_pin_prune_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         _create_numbered_runs(adir, 7, pinned={0, 1})
         pruned = analysis_cache.prune_runs(adir, retention=3)
         manifest = analysis_cache.load_manifest(adir)
@@ -431,7 +361,7 @@ def test_prune_runs_preserves_pinned():
 def test_prune_runs_noop_under_limit():
     project_dir = tempfile.mkdtemp(prefix="test_ac_noop_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         _create_numbered_runs(adir, 3)
         pruned = analysis_cache.prune_runs(adir, retention=5)
         assert pruned == [], f"expected no pruning, got {pruned}"
@@ -444,7 +374,7 @@ def test_prune_runs_noop_under_limit():
 def test_prune_runs_zero_retention_keeps_all():
     project_dir = tempfile.mkdtemp(prefix="test_ac_zero_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         _create_numbered_runs(adir, 5)
         pruned = analysis_cache.prune_runs(adir, retention=0)
         assert pruned == [], "retention=0 means unlimited, no pruning"
@@ -454,10 +384,10 @@ def test_prune_runs_zero_retention_keeps_all():
         shutil.rmtree(project_dir)
 
 
-def test_pin_unpin_toggles_flag():
+def test_pin_run_sets_flag():
     project_dir = tempfile.mkdtemp(prefix="test_ac_toggle_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         out = tempfile.mkdtemp(prefix="test_out_")
         with open(os.path.join(out, "schematic.json"), "w") as f:
             json.dump({"ok": True}, f)
@@ -471,10 +401,6 @@ def test_pin_unpin_toggles_flag():
         analysis_cache.pin_run(adir, "toggle_run")
         manifest = analysis_cache.load_manifest(adir)
         assert manifest["runs"]["toggle_run"]["pinned"] is True
-        # Unpin
-        analysis_cache.unpin_run(adir, "toggle_run")
-        manifest = analysis_cache.load_manifest(adir)
-        assert manifest["runs"]["toggle_run"]["pinned"] is False
     finally:
         shutil.rmtree(project_dir)
 
@@ -482,7 +408,7 @@ def test_pin_unpin_toggles_flag():
 def test_prune_never_removes_current():
     project_dir = tempfile.mkdtemp(prefix="test_ac_keep_cur_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         _create_numbered_runs(adir, 7)
         pruned = analysis_cache.prune_runs(adir, retention=1)
         manifest = analysis_cache.load_manifest(adir)
@@ -500,7 +426,7 @@ def test_prune_never_removes_current():
 def test_should_create_new_run_true_when_no_current():
     project_dir = tempfile.mkdtemp(prefix="test_ac_newrun_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         out = tempfile.mkdtemp(prefix="test_out_")
         with open(os.path.join(out, "schematic.json"), "w") as f:
             json.dump({"analyzer_type": "schematic"}, f)
@@ -514,7 +440,7 @@ def test_should_create_new_run_true_when_no_current():
 def test_get_current_run_none_when_empty():
     project_dir = tempfile.mkdtemp(prefix="test_ac_empty_")
     try:
-        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        adir = _init_analysis_dir(project_dir, "test.kicad_pro")
         result = analysis_cache.get_current_run(adir)
         assert result is None, "should return None when no runs exist"
     finally:

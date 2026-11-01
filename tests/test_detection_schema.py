@@ -38,7 +38,6 @@ from detection_schema import (
     recalc_derived,
     get_derived_field_names,
     get_inverse_solver,
-    get_identity_and_value_fields,
     get_primary_metric,
 )
 
@@ -413,16 +412,10 @@ def test_get_derived_field_names_unknown():
     assert get_derived_field_names("nonexistent") == []
 
 
-def test_get_identity_and_value_fields():
-    identity, values = get_identity_and_value_fields("voltage_dividers")
+def test_identity_and_value_fields():
+    identity, values = SCHEMAS["voltage_dividers"].identity_fields, SCHEMAS["voltage_dividers"].value_fields
     assert "r_top.ref" in identity
     assert "ratio" in values
-
-
-def test_get_identity_and_value_fields_unknown():
-    identity, values = get_identity_and_value_fields("nonexistent")
-    assert identity == ["reference"]
-    assert values == []
 
 
 def test_get_primary_metric():

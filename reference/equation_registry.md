@@ -2,19 +2,19 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-11-01T05:48:32.009402+00:00
+**Last scan:** 2026-11-01T17:05:23.628404+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 104 |
-| Verified | 84 |
+| Total equations | 103 |
+| Verified | 83 |
 | Unverified | 0 |
 | Stale | 20 |
 | Critical impact | 11 |
 | High impact | 34 |
-| Medium impact | 38 |
+| Medium impact | 37 |
 | Low impact | 21 |
 
 ## skills/emc/scripts/emc_formulas.py
@@ -76,7 +76,6 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-066 | `estimate_cap_esl` | ESL estimate from package size (empirical table) | unknown | medium | **verified** |
 | EQ-067 | `estimate_cap_esr` | ESR estimate from package size + capacitance (empirical) | unknown | medium | **verified** |
 
 ## skills/kicad/scripts/kicad_core/pdn.py

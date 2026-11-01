@@ -34,7 +34,10 @@ _HARNESS = Path(__file__).resolve().parent.parent
 _KH = str(PRODUCT_ROOT)
 sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
-import lifecycle_audit  # noqa: E402
+try:
+    import lifecycle_engine as _lc  # noqa: E402 (product with the engine split out)
+except ImportError:
+    import lifecycle_audit as _lc  # noqa: E402
 
 
 def _analysis(mpn="TPS61023DRLR", ref="U1"):
@@ -60,8 +63,8 @@ def test_lc_act_active_part_carries_provenance(monkeypatch):
                 "attempted": ["digikey"],
                 "per_source_status": {"digikey": "active"}}
 
-    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
-    result = lifecycle_audit.audit_bom(_analysis(), sources=["digikey"], delay=0)
+    monkeypatch.setattr(_lc, "audit_component", _mock)
+    result = _lc.audit_bom(_analysis(), sources=["digikey"], delay=0)
     finding = _lc_act_finding(result)
     # Must match the sibling LC-001..004 convention exactly (lifecycle_audit.py
     # rule_info branch): confidence='deterministic', evidence_source='api_lookup'.
@@ -79,8 +82,8 @@ def test_lc_act_lcsc_only_unknown_summary(monkeypatch):
                 "attempted": ["lcsc"],
                 "per_source_status": {}}
 
-    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
-    result = lifecycle_audit.audit_bom(_analysis(), sources=["lcsc"], delay=0)
+    monkeypatch.setattr(_lc, "audit_component", _mock)
+    result = _lc.audit_bom(_analysis(), sources=["lcsc"], delay=0)
     finding = _lc_act_finding(result)
     assert "unknown" in finding["summary"]
     assert "LCSC returns no lifecycle status" in finding["summary"]
@@ -102,8 +105,8 @@ def test_lc005_no_finding_when_denominator_is_mostly_errors(monkeypatch):
                 "attempted": ["digikey", "mouser", "element14", "lcsc"],
                 "per_source_status": {"digikey": "active"}}
 
-    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
-    result = lifecycle_audit.audit_bom(_analysis(), sources=[], delay=0)
+    monkeypatch.setattr(_lc, "audit_component", _mock)
+    result = _lc.audit_bom(_analysis(), sources=[], delay=0)
     # Old code's denominator was len(finding['sources']) == 1 responded
     # source, so 1 >= 2 was False anyway here by coincidence -- the real
     # regression this guards is that the denominator must come from
@@ -127,8 +130,8 @@ def test_lc005_none_status_not_counted_active(monkeypatch):
                 "attempted": ["digikey", "mouser"],
                 "per_source_status": {"digikey": "active"}}
 
-    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
-    result = lifecycle_audit.audit_bom(_analysis(), sources=[], delay=0)
+    monkeypatch.setattr(_lc, "audit_component", _mock)
+    result = _lc.audit_bom(_analysis(), sources=[], delay=0)
     assert _lc005_findings(result) == []
 
 
@@ -142,8 +145,8 @@ def test_lc005_unmapped_label_counts_as_response(monkeypatch):
                 "attempted": ["digikey", "mouser"],
                 "per_source_status": {"digikey": "active"}}
 
-    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
-    result = lifecycle_audit.audit_bom(_analysis(), sources=[], delay=0)
+    monkeypatch.setattr(_lc, "audit_component", _mock)
+    result = _lc.audit_bom(_analysis(), sources=[], delay=0)
     lc005 = _lc005_findings(result)
     assert len(lc005) == 1
     assert lc005[0]["source_name"] == "digikey"
@@ -165,8 +168,8 @@ def test_lc005_excludes_lcsc_and_names_attempted_vs_responded(monkeypatch):
                 "attempted": ["digikey", "mouser", "lcsc"],
                 "per_source_status": {"digikey": "active"}}
 
-    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
-    result = lifecycle_audit.audit_bom(_analysis(), sources=[], delay=0)
+    monkeypatch.setattr(_lc, "audit_component", _mock)
+    result = _lc.audit_bom(_analysis(), sources=[], delay=0)
     lc005 = _lc005_findings(result)
     assert len(lc005) == 1
     finding = lc005[0]
@@ -189,8 +192,8 @@ def test_trust_summary_zero_unknown_confidence_for_lc_act_only(monkeypatch):
                 "attempted": ["digikey"],
                 "per_source_status": {"digikey": "active"}}
 
-    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
-    result = lifecycle_audit.audit_bom(_analysis(), sources=["digikey"], delay=0)
+    monkeypatch.setattr(_lc, "audit_component", _mock)
+    result = _lc.audit_bom(_analysis(), sources=["digikey"], delay=0)
     assert result["findings"]
     assert all(f["rule_id"] == "LC-ACT" for f in result["findings"])
     trust_summary = result["trust_summary"]

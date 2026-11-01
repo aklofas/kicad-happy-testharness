@@ -7,7 +7,10 @@ import sys
 from tests.contract._paths import MAIN_REPO_ROOT
 
 sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets" / "scripts"))
-from datasheet_verify import _v1_view
+try:
+    from datasheet_verify import _legacy_verifier_view as _v1_view
+except ImportError:  # product before the helper rename
+    from datasheet_verify import _v1_view
 
 
 def _extraction(abs_max_list):

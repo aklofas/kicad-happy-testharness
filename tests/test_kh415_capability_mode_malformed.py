@@ -47,7 +47,7 @@ def test_non_dict_json_sidecar_does_not_crash():
     for content in ("[]", '"x"', "42"):
         d = _dir_with(content)
         with redirect_stderr(io.StringIO()):
-            rid = capability_mode.get_or_create_run_id(d)
+            rid = capability_mode.get_capability_mode_ref(d)["run_id"]
         assert isinstance(rid, str) and rid, (content, rid)
         assert (d / "capability_mode.json").read_text() == content
 

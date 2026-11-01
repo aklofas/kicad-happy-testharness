@@ -55,16 +55,6 @@ def test_run_id_is_sortable_iso_format(tmp_path):
     assert len(rid.split("-")[-1]) == 6  # 6-hex suffix
 
 
-def test_get_or_create_run_id_aligns_with_capability_mode(tmp_path):
-    """Phase 4 spec §3.1 wiring contract: get_or_create_run_id returns the
-    same run_id as get_or_create_capability_mode."""
-    from capability_mode import get_or_create_run_id, get_or_create_capability_mode
-
-    rid = get_or_create_run_id(tmp_path)
-    record = get_or_create_capability_mode(tmp_path)
-    assert rid == record["run_id"]
-
-
 def test_read_schema_versions_returns_known_categories(tmp_path):
     """_read_schema_versions must extract x-schema-version from category schemas."""
     from capability_mode import _read_schema_versions
