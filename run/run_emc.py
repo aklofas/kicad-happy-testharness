@@ -42,9 +42,9 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
                 compact=False, env=None):
     """Run analyze_emc.py on one schematic (+optional PCB) output.
 
-    Returns (returncode, summary_dict_or_None, elapsed_s). EMC exits 1 for
-    critical findings with a valid envelope; that is accepted
-    (harnesslib ACCEPTED_EXITS["emc"]) and reported as 0. Output is
+    Returns (returncode, summary_dict_or_None, elapsed_s). EMC exits 0 with
+    findings and 1 only on an input error, which fails the unit
+    (harnesslib ACCEPTED_EXITS["emc"]). Output is
     temp-written and published atomically, so a stale previous output never
     stands in for this run's result (TH-054). None means timeout.
     """
@@ -66,7 +66,7 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
     output_json = Path(output_json)
     res = run_once(make_cmd, output_json, analyzer="emc", timeout=timeout,
                    env=env or build_env(offline=True))
-    if res.status in ("ok", "ok_findings_exit"):
+    if res.status == "ok":
         output_json.with_suffix(".err").unlink(missing_ok=True)
         with open(output_json) as f:
             data = json.load(f)

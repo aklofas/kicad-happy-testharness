@@ -67,10 +67,12 @@ def test_run_once_ok_publishes_and_hashes(tmp_path):
     assert not list(dest.parent.glob("*.tmp-*"))
 
 
-def test_run_once_accepted_exit1_for_emc_is_ok_findings_exit(tmp_path):
-    dest = tmp_path / "snap.json"
-    r = ex.run_once(_cmd("ok_exit1", "emc"), dest, analyzer="emc", timeout=20, env=_env())
-    assert r.status == "ok_findings_exit" and r.exit_code == 1 and dest.exists()
+def test_run_once_exit1_is_unexpected_for_every_analyzer(tmp_path):
+    """Every analyzer exits 0 with findings; 1 means an input error, never success."""
+    for analyzer in ex.ACCEPTED_EXITS:
+        dest = tmp_path / analyzer / "snap.json"
+        r = ex.run_once(_cmd("ok_exit1", analyzer), dest, analyzer=analyzer, timeout=20, env=_env())
+        assert r.status == "exit_unexpected" and r.exit_code == 1 and not dest.exists(), analyzer
 
 
 def test_run_once_valid_output_unexpected_exit_is_fail(tmp_path):
@@ -133,7 +135,7 @@ def test_run_once_failure_quarantines_previous_output(tmp_path):
 
 
 def test_statuses_vocabulary():
-    assert ex.STATUSES == ("ok", "ok_findings_exit", "crash", "timeout", "no_output",
+    assert ex.STATUSES == ("ok", "crash", "timeout", "no_output",
                            "invalid_output", "exit_unexpected")
 
 

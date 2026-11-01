@@ -18,7 +18,7 @@ from typing import Iterable, Iterator
 MANIFEST_VERSION = 1
 MANIFEST_NAME = "manifest.json"
 UNITS_NAME = "units.jsonl"
-OK_STATUSES = ("ok", "ok_findings_exit")
+OK_STATUSES = ("ok",)
 
 
 @dataclass(frozen=True)

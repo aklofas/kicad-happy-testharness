@@ -106,7 +106,7 @@ def _run_one(analyzer, file_path, outfile, errfile, extra_args=None, timeout=Non
                    env=env or build_env(offline=True))
     if res.status == "timeout":
         errfile.write_text(f"Timed out after {cap}s", encoding="utf-8")
-    elif res.status in ("ok", "ok_findings_exit"):
+    elif res.status == "ok":
         errfile.write_text("", encoding="utf-8")
     else:
         errfile.write_text(res.stderr_tail or res.detail, encoding="utf-8")
@@ -275,7 +275,7 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
     skipped = 0
 
     def _format_result(i, relpath, returncode, outfile, status):
-        if status in ("ok", "ok_findings_exit"):
+        if status == "ok":
             if do_validate:
                 ok, msg = validate_required_keys(outfile, output_subdir)
                 if not ok:
@@ -293,7 +293,7 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
     def _recorded_status(ok, status):
         # a published output that fails --validate is a failure, never an ok unit a
         # later --resume would skip
-        return "validation_failed" if not ok and status in ("ok", "ok_findings_exit") else status
+        return "validation_failed" if not ok and status == "ok" else status
 
     def _record(file_path, returncode, elapsed, status, out_sha):
         log.append({"analyzer": output_subdir, "unit_id": _uid(file_path),

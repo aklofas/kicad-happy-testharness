@@ -82,8 +82,8 @@ def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
                     timeout=ANALYZER_TIMEOUT, env=None):
     """Run analyze_thermal.py on one schematic+PCB pair.
 
-    Returns (returncode, summary_dict_or_None, elapsed_s). Exits {0,1} with a
-    valid envelope are success and reported as 0 (harnesslib
+    Returns (returncode, summary_dict_or_None, elapsed_s). Exit 0 with a valid
+    envelope is success; exit 1 is an input error and fails the unit (harnesslib
     ACCEPTED_EXITS["thermal"]); None means timeout.
     """
     from harnesslib.execution import run_once, build_env
@@ -97,7 +97,7 @@ def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
     output_json = Path(output_json)
     res = run_once(make_cmd, output_json, analyzer="thermal", timeout=timeout,
                    env=env or build_env(offline=True))
-    if res.status in ("ok", "ok_findings_exit"):
+    if res.status == "ok":
         output_json.with_suffix(".err").unlink(missing_ok=True)
         with open(output_json) as f:
             data = json.load(f)

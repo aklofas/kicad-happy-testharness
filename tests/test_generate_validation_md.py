@@ -129,3 +129,11 @@ def test_category_rows_share_the_total_denominator():
     md = gvm.generate_markdown(check_results=results)
     assert "| SEED | 2 | 50.0% |" in md and "| FND | 1 | 100.0% |" in md
     assert "100%" not in md.split("### Crash testing")[1].split("### Regression")[0]
+
+
+def test_spice_count_is_labelled_as_analyzer_runs():
+    """The SPICE count is one output file per schematic run, not one per simulation."""
+    md = gvm.generate_markdown(check_results=_check_results())
+    assert "| SPICE simulations |" not in md
+    assert "| SPICE analyzer runs |" in md
+    assert "Python 3.10+" in md and "Python 3.8" not in md

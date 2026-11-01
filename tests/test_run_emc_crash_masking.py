@@ -23,7 +23,7 @@ sys.exit(1)
 WRITING_RC1 = """import sys, json
 out = sys.argv[sys.argv.index('--output') + 1]
 json.dump({"analyzer_type": "emc", "summary": {"total_findings": 3, "critical": 1}}, open(out, 'w'))
-sys.exit(1)  # exit 1 = critical findings, still valid output
+sys.exit(1)  # exit 1 = input error, even with an output written
 """
 
 
@@ -55,10 +55,9 @@ def test_crash_without_stale_output_is_reported_as_failure():
     assert rc != 0 and summary is None and err_written
 
 
-def test_exit_one_with_fresh_output_is_still_success():
-    rc, summary, _ = _run(WRITING_RC1, stale=True)
-    assert rc == 0
-    assert summary == {"total_findings": 3, "critical": 1}
+def test_exit_one_with_fresh_output_is_failure():
+    rc, summary, err_written = _run(WRITING_RC1, stale=True)
+    assert rc == 1 and summary is None and err_written
 
 
 if __name__ == "__main__":

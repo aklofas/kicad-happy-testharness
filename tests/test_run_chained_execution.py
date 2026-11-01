@@ -42,11 +42,12 @@ def _inputs(tmp_path):
     return sch, pcb
 
 
-def test_emc_exit1_with_output_is_success(tmp_path):
+def test_emc_exit1_with_output_is_failure(tmp_path):
     sch, _ = _inputs(tmp_path)
     out = tmp_path / "emc.json"
     rc, summary, _ = run_one_emc(_script(tmp_path, "ok_exit1", "emc"), sch, None, out)
-    assert rc == 0 and summary == {"total_findings": 0} and out.exists()
+    assert rc == 1 and summary is None and not out.exists()
+    assert "exit_unexpected" in out.with_suffix(".err").read_text()
 
 
 def test_emc_exit2_is_failure_and_quarantines(tmp_path):
@@ -87,12 +88,13 @@ def test_emc_flags_and_pcb_pairing_reach_analyzer(tmp_path):
     assert "--compact" in argv and "--spice-enhanced" in argv
 
 
-def test_thermal_exit1_with_output_is_success(tmp_path):
+def test_thermal_exit1_with_output_is_failure(tmp_path):
     sch, pcb = _inputs(tmp_path)
     out = tmp_path / "x_thermal.json"
     rc, summary, _ = run_one_thermal(_script(tmp_path, "ok_exit1", "thermal"),
                                      sch, pcb, out)
-    assert rc == 0 and summary == {"total_findings": 0} and out.exists()
+    assert rc == 1 and summary is None and not out.exists()
+    assert "exit_unexpected" in out.with_suffix(".err").read_text()
 
 
 def test_thermal_garbage_output_is_failure(tmp_path):

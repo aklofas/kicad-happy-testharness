@@ -377,7 +377,7 @@ Each closed analyzer issue has a corresponding bugfix regression guard assertion
 | PCB files | {pcb_files:,} |
 | Gerber directories | {gerber_files:,} |
 | EMC analyses | {emc_files:,} |
-| SPICE simulations | {spice_files:,} |
+| SPICE analyzer runs | {spice_files:,} |
 | Components parsed | {cat_stats.get('total_components', 0):,} |
 | Nets traced | {cat_stats.get('total_nets', 0):,} |
 | Regression assertions | {assertion_stats.get('total', 0):,} at {rate_str} |

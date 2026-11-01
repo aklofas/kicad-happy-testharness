@@ -20,13 +20,13 @@ from typing import Callable, Mapping
 
 from .identity import sha256_file
 
-STATUSES = ("ok", "ok_findings_exit", "crash", "timeout", "no_output",
+STATUSES = ("ok", "crash", "timeout", "no_output",
             "invalid_output", "exit_unexpected")
 
 ACCEPTED_EXITS: dict[str, frozenset[int]] = {
     "schematic": frozenset({0}), "pcb": frozenset({0}), "gerber": frozenset({0}),
     "cross_analysis": frozenset({0}),
-    "emc": frozenset({0, 1}), "thermal": frozenset({0, 1}),
+    "emc": frozenset({0}), "thermal": frozenset({0}),
     "spice": frozenset({0}), "datasheets": frozenset({0}),
 }
 
@@ -160,7 +160,6 @@ def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str
             os.replace(temp, dest)
         except OSError as exc:
             return fail("invalid_output", rc, tail, f"publish failed: {exc}")
-        status = "ok" if rc == 0 else "ok_findings_exit"
-        return RunResult(status, rc, dest, sha256_file(dest), elapsed, tail, "ok")
+        return RunResult("ok", rc, dest, sha256_file(dest), elapsed, tail, "ok")
     finally:
         _cleanup(temp)  # temp and any sidecars; harmless after a successful publish

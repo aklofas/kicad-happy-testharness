@@ -18,7 +18,6 @@ from harnesslib import identity as ident  # noqa: E402
 from harnesslib.profiles import PROFILES  # noqa: E402
 
 FAKE = ROOT / "tests" / "fixtures" / "h0" / "plan2" / "fake_analyzer.py"
-OK = ("ok", "ok_findings_exit")
 
 
 def _rec(analyzer, repo, key, b_status, c_status, verdict="PASS"):

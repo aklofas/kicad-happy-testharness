@@ -14,7 +14,7 @@ from pathlib import Path
 _TOOLS_DIR = Path(__file__).resolve().parent.parent / "tools"
 
 BAD_SKIP_REASONS = ("both_failed", "dependency_missing", "snapshot_read_error")
-OK_STATUSES = ("ok", "ok_findings_exit")
+OK_STATUSES = ("ok",)
 
 
 def _ok(res) -> bool:
