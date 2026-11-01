@@ -18,6 +18,8 @@ FIX = HARNESS_ROOT / "tests/fixtures/datasheets"
 PLAN_FIX = FIX / "plan-lm2596-adj.example.json"
 SCOUT_FIX = FIX / "scout-lm2596-adj.example.json"
 REG_RESULT_FIX = FIX / "result-regulator-complete.example.json"
+# Results must carry the plan's pdf_sha256 or merge_results refuses them.
+PDF_SHA256 = json.loads(PLAN_FIX.read_text())["pdf_sha256"]
 SCHEMA_DIR = MAIN_REPO_ROOT / "skills/datasheets/schemas"
 EXTRACTION_SCHEMA = SCHEMA_DIR / "extraction.schema.json"
 
@@ -39,6 +41,7 @@ def _build_base_result(task_id: str = "base") -> dict:
         "task_id": task_id,
         "schema_version": "1.0",
         "status": "complete",
+        "pdf_sha256": PDF_SHA256,
         "extracted_at": "2026-04-25T11:00:00Z",
         "model_tier": "B",
         "model_id": "claude-sonnet-4-6",
@@ -74,6 +77,7 @@ def _build_pinout_result() -> dict:
         "task_id": "pinout",
         "schema_version": "1.0",
         "status": "complete",
+        "pdf_sha256": PDF_SHA256,
         "extracted_at": "2026-04-25T11:00:00Z",
         "model_tier": "A",
         "model_id": "claude-opus-4-7",

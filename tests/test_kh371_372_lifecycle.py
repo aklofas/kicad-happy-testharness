@@ -113,21 +113,32 @@ def test_lc005_no_finding_when_denominator_is_mostly_errors(monkeypatch):
     assert _lc005_findings(result) == []
 
 
-# --- (d) status=None does not count as active ------------------------------
+# --- (d) status=None does not count as active, nor as a response ----------
 
 def test_lc005_none_status_not_counted_active(monkeypatch):
     def _mock(mpn, sources, project_dir=None, delay=1.0):
-        # digikey confirms active; mouser responded but with status=None.
-        # The OLD code's `src_data.get('status') in ('active', 'Active',
-        # None)` check treated mouser's None as an active confirmation too,
-        # so it saw 2 "active" sources and did NOT flag single-source. The
-        # fixed code only trusts explicit active statuses (per_source_status,
-        # which the real audit_component only populates from a truthy raw
-        # status), sees exactly 1 confirmed-active source out of 2 responses,
-        # and correctly fires.
+        # digikey confirms active; mouser answered with status=None. The OLD
+        # code's `src_data.get('status') in ('active', 'Active', None)` check
+        # treated mouser's None as an active confirmation. A null status is
+        # no lifecycle answer at all: one responded source, so no LC-005.
         return {"mpn": mpn, "status": "active",
                 "sources": {"digikey": {"status": "Active"},
                             "mouser": {"status": None}},
+                "attempted": ["digikey", "mouser"],
+                "per_source_status": {"digikey": "active"}}
+
+    monkeypatch.setattr(lifecycle_audit, "audit_component", _mock)
+    result = lifecycle_audit.audit_bom(_analysis(), sources=[], delay=0)
+    assert _lc005_findings(result) == []
+
+
+def test_lc005_unmapped_label_counts_as_response(monkeypatch):
+    def _mock(mpn, sources, project_dir=None, delay=1.0):
+        # mouser states a label that maps to no lifecycle status: it answered
+        # without confirming active, so digikey is the single active source.
+        return {"mpn": mpn, "status": "active",
+                "sources": {"digikey": {"status": "Active"},
+                            "mouser": {"status": "Restricted Availability"}},
                 "attempted": ["digikey", "mouser"],
                 "per_source_status": {"digikey": "active"}}
 
@@ -142,14 +153,14 @@ def test_lc005_none_status_not_counted_active(monkeypatch):
 
 def test_lc005_excludes_lcsc_and_names_attempted_vs_responded(monkeypatch):
     def _mock(mpn, sources, project_dir=None, delay=1.0):
-        # digikey confirms active; mouser responds but with no status;
+        # digikey confirms active; mouser responds with an unmapped label;
         # lcsc responds with stock data only (no lifecycle status, ever).
         # Without the LCSC exclusion, lcsc would inflate both the attempted
         # and responded counts even though it can never confirm or deny
         # lifecycle status.
         return {"mpn": mpn, "status": "active",
                 "sources": {"digikey": {"status": "Active"},
-                            "mouser": {"status": None},
+                            "mouser": {"status": "Restricted Availability"},
                             "lcsc": {"stock_qty": 50}},
                 "attempted": ["digikey", "mouser", "lcsc"],
                 "per_source_status": {"digikey": "active"}}

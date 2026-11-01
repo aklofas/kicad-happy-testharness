@@ -105,7 +105,10 @@ def emit_sites(product_root: Path, path: Path,
             sites.append(EmitSite(file_rel, call.lineno, callee, detector, rule_id,
                                   _str_literal(kws.get("schema_era")), False, "positional-emc"))
             continue
-        if callee == "_make_finding" and call.args and ("detector" in kws or "rule_id" in kws):
+        # positional args with literal detector= and rule_id= keywords meet the policy: resolve below
+        if callee == "_make_finding" and call.args and ("detector" in kws or "rule_id" in kws) \
+                and not (_str_literal(kws.get("detector")) is not None
+                         and _str_literal(kws.get("rule_id")) is not None):
             sites.append(EmitSite(file_rel, call.lineno, callee, None, _str_literal(kws.get("rule_id")),
                                   _str_literal(kws.get("schema_era")), False,
                                   "positional-emc:mixed-shape"))

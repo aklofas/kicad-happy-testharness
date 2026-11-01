@@ -1,0 +1,39 @@
+{
+ "budget_id": "v30x-wave5",
+ "profile": "standard",
+ "baseline_sha": "40b8ff3",
+ "candidate_sha": "698116c",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "GERBER-wave5",
+   "analyzer": "gerber",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:gerber",
+   "evidence": "Tasks 51-54: job-file completeness + GR-001 inner copper (51), X2 component/net/pad/trace/connectivity reading (52), Gerber-drill / .xln / .nc drills, route slots, GR-003 (53), Edge.Cuts outline alignment + GR-002 + mm extents + board_dimensions (54); aligned never T->F, drill flags never T->F, complete T->F only on the job-file branch; derived summaries follow the findings. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  },
+  {
+   "id": "SCH-wave5",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:schematic",
+   "evidence": "Task 73 (KH-new-typec-detect, GitHub #61.2): usb_compliance connectors / CC checks / summary and UC-003 findings only; Task 19 manifest audit expected 0 corpus moves (not opened). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  },
+  {
+   "id": "EMC-wave5",
+   "analyzer": "emc",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:emc",
+   "evidence": "Task 71 GP-001 'not available' info removed where the upstream PCB carries the empty return path, reworded 'Return path not checked' on fill-less boards (#60.1); Task 74 SW-003 'not estimated' info (#62); category_summary / regulatory_coverage follow; anything else only behind an explained upstream move (D). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:downstream",
+   "evidence": "thermal and cross_analysis units behind an explained upstream pcb or schematic move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  }
+ ]
+}

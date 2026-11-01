@@ -110,6 +110,21 @@ def test_returned_structure():
     print("  PASS  test_returned_structure")
 
 
+def test_collinear_centres_degenerate():
+    """GitHub #62: cap, IC and inductor centres in a line give no area, not 0 mm^2."""
+    footprints = _make_footprints(
+        ("C1", 5.0, 5.0),
+        ("U1", 15.0, 5.0),
+        ("L1", 25.0, 5.0),
+    )
+    schematic = _make_schematic([_make_regulator()])
+    results = _compute_switching_loop_areas(footprints, schematic)
+    assert len(results) == 1
+    assert results[0]["area_mm2"] is None
+    assert results[0]["estimate"] == "degenerate"
+    print("  PASS  test_collinear_centres_degenerate")
+
+
 # ---------------------------------------------------------------------------
 # 2b. Topology filtering
 # ---------------------------------------------------------------------------
@@ -236,6 +251,29 @@ def test_sw003_precomputed_small_loop():
     print("  PASS  test_sw003_precomputed_small_loop")
 
 
+def test_sw003_precomputed_degenerate_not_estimated():
+    """A degenerate pre-computed loop gives one SW-003 info 'not estimated', not a pass."""
+    pcb = {
+        "switching_loop_areas": [{
+            "regulator_ref": "U1",
+            "regulator_value": "TPS54331",
+            "inductor_ref": "L1",
+            "cap_ref": "C1",
+            "area_mm2": None,
+            "estimate": "degenerate",
+            "vertices_mm": [[5, 5], [15, 5], [25, 5]],
+        }],
+        "footprints": [],
+    }
+    schematic = _make_schematic([_make_regulator()])
+    findings = check_input_cap_loop_area(pcb, schematic)
+    assert len(findings) == 1, f"Expected 1 finding, got {len(findings)}"
+    assert findings[0]["rule_id"] == "SW-003"
+    assert findings[0]["severity"] == "info"
+    assert "not estimated" in findings[0]["summary"]
+    print("  PASS  test_sw003_precomputed_degenerate_not_estimated")
+
+
 # ---------------------------------------------------------------------------
 # 2e. EMC SW-003 fallback (no pre-computed data)
 # ---------------------------------------------------------------------------
@@ -305,8 +343,11 @@ def test_end_to_end_corpus_output():
         assert "inductor_ref" in loop
         assert "cap_ref" in loop
         assert "area_mm2" in loop
-        assert isinstance(loop["area_mm2"], (int, float))
-        assert loop["area_mm2"] > 0
+        if loop["area_mm2"] is None:
+            assert loop.get("estimate") == "degenerate"
+        else:
+            assert isinstance(loop["area_mm2"], (int, float))
+            assert loop["area_mm2"] > 0
         assert "vertices_mm" in loop
         assert len(loop["vertices_mm"]) == 3
     print(f"  PASS  test_end_to_end_corpus_output ({path}, {len(loops)} loops)")
@@ -320,6 +361,7 @@ ALL_TESTS = [
     # 2a. Loop area computation
     test_triangle_area_basic,
     test_returned_structure,
+    test_collinear_centres_degenerate,
     # 2b. Topology filtering
     test_non_switching_topologies_filtered,
     test_switching_topology_produces_results,
@@ -331,6 +373,7 @@ ALL_TESTS = [
     # 2d. EMC SW-003 pre-computed path
     test_sw003_precomputed_large_loop,
     test_sw003_precomputed_small_loop,
+    test_sw003_precomputed_degenerate_not_estimated,
     # 2e. EMC SW-003 fallback
     test_sw003_fallback_no_precomputed,
     # 2f. End-to-end

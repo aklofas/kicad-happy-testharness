@@ -73,13 +73,13 @@ def test_read_schema_versions_returns_known_categories(tmp_path):
     # When run from repo root, expect category schemas with versions populated.
     # When run from elsewhere (cache_dir doesn't resolve), accept empty dict.
     if versions:
-        # If any populated, the regulator should be at 0.3 per current state.
+        # If any populated, the regulator should be at 0.4 per current state.
         assert "regulator" in versions
-        assert versions["regulator"] == "0.3"
-        # Schemas without x-schema-version (base, extraction, manifest, pinout,
-        # spec_value) must NOT appear.
-        assert "base" not in versions
-        assert "extraction" not in versions
+        assert versions["regulator"] == "0.4"
+        assert versions["base"] == versions["pinout"] == versions["extraction"] == "1.0"
+        # Schemas without x-schema-version (manifest, spec_value) must NOT appear.
+        assert "manifest" not in versions
+        assert "spec_value" not in versions
 
 
 def test_capability_mode_ref_emitted_by_schematic_analyzer(tmp_path):

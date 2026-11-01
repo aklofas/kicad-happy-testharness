@@ -2996,7 +2996,7 @@ absolute paths, so prefix stripping and the sha256 linkage checks fail.
 The distributor layer (`skills/{digikey,mouser,lcsc,element14}` sync/fetch CLIs over
 `skills/datasheets/distributor_core/`) emits no analyzer output, so the corpus gate is blind
 to it. Its evidence is the product's offline oracle `tools/distributor_offline.py` over
-`tools/tests/fixtures/distributor/` (41 in-process sync/fetch runs with the clock frozen,
+`tools/tests/fixtures/distributor/` (in-process sync/fetch runs — 41 through Wave 4, 62 from 3.0.x Wave 5 — with the clock frozen,
 network and PDF seams replaced by recorded responses; five artefacts per run — manifest bytes,
 stdout, stderr, summary, files listing — byte-compared with an expected set frozen at the
 pre-round tip). `harnesslib.profiles` declares it as `distributor-offline` (cap 120 s for the
@@ -3022,6 +3022,15 @@ name the profile in the round record (`round_record.py --profile distributor-off
 scrape whole, so URL normalisation, the `%PDF` sniff, the transport cascade and `pdftotext`
 are covered only by the product's unit tests; `--parallel > 1` is completion-order
 nondeterministic and not part of the oracle.
+
+**Re-freeze rounds.** When a round changes distributor behaviour, the product re-freezes
+the expected set and adds runs (3.0.x Wave 5: 41 → 62 runs, 21 re-frozen + 21 new), and the
+handoff lists every run as unchanged / M (re-frozen) / A (new) with the commits behind it.
+Run the gate with `--runner-rev <candidate>` (the tip's oracle and scenarios on the baseline
+export): direction 1 must still exit 0, and direction 2 then FAILS by construction. The
+verdict is the per-run match instead: the runs with any differing artefact must be exactly
+the declared M + A set, and every unchanged run byte-identical. Spot-read a few M diffs
+against the stated reason, and record the match in the round's aux dir.
 
 ### 26k. Launching a multi-hour run and waiting on it (no pgrep)
 

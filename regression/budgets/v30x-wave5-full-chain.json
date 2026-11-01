@@ -1,0 +1,39 @@
+{
+ "budget_id": "v30x-wave5-full-chain",
+ "profile": "full-chain",
+ "baseline_sha": "40b8ff3",
+ "candidate_sha": "698116c",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-wave5",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:schematic",
+   "evidence": "Task 73 (KH-new-typec-detect, GitHub #61.2): usb_compliance connectors / CC checks / summary and UC-003 findings only; Task 19 manifest audit expected 0 corpus moves (not opened). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  },
+  {
+   "id": "PCB-wave5",
+   "analyzer": "pcb",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:pcb",
+   "evidence": "full-chain only: Task 71 return_path_continuity [] kept when the fills were checked (#60.1); Task 74 degenerate switching_loop_areas record (area_mm2 null + estimate degenerate, --schematic only). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  },
+  {
+   "id": "EMC-wave5",
+   "analyzer": "emc",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:emc",
+   "evidence": "Task 71 GP-001 'not available' info removed where the upstream PCB carries the empty return path, reworded 'Return path not checked' on fill-less boards (#60.1); Task 74 SW-003 'not estimated' info (#62); category_summary / regulatory_coverage follow; anything else only behind an explained upstream move (D). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave5:downstream",
+   "evidence": "thermal and cross_analysis units behind an explained upstream pcb or schematic move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-10-29-v3.0.x-wave5/handoff-wave5.md (consolidated product budget budget-wave5-union.json, 43 classes, in the same directory)"
+  }
+ ]
+}

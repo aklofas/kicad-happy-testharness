@@ -110,6 +110,19 @@ def test_mixed_positional_keyword_is_unresolved():
     assert sh[0].detector is None
 
 
+def test_mixed_positional_with_literal_keywords_resolves(tmp_path):
+    src = ("def _make_finding(category, severity, rule_id, title, description, **extra): return extra\n"
+           "X = _make_finding('switching_emc', 'INFO', rule_id='SW-003', detector='emc_switching_emc',\n"
+           "                  title='t', description='d', schema_era='v3.0')\n")
+    root = tmp_path / "prod"
+    f = root / "skills" / "emc" / "scripts" / "emc_rules.py"
+    f.parent.mkdir(parents=True)
+    f.write_text(src)
+    sites = source_scan.emit_sites(root, f)
+    assert [(s.detector, s.rule_id, s.schema_era, s.resolved, s.reason) for s in sites] == [
+        ("emc_switching_emc", "SW-003", "v3.0", True, "")]
+
+
 def test_emit_sites_latin1_cookie(tmp_path):
     src = (b"# -*- coding: latin-1 -*-\n"
            b"def make_finding(**kw): return kw\n"

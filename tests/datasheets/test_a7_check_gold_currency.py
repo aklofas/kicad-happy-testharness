@@ -88,26 +88,26 @@ def _write_synth_schemas(tmp_path, *, base="1.0", categories=None,
                           extractor="1.0"):
     """Write synthetic schema files at <tmp_path>/skills/datasheets/schemas/.
 
-    Each schema declares a top-level `version` field; extraction.schema.json
-    declares `extractor_schema_version`. The currency-check tool reads these
-    fields directly.
+    Each schema declares a top-level `x-schema-version` field; the extractor
+    version is `EXTRACTOR_SCHEMA_VERSION` in a sibling scripts/merge_results.py.
+    The currency-check tool reads these directly.
     """
     categories = categories or {"regulator": "0.3"}
     schemas_dir = tmp_path / "skills" / "datasheets" / "schemas"
     schemas_dir.mkdir(parents=True)
     (schemas_dir / "base.schema.json").write_text(json.dumps({
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "version": base,
+        "x-schema-version": base,
     }))
     for cat, ver in categories.items():
         (schemas_dir / f"{cat}.schema.json").write_text(json.dumps({
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "version": ver,
+            "x-schema-version": ver,
         }))
-    (schemas_dir / "extraction.schema.json").write_text(json.dumps({
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "extractor_schema_version": extractor,
-    }))
+    scripts_dir = schemas_dir.parent / "scripts"
+    scripts_dir.mkdir()
+    (scripts_dir / "merge_results.py").write_text(
+        f"EXTRACTOR_SCHEMA_VERSION = {extractor!r}\n")
     return schemas_dir
 
 

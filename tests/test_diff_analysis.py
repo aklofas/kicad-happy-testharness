@@ -392,10 +392,10 @@ def test_regression_emc_new_critical_finding():
     assert emc_regs[0]["severity"] == "breaking"
 
 
-def test_regression_emc_risk_score_increase():
-    """EMC risk score increase -> regression with severity 'major'."""
+def test_regression_emc_risk_score_decrease():
+    """EMC risk score fall -> regression with severity 'major' (100 = lowest risk, 0 = worst)."""
     diff_result = {
-        "risk_score": {"base": 42, "head": 58, "delta": 16},
+        "risk_score": {"base": 58, "head": 42, "delta": -16},
     }
     regressions = diff_engine.classify_regressions("emc", diff_result)
     assert len(regressions) >= 1
@@ -435,7 +435,7 @@ def test_regression_pcb_unrouted_increase():
 
 def test_no_regressions_on_improvements():
     """No regressions when changes are improvements."""
-    # EMC: findings resolved, risk score decreased
+    # EMC: findings resolved, risk score rose (100 = lowest risk)
     diff_result = {
         "findings": {
             "new": [],
@@ -444,12 +444,12 @@ def test_no_regressions_on_improvements():
                  "title": "Missing ground plane"},
             ],
         },
-        "risk_score": {"base": 58, "head": 42, "delta": -16},
+        "risk_score": {"base": 42, "head": 58, "delta": 16},
     }
     regressions = diff_engine.classify_regressions("emc", diff_result)
-    # Risk score decrease (delta < 0) should not be flagged
+    # Risk score increase (delta > 0) is an improvement and should not be flagged
     risk_regs = [r for r in regressions if r["category"] == "emc_risk"]
-    assert len(risk_regs) == 0, "Decreasing risk score should not be a regression"
+    assert len(risk_regs) == 0, "Increasing risk score should not be a regression"
     # Resolved findings are not regressions
     emc_regs = [r for r in regressions if r["category"] == "emc"]
     assert len(emc_regs) == 0, "Resolved findings should not be regressions"

@@ -19,6 +19,7 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+import ast
 import enum
 import hashlib
 import json
@@ -109,7 +110,7 @@ def _minor(version: str) -> int:
 
 
 def _read_current_schema_version(schemas_dir: Path, name: str,
-                                  field_name: str = "version") -> Optional[str]:
+                                  field_name: str = "x-schema-version") -> Optional[str]:
     """Read a schema's declared version from its top-level field.
 
     Returns None if the schema file is absent or has no such field.
@@ -125,9 +126,23 @@ def _read_current_schema_version(schemas_dir: Path, name: str,
 
 
 def _read_current_extractor_version(schemas_dir: Path) -> Optional[str]:
-    """Read extractor_schema_version from extraction.schema.json."""
-    return _read_current_schema_version(schemas_dir, "extraction",
-                                        field_name="extractor_schema_version")
+    """Read EXTRACTOR_SCHEMA_VERSION from merge_results.py beside the schemas dir.
+
+    No schema carries the extractor version; merge_results stamps it into every
+    extraction. Returns None if the script or the literal assignment is absent.
+    """
+    path = schemas_dir.parent / "scripts" / "merge_results.py"
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError):
+        return None
+    for node in tree.body:
+        if (isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant)
+                and isinstance(node.value.value, str)
+                and any(isinstance(t, ast.Name) and t.id == "EXTRACTOR_SCHEMA_VERSION"
+                        for t in node.targets)):
+            return node.value.value
+    return None
 
 
 def _audit_one(slug_dir: Path, *, pdf_dir: Path, schemas_dir: Path,

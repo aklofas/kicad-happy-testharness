@@ -32,4 +32,4 @@ Authored against `kicad-cli` 10.0.1. Any `simple.kicad_prl` side-effect file sho
 ## Known analyzer behavior on this fixture
 
 - No ICs → `analyze_thermal.py` output is sparse (no hot components). If later contract tests need richer thermal coverage, add an SOT-23 LDO rather than stretching the thermal envelope to declare every field optional.
-- Tracks occupy ~18×2.5 mm inside a 35×25 mm outline → `analyze_gerbers.py` emits two GR-002 width/height-variation warnings. Non-blocking; contract tests assert envelope shape, not finding counts.
+- Tracks occupy ~18×2.5 mm inside a 35×25 mm outline → `analyze_gerbers.py` emits no findings: GR-002 fires only on copper outside the Edge.Cuts outline (before product 3.0.1 it compared layer extents and gave two width/height-variation warnings here). Contract tests assert envelope shape, not finding counts.
