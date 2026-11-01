@@ -11,6 +11,445 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-10-31 — KH-522: differential-pair `has_esd` set by any shared IC — the USB PHY itself credited as ESD protection (bookkeeping close; GitHub #61.1)
+
+**Severity:** HIGH (default path; a false protection claim on most pairs)
+**File:** `schematic/net_analysis.py` (`_detect_differential_pairs`; protection credit at :1409-1411 at `698116c`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R3-F3). **Fixed:** product v3.0.x-dev `34767d7` `b6a3d8d` `8ac280b` `5ddf36b` (3.0.x Wave 4 Part A, range `0683d01..d5c500e`); the tracker entry stayed open until the Wave 5 handoff mapped GitHub #61.1 to it.
+
+- **Root cause:** any component on both legs with `type == "ic"` set `has_esd`, so the PHY or MCU driving the pair (e.g. `CH340G`) was listed as its ESD protection.
+- **Fix:** only protection-classified parts (TVS / ESD arrays / protection-keyword ICs) are credited. Corpus: 10,894 pairs carried `esd_protection` at the audit, 3,117 / 23,651 at `40b8ff3`.
+- **Verification:** gated in 3.0.x Wave 4 Part A (`results/v30x_w4a_gate{,_fc}`, accepted 2026-10-28) and carried through the 40b8ff3 relock; GitHub #61.1 (reporter case: MCU as a USB pair's ESD) is this entry.
+
+## 2026-10-31 — KH-330: `base.schema.json` and `pinout.schema.json` missing `x-schema-version`
+
+**Severity:** LOW
+**File:** `skills/datasheets/schemas/base.schema.json`, `pinout.schema.json` (also `extraction.schema.json`)
+**Discovered:** 2026-05-19. **Fixed:** product v3.0.x-dev `1eae5da` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the category schemas (regulator, diode, mcu, opamp, transistor, crystal) carried a top-level `x-schema-version`; `base`, `pinout` and `extraction` did not, so consumers fell back to a hard-coded default.
+- **Fix:** `base` (1.0), `pinout` and `extraction` carry `x-schema-version`, so the capability record lists them. The same commit adds the regulator `ceramic` token (regulator schema 0.3 → 0.4, KH-633).
+- **Harness note:** handoff ask 3 — `tests/contract/test_capability_mode.py::test_read_schema_versions_returns_known_categories` expects regulator 0.4; `regression/check_gold_currency.py` reads the version key.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-488: Mouser `KEY_PRIORITY = ("mouser",)` keys every part without an MPN or Mouser number as `""`, so they collide in `manifest.parts[""]`
+
+**Severity:** LOW (Mouser sync manifest only)
+**File:** `skills/mouser/scripts/provider_mouser.py:22-23` (`KEY_PRIORITY`); `skills/datasheets/distributor_core/sync.py:144-145` (part key); the other providers' search paths
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 item 9 (review B-I8). **Fixed:** product v3.0.x-dev `6613708` `cb287ae` `27989c7` `17400f8`, close fix wave `2ac039c` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a part admitted on another distributor's number alone got the empty key at Mouser, so every such part overwrote the previous one. The wider form (handoff NEW-2): every provider searched with an empty query for parts known only by another distributor's part number.
+- **Fix (widened):** a provider searches only with an MPN or its own part number. Other parts count as skipped (`skipped without an MPN or <distributor> part number`), Mouser no longer files them under one empty key, and the other providers no longer fetch them from the schematic Datasheet URL; the provider that owns the number still does. Value-derived MPNs stay searchable (`27989c7`). `2ac039c` updates the lcsc / element14 SKILL sync lines. Distributor-offline: the `{digikey,element14,lcsc,mouser}/{sync-default,sync-dry-json,sync-force,sync-legacy-index,sync-mpn-list}` runs and `digikey/sync-sch-dry` (skip count 2 → 1) re-frozen in `cb287ae` / `17400f8` (with KH-615's `590e5f3`); RUNBOOK 26j.
+- **Cost:** generic symbol names are now searched by providers that lack their own number when another distributor's number exists (ruling R11); recorded on KH-495.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-571: `what_if` never reaches the patched detection for SPICE, EMC or tolerance, and its crystal fix suggests one cap when the formula is joint
+
+**Severity:** HIGH (what_if CLI; the SPICE and EMC comparisons were empty or "UNKNOWN" on every run)
+**File:** `skills/kicad/scripts/what_if.py` (SPICE re-sim input, EMC compare, tolerance fields, `parsed_value`, crystal suggestions, log sweep); `simulate_subcircuits.py:109,135-150`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R12-F2, R12-F3, R12-F8, R12-F5, R12-F9, R12-reg-logsweep). **Fixed:** product v3.0.x-dev `aba7a08` `bacf5bc` `a7ec28f`, CHANGELOG correction `86230cc` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the SPICE re-sim passed `signal_analysis`, which `simulate_subcircuits` reads only in its pre-v1.3 guard, so both runs saw the original values; the EMC compare read `overall_risk` / `risk_level`, which no output carries; tolerance fields came from the nominal deltas only; `parsed_value` was treated as a dict though the producer emits a scalar; the two crystal-cap suggestions were one joint edit; a zero log-sweep bound raised ZeroDivisionError.
+- **Fix:** `--spice` simulates the changed subcircuit with the patched values; `--emc` previews EMC on the patched design (`before_risk` / `after_risk` = `summary.emc_risk_score`, a new `worsened` list, findings matched as `diff_analysis` matches them); new `--offline` flag; `--spice` with a sweep exits 2. Tolerance corners cover every recalculable field; `--suggest-fixes` sizes both crystal caps together; a log-sweep bound ≤ 0 exits 2; patched detections recompute time constant, crystal load error / status and regulator `power_dissipation`; `--output` replaces each patched finding in place and writes UTF-8 atomically (one atomic text writer in `kicad_core`, `a7ec28f`). `what_if --spice` without `--offline` can now query distributors (CHANGELOG `### Changed`, `86230cc`).
+- **Commit-message note:** `bacf5bc` / `a7ec28f` also carry the KH-585 what_if half (UTF-8 I/O) and the KH-637 `what-if.md` `--target` doc fix without naming them.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-572: diff drops rich findings without a `reference`/`detection_id` and counts only entities, so VD-001 additions and routing-only regressions report "No changes detected"
+
+**Severity:** HIGH (every PR through the Action; also drives the analysis cache's new-run decision)
+**File:** `skills/kicad/scripts/diff_engine.py` (`_get_key` / `_generic_identity`, `_diff_lists`, totals, severity, footprint `lib_id`, EMC severity); `diff_analysis.py` (`has_changes`); `action/format-report.py`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R12-F1, R12-F4, R12-reg-libid). **Fixed:** product v3.0.x-dev `c4516f0` `031272d` `ca4d97f` `463c523` `44b80f0`, CHANGELOG correction `86230cc` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `_diff_lists` dropped items whose key was None (VD-001 carries only `components` / `nets` / `finding_id`); `has_changes` followed an entity-only count, so routing- or statistics-only changes read "No changes detected"; footprints were compared on a `lib_id` corpus PCBs do not carry; EMC severity read flat legacy keys.
+- **Fix:** every finding (schematic, PCB, EMC, thermal) is compared by identity — `finding_id` unless positional (`#N` suffix, `__unnamed_N` net), then content — and footprint swaps are reported; PCB diffs gain a `findings` section; EMC counts come from `summary.by_severity`. `has_changes` is true when any section changed; `total_changes` counts listed items and the moved scalars go to a new `summary.metric_changes`; a higher EMC risk score is an improvement (0 = worst); routing changes are major (new `--analysis-dir` run). The Action PR comment carries the PCB diff and the added/removed rows and escapes `|` and mentions.
+- **Commit-message note:** `ca4d97f` also carries the KH-585 diff half (`--output` UTF-8) without naming it.
+- **Harness note:** handoff ask 5 — `tests/test_diff_analysis.py::test_regression_emc_risk_score_increase` and `::test_no_regressions_on_improvements` flip.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-577: `lifecycle_audit` status consensus takes the last non-unknown source, so a later "active" erases an earlier "obsolete", and explicit discontinuation flags and labels normalise to `unknown`
+
+**Severity:** HIGH (lifecycle default path whenever two distributors disagree; no corpus gate)
+**File:** `skills/kicad/scripts/lifecycle_audit.py` (`audit_component` status merge, `_normalize_status`, the unread `discontinued` flag)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-F3, R14-F6). **Fixed:** product v3.0.x-dev `9e5720f` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the merge kept the last non-unknown source in dict order, so DigiKey Obsolete + Mouser Active read `active`; the `discontinued` flag was written and never read, and "Discontinued at Digi-Key" / "Not Recommended for New Designs" normalised to `unknown`.
+- **Fix:** the worst status any distributor reports wins, whatever the query order; discontinuation flags are read; "Discontinued at DigiKey" maps to discontinued and "Not Recommended for New Designs" to NRND (ruling W5-15).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-578: `lifecycle_audit` finds the project directory through the removed top-level `file` key, so datasheet-extracted temperatures are never used
+
+**Severity:** MEDIUM (default canonical layout `analysis/<run_id>/`; LT-001 fell back to API data silently)
+**File:** `skills/kicad/scripts/lifecycle_audit.py` (`project_dir` from `analysis["file"]`, `read_extraction_temperature`); `kicad_core/project.py` (shared resolver)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-X1). **Fixed:** product v3.0.x-dev `9b1e23e` `1a8d01e` `96c5935` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the schematic envelope no longer carries `file`, so `project_dir` became the JSON's own directory and the extraction lookup read `analysis/<run_id>/datasheets/extracted/`, which never exists; a `null` or non-dict extraction raised. Same root cause as KH-477 (fixed for SPICE only).
+- **Fix:** the project directory comes from the analysis `inputs.source_files` (`kicad_core.project.project_dir_from_analysis`, also used by KH-782); current (v2) extractions supply the ambient operating range, never junction, storage or case ranges; a malformed extraction is skipped with a warning and `analyze_schematic.py --lifecycle` no longer crashes on one; reversed bounds read in order, a Fahrenheit range is not read as Celsius, fractional lead weeks round up. The thermal `file` fallback named in the entry moved with KH-782 (`7416758`).
+- **Commit-message note:** `9b1e23e`..`96c5935` also carry the KH-585 lifecycle UTF-8 lines without naming them.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-579: `lifecycle_audit` `sources_available` order varies with the hash seed, the cold-temperature shortfall has the wrong sign, and LC-006 weeks are floor-divided
+
+**Severity:** MEDIUM (determinism rule violation; lifecycle only)
+**File:** `skills/kicad/scripts/lifecycle_audit.py` (`sources_available`, cold shortfall, LC-006 weeks)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-F10, R14-F13, LC-006 rounding row; se/R1-F8). **Fixed:** order half 3.0.x Wave 2 `c40e135`; rest product v3.0.x-dev `cd83ad9` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the source list was built from a set; the cold shortfall was `design_min - comp_min` (negative) while the hot side was positive; lead days were floor-divided into weeks, so 90 days missed the 12-week threshold.
+- **Fix:** sorted sources (Wave 2); the cold shortfall is positive like the hot side; lead times round up to whole weeks (ruling W5-18); a blank-padded status label counts as no status.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-580: the Deep Review evidence gate certifies numerically different quotes (`55 V` vs `5.5 V`, `-40 C` vs `40 C`, `<` vs `>`, `"..."`) and crashes on non-dict evidence
+
+**Severity:** HIGH (Deep Review gate default path; a wrong quote was stamped `evidence_checked: full`)
+**File:** `skills/kicad/review/scripts/deep_review_gate.py` (`_quote_in_text`, `check_datasheet`, `gate_finding`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-F1, R14-F4, nonpositive-page register item). **Fixed:** product v3.0.x-dev `dbee622` `d11de33` `79e0273` `316bd87` `bc31fc0` `c2a6fa8` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the squash normalisation dropped digits' context, signs, decimal points and comparison operators, and an all-punctuation quote returned True; non-dict evidence or `findings` raised instead of quarantining; a page ≤ 0 checked the whole document.
+- **Fix:** a quote that differs from the page in a number, sign, decimal point, comparison operator or unit letter (`µ`, `Ω`) is quarantined ("55 V" vs "5.5 V", "40 °C" vs "−40 °C", "15 V" vs "±15 V", "10 µA" vs "10 A"); case, spacing, punctuation, Unicode minus/dash spellings and hyphenation stay tolerated. A quote with no letter or digit, a page below 1 or past the end, and non-object evidence are quarantined; a non-array `findings` / `quarantined` or an unreadable analysis JSON is an input error (exit 2). UTF-8 I/O; atomic writes with the umask mode that replace a symlink.
+- **Remainder → KH-807:** a spaced "± 15 V" on the page still certifies a "15 V" quote.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-595: `export_issues` dedups by rule label only, so the first export opens N issues per rule and later runs skip every new instance of an already-open rule
+
+**Severity:** MEDIUM (visible `SKIP` lines; GitHub issue creation)
+**File:** `skills/kicad/scripts/export_issues.py` (skip logic, rule-label dedup key, failed lookup returns `[]`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R12-F7). **Fixed:** product v3.0.x-dev `26f8177` `cca2a4c` `6cb75e0` `f502701` `79be0b6` `c265a2a` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** issues were keyed by the rule label, with no dedup inside a run, and a failed open-issue lookup returned `[]`, so everything was re-filed.
+- **Fix:** issues are matched by finding (ruling W5-13): each body starts with a hidden `finding_id` marker carrying a content key, so renumbered unnamed nets and reordered collision suffixes do not duplicate; claims run in two passes so a finding never takes another present finding's issue; issues without a marker are matched once by exact title; `@mentions` are neutralised; a failed or full-page `gh issue list` exits 1 and exports nothing.
+- **Remainder → KH-812:** 1000+ open issues refuse the export (no paging).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-596: a re-run with `--analysis-dir` mixes a fresh schematic.json with stale pcb/thermal outputs in the new run, and `source_hashes` drops the PCB hash
+
+**Severity:** MEDIUM (documented `--analysis-dir` workflow; cache coherence)
+**File:** `skills/kicad/scripts/analysis_cache.py` (copy-forward, `_OUTPUT_SOURCE_EXT`, stale-skipped `outputs` entries, hashes)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R13-F1). **Fixed:** product v3.0.x-dev `4c8e838` `53a917c` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** derived outputs (thermal / EMC / cross-analysis / SPICE) were copied forward without checking the inputs they were built from, and `source_hashes` kept only the re-run analyzer's source.
+- **Fix:** when a schematic or PCB re-run changes `schematic.json` / `pcb.json`, every derived output built from the old file (from its `inputs.upstream_artifacts`; SPICE counts as built from both) leaves the run, with a stderr `Note:`; a reproducing re-run keeps them; `source_hashes` keep every source behind the run's outputs; an output not carried forward leaves `outputs` (ruling W5-14).
+- **Remainder → KH-805:** `lifecycle.json` is still carried forward after a BOM change, and `gerber.json` is never judged stale.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-600: `lifecycle_audit` provider lookups accept a result whose MPN only shares a 6-character prefix (DigiKey, LCSC) or take the first result with no MPN comparison (Mouser, element14)
+
+**Severity:** HIGH (online lifecycle path; reported a sibling part's status as the BOM part's)
+**File:** `skills/kicad/scripts/lifecycle_audit.py` (DigiKey / LCSC prefix match, Mouser non-exact search, element14 first result)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-F2). **Fixed:** product v3.0.x-dev `31d7871` `2cd2307` `10916ee` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a 6-character prefix or the first result was accepted as the requested part.
+- **Fix:** a result is used only when it is the requested part number, normalised for case, spacing, dashes, slashes, commas and parentheses; ordering marks (`LM358DRG4`, `/NOPB`, `+`, `#PBF`) and `.` stay significant (`AP2112K-3.3` ≠ `AP2112K-33`); Mouser is searched with its exact option; an unlisted part reads unknown (LC-004). LCSC lookups read the current jlcsearch row shape (top-level `mfr`, no `extra` block), so LCSC answers again (ruling W5-3).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-601: LC-005 counts a source that responds with `status: None` as responding but not active, so a part stocked at Mouser (null `LifecycleStatus`) is flagged single-source
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/lifecycle_audit.py` (LC-005 `responded` / active counting)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-X2). **Fixed:** product v3.0.x-dev `c1e9d54` `39d9d81` `ce8f949` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a response with a null status counted toward `responded` but not toward active, so DigiKey Active + Mouser null fired LC-005.
+- **Fix:** LC-005 counts only distributors that state a lifecycle status; a stated but unmapped label still counts as an answer (ruling W5-17 / R29b); an outage still never counts.
+- **Harness note:** handoff ask 4 — `tests/test_kh371_372_lifecycle.py::test_lc005_none_status_not_counted_active` and `::test_lc005_excludes_lcsc_and_names_attempted_vs_responded` change.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-602: `lifecycle_audit` temperature-range parsing reads a negative maximum as positive and starts a decimal minimum mid-number
+
+**Severity:** LOW (rare distributor attribute shapes)
+**File:** `skills/kicad/scripts/lifecycle_audit.py` (temperature-range regex)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-F7). **Fixed:** product v3.0.x-dev `cd83ad9` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the regex did not take a signed decimal token per bound: `-40°C~-10°C` → (-40, 10), `-40.5°C ~ +85.5°C` → (5, 85).
+- **Fix:** each bound parses a signed decimal, including a U+2212 minus.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-603: BOM manager reads `POPULATE=1` as DNP, and a group's DNP state comes from its first member, so the order file depends on symbol file order
+
+**Severity:** HIGH (default `bom_manager` export/order path; POPULATE projects lost every fitted part)
+**File:** `skills/bom/scripts/bom_manager.py` (`is_dnp`, `DNP_FIELDS`, group keys)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R5-F4, sk/R5-F1). **Fixed:** product v3.0.x-dev `92d265c` `da6fa70`, close fix wave `698116c` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** every `DNP_FIELDS` entry, `POPULATE` included, was tested against `("YES","TRUE","1","DNP")` before the POPULATE-specific `"0"` check, so `POPULATE=1` read as DNP.
+- **Fix:** `POPULATE` is a population flag: `1`, `yes`, `true` or empty = fitted; `0`, `no`, `false`, `n`, `DNP`, `DNF`, `do not fit`, `do not populate`, `not fitted`, `unfitted` (whole value, any case) = not fitted, so a part number containing `DNP` stays fitted. `698116c` makes this one list shared with the JLCPCB translator (KH-604).
+- **Group half:** already fixed before this range — at `7131f26` the group key carries the DNP state ("A line never mixes DNP and fitted parts", CHANGELOG kf/A13-F4).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-604: `translate_bom_pnp` ignores a DNP/population column and does not expand `R1-R4` ranges, so JLCPCB assembles DNP parts and drops ranged parts as orphans
+
+**Severity:** HIGH (documented "KiCad/Altium BOM" input to the JLCPCB translator)
+**File:** `skills/bom/scripts/translate_bom_pnp.py` (`_is_dnp`, `DNP_MARKERS`, `_expand_designators`, `_read_bom_designators`, `pnp --bom` orphan filter)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R5-F5, sk/R5-F6; tests sk/R5-F10). **Fixed:** product v3.0.x-dev `92e74d6` `4df221e` `cc4b102` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** DNP was read from the value cell only, and `_expand_designators('R1-R4')` returned `['R1-R4']`, so ranged parts' placements were dropped as orphans with exit 0.
+- **Fix:** rows marked in a `DNP` / `Populate` / `Fitted` column are left out; `R1-R4` ranges (zero-padded and `R0` forms included) expand in the BOM and in the `pnp --bom` designator set; a part number containing `DNP` (`OPT4003DNPRQ1`) is not DNP; whole-token markers and per-row identity tests.
+- **Harness note:** handoff tools note — add `skills/bom/scripts/translate_bom_pnp.py` to `tools/check_refactor.py` `SKILL_CLIS["bom"]` (it now imports the core skills).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-605: distributor sync stores a fuzzy or first-result search hit under the requested MPN as `ok` / `verified`, and the substitute's datasheet URL is written back to the schematic
+
+**Severity:** HIGH (default distributor sync; wrong datasheets reached the user's Datasheet fields and extraction)
+**File:** `skills/{lcsc,digikey,element14}/scripts/provider_*.py` (first-result / `startswith` fallbacks); `skills/datasheets/distributor_core/verify.py`, `sync.py`; `skills/lcsc/scripts/search_lcsc.py` (direct lookup)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R4-F1). **Fixed:** product v3.0.x-dev `c64acde` `4b5f2d6` `be55cb4` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a requested MPN without an exact hit resolved to the provider's first result, the PDF was verified against the returned MPN, recorded `verified`, and stored under the requested MPN.
+- **Fix:** a hit is stored only when it is the requested part (ordering suffixes such as `/NOPB`, `#PBF`, `-TR` allowed; a family match only for parts named by their Value; a distributor part number must match exactly, ruling W5-3); other hits are `not_found` with the closest result named; a downloaded datasheet is verified against the requested MPN. `be55cb4` (in the KH-634 task range, the identity carry from this task) matches `search_lcsc` direct lookups to the requested code. Distributor-offline: new `sync-identity` ×4 (`c64acde`, `4b5f2d6`, `0dff5f0`) incl. the 2N7002 / 2N7002V near-miss.
+- **Remainder → KH-808:** the family match accepts a digit continuation (`LM358` → `LM3580`), and strict mode drops correct base-part datasheets.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-614: re-planning a datasheet extraction after a PDF revision reuses the old task results and stamps them with the new PDF's SHA
+
+**Severity:** HIGH (opt-in extraction pipeline; defeated the only staleness guard)
+**File:** `skills/datasheets/scripts/plan_extraction.py`, `merge_results.py` (`_read_result`, `_classify`, `_initial_extraction`); `references/dispatcher-contract.md`, `dispatch-claude-code.md`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R3-F2). **Fixed:** product v3.0.x-dev `306d227` `28443cc` `9ae577b` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** results were not bound to a PDF; the merger checked status and schema only and stamped the new plan's SHA and a fresh timestamp on old results.
+- **Fix:** task results carry `pdf_sha256` (copied from the plan); `merge_results.py` rejects a result without it or from another PDF revision; re-planning for a changed PDF removes the previous results; `--use-cached-scout` refuses a scout from a different PDF and warns about one with no SHA (ruling W5-10). Results written before this change need one re-dispatch.
+- **Harness note:** handoff ask 2 — `tests/contract/test_merge_results.py` ×5 need `pdf_sha256` in the wrappers and in `tests/fixtures/datasheets/result-regulator-complete.example.json`.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-615: distributor sync marks a PDF transport failure as permanent, one provider's failure blocks every other provider, and LCSC sync never tries the direct lookup
+
+**Severity:** MEDIUM (default distributor sync; missing datasheets, recoverable with `--force`)
+**File:** `skills/datasheets/distributor_core/download.py`, `sync.py` (outcome recording, skip logic, `--force-all`); `provider_digikey.py`; `skills/lcsc/scripts/provider_lcsc.py` (`sync_one_part`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R4-F2, sk/R4-F3, sk/R4-F7). **Fixed:** product v3.0.x-dev `5061fe5` `bc6ce0d` `ea5f639` `9e60522` `9b2106d` `a14af98` `590e5f3` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a download failure without an exception returned False → permanent `failed`; `--force-all` overwrote a prior `ok`; failures carried no provider, so one provider's miss skipped the part at every other provider; LCSC sync had no direct lookup.
+- **Fix:** one outcome helper for serial and parallel sync (`5061fe5`); network failures are recorded `error` with the distributor's message and retried next run (refusals, size / time limits, unwritable files and redirect loops stay permanent); `--force-all` keeps the existing entry and file when the refresh fails; failures are recorded per provider (`failed_providers`, ruling W5-4) and legacy unattributed failures are retried once by each distributor; LCSC sync looks up an unlisted code on LCSC's product page and keeps it only when LCSC answers with that code; element14 goes on to its SKU and keyword searches after a wrong-part hit; DigiKey 429 stops after three retries (KH-492 rider, `ea5f639`). Distributor-offline: `590e5f3` re-freeze; new `sync-second-provider` ×4 (`a14af98`), `sync-force-all` ×4 (`ea5f639`, `9e60522`), `lcsc/sync-lcsc-direct` (`ea5f639`).
+- **Remainder → KH-813:** `--force-all` dropping an entry for a real answer leaves the old PDF on disk.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-616: distributor sync loses worker exceptions under `--parallel`, schedules a repeated MPN twice with colliding `.part` files, and `--json` output is preceded by a stdout progress line
+
+**Severity:** MEDIUM (opt-in `--parallel` / `--json`; multi-row MPNs on the default path)
+**File:** `skills/datasheets/distributor_core/sync.py`, `inputs.py` (`extract_parts`), `download.py`; `provider_element14.py`; the fetch CLIs
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R4-F4, sk/R4-F6, sk/R4-F5). **Fixed:** product v3.0.x-dev `430abd7` `0dff5f0` `c650abf` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `executor.map` results were never consumed; `extract_parts` appended one entry per BOM row; progress went to stdout and the no-work `--json` return printed nothing.
+- **Fix:** a part on several BOM rows is fetched once with every reference recorded (other fields from the first row that has them, ruling W5-5); progress goes to stderr; every `--json` run prints one JSON document, including no-work and error exits; missing or malformed inputs (a refused symlinked `datasheets/`, a missing analyzer JSON) report an error instead of exiting silently (handoff NEW-1) or with a traceback; a null distributor field is a failed part. Distributor-offline: new `sync-error-json` ×4 and `sync-nowork-json` ×4 (`430abd7`).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-617: BOM tracking-CSV re-export deletes manual rows, copies `Validated`/stock/PNs onto a different part matched by reference, and drops extra columns not filled on the first row
+
+**Severity:** HIGH (default `bom_manager` export over an existing tracking CSV; silent user-data loss)
+**File:** `skills/bom/scripts/bom_manager.py` (re-export rows, `load_existing_csv`, first-reference fallback, extra distributor columns)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R5-F8, sk/R5-F2). **Fixed:** product v3.0.x-dev `3e5a037` `52f6be1` `999ef6b` `2daf21d` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** rows came only from the schematic BOM; existing rows were keyed by MPN alone and matched by first reference with no identity check; extra columns were sampled from the first row.
+- **Fix:** re-export keeps manual `Reference` = `--` rows (after the schematic rows); each line matches its old row by part (MPN, or value and footprint without one), so a fitted part and its DNP twin keep their own data; `Validated`, stock and CSV-only distributor numbers carry over only for the same part; distributor columns filled on any row are kept; atomic write keeping the umask mode (ruling W5-1).
+- **Commit-message note:** `3e5a037` also carries the KH-636 doc line (`skills/bom/SKILL.md:267`, do/R3-F2) without naming KH-636.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-620: `datasheet_verify` decoupling counts the X5R/X7R digit (and `max`) as a capacitor quantity, pools caps across every power pin with no input/output split, and orders `actual_caps` by set iteration
+
+**Severity:** MEDIUM (legacy v1.3-shaped caches only)
+**File:** `skills/datasheets/scripts/datasheet_verify.py` (quantity regex, `power_pin_nets`, cap pooling)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R3-F5, sk/R3-F6). **Fixed:** order half 3.0.x Wave 2 `c40e135`; rest product v3.0.x-dev `ac99c1b` `c8a2f62` `4e9c48d` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the quantity regex took any digit run (`X5R` → 5, `max 10mm` → 10); caps were pooled across every power-pin net with no role split or ground check.
+- **Fix:** the X5R/X7R digit, "max" and pad sizes are not counts; "2 x 10uF", "22uFx2" and "10μF" are read. Input and output recommendations are checked on the pins of their role (a `passive` or direction-less power pin takes its role from its function or name); a cap counts only when its other end is on ground (a ground-named net or one of the IC's own ground pins).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-621: `datasheet_verify` v2 pin adapter keeps only the first of grouped pin numbers, uses the domain limit before the per-pin `recommended`, and ignores `is_5v_tolerant`
+
+**Severity:** MEDIUM (current v2 pipeline, default verifier path)
+**File:** `skills/datasheets/scripts/datasheet_verify.py` (v2 pin adapter, `pin_voltage_abs_max_exceeded`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R3-F7, sk/R3-F12). **Fixed:** product v3.0.x-dev `050e963` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the adapter kept `numbers[0]` only, took the domain `voltage_operating_max` before the per-pin `recommended`, and gave a 5 V-tolerant pin the domain abs max.
+- **Fix:** every number of a grouped pin is checked; a pin's own recommended limit comes before its domain's; a 5 V-tolerant pin gets only its own limits, or no check.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-622: typed datasheet cache reader crashes on a `null` or UTF-16 cache file, and rejects a partial `body_mm`
+
+**Severity:** MEDIUM (malformed or partial caches; reached analyzers through unguarded `datasheet_features`)
+**File:** `skills/datasheets/datasheet_types/cache_reader.py` (except tuple); `datasheet_types/base_block.py` (`body_mm`); `datasheet_extract_cache.py`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R3-F8, sk/R3-F9). **Fixed:** product v3.0.x-dev `81a9458` `8743219` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `lookup` caught neither `AttributeError` (a `null` file) nor `UnicodeDecodeError`, and `body_mm` required all three dims.
+- **Fix:** a malformed cache (`null`, not an object, non-UTF-8, UTF-16, symlinked or oversized) is a lookup miss; partial package dimensions are accepted; every cache read is guarded (ruling W5-8). The datasheets SKILL.md `lookup()` line describes staleness and quality.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-624: BOM manager assigns each `Supplier N` slot to one distributor for the whole project, so a symbol whose `Supplier 1` is Mouser has its Mouser PN emitted as DigiKey
+
+**Severity:** HIGH (narrow reach: projects mixing distributors in one Supplier slot)
+**File:** `skills/bom/scripts/bom_manager.py` (`supplier_slots`, project-wide `field_mapping`, `get_canonical`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R5-F3). **Fixed:** product v3.0.x-dev `dc7d201` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the first symbol naming `Supplier 1` fixed the slot's distributor for every symbol.
+- **Fix:** a `Supplier N` part number is filed under the distributor that symbol names in its own `Supplier N`; the `Supplier Part Number N`, `Supplier Part Num N`, `Supplier_N P/N` and `supplier N pn` spellings are recognised.
+- **Remainder → KH-809:** a `Supplier N Part Number` with no `Supplier N` name no longer inherits the project mapping.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-625: `sync_datasheet_urls` maps bare references to URLs across every manifest part, so a replaced part's stale entry fills the new symbol's Datasheet field
+
+**Severity:** MEDIUM (fills blank Datasheet fields only)
+**File:** `skills/bom/scripts/sync_datasheet_urls.py` (`build_ref_url_map`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R5-F7). **Fixed:** product v3.0.x-dev `9cd0dd4`, close fix wave `b9cc241` (docstring residue) (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the URL map was built by bare reference over every manifest part, last wins, with no part-number compare.
+- **Fix:** each symbol is matched by its own part number (MPN, then a distributor or supplier-slot number it carries, then its Value only when it has neither); only `ok` manifest entries are used (ruling W5-2).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-633: datasheet extraction prompts ask for shapes the schemas reject (no-pinout base, scalar MSL, list compliance, `analog_in`, string `alt_functions`) and misstate which fields are required
+
+**Severity:** MEDIUM (opt-in LLM extraction; the docs audit rated it HIGH)
+**File:** `skills/datasheets/prompts/base.md`, `pinout.md`, `regulator.md`; `schemas/regulator.schema.json`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R3-F4; do/R3-F1). **Fixed:** product v3.0.x-dev `1eae5da` `0a574c9` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the prompt examples were written against older shapes than the schemas validate, and the regulator schema had no generic ceramic dielectric token.
+- **Fix:** the prompts ask only for schema-valid shapes: pin types from the KiCad ERC vocabulary (open-drain pins mapped), alternate functions as objects, MSL and compliance as objects, `"pinout": []` in the base task; regulator extractions may say `ceramic` (regulator schema 0.4, mirror updated in `0a574c9`; ruling W5-7).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-646: `distributor_offline._drop_provider_modules` evicts only provider modules loaded from the selected product tree
+
+**Severity:** LOW (dev-only oracle)
+**File:** `tools/distributor_offline.py` (`_drop_provider_modules`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (sk/R6-F4); split from KH-626. **Fixed:** product v3.0.x-dev `e86c654` `bd12f51` `4c49218` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** eviction filtered by origin, so a provider module preloaded from another product tree survived.
+- **Fix:** every product-tree module is evicted by name, the evicted modules are put back on exit, and the selected tree's core path is preferred.
+- **Commit-message note:** `57039bc` in the same task range names sk/R4-F11 only (the sync help-text half), not this entry.
+- **Harness note:** the survey runner `oracle-scripts/dist/repro_dist.py` calls `_drop_provider_modules(product)`, now zero-argument.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-652: `datasheet_extract_cache.py` writes fixed `.tmp` names and joins manifest `file` values without containment
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/datasheet_extract_cache.py` (manifest / index writers, manifest `file` join); `datasheet_verify.py` (reader)
+**Discovered:** 2026-10-25, residue of the product 3.0.x Wave 1 security round (`63f6a20`). **Fixed:** reader half product v3.0.x-dev `740d2b6`, writer half `8743219` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** predictable `*.tmp` siblings (a planted symlink is followed) and an unchecked `Path(extract_dir) / entry["file"]` join.
+- **Fix:** manifest and extraction files are written through unique temp files that keep an existing file's mode; manifest file names are joined as leaf names only; an unreadable manifest reads as empty and is never overwritten (the extraction is still written, the manifest update skipped with a warning); the verifier ignores a manifest entry naming a file outside the folder.
+- **Commit-message note:** `740d2b6` carries the reader half without naming KH-652.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-484: GR-002 compares layer extent SIZES, not offsets — a layer shifted by any amount with the same bounding-box size passes the alignment check
+
+**Severity:** MEDIUM
+**File:** `skills/kicad/scripts/analyze_gerbers.py` (`check_alignment`, extents walker); `methodology_gerbers.md`
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 item 5 (review A-I12); addenda 2026-10-25 (kc/R10-reg-GR002units; Wave 2 inner-plane panels) and 2026-10-29 (five FND locks). **Fixed:** product v3.0.x-dev `0c6a506` `4deebc0`, close fix wave `9da1f46` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `check_alignment` compared the spread of per-layer widths / heights against 5 % / 2 mm in each layer's own units and never compared origins, so a shifted layer passed, an inch layer got a 2-inch tolerance, and panels whose inner planes sit inside the panel extent warned.
+- **Fix:** GR-002 reports copper outside the board outline: a copper layer past the Edge.Cuts extent by more than max(2 mm, 5 % of that side) is named with its distance. Extents are millimetres for every file (`alignment.layer_extents` now mm for inch files, as the schema states); arcs and full circles count their full sweep; several outline files together bound the board; a one-axis Edge.Cuts file is not the outline (`9da1f46`); drill files are not compared (ruling W5-21, kc/R10-F5). Budget (standard): GR-002 −98 on 58 modern units and −85 legacy, `aligned` F → T 107/300, T → F 0, `board_dimensions` 11/300.
+- **Addendum (2026-10-29 FND locks):** the five locks named in the ISSUES addendum (`FND-00001817-AST-01`, `FND-00001451-AST-03`, `FND-00001455-AST-03`, `FND-00001488-AST-03`, `FND-00001576-AST-01`; handoff: "the 5-6 FND units") are expected to flip back to `aligned` True.
+- **Remainder → KH-802:** outline choice (a larger stale outline can swallow real outside copper), `compute_board_dimensions` takes the first Edge.Cuts file, G70 files without `%MO`, `%FST` / incremental extents.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-780: the generic-transistor audit ignores datasheets recorded in the sync manifest's `parts`
+
+**Severity:** LOW (corpus: 7 manifests, expected 0 units to move)
+**File:** `skills/kicad/scripts/schematic/audits.py:742-755` at `7131f26` (`has_datasheet`)
+**Discovered:** 2026-10-29, product 3.0.x Wave 5 distributor survey (latent; slug KH-new-audit-manifest); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `919ffb2` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `has_datasheet` read only the top-level and `components` shapes of `datasheets/manifest.json`, not the `parts` map the sync tools write, so a downloaded datasheet was never seen.
+- **Fix:** a part with an `ok` entry under `parts[mpn]` is reported as having a datasheet in `datasheets/`; the older shapes still read. Gated: standard class (audit message text on units with an `ok` entry; E = 0).
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-781: datasheet verification checks a multi-unit IC once per symbol unit, so its non-power units raise false findings
+
+**Severity:** LOW (latent until KH-606: the verifier never found cache-manager caches)
+**File:** `skills/datasheets/scripts/datasheet_verify.py` (`run_datasheet_verification`)
+**Discovered:** 2026-10-29, product 3.0.x Wave 5 datasheets survey (slug KH-new-multiunit-verify); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `740d2b6` `5728851` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** verifiers ran per symbol unit; with the KH-606 cache fix alone the LM358 on ikajdan/stm32-buck-converter raised 4 false `decoupling_insufficient` errors from its non-power unit.
+- **Fix:** units of one physical part are merged per reference before the verifiers run; symlinked caches are refused.
+- **Commit-message note:** `740d2b6` omits the slug.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-782: analyzers read datasheet extractions from a shared temporary directory, or from `datasheets/extracted` beside the input JSON or the project's parent folder
+
+**Severity:** MEDIUM (Security: a planted extraction in a shared or parent directory reached analysis output)
+**File:** `skills/datasheets/scripts/datasheet_extract_cache.py` (`resolve_extract_dir`, fallback `$TMPDIR/kicad-happy/datasheets/extracted`), `datasheet_features.py`; `analyze_thermal.py`; `lifecycle_audit.py`; `skills/emc/scripts/emc_rules.py`; `skills/spice/scripts/spice_model_cache.py`; `datasheet_verify.py` (`_resolve_extract_dir`, parent-folder attempt, manifest read); `kicad_core/project.py`
+**Discovered:** 2026-10-29, product 3.0.x Wave 5 datasheets survey § 9, widened by the lifecycle survey (slug KH-new-tmp-extract-cache); the verifier half found by the whole-range close review (Important I1). Assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `b212241` `7416758` `84cc723` `02550ea`, close fix wave `b5649f7` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** with no project named, `resolve_extract_dir` fell back to one shared `$TMPDIR` cache; thermal and lifecycle looked beside the input JSON (a JSON in `/tmp` read `/tmp/datasheets/extracted`); the schematic verifier also tried the project's parent folder and read the manifest without the symlink refusal and size cap.
+- **Fix:** the project comes from the analysis `inputs.source_files` (a relative path only when that schematic exists from the cwd); with none there is no extraction cache. Thermal finds the project's cache from an `analysis/<run>/schematic.json`; the SPICE datasheet-spec fallback reads only the named project; the verifier reads only the project's own `datasheets/extracted` and its `manifest.json` with the symlink refusal and size cap (`b5649f7`). CHANGELOG `### Security`.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-783: `build_review_plan.py` points the design_context task at a flat `analysis/schematic.json` that the run layout does not have
+
+**Severity:** LOW
+**File:** `skills/kicad/review/scripts/build_review_plan.py`, `deep_review_gate.py` (`resolve_run_dir`, manifest read)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (kc/R14-F9), carried as a new KH by the product 3.0.x Wave 5 plan (slug KH-new-review-plan-run-dir); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `bbc2973` `d11de33` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the plan named `analysis/schematic.json`, which the `analysis/<run_id>/` layout never writes.
+- **Fix:** the design_context task points at the current run's `schematic.json` (from `analysis/manifest.json`, confined to a run folder inside `analysis/`); `--output` is written in one atomic step with the umask mode; the gate reads an unreadable manifest as a flat layout instead of crashing.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-784: Gerber completeness ignores inner copper a job file implies and misreads KiCad 9.0.0-9.0.4 job inner-layer numbering
+
+**Severity:** MEDIUM (missing inner layers unreported; complete KiCad 9.0.0-9.0.4 sets reported missing `In4.Cu` / `In6.Cu`)
+**File:** `skills/kicad/scripts/analyze_gerbers.py` (`check_completeness`, `_build_gerber_findings`, `identify_layer_type`)
+**Discovered:** 2026-10-25, external audit round 1 (kf/A12-F1), carried as a new KH by the product 3.0.x Wave 5 plan with the KiCad 9.0.0-9.0.4 job-id bug (fixed upstream in KiCad `9725ac2215`, first tag 9.0.5) (slug KH-new-gerber-completeness); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `e67a1c2` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the job branch checked only listed files, KiCad 9.0.0-9.0.4 wrote `In1.Cu` as `Copper,L5,Inr`, a missing inner layer was GR-001 info, and bare `.g<n>` files were not numbered by KiCad version.
+- **Fix:** the job's layer count implies inner copper when the job lists both outer sides; a listed file that is present names its own layer; a missing inner copper layer is a warning; a bare `.g<n>` from KiCad 8 or older is numbered from its layer id (ruling W5-20). Budget (standard): `completeness.complete` −5 / +46, GR-001 warning +12 / info −107, fab gate FAIL +5 / −46.
+- **Remainder → KH-803:** KiCad 8.99 / 9.99 nightlies carry the same job-id bug and are not remapped.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-785: the Gerber X2 reader misses `%TO.P` pad components, `G04 #@!` structured-comment attributes, `\uXXXX` escapes and non-round aperture shapes
+
+**Severity:** MEDIUM (`component_analysis` / `net_analysis` / `pad_summary` empty or short on KiCad Gerbers)
+**File:** `skills/kicad/scripts/analyze_gerbers.py` (`parse_gerber`, `_gerber_unescape`); `references/gerber-parsing.md`
+**Discovered:** 2026-10-25, external audit round 1 (kf/A12-F2..F5), carried as a new KH by the product 3.0.x Wave 5 plan (slug KH-new-gerber-x2); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `9ee59ca` `c3be297` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** components were registered only from `%TO.C` (KiCad writes `%TO.P` with the reference on pads), structured-comment attributes (KiCad 5.1, X2 off) were ignored, escapes were not decoded, only some aperture shapes counted, `%TD.AperFunction*%` did not clear, and `%TO.N,*%` counted as a net.
+- **Fix:** all of the above as KiCad writes them; copper pad references set a component side only for single-sided parts (`c3be297`). Oracle X1 == X2 on 39/39 kicad-cli boards. Budget: standard `component_analysis` 59 + 38, `net_analysis` 28 + 27, `pad_summary` 47 + 37 of 150 + 150, `x2_component_count`; full-chain `connectivity` 24/150 modern.
+- **Remainder → KH-801:** back-mounted THT parts read as front.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-786: Gerber-format drill files, `.xln` / `.nc` files and Excellon route slots are not counted as drills, and a directory named `*.drl` crashes the analyzer
+
+**Severity:** MEDIUM (false GR-003 "no drill" warnings on Gerber-drill exports; KeyError crash)
+**File:** `skills/kicad/scripts/analyze_gerbers.py` (discovery, `parse_drill`, new `_gerber_drill`)
+**Discovered:** 2026-10-25, external audit round 1 (kf/A12-F6, kc/R10-F6, kc/R10-reg-drillext, kc/R10-F11), carried as a new KH by the product 3.0.x Wave 5 plan (slug KH-new-gerber-drill); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `59f9184` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a Gerber file with a `Plated` / `NonPlated` `FileFunction` stayed a layer, `.xln` / `.nc` were not discovered, route-mode slots were skipped, and a non-file `*.drl` candidate reached `coordinate_range`.
+- **Fix:** those files are drills; a route slot is one hole, as in KiCad's drill report; a Gerber drill file's reference designators stay out of `component_analysis`; a directory or dangling link named `*.drl` is skipped with a diagnostic (rulings W5-22, W5-23). Oracle `total_holes` = KiCad drill report on 39/39. Budget (standard): GR-003 −60 Gerber-drill dirs, −23 `.xln` / `.nc` dirs, `total_holes` on ≈ 20 % of units, `complete` +32, `component_analysis` −9.
+- **Commit-message note:** `59f9184` also carries the KH-592 route-slot half and the KH-585 gerber half without naming them; the KH-592 residue stays on that entry.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-787: an empty return-path result is dropped from the PCB output, so EMC GP-001 asks for `--full` on boards that ran it (GitHub #60.1)
+
+**Severity:** LOW (wrong advice; no missed finding)
+**File:** `skills/kicad/scripts/pcb/presentation.py:343-344` at `7131f26` (`if return_path:`); `skills/emc/scripts/emc_rules.py:436-450` (absence read as "not run"); `pcb/pipeline.py:439`
+**Discovered:** 2026-10-30, GitHub #60 item 1 (PGIRang, filed against v2.3.2; verified at v2.3.2 and `7131f26`; sibling of KH-434) (slug KH-new-returnpath-empty); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `bd0a73b` `5457d30` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `[]` is falsy, so a checked board with no gaps lost the `return_path_continuity` key and EMC printed the KH-278 "run with --full" message. Corpus at `40b8ff3`: 1,103 / 24,459 `--full` boards with fills but no key; 6,056 / 42,388 EMC outputs carry the message.
+- **Fix:** the key is kept when the check ran (`[]` = no gaps); GP-001 says whether `--full` did not run or the board has no ground / power plane fill to check against. Budget (full-chain): `return_path_continuity: []` added on 140/150 of the class in a 290-board A/B; the GP-001 "data not available" info removed on the same boards (class `emc-gp001-removed-count`, a `findings` length on every emc.json, GP-001 only by the product's measure, 140 — harness to confirm the count) and reworded on fill-less ones (50); rollups.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-788: `--gp001-debug` writes `gp001_debug.json` next to the board instead of with the other outputs (GitHub #60.4)
+
+**Severity:** LOW (corpus-neutral)
+**File:** `skills/kicad/scripts/pcb/pipeline.py:630-631` at `7131f26`; `analyze_pcb.py`
+**Discovered:** 2026-10-30, GitHub #60 item 4 (PGIRang; reporter's line 7417 = 7416 at v2.3.2) (slug KH-new-gp001-debug-path); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `2c845de`, close fix wave `a6e71da` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the debug path was the analysis dir or the board's directory, ignoring `--output`.
+- **Fix:** `gp001_debug.json` goes into `--analysis-dir` when given (`a6e71da`), else beside `--output`, else the board's directory, through an atomic write that refuses a symlinked target.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-789: USB connectors are read as Type-C by a plain substring of value / footprint / lib_id, and CC checks run on connectors without CC pins (GitHub #61.2)
+
+**Severity:** MEDIUM (false Type-C CC findings on non-Type-C connectors)
+**File:** `skills/kicad/scripts/schematic/system_analyses.py:2198-2203` at `7131f26` (`USB_C` / `USBC` / `TYPE-C` / `TYPE_C` / `TYPEC` substring test)
+**Discovered:** 2026-10-30, GitHub #61 item 2 (PGIRang; the trigger is lib_id `Fixture:USB_CONN`, not the reporter's `USB_B` value) (slug KH-new-typec-detect); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `aeca1b0` `e3333d7` `472a9b3`, CHANGELOG correction `86230cc` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a substring match (`USB_CON…`, `USBCON…`, `USB_CAN_SW`, `USB_COMBINED`; ~16 units / ~8 repos) made a connector Type-C, and CC pins were never required. Corpus at `40b8ff3`: 4,156 USB connectors, 2,317 `is_type_c`, 59 (28 repos) without a CC pin.
+- **Fix:** Type-C by a name token or CC pins (one token rule); CC checks only on connectors with CC pins; an unreadable CC resistor value is info, not a missing pull-down; every spec Rp within tolerance counts (56k/36k ±20 %, 22k/12k/10k ±5 %; 4.7k from 4465 Ω to under 4800 Ω); a 4.8k-5.6k Rd is never Rp; a DNP resistor is absent; a plug's single CC pin is one side. Budget (standard): `usb_compliance.connectors[]` incl. kind `type`, UC-003 +55 / 27 units, −87 / 36 units on a 392-unit A/B, rollups.
+- **Remainder → KH-804:** CC resistor reader gaps and the duplicated Rp table.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
+## 2026-10-31 — KH-790: a switching-loop area is reported as 0 mm² when the part centres are collinear, and SW-003 treats it as acceptable (GitHub #62)
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/pcb/assembly.py:707-764` at `7131f26` (shoelace over cap / IC / inductor centres); `skills/emc/scripts/emc_rules.py:1864-1868`, `:1925-1964` (SW-003 < 25 mm² acceptable, fallback); new `kicad_core/hotloop.py`
+**Discovered:** 2026-10-30, GitHub #62 (PGIRang) (slug KH-new-loop-degenerate); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `66c49c2` `d6c6143` (3.0.x Wave 5, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** three collinear centres give a zero shoelace area, which SW-003 read as a small, acceptable loop.
+- **Fix:** a degenerate estimate is `area_mm2: null` with `estimate: "degenerate"`, and SW-003 reports info "not estimated"; `d6c6143` gives that site a literal detector and rule_id. Budget (full-chain): SW-003 info +10 on 196 units (corpus census 10 on 9 units / 7 repos), 0 SW-003 lost or changed.
+- **Harness note:** handoff ask 6 — `tests/test_switching_loop.py::test_end_to_end_corpus_output` must accept `area_mm2: null` with `estimate: "degenerate"`; add a unit pin for the #62 case.
+- **Remainder → KH-796:** the area is a centre-triangle proxy, not the hot loop.
+- **Verification:** Product-side: `tools/tests` 2,108 OK (3 skipped) at `698116c`; `check_refactor quick` vs `7131f26` OK on all 8 checks with the union budget (`budget-wave5-union.json`, 43 classes) and the union text-allow list; `--schema` x6 byte-identical to `7131f26` (handoff-wave5.md, close-evidence-698116c.md). Harness: 3.0.x Wave 5 gate `40b8ff3`..`698116c` (2026-10-31; candidate pushed, origin/v3.0.x-dev = `698116c`): FULL standard budgeted clean (149,633 compared, 5,078 moved, 175,794 deltas, 0 residuals, 0 candidate failures); full-chain GATE PASS (21,409 compared, 1,434 moved, 0 residuals); spice-offline identical 8,830/8,830; text oracle 916 / 54 allowed; `--schema` x6 identical; distributor-offline 62 runs, differences exactly the 42 declared re-frozen + new runs; tiers vs product_698116c 3,562 / 0 / 8 / 4 — see status.md.
+
 ## 2026-10-29 — KH-427: `design_rule_compliance` applies the `.kicad_pro` global min drill without honouring an UNCONDITIONAL `.kicad_dru` `hole_size` override — reports a violation native DRC does not
 
 **Severity:** MEDIUM (false design-rule violation on boards that relax/tighten drills via `.kicad_dru`; the KH-383/412 pad-drill work made the drill check more visible)
