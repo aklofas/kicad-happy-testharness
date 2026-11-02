@@ -11,6 +11,226 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-01 — TH-102: the fixture set had no multi-unit schematic, so a placed symbol with unit > 1 could not be pinned by product tests
+
+**Severity:** LOW (coverage gap)
+**File:** `tests/fixtures/` (harness fixture set the product's `check_refactor` and `tools/tests` read at the CI pin)
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 Task 5 (`test_model_records` could not pin the multi-unit case; ruling R2 substituted a shared-refdes multi-sheet fixture); asked in the Wave 7 close handoff. Filed and fixed by the harness the same day.
+
+- **Root cause:** no fixture placed a symbol with `(unit N>1)`, defined a lib symbol with several units, or carried a legacy `U N>1` line.
+- **Fix:** `tests/fixtures/multi-unit/dual_opamp.kicad_sch` (KiCad 9 format, self-authored, no corpus content): U1 (LM358, SOIC-8) placed as unit 1 (follower `SIG_IN` → `BUF_OUT`), unit 2 (non-inverting stage with R1 / R2 on `FB`, output `AMP_OUT`) and unit 3 (`+5V` / `GND` supply pins); nets join through global labels on the pin ends. `tests/test_multi_unit_fixture.py` pins the five component records (U1 ×3, R1, R2), `total_components` 3, and every pin's net. `check_refactor`'s `discover_fixtures` picks the file up, so the product's fixture snapshot gains its artefacts at the next pin bump (re-snapshot the baseline then).
+- **Verification:** `tests/test_multi_unit_fixture.py` 2 passed against product_988d576, product_c0a8a62 and product_07b7fb1; tiers vs product_988d576 3,557 / 0 / 8 / 4.
+
+## 2026-11-01 — KH-659: `ThermalSkipped.reason` schema description did not list `no_operating_current`
+
+**Severity:** LOW (description text only; outputs stayed schema-valid, the field is not an enum)
+**File:** `skills/kicad/scripts/envelopes/thermal.py:80`, `skills/kicad/scripts/analyze_thermal.py` (skip-reason docstring)
+**Discovered:** 2026-10-25, product 3.0.x Wave 2 task-4 review (handoff §Asks 4h). **Fixed:** product v3.0.x-dev `a909f9a` `41d385e` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** KH-568 added the skip reason `no_operating_current` without updating the `reason` description or the docstring.
+- **Fix:** the `--schema` description lists `no_operating_current` (`a909f9a`); the docstring lists all five reasons (`41d385e`). Thermal `--schema` md5 `b03911dae84fba29cff456cdc92e2000`; `help__analyze_thermal` / `neg__analyze_thermal__schema-noinput` are in the 19-artefact text allowance.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-829: cache, capability-sidecar, distributor-manifest, SPICE-model-manifest and `output-schema.md` files were read and written in the locale's default encoding
+
+**Severity:** LOW (non-UTF-8 locales only; a hand-edited non-ASCII manifest crashed the run)
+**File:** `skills/kicad/scripts/analysis_cache.py`, `capability_mode.py`, `gen_output_schema_md.py`; `skills/datasheets/distributor_core/manifest.py`; `skills/spice/scripts/spice_model_cache.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-utf8-arch-registers); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `d74d372` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `open()` / `read_text()` / `write_text()` at the eight register sites took no `encoding=`.
+- **Fix:** `encoding="utf-8"` at each site. Output-changing only on a non-UTF-8 default locale (none in the gate). The remaining ~45 product sites are KH-849.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-830: `NetlistQueries` carried fifteen query methods nothing called, and the schematic pipeline helpers took `analysis_dir` / `bom` arguments they never read
+
+**Severity:** LOW (dead code)
+**File:** `skills/kicad/scripts/netlist_queries.py`, `schematic/pipeline.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-netlist-queries-dead-surface); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `b4dc0fb` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** no product caller; the per-net component and type indexes were read only by those methods.
+- **Fix:** the methods, their indexes and the unread parameters are deleted.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-831: core modules carried helpers nothing called — `hash_source_files`, `estimate_cap_esl`, `get_xy`, the module-level `get_two_pin_nets`, `count_by_severity`
+
+**Severity:** LOW (dead code)
+**File:** `analysis_cache.py`, `kicad_core/{model,netquery,passives,sexp}.py`, `finding_schema.py`, `output_filters.py`, `project_config.py`, the analyzer CLIs
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-core-dead-helpers); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `8b7312a` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** no product caller (the `AnalysisContext.get_two_pin_nets` method is the live one and stays).
+- **Fix:** deleted; the full list is in the commit and the CHANGELOG "Dead code removed" bullet.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-832: what-if, thermal and cross-analysis took inputs nothing read
+
+**Severity:** LOW (dead code)
+**File:** `skills/kicad/scripts/what_if.py`, `analyze_thermal.py`, `cross_analysis.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-what-if-unread-inputs); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `363fab2` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the parameters were accepted and passed but never read.
+- **Fix:** the unread inputs are dropped from the signatures and call sites.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-833: the distributor provider adapters carried contract members nothing read
+
+**Severity:** LOW (dead code)
+**File:** `skills/{digikey,element14,lcsc,mouser}/scripts/provider_*.py`, `skills/datasheets/distributor_core/sync.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-provider-contract-dead-members); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `4917a04` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** no reader in `distributor_core` or the sync / fetch CLIs.
+- **Fix:** deleted from the adapters and the contract.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-834: EMC kept its own severity map beside the core normaliser
+
+**Severity:** LOW (duplicate)
+**File:** `skills/emc/scripts/emc_rules.py` (`_EMC_SEVERITY_MAP`, `_normalize_severity`), `analyze_emc.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-emc-severity-map-dup); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `42f04a0` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a second copy of the severity mapping the core normaliser already does.
+- **Fix:** EMC findings use the core normaliser; the map and wrapper are gone (constants registry CONST-460 hash moved with it).
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-835: `datasheet_extract_cache.validate_v2_extraction` and its `_V2_STRUCTURE` table had no caller
+
+**Severity:** LOW (dead code)
+**File:** `skills/datasheets/scripts/datasheet_extract_cache.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-datasheet-v2-validator-dead); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `7654866` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** no product caller.
+- **Fix:** deleted.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-836: `spice_models.ELEMENT_PREFIX` and `DEFAULT_MODEL` were never read
+
+**Severity:** LOW (dead code)
+**File:** `skills/spice/scripts/spice_models.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-spice-models-dead-tables); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `7654866` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** no product reader.
+- **Fix:** deleted.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-837: the datasheet round-trip smoke script carried a check that could never run
+
+**Severity:** LOW (dead code)
+**File:** `skills/datasheets/scripts/_smoke_v14_roundtrip.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-smoke-v14-unreachable-check); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `7654866` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the check sat on a path the script never reaches.
+- **Fix:** deleted.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-838: the domain and validation detectors each had their own named-pin net lookup
+
+**Severity:** LOW (duplicate)
+**File:** `skills/kicad/scripts/detector_helpers.py`, `domain_detectors.py`, `validation_detectors.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-named-pin-net-dup); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `950f9db` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the same lookup was written twice.
+- **Fix:** one helper in `detector_helpers.py`; both families call it.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-839: the two schematic readers each annotated `pin_nets` with their own copy
+
+**Severity:** LOW (duplicate)
+**File:** `skills/kicad/scripts/schematic/presentation.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-pin-nets-annotation-dup); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `7a15392` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the modern and legacy readers carried the same annotation loop.
+- **Fix:** one helper used by both.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-840: four S-expression readers decoded properties with their own loops
+
+**Severity:** LOW (duplicate)
+**File:** `skills/kicad/scripts/kicad_core/fields.py`, `kicad_core/sexp.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-sexp-property-decode-dup); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `7a0ae1d` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the same property decode was written four times.
+- **Fix:** one property-decode iterator behind the four readers.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-841: `lifecycle_audit --analysis-dir` wrote its output with its own writer instead of the shared derived writer
+
+**Severity:** LOW (duplicate)
+**File:** `skills/kicad/scripts/lifecycle_audit.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-lifecycle-derived-writer); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `7306ea6` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the CLI did not use `output_io.write_derived_output`.
+- **Fix:** it writes through the shared derived writer.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-842: the analysis cache, capability sidecar, detection schema and analysis context carried members nothing called
+
+**Severity:** LOW (dead code)
+**File:** `skills/kicad/scripts/analysis_cache.py` (`ensure_analysis_dir`, `sources_changed`, `unpin_run`), `capability_mode.py` (`get_or_create_run_id`), `detection_schema.py` (`get_identity_and_value_fields`), `kicad_types.py` (`AnalysisContext.generator_version`), `schematic/pipeline.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-dead-cache-context-helpers); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `a04e2a5` `0709edb` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** no product caller or reader.
+- **Fix:** deleted. Harness `reference/product_api/dispositions.json` retires the inventoried ones (round `v30x-w7`).
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-843: the analysis cache's run-folder generator was called `generate_run_id`, the same word as the provenance `run_id`
+
+**Severity:** LOW (naming)
+**File:** `skills/kicad/scripts/analysis_cache.py`, `run_id.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-run-folder-name); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `a04e2a5` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** one name for two different identifiers (a folder name and the provenance id).
+- **Fix:** renamed `generate_run_folder_name`. Slug named in the CHANGELOG only.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-844: the datasheet verifier's private helpers were named for format versions, not for what they read
+
+**Severity:** LOW (naming)
+**File:** `skills/datasheets/scripts/datasheet_verify.py`, `skills/kicad/scripts/lookup_detectors.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-verifier-helper-names); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `490bd82` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `_is_v2_format`, `_v2_domain_voltage_max`, `_v2_domain_voltage_op_max`, `_v1_view` encoded the extraction-format history.
+- **Fix:** renamed `_is_sectioned_format`, `_domain_absolute_voltage_max`, `_domain_operating_voltage_max`, `_legacy_verifier_view`.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-845: the circuit detectors reached the netlist through a `_get_net_components` wrapper
+
+**Severity:** LOW (indirection)
+**File:** `skills/kicad/scripts/signal_detectors.py`, `domain_detectors.py`, `netlist_queries.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-detector-family-layout); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `2cc1a36` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a one-line wrapper over `ctx.nq.components_on_net`.
+- **Fix:** the detectors call `ctx.nq.components_on_net` directly and the wrapper is gone. The slug is named in the CHANGELOG only; the family relocation itself is deferred (KH-855).
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-846: the lifecycle engine lived in its CLI, so the schematic `--lifecycle` run imported the CLI module
+
+**Severity:** LOW (layout)
+**File:** `skills/kicad/scripts/lifecycle_audit.py` → `lifecycle_engine.py`, `schematic/pipeline.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-lifecycle-engine-owner); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `c199e3a` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `lifecycle_audit.py` held the distributor queries, extraction temperature reads, `audit_component` and `audit_bom` as well as `main()`.
+- **Fix:** the engine is `lifecycle_engine.py`; `lifecycle_audit.py` is the CLI; the pipeline imports the engine. Harness: scan coverage and the constants registry re-keyed (17 constants), dispositions recorded. The LC-007 skip text still names the CLI: KH-853.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-847: the PCB `--schema` described `board_thickness_mm` and `via_analysis` wrongly
+
+**Severity:** LOW (description text)
+**File:** `skills/kicad/scripts/envelopes/pcb.py`, `skills/kicad/references/output-schema.md`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-pcb-schema-thickness-via-analysis); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `a909f9a` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the descriptions did not match the emitted values (the thickness default and when the key appears; two missing `via_analysis` sub-keys).
+- **Fix:** `board_thickness_mm` is described as the thickness the current-capacity check used (1.6 when the board gives none, present only with current-capacity findings); `via_analysis` lists `via_in_pad` and `fanout_patterns`. The reader gap behind the 1.6 default is KH-851.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
+## 2026-11-01 — KH-848: `summarize_findings.py --help` listed `--confidence` / `--evidence-source` values the CLI rejects
+
+**Severity:** LOW (help text)
+**File:** `skills/kicad/scripts/summarize_findings.py`
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-summarize-help-vocabulary); assigned FIXED-direct, never open. **Fixed:** product v3.0.x-dev `a909f9a` (3.0.x Wave 7, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the help named `simulation`, `user_config` and `lookup`, which the argument parser does not accept.
+- **Fix:** the help lists exactly the accepted values.
+- **Verification:** Product-side: `tools/tests` 2,126 OK (0 skipped) at `988d576`; `check_refactor quick` OK vs the `c0a8a62` baseline with the empty budget and the 19-artefact text allowance (`text-allow-step8.json`); `--schema` ×6 description-only (six md5s in the close handoff). Harness: 3.0.x Wave 7 gate `c0a8a62`..`988d576`, structural, empty budget: FULL standard GATE PASS (strict-field 149,633 / 149,633 identical, 0 deltas, census exact, 10 ledgered skips, 0 candidate failures); full-chain GATE PASS (8 jobs, 600 s cap; 21,409 / 21,409 identical, 0 deltas, 3 ledgered skips, 0 candidate failures); spice-offline identical 8,830 / 8,830; text oracle 916 artefacts, exactly the 19 allowed differ; `--schema` ×6 = the handoff's md5s, identical without description strings; distributor-offline 67 runs / 310 artefacts, 0 differ, existing frozen runs unchanged; tiers vs product_988d576 3,557 / 0 / 8 / 4 — see status.md.
+
 ## 2026-11-01 — KH-636: documented commands and workflows fail or destroy user data — `--recursive` sync flag rejected, opencode config corrupted, manual BOM rows deleted, nonexistent Action outputs, repo-relative Deep Review paths, wrong flag precedence
 
 **Severity:** HIGH (user-facing install and skill commands; two of them destroyed user data: the opencode config and manual BOM rows)
