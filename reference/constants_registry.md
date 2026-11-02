@@ -2,7 +2,7 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-01T17:05:20.634111+00:00
+**Last scan:** 2026-11-02T01:28:05.429565+00:00
 
 ## Summary
 
@@ -378,6 +378,16 @@
 | CONST-419 | `status_counts` | heuristic_threshold | 4 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-420 | `_TOLERANCES` | physics | 7 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-421 | `_intra_pair_tolerance` | physics | 7 | unverified | 0.1 | 0.0 | **low** (0.1) |
+
+## skills/kicad/scripts/design_intent.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-735 | `_IPC_CONTEXT_PATTERN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-736 | `VALID_TARGET_MARKETS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-028 | `resolve_design_intent:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-029 | `resolve_design_intent:kw2` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-740 | `defaults` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/detection_schema.py
 
@@ -815,7 +825,7 @@
 |---|---|---|---|---|---|---|---|
 | CONST-856 | `_AMBIGUOUS_RECORD_CAP` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 
-## skills/kicad/scripts/lifecycle_audit.py
+## skills/kicad/scripts/lifecycle_engine.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
@@ -988,11 +998,11 @@
 | CONST-027 | `VALID_DIFF_THRESHOLDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-734 | `DEFAULT_CONFIG` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-754 | `checks` | unknown | 8 | unverified | 0.0 | 0.0 | **low** (0.0) |
-| CONST-735 | `_IPC_CONTEXT_PATTERN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-736 | `VALID_TARGET_MARKETS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-028 | `resolve_design_intent:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-029 | `resolve_design_intent:kw2` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-740 | `defaults` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+
+## skills/kicad/scripts/risk_summary.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
 | CONST-741 | `SEVERITY_WEIGHTS` | datasheet_lookup | 3 | stale | 0.7 | 0.0 | **critical** (0.7) |
 | CONST-742 | `CONFIDENCE_WEIGHTS` | datasheet_lookup | 3 | unverified | 0.7 | 0.2 | **critical** (0.7) |
 | CONST-743 | `RESPIN_CATEGORIES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |

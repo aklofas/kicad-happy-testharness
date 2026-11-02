@@ -2,7 +2,7 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-11-01T17:05:23.628404+00:00
+**Last scan:** 2026-11-02T01:28:30.527405+00:00
 
 ## Summary
 
@@ -70,7 +70,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-094 | `estimate_switching_emissions` | V_n = V_peak × 2/(nπ) × sin(nπD) (trapezoidal harmonic envelope) | emc_radiation | critical | **verified** |
 | EQ-095 | `check_switching_node_area` | A_track = Σ(width_mm × length_mm) (switching node copper area) | emc_radiation | medium | **verified** |
 | EQ-096 | `check_pdn_distributed` | I_reflected = P_downstream / V_upstream (reflected transient current) | impedance | medium | **verified** |
-| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm < 15mm AND | unknown | medium | **stale** |
+| EQ-106 | `check_inductor_leakage` | Proximity gate — emit ML-001 when d_mm <= 15mm. | unknown | medium | **stale** |
 
 ## skills/kicad/scripts/kicad_core/passives.py
 
