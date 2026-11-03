@@ -87,11 +87,11 @@ def test_kh413_fixture_output_unchanged():
 def test_nloy_touch_keyboard_only_deterministic_under_30s():
     """Uses --only-deterministic, not --full: KH-420's regression and its
     "10 s -> 110 s" symptom (ISSUES.md) are both measured in this mode.
-    --full on this board has a separate, pre-existing ~80 s
+    --full on this board also paid a separate ~80-100 s
     _point_in_polygon cost (analyze_return_path_continuity /
-    pcb_connectivity.build_connectivity_graph) that is not KH-420 and
-    exists at v2.3.0 too, so an absolute --full bound can't guard this
-    regression.
+    pcb_connectivity.build_connectivity_graph) that is not KH-420; the
+    zone-fill strip index (PR #65) took it under 10 s, but a --full bound
+    would still measure that index rather than this regression.
     """
     if not NLOY.exists():
         pytest.skip("NLoy corpus board absent (corpus tier)")

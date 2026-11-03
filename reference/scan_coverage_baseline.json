@@ -1,6 +1,6 @@
 {
  "snapshot_version": 2,
- "product_sha": "647bc85ceee9279ec67a3971a45c1971ceadb912",
+ "product_sha": "0efc01242850cf4a1be561d762f0edf10ab19f3a",
  "files": [
   "skills/bom/scripts/_core_path.py",
   "skills/bom/scripts/bom_fields.py",
@@ -180,6 +180,7 @@
   "detect_tj_exceeds_max|TJ-001": 1,
   "detect_vcc_outside_recommended|OV-001": 2,
   "detect_wrong_signal_type|PM-001": 1,
+  "emc_ground_plane|GP-001": 1,
   "emc_switching_emc|SW-003": 1,
   "format_version_gate|FV-001": 1,
   "validate_can_bus|PR-003": 1,
@@ -305,7 +306,8 @@
   "EQ-105": "skills/emc/scripts/emc_formulas.py",
   "EQ-106": "skills/emc/scripts/emc_rules.py",
   "EQ-107": "skills/kicad/scripts/kicad_core/values.py",
-  "EQ-108": "skills/emc/scripts/emc_formulas.py"
+  "EQ-108": "skills/emc/scripts/emc_formulas.py",
+  "EQ-109": "skills/kicad/scripts/pcb/routing.py"
  },
  "constants": [
   "skills/bom/scripts/bom_fields.py|module|FIELD_ALIASES",
@@ -440,6 +442,7 @@
   "skills/emc/scripts/emc_rules.py|generate_test_plan|plan",
   "skills/emc/scripts/emc_rules.py|generate_test_plan|protocol_speeds",
   "skills/emc/scripts/emc_rules.py|module|PDN_RELEVANT_FMAX_HZ",
+  "skills/emc/scripts/emc_rules.py|module|SPLIT_BRIDGE_CAP_MM",
   "skills/emc/scripts/emc_rules.py|module|_CAP_UNIT_SCALES",
   "skills/emc/scripts/emc_rules.py|module|_FERRITE_MAX_HENRY",
   "skills/emc/scripts/emc_rules.py|module|_PLANE_PAIR_MAX_DIELECTRIC_MM",
@@ -456,6 +459,7 @@
   "skills/kicad/review/scripts/deep_review_gate.py|module|_DASH_RE",
   "skills/kicad/review/scripts/deep_review_gate.py|module|_ELISION_RE",
   "skills/kicad/review/scripts/deep_review_gate.py|module|_LEADING_POINT_RE",
+  "skills/kicad/review/scripts/deep_review_gate.py|module|_PLUSMINUS_GAP_RE",
   "skills/kicad/review/scripts/deep_review_gate.py|module|_PLUSMINUS_RE",
   "skills/kicad/review/scripts/deep_review_gate.py|module|_TOKEN_RE",
   "skills/kicad/review/scripts/merge_annotations.py|merge|report",
@@ -823,6 +827,7 @@
   "skills/kicad/scripts/kicad_core/textvars.py|module|_ERC_DRC",
   "skills/kicad/scripts/kicad_core/values.py|_parse_value|multipliers",
   "skills/kicad/scripts/kicad_core/values.py|module|_E_SERIES",
+  "skills/kicad/scripts/kicad_core/values.py|module|_IMPEDANCE_SLASH",
   "skills/kicad/scripts/kicad_core/values.py|module|_MANTISSA",
   "skills/kicad/scripts/kicad_core/values.py|module|_MIL_MM",
   "skills/kicad/scripts/kicad_core/values.py|module|_RATED_V_RE",

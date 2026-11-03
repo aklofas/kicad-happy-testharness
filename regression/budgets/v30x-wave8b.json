@@ -1,0 +1,39 @@
+{
+ "budget_id": "v30x-wave8b",
+ "profile": "standard",
+ "baseline_sha": "647bc85",
+ "candidate_sha": "0efc012",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-wave8b",
+   "path_glob": "/**",
+   "predicate": "v30x_wave8b:schematic",
+   "evidence": "KH-800 (net-name tie-break as KiCad + child sheets in sheet-uuid order; connectivity, components modulo pin_nets and raw label lists must be unchanged as multisets; name- and order-derived blocks and findings follow, incl. VM-001 / LB-001 / PP-001 / DO-DET / I2C knock-ons) and KH-850 (/-joined impedance values lose parsed_value; LC-DET removals). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-02-v3.0.x-wave8bc/handoff-wave8b.md (8c: handoff-wave8c.md, corpus-neutral, same directory)",
+   "analyzer": "schematic"
+  },
+  {
+   "id": "PCB-wave8b",
+   "path_glob": "/**",
+   "predicate": "v30x_wave8b:pcb",
+   "evidence": "KH-851 setup.board_thickness_mm added; KH-825 plain-mode routing note leaves diagnostics; KH-863 OR-001 removals only. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-02-v3.0.x-wave8bc/handoff-wave8b.md (8c: handoff-wave8c.md, corpus-neutral, same directory)",
+   "analyzer": "pcb"
+  },
+  {
+   "id": "EMC-wave8b",
+   "path_glob": "/**",
+   "predicate": "v30x_wave8b:emc",
+   "evidence": "KH-795 GP-001 'Signal crosses a split between reference planes' added with non-empty upstream reference_plane_changes (category_summary / regulatory_coverage / per_net_scores / test_plan follow); KH-864 band edges measured 0; anything else only behind an explained upstream schematic move (D). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-02-v3.0.x-wave8bc/handoff-wave8b.md (8c: handoff-wave8c.md, corpus-neutral, same directory)",
+   "analyzer": "emc"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave8b:downstream",
+   "evidence": "thermal and cross_analysis units behind an explained upstream schematic move (KH-800 / KH-850). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-02-v3.0.x-wave8bc/handoff-wave8b.md (8c: handoff-wave8c.md, corpus-neutral, same directory)"
+  }
+ ]
+}

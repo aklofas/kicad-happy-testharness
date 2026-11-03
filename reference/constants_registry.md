@@ -2,15 +2,15 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-03T00:51:23.503346+00:00
+**Last scan:** 2026-11-03T09:04:51.324062+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 945 |
+| Total constants | 948 |
 | Verified | 195 |
-| Unverified | 725 |
+| Unverified | 728 |
 | Stale (changed since verification) | 25 |
 | Critical risk | 5 |
 | High risk | 10 |
@@ -237,6 +237,7 @@
 | CONST-113 | `_TX_RX_LANE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-241 | `_USB_OR_SS_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-460 | `finding` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-018 | `SPLIT_BRIDGE_CAP_MM` | physics | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-005 | `check_missing_decoupling:kw1` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-012 | `check_connector_filtering:kw1` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-267 | `bands` | unknown | 3 | verified | 0.0 | 0.0 | **low** (0.0) |
@@ -281,6 +282,7 @@
 | CONST-939 | `_DASH_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-940 | `_PLUSMINUS_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-941 | `_TOKEN_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-047 | `_PLUSMINUS_GAP_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-942 | `_LEADING_POINT_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-686 | `_ELISION_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-687 | `top_required` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -813,6 +815,7 @@
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-846 | `_MIL_MM` | physics | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-048 | `_IMPEDANCE_SLASH` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-854 | `_MANTISSA` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-855 | `multipliers` | standard | 10 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-848 | `_E_SERIES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |

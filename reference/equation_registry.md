@@ -2,19 +2,19 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-11-03T00:51:30.827187+00:00
+**Last scan:** 2026-11-03T09:03:31.937331+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 103 |
-| Verified | 83 |
+| Total equations | 104 |
+| Verified | 84 |
 | Unverified | 0 |
 | Stale | 20 |
 | Critical impact | 11 |
 | High impact | 34 |
-| Medium impact | 37 |
+| Medium impact | 38 |
 | Low impact | 21 |
 
 ## skills/emc/scripts/emc_formulas.py
@@ -141,8 +141,8 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-023 | `_microstrip_impedance` | Z₀ = (60/√εr)ln(8h/w+w/4h) (Wheeler narrow microstrip) | impedance | high | **verified** |
-| EQ-024 | `_microstrip_impedance` | Z₀ = 120π/(√εr(w/h+1.393+0.667ln(w/h+1.444))) (Wheeler wide) | impedance | high | **verified** |
+| EQ-023 | `_microstrip_impedance` | Z₀ = (60/√εeff)ln(8h/w+w/4h) (Hammerstad narrow microstrip) | impedance | high | **verified** |
+| EQ-024 | `_microstrip_impedance` | Z₀ = 120π/(√εeff(w/h+1.393+0.667ln(w/h+1.444))) (Hammerstad wide) | impedance | high | **verified** |
 | EQ-045 | `_build_routing_graph` | d = √(Δx²+Δy²) (routing graph edge weight) | geometry | low | **verified** |
 | EQ-046 | `_mark` | d = √(Δx²+Δy²) (grid cell marking) | geometry | low | **verified** |
 | EQ-050 | `analyze_net_lengths` | L = √(Δx²+Δy²) (track segment length) | geometry | low | **verified** |
@@ -150,6 +150,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-052 | `analyze_power_nets` | d = √(Δx²+Δy²) (Euclidean distance) | geometry | low | **verified** |
 | EQ-053 | `analyze_return_path_continuity` | d = √(Δx²+Δy²) (trace-to-plane gap detection) | geometry | low | **verified** |
 | EQ-057 | `analyze_trace_proximity` | d = √(Δx²+Δy²) (grid-based proximity scan) | geometry | low | **verified** |
+| EQ-109 | `_microstrip_impedance` | εeff = (εr+1)/2 + (εr−1)/2·[(1+12h/w)^−½ + 0.04(1−w/h)² for w/h<1] (Hammerstad) | unknown | medium | **verified** |
 
 ## skills/kicad/scripts/schematic/audits.py
 
