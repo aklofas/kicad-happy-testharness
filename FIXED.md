@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-03 — TH-103: `test_kh366_367_determinism` compared the wall-clock `elapsed_s`, so a loaded run could fail a hash-seed determinism check
+
+**Severity:** LOW (spurious pre-push failure)
+**File:** `tests/test_kh366_367_determinism.py` (`_run` and `test_xv_002_ref_order_stable._run_cross` normalizers)
+**Discovered:** 2026-11-03, the pre-push hook of the Waves 8c + 8b adoption push (vs product_0efc012): `test_xv_002_ref_order_stable` failed on `"elapsed_s": 0.001` vs `0.002` between two cross_analysis runs; 12 / 12 standalone reruns passed on 0efc012 and 647bc85. **Fixed:** this harness commit (filed and fixed together).
+
+- **Root cause:** the normalizers dropped `inputs` and `capability_mode_ref` but not the top-level `elapsed_s` (millisecond-rounded wall time, emitted by cross_analysis since the schema_version batch), so two runs that straddle a rounding boundary under load differ.
+- **Fix:** both normalizers also pop `elapsed_s`.
+- **Verification:** the file's tests pass against product_0efc012; pre-push hook re-run green.
+
 ## 2026-11-03 — KH-806: `analyze_pcb --output` and `diff_analysis --output` are plain writes, and `atomic_write_text` follows a symlinked target
 
 **Severity:** LOW

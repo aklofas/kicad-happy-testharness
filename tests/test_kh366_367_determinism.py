@@ -52,10 +52,11 @@ def _run(script, target, seed, args=None, tmpdir=None):
 
     with open(outfile) as f:
         d = json.load(f)
-    # Pop both inputs and capability_mode_ref to ensure byte-stability
-    # across runs (run_id varies unless reusing same analysis dir)
+    # Pop inputs, capability_mode_ref and the wall-clock elapsed_s to ensure
+    # byte-stability across runs (run_id varies unless reusing same analysis dir)
     d.pop("inputs", None)
     d.pop("capability_mode_ref", None)
+    d.pop("elapsed_s", None)
     return json.dumps(d, sort_keys=True)
 
 
@@ -107,6 +108,7 @@ def test_xv_002_ref_order_stable():
             d = json.load(f)
         d.pop("inputs", None)
         d.pop("capability_mode_ref", None)
+        d.pop("elapsed_s", None)
         return json.dumps(d, sort_keys=True)
 
     out1 = _run_cross(0)
