@@ -137,3 +137,26 @@ def test_spice_count_is_labelled_as_analyzer_runs():
     assert "| SPICE simulations |" not in md
     assert "| SPICE analyzer runs |" in md
     assert "Python 3.10+" in md and "Python 3.8" not in md
+
+
+def test_issue_counts_read_both_heading_formats(tmp_path, monkeypatch):
+    """TH-104: FIXED.md entries headed `## <date> — TH-NNN` were not counted, so the
+    filed total shrank as open issues closed."""
+    issues = tmp_path / "ISSUES.md"
+    fixed = tmp_path / "FIXED.md"
+    issues.write_text(
+        "## Test Harness Issues\n\n"
+        "### TH-010: open one\n\n"
+        "### TH-012: open two, narrowed in FIXED.md\n\n"
+        "### KH-247 (HIGH): TH-001/PDN rule id in the title\n", encoding="utf-8")
+    fixed.write_text(
+        "## 2026-11-03 — TH-011: dated heading\n\n"
+        "### TH-003: old heading\n\n"
+        "## 2026-10-01 — TH-012: half fixed\n\n"
+        "### TH-004 (LOW) / TH-005 (LOW): two ids\n\n"
+        "## Pre-2026-03-13 — Earlier fixes (KH-001 through KH-011, TH-001 through TH-006)\n",
+        encoding="utf-8")
+    monkeypatch.setattr(gvm, "ISSUES_FILE", issues)
+    monkeypatch.setattr(gvm, "FIXED_FILE", fixed)
+    assert gvm._count_th_issues() == (2, 4, 12)
+    assert gvm._count_kh_issues() == (1, 0, 247)

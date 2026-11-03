@@ -42,30 +42,30 @@ def _count_output_files(atype):
                and not _.name.startswith("_aggregate"))
 
 
-def _count_issues(prefix):
-    """Count <prefix>-* issues from ISSUES.md and FIXED.md.
+def _heading_ids(path, prefix):
+    """Ids a heading opens with: `### TH-012: ...`, `## 2026-11-03 — TH-012: ...` or
+    `### KH-398 (MEDIUM) / KH-399 (LOW): ...`. Ids later in the title (rule ids such as
+    `TH-001/PDN`, ranges in an `Earlier fixes` heading) are not the heading's own."""
+    one = rf"{prefix}-\d{{3}}(?:\s*\([A-Z-]+\))?"
+    lead = re.compile(rf"#+\s+(?:\d{{4}}-\d\d-\d\d\s+—\s+)?({one}(?:\s*(?:/|,|and|\+)\s*{one})*)")
+    ids = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        m = lead.match(line)
+        if m:
+            ids.update(int(n) for n in re.findall(rf"{prefix}-(\d{{3}})", m.group(1)))
+    return ids
 
+
+def _count_issues(prefix):
+    """Count <prefix>-* issues by distinct id from ISSUES.md (open) and FIXED.md (closed).
+
+    An id still in ISSUES.md is open even when FIXED.md records a fixed half.
     Returns (open_count, closed_count, max_number).
     """
-    open_count = 0
-    closed_count = 0
-    max_num = 0
-    marker = f"### {prefix}-"
-    for path, is_open in [(ISSUES_FILE, True), (FIXED_FILE, False)]:
-        if not path.exists():
-            continue
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip().startswith(marker):
-                if is_open:
-                    open_count += 1
-                else:
-                    closed_count += 1
-                try:
-                    num = int(line.strip().split(f"{prefix}-")[1].split()[0].rstrip(":—"))
-                    max_num = max(max_num, num)
-                except (ValueError, IndexError):
-                    pass
-    return open_count, closed_count, max_num
+    open_ids = _heading_ids(ISSUES_FILE, prefix) if ISSUES_FILE.exists() else set()
+    fixed_ids = _heading_ids(FIXED_FILE, prefix) if FIXED_FILE.exists() else set()
+    closed_ids = fixed_ids - open_ids
+    return len(open_ids), len(closed_ids), max(open_ids | fixed_ids, default=0)
 
 
 def _count_kh_issues():

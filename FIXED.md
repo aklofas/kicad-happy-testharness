@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-03 — TH-104: `generate_validation_md.py` counted only `### <prefix>-` headings, so closed issues under `## <date> — TH-NNN` headings were dropped and the filed total shrank
+
+**Severity:** LOW (published issue counts in VALIDATION.md)
+**File:** `tools/generate_validation_md.py` (`_count_issues`)
+**Discovered:** 2026-11-03, the main repo's v3.0.0 release prep: the round-9b draft read "TH-001 through TH-071: 57 filed, 38 closed, 19 open" against 59 / 38 / 21 in the previous VALIDATION.md. **Fixed:** this harness commit (filed and fixed together).
+
+- **Root cause:** only lines starting `### KH-` / `### TH-` were counted, one per heading. FIXED.md entries have been headed `## <date> — <id>:` for some time, so the closed count stopped moving while issues left ISSUES.md. A multi-id heading (`### KH-398 (MEDIUM) / KH-399 (LOW)`) counted once, and a heading that only mentions an id later in its title could set the maximum.
+- **Fix:** `_heading_ids` reads the ids a heading opens with, in both formats, including chained ids; counts are distinct ids, and an id still in ISSUES.md stays open even when FIXED.md records a fixed half. Ids later in a title (rule ids such as `TH-001/PDN`, the `Earlier fixes` range heading) are ignored.
+- **Verification:** new `tests/test_generate_validation_md.py::test_issue_counts_read_both_heading_formats` failed before the fix and passes after (file 10 / 10). On the round-9b tracker files (`4e665a6f8f0`) the generator now gives KH 450 filed / 378 closed / 72 open (max 496) and TH 73 / 53 / 20 (max 78), matching status.md's "Open 72 KH + 20 TH"; these are the corrected lines given to the main repo for the v3.0.0 VALIDATION.md, applied by hand (draft not regenerated).
+
 ## 2026-11-03 — TH-103: `test_kh366_367_determinism` compared the wall-clock `elapsed_s`, so a loaded run could fail a hash-seed determinism check
 
 **Severity:** LOW (spurious pre-push failure)
