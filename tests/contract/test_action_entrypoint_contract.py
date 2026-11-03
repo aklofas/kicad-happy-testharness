@@ -196,6 +196,14 @@ def _run_thermal_block(thermal_block: str, tmp_path: Path, stub_mode: str) -> di
     }
 
 
+VALID_JSON_NOTICE = "exited nonzero but left a valid JSON report"
+
+
+def _valid_json_notice(text):
+    # Products before 3.0.1 (KH-852) worded the notice as "blocking findings".
+    return VALID_JSON_NOTICE in text or "blocking findings" in text
+
+
 # ---------------------------------------------------------------------------
 # EMC
 # ---------------------------------------------------------------------------
@@ -213,10 +221,10 @@ def test_emc_valid_json_survives_nonzero_exit(emc_block, tmp_path):
     p = Path(r["final_emc_json"])
     assert p.is_file()
     assert json.loads(p.read_text())["summary"]["by_severity"]["error"] == 1
-    # Disposition notice must mention blocking findings
+    # Disposition notice must say the nonzero exit left a usable report
     combined = r["stdout"] + r["stderr"]
-    assert "blocking findings" in combined, (
-        f"Expected '::notice::...blocking findings' in output.\n"
+    assert _valid_json_notice(combined), (
+        f"Expected '::notice::...{VALID_JSON_NOTICE}' in output.\n"
         f"stdout:\n{r['stdout']}\nstderr:\n{r['stderr']}"
     )
 
@@ -256,7 +264,7 @@ def test_thermal_valid_json_survives_nonzero_exit(thermal_block, tmp_path):
     assert p.is_file()
     assert json.loads(p.read_text())["summary"]["by_severity"]["error"] == 1
     combined = r["stdout"] + r["stderr"]
-    assert "blocking findings" in combined
+    assert _valid_json_notice(combined)
 
 
 def test_thermal_malformed_json_clears_path(thermal_block, tmp_path):

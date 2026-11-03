@@ -2,17 +2,17 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-02T01:28:05.429565+00:00
+**Last scan:** 2026-11-03T00:51:23.503346+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 946 |
-| Verified | 197 |
-| Unverified | 726 |
-| Stale (changed since verification) | 23 |
-| Critical risk | 4 |
+| Total constants | 945 |
+| Verified | 195 |
+| Unverified | 725 |
+| Stale (changed since verification) | 25 |
+| Critical risk | 5 |
 | High risk | 10 |
 
 ## skills/bom/scripts/bom_fields.py
@@ -200,14 +200,13 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
-| CONST-176 | `SEVERITY_WEIGHTS` | datasheet_lookup | 3 | verified | 0.7 | 0.0 | **low** (0.0) |
+| CONST-176 | `SEVERITY_WEIGHTS` | datasheet_lookup | 3 | stale | 0.7 | 0.0 | **critical** (0.7) |
 | CONST-463 | `CONFIDENCE_WEIGHTS` | datasheet_lookup | 3 | verified | 0.7 | 0.2 | **low** (0.2) |
 | CONST-178 | `MAX_FINDINGS_PER_RULE` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
-| CONST-181 | `sev_order` | heuristic_threshold | 3 | verified | 0.4 | 0.0 | **low** (0.0) |
+| CONST-181 | `sev_order` | heuristic_threshold | 3 | stale | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-281 | `cat_labels` | keyword_classification | 17 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-389 | `config` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-282 | `counts` | heuristic_threshold | 3 | stale | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-390 | `active_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-395 | `_sev_order` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-287 | `_final_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 
