@@ -35,12 +35,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "Total holes ~30 (tolerance 10%)",
+      "description": "Total holes ~40 (tolerance 10%)",
       "check": {
         "path": "statistics.total_holes",
         "op": "range",
-        "min": 27,
-        "max": 33
+        "min": 36,
+        "max": 44
       }
     },
     {
@@ -73,11 +73,11 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Alignment is False",
+      "description": "Alignment is True",
       "check": {
         "path": "alignment.aligned",
         "op": "equals",
-        "value": false
+        "value": true
       }
     },
     {
@@ -88,6 +88,16 @@
         "op": "range",
         "min": 27,
         "max": 33
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Component holes ~10 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.component_holes.count",
+        "op": "range",
+        "min": 9,
+        "max": 11
       }
     }
   ]

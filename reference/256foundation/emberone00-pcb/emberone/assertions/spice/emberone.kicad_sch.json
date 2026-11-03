@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~71 (tolerance 10%)",
+      "description": "Simulation count ~79 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 67,
-        "max": 75
+        "min": 75,
+        "max": 83
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 55 passing simulation(s)",
+      "description": "At least 61 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 55
+        "value": 61
       }
     },
     {
@@ -47,24 +47,24 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "27 decoupling simulation(s)",
+      "description": "29 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 27
+        "value": 29
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "22 inrush simulation(s)",
+      "description": "26 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 22
+        "value": 26
       }
     },
     {
@@ -80,13 +80,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "12 voltage_divider simulation(s)",
+      "description": "14 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 12
+        "value": 14
       }
     }
   ]

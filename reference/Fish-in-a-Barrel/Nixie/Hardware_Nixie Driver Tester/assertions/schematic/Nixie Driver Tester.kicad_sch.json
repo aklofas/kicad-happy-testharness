@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-10-29T21:55:51Z",
+        "tagged_at": "2026-11-03T20:08:54Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -291,6 +291,16 @@
     },
     {
       "id": "SEED-00000028",
+      "description": "1 suggest_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000029",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -299,7 +309,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000030",
       "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

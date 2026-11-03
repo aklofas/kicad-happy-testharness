@@ -94,13 +94,13 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "13 switching_emc finding(s)",
+      "description": "15 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 13
+        "value": 15
       }
     },
     {
@@ -955,6 +955,26 @@
     },
     {
       "id": "STRUCT-00000095",
+      "description": "L203 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL203\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000096",
+      "description": "C208 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC208\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000097",
       "description": "L204 in EMC findings",
       "check": {
         "path": "findings",
@@ -964,13 +984,23 @@
       }
     },
     {
-      "id": "STRUCT-00000096",
+      "id": "STRUCT-00000098",
       "description": "C217 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC217\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000099",
+      "description": "L205 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL205\\b"
       }
     }
   ]

@@ -50,13 +50,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "5 ground_plane finding(s)",
+      "description": "13 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 5
+        "value": 13
       }
     },
     {
@@ -94,13 +94,13 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "30 switching_emc finding(s)",
+      "description": "31 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 30
+        "value": 31
       }
     },
     {
@@ -626,6 +626,26 @@
     },
     {
       "id": "STRUCT-00000062",
+      "description": "L501 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL501\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000063",
+      "description": "C19 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC19\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000064",
       "description": "L6 in EMC findings",
       "check": {
         "path": "findings",
@@ -635,7 +655,7 @@
       }
     },
     {
-      "id": "STRUCT-00000063",
+      "id": "STRUCT-00000065",
       "description": "L8 in EMC findings",
       "check": {
         "path": "findings",

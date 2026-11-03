@@ -25,22 +25,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "Drill file count ~1 (tolerance 10%)",
+      "description": "Drill file count ~2 (tolerance 10%)",
       "check": {
         "path": "statistics.drill_files",
         "op": "range",
-        "min": 0,
-        "max": 2
+        "min": 1,
+        "max": 3
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "Total holes ~3 (tolerance 10%)",
+      "description": "Total holes ~39 (tolerance 10%)",
       "check": {
         "path": "statistics.total_holes",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 35,
+        "max": 43
       }
     },
     {
@@ -82,12 +82,32 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "Component holes ~3 (tolerance 10%)",
+      "description": "Via holes ~23 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "range",
+        "min": 20,
+        "max": 26
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Component holes ~15 (tolerance 10%)",
       "check": {
         "path": "drill_classification.component_holes.count",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 13,
+        "max": 17
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Mounting holes ~1 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.mounting_holes.count",
+        "op": "range",
+        "min": 0,
+        "max": 2
       }
     }
   ]
