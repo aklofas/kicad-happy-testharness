@@ -11,6 +11,136 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-03 — KH-806: `analyze_pcb --output` and `diff_analysis --output` are plain writes, and `atomic_write_text` follows a symlinked target
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/analyze_pcb.py` (`--output`), `diff_analysis.py` (`--output`); `kicad_core/fileio.py` (`atomic_write_text`, `resolve()`)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 17; not verified harness-side. **Fixed:** product v3.0.x-dev `148c2cb` `50cf5b2` `297f55d` (3.0.x Wave 8c, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `analyze_pcb --output`, `diff_analysis --output`, the GP-001 debug write and `save_manifest` opened the target by name, and `atomic_write_text` itself followed a symlinked target.
+- **Fix:** those writers go through `atomic_write_text(follow_symlinks=False)`: a symlink at the target (including one to a FIFO or device) is replaced by a regular file; `/dev` / `/proc` stream nodes and a FIFO named directly are still written in place; an existing file's mode is kept. The other plain `--output` CLIs and the `/dev/` prefix rule are filed as KH-867 / KH-868.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`; 8c corpus-neutral): standard + full-chain + spice-offline 0 movement from 8c, text oracle 647bc85 vs a565254 944 artefacts 0 deltas, JSON fixtures 0 deltas, `--schema` x6 unchanged, tiers 3,574 / 0 / 8 / 4 vs product_0efc012. distributor-offline 8c run 67 runs OK; corpus gates 0 movement from 8c.
+
+## 2026-11-03 — KH-791: `analysis_cache.save_manifest` writes every `analysis/manifest.json` with mode 0600
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/analysis_cache.py` (`save_manifest`, `NamedTemporaryFile` + rename)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 1 (`7131f26..698116c`, candidate `698116c`); not verified harness-side. **Fixed:** product v3.0.x-dev `a4b02ef` `148c2cb` `50cf5b2` (3.0.x Wave 8c, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `save_manifest` created `analysis/manifest.json` with mode 0600.
+- **Fix:** a new manifest gets the umask mode (0644 under 022); an existing manifest at exactly 0600 (the old bug's mode) is rewritten with the umask mode, any other existing mode is kept.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`; 8c corpus-neutral): standard + full-chain + spice-offline 0 movement from 8c, text oracle 647bc85 vs a565254 944 artefacts 0 deltas, JSON fixtures 0 deltas, `--schema` x6 unchanged, tiers 3,574 / 0 / 8 / 4 vs product_0efc012.
+
+## 2026-11-03 — KH-811: extraction cache reads have an islink → open window, and a symlinked parent directory is not refused
+
+**Severity:** LOW
+**File:** datasheet extraction cache readers (`skills/datasheets/scripts/datasheet_extract_cache.py`, `datasheet_types/cache_reader.py`, `datasheet_verify.py`)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 22; not verified harness-side. **Fixed:** product v3.0.x-dev `b89b048` `07f6304` `a565254` (3.0.x Wave 8c, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** extraction-cache reads checked `islink` and then opened by name, and a symlinked project `datasheets/` or `datasheets/extracted/` was followed.
+- **Fix:** reads open with `O_NOFOLLOW|O_NONBLOCK` and `fstat`-check a regular file of capped size (a link, FIFO or swap after the check returns None); a symlinked project `datasheets/` or `datasheets/extracted/` is refused with one warning per folder, an explicit override (`analyze_thermal --datasheets`) is followed; the SPICE spec fetcher and the derating abs-max reader use the same reader and refuse manifest `file` values outside the cache; Windows falls back to an fstat-vs-lstat identity check. Residues filed as KH-869 / KH-870 / KH-871.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`; 8c corpus-neutral): standard + full-chain + spice-offline 0 movement from 8c, text oracle 647bc85 vs a565254 944 artefacts 0 deltas, JSON fixtures 0 deltas, `--schema` x6 unchanged, tiers 3,574 / 0 / 8 / 4 vs product_0efc012.
+
+## 2026-11-03 — KH-797: `merge_results.py` writes are not atomic
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/merge_results.py:269`, `:306-307`
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 8; not verified harness-side. **Fixed:** product v3.0.x-dev `b0b4240` (3.0.x Wave 8c, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `merge_results` wrote the extraction and plan files in place.
+- **Fix:** `write_json_atomic(sort_keys=True)`, the datasheets skill's own atomic writer; bytes identical to before.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`; 8c corpus-neutral): standard + full-chain + spice-offline 0 movement from 8c, text oracle 647bc85 vs a565254 944 artefacts 0 deltas, JSON fixtures 0 deltas, `--schema` x6 unchanged, tiers 3,574 / 0 / 8 / 4 vs product_0efc012.
+
+## 2026-11-03 — KH-807: the Deep Review gate certifies "15 V" against a spaced "± 15 V" on the page
+
+**Severity:** LOW (false certification; existed before KH-580)
+**File:** `skills/kicad/review/scripts/deep_review_gate.py` (`_quote_in_text` ± fold)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 18 (KH-580 remainder); not verified harness-side. **Fixed:** product v3.0.x-dev `6c9f69e` `a565254` (3.0.x Wave 8c, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** the Deep Review gate's quote match dropped a spaced `±`, so "15 V" verified against "± 15 V".
+- **Fix:** a spaced `±` stays with its number. Accepted residual: a `±` that ends a table-header line joins the next line's number.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`; 8c corpus-neutral): standard + full-chain + spice-offline 0 movement from 8c, text oracle 647bc85 vs a565254 944 artefacts 0 deltas, JSON fixtures 0 deltas, `--schema` x6 unchanged, tiers 3,574 / 0 / 8 / 4 vs product_0efc012.
+
+## 2026-11-03 — KH-813: `--force-all` that replaces an entry with a real answer leaves the old PDF on disk
+
+**Severity:** LOW
+**File:** `skills/datasheets/distributor_core/sync.py` (`--force-all` outcome recording, `ea5f639` / `9e60522`; KH-615)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 24; not verified harness-side. **Fixed:** product v3.0.x-dev `1289946` `e023881` `ada9529` (3.0.x Wave 8c, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** a `--force-all` refresh that replaced an entry with a real answer left the old PDF on disk.
+- **Fix:** the old PDF is removed only when the refresh is `ok` under a different file name (case-safe comparison), after the manifest is saved; a `not_found` / `no_datasheet` refresh keeps the existing `ok` entry and its PDF (user ruling, option A). The distributor-offline `sync-force-all` scenario moves for all four providers (declared): manifest keeps PRESENT2's `ok` entry (647bc85 stored `not_found`), `files.txt` size line 1292 -> 1349, `stderr.txt` unchanged. The wrong-part `ok` case is KH-872.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`; 8c corpus-neutral): standard + full-chain + spice-offline 0 movement from 8c, text oracle 647bc85 vs a565254 944 artefacts 0 deltas, JSON fixtures 0 deltas, `--schema` x6 unchanged, tiers 3,574 / 0 / 8 / 4 vs product_0efc012. distributor-offline 647bc85 -> a565254 (runner a565254): 67 runs / 310 artefacts, exactly the 8 declared `sync-force-all` files differ.
+
+## 2026-11-03 — KH-851: the PCB reader drops `(general (thickness …))` when the file has no `(setup)` node
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/pcb/reader.py:135` (thickness read inside the setup branch); the `--schema` `board_thickness_mm` description (`envelopes/pcb.py`, reworded in `a909f9a`)
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 Task 71 (slug KH-new-pcb-thickness-without-setup); filed by the harness. **Fixed:** product v3.0.x-dev `267ca05` (3.0.x Wave 8b, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `extract_setup` returned early when the file had no `(setup)` node, before reading `(general (thickness))`.
+- **Fix:** the thickness is read from `(general)` first; `setup.board_thickness_mm` is emitted on boards without `(setup)`.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`, output-changing, budgets `regression/budgets/v30x-wave8b{,-full-chain}.json`): standard + full-chain budgeted clean, 0 residuals, 0 candidate failures; tiers 3,574 / 0 / 8 / 4 vs product_0efc012. standard 15 pcb units / 3 repos gain only `setup.board_thickness_mm`; full-chain 10 units / 1 repo; fixtures 20 deltas (budget class 1).
+
+## 2026-11-03 — KH-820: microstrip impedance uses the bulk εr instead of the effective εeff, so every `--full` `impedance_ohm` is about 18 % low
+
+**Severity:** MEDIUM (output-changing under `--full`: every `impedance_ohm` and anything that reads it)
+**File:** `skills/kicad/scripts/pcb/routing.py:623-663` (`_microstrip_impedance`; `math.sqrt(er)` in both Wheeler branches at `:659` and `:662`, tagged EQ-023 / EQ-024); callers `:755`, `:789`
+**Discovered:** 2026-11-01, product 3.0.x Wave 6 docs surveys (schema survey N1); filed by the harness at the Wave 6 gate. **Fixed:** product v3.0.x-dev `d68a034` (3.0.x Wave 8b, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `_microstrip_impedance` used the bulk εr in Z₀ on every layer.
+- **Fix:** outer layers use the Hammerstad εeff (EQ-109); inner layers keep bulk εr (stripline formula = KH-881). Pozar Ex. 3.7 hand check (εr 2.20, d 1.27 mm, W 3.91 mm): εeff 1.871, Z₀ 50.3 Ω; EQ-023 / EQ-024 re-verified on εeff.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`, output-changing, budgets `regression/budgets/v30x-wave8b{,-full-chain}.json`): standard + full-chain budgeted clean, 0 residuals, 0 candidate failures; tiers 3,574 / 0 / 8 / 4 vs product_0efc012. full-chain 2,391 pcb units / 242 repos: 1,109,499 outer `impedance_ohm` values rise (x1.0-1.3), 0 inner values change, no finding moves.
+
+## 2026-11-03 — KH-825: without `--full`, the PCB analyzer reports its routing-completeness note as a `ValueError` diagnostic and a stderr "Warning: … ValueError: …"
+
+**Severity:** LOW (wording; every plain-mode PCB run with `routing_complete` true carries it)
+**File:** `skills/kicad/scripts/pcb/presentation.py:401-406` (`record(diagnostics, "pcb.presentation.assemble_result", ValueError("pads are not checked for a copper path between them"), …)`)
+**Discovered:** 2026-11-01, product 3.0.x Wave 6 docs surveys; filed by the harness at the Wave 6 gate. **Fixed:** product v3.0.x-dev `59aa9a6` `1fdd195` (3.0.x Wave 8b, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** plain-mode PCB runs recorded the routing-completeness caveat as a `ValueError` diagnostic (and a stderr Warning).
+- **Fix:** the diagnostic is gone; the caveat is in the two `routing_complete` `--schema` descriptions (pcb md5 `a9ede3398fc30710eeb371b53852fba3`, description text + the additive KH-795 key). The Action / fab gate wording is KH-882.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`, output-changing, budgets `regression/budgets/v30x-wave8b{,-full-chain}.json`): standard + full-chain budgeted clean, 0 residuals, 0 candidate failures; tiers 3,574 / 0 / 8 / 4 vs product_0efc012. standard 16,536 pcb units / 5,238 repos (88.6 % of 18,660 plain pcb units) lose exactly that diagnostic, nothing else.
+
+## 2026-11-03 — KH-863: OR-001 normalises the footprint angle with `round(angle % 180)`, so 179.6° lands in a bucket of its own (180) instead of with 0°
+
+**Severity:** LOW (OR-001 orientation-consistency advisory; boards with near-180° rotations)
+**File:** `skills/kicad/scripts/pcb/assembly.py:962` (`norm_angle = round(angle % 180)`)
+**Discovered:** 2026-11-02, product 3.0.x Wave 8a (slug KH-new-or001-rounding); verified harness-side at `647bc85` (`round(179.6 % 180)` and `round(359.6 % 180)` are both 180). **Fixed:** product v3.0.x-dev `68b8936` (3.0.x Wave 8b, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** OR-001 normalised with `round(angle % 180)`, so 179.6° made a bucket of its own.
+- **Fix:** `round(angle) % 180`; buckets can only merge, so OR-001 can only be removed.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`, output-changing, budgets `regression/budgets/v30x-wave8b{,-full-chain}.json`): standard + full-chain budgeted clean, 0 residuals, 0 candidate failures; tiers 3,574 / 0 / 8 / 4 vs product_0efc012. 0 corpus units move (standard and full-chain), as measured by the product.
+
+## 2026-11-03 — KH-850: `parse_value("600R/200mA")` returns 600 Ω — a ferrite's impedance-at-frequency / current rating parses as a resistance
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/kicad_core/values.py` (`parse_value`)
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 (slug KH-new-ferrite-slash-notation-parses); verified harness-side at `988d576`: `parse_value("600R/200mA") == 600.0`, the same as `parse_value("600R")`. **Fixed:** product v3.0.x-dev `3b50304` (3.0.x Wave 8b, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `parse_value` split `600R/200mA` on `/` and read 600 Ω (and `120Ohm / 100Mhz` as 120 H on inductors, a false 6.7 Hz LC filter).
+- **Fix:** a `/`-joined impedance with a current or frequency (`_IMPEDANCE_SLASH`) returns None; plain `600R`, `10k/1%`, `100n/50V`, `2.2uH/4.3A` unchanged. Residues KH-883 (`600 Ohm @ 100MHz`) and KH-884 (`0R/2A`). Harness: 16 AbdulAjadi1/FPGA-Board LC assertions retired (schematic SEED-34/35, STRUCT-23/24, SEED-18/19, STRUCT-11/12; spice SEED-06, STRUCT-04/49/50, SEED-05, STRUCT-03/05/06).
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`, output-changing, budgets `regression/budgets/v30x-wave8b{,-full-chain}.json`): standard + full-chain budgeted clean, 0 residuals, 0 candidate failures; tiers 3,574 / 0 / 8 / 4 vs product_0efc012. standard 23 schematic units / 11 repos: 40 `parsed_value` drops; LC-DET removed on FPGA-BOARD and USB_JTAG_PROGRAMMING; spice-offline 2 benches (`lc_filter`) removed.
+
+## 2026-11-03 — KH-800: reversing the root-sheet order changes the schematic analyzer's output on 6 of 14 multi-sheet boards
+
+**Severity:** MEDIUM (determinism: the same design gives different nets, findings and a BOM quantity depending on sheet order — wideboy `100p` 6 → 1)
+**File:** schematic connectivity / net naming (sheet path), VM-001 domain, multi-driver / ERC, BOM grouping (the handoff names no line)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 11 (found while making the diff identity sheet-order-stable, KH-572); repro product `.superpowers/sdd/2026-10-29-v3.0.x-wave5/followups/sheet-order/` (14 boards, `orig.json` / `rev.json` / `diff.json` each); not verified harness-side. **Fixed:** product v3.0.x-dev `ff591b3` `dd4e0a8` `a177bcc` `b3f9f0b` `0efc012` (3.0.x Wave 8b, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** equal-rank net names tie-broke on sheet index and child sheets were read in file order, so the stored sheet order changed net names and order-dependent selections.
+- **Fix:** equal-rank names tie-break as KiCad 10 (`connection_graph.cpp:3275-3311`): shallower sheet, then the lower full sheet-qualified name, sheet names escaped (`B/C` -> `B{slash}C`); child sheets are read in sheet-uuid order. KiCad 5 `.sch` unchanged (KH-879). jotego s18 name loss waived by the user (root cause KH-874). Knock-ons filed: KH-875 (VM-001 regulator cascade), KH-876 (multi-unit IC voltage), KH-877 (`4.5V-28V IN` rail), KH-878 (`SCLn`/`SDAn`), KH-880 (multi-root).
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`, output-changing, budgets `regression/budgets/v30x-wave8b{,-full-chain}.json`): standard + full-chain budgeted clean, 0 residuals, 0 candidate failures; tiers 3,574 / 0 / 8 / 4 vs product_0efc012. standard 715 schematic units / 422 repos (676 renamed, 39 order only; connectivity, components modulo `pin_nets` and raw label lists identical in every unit), full-chain 68 units / 30 repos; the handoff's ≈4,500 (E) assumed hierarchy-mode sub-sheet units, the standard profile runs `--no-hierarchy`; spice-offline 15 reports; sheet-order check (`tools/sheet_order_check.py`, 14 repro roots) 0/14 -> 14/14 identical; netlist oracle unchanged (4/5, m68k = KH-645); new `tests/test_kh800_sheet_order.py`.
+
+## 2026-11-03 — KH-864: EMC limit lookup uses `f_min <= f < f_max`, so a frequency exactly on a band edge (88, 216, 960 MHz FCC; 230 MHz CISPR) takes the upper band's looser limit
+
+**Severity:** LOW (emission margin at four exact frequencies; a harmonic landing on an edge reports 3.5-8 dB more margin than the stricter limit)
+**File:** `skills/emc/scripts/emc_formulas.py:88` (`get_emission_limit`), tables `:30-` (`FCC_CLASS_B_RADIATED`, `FCC_CLASS_A_RADIATED`, CISPR tables)
+**Discovered:** 2026-11-02, product 3.0.x Wave 8a (slug KH-new-fcc-band-edges); verified harness-side at `647bc85`. **Fixed:** product v3.0.x-dev `3fd71c3` `0efc012` (3.0.x Wave 8b, unreleased; commits local and unpushed at the handoff).
+
+- **Root cause:** `get_emission_limit` took the first band with `f_min <= f < f_max`, so an exact band edge took the upper band's looser limit (and the CISPR 1000 MHz top edge returned None).
+- **Fix:** every band containing f, ends included, then the lowest limit (47 CFR 15.209(b) convention); covers FCC 88/216/960, CISPR 230 and 1000 MHz, and CISPR 25 at 68/108 MHz where the upper band is tighter. The SW-001 double count is the KH-643 addendum; the dead SW-003 note is KH-892.
+- **Verification:** Wave 8c + 8b gate 2026-11-03 (harness, baseline `647bc85`, candidate `0efc012`, output-changing, budgets `regression/budgets/v30x-wave8b{,-full-chain}.json`): standard + full-chain budgeted clean, 0 residuals, 0 candidate failures; tiers 3,574 / 0 / 8 / 4 vs product_0efc012. 0 corpus movement (standard + full-chain), as the product measured.
+
 ## 2026-11-02 — KH-819: the schematic analyzer's typed-lookup cache still falls back to the parent folder's `datasheets/extracted` (KH-782 residue)
 
 **Severity:** MEDIUM (Security, as KH-782: a planted extraction in the parent directory reaches deterministic AM / OV / TJ / FT / EX / PM findings)
