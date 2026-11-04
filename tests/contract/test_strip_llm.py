@@ -120,7 +120,26 @@ def test_summarize_findings_only_deterministic_flag(tmp_path):
     # The summary is surfaced via the "examples" field in summarize_findings JSON output.
     default_examples = _flatten_examples(data_default)
     det_examples = _flatten_examples(data_det)
-    assert "merged finding" in default_examples, (
-        f"Default mode should read merged JSON; got examples: {default_examples}")
+    # The overlay's summary differs from the raw file, so it no longer strips back to it:
+    # default mode reports it and reads the raw file instead.
+    assert "raw finding" in default_examples, (
+        f"Default mode should skip a stale merged JSON; got examples: {default_examples}")
+    assert "does not match" in result.stderr
     assert "raw finding" in det_examples, (
         f"--only-deterministic should read raw JSON; got examples: {det_examples}")
+    assert "does not match" not in result_det.stderr
+
+    # An overlay that differs only in llm_* fields is current and read silently.
+    merged["findings"] = [
+        dict(raw["findings"][0],
+             llm_review={"status": "suppressed", "reason": "x" * 25,
+                          "confidence": "high", "reviewed_at": "2026-04-27T00:00:00Z"})
+    ]
+    (merged_run_dir / "schematic.json").write_text(json.dumps(merged))
+    result_fresh = subprocess.run(
+        ["python3", "skills/kicad/scripts/summarize_findings.py",
+         str(raw_dir), "--json"],
+        capture_output=True, text=True, check=True,
+        cwd=MAIN_REPO_ROOT,
+    )
+    assert "Note:" not in result_fresh.stderr

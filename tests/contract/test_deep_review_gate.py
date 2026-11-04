@@ -180,7 +180,8 @@ def test_datasheet_quote_check(analysis_dir, tmp_path):
     assert r.returncode == 1
     out = json.loads(p.read_text())
     assert len(out["findings"]) == 1
-    assert out["findings"][0]["evidence_checked"] == "full"
+    # The gate never runs a cited computation, so it can only be partial.
+    assert out["findings"][0]["evidence_checked"] == "partial"
     assert len(out["quarantined"]) == 1
     assert "quote not found" in out["quarantined"][0]["quarantine_reason"]
 
