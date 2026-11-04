@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-03 — KH-870: the PDF hashers open with a blocking `open`, so a FIFO at `datasheets/X.pdf` hangs the staleness check
+
+**Severity:** LOW
+**File:** `skills/datasheets/datasheet_types/cache_reader.py` (`_compute_pdf_sha256`, `_resolve_pdf_path`); `skills/datasheets/scripts/datasheet_extract_cache.py` (`_pdf_hash`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8c; verified harness-side at `0efc012`. **Fixed:** product v3.0.x-dev `b0d9ab6` (3.0.x Wave 9a, unreleased; local and unpushed at the handoff).
+
+- **Root cause:** both hashers opened the cached PDF path with a blocking, link-following `open`, and the resolver returned the path without an `is_file` check.
+- **Fix:** a cached PDF path is read only inside the project's `datasheets/` folder and only as a regular file, bounded (`cache_reader.read_regular_bytes`); anything else reads as missing. The silent-stale side effect for paths outside `datasheets/` is filed as KH-905.
+- **Verification:** harness probe, FIFO at `datasheets/X.pdf`, 5 s timeout: `_compute_pdf_sha256` and `_pdf_hash` return None at `6009004`, rc 124 (hang) at `9885287`. Waves 9a + 9e gate 2026-11-03 (baseline `9885287`, candidate `6009004`): standard + full-chain strict-field clean, spice-offline identical, distributor-offline 0 differing, tiers 3,575 / 0 / 8 / 4.
+
 ## 2026-11-03 — TH-104: `generate_validation_md.py` counted only `### <prefix>-` headings, so closed issues under `## <date> — TH-NNN` headings were dropped and the filed total shrank
 
 **Severity:** LOW (published issue counts in VALIDATION.md)
