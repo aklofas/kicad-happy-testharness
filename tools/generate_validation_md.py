@@ -103,7 +103,9 @@ def _load_catalog_stats():
 
     categories = Counter(r.get("category", "?") for r in catalog)
     versions = Counter()
+    multi_version_repos = uncounted_repos = 0
     for r in catalog:
+        counted = 0
         for v in r.get("kicad_versions", []):
             # Parse major version from strings like "9.0", "5 (legacy)", "10.99"
             m = re.match(r"(\d+)", v)
@@ -111,6 +113,11 @@ def _load_catalog_stats():
                 major = int(m.group(1))
                 if major >= 5:
                     versions[f"KiCad {major}"] += 1
+                    counted += 1
+        if counted > 1:
+            multi_version_repos += 1
+        elif counted == 0:
+            uncounted_repos += 1
 
     total_components = sum(r.get("complexity", {}).get("total_components", 0)
                            for r in catalog)
@@ -136,6 +143,8 @@ def _load_catalog_stats():
         "total_repos": len(catalog),
         "categories": categories,
         "versions": versions,
+        "multi_version_repos": multi_version_repos,
+        "uncounted_repos": uncounted_repos,
         "total_components": total_components,
         "total_nets": total_nets,
         "detector_coverage": det_coverage,
@@ -231,6 +240,11 @@ The [test harness](https://github.com/aklofas/kicad-happy-testharness) contains 
     for ver, count in sorted(cat_stats.get("versions", {}).items(),
                               key=lambda x: int(x[0].split()[-1])):
         md += f"| {ver} | {count:,} |\n"
+    md += (f"\nA repo is counted once for each KiCad version string found in its files, so the "
+           f"{cat_stats.get('multi_version_repos', 0):,} repos that hold files from more than "
+           f"one version appear in more than one row (KiCad 8.0 and 8.99 both count under "
+           f"KiCad 8); the {cat_stats.get('uncounted_repos', 0):,} repos whose version the "
+           f"harness catalog records as unknown, empty or older than KiCad 5 are not counted.\n")
 
     md += f"""
 **Category distribution:**
@@ -308,9 +322,10 @@ Assertions are seeded from validated output and checked on every run. When analy
             gate_verdict = "CLEAN"
         run_ref = f"The run below is {gate_label}." if gate_label else ""
         md += "### Layer 1 regression gate (pre-tag requirement)\n\n"
-        md += ("Before any release is tagged, the harness runs the candidate commit and the "
-               "previous release over the full corpus and diffs every analyzer envelope unit "
-               "by unit. Every unit that moves (FAIL, Disappeared, NewUnknown) must be "
+        md += ("Before any release is tagged, the harness runs the candidate over the full "
+               "corpus and diffs every analyzer envelope unit by unit against a baseline: the "
+               "previous release, or, for a release built in gated waves, the previous accepted "
+               "candidate of each wave. Every unit that moves (FAIL, Disappeared, NewUnknown) must be "
                "attributed to a budget class pre-registered in the change's review record, "
                "and no finding may be silently downgraded; unexplained movement fails the "
                f"gate. {run_ref}\n\n")

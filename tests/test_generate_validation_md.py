@@ -160,3 +160,35 @@ def test_issue_counts_read_both_heading_formats(tmp_path, monkeypatch):
     monkeypatch.setattr(gvm, "FIXED_FILE", fixed)
     assert gvm._count_th_issues() == (2, 4, 12)
     assert gvm._count_kh_issues() == (1, 0, 247)
+
+
+def test_gate_paragraph_names_the_wave_chained_baseline():
+    md = gvm.generate_markdown(check_results=_check_results(),
+                               gate_rollup=_rollup(clean=True))
+    gate = md.split("### Layer 1 regression gate (pre-tag requirement)\n\n")[1]
+    assert gate.startswith(
+        "Before any release is tagged, the harness runs the candidate over the full corpus "
+        "and diffs every analyzer envelope unit by unit against a baseline: the previous "
+        "release, or, for a release built in gated waves, the previous accepted candidate "
+        "of each wave.")
+
+
+def test_version_table_note_counts_multi_version_and_uncounted_repos(tmp_path, monkeypatch):
+    import json
+    catalog = [{"kicad_versions": ["8.0", "8.99"]},      # two strings, both KiCad 8
+               {"kicad_versions": ["6.0", "9.0"]},
+               {"kicad_versions": ["7.0"]},
+               {"kicad_versions": ["unknown"]},
+               {"kicad_versions": []},
+               {"kicad_versions": ["4.0"]}]
+    path = tmp_path / "repo_catalog.json"
+    path.write_text(json.dumps(catalog))
+    monkeypatch.setattr(gvm, "CATALOG_FILE", path)
+    md = gvm.generate_markdown(check_results=_check_results())
+    assert "| KiCad 8 | 2 |" in md
+    table_end = md.split("**KiCad version distribution:**")[1].split("**Category distribution:**")[0]
+    assert ("A repo is counted once for each KiCad version string found in its files, so "
+            "the 2 repos that hold files from more than one version appear in more than one "
+            "row (KiCad 8.0 and 8.99 both count under KiCad 8); the 3 repos whose version "
+            "the harness catalog records as unknown, empty or older than KiCad 5 are not "
+            "counted.") in table_end
