@@ -11,6 +11,167 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-04 — KH-443: Net ties are not bridged by the DC-continuity audits — RS-001 false "no declared source" when a rail is fed through a `NetTie_2`; PP-001 / power tracing have the same blind spot (GitHub #50)
+
+
+**Severity:** MEDIUM (false RS-001 WARNING on a rail that is sourced; corpus:
+213 `.kicad_sch` files / 136 repos place `Device:NetTie_*`, 565 `.kicad_pcb`
+files carry `net_tie_pad_groups`)
+**File:** `skills/kicad/scripts/signal_detectors.py` — `audit_rail_sources`
+(RS-001/002, bridges `solder_jumpers` with `default_state == "bridged"` only),
+`audit_power_pin_dc_paths` (PP-001 `_bridges_dc`: inductor / ferrite / fuse /
+≤1 Ω resistor / bridged jumper — no `net_tie`); any other consumer that walks
+DC continuity (power_budget rail attribution, regulator output→rail mapping)
+**Discovered:** 2026-10-14, GitHub #50 (bson): "Net ties aren't understood…
+can be treated as 0R resistor arrays… but of course there is no BOM part"
+**Reported by:** bson (GitHub #50)
+
+**Repro (verified 2026-10-14 at main `0684046`, kicad-cli 10.0.6 oracle):**
+`repos/Envious-Data/EnvOpenPico/RP2040/EnvPicoLiPo/EnvPicoLiPo.kicad_sch` —
+U1 BQ24072RGT pin 10 `OUT` (`power_out`) sits on `Net-(C2-Pad2)` (analyzer
+`__unnamed_8`); NT1 `Device:NetTie_2` pin 1 is on that net, pin 2 on `VDD`,
+which carries U2 `Vin` (`power_in`), C3, R4. kicad-cli keeps the two nets
+distinct (correct — a net tie IS two nets in KiCad) and the analyzer's net
+membership matches the oracle exactly. But `audit_rail_sources` emits
+**RS-001 "VDD has no declared source"** (description: "…no bridged solder
+jumper path to a sourced net") although the rail is sourced one net-tie hop
+away. The same audit would have accepted a bridged `SolderJumper` in NT1's
+place. Pattern example (no RS-001 fires there today — the rails carry
+`#PWR` symbols): `greatscottgadgets/hackrf/hardware/hackrf-one` NT2 ties
+`REG_OUT1`↔`VCC` and NT1 `REG_OUT2`↔`+1V8`, so U21 TPS62410's outputs reach
+their rails only through ties; regulator→rail attribution (power_budget,
+DC-001 output-cap checks) cannot cross them either.
+Counter-evidence checked: `piotr-binkowski/kintex-pcie-board` NT6/NT3 tie
+`MGTAVCC`/`+1V8` to U8 `FB3`/`FB1` (feedback sense) — the PP-001 fires there
+are NOT tie-caused (U8 VOUT3 is on `MGTAVCC` directly).
+
+**What already works (so #50's "not identified" is only half right):**
+`kicad_utils` classifies `NT*` refs / `NetTie` lib_ids / values as
+`type: "net_tie"`; `in_bom no` is honoured, so NTs never enter
+`missing_mpn`, SS-001 or `bom_coverage`; SP-001 excludes them; the
+datasheet-sync scripts and `lifecycle_audit` skip them; `analyze_pcb`
+exports `net_tie_pad_groups` per footprint.
+
+**Minor rider:** `simulation_readiness.components_without_model` lists
+every NT (868-antenna: NT1..NT4; EnvPicoLiPo: NT1) — a net tie needs no
+SPICE model; exempt `net_tie` (and arguably `jumper`) in that filter at
+`analyze_schematic.py` ≈ l.6040.
+
+**Fix direction:** treat `type == "net_tie"` as an always-bridged jumper in
+`audit_rail_sources` and `_bridges_dc` (one predicate shared by both — the
+PR #44 fuse-bridge change is the template), keep net membership untouched
+(KiCad ground truth), and record the hop in the RS finding the way
+`source_path: "bridged_jumper"` does (`"net_tie"`). Gate budget: RS-001
+disappearances + RS-00x info "sourced via net tie" appearances on the ≈136
+NetTie repos; PP-001 disappearances where the only rail path crosses a tie;
+`components_without_model` shrinks by the NT count. Not for the PCB side:
+`net_tie_pad_groups` already lets copper join the two nets; no analyzer rule
+flags that join today.
+
+#### Addendum to KH-443 (net ties not bridged)
+**Added:** 2026-10-25, external audit round 1 (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R5-F11)
+RS-003 traversal has the same scope question. The comment at `skills/kicad/scripts/signal_detectors.py:4311-4312` and SKILL.md say it crosses a "bridged jumper / ferrite", but `:4244` iterates only `bridge_facts.jumpers`. Ruling needed together with this item: should RS-003 (and the bridge set generally) traverse ferrites, fuses and 0 Ω parts, or jumpers only? Then align the code or the comment.
+
+- **Fixed:** product v3.0.x-dev `3642bcf3` (9b T6) (3.0.x Waves 9b + 9c, unreleased; local and unpushed at the handoff): net ties are one conductor in RS-001 / PP-001.
+- **Verification:** product 3.0.x Waves 9b + 9c gate (`389fbd5` → `8c42799`, results/v301_w9bc_gate). Std gate: RS-001 −97 / +14 and PP-001 −2,041 / +17 across the schematic lane, all on units the budget labels (no residual); harness fixture `tests/fixtures/net_tie/` (`tests/test_net_tie_rail_source.py`) RS-001 on the tied rail at `389fbd5`, none at `8c42799`; `NT?` duplicate references join nothing (locked by the same test). Rider (simulation readiness lists net ties as components without a model) filed separately as KH-916. GitHub #50 gets the product reply at release.
+
+## 2026-11-04 — KH-460: EMC DC-002 "no decoupling cap near <IC>" fires on an ESD-protection array (USBLC6-2SC6) at `error` — the non-IC exemption keys on the value substring `esd`/`tvs`, and the finding duplicates the schematic UC-001 warning at a higher severity
+
+
+**Severity:** LOW (one false `error` per board with a part-numbered ESD array on a connector VBUS net; the only `error` on a fab-ready board)
+**File:** `skills/emc/scripts/emc_rules.py:632-639` — the "Skip known non-ICs" test `any(p in val for p in ('esd', 'tvs', 'test', 'tp', 'net_tie'))` runs on the component value; `USBLC6-2SC6`, `TPD2E*`, `PESD*`, `SP05*` contain neither token
+**Discovered:** 2026-10-22, SacMap rev2 soak run 9 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/9/`, product `main` @ `4701c26` = v2.3.2 pre-tag; report `REVIEW-2026-10-22.md`, meta `REVIEW-2026-10-22-meta.md`), report §18.1 / meta §2 #1 (unchanged since the 2026-10-05 run)
+
+**Repro:** SacMap U4 `USBLC6-2SC6`, pin 5 on VBUS net `__unnamed_10` (J1.1, U4.5, F1.1 — no capacitor). DC-002 `error` components `["U4"]`, `nearby_caps`/`closest_cap_mm` null; schematic UC-001 `warning` "No decoupling capacitor on VBUS at J1" describes the same fact.
+
+**Fix direction:** classify by role, not value text — the schematic analyzer already identifies ESD arrays (`esd_audit` / protection detector components, `ic_pin_analysis` function `esd_protection`); skip those refs in DC-002, or keep the check and emit at `warning` with `related_rule: UC-001`. Gate budget: DC-002 disappearances on boards with part-numbered ESD arrays (count at the filing round).
+
+- **Fixed:** product v3.0.x-dev `2d3dbcc9`, `cd9b6695` (9c T2) (3.0.x Waves 9b + 9c, unreleased; local and unpushed at the handoff): EMC DC-002 checks TPS / TP4056 parts and exempts schematic protection arrays; a PCB-only run keeps TI TPD arrays exempt.
+- **Verification:** product 3.0.x Waves 9b + 9c gate (`389fbd5` → `8c42799`, results/v301_w9bc_gate). Std gate EMC lane DC-002 −479 / +1,073 (PCB decoupling + 9c T2 together), every unit labelled; the product fixture gate holds the USBLC6-2SC6 case.
+
+## 2026-11-04 — KH-685: a `no_connect`-type pin wired to a label or net joins it; kicad-cli isolates it
+
+
+**Severity:** MEDIUM (membership, pre-existing; made scorable by Wave 3b instance refs)
+**File:** `schematic/connectivity.py` (pin-to-net assignment)
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4, class C3)
+
+**Symptom:** jotego vendetta JM1.15 (pin type `no_connect`) wired to `TEST` joins `/TEST`; kicad-cli exports it as `unconnected-(JM1-NC-Pad15)`. With that pin made `passive` kicad-cli exports `/TEST` {JM1.15}, and Gekkio SGB U3/U4/U5 pin 1 (NC wired to GND) is also left out, so this is a membership rule, not only naming. Reach on the samples: 9 nets / 4 boards (s_f1r vendetta, exterm ×4, Gekkio ×3; s_rand s18 `COIN_3`), plus m68k-hbc U25/U12 (its 2 merged nets).
+
+**Fix direction / budget:** isolate `no_connect`-type pins as KiCad does; budget: nets / NT-001 / pin counts on boards with wired NC-type pins.
+
+**Addendum 2026-10-29 (3.0.x relock triage):** stacked `no_connect` pins with no wire merge too. sparkfun SparkFun_RTK_Facet_mosaic root sheet at `40b8ff3`: U7 (AP7361C) pins 2/3/6/7 → one net `__unnamed_95`, J2 NC1/NC2 → `__unnamed_98` (`point_count` 1, `no_connect` true); kicad-cli 10.0.7 exports six `unconnected-(…)` nets (pin-grouping oracle: 156 matched / 2 merged, single-pin 61 vs 67).
+
+- **Fixed:** product v3.0.x-dev `d7f2cfc8` (9b T4) (3.0.x Waves 9b + 9c, unreleased; local and unpushed at the handoff): an NC-type pin is a net of its own, as in KiCad; ERC reports a wired one once per point (legacy `.sch` too).
+- **Verification:** product 3.0.x Waves 9b + 9c gate (`389fbd5` → `8c42799`, results/v301_w9bc_gate). Std gate: 426 schematic units change connectivity, and in every one the candidate netlist equals the baseline with each NC-typed pin (`no_connect`, legacy `unconnected`) split into its own net (3,597 pins; checked as pin multisets, names ignored); no other connectivity change anywhere in the 36,465 schematic units. Legacy GND ties on NC-typed library pins are isolated by design (ruling sch P1).
+
+## 2026-11-04 — KH-796: the switching-loop area is a centre-triangle proxy, not the hot loop
+
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/pcb/assembly.py` (switching-loop estimate), `kicad_core/hotloop.py`; `skills/emc/scripts/emc_rules.py` (SW-003)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 7 (GitHub #62 follow-up; KH-790 remainder); not verified harness-side
+
+**Symptom:** the area is a shoelace over cap / IC / inductor centres. A buck hot loop is Cin → VIN → GND → Cin GND (the inductor is not in it); a boost loop is switch → diode/FET → Cout. Long near-lines just over 1 mm² still read as small loops (BlueJayRacing IC6: 1.2 mm² over 48 mm).
+
+**Fix direction / budget:** a topology-aware loop from pads and tracks. Budget: full-chain SW-003 and `switching_loop_areas` (standard PCB outputs carry none: no `--schematic` in that profile).
+
+- **Fixed:** product v3.0.x-dev `48bc7296`, `4660efe0` (9b T19); SW-003 grading `d6eed6f7`, `a2b05b83` (9c T9) (3.0.x Waves 9b + 9c, unreleased; local and unpushed at the handoff): the hot loop is measured pad to pad through the nearest input cap (`method: "pad"`, `loop_pads`, 6 vertices); SW-003 grades only pad loops and reports a centre triangle as an ungraded info estimate.
+- **Verification:** product 3.0.x Waves 9b + 9c gate (`389fbd5` → `8c42799`, results/v301_w9bc_gate). No corpus lane passes `--schematic`, so the pad path is gate-blind (KH-931); verified by the harness fixture `tests/fixtures/hotloop/buck.kicad_pcb` (`tests/test_hotloop_pad_fixture.py`: 120.0 mm² pad loop, SW-003 error from the pad loop, 35 mm² centre triangle → info "not graded") and the rewritten `tests/test_switching_loop.py`; product targeted check on 100 boards, 30/30 areas equal to the KiCad IPC-D-356 oracle. Std gate EMC: 447 SW-003 rewritten in place (≈440 estimated). GitHub #62 gets the product reply at release. Open follow-ups: KH-930, KH-931.
+
+## 2026-11-04 — KH-877: the rail-name heuristic does not treat `4.5V-28V IN` as a rail
+
+
+**Severity:** LOW (PP-001 / DO-DET noise on input rails named by a range)
+**File:** `skills/kicad/scripts/kicad_core/netnames.py:111-180` (`is_power_net_name`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-800 follow-ups); verified harness-side at `0efc012` (`is_power_net_name('/…/4.5V-28V IN')` False, `parse_voltage_from_net_name` 4.5; `is_power_net_name('VSYS')` True)
+
+**Symptom:** after the KH-800 renames, PiPortable's input net is named `4.5V-28V IN` (it was `VSYS`). Not seen as a rail, it gives 3 PP-001 "no DC path to a power rail" on U2.22 (VSYS pin), U4.8 and U5.8 (VIN), 2 DO-DET "regulator missing capacitors", and loses one decoupling-coverage record (product A/B `ab_so/{base,tip2}/33.json`). The handoff lists `VSYS` as a miss too; `VSYS` as a net name is recognised (explicit list, `netnames.py:149`). It appears here only as a pin name.
+
+**Fix direction / budget:** accept a leading voltage range (`<v>V-<v>V` with an optional `IN`/`_IN` tail) as a rail; optionally treat a net feeding `power_in` VIN/VSYS pins as a rail. Output-changing (PP-001/DO-DET); measure before budgeting. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev `ad5629e0` (9b T8) (3.0.x Waves 9b + 9c, unreleased; local and unpushed at the handoff): a named net whose pins make it a supply is a power rail.
+- **Verification:** product 3.0.x Waves 9b + 9c gate (`389fbd5` → `8c42799`, results/v301_w9bc_gate). Std gate schematic lane: rail recognition moves DC-DET +1,934 / −28, PP-001 −2,041, RC-DET −526 / +30, every unit labelled; PiPortable power sheets move as the handoff described (PP-001 −1/−1/−3, DC-DET +1 each).
+
+## 2026-11-04 — KH-894: supply-rail recognition is by net name only, so a rail whose KiCad name is not rail-like loses its decoupling group and gains RC filters (su-pcb SPICE benches flip decoupling → rc_filter)
+
+
+**Severity:** LOW (decoupling / RC-DET / SPICE bench type on supply nets with non-rail names)
+**File:** `skills/kicad/scripts/kicad_core/netnames.py:111` (`is_power_net_name`); consumers `skills/kicad/scripts/signal_detectors.py:1245` (`detect_decoupling`, per power rail) and `:523` (`detect_rc_filters` needs a shared SIGNAL net, so a non-rail supply qualifies)
+**Discovered:** 2026-11-03, harness Wave 8c + 8b gate spice-offline lane (product asked for a "component order" KH; measured cause is the net name); verified harness-side at `0efc012`: `is_power_net_name` True for `CAN_VCC`, `VCC_PROTECTED`, `3V3_PROTECTED`, `VBUS_PROT`, False for `CAN_VCC_PROTECTED` and `lclprotecteddvc1`
+
+**Symptom:** KH-800 gives two su-pcb nets their KiCad names with unchanged pins: `EQM-SU-PCB` `/…9b57…/CAN_VCC` → `/…d779…/CAN_VCC_PROTECTED` (IC5.3, IC13.3, C3/C4/C50/C51, R193, R87) and `SU-PCB-OLD` `/…fe149/MEM_VCC` → `/…c945/lclprotecteddvc1`. Under the new names the nets are no longer rails: the decoupling group (C4, C51, C3, C50) disappears, RC-DET pairs R193/C3 and R87/C3 with the supply as output (2 and 4 filters), and the SPICE benches change type (decoupling −1, rc_filter +2 / +4). Connectivity is identical; only the name decides. The analyzer had the same blind spot for any design that names a supply this way (it was hidden here by the old tie-break picking a rail-like name).
+
+**Fix direction / budget:** treat a net as a rail from its pins as well as its name (a net feeding `power_in` supply pins of ICs, or carrying a power symbol on another sheet), and/or widen the name rule to `<prefix>_VCC_<suffix>`; RC-DET should not take a net that feeds IC supply pins as a filter output. Output-changing: decoupling / RC-DET / PP-001 and SPICE benches; measure before budgeting. Same family as KH-877. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev `ad5629e0`, `8564354c` (9b T8) (3.0.x Waves 9b + 9c, unreleased; local and unpushed at the handoff): a net whose pins make it a supply (passive VCC pin with caps to ground) is a power rail; bridge / motor-driver outputs are not.
+- **Verification:** product 3.0.x Waves 9b + 9c gate (`389fbd5` → `8c42799`, results/v301_w9bc_gate). Std gate: su-pcb `EQM-SU-PCB.kicad_sch` now has "Decoupling on …/CAN_VCC_PROTECTED" and loses 6 RC-DET (MCU sheet: "Decoupling on CAN_VCC"); harness fixture `tests/fixtures/topology_rail/` (`tests/test_topology_rail.py`) red at `389fbd5`, green at `8c42799`, with an `OSC_IN` crystal net as the negative control.
+
+## 2026-11-04 — KH-895: TE-001 counts `TP`-prefixed capacitive touch pads as test points — test-point recognition is by reference prefix
+
+
+**Severity:** LOW (test-coverage count and TE-001 text on boards that name touch electrodes `TP<n>`)
+**File:** `skills/kicad/scripts/pcb/assembly.py` — `07b7fb1` :800 / :832 (inline `ref.upper().startswith("TP")`); `5687ee1` :814 `_is_test_point` (prefix OR `pad_prop_testpoint`; the prefix alone still admits the pad). Same prefix rule on the schematic side: `schematic/system_analyses.py:1898` (`is_tp`, `5687ee1`), `project_config.py:578`.
+**Discovered:** 2026-11-03, SacMap rev2 soak run 10 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/10/`, product `07b7fb1` = v3.0.0 release base; `REVIEW-2026-11-03.md` / `-meta.md`); verified harness-side by code read at `07b7fb1` and v3.0.x-dev `5687ee1`
+
+**Symptom:** SacMap touch pads (value `TouchPad`, footprint `sacmap:Touch`, reference `TP<n>`) are counted in `test_point_count` and as net coverage for TE-001. PCB half of KH-436 (schematic `test_coverage`, with its FD-001 rider); fix together from the CP-003 touch-pad classifier.
+
+**Fix direction / budget:** exclude a `TP` reference whose value or footprint names a touch / capacitive sensor (`touch`, `cap_sense`, `electrode`), or require a test-point footprint / pad property when the value contradicts it. Output-changing: TE-001 / `test_point_count` on boards with TP-named touch pads; measure first. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev `efad984d` (9b T13) (3.0.x Waves 9b + 9c, unreleased; local and unpushed at the handoff): capacitive touch pads with TP references are not test points (PCB TE-001 and schematic `test_coverage`).
+- **Verification:** product 3.0.x Waves 9b + 9c gate (`389fbd5` → `8c42799`, results/v301_w9bc_gate). Std gate PCB lane: TE-001 rewritten in place on 2 boards (counts unchanged), labelled; the product A/B gave meiji-led-ring 13 → 5 TPs, plan44 5 → 1, SacMap 2 → 0. KH-436 keeps its FD-001 rider.
+
+## 2026-11-04 — KH-920: load switches and USB power switches were recorded as LDO regulators
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/signal_detectors.py` (`_screen_regulator_candidate`, `audit_rail_sources`); `skills/kicad/scripts/kicad_core/parts.py` (`LOAD_SWITCH_KEYWORDS`); `skills/kicad/scripts/domain_detectors.py` (`detect_power_path`)
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-9-report.md`); filed FIXED-direct. **Fixed:** product v3.0.x-dev `9bf13f0b` + `40c6d163` (3.0.x Wave 9b, unreleased; local and unpushed at the handoff).
+
+- **Root cause:** the regulator screen excluded only its own short power-mux list. Load / USB power switches (MT9700, SY6280, AP2171/AP2191, TPS206x, STMPS2, NCP380, …) were typed LDO, and a phantom PR-DET record gave them an `output_rail`, DO-DET "regulator missing capacitors" and PS-001 "PG status unknown". The load-switch keyword list lived privately in `domain_detectors`.
+- **Fix:** `9bf13f0b` moves the list to a shared `LOAD_SWITCH_KEYWORDS` in `kicad_core/parts.py` (adding `tps206`, `ap217`, `mt9700`, `sy628`), used by both the regulator screen (`signal_detectors.py:1763` at `8c42799`) and `detect_power_path` (`domain_detectors.py:2810`). `40c6d163` makes `audit_rail_sources` treat a switch's output net as sourced when its input conductor is sourced (fixpoint over chains, `signal_detectors.py:4396-4497`), so removing the phantom regulator does not leave its output as an unsourced rail.
+- **Verification:** product A/B on the 52 census roots carrying these parts, base `8564354` vs `40c6d163`: PR-DET -72, DO-DET -12, PS-001 -3, PP-DET +27 (true `load_switch` detections), RS-001 +13. The 13 are switch outputs whose input rail is itself unsourced and already carries an RS-001 in the same file. The same-file restatement was hand-checked 13/13. Old-gap set (215 roots with a PP-DET load switch, `9bf13f0` vs `40c6d163`): RS-001 -35, 0 added. sample300: PR-DET -26, PP-DET +6, DO-DET -1, RS-001 -2. Full chain (28 roots): EMC and cross_analysis 0/28 moved, thermal `skipped_components` / summary only. Product tests 2,367 OK; harness unit 2,872 passed / 1 xfailed, contract 685 / 8 skipped / 3 xfailed. Determinism PYTHONHASHSEED 0 vs 1 identical on 12 roots. Net-tie sample 0 deltas.
+- **Residual (filed open as KH-946):** `audit_rail_sources` pairs every input net with every output net of a switch (`signal_detectors.py:4477-4487` at `8c42799`), so a dual switch with separate channels (TPS22966 VIN1/VOUT1, VIN2/VOUT2) can mark VOUT2 sourced from VIN1 and hide an RS-001. Still present at `8c42799`.
+
 ## 2026-11-03 — KH-870: the PDF hashers open with a blocking `open`, so a FIFO at `datasheets/X.pdf` hangs the staleness check
 
 **Severity:** LOW
