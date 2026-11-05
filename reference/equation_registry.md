@@ -2,16 +2,16 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-11-03T09:03:31.937331+00:00
+**Last scan:** 2026-11-05T04:02:14.412356+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
 | Total equations | 104 |
-| Verified | 84 |
+| Verified | 85 |
 | Unverified | 0 |
-| Stale | 20 |
+| Stale | 19 |
 | Critical impact | 11 |
 | High impact | 34 |
 | Medium impact | 38 |
@@ -65,7 +65,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **verified** |
 | EQ-086 | `check_decoupling_via_distance` | d = √(Δx²+Δy²) (cap-to-via distance for connection inductance) | parasitic | high | **verified** |
 | EQ-087 | `check_clock_near_connector` | d = √(Δx²+Δy²) (clock trace midpoint to connector distance) | parasitic | high | **verified** |
-| EQ-088 | `check_input_cap_loop_area` | A = polygon_area(cap, IC, inductor) (hot loop area estimation) | unknown | medium | **stale** |
+| EQ-088 | `check_input_cap_loop_area` | A = polygon_area(cap, IC, inductor) (hot loop area estimation) | unknown | medium | **verified** |
 | EQ-093 | `_suggest_pdn_cap` | C_suggest = 1/(4π²f²ESL) then round to E12 (PDN cap selection) | impedance | medium | **verified** |
 | EQ-094 | `estimate_switching_emissions` | V_n = V_peak × 2/(nπ) × sin(nπD) (trapezoidal harmonic envelope) | emc_radiation | critical | **verified** |
 | EQ-095 | `check_switching_node_area` | A_track = Σ(width_mm × length_mm) (switching node copper area) | emc_radiation | medium | **verified** |

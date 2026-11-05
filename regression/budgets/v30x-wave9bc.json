@@ -1,0 +1,46 @@
+{
+ "budget_id": "v30x-wave9bc",
+ "profile": "standard",
+ "baseline_sha": "389fbd5",
+ "candidate_sha": "8c42799",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-wave9bc",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave9bc:schematic",
+   "evidence": "9b T3/T4/T5/T6/T8/T9: raw lists and components (bar pin_nets) unchanged; connectivity changes only by NC-typed pins taking nets of their own; findings gain or lose only the 9b schematic rules, other detectors rewrite in place. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-04-v3.0.1-wave9bc/handoff-wave9bc.md (per-task budgets budget-9b-T*.json / budget-9c-T*.json, merged budget-wave9bc.json, same directory)"
+  },
+  {
+   "id": "PCB-wave9bc",
+   "analyzer": "pcb",
+   "path_glob": "/**",
+   "predicate": "v30x_wave9bc:pcb",
+   "evidence": "9b T10 KO-001 removals + keepout_allowed_net dropped, T11 RT-001/BV-001 removals, T13 TE-001 rewrites, T14 ground_domains (pad-named domains leave, 0V / battery-negative arrive), T15 decoupling caps on signal-pin nets leave. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-04-v3.0.1-wave9bc/handoff-wave9bc.md (per-task budgets budget-9b-T*.json / budget-9c-T*.json, merged budget-wave9bc.json, same directory)"
+  },
+  {
+   "id": "GERBER-wave9bc",
+   "analyzer": "gerber",
+   "path_glob": "/**",
+   "predicate": "v30x_wave9bc:gerber",
+   "evidence": "9b T16/T17/T18: non-Gerber files become error records, dot / Zone.Identifier files leave, job-file diagnostics, D02 extents shrink, GR-001 added with error records, GR-002 removed. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-04-v3.0.1-wave9bc/handoff-wave9bc.md (per-task budgets budget-9b-T*.json / budget-9c-T*.json, merged budget-wave9bc.json, same directory)"
+  },
+  {
+   "id": "EMC-wave9bc",
+   "analyzer": "emc",
+   "path_glob": "/**",
+   "predicate": "v30x_wave9bc:emc",
+   "evidence": "9c T2-T9 rules + EMC readers of 9b PCB blocks (GP-005, DC-001/002/003); other rules and board_info.total_nets only with a labelled upstream move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-04-v3.0.1-wave9bc/handoff-wave9bc.md (per-task budgets budget-9b-T*.json / budget-9c-T*.json, merged budget-wave9bc.json, same directory)"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave9bc:downstream",
+   "evidence": "thermal / cross_analysis movement only under a labelled upstream schematic or PCB move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-04-v3.0.1-wave9bc/handoff-wave9bc.md (per-task budgets budget-9b-T*.json / budget-9c-T*.json, merged budget-wave9bc.json, same directory)"
+  }
+ ]
+}

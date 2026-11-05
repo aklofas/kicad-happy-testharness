@@ -2,15 +2,15 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-03T09:04:51.324062+00:00
+**Last scan:** 2026-11-05T04:02:08.106093+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 948 |
+| Total constants | 980 |
 | Verified | 195 |
-| Unverified | 728 |
+| Unverified | 760 |
 | Stale (changed since verification) | 25 |
 | Critical risk | 5 |
 | High risk | 10 |
@@ -112,6 +112,7 @@
 | CONST-429 | `DEFAULT_MAX_AGE_DAYS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-430 | `MIN_SCORE` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-431 | `MAX_RETRIES` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-116 | `is_extraction_stale:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 
 ## skills/datasheets/scripts/datasheet_features.py
 
@@ -210,6 +211,16 @@
 | CONST-395 | `_sev_order` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-287 | `_final_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 
+## skills/emc/scripts/analyze_harmonic_limits.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-161 | `DETECTORS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-164 | `LEVEL_UNITS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-192 | `MARGIN_DECIMALS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-280 | `MAX_INPUT_BYTES` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-390 | `normalized` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+
 ## skills/emc/scripts/emc_formulas.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
@@ -238,11 +249,12 @@
 | CONST-241 | `_USB_OR_SS_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-460 | `finding` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-018 | `SPLIT_BRIDGE_CAP_MM` | physics | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-005 | `check_missing_decoupling:kw1` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-005 | `check_missing_decoupling:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-012 | `check_connector_filtering:kw1` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-267 | `bands` | unknown | 3 | verified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-385 | `ss_keywords` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-363 | `PROXIMITY_MM` | physics | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-432 | `_PLANE_MIN_FILL_FRACTION` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-292 | `SAMPLE_INTERVAL` | heuristic_threshold | 1 | verified | 0.4 | 0.1 | **low** (0.1) |
 | CONST-245 | `_FERRITE_MAX_HENRY` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-294 | `connector_sizes` | datasheet_lookup | 19 | verified | 0.7 | 0.0 | **low** (0.0) |
@@ -260,6 +272,19 @@
 |---|---|---|---|---|---|---|---|
 | CONST-293 | `prefixes` | unknown | 10 | unverified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-301 | `measurements` | unknown | 3 | unverified | 0.0 | 0.0 | **low** (0.0) |
+
+## skills/emc/scripts/test_analyze_harmonic_limits.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-643 | `VALID_SPECTRUM` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-669 | `VALID_PROFILE` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-676 | `mutations` | unknown | 5 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-697 | `cases` | unknown | 4 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-729 | `cases` | unknown | 4 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-730 | `cases` | unknown | 3 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-731 | `arguments` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-737 | `cases` | unknown | 4 | unverified | 0.0 | 0.0 | **low** (0.0) |
 
 ## skills/kicad/review/scripts/_mini_jsonschema.py
 
@@ -504,7 +529,6 @@
 | CONST-536 | `_RESET_ALIASES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-537 | `_DEBUG_CONNECTOR_KEYWORDS` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-538 | `required` | keyword_classification | 4 | unverified | 0.3 | 0.1 | **medium** (0.3) |
-| CONST-539 | `_LOAD_SWITCH_KEYWORDS` | keyword_classification | 25 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-540 | `_IDEAL_DIODE_KEYWORDS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-541 | `_USB_PD_KEYWORDS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-542 | `_POWER_IN_PINS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -646,6 +670,7 @@
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-286 | `NON_COMPONENT_TYPES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-739 | `_TOUCH_MARKERS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-895 | `_LED_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-896 | `_NON_LED_DIODE_SYMBOL` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-193 | `type_map` | standard | 65 | verified | 0.7 | 0.0 | **low** (0.0) |
@@ -746,6 +771,7 @@
 | CONST-831 | `_RAIL_TAILS_GATED` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-897 | `_NEGATIVE_SUPPLY_NAMES` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-832 | `_VOLTAGE_SIGNAL_SUFFIXES` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-809 | `_USB_D_SUFFIX` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-898 | `IC_SIGNAL_PIN_TYPES` | standard | 6 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-078 | `_UUID_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
@@ -753,15 +779,18 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
-| CONST-359 | `_BRIDGE_KINDS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-359 | `_BRIDGE_KINDS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-360 | `_ZERO_OHM_SPELLINGS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/kicad_core/parts.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-839 | `LOAD_SWITCH_KEYWORDS` | keyword_classification | 26 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-833 | `_REGULATOR_VREF` | datasheet_lookup | 118 | stale | 1.0 | 0.0 | **high** (0.5) |
 | CONST-834 | `_LOAD_TYPE_KEYWORDS` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-967 | `_PACKAGE_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-968 | `_AMBIGUOUS_SUFFIXES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-835 | `_KNOWN_FREQS` | datasheet_lookup | 105 | verified | 0.8 | 0.0 | **low** (0.0) |
 | CONST-384 | `defaults` | datasheet_lookup | 5 | verified | 0.7 | 0.0 | **low** (0.0) |
 | CONST-261 | `MLCC_ESL` | datasheet_lookup | 8 | verified | 0.8 | 0.0 | **low** (0.0) |
@@ -786,6 +815,7 @@
 |---|---|---|---|---|---|---|---|
 | CONST-678 | `_DRU_LENGTH` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-784 | `_DRU_UNIT_MM` | physics | 3 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-969 | `_DRU_BARE_NUMBER` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
 ## skills/kicad/scripts/kicad_core/render.py
 
@@ -871,13 +901,14 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-970 | `_SUPPLY_PIN_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-211 | `_ESD_TVS_PREFIXES` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-320 | `_RF_MODULE_KEYWORDS` | keyword_classification | 20 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-321 | `_RF_LIB_KEYWORDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-330 | `_EDGE_MOUNT_LIBRARY_KEYWORDS` | keyword_classification | 16 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-806 | `pts` | unknown | 4 | unverified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-097 | `risk_order` | heuristic_threshold | 3 | stale | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-964 | `loop` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-964 | `loop` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-014 | `analyze_fiducials:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-344 | `finding` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 
@@ -902,8 +933,6 @@
 | CONST-098 | `adequacy_order` | heuristic_threshold | 4 | stale | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-333 | `_PASSIVE_REF_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-300 | `_gnd_keywords` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-023 | `analyze_copper_presence:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-104 | `analyze_copper_presence:kw2` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 
 ## skills/kicad/scripts/pcb/dfm.py
 
@@ -922,7 +951,6 @@
 | CONST-922 | `_BOARD_MINIMUM_ITEMS` | unknown | 5 | unverified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-923 | `_CUSTOM_CHECKED_TYPES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-924 | `_ANNULUS_DIRECT_SHAPES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-925 | `_BARE_NUMBER` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-332 | `v` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/kicad/scripts/pcb/geometry.py
@@ -989,7 +1017,7 @@
 | CONST-316 | `ANTIPAD_GRID` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-317 | `sample` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-089 | `seg_entry` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-184 | `analyze_ground_domains:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-971 | `_is_ground:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 
 ## skills/kicad/scripts/project_config.py
 
@@ -1123,6 +1151,8 @@
 | CONST-934 | `_NOT_SUPPLY_PIN_NAMES` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-935 | `_NOT_SUPPLY_PIN_PREFIXES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-936 | `_SUPPLY_RETURN_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-972 | `_SUPPLY_PIN_FULL_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-973 | `_BRIDGE_OUTPUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-223 | `_io_pin_names` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-224 | `_sense_pin_names` | keyword_classification | 17 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-225 | `_pwr_pin_to_rail` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -1257,7 +1287,7 @@
 | CONST-135 | `reg_lib_keywords` | keyword_classification | 52 | verified | 0.5 | 0.0 | **low** (0.0) |
 | CONST-659 | `_screen_regulator_candidate:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-137 | `_rf_exclude` | keyword_classification | 12 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-138 | `_power_mux_exclude` | keyword_classification | 12 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-138 | `_power_mux_exclude` | keyword_classification | 11 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-660 | `_screen_regulator_candidate:kw2` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-442 | `_opamp_adc_exclude` | keyword_classification | 19 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-910 | `out` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -1293,6 +1323,8 @@
 | CONST-268 | `detect_design_observations:kw2` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-769 | `SHORTABLE` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-770 | `MASS_SHORT_THRESHOLD` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-974 | `_SWITCH_INPUT_PINS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-975 | `_SWITCH_OUTPUT_PINS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-771 | `_MODULE_INTERNAL_RAIL_PATTERNS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-458 | `MAX_HOPS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 
@@ -1321,6 +1353,7 @@
 | CONST-912 | `_PG_PIN_PATTERNS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-913 | `_en_endpoint_compatible:kw1` | keyword_classification | 18 | unverified | 0.4 | 0.2 | **medium** (0.4) |
 | CONST-914 | `_USB_D_NOT_DATA` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-976 | `_DATA_PAIR_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-786 | `_I2C_IC_KEYWORDS` | keyword_classification | 51 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-787 | `_I2C_SDA_NAMES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-788 | `_I2C_SCL_NAMES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -1403,6 +1436,14 @@
 | CONST-817 | `VIA_PLATING_UM` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-818 | `net_entry` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
+## skills/spice/scripts/run_external_deck.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-977 | `SIMULATORS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-978 | `DEFAULT_TIMEOUT_S` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-979 | `_SIMULATOR_OUTPUT_SUFFIXES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+
 ## skills/spice/scripts/simulate_subcircuits.py
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
@@ -1444,6 +1485,9 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-980 | `_NATIVE_LINE_LIMIT` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-981 | `_FATAL_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-982 | `_NOTE_LINE_LIMIT` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-819 | `BACKENDS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 
 ## skills/spice/scripts/spice_spec_fetcher.py
@@ -1462,6 +1506,7 @@
 | CONST-197 | `measurements` | unknown | 8 | verified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-198 | `measurements` | unknown | 8 | stale | 0.0 | 0.0 | **low** (0.0) |
 | CONST-199 | `measurements` | unknown | 6 | stale | 0.0 | 0.0 | **low** (0.0) |
+| CONST-983 | `_VEE_PIN_NAMES` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-916 | `_NAMED_NEGATIVE_RAILS` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-200 | `measurements` | unknown | 4 | stale | 0.0 | 0.0 | **low** (0.0) |
 | CONST-201 | `measurements` | unknown | 3 | verified | 0.0 | 0.0 | **low** (0.0) |
@@ -1482,4 +1527,11 @@
 |---|---|---|---|---|---|---|---|
 | CONST-824 | `DEFAULT_TOLERANCE` | physics | 3 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-825 | `_VALUE_KEYS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+
+## skills/spice/scripts/test_spice_simulator.py
+
+| ID | Name | Category | # | Status | Impact | Overfit | Risk |
+|---|---|---|---|---|---|---|---|
+| CONST-984 | `cases` | unknown | 3 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-985 | `candidates` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 

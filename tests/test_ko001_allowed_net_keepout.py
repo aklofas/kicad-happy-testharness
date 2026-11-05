@@ -1,7 +1,8 @@
-"""KO-001 allowed-net exemption — a KiCad rule area can name a net whose items are
-permitted inside it (an antenna keepout that admits the antenna's own via). No corpus
-board exercises this: 0 of 23,336 keepout zones carry a net, so the exemption branch
-is covered here by a synthetic board (rc.2 carry-over, KO-001 corpus-exercise gap).
+"""KO-001 under a keepout that names a net — a KiCad rule area can carry a net, but
+KiCad does not exempt that net's vias from a vias-restricted keepout (kicad-cli 10.0.7
+DRC reports both vias), so KO-001 flags every through via inside it and no finding
+carries a `keepout_allowed_net` key. No corpus board exercises this: 0 of 23,336
+keepout zones carry a net, so the case is covered here by a synthetic board.
 Fixtures: tests/fixtures/ko001/ — two vias inside a vias-restricted keepout, one on
 the keepout's net ANT and one on GND, plus a GND via outside it.
 """
@@ -25,14 +26,14 @@ def _ko001(name):
     return [f for f in json.loads(out.stdout)["findings"] if f.get("rule_id") == "KO-001"]
 
 
-def test_via_on_the_keepouts_allowed_net_is_exempt():
+def test_via_on_the_keepouts_net_is_not_exempt():
     findings = _ko001("antenna_keepout.kicad_pcb")
-    assert [(f["via_x"], f["via_y"]) for f in findings] == [(112.0, 110.0)]
-    assert findings[0]["keepout_allowed_net"] == "ANT"
-    assert findings[0]["keepout_name"] == "antenna_keepout"
+    assert sorted((f["via_x"], f["via_y"]) for f in findings) == [(110.0, 110.0), (112.0, 110.0)]
+    assert {f["keepout_name"] for f in findings} == {"antenna_keepout"}
+    assert not any("keepout_allowed_net" in f for f in findings)
 
 
-def test_same_board_without_an_allowed_net_flags_both_vias():
+def test_same_board_without_a_net_flags_both_vias():
     findings = _ko001("plain_keepout.kicad_pcb")
     assert sorted((f["via_x"], f["via_y"]) for f in findings) == [(110.0, 110.0), (112.0, 110.0)]
-    assert {f["keepout_allowed_net"] for f in findings} == {""}
+    assert not any("keepout_allowed_net" in f for f in findings)

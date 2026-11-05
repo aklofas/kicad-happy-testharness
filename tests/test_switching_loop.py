@@ -1,11 +1,11 @@
 """Unit tests for switching loop area computation and EMC SW-003 integration.
 
 Tests:
-  - _compute_switching_loop_areas triangle area calculation
+  - _compute_switching_loop_areas pad-to-pad loop area (method "pad")
   - Topology filtering (non-switching topologies produce empty results)
   - Missing/incomplete data handling
-  - EMC SW-003 pre-computed path (findings for large loops, none for small)
-  - EMC SW-003 fallback path (without pre-computed data)
+  - EMC SW-003 pre-computed path (pad loops graded, other records not)
+  - EMC SW-003 fallback path (centre triangle: info estimate, not graded)
   - End-to-end via corpus output scan (skips gracefully if unavailable)
 """
 
@@ -35,9 +35,26 @@ _RESULTS = _HARNESS / "results" / "outputs"
 # ---------------------------------------------------------------------------
 
 def _make_footprints(*refs_and_positions):
-    """Build synthetic footprint list from (ref, x, y) tuples."""
+    """Build synthetic footprint list from (ref, x, y) tuples (no pads)."""
     return [{"reference": ref, "x": x, "y": y, "pads": []}
             for ref, x, y in refs_and_positions]
+
+
+def _pad(number, net, x, y):
+    return {"number": number, "net_name": net, "abs_x": x, "abs_y": y}
+
+
+def _buck_footprints(cap_vin, reg_vin, reg_sw, ind_sw, reg_gnd, cap_gnd):
+    """Input cap C1 (VIN/GND), regulator U1 (VIN/SW/GND) and inductor L1 (SW/VOUT),
+    with the six hot-loop pads at the given (x, y) positions."""
+    return [
+        {"reference": "C1", "x": cap_vin[0], "y": (cap_vin[1] + cap_gnd[1]) / 2,
+         "pads": [_pad("1", "VIN", *cap_vin), _pad("2", "GND", *cap_gnd)]},
+        {"reference": "U1", "x": reg_sw[0], "y": reg_sw[1],
+         "pads": [_pad("1", "VIN", *reg_vin), _pad("2", "SW", *reg_sw), _pad("3", "GND", *reg_gnd)]},
+        {"reference": "L1", "x": ind_sw[0], "y": ind_sw[1] + 2.0,
+         "pads": [_pad("1", "SW", *ind_sw), _pad("2", "VOUT", ind_sw[0], ind_sw[1] + 4.0)]},
+    ]
 
 
 def _make_regulator(ref="U1", topology="switching", inductor="L1",
@@ -65,64 +82,70 @@ def _make_schematic(regulators):
 
 
 # ---------------------------------------------------------------------------
-# 2a. Loop area computation
+# 2a. Loop area computation (pad to pad)
 # ---------------------------------------------------------------------------
 
-def test_triangle_area_basic():
-    """Triangle (0,0)-(10,0)-(0,10) should give area = 50.0 mm^2."""
-    # Place cap at (10,0), IC at (0,0), inductor at (0,10) — but note
-    # the function skips positions at (0,0).  Use offset positions instead.
-    # Triangle at (1,1), (11,1), (1,11): area = 0.5 * |10*10| = 50.0
-    footprints = _make_footprints(
-        ("U1", 1.0, 1.0),
-        ("L1", 1.0, 11.0),
-        ("C1", 11.0, 1.0),
-    )
+def test_pad_loop_area_basic():
+    """Six hot-loop pads on a 10 x 10 mm square give a 100.0 mm^2 pad loop."""
+    footprints = _buck_footprints(
+        cap_vin=(1.0, 11.0), reg_vin=(6.0, 11.0), reg_sw=(11.0, 11.0),
+        ind_sw=(11.0, 1.0), reg_gnd=(6.0, 1.0), cap_gnd=(1.0, 1.0))
     schematic = _make_schematic([_make_regulator()])
     results = _compute_switching_loop_areas(footprints, schematic)
     assert len(results) == 1, f"Expected 1 result, got {len(results)}"
     loop = results[0]
-    assert loop["area_mm2"] == 50.0, f"Expected 50.0, got {loop['area_mm2']}"
+    assert loop["method"] == "pad"
+    assert loop["area_mm2"] == 100.0, f"Expected 100.0, got {loop['area_mm2']}"
     assert loop["regulator_ref"] == "U1"
     assert loop["inductor_ref"] == "L1"
     assert loop["cap_ref"] == "C1"
-    print("  PASS  test_triangle_area_basic")
+    assert "estimate" not in loop
+    print("  PASS  test_pad_loop_area_basic")
 
 
 def test_returned_structure():
-    """Verify all expected keys exist in result dict."""
-    footprints = _make_footprints(
-        ("U1", 5.0, 5.0),
-        ("L1", 15.0, 5.0),
-        ("C1", 10.0, 15.0),
-    )
+    """A resolved pad loop names its six pads in loop order and their positions."""
+    footprints = _buck_footprints(
+        cap_vin=(1.0, 11.0), reg_vin=(6.0, 11.0), reg_sw=(11.0, 11.0),
+        ind_sw=(11.0, 1.0), reg_gnd=(6.0, 1.0), cap_gnd=(1.0, 1.0))
     schematic = _make_schematic([_make_regulator()])
     results = _compute_switching_loop_areas(footprints, schematic)
     assert len(results) == 1
     loop = results[0]
-    expected_keys = {"regulator_ref", "regulator_value", "inductor_ref",
-                     "cap_ref", "area_mm2", "vertices_mm"}
+    expected_keys = {"regulator_ref", "regulator_value", "inductor_ref", "cap_ref",
+                     "method", "area_mm2", "loop_pads", "vertices_mm"}
     assert expected_keys == set(loop.keys()), f"Keys mismatch: {set(loop.keys())}"
-    # vertices_mm should be a list of 3 [x, y] pairs
-    assert len(loop["vertices_mm"]) == 3
-    for v in loop["vertices_mm"]:
-        assert len(v) == 2 and isinstance(v[0], float)
+    assert loop["loop_pads"] == ["C1.1", "U1.1", "U1.2", "L1.1", "U1.3", "C1.2"]
+    assert loop["vertices_mm"] == [[1.0, 11.0], [6.0, 11.0], [11.0, 11.0],
+                                   [11.0, 1.0], [6.0, 1.0], [1.0, 1.0]]
     print("  PASS  test_returned_structure")
 
 
-def test_collinear_centres_degenerate():
-    """GitHub #62: cap, IC and inductor centres in a line give no area, not 0 mm^2."""
-    footprints = _make_footprints(
-        ("C1", 5.0, 5.0),
-        ("U1", 15.0, 5.0),
-        ("L1", 25.0, 5.0),
-    )
+def test_collinear_pads_degenerate():
+    """GitHub #62: hot-loop pads in a line give no area, not 0 mm^2."""
+    footprints = _buck_footprints(
+        cap_vin=(1.0, 5.0), reg_vin=(3.0, 5.0), reg_sw=(5.0, 5.0),
+        ind_sw=(7.0, 5.0), reg_gnd=(9.0, 5.0), cap_gnd=(11.0, 5.0))
     schematic = _make_schematic([_make_regulator()])
     results = _compute_switching_loop_areas(footprints, schematic)
     assert len(results) == 1
+    assert results[0]["method"] == "pad"
     assert results[0]["area_mm2"] is None
     assert results[0]["estimate"] == "degenerate"
-    print("  PASS  test_collinear_centres_degenerate")
+    assert len(results[0]["vertices_mm"]) == 6
+    print("  PASS  test_collinear_pads_degenerate")
+
+
+def test_pads_without_nets_unresolved():
+    """Footprints whose pads carry no nets give a pad record with no area."""
+    footprints = _make_footprints(("U1", 5.0, 5.0), ("L1", 15.0, 5.0), ("C1", 10.0, 15.0))
+    results = _compute_switching_loop_areas(footprints, _make_schematic([_make_regulator()]))
+    assert len(results) == 1
+    assert results[0]["method"] == "pad"
+    assert results[0]["area_mm2"] is None
+    assert results[0]["estimate"] == "pads_unresolved"
+    assert "vertices_mm" not in results[0]
+    print("  PASS  test_pads_without_nets_unresolved")
 
 
 # ---------------------------------------------------------------------------
@@ -209,13 +232,14 @@ def test_empty_input_caps():
 # ---------------------------------------------------------------------------
 
 def test_sw003_precomputed_large_loop():
-    """Pre-computed loop area > 25 mm^2 should produce a SW-003 finding."""
+    """A pad loop over 100 mm^2 is graded: one SW-003 error."""
     pcb = {
         "switching_loop_areas": [{
             "regulator_ref": "U1",
             "regulator_value": "TPS54331",
             "inductor_ref": "L1",
             "cap_ref": "C1",
+            "method": "pad",
             "area_mm2": 150.0,
             "vertices_mm": [[10, 0], [0, 0], [0, 10]],
         }],
@@ -230,6 +254,27 @@ def test_sw003_precomputed_large_loop():
     assert "U1" in f["components"]
     assert "150" in f["description"]
     print("  PASS  test_sw003_precomputed_large_loop")
+
+
+def test_sw003_precomputed_without_method_not_graded():
+    """A loop record without method "pad" holds the centre triangle: one info, not graded."""
+    pcb = {
+        "switching_loop_areas": [{
+            "regulator_ref": "U1",
+            "regulator_value": "TPS54331",
+            "inductor_ref": "L1",
+            "cap_ref": "C1",
+            "area_mm2": 150.0,
+            "vertices_mm": [[10, 0], [0, 0], [0, 10]],
+        }],
+        "footprints": [],
+    }
+    findings = check_input_cap_loop_area(pcb, _make_schematic([_make_regulator()]))
+    assert len(findings) == 1, f"Expected 1 finding, got {len(findings)}"
+    assert findings[0]["rule_id"] == "SW-003"
+    assert findings[0]["severity"] == "info"
+    assert findings[0]["summary"] == "Hot loop for U1 not graded: estimated from part centres"
+    print("  PASS  test_sw003_precomputed_without_method_not_graded")
 
 
 def test_sw003_precomputed_small_loop():
@@ -279,7 +324,7 @@ def test_sw003_precomputed_degenerate_not_estimated():
 # ---------------------------------------------------------------------------
 
 def test_sw003_fallback_no_precomputed():
-    """Without switching_loop_areas, function falls back to footprint positions."""
+    """Without switching_loop_areas the centre triangle is an info estimate, not graded."""
     pcb = {
         "footprints": _make_footprints(
             ("U1", 5.0, 5.0),
@@ -289,11 +334,12 @@ def test_sw003_fallback_no_precomputed():
     }
     schematic = _make_schematic([_make_regulator()])
     # Triangle (5,5)-(30,5)-(5,30): area = 0.5 * 25 * 25 = 312.5 mm^2
-    # That's > 25 so should trigger a finding
     findings = check_input_cap_loop_area(pcb, schematic)
     assert len(findings) == 1, f"Expected 1 finding, got {len(findings)}"
     assert findings[0]["rule_id"] == "SW-003"
-    assert findings[0]["severity"] == "error"  # > 100 mm^2 (normalized per 4ab788e)
+    assert findings[0]["severity"] == "info"
+    assert findings[0]["summary"] == "Hot loop for U1 not graded: estimated from part centres"
+    assert "312" in findings[0]["description"]
     print("  PASS  test_sw003_fallback_no_precomputed")
 
 
@@ -343,13 +389,14 @@ def test_end_to_end_corpus_output():
         assert "inductor_ref" in loop
         assert "cap_ref" in loop
         assert "area_mm2" in loop
+        assert loop.get("method") == "pad"
         if loop["area_mm2"] is None:
-            assert loop.get("estimate") == "degenerate"
+            assert loop.get("estimate") in ("degenerate", "pads_unresolved")
         else:
             assert isinstance(loop["area_mm2"], (int, float))
             assert loop["area_mm2"] > 0
-        assert "vertices_mm" in loop
-        assert len(loop["vertices_mm"]) == 3
+        if loop.get("estimate") != "pads_unresolved":
+            assert len(loop["vertices_mm"]) == 6
     print(f"  PASS  test_end_to_end_corpus_output ({path}, {len(loops)} loops)")
 
 
@@ -359,9 +406,10 @@ def test_end_to_end_corpus_output():
 
 ALL_TESTS = [
     # 2a. Loop area computation
-    test_triangle_area_basic,
+    test_pad_loop_area_basic,
     test_returned_structure,
-    test_collinear_centres_degenerate,
+    test_collinear_pads_degenerate,
+    test_pads_without_nets_unresolved,
     # 2b. Topology filtering
     test_non_switching_topologies_filtered,
     test_switching_topology_produces_results,
@@ -372,6 +420,7 @@ ALL_TESTS = [
     test_empty_input_caps,
     # 2d. EMC SW-003 pre-computed path
     test_sw003_precomputed_large_loop,
+    test_sw003_precomputed_without_method_not_graded,
     test_sw003_precomputed_small_loop,
     test_sw003_precomputed_degenerate_not_estimated,
     # 2e. EMC SW-003 fallback

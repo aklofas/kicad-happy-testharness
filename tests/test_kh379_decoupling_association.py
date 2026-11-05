@@ -57,6 +57,42 @@ def test_esd_only_board_gets_esd_bypass_entry():
     assert out and out[0]["category"] == "esd_bypass" and out[0]["ic"] == "U9"
 
 
+
+def _typed_fp(ref, value, x, pads):
+    """KiCad 6+ footprint: each pad carries its symbol pin type and pin function."""
+    fp = _fp(ref, value, x, [n for n, _, _ in pads])
+    for pad, (_, pintype, pinfunction) in zip(fp["pads"], pads):
+        pad["pintype"], pad["pinfunction"] = pintype, pinfunction
+    return fp
+
+
+def test_crystal_load_cap_on_input_pin_is_not_decoupling():
+    """A cap on an IC net whose own pad is typed `input` (crystal load cap on OSC_IN) is not
+    the IC's decoupling; the supply cap further away is."""
+    mcu = _typed_fp("U1", "MCU", 0.0, [("+3V3", "power_in", "VDD"), ("GND", "power_in", "VSS"),
+                                       ("/OSC_IN", "input", "OSC_IN")])
+    fps = [mcu, _fp("C1", "18p", 2.0, ["/OSC_IN", "GND"]), _fp("C2", "100n", 7.0, ["+3V3", "GND"])]
+    out = pcb_assembly.analyze_decoupling_placement(fps)
+    assert len(out) == 1 and out[0]["ic"] == "U1"
+    assert [c["cap"] for c in out[0]["nearby_caps"]] == ["C2"]
+
+
+def test_untyped_pads_keep_the_load_cap():
+    """KiCad 5 pads carry no pin type: the load cap still counts, as before."""
+    fps = [_fp("U1", "MCU", 0.0, ["+3V3", "GND", "/OSC_IN"]), _fp("C1", "18p", 2.0, ["/OSC_IN", "GND"]),
+           _fp("C2", "100n", 7.0, ["+3V3", "GND"])]
+    out = pcb_assembly.analyze_decoupling_placement(fps)
+    assert [c["cap"] for c in out[0]["nearby_caps"]] == ["C1", "C2"]
+
+
+def test_input_typed_pad_named_as_a_supply_pin_counts():
+    """A supply pin typed `input` (pin function VDD) on a non-rail net is still a supply."""
+    ic = _typed_fp("U1", "SENSOR", 0.0, [("/LDO_OUT", "input", "VDD"), ("GND", "power_in", "GND")])
+    fps = [ic, _fp("C1", "100n", 2.0, ["/LDO_OUT", "GND"])]
+    out = pcb_assembly.analyze_decoupling_placement(fps)
+    assert [c["cap"] for c in out[0]["nearby_caps"]] == ["C1"]
+
+
 if __name__ == "__main__":
     import traceback
     ok = fail = 0
