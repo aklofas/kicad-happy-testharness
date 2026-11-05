@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~95 (tolerance 10%)",
+      "description": "Finding count ~63 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 90,
-        "max": 100
+        "min": 59,
+        "max": 67
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~9",
+      "description": "by_severity.error ~8",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~63",
+      "description": "by_severity.warning ~32",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 59,
-        "max": 67
+        "min": 28,
+        "max": 36
       }
     },
     {
@@ -46,34 +46,34 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~10.0 (+-10)",
+      "description": "EMC risk score ~25.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 20.0
+        "min": 15.0,
+        "max": 35.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "28 clock_routing finding(s)",
+      "description": "12 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 28
+        "value": 12
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "16 decoupling finding(s)",
+      "description": "1 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 16
+        "value": 1
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "25 io_filtering finding(s)",
+      "description": "24 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 25
+        "value": 24
       }
     },
     {
@@ -178,11 +178,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "~33 net(s) with EMC scores",
+      "description": "~25 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 29
+        "value": 22
       }
     }
   ]

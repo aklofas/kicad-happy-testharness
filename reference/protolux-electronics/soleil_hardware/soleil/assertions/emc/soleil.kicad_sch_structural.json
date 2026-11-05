@@ -17,6 +17,17 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "2 esd_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^esd_path$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "9 return_path finding(s)",
       "check": {
         "path": "findings",
@@ -24,17 +35,6 @@
         "field": "category",
         "pattern": "^return_path$",
         "value": 9
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "3 stackup finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^stackup$",
-        "value": 3
       }
     },
     {
@@ -70,22 +70,22 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "Rule ES-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^ES\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Rule RP-001 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^RP\\-001$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "Rule SU-001 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^SU\\-001$"
       }
     },
     {
@@ -100,6 +100,26 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "D1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "D4 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "U6 in EMC findings",
       "check": {
         "path": "findings",

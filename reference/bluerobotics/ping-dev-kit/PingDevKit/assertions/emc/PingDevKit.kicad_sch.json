@@ -6,42 +6,42 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~228 (tolerance 10%)",
+      "description": "Finding count ~221 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 221,
-        "max": 235
+        "min": 214,
+        "max": 228
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~80",
+      "description": "by_severity.error ~76",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 76,
-        "max": 84
+        "min": 72,
+        "max": 80
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~59",
+      "description": "by_severity.warning ~55",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 56,
-        "max": 62
+        "min": 52,
+        "max": 58
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~89",
+      "description": "by_severity.info ~90",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 84,
-        "max": 94
+        "min": 85,
+        "max": 95
       }
     },
     {
@@ -56,13 +56,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "11 clock_routing finding(s)",
+      "description": "7 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 11
+        "value": 7
       }
     },
     {
@@ -133,13 +133,13 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "5 stackup finding(s)",
+      "description": "2 stackup finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^stackup$",
-        "value": 5
+        "value": 2
       }
     },
     {
@@ -211,11 +211,11 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "~120 net(s) with EMC scores",
+      "description": "~123 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 114
+        "value": 116
       }
     }
   ]

@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-03T20:09:10Z",
+        "tagged_at": "2026-11-05T07:52:07Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -32,16 +32,6 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 audit_esd_protection",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_esd_protection",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
       "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
@@ -51,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 audit_sourcing_gate",
       "check": {
         "path": "findings",
@@ -61,17 +51,17 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 3 detect_decoupling",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000006",
       "description": "Exactly 9 detect_design_observations",
       "check": {
         "path": "findings",
@@ -81,7 +71,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000007",
       "description": "Exactly 3 detect_power_regulators",
       "check": {
         "path": "findings",
@@ -91,7 +81,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "U18 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -102,7 +92,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "U19 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -113,7 +103,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "U20 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -124,7 +114,28 @@
       }
     },
     {
+      "id": "STRUCT-00000011",
+      "description": "Exactly 1 detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
       "id": "STRUCT-00000012",
+      "description": "D24 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D24$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Exactly 1 detect_reset_supervisors",
       "check": {
         "path": "findings",
@@ -134,7 +145,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "Exactly 3 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -144,7 +155,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "R182 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -155,7 +166,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "R183 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -166,7 +177,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "R187 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -174,16 +185,6 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R187$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
       }
     }
   ]

@@ -16,6 +16,22 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 analyze_voltage_derating",
+      "check": {
+        "path": "findings",
+        "detector_filter": "analyze_voltage_derating",
+        "op": "equals",
+        "value": 1
+      },
+      "schema_era": {
+        "era": "v3.0",
+        "tagged_by_rule": "VD-001",
+        "tagged_at": "2026-11-05T07:52:10Z",
+        "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 audit_datasheet_coverage",
       "check": {
         "path": "findings",
@@ -25,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 audit_led_circuits",
       "check": {
         "path": "findings",
@@ -35,29 +51,13 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 audit_lifecycle_skipped",
       "check": {
         "path": "findings",
         "detector_filter": "audit_lifecycle_skipped",
         "op": "equals",
         "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 1 audit_power_pin_dc_paths",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-03T20:09:12Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
     {
@@ -72,7 +72,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:09:12Z",
+        "tagged_at": "2026-11-05T07:52:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -88,16 +88,26 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 detect_design_observations",
+      "description": "Exactly 1 detect_decoupling",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_design_observations",
+        "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000009",
+      "description": "Exactly 3 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 2 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R_SER1 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -118,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R_SER2 in detect_rc_filters",
       "check": {
         "path": "findings",

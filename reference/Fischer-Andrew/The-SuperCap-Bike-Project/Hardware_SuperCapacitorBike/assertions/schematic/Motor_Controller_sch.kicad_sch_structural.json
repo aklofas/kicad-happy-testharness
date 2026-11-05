@@ -76,12 +76,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 3 detect_decoupling",
+      "description": "Exactly 4 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -128,16 +128,38 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 1 detect_protection_devices",
+      "description": "Exactly 3 detect_protection_devices",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000014",
+      "description": "D4 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "D6 in detect_protection_devices",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "F2 in detect_protection_devices",
       "check": {
         "path": "findings",

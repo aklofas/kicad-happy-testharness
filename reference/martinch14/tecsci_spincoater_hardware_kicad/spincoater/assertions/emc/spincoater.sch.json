@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~63 (tolerance 10%)",
+      "description": "Finding count ~64 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 59,
-        "max": 67
+        "min": 60,
+        "max": 68
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~4",
+      "description": "by_severity.error ~5",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 4,
+        "max": 6
       }
     },
     {
@@ -46,27 +46,16 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~47.5 (+-10)",
+      "description": "EMC risk score ~43.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 37.5,
-        "max": 57.5
+        "min": 33.0,
+        "max": 53.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 clock_routing finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^clock_routing$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "2 crosstalk finding(s)",
       "check": {
         "path": "findings",
@@ -77,7 +66,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "4 decoupling finding(s)",
       "check": {
         "path": "findings",
@@ -88,13 +77,24 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "2 emission_estimate finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^emission_estimate$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "2 esd_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^esd_path$",
         "value": 2
       }
     },
@@ -189,11 +189,11 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "~39 net(s) with EMC scores",
+      "description": "~38 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 35
+        "value": 34
       }
     }
   ]

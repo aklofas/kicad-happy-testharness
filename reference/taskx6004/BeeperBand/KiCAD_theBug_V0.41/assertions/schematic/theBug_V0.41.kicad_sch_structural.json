@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-03T20:09:17Z",
+        "tagged_at": "2026-11-05T07:52:17Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -72,7 +72,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:09:17Z",
+        "tagged_at": "2026-11-05T07:52:17Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -130,22 +130,22 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 4 detect_decoupling",
+      "description": "Exactly 6 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 4
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 7 detect_design_observations",
+      "description": "Exactly 9 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 7
+        "value": 9
       }
     },
     {
@@ -266,27 +266,6 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "Exactly 1 detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000026",
-      "description": "R7 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000027",
       "description": "Exactly 4 detect_rf_matching",
       "check": {
         "path": "findings",
@@ -296,7 +275,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000026",
       "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -306,7 +285,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000027",
       "description": "R2 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -317,7 +296,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000028",
       "description": "R13 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -328,7 +307,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000029",
       "description": "R15 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -339,7 +318,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000030",
       "description": "R9 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -350,7 +329,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000031",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -360,7 +339,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000032",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
@@ -370,7 +349,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000033",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -381,12 +360,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-11-03T20:09:17Z",
+        "tagged_at": "2026-11-05T07:52:17Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000034",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

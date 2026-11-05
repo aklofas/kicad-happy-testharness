@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 decoupling simulation(s)",
+      "description": "Exactly 5 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 5
       }
     },
     {
@@ -117,6 +117,56 @@
     },
     {
       "id": "STRUCT-00000012",
+      "description": "C56 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC56\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C45 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC45\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C41 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC41\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "C52 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC52\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "C57 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC57\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "C58 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -126,13 +176,33 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000018",
       "description": "C61 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC61\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "C60 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC60\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "C63 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC63\\b"
       }
     }
   ]

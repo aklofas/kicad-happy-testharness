@@ -1,0 +1,79 @@
+{
+  "file_pattern": "rescue-backup_1URack_8Input_AB_2Output_Mixer-2018-09-12-07-44-46.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "C_PW_BYNEG1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_PW_BYNEG1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "C_ChanB_BYNEG1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ChanB_BYNEG1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C_ChanA_NEGBY1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ChanA_NEGBY1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C_PW_BYPOS1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_PW_BYPOS1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C_ChanB_BYPOS1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ChanB_BYPOS1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C_ChanA_POSBY1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC_ChanA_POSBY1\\b"
+      }
+    }
+  ]
+}

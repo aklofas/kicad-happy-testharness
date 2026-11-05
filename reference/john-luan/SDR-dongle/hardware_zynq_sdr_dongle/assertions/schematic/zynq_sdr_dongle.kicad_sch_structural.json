@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-11-03T20:09:16Z",
+        "tagged_at": "2026-11-05T07:52:16Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -42,7 +42,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-03T20:09:16Z",
+        "tagged_at": "2026-11-05T07:52:16Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -98,17 +98,17 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 16 audit_power_pin_dc_paths",
+      "description": "Exactly 14 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 16
+        "value": 14
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-03T20:09:16Z",
+        "tagged_at": "2026-11-05T07:52:16Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -124,7 +124,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:09:16Z",
+        "tagged_at": "2026-11-05T07:52:16Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -181,22 +181,22 @@
     },
     {
       "id": "STRUCT-00000016",
-      "description": "Exactly 8 detect_decoupling",
+      "description": "Exactly 11 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
         "op": "equals",
-        "value": 8
+        "value": 11
       }
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 22 detect_design_observations",
+      "description": "Exactly 25 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 22
+        "value": 25
       }
     },
     {
@@ -339,12 +339,12 @@
     },
     {
       "id": "STRUCT-00000031",
-      "description": "Exactly 5 detect_rc_filters",
+      "description": "Exactly 3 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 5
+        "value": 3
       }
     },
     {
@@ -360,17 +360,6 @@
     },
     {
       "id": "STRUCT-00000033",
-      "description": "R12 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R12$"
-      }
-    },
-    {
-      "id": "STRUCT-00000034",
       "description": "R22 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -378,6 +367,17 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R22$"
+      }
+    },
+    {
+      "id": "STRUCT-00000034",
+      "description": "R12 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
       }
     },
     {
@@ -566,7 +566,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-11-03T20:09:16Z",
+        "tagged_at": "2026-11-05T07:52:16Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },

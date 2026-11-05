@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~219 (tolerance 10%)",
+      "description": "Finding count ~205 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 212,
-        "max": 226
+        "min": 198,
+        "max": 212
       }
     },
     {
@@ -26,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~129",
+      "description": "by_severity.warning ~115",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 122,
-        "max": 136
+        "min": 109,
+        "max": 121
       }
     },
     {
@@ -46,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~44.5 (+-10)",
+      "description": "EMC risk score ~56.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 34.5,
-        "max": 54.5
+        "min": 46.5,
+        "max": 66.5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "24 clock_routing finding(s)",
+      "description": "11 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 24
+        "value": 11
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "145 ground_plane finding(s)",
+      "description": "144 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 145
+        "value": 144
       }
     },
     {
@@ -178,11 +178,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "~171 net(s) with EMC scores",
+      "description": "~164 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 162
+        "value": 155
       }
     }
   ]

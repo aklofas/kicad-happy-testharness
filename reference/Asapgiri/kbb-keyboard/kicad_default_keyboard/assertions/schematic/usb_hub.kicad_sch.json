@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-11-03T20:08:53Z",
+        "tagged_at": "2026-11-05T07:51:39Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -144,7 +144,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:08:53Z",
+        "tagged_at": "2026-11-05T07:51:39Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -191,6 +191,39 @@
     },
     {
       "id": "SEED-00000018",
+      "description": "3 detect_power_path detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_path",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "All detect_power_path have ref",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_path",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000020",
+      "description": "All detect_power_path type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_path",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(load_switch|ideal_diode|power_mux|usb_pd_controller)$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000021",
       "description": "1 detect_power_regulators detected",
       "check": {
         "path": "findings",
@@ -200,7 +233,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000022",
       "description": "All detect_power_regulators have ref present",
       "check": {
         "path": "findings",
@@ -211,7 +244,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000023",
       "description": "2 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -221,7 +254,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000024",
       "description": "4 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -232,12 +265,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-11-03T20:08:53Z",
+        "tagged_at": "2026-11-05T07:51:39Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000025",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -246,7 +279,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000026",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

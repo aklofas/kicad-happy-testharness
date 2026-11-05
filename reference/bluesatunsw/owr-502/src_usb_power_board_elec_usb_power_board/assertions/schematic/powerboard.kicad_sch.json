@@ -53,7 +53,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-03T20:08:57Z",
+        "tagged_at": "2026-11-05T07:51:48Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -89,7 +89,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:08:57Z",
+        "tagged_at": "2026-11-05T07:51:48Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -136,7 +136,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "9 detect_decoupling detected",
+      "description": "11 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -146,7 +146,7 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "15 detect_design_observations detected",
+      "description": "17 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -208,27 +208,6 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "4 detect_rc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "All detect_rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000022",
       "description": "5 detect_voltage_dividers detected",
       "check": {
         "path": "findings",
@@ -238,7 +217,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000021",
       "description": "All detect_voltage_dividers have non-zero ratio",
       "check": {
         "path": "findings",
@@ -249,7 +228,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000022",
       "description": "Has 25 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -258,7 +237,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000023",
       "description": "Has 24 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

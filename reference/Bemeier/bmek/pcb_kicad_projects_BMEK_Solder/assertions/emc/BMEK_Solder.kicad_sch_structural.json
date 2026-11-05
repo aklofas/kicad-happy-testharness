@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "1 esd_path finding(s)",
+      "description": "2 esd_path finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^esd_path$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -209,6 +209,16 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "D1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD1\\b"
       }
     }
   ]

@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~137 (tolerance 10%)",
+      "description": "Finding count ~136 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 130,
-        "max": 144
+        "min": 129,
+        "max": 143
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~111",
+      "description": "by_severity.error ~108",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 105,
-        "max": 117
+        "min": 102,
+        "max": 114
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~12",
+      "description": "by_severity.warning ~14",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 12,
+        "max": 16
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~22.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 10
+        "min": 12.0,
+        "max": 32.0
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "3 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -222,11 +222,11 @@
     },
     {
       "id": "SEED-00000022",
-      "description": "~107 net(s) with EMC scores",
+      "description": "~108 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 101
+        "value": 102
       }
     }
   ]

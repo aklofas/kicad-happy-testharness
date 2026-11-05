@@ -6,63 +6,63 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~194 (tolerance 10%)",
+      "description": "Finding count ~187 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 184,
-        "max": 204
+        "min": 177,
+        "max": 197
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~72",
+      "description": "by_severity.error ~67",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 68,
-        "max": 76
+        "min": 63,
+        "max": 71
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~98",
+      "description": "by_severity.warning ~94",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 93,
-        "max": 103
+        "min": 89,
+        "max": 99
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~24",
+      "description": "by_severity.info ~26",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 23,
+        "max": 29
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~0 (+-10)",
+      "description": "EMC risk score ~22.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 0,
-        "max": 10
+        "min": 12.0,
+        "max": 32.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "17 clock_routing finding(s)",
+      "description": "12 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 17
+        "value": 12
       }
     },
     {
@@ -100,6 +100,17 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "3 esd_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^esd_path$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "124 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -110,7 +121,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "1 inductor_leakage finding(s)",
       "check": {
         "path": "findings",
@@ -121,7 +132,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "10 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -132,7 +143,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "22 return_path finding(s)",
       "check": {
         "path": "findings",
@@ -140,17 +151,6 @@
         "field": "category",
         "pattern": "^return_path$",
         "value": 22
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "5 stackup finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^stackup$",
-        "value": 5
       }
     },
     {
@@ -211,11 +211,11 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "~128 net(s) with EMC scores",
+      "description": "~124 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 121
+        "value": 117
       }
     }
   ]

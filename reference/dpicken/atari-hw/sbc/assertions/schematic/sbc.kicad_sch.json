@@ -53,7 +53,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-03T20:08:58Z",
+        "tagged_at": "2026-11-05T07:51:50Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -144,7 +144,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:08:58Z",
+        "tagged_at": "2026-11-05T07:51:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -267,27 +267,6 @@
     },
     {
       "id": "SEED-00000025",
-      "description": "1 detect_power_regulators detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000026",
-      "description": "All detect_power_regulators have ref present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000027",
       "description": "4 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -297,7 +276,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000026",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -308,7 +287,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000027",
       "description": "1 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -318,7 +297,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000028",
       "description": "Has 26 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -327,7 +306,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000029",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -336,7 +315,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000030",
       "description": "Has 16 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -345,7 +324,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000031",
       "description": "Has 19 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -354,7 +333,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000032",
       "description": "Has 5 resistor_network(s)",
       "check": {
         "path": "statistics.component_types.resistor_network",

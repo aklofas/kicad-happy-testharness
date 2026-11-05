@@ -6,6 +6,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 opamp_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -16,13 +27,43 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "U42 simulated as opamp_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU42\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C79 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC79\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C80 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC80\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C82 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC82\\b"
       }
     }
   ]

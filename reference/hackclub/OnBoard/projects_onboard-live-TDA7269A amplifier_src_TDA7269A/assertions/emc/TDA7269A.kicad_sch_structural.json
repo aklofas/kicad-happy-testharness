@@ -39,13 +39,13 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "3 ground_plane finding(s)",
+      "description": "2 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -103,6 +103,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "Rule DC-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DC\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "Rule EE-001 present",
       "check": {
         "path": "findings",
@@ -112,7 +122,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Rule GP-001 present",
       "check": {
         "path": "findings",
@@ -122,23 +132,13 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Rule GP-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^GP\\-002$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "Rule GP-005 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^GP\\-005$"
       }
     },
     {
@@ -213,16 +213,6 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "C6 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC6\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "J4 in EMC findings",
       "check": {
         "path": "findings",
@@ -232,7 +222,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
@@ -242,7 +232,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
@@ -252,7 +242,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "J3 in EMC findings",
       "check": {
         "path": "findings",

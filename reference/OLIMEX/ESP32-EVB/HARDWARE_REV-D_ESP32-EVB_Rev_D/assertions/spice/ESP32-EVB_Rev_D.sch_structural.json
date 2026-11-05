@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 3 decoupling simulation(s)",
+      "description": "Exactly 4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -413,6 +413,26 @@
     },
     {
       "id": "STRUCT-00000041",
+      "description": "C17 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC17\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000042",
+      "description": "C16 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC16\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000043",
       "description": "U1 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -422,7 +442,7 @@
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000044",
       "description": "U10 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -432,7 +452,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000045",
       "description": "U2 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -442,7 +462,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000046",
       "description": "U3 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -452,7 +472,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000047",
       "description": "U4 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -462,7 +482,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000048",
       "description": "U5 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -472,7 +492,7 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000049",
       "description": "U6 simulated as rf_chain",
       "check": {
         "path": "simulation_results",

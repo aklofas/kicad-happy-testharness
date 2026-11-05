@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~246 (tolerance 10%)",
+      "description": "Finding count ~239 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 238,
-        "max": 254
+        "min": 231,
+        "max": 247
       }
     },
     {
@@ -26,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~65",
+      "description": "by_severity.warning ~58",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 61,
-        "max": 69
+        "min": 55,
+        "max": 61
       }
     },
     {
@@ -46,34 +46,34 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~16.0 (+-10)",
+      "description": "EMC risk score ~28.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 6.0,
-        "max": 26.0
+        "min": 18.0,
+        "max": 38.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "6 clock_routing finding(s)",
+      "description": "3 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 6
+        "value": 3
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "15 decoupling finding(s)",
+      "description": "11 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 15
+        "value": 11
       }
     },
     {
@@ -156,11 +156,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~214 net(s) with EMC scores",
+      "description": "~212 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 207
+        "value": 205
       }
     }
   ]

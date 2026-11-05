@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 decoupling simulation(s)",
+      "description": "Exactly 13 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 6
+        "value": 13
       }
     },
     {
@@ -27,6 +27,26 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "CU10 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCU10\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "CU12 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCU12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "CU13 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -36,7 +56,17 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
+      "description": "CU3 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCU3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "CU30 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -46,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
       "description": "CU44 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -56,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000009",
       "description": "CU50 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -66,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "CU56 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -76,13 +106,53 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000011",
       "description": "CU57 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bCU57\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "CU58 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCU58\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "CU6 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCU6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "CU61 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCU61\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "CU8 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCU8\\b"
       }
     }
   ]

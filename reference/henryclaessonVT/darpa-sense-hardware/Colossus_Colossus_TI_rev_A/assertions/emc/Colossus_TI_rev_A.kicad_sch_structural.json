@@ -6,24 +6,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "4 clock_routing finding(s)",
+      "description": "1 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 4
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "1 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -83,13 +83,13 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "3 stackup finding(s)",
+      "description": "2 stackup finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^stackup$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -105,22 +105,22 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Rule CK-001 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^CK\\-001$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "Rule CK-003 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^CK\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Rule DC-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DC\\-002$"
       }
     },
     {
@@ -205,12 +205,12 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "Rule SU-001 present",
+      "description": "Rule SU-002 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^SU\\-001$"
+        "pattern": "^SU\\-002$"
       }
     },
     {
@@ -225,6 +225,16 @@
     },
     {
       "id": "STRUCT-00000022",
+      "description": "U3 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
       "description": "C12 in EMC findings",
       "check": {
         "path": "findings",
@@ -234,7 +244,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "U4 in EMC findings",
       "check": {
         "path": "findings",
@@ -244,7 +254,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000025",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
@@ -254,7 +264,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "J5 in EMC findings",
       "check": {
         "path": "findings",
@@ -264,7 +274,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000027",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
@@ -274,7 +284,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000028",
       "description": "J3 in EMC findings",
       "check": {
         "path": "findings",
@@ -284,23 +294,13 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000029",
       "description": "L1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bL1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
-      "description": "U3 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU3\\b"
       }
     }
   ]

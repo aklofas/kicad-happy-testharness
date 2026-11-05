@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 5 decoupling simulation(s)",
+      "description": "Exactly 6 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -383,6 +383,36 @@
     },
     {
       "id": "STRUCT-00000038",
+      "description": "C46 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC46\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000039",
+      "description": "C45 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC45\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000040",
+      "description": "C51 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC51\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000041",
       "description": "R12 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -392,7 +422,7 @@
       }
     },
     {
-      "id": "STRUCT-00000039",
+      "id": "STRUCT-00000042",
       "description": "R13 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -402,7 +432,7 @@
       }
     },
     {
-      "id": "STRUCT-00000040",
+      "id": "STRUCT-00000043",
       "description": "R9 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -412,7 +442,7 @@
       }
     },
     {
-      "id": "STRUCT-00000041",
+      "id": "STRUCT-00000044",
       "description": "R10 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -422,7 +452,7 @@
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000045",
       "description": "L9 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -432,7 +462,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000046",
       "description": "C49 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -442,7 +472,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000047",
       "description": "C36 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -452,7 +482,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000048",
       "description": "C48 simulated as rf_matching",
       "check": {
         "path": "simulation_results",

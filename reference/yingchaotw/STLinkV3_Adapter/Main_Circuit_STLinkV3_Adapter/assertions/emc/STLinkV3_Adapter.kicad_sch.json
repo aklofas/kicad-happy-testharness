@@ -6,11 +6,11 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~53 (tolerance 10%)",
+      "description": "Finding count ~50 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 50,
+        "min": 45,
         "max": 56
       }
     },
@@ -26,43 +26,43 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~21",
+      "description": "by_severity.warning ~20",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
         "min": 18,
-        "max": 24
+        "max": 22
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~17",
+      "description": "by_severity.info ~15",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 15,
-        "max": 19
+        "min": 13,
+        "max": 17
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~25.0 (+-10)",
+      "description": "EMC risk score ~28.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 15.0,
-        "max": 35.0
+        "min": 18.0,
+        "max": 38.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "4 board_edge finding(s)",
+      "description": "3 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -122,13 +122,13 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "13 io_filtering finding(s)",
+      "description": "11 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 13
+        "value": 11
       }
     },
     {

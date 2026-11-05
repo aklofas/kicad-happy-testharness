@@ -17,6 +17,17 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "1 esd_path finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^esd_path$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "1 ground_plane finding(s)",
       "check": {
         "path": "findings",
@@ -27,7 +38,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Rule DC-003 present",
       "check": {
         "path": "findings",
@@ -37,7 +48,17 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
+      "description": "Rule ES-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^ES\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Rule GP-004 present",
       "check": {
         "path": "findings",
@@ -47,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "C9 in EMC findings",
       "check": {
         "path": "findings",
@@ -57,13 +78,23 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "D1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD1\\b"
       }
     }
   ]

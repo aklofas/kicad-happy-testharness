@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~321 (tolerance 10%)",
+      "description": "Finding count ~325 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 311,
-        "max": 331
+        "min": 315,
+        "max": 335
       }
     },
     {
@@ -26,32 +26,32 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~17",
+      "description": "by_severity.warning ~19",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 15,
-        "max": 19
+        "min": 17,
+        "max": 21
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~21",
+      "description": "by_severity.info ~23",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 18,
-        "max": 24
+        "min": 20,
+        "max": 26
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~38.5 (+-10)",
+      "description": "EMC risk score ~35.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 28.5,
-        "max": 48.5
+        "min": 25.5,
+        "max": 45.5
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "2 esd_path finding(s)",
+      "description": "6 esd_path finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^esd_path$",
-        "value": 2
+        "value": 6
       }
     },
     {

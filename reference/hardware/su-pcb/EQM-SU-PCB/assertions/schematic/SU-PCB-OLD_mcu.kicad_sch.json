@@ -173,7 +173,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:08:59Z",
+        "tagged_at": "2026-11-05T07:51:53Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -276,7 +276,7 @@
     },
     {
       "id": "SEED-00000026",
-      "description": "2 detect_decoupling detected",
+      "description": "6 detect_decoupling detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
@@ -286,7 +286,7 @@
     },
     {
       "id": "SEED-00000027",
-      "description": "11 detect_design_observations detected",
+      "description": "15 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -296,6 +296,16 @@
     },
     {
       "id": "SEED-00000028",
+      "description": "1 detect_integrated_ldos detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_integrated_ldos",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000029",
       "description": "7 detect_label_aliases detected",
       "check": {
         "path": "findings",
@@ -305,28 +315,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
-      "description": "1 detect_lc_filters detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000030",
-      "description": "All detect_lc_filters have non-zero resonant_hz",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_lc_filters",
-        "op": "not_contains_match",
-        "field": "resonant_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000031",
       "description": "1 detect_led_driver_ics detected",
       "check": {
         "path": "findings",
@@ -336,7 +325,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000031",
       "description": "All detect_led_driver_ics have ref",
       "check": {
         "path": "findings",
@@ -347,7 +336,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000032",
       "description": "All detect_led_driver_ics type values are valid",
       "check": {
         "path": "findings",
@@ -359,7 +348,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000033",
       "description": "Has 26 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -368,7 +357,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000034",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

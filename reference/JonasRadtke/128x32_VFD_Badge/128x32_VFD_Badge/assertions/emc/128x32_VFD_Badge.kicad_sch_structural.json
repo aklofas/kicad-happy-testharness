@@ -39,13 +39,13 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "2 decoupling finding(s)",
+      "description": "3 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -83,13 +83,13 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "2 io_filtering finding(s)",
+      "description": "1 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -237,16 +237,6 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "Rule IO-002 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^IO\\-002$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
       "description": "Rule RP-001 present",
       "check": {
         "path": "findings",
@@ -256,7 +246,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -266,7 +256,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "Rule SW-001 present",
       "check": {
         "path": "findings",
@@ -276,7 +266,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "Rule XT-001 present",
       "check": {
         "path": "findings",
@@ -286,7 +276,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000027",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
@@ -296,7 +286,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000028",
       "description": "C1 in EMC findings",
       "check": {
         "path": "findings",
@@ -306,13 +296,23 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000029",
       "description": "U7 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "U6 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU6\\b"
       }
     },
     {

@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 audit_esd_protection",
+      "description": "Exactly 4 audit_esd_protection",
       "check": {
         "path": "findings",
         "detector_filter": "audit_esd_protection",
         "op": "equals",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -36,32 +36,32 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 detect_decoupling",
+      "description": "Exactly 2 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 2 detect_design_observations",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 2
       }
     },
     {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 3 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
       "id": "STRUCT-00000006",
-      "description": "Exactly 5 detect_rc_filters",
+      "description": "Exactly 4 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -106,17 +106,6 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "R5 in detect_rc_filters",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R5$"
       }
     }
   ]

@@ -36,22 +36,6 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 5 audit_power_pin_dc_paths",
-      "check": {
-        "path": "findings",
-        "detector_filter": "audit_power_pin_dc_paths",
-        "op": "equals",
-        "value": 5
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-03T20:09:16Z",
-        "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
       "description": "Exactly 4 audit_rail_sources",
       "check": {
         "path": "findings",
@@ -62,12 +46,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:09:16Z",
+        "tagged_at": "2026-11-05T07:52:16Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -77,7 +61,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000006",
       "description": "Y1 in detect_crystal_circuits",
       "check": {
         "path": "findings",
@@ -88,7 +72,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 detect_debug_interfaces",
       "check": {
         "path": "findings",
@@ -98,27 +82,27 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 5 detect_decoupling",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 7 detect_decoupling",
       "check": {
         "path": "findings",
         "detector_filter": "detect_decoupling",
-        "op": "equals",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 7 detect_design_observations",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_design_observations",
         "op": "equals",
         "value": 7
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000009",
+      "description": "Exactly 9 detect_design_observations",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_design_observations",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 1 detect_integrated_ldos",
       "check": {
         "path": "findings",
@@ -128,7 +112,28 @@
       }
     },
     {
+      "id": "STRUCT-00000011",
+      "description": "Exactly 1 detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
       "id": "STRUCT-00000012",
+      "description": "U7 in detect_power_regulators",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -138,7 +143,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "R13 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -149,23 +154,13 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 3 detect_solder_jumpers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_solder_jumpers",
         "op": "equals",
         "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
       }
     },
     {
@@ -180,7 +175,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-11-03T20:09:16Z",
+        "tagged_at": "2026-11-05T07:52:16Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     }

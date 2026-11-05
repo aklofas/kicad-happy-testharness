@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~66 (tolerance 10%)",
+      "description": "Simulation count ~67 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 62,
-        "max": 70
+        "min": 63,
+        "max": 71
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 33 passing simulation(s)",
+      "description": "At least 36 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 33
+        "value": 36
       }
     },
     {
@@ -36,13 +36,13 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "6 decoupling simulation(s)",
+      "description": "10 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 6
+        "value": 10
       }
     },
     {
@@ -69,13 +69,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "19 rc_filter simulation(s)",
+      "description": "18 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 19
+        "value": 18
       }
     },
     {
@@ -91,13 +91,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "20 transistor_circuit simulation(s)",
+      "description": "18 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 20
+        "value": 18
       }
     },
     {

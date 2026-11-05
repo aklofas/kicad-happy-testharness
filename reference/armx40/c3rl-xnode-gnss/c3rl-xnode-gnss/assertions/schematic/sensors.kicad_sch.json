@@ -83,7 +83,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:08:56Z",
+        "tagged_at": "2026-11-05T07:51:46Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -99,7 +99,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "9 detect_design_observations detected",
+      "description": "8 detect_design_observations detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
@@ -109,27 +109,39 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 detect_power_regulators detected",
+      "description": "1 detect_power_path detected",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_power_regulators",
+        "detector_filter": "detect_power_path",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "All detect_power_regulators have ref present",
+      "description": "All detect_power_path have ref",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_power_regulators",
+        "detector_filter": "detect_power_path",
         "op": "not_contains_match",
         "field": "ref",
-        "pattern": "^(None|\\?|)$"
+        "pattern": "^$"
       }
     },
     {
       "id": "SEED-00000013",
+      "description": "All detect_power_path type values are valid",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_power_path",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(load_switch|ideal_diode|power_mux|usb_pd_controller)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "3 detect_sensor_interfaces detected",
       "check": {
         "path": "findings",
@@ -139,7 +151,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "All detect_sensor_interfaces have ref",
       "check": {
         "path": "findings",
@@ -150,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "All detect_sensor_interfaces type values are valid",
       "check": {
         "path": "findings",
@@ -162,7 +174,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "2 validate_i2c_bus detected",
       "check": {
         "path": "findings",
@@ -173,12 +185,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-11-03T20:08:56Z",
+        "tagged_at": "2026-11-05T07:51:46Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "5 validate_pullups detected",
       "check": {
         "path": "findings",
@@ -188,7 +200,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -197,7 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -206,7 +218,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "3 decoupling finding(s)",
+      "description": "4 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -162,6 +162,16 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "IC3 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bIC3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "USBC in EMC findings",
       "check": {
         "path": "findings",

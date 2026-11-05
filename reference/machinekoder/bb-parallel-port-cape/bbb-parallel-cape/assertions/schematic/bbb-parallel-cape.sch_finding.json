@@ -16,15 +16,15 @@
     },
     {
       "id": "FND-00001967-AST-02",
-      "description": "The design has separate ground domains: GNDD (digital), GNDA_ADC (analog ADC), and GND_OR_5V, correctly detected in signal_analysis.isolation_barriers with distinct domain keys. No explicit isolation components are listed (correct \u2014 there is no galvanic isolator, just separate ground planes). PWR_BUT is correctly flagged as an isolated power rail.",
+      "description": "The design has separate ground domains: GNDD (digital), GNDA_ADC (analog ADC), and GND_OR_5V, correctly detected in signal_analysis.isolation_barriers with distinct domain keys. No explicit isolation components are listed (correct — there is no galvanic isolator, just separate ground planes). PWR_BUT is correctly flagged as an isolated power rail.",
       "created_from": "FND-00001967",
       "check": {
         "path": "findings",
-        "op": "min_count",
-        "value": 1,
+        "op": "max_count",
+        "value": 0,
         "detector_filter": "detect_isolation_barriers"
       },
-      "migration_note": "Path migrated from: signal_analysis.isolation_barriers"
+      "migration_note": "Re-anchored IB-DET min_count 1 -> max_count 0 (v3.0.1 regen at 246ee5a, ruling 2026-11-05): PWR_BUT is the BeagleBone power-button net, not an isolated rail; there is no galvanic isolator (Wave 9f _B as a whole token only)"
     },
     {
       "id": "FND-00001967-AST-03",
@@ -40,7 +40,7 @@
     },
     {
       "id": "FND-00001967-AST-04",
-      "description": "The STATUS_LED net connects to Q101 gate (input) and BBB connector pin P103.22 (passive), with no explicit output driver. The analyzer's erc_warnings correctly flags this as 'no_driver', which is accurate \u2014 the LED control signal comes from the BeagleBone GPIO, which the schematic does not assign a driver pin type to.",
+      "description": "The STATUS_LED net connects to Q101 gate (input) and BBB connector pin P103.22 (passive), with no explicit output driver. The analyzer's erc_warnings correctly flags this as 'no_driver', which is accurate — the LED control signal comes from the BeagleBone GPIO, which the schematic does not assign a driver pin type to.",
       "created_from": "FND-00001967",
       "check": {
         "path": "design_analysis.erc_warnings",
@@ -63,7 +63,7 @@
     },
     {
       "id": "FND-00001967-AST-06",
-      "description": "INCORRECT: Q101 uses lib_id 'Q_NJFET_GDS' which is a JFET symbol, but the actual component is a 2N7002K \u2014 an N-channel enhancement MOSFET in SOT-23. The analyzer reports type='jfet' which is incorrect. The 2N7002K is a MOSFET, not a JFET. This is a schematic symbol selection error in the original design (using a JFET symbol for a MOSFET), but the analyzer should ideally use the MPN to determine the correct type or flag the discrepancy.",
+      "description": "INCORRECT: Q101 uses lib_id 'Q_NJFET_GDS' which is a JFET symbol, but the actual component is a 2N7002K — an N-channel enhancement MOSFET in SOT-23. The analyzer reports type='jfet' which is incorrect. The 2N7002K is a MOSFET, not a JFET. This is a schematic symbol selection error in the original design (using a JFET symbol for a MOSFET), but the analyzer should ideally use the MPN to determine the correct type or flag the discrepancy.",
       "created_from": "FND-00001967",
       "check": {
         "path": "findings",
@@ -81,11 +81,11 @@
       "check": {
         "path": "findings",
         "op": "min_count",
-        "value": 1,
-        "detector_filter": "detect_isolation_barriers"
+        "value": 5,
+        "detector_filter": "detect_level_shifters"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.isolation_barriers"
+      "migration_note": "Re-anchored IB-DET min_count 1 -> LS-DET min_count 5 (v3.0.1 regen at 246ee5a, ruling 2026-11-05): the text is about the five GTL2003PW translators, detected as IC201..IC205 [bidirectional]"
     }
   ]
 }

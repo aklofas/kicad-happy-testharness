@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-11-03T20:09:12Z",
+        "tagged_at": "2026-11-05T07:52:10Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -72,17 +72,17 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 2 audit_power_pin_dc_paths",
+      "description": "Exactly 1 audit_power_pin_dc_paths",
       "check": {
         "path": "findings",
         "detector_filter": "audit_power_pin_dc_paths",
         "op": "equals",
-        "value": 2
+        "value": 1
       },
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-03T20:09:12Z",
+        "tagged_at": "2026-11-05T07:52:10Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -98,7 +98,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-03T20:09:12Z",
+        "tagged_at": "2026-11-05T07:52:10Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -156,6 +156,16 @@
     },
     {
       "id": "STRUCT-00000014",
+      "description": "Exactly 1 detect_decoupling",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_decoupling",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "Exactly 6 detect_design_observations",
       "check": {
         "path": "findings",
@@ -165,7 +175,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "Exactly 2 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -175,7 +185,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "D5 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -186,7 +196,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "D6 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -197,7 +207,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -207,7 +217,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -218,7 +228,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-11-03T20:09:12Z",
+        "tagged_at": "2026-11-05T07:52:10Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     }

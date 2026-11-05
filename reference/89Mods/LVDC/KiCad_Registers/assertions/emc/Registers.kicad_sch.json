@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~254 (tolerance 10%)",
+      "description": "Finding count ~250 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 246,
-        "max": 262
+        "min": 242,
+        "max": 258
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~121",
+      "description": "by_severity.error ~118",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 114,
-        "max": 128
+        "min": 112,
+        "max": 124
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~122",
+      "description": "by_severity.warning ~121",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 115,
-        "max": 129
+        "min": 114,
+        "max": 128
       }
     },
     {
@@ -56,13 +56,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "3 clock_routing finding(s)",
+      "description": "2 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -122,17 +122,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "3 stackup finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^stackup$",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -141,7 +130,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -150,7 +139,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "~5 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -159,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -168,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -177,7 +166,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "~164 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",

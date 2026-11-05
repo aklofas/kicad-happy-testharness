@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~40 (tolerance 10%)",
+      "description": "Finding count ~38 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 36,
-        "max": 44
+        "min": 34,
+        "max": 42
       }
     },
     {
@@ -26,22 +26,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~14",
+      "description": "by_severity.warning ~13",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 11,
+        "max": 15
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~16",
+      "description": "by_severity.info ~15",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 14,
-        "max": 18
+        "min": 13,
+        "max": 17
       }
     },
     {
@@ -56,13 +56,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "5 board_edge finding(s)",
+      "description": "4 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 5
+        "value": 4
       }
     },
     {
@@ -100,13 +100,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "14 io_filtering finding(s)",
+      "description": "13 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 14
+        "value": 13
       }
     },
     {
@@ -178,11 +178,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "~17 net(s) with EMC scores",
+      "description": "~16 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 15
+        "value": 14
       }
     }
   ]
