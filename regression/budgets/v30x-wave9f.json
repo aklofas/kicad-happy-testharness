@@ -1,0 +1,25 @@
+{
+ "budget_id": "v30x-wave9f",
+ "profile": "standard",
+ "baseline_sha": "8c42799",
+ "candidate_sha": "246ee5a",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-wave9f",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave9f:schematic",
+   "evidence": "2a9db0b3 two-digit regulator suffix below 0.5 V gives no value (only units holding such a part move regulator readers); b56baffa IB-DET isolated rail = ISO or a whole _B/_SEC token (IB-DET only removed or narrowed, dropped rails fail the pattern). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-04-v3.0.1-wave9bc/ (product 9f handoff in the shared LOG; measured rows scan_candidate.jsonl / regdiff_candidate.jsonl)"
+  },
+  {
+   "id": "D-downstream",
+   "path_glob": "/**",
+   "predicate": "v30x_wave9f:downstream",
+   "evidence": "EMC / thermal / cross movement only under a labelled upstream schematic move (e.g. the dimmer's PD-001). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-04-v3.0.1-wave9bc/ (product 9f handoff in the shared LOG; measured rows scan_candidate.jsonl / regdiff_candidate.jsonl)"
+  }
+ ]
+}
