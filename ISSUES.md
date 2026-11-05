@@ -2081,6 +2081,8 @@ Home of KH-701, KH-702 and KH-710 (a)(b)(c)(i).
 
 **Addendum 2026-11-04 (3.0.x Waves 9b + 9c gate):** the decimal-suffix rule also gives a wrong value: `LC78_03-05` (der-pw/hm_stm32_2ch_dimmer, `Kicad_STM32_2CH_Dimmer.sch`) reads `_03` as 0.3 V, and EMC now adds a PD-001 "VCC PDN anti-resonance exceeds target" at Vout = 0.3 V, target 0.034 Ω (std gate EMC lane, PD-001 +1). The part is a 3.3 V module; a suffix followed by another `-NN` group needs the family rule too.
 
+**Addendum 2026-11-04 (3.0.x Wave 9f, `2a9db0b3`, gated at `246ee5a`):** the low-suffix case is fixed — a two-digit suffix below 0.5 V gives no value. Std gate: 4 units move (BerkeleyLab/Marble `design_Power`, `design_Power_SW`, `design_Marble` ADM7155ACPZ-02-R7; der-pw/hm_stm32_2ch_dimmer LC78_03-05, whose EMC PD-001 at Vout 0.3 V goes); faoziaziz/qris_iot UM1750S-00 does not move in the output (its Vout comes from the feedback divider on both sides). Still open (v3.0.2): integer-volt families (`-05/-09/-10/-12/-15/-24/-48`) and the package tokens `_PACKAGE_TOKEN` misses.
+
 ### KH-918: DO-DET "IC missing decoupling" on rails whose caps have values the parser cannot read
 
 **Severity:** LOW (info-level DO-DET)
@@ -2365,6 +2367,8 @@ The task-15 fix round added the pin-name rescue, so MCP9700 / HX7027 / AV9173 / 
 **Fix direction / budget:** match `_B` / `_SEC` only as a whole token at the end (`_B`, `_B<n>`), and do not report a barrier with zero isolation components unless a second, independent sign is present. Small.
 
 **Addendum 2026-11-04 (3.0.x Waves 9b + 9c gate):** IB-DET moves on 10 corpus units (+23 / −13 findings), not the one R-sample board (e.g. HalfSweet SFduino-UNO-S2, dennowiggle FLEADiP, dmanla ModularPSU "12 ground domains, 0 isolation component(s)"), all under 9b T8 rail recognition.
+
+**Addendum 2026-11-04 (3.0.x Wave 9f, `b56baffa`, gated at `246ee5a`):** the substring half is fixed — an isolated rail is `ISO` anywhere or a whole `_B` / `_SEC` token. Std gate: 105 schematic units, IB-DET removed on 91 and `isolated_power_rails` narrowed on 14, every dropped rail failing the new pattern (full-chain 21 units); nothing else moves. Still open (v3.0.2): a barrier reported with 0 isolation parts and no second sign of isolation.
 
 ### KH-945: an unbalanced `.kicad_dru` still loads with no error
 
