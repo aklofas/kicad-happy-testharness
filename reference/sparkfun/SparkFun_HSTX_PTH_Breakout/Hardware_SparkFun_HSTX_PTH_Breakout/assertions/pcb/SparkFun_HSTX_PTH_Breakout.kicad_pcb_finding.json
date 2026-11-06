@@ -34,7 +34,8 @@
         "op": "equals",
         "value": 43
       },
-      "aspirational": false
+      "aspirational": false,
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): footprint_count=43 counts all footprints by definition; reviewer concedes it's a presentation concern, not a wrong value"
     },
     {
       "id": "FND-00001462-AST-04",
@@ -43,10 +44,11 @@
       "check": {
         "path": "statistics.tht_count",
         "op": "equals",
-        "value": 0
+        "value": 1
       },
-      "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): smd/tht counts follow footprint attributes (Wave 4 Part B P7); was {\"path\": \"statistics.tht_count\", \"op\": \"equals\", \"value\": 1}"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.tht_count\", \"op\": \"equals\", \"value\": 0})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): locks tht_count=0, but J2 (1x17) has 17 thru_hole pads and no attr, typed 'unspecified'; reviewer says J2 is THT, so 1"
     },
     {
       "id": "FND-00001462-AST-05",
@@ -58,7 +60,8 @@
         "value": 13
       },
       "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3, product ruling (2026-10-29, KiCad 10.0.7): +3 PM-002 from fixed circle courtyards, +1 CC-DET /3.3V 0.3 mm; all true; was {\"path\": \"findings\", \"op\": \"max_count\", \"value\": 9}"
+      "migration_note": "3.0.x relock at 40b8ff3, product ruling (2026-10-29, KiCad 10.0.7): +3 PM-002 from fixed circle courtyards, +1 CC-DET /3.3V 0.3 mm; all true; was {\"path\": \"findings\", \"op\": \"max_count\", \"value\": 9}",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): generic max_count over all findings; disputed G2 PM-002 edge clearance -82 mm still present"
     }
   ]
 }

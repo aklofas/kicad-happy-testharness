@@ -15,19 +15,6 @@
       }
     },
     {
-      "id": "FND-00002018-AST-02",
-      "description": "INCORRECT: The design_observations USB_D- entry has has_esd_protection=false, but U6 (TPD2EUSB30) is present on the USB_D- net (pin 2). The bug is in signal_detectors.py line 3499: 'protected_nets = {p[\"protected_net\"] for p in results.get(\"protection_devices\", [])}' uses the singular protected_net field (which is only 'USB_D+'), not the plural protected_nets list (['USB_D+', 'USB_D-', '__unnamed_90']). The fix is to collect all protected_nets entries. Affects any multi-rail ESD protection device.",
-      "created_from": "FND-00002018",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "value": "/\"has_esd_protection\":\\s*false/",
-        "detector_filter": "detect_design_observations"
-      },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
-    },
-    {
       "id": "FND-00002018-AST-03",
       "description": "INCORRECT: The transistor_circuit entry for Q1 (DMP2066LSN) includes a led_driver sub-object referencing D3 ('Activity LED') with power_rail='+3V3'. However D3 is on net PI_LED_nACT (driven directly by the CM4 module, not by Q1). The actual load on Q1's source net (SD_PWR) includes D4 ('SD ON' LED) and J2 (SD card connector). The load_type='led' is triggered by D4 on SD_PWR, but the led_driver association logic looks more broadly and picks up the unrelated D3. The primary load is the SD card (J2 connector), not an LED.",
       "created_from": "FND-00002018",
@@ -46,10 +33,14 @@
       "created_from": "FND-00002018",
       "check": {
         "path": "subcircuits",
-        "op": "min_count",
-        "value": 7
+        "op": "count_matches",
+        "field": "center_ic",
+        "pattern": "^U5$",
+        "value": 1
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): subcircuits still has 6 U5 entries (one per unit) + U6; reviewer: one U5 entry; min_count 7 protects the duplicates",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"subcircuits\", \"op\": \"min_count\", \"value\": 7})"
     }
   ]
 }

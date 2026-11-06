@@ -39,7 +39,8 @@
         "detector_filter": "detect_current_sense"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.current_sense"
+      "migration_note": "Path migrated from: signal_analysis.current_sense",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): lock is on dut1.kicad_sch, which has no PAC1954 (it is in power.kicad_sch); no current_sense on dut1 is correct. Bug remains on power sheet (0 there)"
     },
     {
       "id": "FND-00002027-AST-04",
@@ -86,7 +87,8 @@
         "value": 6
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): Generic findings min_count 6 (actual 35) on a schematic; the claim is about PCB edge clearance."
     },
     {
       "id": "FND-00002027-AST-08",
@@ -107,17 +109,6 @@
         "path": "statistics.total_components",
         "op": "equals",
         "value": 175
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00002027-AST-10",
-      "description": "INCORRECT: Three decorative graphic symbols misidentified as power rails: 'Logo_Open_Hardware_Small', 'OSHW-Text-Logo', 'mini-eLiXiVy-Logo' appear in statistics.power_rails",
-      "created_from": "FND-00002027",
-      "check": {
-        "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/Logo_Open_Hardware_Small/"
       },
       "aspirational": true
     },

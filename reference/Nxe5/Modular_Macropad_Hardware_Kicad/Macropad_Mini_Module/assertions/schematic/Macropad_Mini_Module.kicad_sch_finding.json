@@ -64,11 +64,12 @@
       "check": {
         "path": "findings",
         "op": "max_count",
-        "value": 4,
+        "value": 1,
         "detector_filter": "detect_rc_filters"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"max_count\", \"value\": 4, \"detector_filter\": \"detect_rc_filters\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): now 2 RC: R18/C11 (real) + R14/C9 RC-network = LTC3536 Type-II comp network; reviewer: only R18/C11 is a real filter"
     },
     {
       "id": "FND-00001776-AST-06",
@@ -76,15 +77,14 @@
       "created_from": "FND-00001776",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "reference": "Q1",
-          "value": "FS8205A"
-        },
+        "op": "not_contains_match",
+        "field": "load_type",
+        "pattern": "^led$",
         "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"reference\": \"Q1\", \"value\": \"FS8205A\"}, \"detector_filter\": \"detect_transistor_circuits\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Old check malformed (value dict, trivially passes). Defect remains: Q1 FS8205A load_type 'led', drain=source=GND; reviewer: battery protection, not LED"
     }
   ]
 }

@@ -20,11 +20,13 @@
       "description": "INCORRECT: fpga.sch contains LD1-LD4 (4 LEDs with LED_SMD:LED_0603_1608Metric footprints). These are not present under a 'led' key in component_types \u2014 instead they inflate the 'inductor' count to 4. The same affects the aggregated brutzelkarte.sch output. The correct counts are: led=4, inductor=0.",
       "created_from": "FND-00000433",
       "check": {
-        "path": "statistics.component_types",
-        "op": "exists",
-        "value": "led"
+        "path": "statistics.component_types.led",
+        "op": "equals",
+        "value": 4
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): defect present: LD1-LD4 (Device:LED_Small, LED_0603) typed inductor; component_types has inductor=4, no led key. exists on component_types is vacuous",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types\", \"op\": \"exists\", \"value\": \"led\"})"
     }
   ]
 }

@@ -21,8 +21,8 @@
         },
         "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters",
+      "incorrect_review": "graduate (TH-105, 2026-11-06): rc_filters now empty, so R1/C1 no longer reported (check passes only on an empty list, which is right here)"
     },
     {
       "id": "FND-00000394-AST-02",
@@ -41,8 +41,8 @@
         },
         "detector_filter": "detect_rc_filters"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters",
+      "incorrect_review": "graduate (TH-105, 2026-11-06): rc_filters empty, so R2/C3 is no longer reported. Note: the check is malformed ('value' dict, no pattern) and would fail on any rc filter; re-express with field resistor.ref."
     },
     {
       "id": "FND-00000394-AST-03",
@@ -55,7 +55,7 @@
           "net": "GND"
         }
       },
-      "aspirational": true
+      "incorrect_review": "graduate (TH-105, 2026-11-06): pwr_flag_warnings now [] (no GND warning); note check is malformed (value dict, no field/pattern)"
     },
     {
       "id": "FND-00000394-AST-04",
@@ -66,7 +66,7 @@
         "op": "equals",
         "value": "power"
       },
-      "aspirational": true
+      "incorrect_review": "graduate (TH-105, 2026-11-06): net_classification 12V = power today"
     },
     {
       "id": "FND-00000394-AST-05",

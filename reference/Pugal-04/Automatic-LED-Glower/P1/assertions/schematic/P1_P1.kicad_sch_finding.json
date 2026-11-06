@@ -10,11 +10,12 @@
       "created_from": "FND-00000367",
       "check": {
         "path": "sleep_current_audit.rails.+5V.current_paths[0].type",
-        "op": "eq",
+        "op": "equals",
         "value": "led_indicator"
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: eq"
+      "aspirational_reason": "unsupported op: eq",
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000367-AST-02",
@@ -22,11 +23,12 @@
       "created_from": "FND-00000367",
       "check": {
         "path": "assembly_complexity.smd_count",
-        "op": "eq",
+        "op": "equals",
         "value": 0
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: eq"
+      "aspirational_reason": "unsupported op: eq",
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000367-AST-03",
@@ -34,10 +36,11 @@
       "created_from": "FND-00000367",
       "check": {
         "path": "pwr_flag_warnings",
-        "op": "eq",
+        "op": "equals",
         "value": []
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000367-AST-04",
@@ -45,12 +48,12 @@
       "created_from": "FND-00000367",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_voltage_dividers"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

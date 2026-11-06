@@ -10,10 +10,11 @@
       "created_from": "FND-00000310",
       "check": {
         "path": "title_block.title",
-        "op": "eq",
+        "op": "equals",
         "value": "8x8 LED matrix"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000310-AST-02",
@@ -21,10 +22,11 @@
       "created_from": "FND-00000310",
       "check": {
         "path": "pwr_flag_warnings",
-        "op": "eq",
+        "op": "equals",
         "value": 0
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000310-AST-03",
@@ -32,10 +34,11 @@
       "created_from": "FND-00000310",
       "check": {
         "path": "design_analysis.erc_warnings",
-        "op": "max_value",
+        "op": "max_count",
         "value": 3
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op max_value -> max_count (same semantics)"
     },
     {
       "id": "FND-00000310-AST-04",
@@ -43,10 +46,11 @@
       "created_from": "FND-00000310",
       "check": {
         "path": "ic_pin_analysis[0].signal_pins[8].resistors[0].direction",
-        "op": "eq",
+        "op": "equals",
         "value": "pull-up"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000310-AST-05",
@@ -54,12 +58,12 @@
       "created_from": "FND-00000310",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000310-AST-06",
@@ -67,12 +71,12 @@
       "created_from": "FND-00000310",
       "check": {
         "path": "findings",
-        "op": "eq",
+        "op": "equals",
         "value": 0,
         "detector_filter": "detect_addressable_leds"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     }
   ]
 }

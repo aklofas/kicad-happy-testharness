@@ -24,7 +24,8 @@
         "op": "equals"
       },
       "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): smd/tht counts follow footprint attributes (Wave 4 Part B P7); was {\"path\": \"statistics.tht_count\", \"value\": 3, \"op\": \"equals\"}"
+      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): smd/tht counts follow footprint attributes (Wave 4 Part B P7); was {\"path\": \"statistics.tht_count\", \"value\": 3, \"op\": \"equals\"}",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): reviewer disputes footprint_count incl. decorative; tht_count=0 lock undisputed (but J2/J3/J4 attr 'unspecified' though reviewer calls them THT)"
     },
     {
       "id": "FND-00001387-AST-03",
@@ -37,17 +38,6 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
-    },
-    {
-      "id": "FND-00001387-AST-04",
-      "description": "INCORRECT: The placement_analysis reports 4 courtyard overlaps: J3/J1 (6.452mm2), J1/J4 (6.452mm2), J1/ST1 (0.0mm2), J1/ST2 (0.0mm2). The two zero-area overlaps for ST1/ST2 (standoffs) are spurious: a zero-area overlap is not a real overlap and should not be counted. The non-zero overlaps between J3, J1, and J4 (the GND header pins flanking the DE9) may also be intentional tight placement in a compact board, though they warrant flagging. The Male PCB shows the same pattern. The overlap_count=4 is inflated by the zero-area entries.",
-      "created_from": "FND-00001387",
-      "check": {
-        "path": "placement_analysis.overlap_count",
-        "value": 2,
-        "op": "max_count"
-      },
-      "aspirational": true
     }
   ]
 }

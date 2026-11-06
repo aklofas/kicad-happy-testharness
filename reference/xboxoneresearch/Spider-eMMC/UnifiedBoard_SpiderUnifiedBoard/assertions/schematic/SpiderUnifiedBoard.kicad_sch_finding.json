@@ -20,11 +20,12 @@
       "description": "INCORRECT: Same issue as the Carrier schematic: the SDINBDG4-8G eMMC uses both +1V8 (VCCQ) and +3.3V (VCC). The power_budget only shows +3.3V with estimated_mA=10 for U?. The +1V8 rail is absent from power_budget.rails despite the decoupling_analysis correctly identifying C4 and C5 as +1V8 decoupling capacitors.",
       "created_from": "FND-00001579",
       "check": {
-        "path": "power_budget.rails",
-        "op": "exists",
-        "value": "+1V8"
+        "path": "power_budget.rails.+1V8",
+        "op": "exists"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): 'exists' ignores value, so the lock only checks that rails exist. power_budget.rails is still only +3.3V; reviewer: +1V8 (eMMC VCCQ) should be present.",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"power_budget.rails\", \"op\": \"exists\", \"value\": \"+1V8\"})"
     }
   ]
 }

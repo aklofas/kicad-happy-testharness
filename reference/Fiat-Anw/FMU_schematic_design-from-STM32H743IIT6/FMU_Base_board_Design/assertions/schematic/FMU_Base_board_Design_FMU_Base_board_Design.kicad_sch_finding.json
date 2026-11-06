@@ -79,11 +79,12 @@
       "created_from": "FND-00000306",
       "check": {
         "path": "usb_compliance.summary.pass",
-        "op": "gte",
+        "op": "min_count",
         "value": 3
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: gte"
+      "aspirational_reason": "unsupported op: gte",
+      "migration_note": "TH-100: op gte -> min_count (same semantics)"
     },
     {
       "id": "FND-00000306-AST-08",
@@ -115,11 +116,12 @@
       "created_from": "FND-00000306",
       "check": {
         "path": "statistics.total_components",
-        "op": "gte",
+        "op": "min_count",
         "value": 150
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: gte"
+      "aspirational_reason": "unsupported op: gte",
+      "migration_note": "TH-100: op gte -> min_count (same semantics)"
     },
     {
       "id": "FND-00000306-AST-11",

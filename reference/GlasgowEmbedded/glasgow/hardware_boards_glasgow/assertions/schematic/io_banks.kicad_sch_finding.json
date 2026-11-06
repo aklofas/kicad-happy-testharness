@@ -10,12 +10,14 @@
       "created_from": "FND-00002098",
       "check": {
         "path": "findings",
-        "op": "min_count",
-        "value": 1,
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U14$",
         "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): child sheet analysed alone resolves both io_buffer instances to one reference; was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 2, \"detector_filter\": \"detect_power_regulators\"}"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 1, \"detector_filter\": \"detect_power_regulators\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Defect still open: components list U31 twice, U14 missing; only 1 regulator (U31, R34/R35). Correct output has U14 with R28/R29. Lock min_count 1 was unrelated."
     }
   ]
 }

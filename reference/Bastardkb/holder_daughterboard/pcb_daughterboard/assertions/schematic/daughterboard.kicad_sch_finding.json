@@ -6,7 +6,7 @@
   "assertions": [
     {
       "id": "FND-00002126-AST-01",
-      "description": "R1/R2/R3/R4 (all 5.1k) serve as CC pulldowns for the two USB-C receptacles. The usb_compliance section correctly reports cc1_pulldown_5k1: pass and cc2_pulldown_5k1: pass for both J1 and J4. The vbus_esd_protection: fail and vbus_decoupling: fail results are accurate \u2014 there is no ESD diode or decoupling capacitor on VBUS in this pass-through daughterboard.",
+      "description": "R1/R2/R3/R4 (all 5.1k) serve as CC pulldowns for the two USB-C receptacles. The usb_compliance section correctly reports cc1_pulldown_5k1: pass and cc2_pulldown_5k1: pass for both J1 and J4. The vbus_esd_protection: fail and vbus_decoupling: fail results are accurate — there is no ESD diode or decoupling capacitor on VBUS in this pass-through daughterboard.",
       "created_from": "FND-00002126",
       "check": {
         "path": "usb_compliance.summary.pass",
@@ -20,12 +20,12 @@
       "created_from": "FND-00002126",
       "check": {
         "path": "statistics.power_rails",
-        "op": "equals",
-        "value": [
-          {"name": "GND", "voltage": null}
-        ]
+        "op": "min_count",
+        "value": 2
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Lock pins the defect: power_rails still only [GND]; reviewer says VBUS (USB-C J1/J4) is missing",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.power_rails\", \"op\": \"equals\", \"value\": [{\"name\": \"GND\", \"voltage\": null}]})"
     }
   ]
 }

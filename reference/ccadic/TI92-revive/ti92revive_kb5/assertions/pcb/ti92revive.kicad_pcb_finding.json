@@ -40,13 +40,15 @@
       "created_from": "FND-00001605",
       "check": {
         "path": "footprints",
-        "op": "contains_match",
-        "value": {
-          "reference": "IC1",
-          "type": "smd"
-        }
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "IC1",
+        "assert_field": "type",
+        "assert_value": "smd"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): as written vacuous. IC1 WQFN-24 still type through_hole (attr); reviewer: all pads SMD -> smd",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"footprints\", \"op\": \"contains_match\", \"value\": {\"reference\": \"IC1\", \"type\": \"smd\"}})"
     }
   ]
 }

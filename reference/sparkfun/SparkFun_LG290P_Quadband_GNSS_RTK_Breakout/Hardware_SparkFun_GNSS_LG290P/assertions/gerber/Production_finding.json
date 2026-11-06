@@ -41,10 +41,12 @@
       "created_from": "FND-00001448",
       "check": {
         "path": "completeness.missing_required",
-        "op": "not_contains_match",
-        "value": "Edge.Cuts"
+        "op": "max_count",
+        "value": 0
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): defect present: GKO typed B.Mask, missing_required=['Edge.Cuts'], complete=false. The lock is vacuous (value, no field/pattern)",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"completeness.missing_required\", \"op\": \"not_contains_match\", \"value\": \"Edge.Cuts\"})"
     },
     {
       "id": "FND-00001448-AST-05",

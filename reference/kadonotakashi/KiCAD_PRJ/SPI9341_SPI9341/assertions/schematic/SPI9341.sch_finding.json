@@ -10,10 +10,12 @@
       "created_from": "FND-00001693",
       "check": {
         "path": "statistics.total_components",
-        "value": 2,
-        "op": "equals"
+        "op": "equals",
+        "value": 4
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): locks the defect: total_components=2; schematic has 4 symbols (U?, 3x J? connectors sharing ref J?)",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.total_components\", \"value\": 2, \"op\": \"equals\"})"
     },
     {
       "id": "FND-00001693-AST-02",
@@ -24,7 +26,7 @@
         "value": 1,
         "op": "min_count"
       },
-      "aspirational": false
+      "incorrect_review": "graduate (TH-105, 2026-11-06): SCK now on __unnamed_13 (U? SCK + J? pin 7), not +3.3V; power-net SCK false positive gone"
     }
   ]
 }

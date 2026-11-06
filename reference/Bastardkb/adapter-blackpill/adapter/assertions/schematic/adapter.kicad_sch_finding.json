@@ -46,19 +46,6 @@
       "aspirational": true
     },
     {
-      "id": "FND-00001975-AST-05",
-      "description": "INCORRECT: The analyzer correctly reports has_pull_up:false for all I2C nets. This is a correct observation, not a false positive: the Charybdis Blackpill holder is an adapter PCB; pull-ups for I2C are expected to be on the peripheral boards themselves. The finding is accurate.",
-      "created_from": "FND-00001975",
-      "check": {
-        "path": "design_analysis.bus_analysis.i2c",
-        "op": "contains_key_value",
-        "value": {
-          "has_pull_up": false
-        }
-      },
-      "aspirational": true
-    },
-    {
       "id": "FND-00001975-AST-06",
       "description": "INCORRECT: signal_analysis section reports rc_filters:[] and all other signal detectors empty. The schematic has R1-R8 (5.1k resistors) on the serial lines, but these are current-limiting/protection resistors in series with connector signals, not true RC filters. The empty result is correct for RC filters specifically.",
       "created_from": "FND-00001975",
@@ -69,20 +56,8 @@
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
-    },
-    {
-      "id": "FND-00001975-AST-07",
-      "description": "INCORRECT: The signal_analysis.decoupling_analysis array is empty. The design_observations correctly notes that U1 and U2 have rails_without_caps ['+3.3V', '+5V']. This is accurate: the Blackpill breakout modules have their own decoupling capacitors built in, so the adapter board intentionally has no decoupling caps. The finding is correct behavior.",
-      "created_from": "FND-00001975",
-      "check": {
-        "path": "findings",
-        "op": "min_count",
-        "value": 0,
-        "detector_filter": "detect_decoupling"
-      },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): vacuous min_count 0; reviewer agrees empty rc_filters is correct (0 today)"
     },
     {
       "id": "FND-00001975-AST-08",

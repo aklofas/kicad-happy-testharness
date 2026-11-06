@@ -77,8 +77,8 @@
         },
         "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators",
+      "incorrect_review": "graduate (TH-105, 2026-11-06): AP3012 (U5) now output_rail 5V, switching; old check vacuous (dict value, wrong ref U1), suggested form passes"
     },
     {
       "id": "FND-00001441-AST-07",
@@ -89,7 +89,8 @@
         "op": "equals",
         "value": 1
       },
-      "aspirational": false
+      "aspirational": false,
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): diode=1 is right (the second D1 is an LED); the complaint is the BOM missing a duplicate-ref entry."
     },
     {
       "id": "FND-00001441-AST-08",
@@ -100,8 +101,8 @@
         "op": "equals",
         "value": 37
       },
-      "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): duplicate references counted per symbol (KH-483); was {\"path\": \"statistics.total_components\", \"op\": \"equals\", \"value\": 32}"
+      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): duplicate references counted per symbol (KH-483); was {\"path\": \"statistics.total_components\", \"op\": \"equals\", \"value\": 32}",
+      "incorrect_review": "graduate (TH-105, 2026-11-06): refs now unique and total_components 37 (> the 32 reviewer said undercounted)"
     },
     {
       "id": "FND-00001441-AST-09",
@@ -109,10 +110,13 @@
       "created_from": "FND-00001441",
       "check": {
         "path": "design_analysis.cross_domain_signals",
-        "op": "min_count",
-        "value": 1
+        "op": "not_contains_match",
+        "field": "needs_level_shifter",
+        "pattern": "^true$"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): SDA/SCL still needs_level_shifter=true (3.3V/5V); reviewer: SEN55 I2C is 3.3V logic, no shifter needed",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"design_analysis.cross_domain_signals\", \"op\": \"min_count\", \"value\": 1})"
     },
     {
       "id": "FND-00001441-AST-10",

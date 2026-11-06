@@ -10,13 +10,13 @@
       "created_from": "FND-00000365",
       "check": {
         "path": "findings[0].ground_net",
-        "op": "eq",
+        "op": "equals",
         "value": "GND",
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
       "aspirational_reason": "unsupported op: eq",
-      "migration_note": "Path migrated from: signal_analysis.rc_filters[0].ground_net"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000365-AST-02",
@@ -24,12 +24,12 @@
       "created_from": "FND-00000365",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_lc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.lc_filters"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000365-AST-03",
@@ -37,12 +37,13 @@
       "created_from": "FND-00000365",
       "check": {
         "path": "design_analysis.power_domains.ic_power_rails.IC1.power_rails",
-        "op": "eq",
+        "op": "equals",
         "value": [
           "+12V"
         ]
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000365-AST-04",
@@ -50,12 +51,12 @@
       "created_from": "FND-00000365",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_buzzer_speakers"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.buzzer_speaker_circuits"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

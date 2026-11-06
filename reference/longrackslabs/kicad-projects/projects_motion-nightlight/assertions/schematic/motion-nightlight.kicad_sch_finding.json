@@ -10,12 +10,15 @@
       "created_from": "FND-00002257",
       "check": {
         "path": "findings",
-        "op": "min_count",
+        "op": "count_matches",
+        "field": "total_capacitance_uF",
+        "pattern": "^0\\.[12]",
         "value": 1,
         "detector_filter": "detect_decoupling"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 1, \"detector_filter\": \"detect_decoupling\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): C1/C2 '104' still parse 1.04e-10 F; V_CONTROL total_capacitance_uF 0.0. Correct is 0.2 uF. min_count 1 was unrelated."
     }
   ]
 }

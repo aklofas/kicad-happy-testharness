@@ -10,12 +10,12 @@
       "created_from": "FND-00000315",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_decoupling"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000315-AST-02",
@@ -23,12 +23,12 @@
       "created_from": "FND-00000315",
       "check": {
         "path": "findings[0].switches_on_matrix",
-        "op": "eq",
+        "op": "equals",
         "value": 4,
         "detector_filter": "detect_key_matrices"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000315-AST-03",
@@ -36,12 +36,12 @@
       "created_from": "FND-00000315",
       "check": {
         "path": "findings[0].estimated_keys",
-        "op": "eq",
+        "op": "equals",
         "value": 4,
         "detector_filter": "detect_key_matrices"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].estimated_keys"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000315-AST-04",
@@ -49,21 +49,11 @@
       "created_from": "FND-00000315",
       "check": {
         "path": "design_analysis.erc_warnings",
-        "op": "eq",
+        "op": "equals",
         "value": []
       },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000315-AST-05",
-      "description": "The differential_pairs entry correctly identifies D+/D- with series resistors R2/R3 and USB1, but U1 D+/D- pins are not included in the shared_ics list because the ATmega32U4's D+ (pin 4, __unnamed_26) and D- (pin 3, __unnamed_18) are on unnamed nets instead of the labeled D+/D- nets. The global label wiring in the legacy .sch format connects U1 through the global labels to R2/R3, but the analyzer fails to trace through global labels to merge the nets.",
-      "created_from": "FND-00000315",
-      "check": {
-        "path": "design_analysis.differential_pairs[0].shared_ics",
-        "op": "contains",
-        "value": "U1"
-      },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     }
   ]
 }

@@ -38,7 +38,8 @@
         "detector_filter": "detect_power_regulators"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): regulator min_count 4 not disputed; claim is U5 output_rail 3.3V vs 3.3V_P"
     },
     {
       "id": "FND-00001813-AST-04",
@@ -46,12 +47,14 @@
       "created_from": "FND-00001813",
       "check": {
         "path": "findings",
-        "value": 4,
-        "op": "equals",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U7$",
         "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"value\": 4, \"op\": \"equals\", \"detector_filter\": \"detect_power_regulators\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): U7 DP5305 (USB-PD controller) still listed as regulator, topology unknown; count 4 includes it"
     },
     {
       "id": "FND-00001813-AST-05",

@@ -27,7 +27,8 @@
         "detector_filter": "detect_key_matrices"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.key_matrices"
+      "migration_note": "Path migrated from: signal_analysis.key_matrices",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): key_matrices count not disputed; the I2C claim still holds: bus_analysis.i2c has net 'sda' (U1 Pico, U2 ST7735), spi []"
     },
     {
       "id": "FND-00002232-AST-03",
@@ -36,9 +37,11 @@
       "check": {
         "path": "kicad_version",
         "op": "equals",
-        "value": "unknown"
+        "value": "6.0"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): kicad_version still 'unknown' for file_version 20211123 (KiCad 6); reviewer says it should be KiCad 6; corpus format is '9.0'/'8.0' so '6.0'",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"kicad_version\", \"op\": \"equals\", \"value\": \"unknown\"})"
     }
   ]
 }

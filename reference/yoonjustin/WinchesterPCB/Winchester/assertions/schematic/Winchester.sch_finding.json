@@ -74,11 +74,16 @@
       "description": "INCORRECT: COMPONENT1 has value 'PJRAN' and footprint 'Winchester:PJRAN'. PJRAN is a DB25/JAMMA-style arcade joystick connector, not a capacitor. The analyzer assigns type 'capacitor' presumably because the fallback logic matches something in the value or footprint name. It should be 'connector' or 'other'.",
       "created_from": "FND-00001969",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "max_count",
-        "value": 25
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "COMPONENT1",
+        "assert_field": "type",
+        "assert_value": "connector"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): COMPONENT1 PJRAN still typed capacitor (max 25 includes it)",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.capacitor\", \"op\": \"max_count\", \"value\": 25})"
     },
     {
       "id": "FND-00001969-AST-08",

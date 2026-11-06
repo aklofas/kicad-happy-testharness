@@ -29,6 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from reference_io import write_assertion_file
+from checks import assertion_errors
 from utils import DATA_DIR, data_dir, project_prefix, _truncate_with_hash, atomic_write_text
 
 
@@ -393,6 +394,9 @@ def promote_to_assertion(finding_id, dry_run=False):
 
     if not assertions:
         return 0, 0
+    bad = [(a["id"], err) for a in assertions for err in assertion_errors(a)]
+    if bad:
+        raise ValueError(f"{finding_id}: refusing to write assertions run_checks rejects: {bad}")
 
     # Build file_pattern from source_file.
     # source_file is like "schematic/repo/projprefix_file.kicad_sch.json"

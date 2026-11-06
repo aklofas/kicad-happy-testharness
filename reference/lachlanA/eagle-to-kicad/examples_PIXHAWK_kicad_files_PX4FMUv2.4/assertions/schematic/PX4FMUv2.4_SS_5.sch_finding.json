@@ -54,10 +54,13 @@
       "created_from": "FND-00002031",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/Sheet:/"
+        "op": "not_contains_match",
+        "field": "name",
+        "pattern": "^Sheet:$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): empty text; as written vacuous. power_rails still holds bogus rail 'Sheet:' (Eagle-import text)",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/Sheet:/\"})"
     },
     {
       "id": "FND-00002031-AST-06",
@@ -153,7 +156,8 @@
         "detector_filter": "detect_memory_interfaces"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): Empty INCORRECT text; one of many generic checks bulk-filed under incorrect[], no stated defect; min_count 0 is vacuous"
     },
     {
       "id": "FND-00002031-AST-14",
@@ -224,19 +228,6 @@
         "value": 127
       },
       "aspirational": true
-    },
-    {
-      "id": "FND-00002031-AST-20",
-      "description": "INCORRECT: ",
-      "created_from": "FND-00002031",
-      "check": {
-        "path": "findings[0].frequency",
-        "op": "equals",
-        "value": null,
-        "detector_filter": "detect_crystal_circuits"
-      },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].frequency"
     },
     {
       "id": "FND-00002031-AST-21",

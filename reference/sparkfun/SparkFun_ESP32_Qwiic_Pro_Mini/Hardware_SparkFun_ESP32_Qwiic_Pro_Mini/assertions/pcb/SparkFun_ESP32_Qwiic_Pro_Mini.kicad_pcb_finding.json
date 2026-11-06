@@ -40,11 +40,12 @@
       "created_from": "FND-00001396",
       "check": {
         "path": "statistics.smd_count",
-        "value": 14,
-        "op": "min_count"
+        "op": "min_count",
+        "value": 18
       },
-      "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): smd/tht counts follow footprint attributes (Wave 4 Part B P7); was {\"path\": \"statistics.smd_count\", \"value\": 19, \"op\": \"min_count\"}"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.smd_count\", \"value\": 14, \"op\": \"min_count\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): smd_count 14 (U2,U3,SW1,SW2 unspecified) locks the undercount reviewer flagged at 19"
     }
   ]
 }

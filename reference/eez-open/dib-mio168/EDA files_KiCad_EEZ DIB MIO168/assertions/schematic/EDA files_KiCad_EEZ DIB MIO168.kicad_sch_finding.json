@@ -71,11 +71,13 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "field": "reference",
+        "field": "input_resistor.ref",
         "pattern": "^R17$",
         "detector_filter": "detect_opamp_circuits"
       },
-      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"reference\", \"pattern\": \"^R17$\", \"detector_filter\": \"detect_opamp_circuits\"})",
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock checks field 'reference' (vacuous); IC16 buffer still has input_resistor R17 (9.09k) which belongs to IC19"
     }
   ]
 }

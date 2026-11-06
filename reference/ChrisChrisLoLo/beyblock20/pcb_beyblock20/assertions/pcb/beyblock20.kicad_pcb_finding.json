@@ -23,7 +23,8 @@
         "op": "equals",
         "value": 1
       },
-      "aspirational": false
+      "aspirational": false,
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): Board is 95.25x100.012 mm; it does exceed the 100x100 pricing threshold. Tolerance slack is a policy choice, not an analyzer defect."
     },
     {
       "id": "FND-00001953-AST-03",
@@ -31,10 +32,13 @@
       "created_from": "FND-00001953",
       "check": {
         "path": "silkscreen.documentation_warnings",
-        "op": "min_count",
-        "value": 1
+        "op": "not_contains_match",
+        "field": "type",
+        "pattern": "^missing_switch_labels$"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): missing_switch_labels still fires on all 20 keyboard SW_SPST switches; lock protects it",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"silkscreen.documentation_warnings\", \"op\": \"min_count\", \"value\": 1})"
     }
   ]
 }

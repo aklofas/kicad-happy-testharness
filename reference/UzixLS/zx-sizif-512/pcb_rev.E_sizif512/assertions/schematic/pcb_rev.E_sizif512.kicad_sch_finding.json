@@ -49,8 +49,8 @@
         "pattern": "^Q5$",
         "detector_filter": "detect_transistor_circuits"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits",
+      "incorrect_review": "graduate (TH-105, 2026-11-06): Q5 no longer in transistor_circuits (only Q1-Q4), as the reviewer says is correct"
     },
     {
       "id": "FND-00000266-AST-05",
@@ -58,13 +58,15 @@
       "created_from": "FND-00000266",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^Q13$",
-        "detector_filter": "detect_transistor_circuits"
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "Q13",
+        "assert_field": "gate_driver_ics",
+        "assert_value": []
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"reference\", \"pattern\": \"^Q13$\", \"detector_filter\": \"detect_transistor_circuits\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Q13 moved to detect_led_drivers, still has 19 gate_driver_ics (U6 x many, gate on +3V3). Correct: no driver IC. detector_filter dropped because the finding changed detector."
     }
   ]
 }

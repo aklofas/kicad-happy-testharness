@@ -35,11 +35,13 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^U1$",
+        "field": "isolation_components",
+        "pattern": "'reference': 'U1'",
         "detector_filter": "detect_isolation_barriers"
       },
-      "migration_note": "Path migrated from: signal_analysis.isolation_barriers"
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"ref\", \"pattern\": \"^U1$\", \"detector_filter\": \"detect_isolation_barriers\"})",
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): vacuous (field ref absent); U1 TMUX4051 still listed in isolation_components"
     }
   ]
 }

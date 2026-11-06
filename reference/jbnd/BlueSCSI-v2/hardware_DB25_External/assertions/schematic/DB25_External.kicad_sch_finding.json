@@ -11,9 +11,11 @@
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "equals",
-        "value": 34
+        "value": 33
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): RP1 (custom_symbols:BlackSCSI MCU module) still typed resistor, count 34; reviewer: 33",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.resistor\", \"op\": \"equals\", \"value\": 34})"
     },
     {
       "id": "FND-00000412-AST-02",
@@ -21,10 +23,12 @@
       "created_from": "FND-00000412",
       "check": {
         "path": "statistics.component_types.switch",
-        "op": "equals",
-        "value": 1
+        "op": "max_count",
+        "value": 0
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): locks the defect: SD2 MicroSD-TF-06 is still switch=1; reviewer says it is a connector, not a switch",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.switch\", \"op\": \"equals\", \"value\": 1})"
     },
     {
       "id": "FND-00000412-AST-03",

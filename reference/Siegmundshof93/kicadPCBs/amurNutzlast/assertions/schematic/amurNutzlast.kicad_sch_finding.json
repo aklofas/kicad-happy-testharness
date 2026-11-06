@@ -20,12 +20,16 @@
       "created_from": "FND-00002271",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": "/\"estimated_vout\":\\s*[0-9]/",
+        "op": "field_equals",
+        "match_field": "ref",
+        "match_value": "U2",
+        "assert_field": "feedback_divider.r_top.ref",
+        "assert_value": "R12",
         "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/\\\"estimated_vout\\\":\\\\s*[0-9]/\", \"detector_filter\": \"detect_power_regulators\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Old check used 'value', not 'pattern' (vacuous). U2 still uses R10/R11 sense resistors, Vout 0.601 V; correct divider is R12 (top)/R13 on ADJ1."
     }
   ]
 }

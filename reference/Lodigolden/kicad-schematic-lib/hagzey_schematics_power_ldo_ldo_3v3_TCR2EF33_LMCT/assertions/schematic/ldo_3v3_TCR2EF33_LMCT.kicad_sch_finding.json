@@ -10,12 +10,16 @@
       "created_from": "FND-00002266",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": "/\\+3V3/",
+        "op": "field_equals",
+        "match_field": "ref",
+        "match_value": "U1",
+        "assert_field": "output_rail",
+        "assert_value": "+3V3",
         "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/\\\\+3V3/\", \"detector_filter\": \"detect_power_regulators\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Old check used 'value' instead of 'pattern' so it matched anything. U1 output_rail still '__unnamed_0'; reviewer says it should be +3V3 (through FB1)."
     }
   ]
 }

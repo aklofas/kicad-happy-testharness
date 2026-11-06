@@ -10,12 +10,12 @@
       "created_from": "FND-00000324",
       "check": {
         "path": "findings[0].reference",
-        "op": "eq",
+        "op": "equals",
         "value": "Y1",
         "detector_filter": "detect_crystal_circuits"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].reference"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000324-AST-02",
@@ -23,12 +23,12 @@
       "created_from": "FND-00000324",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_power_regulators"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000324-AST-03",
@@ -36,12 +36,12 @@
       "created_from": "FND-00000324",
       "check": {
         "path": "findings[0].category",
-        "op": "eq",
+        "op": "equals",
         "value": "single_pin_nets",
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations[0].category"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000324-AST-04",
@@ -49,12 +49,12 @@
       "created_from": "FND-00000324",
       "check": {
         "path": "findings[0].cap_count",
-        "op": "min_value",
+        "op": "min_count",
         "value": 6,
         "detector_filter": "detect_decoupling"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[0].cap_count"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000324-AST-05",
@@ -62,12 +62,12 @@
       "created_from": "FND-00000324",
       "check": {
         "path": "findings[2].has_bulk",
-        "op": "eq",
+        "op": "equals",
         "value": true,
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations[2].has_bulk"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000324-AST-06",
@@ -75,12 +75,12 @@
       "created_from": "FND-00000324",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_memory_interfaces"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

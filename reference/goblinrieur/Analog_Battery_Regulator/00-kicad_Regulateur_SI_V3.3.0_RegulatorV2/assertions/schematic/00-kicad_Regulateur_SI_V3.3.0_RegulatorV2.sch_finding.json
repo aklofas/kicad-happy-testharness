@@ -10,13 +10,13 @@
       "created_from": "FND-00000369",
       "check": {
         "path": "findings[0].source_net",
-        "op": "eq",
+        "op": "equals",
         "value": "GND",
         "detector_filter": "detect_transistor_circuits"
       },
       "aspirational": true,
       "aspirational_reason": "unsupported op: eq",
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits[0].source_net"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000369-AST-02",
@@ -24,12 +24,12 @@
       "created_from": "FND-00000369",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 4,
         "detector_filter": "detect_opamp_circuits"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000369-AST-03",
@@ -37,12 +37,12 @@
       "created_from": "FND-00000369",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 3,
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

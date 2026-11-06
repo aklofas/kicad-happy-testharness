@@ -31,11 +31,13 @@
       "description": "INCORRECT: The four HOLE-type components (M1-M4, library VLFANT01B-rescue:HOLE) are classified as component_type='other' instead of 'mounting_hole'. Other designs with similar mounting hole footprints are classified correctly. The rescue library prefix may be preventing the type classifier from recognizing the HOLE symbol name.",
       "created_from": "FND-00001790",
       "check": {
-        "path": "statistics.component_types.other",
-        "value": 4,
-        "op": "equals"
+        "path": "statistics.component_types.mounting_hole",
+        "op": "equals",
+        "value": 4
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): locks the defect: M1-M4 rescue:HOLE still other=4; reviewer says mounting_hole (that type exists in the corpus)",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.other\", \"value\": 4, \"op\": \"equals\"})"
     }
   ]
 }

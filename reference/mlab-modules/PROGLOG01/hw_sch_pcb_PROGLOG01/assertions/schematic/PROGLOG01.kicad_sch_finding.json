@@ -49,7 +49,8 @@
         "detector_filter": "detect_power_regulators"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): min_count 1 met by MIC5504 LDO; TPS22919 load switch no longer listed as a regulator (claim fixed)"
     },
     {
       "id": "FND-00002005-AST-05",
@@ -57,10 +58,14 @@
       "created_from": "FND-00002005",
       "check": {
         "path": "design_analysis.cross_domain_signals",
-        "op": "min_count",
+        "op": "count_matches",
+        "field": "needs_level_shifter",
+        "pattern": "^True$",
         "value": 0
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): defect present: SPI_SI/SCK/SS/SO still needs_level_shifter=True (4); reviewer says both ends are 3V3. min_count 0 is vacuous",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"design_analysis.cross_domain_signals\", \"op\": \"min_count\", \"value\": 0})"
     },
     {
       "id": "FND-00002005-AST-06",

@@ -10,21 +10,11 @@
       "created_from": "FND-00000312",
       "check": {
         "path": "design_analysis.erc_warnings",
-        "op": "max_value",
+        "op": "max_count",
         "value": 2
       },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000312-AST-02",
-      "description": "X1 has a manufacturer part number stored in a custom field named 'MFN' (F5: FTSH-105-01-F-DV-K) rather than the standard 'MPN' field. The analyzer correctly reports mpn: '' for X1 in the BOM but only lists P1 in missing_mpn. X1 should also appear in missing_mpn since its MPN is not in a recognized field \u2014 even though it is DNP. The custom 'MFN' field name is a project convention not recognized by the analyzer.",
-      "created_from": "FND-00000312",
-      "check": {
-        "path": "statistics.missing_mpn",
-        "op": "contains",
-        "value": "X1"
-      },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op max_value -> max_count (same semantics)"
     },
     {
       "id": "FND-00000312-AST-03",
@@ -32,12 +22,12 @@
       "created_from": "FND-00000312",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

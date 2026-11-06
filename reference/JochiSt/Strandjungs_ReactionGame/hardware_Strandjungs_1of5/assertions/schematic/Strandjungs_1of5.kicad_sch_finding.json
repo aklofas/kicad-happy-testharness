@@ -21,12 +21,12 @@
       "check": {
         "path": "assembly_complexity.smd_count",
         "op": "range",
-        "value": [
-          30,
-          40
-        ]
+        "min": 30,
+        "max": 40
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): smd_count=51 today vs 35 by footprint count (PCB agrees 35); old check passed only because range used value instead of min/max",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"assembly_complexity.smd_count\", \"op\": \"range\", \"value\": [30, 40]})"
     },
     {
       "id": "FND-00001593-AST-03",

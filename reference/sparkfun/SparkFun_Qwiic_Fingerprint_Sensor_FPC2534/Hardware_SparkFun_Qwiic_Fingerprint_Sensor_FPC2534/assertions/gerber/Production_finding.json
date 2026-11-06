@@ -73,10 +73,12 @@
       "created_from": "FND-00001451",
       "check": {
         "path": "completeness.missing_required",
-        "op": "not_contains_match",
-        "value": "Edge.Cuts"
+        "op": "max_count",
+        "value": 0
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Old check malformed (string list, value not pattern: always passes). Defect remains: GKO still B.Mask, missing_required [Edge.Cuts]",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"completeness.missing_required\", \"op\": \"not_contains_match\", \"value\": \"Edge.Cuts\"})"
     },
     {
       "id": "FND-00001451-AST-08",
@@ -88,7 +90,8 @@
         "value": 625
       },
       "aspirational": false,
-      "migration_note": "Re-anchored 525 -> 625 (v3.0.1 regen at 9885287, ruling 2026-11-03 (FND batch 1)): +100 = the T2 0.6 mm plated slots (drill_report.rpt); Wave 5 drill model"
+      "migration_note": "Re-anchored 525 -> 625 (v3.0.1 regen at 9885287, ruling 2026-11-03 (FND batch 1)): +100 = the T2 0.6 mm plated slots (drill_report.rpt); Wave 5 drill model",
+      "incorrect_review": "product ruling (re-anchored): Re-anchored 525 -> 625 (v3.0.1 regen at 9885287, ruling 2026-11-03 (FND batch 1)): +100 = the T2 0.6 mm plated slots (drill_report.rpt); Wave 5 drill model"
     }
   ]
 }

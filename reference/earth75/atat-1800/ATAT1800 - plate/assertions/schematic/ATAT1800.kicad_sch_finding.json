@@ -83,7 +83,8 @@
         "detector_filter": "detect_protection_devices"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "migration_note": "Path migrated from: signal_analysis.protection_devices",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): The claim (D- has_esd false) is fixed: D+ and D- now both has_esd_protection true. The protection min_count 1 was not disputed."
     },
     {
       "id": "FND-00001982-AST-08",
@@ -92,9 +93,11 @@
       "check": {
         "path": "statistics.component_types.switch",
         "op": "equals",
-        "value": 109
+        "value": 102
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): S1-S7 MX_stab still typed switch; 109 is the defect, reviewer says 102",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.switch\", \"op\": \"equals\", \"value\": 109})"
     }
   ]
 }

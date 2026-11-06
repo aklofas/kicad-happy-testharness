@@ -46,9 +46,11 @@
       "check": {
         "path": "completeness.complete",
         "op": "equals",
-        "value": false
+        "value": true
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): complete=false today: Soft_Power_Switch_panelized.GKO with Profile aperture classified B.Mask; Edge.Cuts reported missing",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"completeness.complete\", \"op\": \"equals\", \"value\": false})"
     },
     {
       "id": "FND-00001459-AST-05",
@@ -57,11 +59,11 @@
       "check": {
         "path": "completeness.missing_required",
         "op": "equals",
-        "value": [
-          "Edge.Cuts"
-        ]
+        "value": []
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): GKO is still B.Mask, so missing_required is ['Edge.Cuts']; the lock asserts exactly that defect. Correct is [].",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"completeness.missing_required\", \"op\": \"equals\", \"value\": [\"Edge.Cuts\"]})"
     }
   ]
 }

@@ -11,10 +11,11 @@
       "check": {
         "path": "statistics.copper_layers_used",
         "op": "equals",
-        "value": 2
+        "value": 4
       },
-      "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): zone-only inner planes now count as copper layers; was {\"path\": \"statistics.copper_layers_used\", \"op\": \"equals\", \"value\": 0}"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.copper_layers_used\", \"op\": \"equals\", \"value\": 2})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): copper_layers_used is now 2 ['In1.Cu','In2.Cu'] (zones counted), but F.Cu/B.Cu are missing; reviewer says it is a 4-layer board. The lock asserted 2."
     }
   ]
 }

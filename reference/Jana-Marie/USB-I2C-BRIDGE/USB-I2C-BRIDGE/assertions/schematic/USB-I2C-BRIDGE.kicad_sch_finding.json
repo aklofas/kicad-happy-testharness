@@ -64,12 +64,13 @@
       "created_from": "FND-00001642",
       "check": {
         "path": "design_analysis.differential_pairs",
-        "value": {
-          "type": "USB"
-        },
-        "op": "contains_match"
+        "op": "contains_match",
+        "field": "type",
+        "pattern": "^USB$"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): as written vacuous (value, no pattern). D+/D- pair still type 'differential'; reviewer: USB",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"design_analysis.differential_pairs\", \"value\": {\"type\": \"USB\"}, \"op\": \"contains_match\"})"
     },
     {
       "id": "FND-00001642-AST-07",

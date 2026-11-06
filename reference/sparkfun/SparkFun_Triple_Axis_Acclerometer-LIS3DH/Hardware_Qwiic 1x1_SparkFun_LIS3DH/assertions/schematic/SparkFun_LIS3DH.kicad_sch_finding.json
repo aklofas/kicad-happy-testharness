@@ -30,16 +30,16 @@
       "created_from": "FND-00001543",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "net": "SDA",
-          "has_pullup": true
-        },
+        "op": "field_equals",
+        "match_field": "net",
+        "match_value": "SDA",
+        "assert_field": "has_pullup",
+        "assert_value": true,
         "detector_filter": "detect_design_observations"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"i2c_bus\", \"net\": \"SDA\", \"has_pullup\": true}, \"detector_filter\": \"detect_design_observations\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): as written vacuous. SDA has_pullup still false (R2 via JP2 to 3.3V); reviewer: true"
     },
     {
       "id": "FND-00001543-AST-04",
@@ -50,7 +50,7 @@
         "op": "min_count",
         "value": 20
       },
-      "aspirational": false
+      "incorrect_review": "graduate (TH-105, 2026-11-06): Description itself says all 24 refs in missing_mpn is accurate (INCORRECT label mis-sorted); missing_mpn has 24"
     }
   ]
 }

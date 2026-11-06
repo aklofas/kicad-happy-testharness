@@ -40,6 +40,8 @@ def check_assertions(data_dir, repo_name=None, analyzer_type=None):
         if aset.get("_load_error"):   # an unreadable assertion file
             errors += 1
             continue
+        errors += sum(1 for a in assertions if a.get("_invalid"))
+        assertions = [a for a in assertions if not a.get("_invalid")]
 
         data, load_error = load_set_output(aset)
         if load_error:
@@ -89,6 +91,18 @@ def _check_one_set(aset):
             "aspirational": False,
         })
         return result
+
+    invalid = [a for a in aset.get("assertions", []) if a.get("_invalid")]
+    for a in invalid:
+        result["load_errors"] += 1
+        result["results"].append({
+            "file": file_pattern, "repo": repo_name, "project": project_name,
+            "id": a.get("id", "?"), "description": a.get("description", ""),
+            "passed": False, "error": f"invalid assertion: {a['_invalid']}",
+            "aspirational": a.get("aspirational", False),
+        })
+    if invalid:
+        aset = dict(aset, assertions=[a for a in aset["assertions"] if not a.get("_invalid")])
 
     data, load_error = load_set_output(aset)
 
@@ -286,10 +300,10 @@ def main():
         print(f"Failed: {failed}")
         print(f"Errors: {errors}")
         if load_errors:
-            print(f"Unreadable assertion files: {load_errors}")
+            print(f"Unreadable assertion files or invalid assertions: {load_errors}")
             for r in all_results:
-                if r.get("id") == "<assertion file>":
-                    print(f"  LOAD ERROR {r['file']}: {r['error']}")
+                if r.get("id") == "<assertion file>" or str(r.get("error", "")).startswith("invalid assertion"):
+                    print(f"  LOAD ERROR {r['file']} {r['id']}: {r['error']}")
         if total > 0:
             print(f"Rate:   {passed/total*100:.1f}%")
         if not_found:

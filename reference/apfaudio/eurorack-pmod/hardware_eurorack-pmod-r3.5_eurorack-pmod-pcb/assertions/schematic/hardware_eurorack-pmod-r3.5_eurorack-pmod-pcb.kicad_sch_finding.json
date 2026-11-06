@@ -58,13 +58,14 @@
       "created_from": "FND-00000261",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
+        "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R35$",
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"resistor.ref\", \"pattern\": \"^R35$\", \"detector_filter\": \"detect_rc_filters\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock asserts R35 absent but reviewer says R35+C32 is the one genuine filter; today 0 RC filters"
     },
     {
       "id": "FND-00000261-AST-06",

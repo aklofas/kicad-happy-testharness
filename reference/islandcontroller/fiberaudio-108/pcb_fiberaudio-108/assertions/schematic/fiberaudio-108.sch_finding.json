@@ -19,11 +19,13 @@
       "description": "INCORRECT: LD1 is a red LED (lib_id: Device:LED, footprint: LED_SMD:LED_0603_1608Metric) but is classified as type 'inductor' in both the BOM and components list. The root cause is in the reference prefix resolution: prefix 'LD' has no entry in the type_map, so the code falls through to the single-character fallback where 'L' maps to 'inductor'. The lib_id check ('device:led') does not fire the led-override because the led-in-lib check at line 511 requires both 'led' AND 'diode' in lib_lower. Fix: add 'LD' as a key in type_map mapping to 'led', or add an override in the single-char fallback block for result=='inductor' that checks for 'led' in lib_lower.",
       "created_from": "FND-00002067",
       "check": {
-        "path": "statistics.component_types.inductor",
+        "path": "statistics.component_types.led",
         "op": "equals",
         "value": 1
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): LD1 (Device:LED) still typed inductor; component_types inductor:1, no led; reviewer: LD1 is an LED",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.inductor\", \"op\": \"equals\", \"value\": 1})"
     },
     {
       "id": "FND-00002067-AST-03",

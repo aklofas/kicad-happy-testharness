@@ -29,17 +29,6 @@
       "aspirational": true
     },
     {
-      "id": "FND-00002056-AST-03",
-      "description": "INCORRECT: The file carries file_version=20211123 which corresponds to KiCad 6 (KiCad 6 introduced the S-expression .kicad_sch format in late 2021 with this version stamp). The analyzer outputs kicad_version='unknown' instead of detecting this as KiCad 6. This affects downstream reporting of KiCad version compatibility.",
-      "created_from": "FND-00002056",
-      "check": {
-        "path": "kicad_version",
-        "op": "equals",
-        "value": "unknown"
-      },
-      "aspirational": false
-    },
-    {
       "id": "FND-00002056-AST-04",
       "description": "INCORRECT: The MC34063AD (U1) has L1 (220uH) as a switching inductor, D1 (Schottky 1N5819WS) as a catch diode, and the input rail is 'vin' while the output rail is '+3V3'. This is a classic buck/step-down topology. The analyzer sets topology='unknown', missing an opportunity to identify the regulator type from the circuit structure (inductor + Schottky diode + input rail name).",
       "created_from": "FND-00002056",

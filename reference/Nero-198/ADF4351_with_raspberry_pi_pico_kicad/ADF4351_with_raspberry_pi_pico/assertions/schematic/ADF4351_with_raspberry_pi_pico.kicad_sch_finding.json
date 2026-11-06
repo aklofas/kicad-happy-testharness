@@ -36,12 +36,12 @@
       "created_from": "FND-00000337",
       "check": {
         "path": "findings[0].has_pullup",
-        "op": "eq",
+        "op": "equals",
         "value": false,
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations[0].has_pullup"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000337-AST-04",
@@ -49,10 +49,11 @@
       "created_from": "FND-00000337",
       "check": {
         "path": "design_analysis.bus_analysis.spi",
-        "op": "eq",
+        "op": "equals",
         "value": []
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     }
   ]
 }

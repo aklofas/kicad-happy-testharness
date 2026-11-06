@@ -32,12 +32,14 @@
       "created_from": "FND-00001424",
       "check": {
         "path": "findings",
-        "value": 1,
-        "op": "min_count",
-        "detector_filter": "detect_protection_devices"
+        "op": "not_contains_match",
+        "field": "has_esd_protection",
+        "pattern": "^False$",
+        "detector_filter": "detect_design_observations"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"value\": 1, \"op\": \"min_count\", \"detector_filter\": \"detect_protection_devices\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): protection min_count 1 is not the claim; D+/D- usb_data still has_esd_protection False despite D1 DT1042; reviewer: protected"
     },
     {
       "id": "FND-00001424-AST-04",

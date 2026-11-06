@@ -35,12 +35,13 @@
       "created_from": "FND-00001514",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "contains_match",
-        "value": {
-          "has_pull_up": false
-        }
+        "op": "not_contains_match",
+        "field": "has_pull_up",
+        "pattern": "^false$"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock vacuous; SDA/SCL still has_pull_up False; R7/R8 4.7k reach 3.3V through closed JP2 -> should be true",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"has_pull_up\": false}})"
     },
     {
       "id": "FND-00001514-AST-04",

@@ -43,10 +43,11 @@
       "created_from": "FND-00000339",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "eq",
+        "op": "equals",
         "value": 2
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000339-AST-05",
@@ -54,10 +55,11 @@
       "created_from": "FND-00000339",
       "check": {
         "path": "design_analysis.bus_analysis.i2c[0].has_pull_up",
-        "op": "eq",
+        "op": "equals",
         "value": true
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000339-AST-06",
@@ -65,12 +67,12 @@
       "created_from": "FND-00000339",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 2,
         "detector_filter": "detect_decoupling"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

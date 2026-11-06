@@ -32,10 +32,15 @@
       "created_from": "FND-00002329",
       "check": {
         "path": "bus_topology.detected_bus_signals",
-        "op": "contains_match",
-        "value": "/\"prefix\": \"B\", \"width\": 16/"
+        "op": "field_equals",
+        "match_field": "prefix",
+        "match_value": "B",
+        "assert_field": "width",
+        "assert_value": 16
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): as written vacuous (value, no pattern). B width still 32; reviewer: 16 unique signals",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"bus_topology.detected_bus_signals\", \"op\": \"contains_match\", \"value\": \"/\\\"prefix\\\": \\\"B\\\", \\\"width\\\": 16/\"})"
     },
     {
       "id": "FND-00002329-AST-04",
@@ -46,7 +51,7 @@
         "op": "max_count",
         "value": 0
       },
-      "aspirational": true
+      "incorrect_review": "graduate (TH-105, 2026-11-06): pwr_flag_warnings now []; reviewer said #FLG01/#FLG02 are on +5V/GND"
     }
   ]
 }

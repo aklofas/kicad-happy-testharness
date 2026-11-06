@@ -69,10 +69,25 @@ def validate_assertion_structure(assertion, source_file=None):
         warnings.append(f"{prefix}[{aid}] check missing 'path'")
     if "op" not in check:
         warnings.append(f"{prefix}[{aid}] check missing 'op'")
-    elif check["op"] not in KNOWN_OPS:
-        warnings.append(f"{prefix}[{aid}] unknown operator '{check['op']}'")
 
     return warnings
+
+
+def assertion_errors(assertion):
+    """Reasons the engine refuses to evaluate an assertion (it is reported as a load error):
+    an operator outside KNOWN_OPS would fail forever (TH-100), and a non-aspirational lock on
+    an INCORRECT finding may pin the defect it reports unless a review says otherwise (TH-105)."""
+    errors = []
+    check = assertion.get("check") if isinstance(assertion, dict) else None
+    if not isinstance(check, dict):
+        return errors
+    if "op" in check and check["op"] not in KNOWN_OPS:
+        errors.append(f"unknown operator '{check['op']}'")
+    desc = str(assertion.get("description") or "").lstrip()
+    if (desc.upper().startswith("INCORRECT") and not assertion.get("aspirational")
+            and not assertion.get("incorrect_review")):
+        errors.append("non-aspirational lock on an INCORRECT finding without incorrect_review")
+    return errors
 
 
 def _item_field(item, field):
@@ -389,6 +404,9 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                             warnings = validate_assertion_structure(a, str(f))
                             for w in warnings:
                                 print(f"WARNING: {w}", file=sys.stderr)
+                            errs = assertion_errors(a)
+                            if errs:
+                                a["_invalid"] = "; ".join(errs)
                         # Annotate with location info for output mapping
                         data["_repo"] = repo_key
                         data["_project"] = proj_dir.name

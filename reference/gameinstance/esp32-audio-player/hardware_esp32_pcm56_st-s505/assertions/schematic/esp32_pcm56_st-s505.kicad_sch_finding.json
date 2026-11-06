@@ -17,19 +17,6 @@
       "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
     },
     {
-      "id": "FND-00002046-AST-02",
-      "description": "INCORRECT: U2 (LM79L05_TO92) is a negative-voltage linear regulator from the LM79 family. It takes a negative input rail and outputs a regulated negative voltage (-Vreg). The analyzer classifies it as topology='LDO', which is architecturally misleading \u2014 LDO implies a low-dropout positive regulator. The analyzer should recognize LM79xx lib_id prefixes as negative linear regulators and use a distinct topology label (e.g., 'negative_linear') to avoid confusion with positive LDO regulators.",
-      "created_from": "FND-00002046",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "value": "/LM79.*topology.*LDO/",
-        "detector_filter": "detect_power_regulators"
-      },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
-    },
-    {
       "id": "FND-00002046-AST-03",
       "description": "PS1 is a TMLM10105 from the KiCad library 'Converter_ACDC' \u2014 a TRACO POWER isolated AC/DC module with mains input (AC (L), AC (N), 12V AC (L)) producing isolated DC output. The schematic also has raw AC mains nets. The analyzer: (1) classifies PS1 as type='ic' instead of recognizing it as a power converter, (2) leaves isolation_barriers=[] despite a clear mains-to-SELV isolation boundary, and (3) does not flag the presence of mains voltages (AC (L), AC (N)) in the design. This is a safety-relevant omission.",
       "created_from": "FND-00002046",

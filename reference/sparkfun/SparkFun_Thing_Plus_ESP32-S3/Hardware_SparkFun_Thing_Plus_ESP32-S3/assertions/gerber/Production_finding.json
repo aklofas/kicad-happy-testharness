@@ -10,21 +10,25 @@
       "created_from": "FND-00001574",
       "check": {
         "path": "completeness.missing_required",
-        "op": "not_contains_match",
-        "value": "Edge.Cuts"
+        "op": "equals",
+        "value": []
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Old check is vacuous ('value', and the items are strings). GKO is still B.Mask, so missing_required is ['Edge.Cuts']; correct is [].",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"completeness.missing_required\", \"op\": \"not_contains_match\", \"value\": \"Edge.Cuts\"})"
     },
     {
       "id": "FND-00001574-AST-02",
       "description": "INCORRECT: The GKO file (SparkFun_Thing_Plus_ESP32-S3_panelized.GKO) has X2 attribute %TF.FileFunction,Soldermask,Bot*% (a known KiCad export quirk where .GKO gets an incorrect Soldermask attribute) but its aperture_analysis shows it contains Profile (board outline) geometry. The analyzer classifies it as B.Mask based on the X2 attribute without cross-checking the aperture function, resulting in B.Mask appearing in found_layers while Edge.Cuts is absent. The aperture content should take precedence over or be reconciled with the X2 attribute.",
       "created_from": "FND-00001574",
       "check": {
-        "path": "found_layers",
-        "op": "not_contains_match",
-        "value": "B.Mask"
+        "path": "completeness.missing_required",
+        "op": "equals",
+        "value": []
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): top-level found_layers absent so lock is vacuous; Edge.Cuts still missing_required",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"found_layers\", \"op\": \"not_contains_match\", \"value\": \"B.Mask\"})"
     },
     {
       "id": "FND-00001574-AST-03",

@@ -11,22 +11,27 @@
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "equals",
-        "value": 40
+        "value": 39
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): resistor=40 today: RP1 (Pico_Footprint module, BlackSCSI symbol) still typed resistor; 39 real resistors",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.resistor\", \"op\": \"equals\", \"value\": 40})"
     },
     {
       "id": "FND-00000414-AST-02",
       "description": "INCORRECT: SD2 (value: MicroSD-TF-06, lib_id: New_Library:MicroSD-TF-06) is classified as 'switch'. The SPI interface nets are present (SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS) but memory_interfaces remains empty. Same issue as the other three schematics.",
       "created_from": "FND-00000414",
       "check": {
-        "path": "findings",
-        "op": "equals",
-        "value": [],
-        "detector_filter": "detect_memory_interfaces"
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "SD2",
+        "assert_field": "type",
+        "assert_value": "connector"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"equals\", \"value\": [], \"detector_filter\": \"detect_memory_interfaces\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): SD2 MicroSD socket still typed 'switch'. memory_interfaces==[] is correct by design (memory ICs only), so the lock now checks the real defect: SD2 should be a connector."
     }
   ]
 }

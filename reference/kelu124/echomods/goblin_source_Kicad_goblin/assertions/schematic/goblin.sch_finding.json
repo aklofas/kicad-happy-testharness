@@ -13,7 +13,8 @@
         "op": "equals",
         "value": 60
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "unclear (TH-105, 2026-11-06), kept as aspirational: description is 'INCORRECT: ' with no text, and the findings.json item is blank too; no claim to judge"
     },
     {
       "id": "FND-00002032-AST-02",
@@ -21,10 +22,12 @@
       "created_from": "FND-00002032",
       "check": {
         "path": "statistics.component_types.relay",
-        "op": "equals",
-        "value": 3
+        "op": "less_than",
+        "value": 1
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): empty INCORRECT text, but lock encodes a defect: relay=3 are K1/K2/K3 Header19/Header6 connectors typed by K ref",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.relay\", \"op\": \"equals\", \"value\": 3})"
     },
     {
       "id": "FND-00002032-AST-03",
@@ -48,7 +51,8 @@
         "detector_filter": "detect_rf_matching"
       },
       "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3, product ruling (2026-10-29, KiCad 10.0.7): corrected pin_nets reach U1 = AD8331 (ultrasound VGA), not an RF IC; was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 1, \"detector_filter\": \"detect_rf_matching\"}"
+      "migration_note": "3.0.x relock at 40b8ff3, product ruling (2026-10-29, KiCad 10.0.7): corrected pin_nets reach U1 = AD8331 (ultrasound VGA), not an RF IC; was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 1, \"detector_filter\": \"detect_rf_matching\"}",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): Empty INCORRECT text; one of many generic checks bulk-filed under incorrect[], no stated defect"
     },
     {
       "id": "FND-00002032-AST-05",
@@ -60,8 +64,9 @@
         "value": 2,
         "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.opamp_circuits",
+      "incorrect_review": "unclear (TH-105, 2026-11-06), kept as aspirational: reviewer text empty; 2 op-amps today (AD8331 VGA unknown config, AD8691); claim unknowable"
     },
     {
       "id": "FND-00002032-AST-06",
@@ -96,7 +101,8 @@
         "op": "contains_match",
         "value": "/HVOUT/"
       },
-      "aspirational": true
+      "aspirational": true,
+      "incorrect_review": "unclear (TH-105, 2026-11-06), kept as aspirational: Empty description. Also the check uses 'value' instead of 'pattern', so it is vacuous (no HVOUT in rails; would pass anyway)."
     },
     {
       "id": "FND-00002032-AST-09",
@@ -119,7 +125,8 @@
         "value": 1
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: thermal_analysis.thermal_pads"
+      "migration_note": "Path migrated from: thermal_analysis.thermal_pads",
+      "incorrect_review": "unclear (TH-105, 2026-11-06), kept as aspirational: empty INCORRECT description; parent finding has only bare check lists, no claim to judge"
     },
     {
       "id": "FND-00002032-AST-11",
@@ -131,7 +138,8 @@
         "value": 1
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings"
+      "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): empty description; bulk-promoted finding with blank items (no INCORRECT claim to judge); generic check, actual 15"
     },
     {
       "id": "FND-00002032-AST-12",

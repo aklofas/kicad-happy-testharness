@@ -55,30 +55,6 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.design_observations[0].category"
-    },
-    {
-      "id": "FND-00001929-AST-05",
-      "description": "INCORRECT: signal_analysis.design_observations contains two identical entries for {category: 'reset_pin', component: 'U2', value: 'ArduinoPro_Mini', pin: 'RST', net: 'RST', has_pullup: False, has_filter_cap: False, connected_components: [{ref: 'J3'}, {ref: 'J2'}]}. The same duplication occurs in the nano variant. The substance of the observation (no pull-up, no filter cap, reset connected to breakout headers) is correct, but it should appear only once.",
-      "created_from": "FND-00001929",
-      "check": {
-        "path": "findings",
-        "value": 2,
-        "op": "count_where_category_eq_reset_pin",
-        "detector_filter": "detect_design_observations"
-      },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
-    },
-    {
-      "id": "FND-00001929-AST-06",
-      "description": "INCORRECT: All .kicad_sch (file_version 20211123 = KiCad 6.0) and .kicad_pcb (file_version 20211014 = KiCad 6.0) files report kicad_version='unknown'. The file version numbers are sufficient to determine the KiCad generation: 20211123 and 20211014 correspond to KiCad 6.0 release. Also affects .kicad_pcb files from KiCad 5 (file_version 20171130) \u2014 those also report 'unknown'. Only legacy .sch files get correct version detection ('5 (legacy)'). The PCB analyzer should map known file_version ranges to KiCad major versions (e.g., 20171130=KiCad5, 20211014=KiCad6).",
-      "created_from": "FND-00001929",
-      "check": {
-        "path": "kicad_version",
-        "value": "unknown",
-        "op": "equals"
-      },
-      "aspirational": false
     }
   ]
 }

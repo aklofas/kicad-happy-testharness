@@ -19,11 +19,16 @@
       "description": "INCORRECT: XTAL1 has reference prefix 'XTAL' which is not in type_map and doesn't reach the X-prefix crystal handler (line 432 of kicad_utils.py, which only fires when prefix == 'X'). The lib_id 'dk_Crystals:ECS-_327-12_5-34B-TR' contains 'crystal' in lowercase but the generic lib-based fallback section (lines 462+) has no crystal detection \u2014 only the X-prefix block does. As a result XTAL1 falls through to 'other', preventing crystal_circuits detection from finding it (the detector only processes type=='crystal' components). The IC-pin detection also misses it because U1 (74HC4060) uses 'RTC'/'CTC' pin names rather than XTAL/OSC/XI/XO patterns.",
       "created_from": "FND-00002013",
       "check": {
-        "path": "statistics.component_types.other",
-        "op": "equals",
-        "value": 1
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "XTAL1",
+        "assert_field": "type",
+        "assert_value": "crystal"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): XTAL1 still type other; other=1 locks the defect",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.other\", \"op\": \"equals\", \"value\": 1})"
     },
     {
       "id": "FND-00002013-AST-03",
@@ -36,7 +41,8 @@
         "detector_filter": "detect_crystal_circuits"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits",
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): INCORRECT label contradicts the text: reviewer says U11 detection is faithful to the miswired source; U11 still present"
     },
     {
       "id": "FND-00002013-AST-04",

@@ -9,11 +9,15 @@
       "description": "INCORRECT: Same issue as the main panelized board: routing_complete=false with 3 unrouted nets corresponding to NC pads on J2 (Qwiic connector, note different reference from main schematic) and U1. These are intentional no-connect pads, not routing failures. The v01b panel contains fewer copies (4 copies based on 256 vias vs 3240 in the main panel).",
       "created_from": "FND-00001508",
       "check": {
-        "path": "statistics.routing_complete",
-        "op": "equals",
-        "value": false
+        "path": "findings",
+        "op": "not_contains_match",
+        "field": "net_name",
+        "pattern": "^unconnected-",
+        "detector_filter": "analyze_connectivity"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): NC pads (J2 NC1/NC2, U1-13) still RT-001 unrouted; lock on routing_complete=false protects it",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.routing_complete\", \"op\": \"equals\", \"value\": false})"
     }
   ]
 }

@@ -10,10 +10,14 @@
       "created_from": "FND-00002057",
       "check": {
         "path": "ic_pin_analysis",
-        "op": "contains_match",
-        "value": "/LM393/"
+        "op": "count_matches",
+        "field": "reference",
+        "pattern": "^U1$",
+        "value": 1
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock malformed/vacuous; ic_pin_analysis still has two U1 LM393 entries (total_pins 2 and 3); reviewer: one merged entry",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"ic_pin_analysis\", \"op\": \"contains_match\", \"value\": \"/LM393/\"})"
     }
   ]
 }

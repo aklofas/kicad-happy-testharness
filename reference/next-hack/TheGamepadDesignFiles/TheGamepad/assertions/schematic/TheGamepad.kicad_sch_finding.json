@@ -34,14 +34,15 @@
       "created_from": "FND-00001634",
       "check": {
         "path": "bus_topology.detected_bus_signals",
-        "op": "contains_match",
-        "value": {
-          "prefix": "K_C",
-          "width": 4,
-          "range": "K_C0..K_C3"
-        }
+        "op": "field_equals",
+        "match_field": "prefix",
+        "match_value": "K_C",
+        "assert_field": "width",
+        "assert_value": 4
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): defect present: K_C width=12 for K_C0..K_C3 (should be 4). The lock is vacuous (dict value, no pattern)",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"bus_topology.detected_bus_signals\", \"op\": \"contains_match\", \"value\": {\"prefix\": \"K_C\", \"width\": 4, \"range\": \"K_C0..K_C3\"}})"
     },
     {
       "id": "FND-00001634-AST-04",

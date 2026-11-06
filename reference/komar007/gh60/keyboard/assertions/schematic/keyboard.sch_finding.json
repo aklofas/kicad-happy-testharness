@@ -22,12 +22,13 @@
       "description": "INCORRECT: The bus_analysis.i2c section reports a bus on net 'col5' (line='SCL') with device IC1. The net name 'col5' is a keyboard matrix column net \u2014 it is not an I2C bus. The ATmega32U4 shares I2C and GPIO on the same physical pins, and here PD0/SCL is used as a keyboard column scan output, not as I2C. This is a false-positive I2C detection based on pin-name matching without considering the functional context of the net.",
       "created_from": "FND-00002080",
       "check": {
-        "path": "findings.i2c",
+        "path": "design_analysis.bus_analysis.i2c",
         "op": "max_count",
         "value": 0
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.bus_analysis.i2c"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings.i2c\", \"op\": \"max_count\", \"value\": 0})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock path findings.i2c resolves to nothing (vacuous); bus_analysis.i2c still lists matrix nets row1 (SCL) / row2 (SDA) on IC1"
     },
     {
       "id": "FND-00002080-AST-03",

@@ -52,12 +52,13 @@
       "description": "INCORRECT: The bus_analysis.uart section detects TX+, TX-, RX+, RX- as UART signals. These are Ethernet magnetics signals from the B10601S 10BASE-T transformer module (TX and RX differential pairs at the line side). The pin names on U1 are explicitly 'TX+', 'TX-', 'RX+', 'RX-' and connect to an RJ45 connector (J2), not to any UART-capable device. This is a false positive triggered by the TX/RX net name pattern matching.",
       "created_from": "FND-00001583",
       "check": {
-        "path": "findings.uart",
+        "path": "design_analysis.bus_analysis.uart",
         "op": "max_count",
         "value": 0
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.bus_analysis.uart"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings.uart\", \"op\": \"max_count\", \"value\": 0})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Old path findings.uart is dead (vacuous pass); defect remains: bus_analysis.uart still lists TX+/TX-/RX+/RX- (Ethernet magnetics)"
     },
     {
       "id": "FND-00001583-AST-06",

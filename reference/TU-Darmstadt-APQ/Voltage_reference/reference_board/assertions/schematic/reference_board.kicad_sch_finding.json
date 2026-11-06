@@ -42,12 +42,14 @@
       "created_from": "FND-00001749",
       "check": {
         "path": "findings",
-        "value": "non_inverting_amplifier",
         "op": "contains_match",
+        "field": "configuration",
+        "pattern": "non_inverting",
         "detector_filter": "detect_opamp_circuits"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"value\": \"non_inverting_amplifier\", \"op\": \"contains_match\", \"detector_filter\": \"detect_opamp_circuits\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock vacuous (value, no pattern); U3 still configuration=comparator_or_open_loop; reviewer: non-inverting via NT4 Kelvin feedback"
     },
     {
       "id": "FND-00001749-AST-05",

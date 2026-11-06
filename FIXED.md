@@ -11,6 +11,39 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-105: FND locks on findings marked INCORRECT were not aspirational, so some pinned the value their own finding calls the defect
+
+**Severity:** MEDIUM (false regressions at every fix)
+**File:** `reference/**/assertions/**/*_finding.json` (data); `regression/checks.py` (`assertion_errors`), `regression/run_checks.py`, `regression/findings.py` (promotion)
+**Discovered:** 2026-11-03, v3.0.1 regen at `9885287`
+
+- **Root cause:** old promotions locked INCORRECT-marked finding items without the `aspirational` flag (the current promotion path sets it), and some of them locked the defect.
+- **Fix (product rule: an INCORRECT finding locks the correct value as aspirational, or nothing):** every INCORRECT lock that passed at the 4c2a0d6 regen was triaged against its text and the current output (468: 352 live + 116 aspirational; records `results/v302_th105/`), and each now carries an `incorrect_review` with its verdict and evidence:
+  - graduate 138: the check asserts the reviewer's correct value and passes, so it is a live lock (90 of them were aspirational);
+  - rewrite 117: the check pinned the defect, now replaced by the reviewer's correct value as an aspirational lock, which fails today, with the old check in `migration_note`;
+  - unrelated 114: the check is not about the disputed claim, kept as is;
+  - reviewer_wrong 33: the review misread the design, the lock is kept;
+  - unclear 47: made aspirational;
+  - delete 19: no correct value is expressible.
+  - Seven earlier product-ruled re-anchors got the same review record.
+  - Load-time guard: `checks.assertion_errors` rejects a non-aspirational lock whose description starts INCORRECT without `incorrect_review`. `run_checks` reports it as a load error (exit 1) and still runs the set's other assertions, and `findings.py promote` refuses to write one.
+- **Verification:** full-corpus `run_checks --json` vs product_4c2a0d6 (`results/v302_th105/checks_after.json`): 2,717,763 passed / 0 failed / 0 errors / 0 load errors; every rewrite fails as aspirational and every graduation passes live. `tests/test_run_checks.py::test_incorrect_lock_needs_aspirational_or_a_review`.
+
+## 2026-11-06 — TH-100: 231 aspirational FND assertions used operators `checks.py` does not know, so they could never evaluate
+
+**Severity:** LOW (aspirational only)
+**File:** `reference/**/assertions/**` (data); `regression/checks.py`, `regression/run_checks.py`, `regression/findings.py`
+**Discovered:** 2026-10-29, 3.0.x relock
+
+- **Root cause:** LLM-written finding checks used non-engine spellings (`eq`, `min_value`, `count_eq`, ...), the loader only warned, and `evaluate_assertion` failed them forever as `unknown op`.
+- **Fix:**
+  - 208 renamed to the engine operator with the same semantics (`eq`/`count_eq`/`len_eq` → `equals`; `min_value`/`gte`/`count_gte`/`min_length` → `min_count`, where `_countable` reads a list as its length and a scalar as its value; `max_value` → `max_count`; `count_gt` → `greater_than`);
+  - 5 `findings` checks translated to `contains_match` / `not_contains_match` / `exists` on the real field (`components`, `category`);
+  - 18 retired because the engine cannot express them (string-list containment, JSONPath filters, `neq`, pre-v3 `design_analysis` paths); list in `results/v302_th100/retired.json`.
+  - Each changed assertion carries a `migration_note`.
+  - An unknown operator is now an `assertion_errors` load error in `run_checks`, and `findings.py promote` refuses one.
+- **Verification:** no unknown operator left in `reference/`; the remapped assertions evaluate (66 pass, several vacuously on paths that no longer exist, so they stay aspirational; 147 fail); full-corpus run 0 load errors. Tests: `test_run_checks.py::test_unknown_operator_is_a_load_error_and_other_assertions_still_run`, `test_findings_promote_guard.py`, `test_schema.py::test_unknown_op`.
+
 ## 2026-11-06 — TH-106: `generate_analytics.py` issue counts read only `### <id>` headings
 
 **Severity:** LOW (the analytics Issue Tracker chart)

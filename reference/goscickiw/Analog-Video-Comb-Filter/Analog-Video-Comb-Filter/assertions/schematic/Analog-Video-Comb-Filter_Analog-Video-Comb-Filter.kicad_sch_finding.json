@@ -10,13 +10,13 @@
       "created_from": "FND-00000377",
       "check": {
         "path": "findings[1].configuration",
-        "op": "eq",
+        "op": "equals",
         "value": "non_inverting",
         "detector_filter": "detect_opamp_circuits"
       },
       "aspirational": true,
       "aspirational_reason": "unsupported op: eq",
-      "migration_note": "Path migrated from: signal_analysis.opamp_circuits[1].configuration"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000377-AST-02",
@@ -24,13 +24,13 @@
       "created_from": "FND-00000377",
       "check": {
         "path": "findings[0].topology",
-        "op": "eq",
+        "op": "equals",
         "value": "linear",
         "detector_filter": "detect_power_regulators"
       },
       "aspirational": true,
       "aspirational_reason": "unsupported op: eq",
-      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].topology"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000377-AST-03",
@@ -38,12 +38,12 @@
       "created_from": "FND-00000377",
       "check": {
         "path": "findings",
-        "op": "max_value",
+        "op": "max_count",
         "value": 4,
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "TH-100: op max_value -> max_count (same semantics)"
     },
     {
       "id": "FND-00000377-AST-04",
@@ -51,12 +51,12 @@
       "created_from": "FND-00000377",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 4,
         "detector_filter": "detect_lc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.lc_filters"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

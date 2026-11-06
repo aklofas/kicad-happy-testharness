@@ -30,12 +30,14 @@
       "created_from": "FND-00001368",
       "check": {
         "path": "findings",
-        "value": true,
-        "op": "exists",
+        "op": "not_contains_match",
+        "field": "components",
+        "pattern": "^SW\\d+$",
         "detector_filter": "analyze_thermal_pad_vias"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: thermal_pad_vias"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"value\": true, \"op\": \"exists\", \"detector_filter\": \"analyze_thermal_pad_vias\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock encodes defect: TV-001 still flags SW1.. Choc hotswap pads as thermal pads; reviewer: not thermal pads"
     }
   ]
 }

@@ -72,7 +72,8 @@
         "detector_filter": "detect_bridge_circuits"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): generic bridge count; disputed driver_ics still [] (DRV8328B not associated) - defect persists"
     },
     {
       "id": "FND-00001980-AST-07",
@@ -80,12 +81,14 @@
       "created_from": "FND-00001980",
       "check": {
         "path": "findings",
-        "op": "min_count",
-        "value": 1,
+        "op": "not_contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R6$",
         "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 1, \"detector_filter\": \"detect_voltage_dividers\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): min_count 1 still satisfied by the defect: R6/R8 (gate R + pulldown) still a divider, ratio 0.99691; reviewer: not a divider"
     },
     {
       "id": "FND-00001980-AST-08",

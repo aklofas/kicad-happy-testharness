@@ -32,14 +32,16 @@
       "description": "INCORRECT: The key_matrices detector reports a 4\u00d714 matrix with estimated_keys=33 and switches_on_matrix=26. The 14-column figure comes from merging label-only nets col8\u2013col14 (which appear only as flat labels in the main sheet with no switch or diode pins) with col1\u2013col7 from the left-board sub-sheet. Columns col8\u2013col13 each have zero component pins; col14 connects only to connector P2. The actual populated left-side matrix is 4\u00d77 with 15 switches + a 4\u00d72 thumb extension = 23 diode-switched positions. The 14-column figure is a false positive caused by treating label-only nets as populated matrix columns.",
       "created_from": "FND-00001351",
       "check": {
-        "path": "findings[0].columns",
-        "value": 9,
-        "op": "max_count",
-        "detector_filter": "detect_key_matrices"
+        "path": "findings",
+        "detector_filter": "detect_key_matrices",
+        "op": "contains_match",
+        "field": "columns",
+        "pattern": "^[1-9]$"
       },
       "aspirational": true,
       "aspirational_reason": "Depends on bracket-notation path resolution ([0]) which is not yet implemented in resolve_path()",
-      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].columns"
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings[0].columns\", \"value\": 9, \"op\": \"max_count\", \"detector_filter\": \"detect_key_matrices\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock vacuous (findings[0] is detect_addressable_leds, no columns); key matrix still 4x14 with label-only col8-col13; reviewer: 4x7 (+thumb) <= 9 cols"
     },
     {
       "id": "FND-00001351-AST-04",

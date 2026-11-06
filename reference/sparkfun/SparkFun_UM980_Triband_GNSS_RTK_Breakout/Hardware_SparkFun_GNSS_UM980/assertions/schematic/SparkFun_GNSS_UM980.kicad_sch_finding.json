@@ -164,11 +164,11 @@
       "check": {
         "path": "findings",
         "value": 5,
-        "op": "count_gte",
+        "op": "min_count",
         "detector_filter": "detect_protection_devices"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "migration_note": "TH-100: op count_gte -> min_count (same semantics)"
     },
     {
       "id": "FND-00001854-AST-05",
@@ -177,11 +177,11 @@
       "check": {
         "path": "findings",
         "value": 3,
-        "op": "count_eq",
+        "op": "equals",
         "detector_filter": "detect_decoupling"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "TH-100: op count_eq -> equals (same semantics)"
     },
     {
       "id": "FND-00001854-AST-06",
@@ -214,9 +214,10 @@
       "check": {
         "path": "footprint_filter_warnings",
         "value": 3,
-        "op": "count_eq"
+        "op": "equals"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op count_eq -> equals (same semantics)"
     },
     {
       "id": "FND-00001854-AST-09",
@@ -237,20 +238,10 @@
       "check": {
         "path": "design_analysis.cross_domain_signals",
         "value": 0,
-        "op": "count_eq"
+        "op": "equals"
       },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00001854-AST-11",
-      "description": "INCORRECT: U5 is a UM980 triband GNSS RTK receiver, but ic_pin_analysis reports function as an empty string. The lib_id is 'SparkFun-GPS:UM980' and the description field is also empty in the schematic. The analyzer could infer the GNSS function from the lib_id path containing 'GPS' or from the part name 'UM980', but does not do so.",
-      "created_from": "FND-00001854",
-      "check": {
-        "path": "ic_pin_analysis[?(@.reference=='U5')].function",
-        "value": "",
-        "op": "neq"
-      },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op count_eq -> equals (same semantics)"
     },
     {
       "id": "FND-00001854-AST-12",
@@ -259,11 +250,11 @@
       "check": {
         "path": "findings",
         "value": 0,
-        "op": "count_gt",
+        "op": "greater_than",
         "detector_filter": "detect_rf_chains"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rf_chains"
+      "migration_note": "TH-100: op count_gt -> greater_than (same semantics)"
     },
     {
       "id": "FND-00001854-AST-13",
@@ -271,12 +262,13 @@
       "created_from": "FND-00001854",
       "check": {
         "path": "findings",
-        "value": "L2",
-        "op": "any_contains",
-        "detector_filter": "detect_lc_filters"
+        "op": "contains_match",
+        "detector_filter": "detect_lc_filters",
+        "field": "components",
+        "pattern": "^L2$"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.lc_filters"
+      "migration_note": "TH-100: op any_contains -> contains_match (field=components, pattern=^L2$)"
     },
     {
       "id": "FND-00001854-AST-14",

@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "regression"))
 from validate_schema import (
     scan_schematic_outputs, diff_inventories, build_inventory,
 )
-from checks import KNOWN_OPS, validate_assertion_structure
+from checks import KNOWN_OPS, assertion_errors, validate_assertion_structure
 
 
 # === diff_inventories ===
@@ -127,8 +127,7 @@ def test_missing_op():
 
 def test_unknown_op():
     a = {"id": "SEED-1", "description": "test", "check": {"path": "x", "op": "bogus"}}
-    warnings = validate_assertion_structure(a)
-    assert any("unknown operator 'bogus'" in w for w in warnings)
+    assert assertion_errors(a) == ["unknown operator 'bogus'"]   # an error now, not a warning (TH-100)
 
 def test_all_known_ops_valid():
     for op in KNOWN_OPS:

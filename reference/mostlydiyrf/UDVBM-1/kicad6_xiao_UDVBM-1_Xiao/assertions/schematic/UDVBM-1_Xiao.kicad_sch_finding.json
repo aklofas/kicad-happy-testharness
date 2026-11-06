@@ -27,17 +27,6 @@
       "aspirational": true,
       "aspirational_reason": "agent-generated check failed: expected 339.32, got None",
       "migration_note": "Path migrated from: signal_analysis.lc_filters.resonant_hz"
-    },
-    {
-      "id": "FND-00001611-AST-03",
-      "description": "INCORRECT: In pdn_impedance.rails.+3.3V (and +5V), capacitors C1, C2, C6, C7, C9, C10, C11 with value='0.10' and footprint Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm are assigned type='electrolytic/tantalum' with esr_ohm=0.1, esl_nH=7.5, and srf_hz=5812 Hz. Disc capacitors are ceramic or film, not electrolytic/tantalum. The misclassification appears to stem from the same root cause as finding #2: the parser treats '0.10' as 0.1 Farads (a value more consistent with electrolytic caps), triggering the wrong cap-type heuristic. A true 100nF ceramic disc cap would have esr<0.1 ohm, esl~1nH, and SRF~15 MHz.",
-      "created_from": "FND-00001611",
-      "check": {
-        "path": "pdn_impedance.rails.type",
-        "op": "not_equals",
-        "value": "electrolytic/tantalum"
-      },
-      "aspirational": true
     }
   ]
 }

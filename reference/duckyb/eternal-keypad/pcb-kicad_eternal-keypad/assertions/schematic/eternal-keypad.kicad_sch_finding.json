@@ -47,10 +47,11 @@
       "created_from": "FND-00002061",
       "check": {
         "path": "statistics.component_types.connector",
-        "op": "equals",
-        "value": 1
+        "op": "not_exists"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Lock pins the defect: ProMicro1 still typed connector (connector=1); reviewer says it is the MCU, so no connector",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.connector\", \"op\": \"equals\", \"value\": 1})"
     },
     {
       "id": "FND-00002061-AST-05",
@@ -58,10 +59,12 @@
       "created_from": "FND-00002061",
       "check": {
         "path": "statistics.component_types.mounting_hole",
-        "op": "equals",
-        "value": 2
+        "op": "max_count",
+        "value": 0
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): mounting_hole=2 today = Batt-1/Batt+1, functional 1-pin wire pads on GND/switch input; should be connectors",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.mounting_hole\", \"op\": \"equals\", \"value\": 2})"
     }
   ]
 }

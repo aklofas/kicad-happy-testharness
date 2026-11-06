@@ -10,10 +10,11 @@
       "created_from": "FND-00000342",
       "check": {
         "path": "pwr_flag_warnings",
-        "op": "eq",
+        "op": "equals",
         "value": []
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000342-AST-02",
@@ -21,12 +22,12 @@
       "created_from": "FND-00000342",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_protection_devices"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000342-AST-03",
@@ -34,10 +35,11 @@
       "created_from": "FND-00000342",
       "check": {
         "path": "statistics.dnp_parts",
-        "op": "min_value",
+        "op": "min_count",
         "value": 2
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

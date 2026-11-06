@@ -21,10 +21,11 @@
       "created_from": "FND-00000338",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000338-AST-03",
@@ -32,12 +33,12 @@
       "created_from": "FND-00000338",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_protection_devices"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

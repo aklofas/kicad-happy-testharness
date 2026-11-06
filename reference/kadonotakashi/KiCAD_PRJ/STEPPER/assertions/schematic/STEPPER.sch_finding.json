@@ -10,10 +10,12 @@
       "created_from": "FND-00001695",
       "check": {
         "path": "statistics.total_components",
-        "value": 5,
-        "op": "equals"
+        "op": "equals",
+        "value": 16
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Lock pins the defect: total_components=5 while 16 unannotated instances exist (U?,SW?,R?...); reviewer says 16",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.total_components\", \"value\": 5, \"op\": \"equals\"})"
     },
     {
       "id": "FND-00001695-AST-02",
@@ -21,10 +23,12 @@
       "created_from": "FND-00001695",
       "check": {
         "path": "statistics.component_types.diode",
-        "value": 1,
-        "op": "equals"
+        "op": "max_count",
+        "value": 0
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): diode=1 today is DISPLAY? I2C_OLED(SSD1306), the only diode; correct output has no diode",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.diode\", \"value\": 1, \"op\": \"equals\"})"
     },
     {
       "id": "FND-00001695-AST-03",
@@ -32,11 +36,12 @@
       "created_from": "FND-00001695",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "value": 4,
-        "op": "min_count"
+        "op": "max_count",
+        "value": 2
       },
-      "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): spurious I2C entries from collapsed U? references reduced; was {\"path\": \"design_analysis.bus_analysis.i2c\", \"value\": 6, \"op\": \"min_count\"}"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"design_analysis.bus_analysis.i2c\", \"value\": 4, \"op\": \"min_count\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): +3.3V/GND entries are gone, but there are still 4 bogus i2c entries on AE-DRV8835 (a motor driver, from U? ref collisions). Reviewer: at most 1 real bus. min_count 4 locked the defect."
     }
   ]
 }

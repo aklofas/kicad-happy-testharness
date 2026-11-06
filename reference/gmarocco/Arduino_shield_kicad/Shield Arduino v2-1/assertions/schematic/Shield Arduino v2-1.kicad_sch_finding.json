@@ -10,12 +10,12 @@
       "created_from": "FND-00000379",
       "check": {
         "path": "findings.total_capacitance_uF",
-        "op": "eq",
+        "op": "equals",
         "value": 470.1
       },
       "aspirational": true,
       "aspirational_reason": "unsupported op: eq",
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis[?rail=='+5VA'].total_capacitance_uF"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000379-AST-02",
@@ -23,11 +23,12 @@
       "created_from": "FND-00000379",
       "check": {
         "path": "simulation_readiness.needs_model",
-        "op": "eq",
+        "op": "equals",
         "value": 20
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: eq"
+      "aspirational_reason": "unsupported op: eq",
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000379-AST-03",
@@ -35,11 +36,12 @@
       "created_from": "FND-00000379",
       "check": {
         "path": "assembly_complexity.total_components",
-        "op": "eq",
+        "op": "equals",
         "value": 85
       },
       "aspirational": true,
-      "aspirational_reason": "unsupported op: eq"
+      "aspirational_reason": "unsupported op: eq",
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000379-AST-04",
@@ -47,10 +49,11 @@
       "created_from": "FND-00000379",
       "check": {
         "path": "statistics.component_types.varistor",
-        "op": "eq",
+        "op": "equals",
         "value": 0
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000379-AST-05",
@@ -58,11 +61,11 @@
       "created_from": "FND-00000379",
       "check": {
         "path": "findings",
-        "op": "eq",
+        "op": "equals",
         "value": null
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices[?ref=='VR1']"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000379-AST-06",
@@ -70,12 +73,12 @@
       "created_from": "FND-00000379",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_lc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.lc_filters"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

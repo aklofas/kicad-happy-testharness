@@ -10,10 +10,12 @@
       "created_from": "FND-00001712",
       "check": {
         "path": "statistics.copper_layers_used",
-        "value": 1,
-        "op": "equals"
+        "op": "equals",
+        "value": 2
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): copper_layers_used still 1 ['B.Cu']; reviewer says F.Cu carries pad copper (the gerber has F.Cu), so the board uses 2.",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.copper_layers_used\", \"value\": 1, \"op\": \"equals\"})"
     }
   ]
 }

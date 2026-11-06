@@ -87,17 +87,16 @@
       "description": "INCORRECT: The Micro design has R1 (2.2k) on SDA and R6 (2.2k) on SCL as I2C pull-up resistors. Both connect from the I2C signal net through JP2 (a 3-pole closed/bridged solder jumper, value 'I2C') to 3.3V. The analyzer reports has_pullup=false and pull_ups=[] for both SCL and SDA in design_observations and bus_analysis. The resistors do appear on the I2C nets in ic_pin_analysis but the pull-up topology is not recognized. The jumper intervenes between the resistor free end and the 3.3V rail, creating an indirect path the analyzer does not traverse.",
       "created_from": "FND-00001542",
       "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "net": "SCL",
-          "has_pullup": true
-        },
-        "detector_filter": "detect_design_observations"
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "field_equals",
+        "match_field": "net",
+        "match_value": "SCL",
+        "assert_field": "has_pull_up",
+        "assert_value": true
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"i2c_bus\", \"net\": \"SCL\", \"has_pullup\": true}, \"detector_filter\": \"detect_design_observations\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): defect present: SCL/SDA has_pull_up False (R1/R6 via JP2 to 3.3V); lock vacuous (dict value)"
     },
     {
       "id": "FND-00001542-AST-08",

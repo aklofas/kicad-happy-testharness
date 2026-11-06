@@ -58,11 +58,12 @@
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
         "op": "contains_match",
-        "value": {
-          "has_pull_up": true
-        }
+        "field": "has_pull_up",
+        "pattern": "^True$"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): lock malformed (vacuous); SDA/GPIO4 and SCL/GPIO5 still has_pull_up=False, pull_ups []; reviewer: R3/R4 2.2k via JP1",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"has_pull_up\": true}})"
     },
     {
       "id": "FND-00001520-AST-06",

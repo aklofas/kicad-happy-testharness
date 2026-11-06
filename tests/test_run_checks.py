@@ -343,3 +343,37 @@ def test_output_not_found_is_counted_for_aspirational_too():
              "check": {"path": "x", "op": "equals", "value": 1}}])
         rc, out = _run_checks(tmpdir, ["--allow-errors"])
         assert out["output_not_found"] == {"assertions": 2, "aspirational": 1}
+
+
+def test_unknown_operator_is_a_load_error_and_other_assertions_still_run():
+    """TH-100: an op outside KNOWN_OPS used to fail forever as `unknown op` (aspirational: silently)."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _write_assertion_file(tmpdir, [
+            {"id": "FND-1-AST-01", "description": "a", "aspirational": True,
+             "check": {"path": "component_count", "op": "eq", "value": 42}},
+            {"id": "FND-1-AST-02", "description": "b",
+             "check": {"path": "component_count", "op": "equals", "value": 42}}])
+        _write_output_file(tmpdir, {"component_count": 42})
+        rc, out = _run_checks(tmpdir)
+        assert out["load_errors"] == 1 and out["passed"] == 1 and rc == 1
+        bad = [r for r in out["results"] if r["id"] == "FND-1-AST-01"]
+        assert "unknown operator 'eq'" in bad[0]["error"]
+
+
+def test_incorrect_lock_needs_aspirational_or_a_review():
+    """TH-105: a non-aspirational lock on an INCORRECT finding may pin the defect."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _write_assertion_file(tmpdir, [
+            {"id": "FND-2-AST-01", "description": "INCORRECT: x is 3, should be 4",
+             "check": {"path": "x", "op": "equals", "value": 3}},
+            {"id": "FND-2-AST-02", "description": "INCORRECT: y", "aspirational": True,
+             "check": {"path": "x", "op": "equals", "value": 4}},
+            {"id": "FND-2-AST-03", "description": "INCORRECT: z",
+             "incorrect_review": "graduate: locks the correct value, bug fixed",
+             "check": {"path": "x", "op": "equals", "value": 3}}])
+        _write_output_file(tmpdir, {"x": 3})
+        rc, out = _run_checks(tmpdir)
+        assert out["load_errors"] == 1 and out["passed"] == 1 and rc == 1
+        assert out["aspirational"]["failed"] == 1
+        bad = [r for r in out["results"] if r["id"] == "FND-2-AST-01"]
+        assert "incorrect_review" in bad[0]["error"]

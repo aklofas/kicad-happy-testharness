@@ -32,13 +32,13 @@
       "description": "INCORRECT: PS1 is a CUI V78E05-500-SMT non-isolated DC-DC converter (6.5\u201336 V in \u2192 5 V/500 mA out). Its symbol has a power_out pin and its description explicitly reads 'Dc-Dc Converter', yet the analyzer assigns type='connector' in both the BOM and component records. It should be classified as a power supply or regulator. This causes the component_types count to show 5 connectors (4 real + 1 misclassified) and masks the real connector count of 4.",
       "created_from": "FND-00001597",
       "check": {
-        "path": "bom[?value=='V78E05-500-SMT'].type",
-        "op": "not_contains_match",
-        "value": {
-          "type": "connector"
-        }
+        "path": "statistics.component_types.connector",
+        "op": "equals",
+        "value": 4
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): defect present: PS1 V78E05 DC-DC still typed connector, connector=5 (4 real). bom[?value==] path is unsupported, so the lock is vacuous",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"bom[?value=='V78E05-500-SMT'].type\", \"op\": \"not_contains_match\", \"value\": {\"type\": \"connector\"}})"
     },
     {
       "id": "FND-00001597-AST-04",
@@ -62,7 +62,7 @@
         "op": "max_count",
         "value": 0
       },
-      "aspirational": true
+      "incorrect_review": "graduate (TH-105, 2026-11-06): pwr_flag_warnings now [] for connector-powered +12V/-12V"
     },
     {
       "id": "FND-00001597-AST-06",
@@ -121,7 +121,7 @@
         "value": [],
         "op": "equals"
       },
-      "aspirational": true
+      "incorrect_review": "graduate (TH-105, 2026-11-06): pwr_flag_warnings now []; reviewer said #FLG01/#FLG02 sit on +12V/-12V"
     },
     {
       "id": "FND-00001890-AST-05",
@@ -135,19 +135,6 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.rc_filters"
-    },
-    {
-      "id": "FND-00001890-AST-06",
-      "description": "INCORRECT: The V78E05-500-SMT is a CUI 500mA non-isolated DC-DC step-down converter producing +5V from the +12V Eurorack rail. It is classified as type='connector' because the symbol lib_id is a custom winterbloom library entry. It should be 'ic' or 'regulator'. Consequently, the power_regulators section of signal_analysis is empty \u2014 the +12V\u2192+5V conversion is not detected.",
-      "created_from": "FND-00001890",
-      "check": {
-        "path": "findings",
-        "value": [],
-        "op": "neq",
-        "detector_filter": "detect_power_regulators"
-      },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
       "id": "FND-00001890-AST-07",

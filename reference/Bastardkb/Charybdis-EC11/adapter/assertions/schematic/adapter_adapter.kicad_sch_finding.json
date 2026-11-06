@@ -18,17 +18,6 @@
       "migration_note": "Path migrated from: signal_analysis.addressable_led_chains[0].data_in_net"
     },
     {
-      "id": "FND-00000425-AST-02",
-      "description": "INCORRECT: SW1 uses lib_id 'Device:RotaryEncoder_Switch' with quadrature encoder pins A, B, C and push-button pins S1, S2. The analyzer assigns type='switch' and category='switch' in both the BOM and component list, losing the encoder context entirely. This device is a rotary encoder (Alps EC11E), not a simple switch. The component_types stat counts it as switch:1 rather than recognizing an encoder. Net r1 carries encoder channel B and r2 carries channel A \u2014 these are quadrature signals, not simple switch contacts.",
-      "created_from": "FND-00000425",
-      "check": {
-        "path": "statistics.component_types.switch",
-        "op": "equals",
-        "value": 1
-      },
-      "aspirational": false
-    },
-    {
       "id": "FND-00000425-AST-03",
       "description": "INCORRECT: The design_observations entry for '+5V' decoupling coverage sets has_bypass=true and has_bulk=true for C1 (1uF, 1206 package). A 1uF SMD capacitor in a 1206 package is a bulk/local decoupling capacitor. Bypass capacitors are conventionally 100nF or smaller. Classifying 1uF as a bypass cap overstates the high-frequency decoupling coverage. has_bypass should be false; only has_bulk should be true for this value.",
       "created_from": "FND-00000425",

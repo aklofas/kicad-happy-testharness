@@ -5,18 +5,6 @@
   "generated_by": "findings.py promote",
   "assertions": [
     {
-      "id": "FND-00000340-AST-01",
-      "description": "In the nets section, IC1 pin 20 (named 'VCC', type power_in) is listed as a member of the 'GND' net. In the schematic, IC1 VCC connects via wire to the +5V rail through #PWR07 (+5V at position 5150,2550). The net resolver has miswired this power pin. As a consequence, power_domains for IC1 only shows 'GND' in power_rails and omits '+5V', making the power domain analysis incorrect.",
-      "created_from": "FND-00000340",
-      "check": {
-        "path": "nets.GND.pins[?component=='IC1'].pin_name",
-        "op": "not_contains",
-        "value": "VCC"
-      },
-      "aspirational": true,
-      "aspirational_reason": "unsupported op: not_contains"
-    },
-    {
       "id": "FND-00000340-AST-02",
       "description": "IC1 pin 10 (named 'GND', type power_in) appears only in '__unnamed_3' with point_count=1, not connected to the main 'GND' net. In the schematic, pin 10 connects via wire (3900,3100 \u2192 3900,2300) then through RESET pull-up wiring back to #PWR04 GND symbol at (5150,5100) via a wire at line 403 (5150,4900 \u2192 5150,5100). The GND pin of IC1 should resolve to the main 'GND' net.",
       "created_from": "FND-00000340",
@@ -46,11 +34,11 @@
       "created_from": "FND-00000340",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.spi"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

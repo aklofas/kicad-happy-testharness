@@ -23,9 +23,11 @@
       "check": {
         "path": "statistics.component_types.connector",
         "op": "equals",
-        "value": 5
+        "value": 6
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): CN1 MINI_DIN still typed capacitor; connector=5 is the defect",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.connector\", \"op\": \"equals\", \"value\": 5})"
     },
     {
       "id": "FND-00002234-AST-03",
@@ -38,7 +40,8 @@
         "detector_filter": "detect_crystal_circuits"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): crystal min_count 1 the reviewer confirms correct; claim is single_pin_nets on aliased labels"
     }
   ]
 }

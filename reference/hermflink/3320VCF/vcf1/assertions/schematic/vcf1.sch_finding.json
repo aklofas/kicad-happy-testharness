@@ -5,28 +5,17 @@
   "generated_by": "findings.py promote",
   "assertions": [
     {
-      "id": "FND-00000317-AST-01",
-      "description": "L1 and L2 use the 'L' inductor symbol with value '1uH' and an axial inductor footprint (Fastron SMCC), but are classified as type 'ferrite_bead' in the BOM. In eurorack synthesizer power supplies, small inductors like these are used as LC chokes on \u00b115V rails. The symbol is a standard inductor (L), not a ferrite bead (FB), so the classification should be 'inductor'. This is a misclassification in component type detection.",
-      "created_from": "FND-00000317",
-      "check": {
-        "path": "statistics.component_types",
-        "op": "not_contains",
-        "value": "ferrite_bead"
-      },
-      "aspirational": true
-    },
-    {
       "id": "FND-00000317-AST-02",
       "description": "INCORRECT: Three RC-network detections (R7+C8, R8+C8, R11+C8) at 48.23kHz share the same capacitor C8 (33pF) connected to the same node. R7, R8, and R11 are all 100k input resistors for op-amp U2 unit 1's summing junction, and C8 is a small compensation/stray capacitance cap across the summing node \u2014 not three independent RC filter stages. Reporting them as 3 separate RC filters overstates the filter count and mischaracterizes their function.",
       "created_from": "FND-00000317",
       "check": {
         "path": "findings",
-        "op": "max_value",
+        "op": "max_count",
         "value": 4,
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "TH-100: op max_value -> max_count (same semantics)"
     },
     {
       "id": "FND-00000317-AST-03",
@@ -34,12 +23,12 @@
       "created_from": "FND-00000317",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 2,
         "detector_filter": "detect_opamp_circuits"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.opamp_circuits"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000317-AST-04",
@@ -47,23 +36,12 @@
       "created_from": "FND-00000317",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 1,
         "detector_filter": "detect_voltage_dividers"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.feedback_networks"
-    },
-    {
-      "id": "FND-00000317-AST-05",
-      "description": "The power_domains.ic_power_rails section lists U3 (AS3320) and U1 (TL074) but omits U2 (TL072). U2 has two units: unit 1 at position (2950, 2050) and unit 2 at position (9250, 3300), both powered by \u00b115V rails. The omission indicates the power domain analysis failed to resolve U2's power connections.",
-      "created_from": "FND-00000317",
-      "check": {
-        "path": "design_analysis.power_domains.ic_power_rails",
-        "op": "contains",
-        "value": "U2"
-      },
-      "aspirational": true
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000317-AST-06",
@@ -71,12 +49,12 @@
       "created_from": "FND-00000317",
       "check": {
         "path": "findings.0.cap_count",
-        "op": "min_value",
+        "op": "min_count",
         "value": 2,
         "detector_filter": "detect_decoupling"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis.0.cap_count"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }

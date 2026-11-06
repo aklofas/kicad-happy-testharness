@@ -4470,28 +4470,6 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 **Fix direction:** a one-shot script that moves the 11 re-pointable findings items with their assertions; record a disposition on the findings items of the 16 dead sets and delete their assertion files; add a test that every assertion set in the corpus resolves to an output or a disposition.
 
-### TH-105: 360 FND locks on findings marked INCORRECT are not aspirational, so some pin the value their own finding calls the defect
-
-**Severity:** MEDIUM (false regressions at every fix: a lock that pins the reported bug fails the moment the product fixes it, and reads as a regression until someone reads its text)
-**File:** `reference/*/*/*/assertions/*/*_finding.json` (data); the current promotion path `regression/findings.py:353-365` already writes `incorrect` items as `aspirational: true`, so these locks predate it (the sampled files date from the April 2026 directory migrations `f757b19a27b` / `c0b2f588d21`; none ever carried the flag in git history)
-**Discovered:** 2026-11-03, v3.0.1 regen at `9885287`: six of the nine curated FND failures (FND-00001727-AST-02, 00002233-AST-01, 00001344-AST-05, 00001717-AST-01, 00001440-AST-03, 00001743-AST-02) locked `alignment.aligned == False` while their own text read "INCORRECT: the analyzer flags aligned=False …"; Wave 5's KH-484 fix flipped them. Re-anchored to True on the product's ruling (2026-11-03, FND batch 1).
-
-**Audit (default-era run at the regen, `results/v301_regen/incorrect_fnd_audit.json`):** 1,254 FND locks whose description starts `INCORRECT` on 393 repos — aspirational: 781 failing (correct shape, bug open) + 113 passing (bug fixed; these can graduate to real locks); NOT aspirational: **359 passing + 1 failing**. The 360 are a mix, so they need triage one by one: some lock the correct value and pass because the bug is fixed (e.g. Stock-Ticker `cutoff_hz > 100`), some pin the defect (e.g. SparkFun_GNSS_Flex_pHAT `statistics.drill_files == 0`; the failing one, FND-00001494-AST-07 AS7343 `via_in_pad min_count 2`, pins the NC-pad false positive its finding calls wrong and is one of the 9 standing failures). Of the 360, 185 come from the finding's `incorrect` list, 31 from `missed`, 144 could not be matched to a finding item.
-
-**Rule (product ruling 2026-11-03):** an INCORRECT-marked finding locks the correct value as aspirational, or nothing.
-
-**Fix direction:** (1) triage the 360: a lock whose value is the defect → rewrite to the correct value (aspirational while the bug is open) or delete; a lock on the correct value → keep, set aspirational if it fails; empty-text `INCORRECT:` locks → rule from the finding item or delete; FND-00001494-AST-07 goes to the product with the next relock's rulings; (2) the 113 passing aspirational locks graduate (drop `aspirational`); (3) a load-time check in `checks.load_assertions` (or a validator in the tier) that refuses a non-aspirational lock whose description starts `INCORRECT`, so the pattern cannot return.
-
-### TH-100: 235 aspirational FND assertions use an operator `checks.py` does not know, so they can never evaluate
-
-**Severity:** LOW (aspirational only, 0 live locks; each is a silent hole: it fails forever as `unknown op`, whatever the analyzer does)
-**File:** `regression/checks.py` (`validate_assertion` only warns on an op outside `KNOWN_OPS`; `evaluate_assertion` returns `actual = "unknown op: <op>"` and fails); the FND promotion path that wrote them
-**Discovered:** 2026-10-29, 3.0.x relock (TPS5430 `FND-00001879-AST-07` `count_eq` warning); class scan over every `reference/**/assertions/` file
-
-**Symptom:** 235 assertions in 70 files / 64 repos, all `aspirational: true`, carry one of 16 non-engine spellings: `eq` 107, `min_value` 80, `max_value` 11, `not_contains` 8, `count_eq` 8, `contains` 8, `neq` 3, `gte` 2, and one each of `not_equals`, `count_gte`, `count_gt`, `any_contains`, `contains_key_value`, `min_length`, `len_eq`, `count_where_category_eq_reset_pin`. They sit in the aspirational fail count (1,456) and can never flip to pass, so a fixed bug they describe goes unnoticed. Some also lost their scope in the `signal_analysis` path migration (`FND-00001879-AST-07` counts all `findings` with no `detector_filter`).
-
-**Fix direction:** make an unknown op a load-time error in `run_checks` (and in the FND promotion writer) so new ones cannot land; then remap each assertion by its description, not by spelling: `eq` → `equals`, `contains`/`not_contains` → `contains_match`/`not_contains_match`, `min_value`/`max_value` → `min_count`/`max_count` or `greater_than`/`less_than` depending on whether the path is a list or a scalar, the `count_*` forms → `min_count`/`max_count`/`count_matches` with the lost `detector_filter` restored, and retire the ones the engine cannot express (`neq`, `count_where_category_eq_reset_pin`). Expect aspirational pass/fail counts to move.
-
 ### TH-101: no gate profile exercises gerber `--full` output (`connectivity`), so the product's Wave 5 Task 52 class is gate-blind harness-side
 
 **Severity:** LOW (not blocking; coverage gap, no wrong verdict)

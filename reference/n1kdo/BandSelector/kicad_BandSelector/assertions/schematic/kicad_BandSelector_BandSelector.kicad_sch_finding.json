@@ -10,10 +10,13 @@
       "created_from": "FND-00000397",
       "check": {
         "path": "inrush_analysis.rails[0].total_output_capacitance_uF",
-        "op": "less_than",
-        "value": 1000
+        "op": "range",
+        "min": 1,
+        "max": 1000
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): C10 '2.2' now parses as 2.2 pF (0.0 uF total), not 2.2 F. Still wrong: correct is 2.2 uF. less_than 1000 passes on the new defect.",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"inrush_analysis.rails[0].total_output_capacitance_uF\", \"op\": \"less_than\", \"value\": 1000})"
     },
     {
       "id": "FND-00000397-AST-02",

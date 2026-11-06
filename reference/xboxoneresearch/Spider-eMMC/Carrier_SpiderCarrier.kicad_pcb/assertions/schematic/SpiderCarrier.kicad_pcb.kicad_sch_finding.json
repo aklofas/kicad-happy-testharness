@@ -32,11 +32,12 @@
       "description": "INCORRECT: The SDINBDG4-8G eMMC is powered by both +3.3V (VCC pins E6, F5, J10, K9) and +1V8 (VCCQ pins C6, M4, N4, P3, P5). The power_budget only reports the eMMC on the +3.3V rail (estimated_mA=10) and omits +1V8 entirely. The design_analysis.power_domains correctly identifies both +1V8 and +3.3V as IC power rails for U?, but this information does not propagate to power_budget. Same issue is present in UnifiedBoard output.",
       "created_from": "FND-00001578",
       "check": {
-        "path": "power_budget.rails",
-        "op": "exists",
-        "value": "+1V8"
+        "path": "power_budget.rails.+1V8",
+        "op": "exists"
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): power_budget.rails has only +3.3V; +1V8 (eMMC VCCQ) missing; old exists check ignored the value",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"power_budget.rails\", \"op\": \"exists\", \"value\": \"+1V8\"})"
     },
     {
       "id": "FND-00001578-AST-04",

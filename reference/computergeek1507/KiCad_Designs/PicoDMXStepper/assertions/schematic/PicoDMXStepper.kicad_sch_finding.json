@@ -20,12 +20,14 @@
       "created_from": "FND-00002275",
       "check": {
         "path": "findings",
-        "op": "min_count",
-        "value": 1,
+        "op": "not_contains_match",
+        "field": "topology",
+        "pattern": "^LDO$",
         "detector_filter": "detect_power_regulators"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"min_count\", \"value\": 1, \"detector_filter\": \"detect_power_regulators\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): U1 VR10S05 (isolated DC/DC module) still topology 'LDO'. Correct: not LDO."
     },
     {
       "id": "FND-00002275-AST-03",

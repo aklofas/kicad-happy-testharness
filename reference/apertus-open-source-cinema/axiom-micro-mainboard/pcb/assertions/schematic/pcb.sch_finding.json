@@ -53,9 +53,11 @@
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "equals",
-        "value": 1
+        "value": 4
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Lock pins the defect: test_point=1; SCL1/SDA1 still 'switch', GND1 'other'; reviewer: all four TEST parts are test points",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.component_types.test_point\", \"op\": \"equals\", \"value\": 1})"
     },
     {
       "id": "FND-00001986-AST-06",
@@ -68,7 +70,8 @@
         "detector_filter": "detect_power_regulators"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators",
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): existence lock (U6 is detected); bug remains: U6 ADP150-2.8 topology unknown, rails/vout null"
     },
     {
       "id": "FND-00001986-AST-07",

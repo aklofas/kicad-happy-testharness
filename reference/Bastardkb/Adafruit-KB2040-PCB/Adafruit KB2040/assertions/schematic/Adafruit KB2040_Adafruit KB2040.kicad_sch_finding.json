@@ -54,11 +54,11 @@
       "created_from": "FND-00000345",
       "check": {
         "path": "findings",
-        "op": "eq",
+        "op": "equals",
         "value": []
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations[?category=='regulator_caps']"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000345-AST-06",
@@ -66,12 +66,12 @@
       "created_from": "FND-00000345",
       "check": {
         "path": "findings[0].load_caps",
-        "op": "min_length",
+        "op": "min_count",
         "value": 2,
         "detector_filter": "detect_crystal_circuits"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].load_caps"
+      "migration_note": "TH-100: op min_length -> min_count (same semantics)"
     }
   ]
 }

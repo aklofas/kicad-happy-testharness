@@ -10,10 +10,13 @@
       "created_from": "FND-00002063",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/Logo_Open_Hardware_Small/"
+        "op": "not_contains_match",
+        "field": "name",
+        "pattern": "Logo_Open_Hardware"
       },
-      "aspirational": true
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): defect present: power_rails still has 'Logo_Open_Hardware_Small'; the lock is vacuous (value, no pattern) and its intent locked the defect",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/Logo_Open_Hardware_Small/\"})"
     },
     {
       "id": "FND-00002063-AST-02",

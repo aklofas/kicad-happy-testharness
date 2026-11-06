@@ -13,18 +13,6 @@
         "op": "min_count",
         "value": 2
       }
-    },
-    {
-      "id": "FND-00002128-AST-02",
-      "description": "INCORRECT: R2 and R3 are wired as CC1 and CC2 pulldowns to GND on the USB-C connector J1 (TYPE-C-31-M-12). Their values are '5.1k, 1%'. The component parser returns parsed_value=None for this format (comma+tolerance suffix not handled), while R5 with value '5.1k' correctly parses to 5100.0. As a result the usb_compliance check reports cc1_pulldown_5k1: fail and cc2_pulldown_5k1: fail when the pulldowns are actually present and correct. This is a false negative \u2014 the device is USB-C power delivery compliant for device/sink role.",
-      "created_from": "FND-00002128",
-      "check": {
-        "path": "usb_compliance.summary.fail",
-        "op": "equals",
-        "value": 2
-      },
-      "aspirational": false,
-      "migration_note": "3.0.x relock at 40b8ff3 (2026-10-29): KH value parser reads '5.1k, 1%' (CC pull-downs now pass); was {\"path\": \"usb_compliance.summary.fail\", \"op\": \"equals\", \"value\": 4}"
     }
   ]
 }

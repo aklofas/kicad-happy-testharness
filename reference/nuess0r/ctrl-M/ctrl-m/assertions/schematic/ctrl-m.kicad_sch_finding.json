@@ -10,10 +10,15 @@
       "created_from": "FND-00002320",
       "check": {
         "path": "bus_topology.detected_bus_signals",
-        "op": "min_count",
-        "value": 1
+        "op": "field_equals",
+        "match_field": "range",
+        "match_value": "A8..A10",
+        "assert_field": "width",
+        "assert_value": 3
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): min_count 1 is not the claim; widths still doubled (A8..A10 width 6); reviewer: 3",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"bus_topology.detected_bus_signals\", \"op\": \"min_count\", \"value\": 1})"
     },
     {
       "id": "FND-00002320-AST-02",
@@ -24,7 +29,8 @@
         "op": "min_count",
         "value": 1
       },
-      "aspirational": false
+      "aspirational": false,
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): existence lock; bug remains: D+/D- pair still type 'differential' not USB"
     },
     {
       "id": "FND-00002320-AST-03",

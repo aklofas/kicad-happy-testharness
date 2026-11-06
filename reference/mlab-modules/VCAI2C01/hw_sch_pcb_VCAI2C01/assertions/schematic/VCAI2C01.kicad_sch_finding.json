@@ -44,12 +44,14 @@
       "created_from": "FND-00001762",
       "check": {
         "path": "findings",
-        "value": 4,
-        "op": "equals",
+        "op": "not_contains_match",
+        "field": "ground_net",
+        "pattern": "^OUT[1-4]$",
         "detector_filter": "detect_rc_filters"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "aspirational": true,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"value\": 4, \"op\": \"equals\", \"detector_filter\": \"detect_rc_filters\"})",
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): 4 RC-networks still reported with ground_net OUT1..OUT4 (opamp outputs, integrator feedback); reviewer: not filters"
     },
     {
       "id": "FND-00001762-AST-05",

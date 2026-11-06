@@ -53,12 +53,12 @@
       "created_from": "FND-00001460",
       "check": {
         "path": "completeness.missing_required",
-        "op": "equals",
-        "value": [
-          "Edge.Cuts"
-        ]
+        "op": "max_count",
+        "value": 0
       },
-      "aspirational": false
+      "aspirational": true,
+      "incorrect_review": "rewrite (TH-105, 2026-11-06): Lock pins the defect: missing_required still [Edge.Cuts] (GKO read as B.Mask); reviewer: GKO is the outline",
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"completeness.missing_required\", \"op\": \"equals\", \"value\": [\"Edge.Cuts\"]})"
     }
   ]
 }

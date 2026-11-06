@@ -10,12 +10,12 @@
       "created_from": "FND-00000381",
       "check": {
         "path": "findings",
-        "op": "eq",
+        "op": "equals",
         "value": 4,
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000381-AST-02",
@@ -23,12 +23,12 @@
       "created_from": "FND-00000381",
       "check": {
         "path": "findings",
-        "op": "eq",
+        "op": "equals",
         "value": 2,
         "detector_filter": "detect_voltage_dividers"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
+      "migration_note": "TH-100: op eq -> equals (same semantics)"
     },
     {
       "id": "FND-00000381-AST-03",
@@ -36,12 +36,12 @@
       "created_from": "FND-00000381",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 2,
         "detector_filter": "detect_current_sense"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.current_sense"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000381-AST-04",
@@ -49,12 +49,12 @@
       "created_from": "FND-00000381",
       "check": {
         "path": "findings",
-        "op": "min_value",
+        "op": "min_count",
         "value": 2,
         "detector_filter": "detect_bridge_circuits"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     },
     {
       "id": "FND-00000381-AST-05",
@@ -62,12 +62,12 @@
       "created_from": "FND-00000381",
       "check": {
         "path": "findings[0].isolation_components",
-        "op": "min_value",
+        "op": "min_count",
         "value": 3,
         "detector_filter": "detect_isolation_barriers"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.isolation_barriers[0].isolation_components"
+      "migration_note": "TH-100: op min_value -> min_count (same semantics)"
     }
   ]
 }
