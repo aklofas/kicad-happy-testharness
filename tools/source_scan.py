@@ -262,6 +262,28 @@ def coverage_snapshot(product_root: Path, exceptions: dict | None = None) -> dic
     }
 
 
+def relocate_baseline(baseline: dict, relocations: list[dict]) -> dict:
+    """The baseline with a product round's relocation map applied (TH-070): constant keys
+    move to their new owner file by the constants registry's rules
+    (`relocate_registry`), and each moved-from file is listed in `relocated_files` so a
+    diff reports it as relocated, not lost."""
+    out = dict(baseline)
+    recs = []
+    for key in baseline["constants"]:
+        file, scope, name = key.split("|", 2)
+        recs.append({"file": file, "scope": scope, "name": name})
+    _constants_engine.relocate_registry({"constants": recs}, relocations)
+    out["constants"] = sorted({f"{r['file']}|{r['scope']}|{r['name']}" for r in recs})
+    out["relocated_files"] = sorted({rl["old_owner"] for rl in relocations})
+    return out
+
+
+def load_relocations(path: Path) -> list[dict]:
+    """A relocation map: a list, or a round record's {"relocations": [...]}."""
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    return data.get("relocations", []) if isinstance(data, dict) else data
+
+
 def coverage_diff(baseline: dict, current: dict) -> dict:
     """Losses (fail) and growth (ratchet candidates) of `current` vs `baseline`."""
     if not isinstance(baseline.get("untagged_era_sites"), dict):
@@ -269,8 +291,11 @@ def coverage_diff(baseline: dict, current: dict) -> dict:
     lost_sites = sorted(k for k, n in baseline["emit_sites"].items()
                         if current["emit_sites"].get(k, 0) < n)
     b_untag, c_untag = baseline["untagged_era_sites"], current["untagged_era_sites"]
+    gone = set(baseline["files"]) - set(current["files"])
+    relocated = gone & set(baseline.get("relocated_files", ()))
     out = {
-        "lost_files": sorted(set(baseline["files"]) - set(current["files"])),
+        "lost_files": sorted(gone - relocated),
+        "relocated_files": sorted(relocated),
         "lost_sites": lost_sites,
         "lost_eq": sorted(set(baseline["eq_ids"]) - set(current["eq_ids"])),
         "lost_constants": sorted(set(baseline["constants"]) - set(current["constants"])),
@@ -302,6 +327,8 @@ def _growth_summary(grew: dict) -> str:
 
 
 def _print_diff(d: dict) -> None:
+    for f in d.get("relocated_files", []):
+        print(f"  relocated (map): {f}")
     for key in ("lost_files", "lost_sites", "lost_eq", "lost_constants", "exception_violations"):
         for item in d[key]:
             print(f"  {key}: {item}")
@@ -320,6 +347,9 @@ def main(argv=None) -> int:
         p.add_argument("--exceptions", type=Path, default=None)
     sub.choices["check"].add_argument("--baseline", type=Path, default=BASELINE_PATH)
     sub.choices["check"].add_argument("--accept-baseline", action="store_true")
+    sub.choices["check"].add_argument("--map", type=Path, default=None,
+                                      help="the round's relocation map (list or {relocations: [...]}); "
+                                           "applied to the baseline before the diff")
     sub.choices["snapshot"].add_argument("-o", "--output", type=Path, default=BASELINE_PATH)
     sub.choices["sites"].add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
@@ -355,6 +385,8 @@ def main(argv=None) -> int:
         print(f"error: baseline {args.baseline} missing; run `snapshot` first", file=sys.stderr)
         return 2
     baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
+    if args.map:
+        baseline = relocate_baseline(baseline, load_relocations(args.map))
     d = coverage_diff(baseline, current)
     print(f"scan coverage vs {args.baseline.name} (baseline sha {baseline['product_sha'][:7]}, "
           f"current {current['product_sha'][:7]})")

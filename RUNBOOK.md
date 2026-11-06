@@ -169,7 +169,9 @@ sites, or an exception count that grew or shrank fail it; re-baseline only with
 prints `coverage grew: …`, ratchet the baseline in the round's commit:
 `python3 tools/source_scan.py check --product $KICAD_HAPPY_DIR --accept-baseline`. The same
 check runs in the required offline tier as `tests/test_scan_coverage_gate.py`. When the
-round moved symbols: `python3 tools/api_migration.py apply-map <relocation.json> --product
+round moved symbols, pass its relocation map to the check (`check --map <relocation.json>`):
+moved constants are re-keyed to their new file and a moved-from file reads `relocated (map)`
+instead of lost (TH-070). Also: `python3 tools/api_migration.py apply-map <relocation.json> --product
 $KICAD_HAPPY_DIR` lists every harness site to edit; `python3 tools/api_migration.py check`
 must then show no violation from this round before the round's response record is
 written. In the same re-baseline, apply the map to the constants registry and rescan both

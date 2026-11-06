@@ -405,3 +405,20 @@ def test_scanners_never_import_product_code(tmp_path):
     assert out["detectors"]["d"]["source_file"] == rel
     assert "tripwire" not in sys.modules
     assert not {m for m in set(sys.modules) - before if "tripwire" in m}
+
+
+def test_relocation_map_rekeys_baseline_constants_and_files():
+    """TH-070: a file move (relocation map) read as lost constants and a lost file."""
+    base = {"files": ["skills/a/old.py", "skills/a/keep.py"], "emit_sites": {}, "untagged_era_sites": {},
+            "eq_ids": {}, "unresolved": [], "exception_violations": [],
+            "constants": ["skills/a/old.py|<module>|LIMIT", "skills/a/old.py|f|f:kw0",
+                          "skills/a/keep.py|<module>|K"]}
+    cur = {"files": ["skills/a/new.py", "skills/a/keep.py"], "emit_sites": {}, "untagged_era_sites": {},
+           "eq_ids": {}, "unresolved": [], "exception_violations": [],
+           "constants": ["skills/a/new.py|<module>|LIMIT", "skills/a/new.py|f|f:kw0", "skills/a/keep.py|<module>|K"]}
+    assert not source_scan.coverage_diff(base, cur)["clean"]
+    rel = [{"symbol": "a.old.LIMIT", "old_owner": "skills/a/old.py", "new_owner": "skills/a/new.py"},
+           {"symbol": "a.old.f", "old_owner": "skills/a/old.py", "new_owner": "skills/a/new.py"}]
+    d = source_scan.coverage_diff(source_scan.relocate_baseline(base, rel), cur)
+    assert d["clean"] and d["lost_constants"] == [] and d["lost_files"] == []
+    assert d["relocated_files"] == ["skills/a/old.py"]

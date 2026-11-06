@@ -3,6 +3,7 @@ The registry and its CLI live in validate/audit_constants.py."""
 import ast
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from .sources import iter_product_sources
@@ -408,3 +409,62 @@ def scan_all_quiet(product_root):
     for fpath in iter_source_files(product_root):
         all_constants.extend(scan_file(fpath, product_root))
     return all_constants
+
+
+# Relocation (a product round's `relocations[]` map) -- shared by the constants registry
+# (validate/audit_constants.py relocate) and the scan-coverage baseline (tools/source_scan.py check).
+
+_SYNTHETIC_SUFFIX = re.compile(r":(kw)?\d+$")
+
+
+def _synthetic_name(name, func):
+    """True when `name` is the synthetic name of an inline keyword set in `func`:
+    `func:kw<ordinal>` (current) or `func:<line>` (legacy)."""
+    return bool(name) and name.startswith(func + ":") and bool(_SYNTHETIC_SUFFIX.fullmatch(name[len(func):]))
+
+
+def _in_function_scope(scope, func):
+    """True when `scope` is function `func` itself, a nested scope under it
+    (`func.inner`), or a synthetic `func:kw<n>` / `func:<line>` form."""
+    if not scope:
+        return False
+    head = scope.split(".", 1)[0]
+    return head == func or _synthetic_name(head, func)
+
+
+def relocate_registry(registry, relocations):
+    """Apply a round record's relocation map (`relocations[]`) to registry entries.
+
+    Matches on old_owner plus either the constant's own name (a moved constant)
+    or its scope (a moved function: its local constants carry
+    `scope == <function>` or a nested `<function>.<inner>` scope, and synthetic
+    names of the form `<function>:<line>`). Rewrites file, and when new_name
+    differs also the name / scope / function references to the old name;
+    records `relocated_from`; preserves every verification field. Returns count.
+    """
+    moved = 0
+    for rl in relocations:
+        old_name = rl["symbol"].rsplit(".", 1)[-1]
+        new_name = rl.get("new_name") or old_name
+        for c in registry["constants"]:
+            if c.get("file") != rl["old_owner"]:
+                continue
+            by_name = c.get("name") == old_name
+            by_scope = _in_function_scope(c.get("scope"), old_name)
+            if not (by_name or by_scope):
+                continue
+            c["relocated_from"] = c["file"]
+            c["file"] = rl["new_owner"]
+            if new_name != old_name:
+                if by_name:
+                    c["name"] = new_name
+                if by_scope:
+                    head, sep, rest = c["scope"].partition(".")
+                    c["scope"] = new_name + head[len(old_name):] + sep + rest
+                    if c.get("function") == old_name:
+                        c["function"] = new_name
+                    nm = c.get("name", "")
+                    if _synthetic_name(nm, old_name):
+                        c["name"] = new_name + nm[len(old_name):]
+            moved += 1
+    return moved

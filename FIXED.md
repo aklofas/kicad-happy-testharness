@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-070: the scan-coverage check reported every moved constant and moved-from file as lost
+
+**Severity:** MEDIUM (`test_scan_coverage_not_lost` red against every structural round until `--accept-baseline`)
+**File:** `tools/source_scan.py` (`relocate_baseline`, `load_relocations`, `coverage_diff`, `check --map`); `harnesslib/source_audit/constants.py` (relocation rules moved here from `validate/audit_constants.py`, re-exported there)
+**Discovered:** 2026-10-15, v3 round-2 reply
+
+- **Root cause:** two halves. Constants were keyed by `function:line`, which TH-065 already fixed (keys are `file|scope|name`; anonymous inline sets `func:kw<n>`). File moves were never applied, so a moved constant read as lost and its old file as a lost file.
+- **Fix:** `check --map <relocation.json>` (a list or a round record's `relocations[]`) re-keys the baseline's constants with the constants registry's own `relocate_registry` (by name, by function scope, synthetic names), so both tools apply the same rules, and lists each moved-from file under `relocated_files` instead of `lost_files`. RUNBOOK 1i.
+- **Verification:** `tests/test_source_scan.py::test_relocation_map_rekeys_baseline_constants_and_files`; the audit_constants tests pass unchanged after the move; `check --product product_4c2a0d6` CLEAN.
+
 ## 2026-11-06 — TH-071: `run_corpus_gate.py --jobs` was not memory-aware, and one runaway unit could take the host to the OOM killer
 
 **Severity:** LOW (operator hazard on a shared box)

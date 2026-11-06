@@ -4554,27 +4554,6 @@ for that env on runner subprocesses (H1 item).
 
 **Addendum 2026-10-15:** mechanism identified — the RED step's 60 s subprocess timeout killed the parent runner; its 32 pool workers survived (ppid 1) and completed the whole emc corpus unsupervised, then idled ~6 h. Tracked as TH-067.
 
-### TH-070: scan-coverage baseline keys anonymous constants by `function:line` and by file, so every structural round reports false losses
-
-**Severity:** MEDIUM (the required offline_contract test `test_scan_coverage_not_lost` goes RED against every product round until `--accept-baseline`; a CI checkpoint pin can therefore only be cut from a re-baseline commit)
-**File:** `tools/source_scan.py` (`coverage_snapshot` constant identity `file|scope|name:line`; `coverage_diff` compares identities verbatim), `tests/test_scan_coverage_gate.py`; same identity in the registry → TH-065
-**Discovered:** 2026-10-15, v3 round-2 reply (maintainer measured 156 `lost_constants` + `lost_eq: EQ-065` against `8912a5a`; reproduced, report `results/v3_round2_gate_aux/scan_check_8912a5a.txt`)
-
-**Symptom:** all 156 "lost" constants are either anonymous constants in
-untouched functions whose line shifted under round-1 deletions
-(`analyze_schematic`, `signal_detectors`, `validation_detectors`, `emc_rules`)
-or constants whose file moved (`kicad_utils.py` → `kicad_core/*.py`,
-`diff_analysis.py` → `diff_engine.py`). Nothing was lost; EQ-065 is the one
-true removal (dead `apply_rotation`, deleted in round 1). The review artifact of
-every structural round is therefore ~150 lines of noise around one real line.
-
-**Fix direction (maintainer suggestion, adopted):** key anonymous constants by
-`(file, scope qualname, ordinal-within-scope, value)` with the line kept as
-location metadata; apply the round's relocation map (file moves) to constant and
-EQ identities before diffing, as `api_migration.py apply-map` does for symbols.
-Until then each accepted round ends with `source_scan.py check --accept-baseline`
-and the diff is attached to the round response (`accept_baseline_diff`).
-
 ### TH-068: fixture-lane A/A cannot strict-verify chained envelopes after the basetemp tree is moved
 
 **Severity:** LOW (the corpus lanes prove the chained analyzers strict-clean at scale; only the offline fixture lane is affected)
