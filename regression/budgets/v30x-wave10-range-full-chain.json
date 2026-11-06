@@ -1,0 +1,81 @@
+{
+ "budget_id": "v30x-wave10-range-full-chain",
+ "profile": "full-chain",
+ "baseline_sha": "003950b",
+ "candidate_sha": "4c2a0d6",
+ "normalization_policy": "volatile-leaves-v1",
+ "unexplained_deltas_allowed": 0,
+ "unexplained_missing_units_allowed": 0,
+ "relock": false,
+ "classes": [
+  {
+   "id": "SCH-wave10b",
+   "analyzer": "schematic",
+   "path_glob": "/**",
+   "predicate": "v30x_wave10b:schematic",
+   "evidence": "RV rail_voltages removals (pin-only supplies, ground-output regulators); SEQ power_sequencing EN always_on -> tied_to_ground + power_tree enable_type tied_to_rail -> tied_to_ground / always_on; LDO ldo_dissipation by magnitude; DER PR-DET/DC-DET derating on negative rails; REG ground-output regulator guard. Raw lists, components, nets, statistics unchanged; finding counts move only by DO-DET removals. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-05-v3.0.1-wave10b/budget-wave10b.json (summary budget-wave10b-summary.md, rulings BUDGETS-10b.md, same directory)"
+  },
+  {
+   "id": "PCB-wave10b",
+   "analyzer": "pcb",
+   "path_glob": "/**",
+   "predicate": "v30x_wave10b:pcb",
+   "evidence": "PM-001 per courtyard layer (only PM-001 findings move) + dfm_summary IPC detection_source -> pcb_fab_notes. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-05-v3.0.1-wave10b/budget-wave10b.json (summary budget-wave10b-summary.md, rulings BUDGETS-10b.md, same directory)"
+  },
+  {
+   "id": "GERBER-wave10b",
+   "analyzer": "gerber",
+   "path_glob": "/**",
+   "predicate": "v30x_wave10b:gerber",
+   "evidence": "gerber-input-hardening: the six named directories (drill not Excellon, comment not an operation, BOM .txt) + dot companion files leaving inputs. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-05-v3.0.1-wave10b/budget-wave10b.json (summary budget-wave10b-summary.md, rulings BUDGETS-10b.md, same directory)"
+  },
+  {
+   "id": "EMC-wave10b",
+   "analyzer": "emc",
+   "path_glob": "/**",
+   "predicate": "v30x_wave10b:emc",
+   "evidence": "STAGE SU-/PD-00x/EE- -> layout; CK-001/DP-004 length share; PD-001 removed on negative rails / transient_source -> output_cap_proxy; RP-001 added / VS-001 on zero-ground-via boards; roll-ups only with a finding move. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-05-v3.0.1-wave10b/budget-wave10b.json (summary budget-wave10b-summary.md, rulings BUDGETS-10b.md, same directory)"
+  },
+  {
+   "id": "THERMAL-wave10b",
+   "analyzer": "thermal",
+   "path_glob": "/**",
+   "predicate": "v30x_wave10b:thermal",
+   "evidence": "TH-DET added for the negative switcher (BelaPlatform GemMulti). /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-05-v3.0.1-wave10b/budget-wave10b.json (summary budget-wave10b-summary.md, rulings BUDGETS-10b.md, same directory)"
+  },
+  {
+   "id": "CROSS-wave10b",
+   "analyzer": "cross_analysis",
+   "path_glob": "/**",
+   "predicate": "v30x_wave10b:cross_analysis",
+   "evidence": "RP-002 removed without coverage, RP-002/PS-002 confidence -> heuristic, checks_run RP-002. /home/aklofas/Projects/kicad-happy/.superpowers/sdd/2026-11-05-v3.0.1-wave10b/budget-wave10b.json (summary budget-wave10b-summary.md, rulings BUDGETS-10b.md, same directory)"
+  }
+ ],
+ "acknowledged_overruns": [
+  {
+   "class": "power-seq-graph-en-ground (tied_to_ground + always_on)",
+   "declared": "82 power_tree entries",
+   "measured": "227 (std; 130 -> always_on, 97 -> tied_to_ground), all EN on GND-family nets; dependencies site 85 = declared",
+   "ruling": "acknowledged by the product 2026-11-06: the sample under-measured the graph site"
+  },
+  {
+   "class": "spice-opamp-rail-plusminus",
+   "declared": "0",
+   "measured": "2 op-amp model_note (starshipraider akl-av1 U5 4V5_P/4V5_N, BLONDEL U18 6V0_P/6V0_N), results identical",
+   "ruling": "acknowledged: pre-existing _N misread now stated by the note (KH-967)"
+  },
+  {
+   "class": "gerber-noop-controls",
+   "declared": "0",
+   "measured": "1 dir (t-robop/ERS-PCB Spica): 9 ._* files leave inputs.source_files",
+   "ruling": "acknowledged: intended d1aa4fdf behaviour, census missed the dir"
+  },
+  {
+   "class": "pd001-transient-source",
+   "declared": "lane full-chain",
+   "measured": "also standard: 90 findings in 82 units",
+   "ruling": "acknowledged: same class, declared lane wrong"
+  }
+ ],
+ "note": "Whole audit-round-3 range ab3494a0..4c2a0d6f (10a output-neutral, 10b budgeted, 10c docs + VSS EN guard) vs product_003950b; the 10b classes apply because 10a and 10c are strict-field identical; residual expected 0."
+}

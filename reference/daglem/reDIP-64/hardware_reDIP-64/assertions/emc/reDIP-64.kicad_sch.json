@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~205 (tolerance 10%)",
+      "description": "Finding count ~204 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 198,
-        "max": 212
+        "min": 197,
+        "max": 211
       }
     },
     {
@@ -26,12 +26,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~113",
+      "description": "by_severity.warning ~112",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 107,
-        "max": 119
+        "min": 106,
+        "max": 118
       }
     },
     {
@@ -46,23 +46,23 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~22.0 (+-10)",
+      "description": "EMC risk score ~25.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 12.0,
-        "max": 32.0
+        "min": 15.0,
+        "max": 35.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "11 clock_routing finding(s)",
+      "description": "10 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 11
+        "value": 10
       }
     },
     {
