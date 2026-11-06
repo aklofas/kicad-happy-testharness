@@ -86,31 +86,47 @@ def _count_th_issues():
 _SEVERITY_ORDER = ("CRITICAL", "HIGH", "MEDIUM", "LOW", "unclassified")
 
 
-def _open_by_severity(prefix):
-    """Open <prefix>-* ids in ISSUES.md by the entry's `**Severity:**` line.
-    LOW-MEDIUM counts as MEDIUM; an entry without a recognised severity is unclassified."""
-    if not ISSUES_FILE.exists():
+def _severity_by_id(path, prefix):
+    """{id number: severity} for the <prefix>-* ids headings in `path` open with: the
+    severity in the heading (`### KH-398 (MEDIUM) / KH-399 (LOW): ...`), else the entry's
+    first `**Severity:**` line. LOW-MEDIUM counts as MEDIUM; no recognised severity is
+    "unclassified"."""
+    if not Path(path).exists():
         return {}
     one = rf"{prefix}-\d{{3}}(?:\s*\([A-Z-]+\))?"
     lead = re.compile(rf"#+\s+(?:\d{{4}}-\d\d-\d\d\s+—\s+)?({one}(?:\s*(?:/|,|and|\+)\s*{one})*)")
-    sev = {}
-    current = []
-    for line in ISSUES_FILE.read_text(encoding="utf-8").splitlines():
+
+    def norm(word):
+        word = word.rstrip("-")
+        word = "MEDIUM" if word == "LOW-MEDIUM" else word
+        return word if word in _SEVERITY_ORDER else None
+
+    sev, current = {}, []
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
         if line.startswith("#"):
             m = lead.match(line)
-            current = [int(n) for n in re.findall(rf"{prefix}-(\d{{3}})", m.group(1))] if m else []
-            for i in current:
-                sev.setdefault(i, "unclassified")
+            current = []
+            if m:
+                for n, word in re.findall(rf"{prefix}-(\d{{3}})(?:\s*\(([A-Z-]+)\))?", m.group(1)):
+                    i = int(n)
+                    sev.setdefault(i, "unclassified")
+                    if word and norm(word) and sev[i] == "unclassified":
+                        sev[i] = norm(word)
+                    current.append(i)
             continue
         m = re.match(r"\*\*Severity:?\*\*:?\s*\**\s*([A-Z][A-Z-]*)", line)
         if m and current:
-            word = m.group(1).rstrip("-")
-            word = "MEDIUM" if word == "LOW-MEDIUM" else word
+            word = norm(m.group(1))
             for i in current:
-                if sev[i] == "unclassified" and word in _SEVERITY_ORDER:
+                if sev[i] == "unclassified" and word:
                     sev[i] = word
             current = []
-    counts = Counter(sev.values())
+    return sev
+
+
+def _open_by_severity(prefix):
+    """Open <prefix>-* ids in ISSUES.md by severity, in _SEVERITY_ORDER."""
+    counts = Counter(_severity_by_id(ISSUES_FILE, prefix).values())
     return {k: counts[k] for k in _SEVERITY_ORDER if counts[k]}
 
 

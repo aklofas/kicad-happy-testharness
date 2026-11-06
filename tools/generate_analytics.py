@@ -14,7 +14,6 @@ import argparse
 import json
 import math
 import os
-import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -22,6 +21,8 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 from utils import DATA_DIR as REFERENCE_DIR, DATA_ROOT  # noqa: E402
+sys.path.insert(0, str(HARNESS_DIR / "tools"))
+import generate_validation_md as gvm  # noqa: E402  (owns the issue-heading rules)
 
 RESULTS_DIR = DATA_ROOT / "results"
 ANALYTICS_DIR = HARNESS_DIR / "analytics"
@@ -109,50 +110,25 @@ def collect_findings_per_repo():
     return repo_counts
 
 
-def _count_issues_in_line(line, prefix):
-    """Count issue IDs in a header line, handling 'X through Y' and comma lists."""
-    count = 0
-    # Match "PREFIX-NNN through PREFIX-MMM" ranges
-    for m in re.finditer(rf'{prefix}-(\d+)\s+through\s+{prefix}-(\d+)', line):
-        count += int(m.group(2)) - int(m.group(1)) + 1
-    if count > 0:
-        # Also count standalone IDs after commas (e.g. "KH-001 through KH-011, KH-014, KH-023")
-        # Remove the "through" ranges first, then count remaining PREFIX-NNN
-        cleaned = re.sub(rf'{prefix}-\d+\s+through\s+{prefix}-\d+', '', line)
-        count += len(re.findall(rf'{prefix}-\d+', cleaned))
-        return count
-    # Simple single-issue header
-    return 1
-
-
 def collect_issue_data():
-    """Count closed issues from FIXED.md."""
-    fixed_file = HARNESS_DIR / "FIXED.md"
-    if not fixed_file.exists():
+    """Closed KH / TH counts and the closed KH severity mix, by distinct id, read the way
+    VALIDATION.md counts them (both heading formats; an id still in ISSUES.md stays open)."""
+    open_kh = gvm._heading_ids(gvm.ISSUES_FILE, "KH") if gvm.ISSUES_FILE.exists() else set()
+    open_th = gvm._heading_ids(gvm.ISSUES_FILE, "TH") if gvm.ISSUES_FILE.exists() else set()
+    if not gvm.FIXED_FILE.exists():
         return 0, 0, {}
+    closed_kh = gvm._heading_ids(gvm.FIXED_FILE, "KH") - open_kh
+    closed_th = gvm._heading_ids(gvm.FIXED_FILE, "TH") - open_th
+    sev = gvm._severity_by_id(gvm.FIXED_FILE, "KH")
+    by_severity = Counter(sev[i] for i in closed_kh if sev.get(i, "unclassified") != "unclassified")
+    return len(closed_kh), len(closed_th), by_severity
 
-    kh_count = 0
-    th_count = 0
-    by_severity = Counter()
-    text = fixed_file.read_text(encoding="utf-8")
 
-    for line in text.splitlines():
-        if line.startswith("### KH-"):
-            n = _count_issues_in_line(line, "KH")
-            kh_count += n
-            lower = line.lower()
-            if "critical" in lower:
-                by_severity["CRITICAL"] += n
-            elif "high" in lower:
-                by_severity["HIGH"] += n
-            elif "medium" in lower:
-                by_severity["MEDIUM"] += n
-            elif "low" in lower:
-                by_severity["LOW"] += n
-        elif line.startswith("### TH-"):
-            th_count += _count_issues_in_line(line, "TH")
-
-    return kh_count, th_count, by_severity
+def collect_open_issues():
+    """(open KH, open TH) distinct ids in ISSUES.md."""
+    if not gvm.ISSUES_FILE.exists():
+        return 0, 0
+    return len(gvm._heading_ids(gvm.ISSUES_FILE, "KH")), len(gvm._heading_ids(gvm.ISSUES_FILE, "TH"))
 
 
 def collect_signal_detector_coverage():
@@ -519,13 +495,7 @@ def generate_issue_history_svg():
     kh_closed, th_closed, by_severity = collect_issue_data()
     total_closed = kh_closed + th_closed
 
-    # Count open issues from ISSUES.md
-    issues_file = HARNESS_DIR / "ISSUES.md"
-    kh_open = 0
-    if issues_file.exists():
-        for line in issues_file.read_text(encoding="utf-8").splitlines():
-            if line.startswith("### KH-"):
-                kh_open += 1
+    kh_open, th_open = collect_open_issues()
 
     w, h = 400, 200
     svg = _svg_header(w, h, "Issue Tracker")
@@ -533,7 +503,7 @@ def generate_issue_history_svg():
 
     # Big numbers
     stats = [
-        (str(kh_open), "open", COLORS["amber"] if kh_open > 0 else COLORS["green"]),
+        (str(kh_open + th_open), "open", COLORS["amber"] if kh_open + th_open > 0 else COLORS["green"]),
         (str(kh_closed), "KH-* closed", COLORS["blue"]),
         (str(th_closed), "TH-* closed", COLORS["purple"]),
     ]

@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-106: `generate_analytics.py` issue counts read only `### <id>` headings
+
+**Severity:** LOW (the analytics Issue Tracker chart)
+**File:** `tools/generate_analytics.py` (`collect_issue_data`, the open count), `tools/generate_validation_md.py` (`_severity_by_id`)
+**Discovered:** 2026-11-03, while fixing TH-104
+
+- **Root cause:** closed issues were counted from `### KH-` / `### TH-` lines only (dated `## <date> — <id>` entries were dropped), severity was read from the heading text, and the open count read `### KH-` only (TH open never counted).
+- **Fix:** the chart reuses `generate_validation_md._heading_ids` (distinct ids, both heading formats, an id still open stays open) and the new `_severity_by_id` (heading severity, else the entry's `**Severity:**` line; LOW-MEDIUM as MEDIUM), which `_open_by_severity` now also uses; `collect_open_issues` counts KH and TH; the unused `_count_issues_in_line` and its tests are gone (the `Earlier fixes (... through ...)` range heading is not counted, as in VALIDATION.md).
+- **Verification:** `tests/test_generate_analytics.py` (both formats, body and heading severity, fixed half of an open id); on the live trackers the chart counts 543 KH / 82 TH closed and 384 / 21 open, the same as `generate_validation_md`.
+
 ## 2026-11-06 — TH-078: the gate had no "debt resolved" disposition — a ledgered crash/timeout the candidate fixed could never gate_pass mechanically
 
 **Severity:** LOW (adjudication cost; no wrong verdict was issued)

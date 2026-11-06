@@ -4470,14 +4470,6 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 **Fix direction:** a one-shot script that moves the 11 re-pointable findings items with their assertions; record a disposition on the findings items of the 16 dead sets and delete their assertion files; add a test that every assertion set in the corpus resolves to an output or a disposition.
 
-### TH-106: `generate_analytics.py` issue counts read only `### <id>` headings — closures under `## <date> — <id>` headings are not counted (the TH-104 undercount, second copy)
-
-**Severity:** LOW (the analytics Issue Tracker chart under-reports closed issues and their severity mix)
-**File:** `tools/generate_analytics.py` `collect_issue_data` (`line.startswith("### KH-")` / `"### TH-"` over FIXED.md; severity read from the heading text, which dated entries keep in the body as `**Severity:**`) and the open-count loop (`### KH-` only, TH open never counted)
-**Discovered:** 2026-11-03, while fixing TH-104 (`generate_validation_md._count_issues` had the same restriction)
-
-**Fix direction:** reuse `generate_validation_md._heading_ids` (leading ids of both heading formats, distinct ids, an id still in ISSUES.md stays open) or move it to a shared helper; read severity from the entry's `**Severity:**` line; keep `_count_issues_in_line`'s `X through Y` handling for the `Earlier fixes` range heading only if the chart should count it (the VALIDATION counter does not). Test with both heading formats, as `test_issue_counts_read_both_heading_formats`.
-
 ### TH-105: 360 FND locks on findings marked INCORRECT are not aspirational, so some pin the value their own finding calls the defect
 
 **Severity:** MEDIUM (false regressions at every fix: a lock that pins the reported bug fails the moment the product fixes it, and reads as a regression until someone reads its text)
