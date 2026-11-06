@@ -3480,6 +3480,8 @@ The same name-space mismatch affects cross_verify and cross_analysis, not only S
 
 **Addendum 2026-10-31 (GitHub #61.3, PGIRang):** a reporter case for the EMC side. EMC DP-001..004 look schematic pair names up in PCB-keyed maps, so a root-sheet local `USB_DM` never matches the board's `/USB_DM` and no PCB-side pair check runs: `emc_rules.py:2083`, `:2104-2105` (DP-001), `:2164` (DP-002), `:2260` (DP-003), `:2323` (DP-004), map from `_build_net_length_map` `:2032-2043` (at `7131f26`). Prefixing `/` in the schematic JSON makes DP-004 fire twice. The reporter's "match with and without the prefix" is unsafe (sub-sheet locals share leaves); the fix is the pad ↔ pin correspondence above (kc/R11-F9). An intra-pair spacing check is a feature request (HS/SS only). Source: product `.superpowers/sdd/2026-10-29-v3.0.x-wave5/github/gh-60-62-findings.md`.
 
+**Addendum 2026-11-06 (v3.0.1 shipped):** GitHub #61 stays open after v3.0.1 (#60 and #62 closed as fixed); this entry is its harness home. The PCB pair checks still match nets by name (`USB_DM` vs `/USB_DM`); the planned fix is the pad / pin net matching above, in a later release.
+
 ### KH-486: `.kicad-happy.json` suppressions (`components` / `nets`) are applied only by the EMC and thermal analyzers
 
 **Severity:** LOW (documented feature gap; the corpus carries no `.kicad-happy.json` with suppressions)
