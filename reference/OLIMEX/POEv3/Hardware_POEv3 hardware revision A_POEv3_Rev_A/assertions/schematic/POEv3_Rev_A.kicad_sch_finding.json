@@ -44,9 +44,10 @@
       "created_from": "FND-00002002",
       "check": {
         "path": "pwr_flag_warnings",
-        "op": "min_count",
-        "value": 1
-      }
+        "op": "max_count",
+        "value": 0
+      },
+      "migration_note": "Re-anchored pwr_flag_warnings min_count 1 -> max_count 0 (v3.0.2 TH-108, product ruling 2026-11-06): +5VP carries a PWR_FLAG (has_pwr_flag); kicad-cli 10.0.8 sch erc on POEv3_Rev_A.kicad_sch reports no power_pin_not_driven"
     },
     {
       "id": "FND-00002002-AST-05",

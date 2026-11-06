@@ -331,3 +331,15 @@ def test_only_file_unreadable_is_not_no_assertions_found():
         (Path(tmpdir) / "reference" / _REPO / _PROJECT / "baselines" / "metadata.json").write_text("{}")
         rc, out = _run_checks(tmpdir)
         assert rc == 1 and out["load_errors"] == 1
+
+
+def test_output_not_found_is_counted_for_aspirational_too():
+    """TH-107: an aspirational assertion whose output is never found failed silently."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _write_assertion_file(tmpdir, [
+            {"id": "FND-1-AST-01", "description": "a", "aspirational": True,
+             "check": {"path": "x", "op": "equals", "value": 1}},
+            {"id": "FND-1-AST-02", "description": "b",
+             "check": {"path": "x", "op": "equals", "value": 1}}])
+        rc, out = _run_checks(tmpdir, ["--allow-errors"])
+        assert out["output_not_found"] == {"assertions": 2, "aspirational": 1}

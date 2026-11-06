@@ -71,10 +71,11 @@
       "created_from": "FND-00001494",
       "check": {
         "path": "vias.via_analysis.via_in_pad",
-        "op": "min_count",
-        "value": 2
+        "op": "max_count",
+        "value": 0
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "Re-anchored via_in_pad min_count 2 -> max_count 0 (v3.0.2 TH-108, product ruling 2026-11-06; INCORRECT lock, TH-105): the lock pinned the NC-pad false positive its own finding reports; the analyzer now reports none"
     }
   ]
 }

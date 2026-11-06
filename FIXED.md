@@ -11,6 +11,40 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-108: the nine standing non-passing locks carried since round 2 were never reviewed — seven were stale
+
+**Severity:** MEDIUM (VALIDATION.md published "7 failed / 2 errors" as unexplained debt since v3.0.0; every ledger since `6a91aaa` carried them as `cause: unreviewed`)
+**File:** seven `reference/**/assertions/**/*_finding.json` locks; `reference/baseline_debts/4c2a0d6.json` (`checks[].cause`)
+**Discovered:** 2026-11-06, v3.0.2 kickoff (VALIDATION.md failure table)
+
+- **Root cause:** curated FND locks set against old analyzer output; later fixes made the analyzer right and the locks wrong, and no relock ruled on them.
+- **Fix (product ruling 2026-11-06):** re-anchored with a `migration_note` citing the evidence:
+  - FND-00001759-AST-04 `usb_compliance.summary.pass` 5 → 6 (U4 ESDA14V2-2BF3 is a TVS on VBUS);
+  - FND-00002002-AST-04 `pwr_flag_warnings` min_count 1 → max_count 0 (+5VP has a PWR_FLAG; kicad-cli 10.0.8 ERC: no `power_pin_not_driven`);
+  - FND-00002142-AST-01 `total_nets` 73 → 60 (the design's shipped `ICE40-DAC_Rev_A.net`: 60 nets, U2.20 on +5V);
+  - FND-00001457-AST-03 `total_nets` 25 → 24 (kicad-cli netlist: 24 nets);
+  - FND-00001450-AST-06 `via_in_pad` min_count 4 → 2 and FND-00001458-AST-06 min_count 3 → max_count 0, after a board-geometry check (independent s-expression read of the two boards): the kept hits are vias inside R2.1 / R4.1 (0.127 mm from centre); no via lies inside any J1 / J2 / C2 pad outline (nearest 1.16–4.26 mm from the pad centres, only inside the old max-dimension box), so no KH;
+  - FND-00001494-AST-07 `via_in_pad` min_count 2 → max_count 0 (INCORRECT lock, TH-105).
+- **Verification:** `run_checks --repo` on the six repos vs product_4c2a0d6: all pass, 0 failed / 0 errors.
+
+## 2026-11-06 — TH-107 (half): two assertions never ran because `file_pattern` repeated the project prefix; `run_checks` did not report unresolved outputs
+
+**Severity:** MEDIUM (the standing "2 errors" on VALIDATION.md)
+**File:** `reference/Open-Vent-Bristol/OpenVent-Bristol_KiCad/OV_Power/assertions/schematic/OV_Power_OV_Power.sch.json`, `reference/greatscottgadgets/daisho/hw_main_board/assertions/schematic/hw_main_board_main_board.sch.json`; `regression/run_checks.py`
+**Discovered:** 2026-11-06, v3.0.2 kickoff
+
+- **Root cause:** `find_output_file` prepends the project prefix to `file_pattern`; these two files already carried it (`hw_main_board_main_board.sch` under project path `hw/main_board`), so the lookup asked for `hw_main_board_hw_main_board_main_board.sch.json`.
+- **Fix:** `file_pattern` → `OV_Power.sch` / `main_board.sch`; `run_checks --json` adds `output_not_found: {assertions, aspirational}` and the text report an "Output not found" line, so aspirational assertions that never run are visible.
+- **Verification:** FND-00000023-AST-00000001 and FND-00000007-AST-00000001 now evaluate and pass (`run_checks --repo`, 843 / 0 and 3,071 / 0); `tests/test_run_checks.py::test_output_not_found_is_counted_for_aspirational_too` fails before, passes after. The 27 aspirational sets left stay open under TH-107.
+
+## 2026-11-06 — TH-037 / TH-039 / TH-040: closed as stale
+
+**Severity:** LOW
+- **TH-037** (`add_repos.py` `KeyError: 'stats'` on fresh runs): `load_progress` now builds the `stats` dict on a fresh run (`tools/add_repos.py:52-66`). A legacy progress file without `stats` is not covered and was not checked.
+- **TH-039** (`test_kh238_feedback_divider_detected` never triggered): the test passes vs product_4c2a0d6 (2026-11-06).
+- **TH-040** (`test_corpus_spot_check` after the `datasheet_backed` rename): passes on the regenerated corpus (2026-11-06); the corpus regens refreshed the key.
+- **Verification:** both tests run 2026-11-06, pass.
+
 ## 2026-11-04 — KH-443: Net ties are not bridged by the DC-continuity audits — RS-001 false "no declared source" when a rail is fed through a `NetTie_2`; PP-001 / power tracing have the same blind spot (GitHub #50)
 
 

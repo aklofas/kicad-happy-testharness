@@ -247,6 +247,12 @@ def main():
             failures.extend(r["failures"])
             all_results.extend(r["results"])
 
+    # Assertions that never ran because their output file is not found (TH-107): the
+    # aspirational ones would otherwise pass unnoticed as ordinary known-bug failures.
+    not_found = [r for r in all_results if r.get("error") == OUTPUT_NOT_FOUND]
+    not_found_counts = {"assertions": len(not_found),
+                        "aspirational": sum(1 for r in not_found if r.get("aspirational"))}
+
     if args.json:
         out = {
             "total": total,
@@ -254,6 +260,7 @@ def main():
             "failed": failed,
             "errors": errors,
             "load_errors": load_errors,
+            "output_not_found": not_found_counts,
             "pass_rate": f"{passed/total*100:.1f}%" if total > 0 else "N/A",
             "results": all_results,
         }
@@ -285,6 +292,9 @@ def main():
                     print(f"  LOAD ERROR {r['file']}: {r['error']}")
         if total > 0:
             print(f"Rate:   {passed/total*100:.1f}%")
+        if not_found:
+            print(f"Output not found (never evaluated): {not_found_counts['assertions']} "
+                  f"assertions, {not_found_counts['aspirational']} of them aspirational")
 
         if aspirational_total > 0:
             print(f"\nAspirational: {aspirational_total} total, "

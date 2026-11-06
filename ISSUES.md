@@ -4457,39 +4457,18 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 ## Test Harness Issues
 
-### TH-108: the nine standing non-passing locks carried since round 2 were never reviewed — seven are stale (the analyzer now matches KiCad)
+### TH-107: 34 aspirational assertions (27 sets) never run because their output file is not found
 
-**Severity:** MEDIUM (VALIDATION.md has published "7 failed / 2 errors" as unexplained debt since v3.0.0; every ledger since `6a91aaa` carries them as `cause: unreviewed`)
-**File:** `reference/**/assertions/**/*_finding.json` (data, nine locks); `reference/baseline_debts/4c2a0d6.json` (`checks[].cause` now classifies each)
-**Discovered:** 2026-11-06, v3.0.2 kickoff (VALIDATION.md failure table), each checked against the regen outputs at `4c2a0d6`
+**Severity:** LOW (aspirational only; they fail as "output file not found" forever, so they can never graduate)
+**File:** data under `reference/**/assertions/` (list below); `regression/reference_io.py` `find_output_file`
+**Discovered:** 2026-11-06, v3.0.2 kickoff. The two counted errors (doubled `file_pattern` prefix) are fixed (FIXED.md, same date), and `run_checks` now reports `output_not_found` (JSON) / an "Output not found" line, so the class is visible.
 
-| Lock | Locked | Now | Evidence |
-|---|---|---|---|
-| FND-00001759-AST-04 (2sayle/USB_Dongle_KiCad) | `usb_compliance.summary.pass` == 5 | 6 | `vbus_esd_protection` passes: U4 ESDA14V2-2BF3 (A1/A2) is a TVS on VBUS; the finding's "no dedicated TVS" missed U4 |
-| FND-00002002-AST-04 (OLIMEX/POEv3) | `pwr_flag_warnings` >= 1 | 0 | +5VP carries a PWR_FLAG (`has_pwr_flag`); kicad-cli 10.0.8 ERC reports no `power_pin_not_driven` |
-| FND-00002142-AST-01 (OLIMEX/iCE40-DAC Rev A) | `statistics.total_nets` == 73 | 60 | the shipped `ICE40-DAC_Rev_A.net` has 60 nets with U2.20 on +5V, as the analyzer reports; the 73 / floating-VCC reading was a legacy-parser bug |
-| FND-00001457-AST-03 (SparkFun Soft_Power_Switch sch) | `statistics.total_nets` == 25 | 24 | kicad-cli netlist has 24 nets, same named set; the finding listed BTN twice |
-| FND-00001450-AST-06 (SparkFun FPC2534 pcb) | `via_in_pad` >= 4 | 2 | likely KH-419 (via-in-pad tests the pad outline, not its box): the J1/J2 NC-pad vias dropped; not yet checked geometrically |
-| FND-00001458-AST-06 (SparkFun Soft_Power_Switch pcb) | `via_in_pad` >= 3 | 0 | likely KH-419, as above |
-| FND-00001494-AST-07 (SparkFun AS7343 pcb) | `via_in_pad` >= 2 | 0 | an INCORRECT lock (TH-105): it pins the NC-pad false positive its own finding calls wrong; 0 is the value the finding asks for |
+**Remaining sets, by disposition:**
+- **Re-point (11 sets, output exists under another project):** the assertion file sits under the wrong project dir with an old `schematic_<repo>_` / `pcb_<repo>_` pattern. siderakb/ergo-snm-keyboard: 9 sets filed under `EC56_rotary_encoder_pcb` (FND-00002185..2193; outputs `ErgoSNM_Keyboard_rev*_*.json`); keebio/fourier: 1 under `fourier_fourier-left_fourier-left-bottom` (FND-00002181, output `fourier_fourier-right_fourier-right.sch.json`); rjwalters/kicad-tools: 1 under `boards_01-voltage-divider_output_voltage_divider` (output `examples_08-label-based-schematic_label_based_mcu.kicad_sch.json`). Their `findings.json` items carry the same wrong file names, so a fix moves item + assertions together (or `findings.py promote` recreates the bad files).
+- **Retire (3 sets):** 0Prashant/Kicad FND-00002472/2473/2475/2476: the findings name files under `schematic/MyKiCad/`, another repo; the files do not exist in 0Prashant/Kicad.
+- **Retire or re-point (13 gerber sets):** 11 repos with no gerber sources in their manifests at all (KCORES/OCP2PCIe, MakersAsylumIndia/M19O2 ×2, SdtElectronics/Xassette-Asterisk, judge2005/OTC, terjeio/PCBLaserSchematics (pattern is an absolute harness path), xboxoneresearch/Spider-eMMC, and the five empty-pattern sets Mage-Control-Systems-Ltd/NCCM, Neotron-Compute/Neotron-Pico, TU-Darmstadt-APQ/LM399_Burnin_Board, attoparsec/Node, mobilinkd/NucleoTNC); Mustafa5355/cavli_c16qs-carrier-board names a drill dir that has no output.
 
-The other two (FND-00000023, FND-00000007) are TH-107.
-
-**Fix direction:** check the two `via_in_pad` "likely" rows against the board geometry, then re-anchor the seven on the product's ruling (as for the 9885287 / 246ee5a FND rulings: new value + `migration_note`); the 9-entry `checks` group of the next ledger shrinks to the TH-107 pair until that is fixed.
-
-### TH-107: 36 assertions never run because their output file is not found — two from a doubled project prefix in `file_pattern`, the rest from outputs that no longer exist
-
-**Severity:** MEDIUM (never evaluated: 2 count as the standing "2 errors", 34 aspirational ones fail silently)
-**File:** `regression/reference_io.py` `find_output_file` (`safe_name = project_prefix(project_path) + file_pattern`); data under `reference/**/assertions/`
-**Discovered:** 2026-11-06, v3.0.2 kickoff, classifying the two standing errors FND-00000023-AST-00000001 (Open-Vent-Bristol OV_Power) and FND-00000007-AST-00000001 (daisho main_board)
-
-**Symptom:** `results/v301_regen3/checks_final.json` has 36 results (29 assertion sets) with `error: output file not found`: 2 counted, 34 aspirational. By set:
-- 2 schematic, **doubled prefix**: `file_pattern` already carries the project prefix (`hw_main_board_main_board.sch`, project path `hw/main_board`), so the lookup asks for `hw_main_board_hw_main_board_main_board.sch.json`; the output exists under the single prefix. These are the 2 counted errors; both lock `findings` min_count 1 and would pass (140 and 30 findings).
-- 15 (12 schematic, 2 pcb, 1 gerber): the repo has outputs of that type but not this file (renamed or removed upstream, or another naming change; not traced).
-- 7 gerber: no gerber outputs for the repo at all.
-- 5 gerber: empty `file_pattern`.
-
-**Fix direction:** rewrite the two doubled patterns; triage the other 27 sets (re-point or retire); make `run_checks` report an assertion set whose output cannot be found as a load error, so the class is loud and does not hide among aspirational failures.
+**Fix direction:** a one-shot script that moves the 11 re-pointable findings items with their assertions; record a disposition on the findings items of the 16 dead sets and delete their assertion files; add a test that every assertion set in the corpus resolves to an output or a disposition.
 
 ### TH-106: `generate_analytics.py` issue counts read only `### <id>` headings — closures under `## <date> — <id>` headings are not counted (the TH-104 undercount, second copy)
 
@@ -4780,37 +4759,6 @@ consider a guard: corpus runners refuse unscoped (no --repo /
 --cross-section) invocation unless an explicit --all flag is passed —
 would also prevent accidental full-corpus runs from test/CI contexts.
 
-### TH-037: `add_repos.py` raises `KeyError: 'stats'` on fresh runs
-
-**Severity:** LOW
-**File:** `tools/add_repos.py:323` (`_update_progress`) and `tools/add_repos.py:512` (dry-run summary)
-**Discovered:** 2026-04-27 while adding Hanqaqa/Easyduino
-
-**Symptom:** When invoked with no pre-existing progress file (i.e. first run for an
-input), both `--dry-run` and the post-pipeline summary path traceback with
-`KeyError: 'stats'`. Pipeline side effects (repos.md edit, clones, analyzer runs,
-seeds, run_checks) all complete successfully *before* the error — only the
-final summary/persistence is broken.
-
-**Repro:**
-```
-python3 tools/add_repos.py --input /tmp/easyduino-validate/validated.json --jobs 4
-# ...
-# [1/1] OK Hanqaqa/Easyduino (153s elapsed)
-# Traceback (most recent call last):
-#   File "tools/add_repos.py", line 435, in _run_parallel
-#     _update_progress(progress, result)
-#   File "tools/add_repos.py", line 323, in _update_progress
-#     progress["stats"]["total_succeeded"] += 1
-# KeyError: 'stats'
-```
-
-**Likely fix:** Initialize `progress["stats"] = {"total_succeeded": 0, ...}` in
-the new-progress-dict path (and the same for `--dry-run`). Defensive `.setdefault`
-in `_update_progress` would also work.
-
----
-
 ### TH-038: `validate_candidates.py` 60s clone timeout too tight for medium repos
 
 **Severity:** LOW
@@ -4829,103 +4777,6 @@ validated candidates.
 **Likely fix:** Bump default to 180s, or scale by repo size if the candidates
 file carries one. The 60s default was probably set for small repos and never
 revisited.
-
----
-
-### TH-039: `test_kh238_feedback_divider_detected` synthetic LM317 fixture never triggers detector
-
-**Severity:** LOW
-**File:** `tests/test_bug_cemetery.py:257-306` (`test_kh238_feedback_divider_detected`)
-**Discovered:** 2026-05-15 during pre-push gate before v1.4.0-rc.1 tag
-
-**Symptom:** The KH-238 regression test (added 2026-04-12 in harness commit
-`a9a34766ae0`) builds a synthetic LM317 fixture and expects
-`detect_power_regulators` to populate `feedback_divider` for U1. Test asserts:
-```
-assert fb is not None, "KH-238 regression: feedback_divider not detected for LM317"
-```
-But `feedback_divider` is `None` on every kicad-happy `v1.4-dev` SHA bisected:
-`968f5c8` (v1.3.1), `0df3b7f`, `d2c3eb6`, `ea9b61b`, `fa02ba4`, `aba7083`,
-`8c36212`, `8daa28d`, `7870c45`, `693b664`. The bug is NOT a recent regression —
-the test has likely been failing since the day it was added (it was the lone
-"1 fail" recorded in `status.md` at 2026-05-14).
-
-**Root cause hypothesis:** The KH-238 fix in kicad-happy
-(`9c8ec19`, "Fix KH-238 feedback divider pair-ordering drops valid R-R pairs",
-on both `main` and `v1.4-dev`) IS present in the analyzer at every bisected SHA.
-The code paths that populate `feedback_divider` exist at
-`skills/kicad/scripts/signal_detectors.py:1877`, `:1894`, `:1988`. But the
-synthetic fixture's wire topology, lib_id (`Regulator_Linear:LM317_SOT-223`), or
-power-pin labeling doesn't trigger any of those branches — most likely the
-detector requires a specific topology (e.g. ADJ pin handling, particular net
-labeling, or a footprint hint) that the `_build_sch.Schematic().ic(...)` helper
-doesn't emit in the form the detector expects.
-
-The analyzer DOES find U1 as a regulator (`detect_power_regulators` emits an
-entry with `ref=U1, value=LM317`), so the issue is specifically in the
-divider-pairing branch, not regulator detection itself.
-
-**Repro:** see `/tmp/kh238_repro/` (created during 2026-05-15 investigation):
-```
-python3 -c "from fixtures._build_sch import ...; ..."  # build fixture
-python3 ~/Projects/kicad-happy/skills/kicad/scripts/analyze_schematic.py \
-    /tmp/kh238_repro/lm317.kicad_sch --output /tmp/kh238_repro/output.json
-jq '.findings[] | select(.detector=="detect_power_regulators")' /tmp/kh238_repro/output.json
-# → "feedback_divider": null
-```
-
-**Likely fix paths (pick one):**
-- Inspect what topology the detector actually expects for LM317-class adjustables
-  (probably needs ADJ pin, not FB pin; or specific net naming like the original
-  KH-238 corpus exemplar) and adjust the fixture's pin definitions and wire
-  topology to match.
-- Or: replace the synthetic fixture with a real-corpus exemplar regression by
-  pinning a specific repo+project that exhibits the KH-238-fixed pattern.
-
-**Not tag-blocking** for v1.4.0-rc.1 — pre-existing, doesn't reflect rc.1 polish
-behavior. Pre-push gate must use `--no-verify` while this is open.
-
----
-
-### TH-040: `test_corpus_spot_check` fails after v1.4 `datasheet-backed` → `datasheet_backed` key rename
-
-**Severity:** LOW
-**File:** `tests/test_invariants.py:490-528` (`test_corpus_spot_check`) and
-`validate/validate_invariants.py` (the `check_invariants` invariant checker)
-**Discovered:** 2026-05-15 during pre-push gate before v1.4.0-rc.1 tag
-
-**Symptom:** `test_corpus_spot_check` walks `results/outputs/schematic/` looking
-for ≥5 envelopes that have `detect_voltage_dividers` or `detect_rc_filters`
-findings AND pass `check_invariants`. Currently finds 0 clean envelopes out of
-49 eligible (sampled), failing with `"No clean outputs found for spot-check"`.
-
-Every sampled envelope fails on the same invariant:
-```
-trust_summary.by_confidence keys {'heuristic', 'deterministic', 'datasheet-backed'}
-                                 != {'heuristic', 'deterministic', 'datasheet_backed'}
-```
-
-**Root cause:** v1.4 breaking change documented in shared
-`LOG-v1.4-progress.md` line 1079 — `trust_summary.by_confidence` aggregate key
-renamed from `'datasheet-backed'` (hyphen) to `'datasheet_backed'` (underscore).
-(Per-finding `confidence` VALUE stays `'datasheet-backed'`; only the rollup
-key changed.) `validate_invariants.check_invariants` was updated to expect the
-new key, but the cached corpus outputs in `results/outputs/schematic/` were
-generated by a pre-v1.4 analyzer and still have the hyphenated key. Re-running
-analyzers across the corpus would refresh them.
-
-**Likely fix paths:**
-- **Quick (5 min):** loosen `check_invariants` to accept either key shape during
-  the v1.4 transition (treat `{datasheet-backed, datasheet_backed}` as
-  equivalent for the by_confidence keys check). Mark as transitional with a
-  "remove after corpus regen" comment.
-- **Proper:** re-run `run/run_schematic.py` across the corpus (hours) to
-  regenerate `results/outputs/schematic/` with the v1.4 key shape. Cascade to
-  re-snapshot reference baselines for any drifts the regen surfaces.
-
-**Not tag-blocking** — pre-existing harness-side data-staleness, not an
-analyzer or producer bug. Pre-push gate must use `--no-verify` while this
-is open.
 
 ---
 

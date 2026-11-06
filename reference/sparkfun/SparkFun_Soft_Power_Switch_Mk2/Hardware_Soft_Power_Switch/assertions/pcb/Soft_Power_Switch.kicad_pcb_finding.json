@@ -60,9 +60,10 @@
       "created_from": "FND-00001458",
       "check": {
         "path": "vias.via_analysis.via_in_pad",
-        "op": "min_count",
-        "value": 3
-      }
+        "op": "max_count",
+        "value": 0
+      },
+      "migration_note": "Re-anchored via_in_pad min_count 3 -> max_count 0 (v3.0.2 TH-108, product ruling 2026-11-06): board geometry check, no via lies inside the outline of any C2 or J1 pad (the former hits sat only in the old max-dimension box: J1.NC1 2.07 mm, J1.NC2 1.68 mm, C2 1.16 mm from the pad centre); KH-419 outline test"
     },
     {
       "id": "FND-00001458-AST-07",
